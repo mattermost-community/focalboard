@@ -17,7 +17,8 @@ export enum UserSettingKey {
     RandomIcons = 'randomIcons',
     MobileWarningClosed = 'mobileWarningClosed',
     WelcomePageViewed = 'welcomePageViewed',
-    DashboardShowEmpty = 'dashboardShowEmpty'
+    DashboardShowEmpty = 'dashboardShowEmpty',
+    HideCloudMessage = 'hideCloudMessage'
 }
 
 export class UserSettings {
@@ -112,6 +113,14 @@ export class UserSettings {
 
     static set mobileWarningClosed(newValue: boolean) {
         UserSettings.set(UserSettingKey.MobileWarningClosed, String(newValue))
+    }
+
+    static get hideCloudMessage(): boolean {
+        return localStorage.getItem(UserSettingKey.HideCloudMessage) === 'true'
+    }
+
+    static set hideCloudMessage(newValue: boolean) {
+        localStorage.setItem(UserSettingKey.HideCloudMessage, JSON.stringify(newValue))
     }
 }
 

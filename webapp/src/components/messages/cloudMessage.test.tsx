@@ -19,6 +19,8 @@ import {wrapIntl} from '../../testUtils'
 
 import client from '../../octoClient'
 
+import {UserSettings} from '../../userSettings'
+
 import CloudMessage from './cloudMessage'
 
 jest.mock('../../utils')
@@ -130,5 +132,43 @@ describe('components/messages/CloudMessage', () => {
                 focalboard_cloudMessageCanceled: 'true',
             },
         })
+    })
+
+    test('not plugin mode, single user, close message', () => {
+        const me: IUser = {
+            id: 'single-user',
+            username: 'single-user',
+            email: 'single-user',
+            props: {},
+            create_at: 0,
+            update_at: Date.now() - (1000 * 60 * 60 * 24), //24 hours,
+            is_bot: false,
+            roles: '',
+        }
+        const state = {
+            users: {
+                me,
+            },
+        }
+        const store = mockStore(state)
+        const hideCloudMessageSpy = jest.spyOn(UserSettings, 'hideCloudMessage', 'set')
+
+        mockedUtils.isFocalboardPlugin.mockReturnValue(false)
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <CloudMessage/>
+            </ReduxProvider>,
+        )
+
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const buttonElement = screen.getByRole('button', {name: 'Close dialog'})
+        userEvent.click(buttonElement)
+
+        expect(mockedOctoClient.patchUserConfig).toBeCalledTimes(0)
+        expect(hideCloudMessageSpy).toHaveBeenCalledWith(true)
+        expect(UserSettings.hideCloudMessage).toBe(true)
     })
 })
