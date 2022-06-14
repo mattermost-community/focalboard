@@ -277,6 +277,12 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error parsing time_range="+timeRange, aErr)
 		return
 	}
+
+	if !a.app.HasPermissionToTeam(userID, teamID) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
+		return
+	}
+
 	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	page, err := strconv.Atoi(query.Get("page"))

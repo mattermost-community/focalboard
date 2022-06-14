@@ -7,12 +7,6 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
-const (
-	TimeRangeToday string = "today"
-	TimeRange7Day  string = "7_day"
-	TimeRange28Day string = "28_day"
-)
-
 // BoardInsightsList is a response type with pagination support.
 type BoardInsightsList struct {
 	mmModel.InsightsListData

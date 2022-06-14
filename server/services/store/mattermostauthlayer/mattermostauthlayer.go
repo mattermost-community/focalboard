@@ -24,11 +24,9 @@ import (
 )
 
 const (
-	sqliteDBType   = "sqlite3"
-	postgresDBType = "postgres"
-	mysqlDBType    = "mysql"
-
-	directChannelType         = "D"
+	sqliteDBType              = "sqlite3"
+	postgresDBType            = "postgres"
+	mysqlDBType               = "mysql"
 	nonTemplateFilterMySQL    = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
 	nonTemplateFilterPostgres = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
 )
@@ -544,7 +542,7 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 			return nil, err
 		}
 
-		if rawUserWorkspace.Type == directChannelType {
+		if rawUserWorkspace.Type == string(mmModel.ChannelTypeDirect) {
 			userIDs := strings.Split(rawUserWorkspace.Name, "__")
 			usersToFetch = append(usersToFetch, userIDs...)
 		}
@@ -565,7 +563,7 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 	userWorkspaces := []model.UserWorkspace{}
 
 	for i := range rawUserWorkspaces {
-		if rawUserWorkspaces[i].Type == directChannelType {
+		if rawUserWorkspaces[i].Type == string(mmModel.ChannelTypeDirect) {
 			userIDs := strings.Split(rawUserWorkspaces[i].Name, "__")
 			names := []string{}
 
