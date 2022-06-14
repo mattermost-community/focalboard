@@ -59,6 +59,11 @@ const usersSlice = createSlice({
                 state.boardUsers[user.id] = user
             })
         },
+        removeBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            action.payload.forEach((user: IUser) => {
+                delete state.boardUsers[user.id]
+            })
+        },
         followBlock: (state, action: PayloadAction<Subscription>) => {
             state.blockSubscriptions.push(action.payload)
         },
@@ -96,7 +101,7 @@ const usersSlice = createSlice({
     },
 })
 
-export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
+export const {setMe, setBoardUsers, removeBoardUsers, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me

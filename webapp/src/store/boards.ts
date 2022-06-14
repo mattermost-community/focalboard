@@ -9,7 +9,7 @@ import {IUser} from '../user'
 
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from './initialLoad'
 
-import {addBoardUsers, setBoardUsers} from './users'
+import {addBoardUsers, removeBoardUsers, setBoardUsers} from './users'
 
 import {RootState} from './index'
 
@@ -81,7 +81,9 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             }
             const user = await client.getUser(m.userId)
             if (user) {
-                thunkAPI.dispatch(addBoardUsers([user]))
+                const deleted = !m.schemeAdmin && !m.schemeEditor && !m.schemeViewer && !m.schemeCommenter
+                const processor = deleted ? removeBoardUsers : addBoardUsers
+                thunkAPI.dispatch(processor([user]))
             }
         })
 
