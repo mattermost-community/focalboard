@@ -28,12 +28,12 @@ endif
 all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
-	cd webapp; npm install
+	npm install --prefix webapp
 
 ci: server-test
-	cd webapp; npm run check
-	cd webapp; npm run test
-	cd webapp; npm run cypress:ci
+	npm run check --prefix webapp
+	npm run test --prefix webapp
+	npm run cypress:ci --prefix webapp
 
 templates-archive: ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
@@ -155,10 +155,10 @@ server-test-postgres: templates-archive ## Run server tests using postgres
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp: ## Build webapp.
-	cd webapp; npm run pack
+	npm run pack --prefix webapp
 
 webapp-test: ## jest tests for webapp
-	cd webapp; npm run test
+	npm run test --prefix webapp
 
 watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-watchplugin.conf
@@ -191,7 +191,7 @@ win-wpf-app: server-dll webapp ## Build Windows WPF application.
 	cd win-wpf && ./package.bat
 	cd win-wpf && ./package-zip.bat
 
-linux-app: webapp ## Build Linux application.
+linux-app: prebuild webapp ## Build Linux application.
 	rm -rf linux/temp
 	rm -rf linux/dist
 	mkdir -p linux/dist
