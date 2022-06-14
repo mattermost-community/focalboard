@@ -2,7 +2,7 @@ module github.com/mattermost/focalboard/server
 
 go 1.18
 
-replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220601144141-e54977931ccd
+replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49
 
 require (
 	github.com/Masterminds/squirrel v1.5.2
