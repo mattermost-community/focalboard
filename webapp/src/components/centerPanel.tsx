@@ -448,7 +448,6 @@ const CenterPanel = (props: Props) => {
                     addCard={(properties: Record<string, string>) => {
                         addCard('', true, properties)
                     }}
-                    hiddenCardsCount={props.hiddenCardsCount}
                 />}
 
             {activeView.fields.viewType === 'gallery' &&

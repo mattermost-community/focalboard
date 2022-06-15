@@ -14,7 +14,7 @@ import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
 import {default as client} from '../octoClient'
 
-import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad, initialLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
 import {getBoardUsers} from './users'
 import {getLastCommentByCard} from './comments'
@@ -124,10 +124,12 @@ const cardsSlice = createSlice({
                 }
             }
         })
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.limitTimestamp = action.payload.limits?.card_limit_timestamp || 0
+        })
         builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
-            state.limitTimestamp = action.payload.limits?.card_limit_timestamp || 0
             for (const block of action.payload.blocks) {
                 if (block.type === 'card' && block.fields.isTemplate) {
                     state.templates[block.id] = block as Card

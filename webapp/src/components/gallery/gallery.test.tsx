@@ -181,7 +181,7 @@ describe('src/components/gallery/Gallery', () => {
         const boardTest = TestBlockFactory.createBoard()
         const card1 = TestBlockFactory.createCard(boardTest)
         const card3 = TestBlockFactory.createCard(boardTest)
-        const stateTest: Partial<RootState> = {
+        const stateTest = {
             contents: {
                 contents: blocksById(contents),
                 contentsByCard: {

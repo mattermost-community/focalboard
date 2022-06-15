@@ -73,7 +73,6 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         icon: '🚴🏻‍♂️',
         cardProperties: [groupProperty],
         properties: {},
-        limited: false,
     }
 
     const globalTemplate: Board = {
@@ -94,7 +93,6 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         isTemplate: true,
         templateVersion: 2,
         properties: {},
-        limited: false,
     }
 
     const me: IUser = {
