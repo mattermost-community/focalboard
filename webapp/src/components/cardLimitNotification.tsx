@@ -163,7 +163,7 @@ const CardLimitNotification = (props: Props) => {
             {!hasPermissionToUpgrade &&
                 <FormattedMessage
                     id='notification-box.card-limit-reached.not-admin.text'
-                    defaultMessage='To access archived cards, {contactLink} to upgrade to a paid plan.'
+                    defaultMessage='To access archived cards, you can {contactLink} to upgrade to a paid plan.'
                     values={{
                         contactLink: (
                             <a
@@ -171,7 +171,7 @@ const CardLimitNotification = (props: Props) => {
                             >
                                 <FormattedMessage
                                     id='notification-box-card-limit-reached.contact-link'
-                                    defaultMessage='contact your Admin'
+                                    defaultMessage='notify your admin'
                                 />
                             </a>),
                     }}
