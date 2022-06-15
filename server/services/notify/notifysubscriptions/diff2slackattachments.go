@@ -35,7 +35,7 @@ var (
 type DiffConvOpts struct {
 	Language      string
 	MakeCardLink  func(block *model.Block, board *model.Block, card *model.Block) string
-	MakeBoardLink func(block *model.Block, board *model.Block, card *model.Block) string
+	MakeBoardLink func(board *model.Block) string
 	Logger        *mlog.Logger
 }
 
@@ -53,7 +53,10 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 			opts.MakeCardLink = func(block *model.Block, _ *model.Board, _ *model.Block) string {
 				return fmt.Sprintf("`%s`", block.Title)
 			}
-			opts.MakeBoardLink = func(_ *model.Block, board *model.Block, _ *model.Block) string {
+		}
+
+		if opts.MakeBoardLink == nil {
+			opts.MakeBoardLink = func(board *model.Block) string {
 				return fmt.Sprintf("`%s`", board.Title)
 			}
 		}
@@ -63,7 +66,7 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 				return opts.MakeCardLink(diff.NewBlock, diff.Board, diff.Card)
 			},
 			"makeBoardLink": func(diff *Diff) string {
-				return opts.MakeBoardLink(diff.NewBlock, diff.Board, diff.Card)
+				return opts.MakeBoardLink(diff.Board)
 			},
 			"stripNewlines": func(s string) string {
 				return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
