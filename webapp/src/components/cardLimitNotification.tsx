@@ -112,7 +112,7 @@ const CardLimitNotification = (props: Props) => {
     }, [show])
 
     const handleContactAdminClicked = useCallback(async () => {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardCTAPerformed, {userId: me?.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardCTAPerformed)
 
         await octoClient.notifyAdminUpgrade()
         setShowNotifyAdminSuccess(true)
