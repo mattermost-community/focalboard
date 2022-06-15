@@ -310,7 +310,7 @@
   "notification-box-card-limit-reached.link": "Upgrade to a paid plan",
   "notification-box-card-limit-reached.title": "{cards} cards hidden from board",
   "notification-box-cards-hidden.title": "This action has hidden another card",
-  "notification-box.card-limit-reached.not-admin.text": "To access archived cards, contact your Admin to upgrade to a paid plan.",
+  "notification-box.card-limit-reached.not-admin.text": "To access archived cards, {contactLink} to upgrade to a paid plan.",
   "notification-box.card-limit-reached.text": "Card limit reached, to view older cards, {link}",
   "register.login-button": "or log in if you already have an account",
   "register.signup-title": "Sign up for your account",
