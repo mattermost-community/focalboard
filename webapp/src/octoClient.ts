@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block, BlockPatch} from './blocks/block'
+import {Block, BlockPatch, FileInfo} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
@@ -141,7 +141,6 @@ class OctoClient {
         }
     }
 
-    // ToDo: document
     private teamPath(teamId?: string): string {
         let teamIdToUse = teamId
         if (!teamId) {
@@ -556,18 +555,23 @@ class OctoClient {
         return undefined
     }
 
-    async getFileAsDataUrl(boardId: string, fileId: string): Promise<string> {
+    async getFileAsDataUrl(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
         }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return ''
+        let fileInfo: FileInfo = {}
+
+        if (response.status === 200) {
+            const blob = await response.blob()
+            fileInfo.url = URL.createObjectURL(blob)
+        } else if (response.status === 400) {
+            fileInfo = await this.getJson(response, {}) as FileInfo
         }
-        const blob = await response.blob()
-        return URL.createObjectURL(blob)
+
+        return fileInfo
     }
 
     async getTeam(): Promise<Team | null> {
@@ -612,14 +616,6 @@ class OctoClient {
         const path = this.teamPath(teamId) + '/templates'
         return this.getBoardsWithPath(path)
     }
-
-    // Boards
-    // ToDo: .
-    // - goal? make the interface show boards & blocks for boards
-    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
-    // - selectors for boards, current team, board members
-    // - ops to add/delete a board, add/delete board members, change roles? .
-    // - WS definition and implementation
 
     async getBoards(): Promise<Board[]> {
         const path = this.teamPath() + '/boards'

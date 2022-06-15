@@ -1,4 +1,4 @@
-CREATE TABLE {{.prefix}}board_members_history (
+CREATE TABLE IF NOT EXISTS {{.prefix}}board_members_history (
     board_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
     action VARCHAR(10),

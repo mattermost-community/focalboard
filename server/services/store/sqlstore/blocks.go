@@ -100,6 +100,32 @@ func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID strin
 	return s.blocksFromRows(rows)
 }
 
+func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block, error) {
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields()...).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"id": ids})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`GetBlocksByIDs ERROR`, mlog.Err(err))
+
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(blocks) != len(ids) {
+		return nil, model.NewErrNotAllFound(ids)
+	}
+
+	return blocks, nil
+}
+
 func (s *SQLStore) getBlocksWithBoardID(db sq.BaseRunner, boardID string) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).

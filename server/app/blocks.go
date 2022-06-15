@@ -13,6 +13,8 @@ import (
 )
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
+var ErrViewsLimitReached = errors.New("views limit reached for board")
+var ErrPatchUpdatesLimitedCards = errors.New("patch updates cards that are limited")
 
 func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
 	if boardID == "" {
@@ -50,6 +52,16 @@ func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTe
 		}
 		return nil
 	})
+
+	go func() {
+		if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed duplicating a block",
+				mlog.Err(uErr),
+			)
+		}
+	}()
+
 	return blocks, err
 }
 
@@ -60,7 +72,17 @@ func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
 func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
 	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return nil
+		return err
+	}
+
+	if a.IsCloudLimited() {
+		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]model.Block{*oldBlock})
+		if lErr != nil {
+			return lErr
+		}
+		if containsLimitedBlocks {
+			return ErrPatchUpdatesLimitedCards
+		}
 	}
 
 	board, err := a.store.GetBoard(oldBlock.BoardID)
@@ -76,7 +98,7 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedB
 	a.metrics.IncrementBlocksPatched(1)
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return nil
+		return err
 	}
 	a.blockChangeNotifier.Enqueue(func() error {
 		// broadcast on websocket
@@ -93,17 +115,22 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedB
 }
 
 func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
-	oldBlocks := make([]model.Block, 0, len(blockPatches.BlockIDs))
-	for _, blockID := range blockPatches.BlockIDs {
-		oldBlock, err := a.store.GetBlock(blockID)
-		if err != nil {
-			return nil
-		}
-		oldBlocks = append(oldBlocks, *oldBlock)
+	oldBlocks, err := a.store.GetBlocksByIDs(blockPatches.BlockIDs)
+	if err != nil {
+		return err
 	}
 
-	err := a.store.PatchBlocks(blockPatches, modifiedByID)
-	if err != nil {
+	if a.IsCloudLimited() {
+		containsLimitedBlocks, err := a.ContainsLimitedBlocks(oldBlocks)
+		if err != nil {
+			return err
+		}
+		if containsLimitedBlocks {
+			return ErrPatchUpdatesLimitedCards
+		}
+	}
+
+	if err := a.store.PatchBlocks(blockPatches, modifiedByID); err != nil {
 		return err
 	}
 
@@ -112,7 +139,7 @@ func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, mo
 		for i, blockID := range blockPatches.BlockIDs {
 			newBlock, err := a.store.GetBlock(blockID)
 			if err != nil {
-				return nil
+				return err
 			}
 			a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
 			a.webhook.NotifyUpdate(*newBlock)
@@ -136,9 +163,20 @@ func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
 			a.metrics.IncrementBlocksInserted(1)
 			a.webhook.NotifyUpdate(block)
 			a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
+
 			return nil
 		})
 	}
+
+	go func() {
+		if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after inserting a block",
+				mlog.Err(uErr),
+			)
+		}
+	}()
+
 	return err
 }
 
@@ -180,8 +218,18 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
 			}
 		}
+
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after inserting blocks",
+				mlog.Err(err),
+			)
+		}
+	}()
 
 	return blocks, nil
 }
@@ -289,8 +337,19 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
 		a.metrics.IncrementBlocksDeleted(1)
 		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
+
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a block",
+				mlog.Err(err),
+			)
+		}
+	}()
+
 	return nil
 }
 
@@ -341,8 +400,18 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 		a.metrics.IncrementBlocksInserted(1)
 		a.webhook.NotifyUpdate(*block)
 		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
+
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after undeleting a block",
+				mlog.Err(err),
+			)
+		}
+	}()
 
 	return block, nil
 }

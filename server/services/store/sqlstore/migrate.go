@@ -35,8 +35,8 @@ var assets embed.FS
 
 const (
 	uniqueIDsMigrationRequiredVersion        = 14
-	teamsAndBoardsMigrationRequiredVersion   = 17
-	categoriesUUIDIDMigrationRequiredVersion = 19
+	teamsAndBoardsMigrationRequiredVersion   = 18
+	categoriesUUIDIDMigrationRequiredVersion = 20
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
