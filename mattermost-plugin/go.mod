@@ -7,7 +7,7 @@ replace github.com/mattermost/focalboard/server => ../server
 require (
 	github.com/mattermost/focalboard/server v0.0.0-20210525112228-f43e4028dbdc
 	github.com/mattermost/mattermost-plugin-api v0.0.21
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220518113816-388842803cee
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49
 	github.com/prometheus/common v0.31.1 // indirect
 	github.com/stretchr/testify v1.7.1
 )
