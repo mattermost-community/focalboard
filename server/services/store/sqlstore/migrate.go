@@ -143,7 +143,7 @@ func (s *SQLStore) Migrate() error {
 	if s.dbType == postgresDBType {
 		cloudInstallationID := os.Getenv("MM_CLOUD_INSTALLATION_ID")
 		schemaName := ""
-		if cloudInstallatingID != "" {
+		if cloudInstallationID != "" {
 			schemaName = fmt.Sprintf("id_%s", cloudInstallationID)
 		}
 		driver, err = postgres.WithInstance(db, &postgres.Config{
