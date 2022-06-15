@@ -153,6 +153,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
 
+	// limits
+	apiv2.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
+
 	// System APIs
 	r.HandleFunc("/hello", a.handleHello).Methods("GET")
 }
@@ -374,6 +377,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 		mlog.Int("block_count", len(blocks)),
 	)
+
+	var bErr error
+	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	if bErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
+		return
+	}
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
@@ -875,7 +885,12 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, true)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if errors.Is(err, app.ErrViewsLimitReached) {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+
 		return
 	}
 
@@ -1408,6 +1423,10 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("blockID", blockID)
 
 	err = a.app.PatchBlock(blockID, patch, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1489,6 +1508,10 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = a.app.PatchBlocks(teamID, patches, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1830,7 +1853,7 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 // File upload
 
 func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET "api/v2/files/teams/{teamID}/{boardID}/{filename} getFile
+	// swagger:operation GET /files/teams/{teamID}/{boardID}/{filename} getFile
 	//
 	// Returns the contents of an uploaded file
 	//
@@ -4002,6 +4025,10 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 	auditRec.AddMeta("blocksCount", len(pbab.BlockIDs))
 
 	bab, err := a.app.PatchBoardsAndBlocks(pbab, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -4139,6 +4166,41 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 	// response
 	jsonStringResponse(w, http.StatusOK, "{}")
 	auditRec.Success()
+}
+
+func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /limits cloudLimits
+	//
+	// Fetches the cloud limits of the server.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/BoardsCloudLimits"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardsCloudLimits, err := a.app.GetBoardsCloudLimits()
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(boardsCloudLimits)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 }
 
 func (a *API) handleHello(w http.ResponseWriter, r *http.Request) {
