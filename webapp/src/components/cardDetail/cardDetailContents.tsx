@@ -78,7 +78,7 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
 
     mutator.performAsUndoGroup(async () => {
         const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'Move card content'})
-        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, newContentOrder, description)
+        await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, newContentOrder, description)
     })
 }
 
