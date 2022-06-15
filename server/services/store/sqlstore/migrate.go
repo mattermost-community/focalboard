@@ -141,7 +141,15 @@ func (s *SQLStore) Migrate() error {
 	defer db.Close()
 
 	if s.dbType == postgresDBType {
-		driver, err = postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable})
+		cloudInstallationID := os.Getenv("MM_CLOUD_INSTALLATION_ID")
+		schemaName := ""
+		if cloudInstallatingID != "" {
+			schemaName = fmt.Sprintf("id_%s", cloudInstallationID)
+		}
+		driver, err = postgres.WithInstance(db, &postgres.Config{
+			MigrationsTable: migrationsTable,
+			SchemaName:      schemaName,
+		})
 		if err != nil {
 			return err
 		}
