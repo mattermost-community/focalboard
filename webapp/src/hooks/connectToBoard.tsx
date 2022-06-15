@@ -21,7 +21,7 @@ import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
 
 const websocketTimeoutForBanner = 5000
 
-export default function useConnectToBoard(dispatch: any, readToken: string, myID: string, workspaceId: string|undefined, readonly: boolean, boardId: string): void {
+export default function useConnectToBoard(dispatch: any, readToken: string, myID: string, teamId: string|undefined, readonly: boolean, boardId: string): void {
     const [websocketClosed, setWebsocketClosed] = useState(false)
     useEffect(() => {
         let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
@@ -33,23 +33,25 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
 
         dispatch(loadAction(boardId))
 
-        let subscribedToWorkspace = false
+        let subscribedToTeam = false
         if (wsClient.state === 'open') {
-            wsClient.authenticate(workspaceId || '0', token)
-            wsClient.subscribeToWorkspace(workspaceId || '0')
-            subscribedToWorkspace = true
+            wsClient.authenticate(teamId || '0', token)
+            wsClient.subscribeToTeam(teamId || '0')
+            subscribedToTeam = true
         }
 
-        const incrementalUpdate = (_: WSClient, blocks: Block[]) => {
-            // only takes into account the blocks that belong to the workspace
-            const workspaceBlocks = blocks.filter((b: Block) => b.workspaceId === '0' || b.workspaceId === workspaceId)
+        const incrementalUpdateBoard = (_: WSClient, boards: Board[]) => {
+            // only takes into account the boards that belong to the team
+            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
+            dispatch(updateBoards(teamBoards.filter((b: Board) => b.deleteAt !== 0)))
+        }
 
+        const incrementalUpdateBlock = (_: WSClient, blocks: Block[]) => {
             batch(() => {
-                dispatch(updateBoards(workspaceBlocks.filter((b: Block) => b.type === 'board' || b.deleteAt !== 0) as Board[]))
-                dispatch(updateViews(workspaceBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(workspaceBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(workspaceBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(workspaceBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
             })
         }
 
@@ -57,9 +59,9 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(workspaceId || '0', newToken)
-                wsClient.subscribeToWorkspace(workspaceId || '0')
-                subscribedToWorkspace = true
+                wsClient.authenticate(teamId || '0', newToken)
+                wsClient.subscribeToTeam(teamId || '0')
+                subscribedToTeam = true
             }
 
             if (timeout) {
@@ -69,23 +71,24 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
             if (newState === 'close') {
                 timeout = setTimeout(() => {
                     setWebsocketClosed(true)
-                    subscribedToWorkspace = false
+                    subscribedToTeam = false
                 }, websocketTimeoutForBanner)
             } else {
                 setWebsocketClosed(false)
             }
         }
 
-        wsClient.addOnChange(incrementalUpdate)
+        wsClient.addOnChange(incrementalUpdateBoard, 'board')
+        wsClient.addOnChange(incrementalUpdateBlock, 'block')
         wsClient.addOnReconnect(() => dispatch(loadAction(boardId)))
         wsClient.addOnStateChange(updateWebsocketState)
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
-            if (subscription.subscriberId === myID && subscription.workspaceId === workspaceId) {
+            if (subscription.subscriberId === myID) {
                 dispatch(followBlock(subscription))
             }
         })
         wsClient.setOnUnfollowBlock((_: WSClient, subscription: Subscription): void => {
-            if (subscription.subscriberId === myID && subscription.workspaceId === workspaceId) {
+            if (subscription.subscriberId === myID) {
                 dispatch(unfollowBlock(subscription))
             }
         })
@@ -93,14 +96,13 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
             if (timeout) {
                 clearTimeout(timeout)
             }
-            if (subscribedToWorkspace) {
-                wsClient.unsubscribeToWorkspace(workspaceId || '0')
+            if (subscribedToTeam) {
+                wsClient.unsubscribeToTeam(teamId || '0')
             }
-            wsClient.removeOnChange(incrementalUpdate)
+            wsClient.removeOnChange(incrementalUpdateBlock, 'block')
+            wsClient.removeOnChange(incrementalUpdateBoard, 'board')
             wsClient.removeOnReconnect(() => dispatch(loadAction(boardId)))
             wsClient.removeOnStateChange(updateWebsocketState)
         }
-    }, [workspaceId, readonly, boardId, myID])
-
-    return websocketClosed
+    }, [teamId, readonly, boardId, myID])
 }

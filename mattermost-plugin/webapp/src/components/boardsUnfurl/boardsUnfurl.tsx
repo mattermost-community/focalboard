@@ -170,7 +170,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                     // href={`${baseURL}${originalPath}`}
                     rel='noopener noreferrer'
                     target='_blank'
-                    onClick={() => (window as any).showRHSCard(card.id)}
+                    onClick={() => (window as any).showRHSCard(card.id, card.boardId)}
                 >
 
                     {/* Header of the Card*/}

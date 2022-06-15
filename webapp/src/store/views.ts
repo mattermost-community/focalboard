@@ -112,10 +112,10 @@ export const getViewsByBoard = createSelector(
     (views) => {
         const result: {[key: string]: BoardView[]} = {}
         Object.values(views).forEach((view) => {
-            if (result[view.parentId]) {
-                result[view.parentId].push(view)
+            if (result[view.boardId]) {
+                result[view.boardId].push(view)
             } else {
-                result[view.parentId] = [view]
+                result[view.boardId] = [view]
             }
         })
         return result

@@ -21,7 +21,7 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import {setTeam} from '../../../webapp/src/store/teams'
-import {setRHSCard} from '../../../webapp/src/store/cards'
+import {setRHSCard, setRHSBoard} from '../../../webapp/src/store/cards'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -165,7 +165,7 @@ export default class Plugin {
     channelHeaderButtonId?: string
     rhsCardID?: string
     registry?: PluginRegistry
-    showRHSCard?: (cardID: string) => void
+    showRHSCard?: (cardID: string, boardID: string) => void
     hideRHSCard?: () => void
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -179,9 +179,11 @@ export default class Plugin {
         const registerResult = registry.registerRightHandSidebarComponent(RHSCard, 'Card')
         console.log(registerResult)
         this.rhsCardID = registerResult.id
-        windowAny.showRHSCard = (cardID: string) => {
+        windowAny.showRHSCard = (cardID: string, boardID: string) => {
             store.dispatch(setRHSCard(cardID))
+            store.dispatch(setRHSBoard(boardID))
             windowAny.showRHSCardID = cardID
+            windowAny.showRHSBoardID = boardID
             mmStore.dispatch(registerResult.showRHSPlugin)
         }
         windowAny.hideRHSCard = () => mmStore.dispatch(registerResult.hideRHSPlugin)
