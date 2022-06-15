@@ -40,6 +40,8 @@ interface Block {
     createAt: number
     updateAt: number
     deleteAt: number
+
+    limited?: boolean
 }
 
 interface FileInfo {

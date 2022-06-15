@@ -39,7 +39,7 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
 
         for (const card of Object.values(cards)) {
             if (card.limited && card.updateAt >= cardLimitTimestamp) {
-                blocksPromises.push(client.getSubtree(card.id).then((blocks) => blocks.find((b) => b?.type === 'card')))
+                blocksPromises.push(client.getBlocksWithBlockID(card.id, card.boardId).then((blocks) => blocks.find((b) => b?.type === 'card')))
             }
         }
         const blocks = await Promise.all(blocksPromises)

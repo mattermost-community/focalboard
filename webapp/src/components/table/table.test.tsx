@@ -128,6 +128,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -645,6 +646,7 @@ describe('components/table/Table extended', () => {
                     showCard={jest.fn()}
                     addCard={jest.fn()}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )

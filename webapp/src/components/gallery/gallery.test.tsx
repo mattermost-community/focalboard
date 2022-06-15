@@ -15,6 +15,7 @@ import {wrapDNDIntl, mockStateStore, blocksById} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import mutator from '../../mutator'
+import {RootState} from '../../store'
 
 import Gallery from './gallery'
 
@@ -183,6 +184,10 @@ describe('src/components/gallery/Gallery', () => {
         const stateTest: Partial<RootState> = {
             contents: {
                 contents: blocksById(contents),
+                contentsByCard: {
+                    [card.id]: [contents[0], contents[1]],
+                    [card2.id]: [contents[2]],
+                },
             },
             cards: {
                 current: '',
