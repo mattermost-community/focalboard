@@ -14,6 +14,7 @@ import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import octoClient from '../../octoClient'
 import {IUser, UserConfigPatch} from '../../user'
 import {getMe, patchProps, getCloudMessageCanceled} from '../../store/users'
+import {UserSettings} from '../../userSettings'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
@@ -35,6 +36,11 @@ const CloudMessage = React.memo(() => {
 
     const onClose = async () => {
         if (me) {
+            if (me.id === 'single-user') {
+                UserSettings.hideCloudMessage = true
+                dispatch(patchProps({focalboard_cloudMessageCanceled: 'true'}))
+                return
+            }
             const patch: UserConfigPatch = {
                 updatedFields: {
                     focalboard_cloudMessageCanceled: 'true',
