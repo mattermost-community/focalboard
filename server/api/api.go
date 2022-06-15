@@ -209,7 +209,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// get unix time for duration
 	startTime := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
 	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
-		StartUnixMilli: startTime.UnixMilli(),
+		StartUnixMilli: mmModel.GetMillisForTime(*startTime),
 		Page:           page,
 		PerPage:        perPage,
 	})
@@ -306,7 +306,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// get unix time for duration
 	startTime := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
 	boardsInsights, err := a.app.GetUserBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
-		StartUnixMilli: startTime.UnixMilli(),
+		StartUnixMilli: mmModel.GetMillisForTime(*startTime),
 		Page:           page,
 		PerPage:        perPage,
 	})
