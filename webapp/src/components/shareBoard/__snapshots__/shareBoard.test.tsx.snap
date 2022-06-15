@@ -854,7 +854,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -1176,7 +1176,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -1374,7 +1374,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -1696,7 +1696,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                 <div
                   class="text-light"
                 >
-                  Users who have permissions will be able to use this link
+                  Users who have permissions will be able to use this link.
                 </div>
               </div>
             </div>
@@ -1920,7 +1920,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                 <div
                   class="text-light"
                 >
-                  Publish and share a “read only” link with everyone on the web
+                  Publish and share a read-only link with everyone on the web.
                 </div>
               </div>
               <div>

@@ -366,7 +366,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         <div className='d-flex justify-content-between'>
                             <div className='d-flex flex-column'>
                                 <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
-                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
+                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a read-only link with everyone on the web.'})}</div>
                             </div>
                             <div>
                                 <Switch
