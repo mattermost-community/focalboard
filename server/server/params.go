@@ -21,6 +21,7 @@ type Params struct {
 	WSAdapter          ws.Adapter
 	NotifyBackends     []notify.Backend
 	PermissionsService permissions.PermissionsService
+	IsPlugin           bool
 }
 
 func (p Params) CheckValid() error {

@@ -53,10 +53,18 @@ type API struct {
 	MattermostAuth  bool
 	logger          *mlog.Logger
 	audit           *audit.Audit
+	isPlugin        bool
 }
 
-func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService,
-	logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(
+	app *app.App,
+	singleUserToken string,
+	authService string,
+	permissions permissions.PermissionsService,
+	logger *mlog.Logger,
+	audit *audit.Audit,
+	isPlugin bool,
+) *API {
 	return &API{
 		app:             app,
 		singleUserToken: singleUserToken,
@@ -64,6 +72,7 @@ func NewAPI(app *app.App, singleUserToken string, authService string, permission
 		permissions:     permissions,
 		logger:          logger,
 		audit:           audit,
+		isPlugin:        isPlugin,
 	}
 }
 
@@ -71,6 +80,14 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2 := r.PathPrefix("/api/v2").Subrouter()
 	apiv2.Use(a.panicHandler)
 	apiv2.Use(a.requireCSRFToken)
+
+	// personal-server specific routes. These are not needed in plugin mode.
+	if !a.isPlugin {
+		apiv2.HandleFunc("/login", a.handleLogin).Methods("POST")
+		apiv2.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
+		apiv2.HandleFunc("/register", a.handleRegister).Methods("POST")
+		apiv2.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
+	}
 
 	// Board APIs
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
@@ -106,7 +123,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// Team APIs
 	apiv2.HandleFunc("/teams", a.sessionRequired(a.handleGetTeams)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}", a.sessionRequired(a.handleGetTeam)).Methods("GET")
-	apiv2.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
 	apiv2.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
@@ -124,9 +140,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleDeleteBoardsAndBlocks)).Methods("DELETE")
 
 	// Auth APIs
-	apiv2.HandleFunc("/login", a.handleLogin).Methods("POST")
-	apiv2.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
-	apiv2.HandleFunc("/register", a.handleRegister).Methods("POST")
 	apiv2.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
 	// Category APIs
