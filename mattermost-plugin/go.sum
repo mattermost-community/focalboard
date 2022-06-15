@@ -55,7 +55,6 @@ cloud.google.com/go/storage v1.6.0/go.mod h1:N7U0C8pVQ/+NIKOBQyamJIeKQKkZ+mxpohl
 cloud.google.com/go/storage v1.8.0/go.mod h1:Wv1Oy7z6Yz3DshWRJFhqM/UCfaWIRTdp0RXyy7KQOVs=
 cloud.google.com/go/storage v1.10.0/go.mod h1:FLPqc6j+Ki4BU591ie1oL6qBQGu2Bl/tZ9ullr3+Kg0=
 code.sajari.com/docconv v1.1.1-0.20210427001343-7b3472bc323a/go.mod h1:KPNt2zuWplps1W0TpOb6ltHj4Xu+j6h7a+YkqGHrxQE=
-code.sajari.com/docconv v1.2.0 h1:4UFgUodoW/hZy8dgghiCSSrcKLJP3Imo6UYFatP0PqI=
 code.sajari.com/docconv v1.2.0/go.mod h1:r8yfCP6OKbZ9Xkd87aBa4nfpk6ud/PoyLwex3n6cXSc=
 contrib.go.opencensus.io/exporter/ocagent v0.4.9/go.mod h1:ueLzZcP7LPhPulEBukGn4aLh7Mx9YJwpVJ9nL2FYltw=
 dmitri.shuralyov.com/app/changes v0.0.0-20180602232624-0a106ad413e3/go.mod h1:Yl+fi1br7+Rr3LqpNJf1/uxUdtRUV+Tnj0o93V2B9MU=
@@ -1129,8 +1128,6 @@ github.com/mattermost/logr/v2 v2.0.15/go.mod h1:mpPp935r5dIkFDo2y9Q87cQWhFR/4xXp
 github.com/mattermost/mattermost-plugin-api v0.0.21 h1:0uQ9kQwFFEvb+qxwXqwbaDGmxwwv3wv6iHdhMWG3KiA=
 github.com/mattermost/mattermost-plugin-api v0.0.21/go.mod h1:qz19Y+5HLbjtzY2RZ6B8ZZx90XUrmoRsHkSAfvfKU1M=
 github.com/mattermost/mattermost-server/v6 v6.0.0-20210901153517-42e75fad4dae/go.mod h1:kmxJuVgpX13Th+e5L1ZsBs4aq+ETmmDg9joo5r4cIw8=
-github.com/mattermost/mattermost-server/v6 v6.0.0-20220518113816-388842803cee h1:4zobTblf+33T9Y6SVXy0zX1YJ999Tyxff7unycul82s=
-github.com/mattermost/mattermost-server/v6 v6.0.0-20220518113816-388842803cee/go.mod h1:HBSu5YC0k8TLb+7DFFB9/63/+oBZj7pgx8K07lHmzyI=
 github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49 h1:7uFRdTX54qUp7jNodn0+vrhxuwnudHxWRv7kLN72Fig=
 github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49/go.mod h1:HBSu5YC0k8TLb+7DFFB9/63/+oBZj7pgx8K07lHmzyI=
 github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8/go.mod h1:jxM3g1bx+k2Thz7jofcHguBS8TZn5Pc+o5MGmORObhw=
