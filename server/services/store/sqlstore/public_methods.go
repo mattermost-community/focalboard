@@ -283,6 +283,10 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
+	return s.getUserTimezone(s.db, userID)
+}
+
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	return s.getUserWorkspaces(s.db, userID)
 

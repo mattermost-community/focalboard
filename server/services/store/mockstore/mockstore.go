@@ -765,6 +765,21 @@ func (mr *MockStoreMockRecorder) GetUserByUsername(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockStore)(nil).GetUserByUsername), arg0)
 }
 
+// GetUserTimezone mocks base method.
+func (m *MockStore) GetUserTimezone(arg0 string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserTimezone", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserTimezone indicates an expected call of GetUserTimezone.
+func (mr *MockStoreMockRecorder) GetUserTimezone(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserTimezone", reflect.TypeOf((*MockStore)(nil).GetUserTimezone), arg0)
+}
+
 // GetUserWorkspaces mocks base method.
 func (m *MockStore) GetUserWorkspaces(arg0 string) ([]model.UserWorkspace, error) {
 	m.ctrl.T.Helper()

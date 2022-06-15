@@ -272,3 +272,7 @@ func (s *SQLStore) isUserGuest(_ sq.BaseRunner, userID string) (bool, error) {
 	}
 	return strings.Contains(user.Roles, "guest"), nil
 }
+
+func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, userID string) (string, error) {
+	return "", errUnsupportedOperation
+}

@@ -747,3 +747,19 @@ func (s *MattermostAuthLayer) IsUserGuest(userID string) (bool, error) {
 	}
 	return strings.Contains(user.Roles, "guest"), nil
 }
+
+func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
+	query := s.getQueryBuilder().
+		Select("timezone").
+		From("Users").
+		Where(sq.Eq{"id": userID})
+	row := query.QueryRow()
+
+	var timezone mmModel.StringMap
+	err := row.Scan(&timezone)
+	if err != nil {
+		return "", err
+	}
+
+	return mmModel.GetPreferredTimezone(timezone), nil
+}

@@ -179,13 +179,6 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	timeRange := query.Get("time_range")
 
-	// get unix time for duration
-	startTime, aErr := mmModel.GetStartUnixMilliForTimeRange(timeRange)
-	if aErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error parsing time_range="+timeRange, aErr)
-		return
-	}
-
 	if !a.app.HasPermissionToTeam(userID, teamID) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
 		return
@@ -203,8 +196,20 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
 		return
 	}
+
+	userTimezone, aErr := a.app.GetUserTimezone(userID)
+	if aErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error getting time zone of user", aErr)
+		return
+	}
+	userLocation, _ := time.LoadLocation(userTimezone)
+	if userLocation == nil {
+		userLocation = time.Now().UTC().Location()
+	}
+	// get unix time for duration
+	startTime := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
 	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
-		StartUnixMilli: startTime,
+		StartUnixMilli: startTime.UnixMilli(),
 		Page:           page,
 		PerPage:        perPage,
 	})
@@ -271,13 +276,6 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	teamID := query.Get("team_id")
 	timeRange := query.Get("time_range")
 
-	// get unix time for duration
-	startTime, aErr := mmModel.GetStartUnixMilliForTimeRange(timeRange)
-	if aErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error parsing time_range="+timeRange, aErr)
-		return
-	}
-
 	if !a.app.HasPermissionToTeam(userID, teamID) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
 		return
@@ -295,8 +293,20 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
 		return
 	}
+
+	userTimezone, aErr := a.app.GetUserTimezone(userID)
+	if aErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error getting time zone of user", aErr)
+		return
+	}
+	userLocation, _ := time.LoadLocation(userTimezone)
+	if userLocation == nil {
+		userLocation = time.Now().UTC().Location()
+	}
+	// get unix time for duration
+	startTime := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
 	boardsInsights, err := a.app.GetUserBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
-		StartUnixMilli: startTime,
+		StartUnixMilli: startTime.UnixMilli(),
 		Page:           page,
 		PerPage:        perPage,
 	})

@@ -62,3 +62,7 @@ func licenseAndGuestCheck(a *App, userID string) (bool, error) {
 	}
 	return true, nil
 }
+
+func (a *App) GetUserTimezone(userID string) (string, error) {
+	return a.store.GetUserTimezone(userID)
+}

@@ -125,6 +125,7 @@ type Store interface {
 	GetUserBoardsInsights(userID string, channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error)
 	IsUserGuest(userID string) (bool, error)
 	GetCloudLimits() (*mmModel.ProductLimits, error)
+	GetUserTimezone(userID string) (string, error)
 }
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
