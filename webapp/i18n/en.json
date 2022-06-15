@@ -18,15 +18,9 @@
   "BoardTemplateSelector.delete-template": "Delete",
   "BoardTemplateSelector.description": "Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.",
   "BoardTemplateSelector.edit-template": "Edit",
-<<<<<<< HEAD
   "BoardTemplateSelector.plugin.no-content-description": "Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of \"{teamName}\" will have access to boards created here.",
-  "BoardTemplateSelector.plugin.no-content-title": "Create a Board in {teamName}",
-  "BoardTemplateSelector.title": "Create a Board",
-=======
-  "BoardTemplateSelector.plugin.no-content-description": "Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of \"{workspaceName}\" will have access to boards created here.",
-  "BoardTemplateSelector.plugin.no-content-title": "Create a board in {workspaceName}",
+  "BoardTemplateSelector.plugin.no-content-title": "Create a board in {teamName}",
   "BoardTemplateSelector.title": "Create a board",
->>>>>>> 020d83fa (Update en.json: Bug fix and consistency (#3151))
   "BoardTemplateSelector.use-this-template": "Use this template",
   "BoardsSwitcher.Title": "Find Boards",
   "BoardsUnfurl.Remainder": "+{remainder} more",

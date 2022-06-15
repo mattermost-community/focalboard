@@ -65,8 +65,7 @@ const BoardTemplateSelector = (props: Props) => {
         mutator.deleteBoard(
             template,
             intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'}),
-            async () => {
-            },
+            async () => {},
             async () => {
                 showBoard(template.id)
             },
