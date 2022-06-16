@@ -15,7 +15,6 @@ import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
 import {ClientConfig} from '../../../config/clientConfig'
 import {getClientConfig} from '../../../store/clientConfig'
-import { monitorEventLoopDelay } from 'perf_hooks'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
