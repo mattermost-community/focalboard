@@ -58,23 +58,16 @@ const CardDetailProperties = (props: Props) => {
 
         const affectsNumOfCards:string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
 
-        // if no card has this value set delete the property directly without warning
-        if (affectsNumOfCards === '0') {
+        // if only the name has changed, set the property without warning
+        if (affectsNumOfCards === '0' || oldType === newType) {
             mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
             return
         }
 
-        let subTextString = intl.formatMessage({
+        const subTextString = intl.formatMessage({
             id: 'CardDetailProperty.property-name-change-subtext',
             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
         }, {oldPropType: oldType, newPropType: newType})
-
-        if (propertyTemplate.name !== newName) {
-            subTextString = intl.formatMessage({
-                id: 'CardDetailProperty.property-type-change-subtext',
-                defaultMessage: 'name to "{newPropName}"',
-            }, {newPropName: newName})
-        }
 
         setConfirmationDialogBox({
             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm property type change'}),
@@ -101,7 +94,7 @@ const CardDetailProperties = (props: Props) => {
             onClose: () => setShowConfirmationDialog(false),
         })
 
-        // open confirmation dialog for property type or name change
+        // open confirmation dialog for property type change
         setShowConfirmationDialog(true)
     }
 
