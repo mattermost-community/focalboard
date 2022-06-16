@@ -12,6 +12,7 @@ import {Subscription} from '../wsclient'
 
 // TODO: change this whene the initial load is complete
 // import {initialLoad} from './initialLoad'
+import {UserSettings} from '../userSettings'
 
 import {RootState} from './index'
 
@@ -147,6 +148,9 @@ export const getCloudMessageCanceled = createSelector(
     (me): boolean => {
         if (!me) {
             return false
+        }
+        if (me.id === 'single-user') {
+            return UserSettings.hideCloudMessage
         }
         return Boolean(me.props?.focalboard_cloudMessageCanceled)
     },
