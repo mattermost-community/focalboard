@@ -56,10 +56,6 @@ const WebsocketConnection = (props: Props) => {
         }
 
         const incrementalBlockUpdate = (_: WSClient, blocks: Block[]) => {
-            // ToDo: update this
-            // - create a selector to get user boards
-            // - replace the teamId check of blocks by a "is in my boards" check
-            /* const teamBlocks = blocks.filter((b: Block) => b.teamId === '0' || b.boardId in userBoardIds) */
             const teamBlocks = blocks
 
             batch(() => {
