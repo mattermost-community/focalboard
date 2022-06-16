@@ -145,7 +145,7 @@ const SidebarBoardItem = (props: Props) => {
                             <Menu.Text
                                 key={`deleteBlock-${board.id}`}
                                 id='deleteBlock'
-                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                                 icon={<DeleteIcon/>}
                                 onClick={() => {
                                     props.onDeleteRequest(board)
