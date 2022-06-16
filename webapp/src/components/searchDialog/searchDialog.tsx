@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode, useMemo, useState} from 'react'
+import React, {MutableRefObject, ReactNode, useEffect, useMemo, useState} from 'react'
 
 import './searchDialog.scss'
 import {FormattedMessage} from 'react-intl'
@@ -10,6 +10,7 @@ import {debounce} from 'lodash'
 import Dialog from '../dialog'
 import {Utils} from '../../utils'
 import Search from '../../widgets/icons/search'
+import { Constants } from '../../constants'
 
 type Props = {
     onClose: () => void
@@ -17,15 +18,19 @@ type Props = {
     subTitle?: string | ReactNode
     searchHandler: (query: string) => Promise<Array<ReactNode>>
     initialData?: Array<ReactNode>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    refs: MutableRefObject<any>
 }
 
 const SearchDialog = (props: Props): JSX.Element => {
     const [results, setResults] = useState<Array<ReactNode>>(props.initialData || [])
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
+    const [selected, setSelected] = useState<number>(-1)
 
     const searchHandler = async (query: string): Promise<void> => {
         setIsSearching(true)
+        setSelected(-1)
         setSearchQuery(query)
         const searchResults = await props.searchHandler(query)
         setResults(searchResults)
@@ -35,6 +40,41 @@ const SearchDialog = (props: Props): JSX.Element => {
     const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [])
 
     const emptyResult = results.length === 0 && !isSearching && searchQuery
+
+    const handleUpDownKeyPress = (e: KeyboardEvent) => {
+        if (Utils.isKeyPressed(e, Constants.keyCodes.DOWN)) {
+            e.preventDefault()
+            if (results.length > 0)
+                setSelected(Utils.clamp(selected + 1, 0, results.length - 1))
+        }
+
+        if (Utils.isKeyPressed(e, Constants.keyCodes.UP)) {
+            e.preventDefault()
+            if (results.length > 0)
+                setSelected(Utils.clamp(selected - 1, 0, results.length - 1))
+        }
+    }
+
+    const handleEnterKeyPress = (e: KeyboardEvent) => {
+        if (Utils.isKeyPressed(e, Constants.keyCodes.ENTER) && selected >= 0) {
+            e.preventDefault()
+            props.refs.current[selected].current.click()
+        }
+    }
+
+    useEffect(() => {
+        if (selected >= 0)
+            props.refs.current[selected].current.parentElement.focus()
+
+        document.addEventListener('keydown', handleUpDownKeyPress)
+        document.addEventListener('keydown', handleEnterKeyPress)
+
+        // cleanup function
+        return () => {
+            document.removeEventListener('keydown', handleUpDownKeyPress)
+            document.removeEventListener('keydown', handleEnterKeyPress)
+        }
+    }, [selected, results])
 
     return (
         <Dialog
@@ -64,6 +104,7 @@ const SearchDialog = (props: Props): JSX.Element => {
                             <div
                                 key={Utils.uuid()}
                                 className='searchResult'
+                                tabIndex={-1}
                             >
                                 {result}
                             </div>

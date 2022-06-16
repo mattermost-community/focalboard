@@ -59,7 +59,8 @@
                 cursor: pointer;
                 overflow: hidden;
 
-                &:hover {
+                &:hover,
+                &:focus {
                     background: rgba(var(--center-channel-color-rgb), 0.08);
                 }
             }

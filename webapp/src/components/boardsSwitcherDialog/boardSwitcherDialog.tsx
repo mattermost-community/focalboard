@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useRef, createRef} from 'react'
 
 import './boardSwitcherDialog.scss'
 import {useIntl} from 'react-intl'
@@ -50,14 +50,17 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const teamsById:Record<string, Team> = {}
     useAppSelector(getAllTeams).forEach((t) => teamsById[t.id] = t)
 
+    const refs = useRef([])
+
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
         if (query.trim().length === 0 || !team) {
             return []
         }
 
         const items = await octoClient.search(team.id, query)
-        const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
-        return items.map((item) => {
+        const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+        refs.current = items.map((_, i) => refs.current[i] ?? createRef())
+        return items.map((item, i) => {
             const resultTitle = item.title || untitledBoardTitle
             const teamTitle = teamsById[item.teamId].title
             return (
@@ -65,6 +68,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
                     key={item.id}
                     className='blockSearchResult'
                     onClick={() => selectBoard(item.teamId, item.id)}
+                    ref={refs.current[i]}
                 >
                     {item.type === BoardTypeOpen && <Globe/>}
                     {item.type === BoardTypePrivate && <LockOutline/>}
@@ -81,6 +85,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
             title={title}
             subTitle={subTitle}
             searchHandler={searchHandler}
+            refs={refs}
         />
     )
 }
