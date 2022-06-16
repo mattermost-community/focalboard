@@ -26,6 +26,7 @@ type Params struct {
 	PermissionsService permissions.PermissionsService
 	PluginAPI          plugin.API
 	Client             *pluginapi.Client
+	IsPlugin           bool
 }
 
 func (p Params) CheckValid() error {

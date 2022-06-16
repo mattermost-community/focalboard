@@ -155,6 +155,7 @@ func (p *Plugin) OnActivate() error {
 		PermissionsService: permissionsService,
 		PluginAPI:          p.API,
 		Client:             client,
+		IsPlugin:           true,
 	}
 
 	server, err := server.New(params)
