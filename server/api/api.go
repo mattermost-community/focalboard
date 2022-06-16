@@ -1027,6 +1027,8 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	a.logger.Debug(string(userData))
+
 	jsonBytesResponse(w, http.StatusOK, userData)
 	auditRec.Success()
 }

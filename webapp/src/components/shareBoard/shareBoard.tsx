@@ -264,6 +264,16 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
+    const getUsername = (user: IUser) => {
+        if(user.nickname){
+            return user.nickname
+        }
+        if(user.lastname && user.firstname){
+            return user.firstname + ' ' + user.lastname
+        }
+        return user.username
+    }
+    
     const formatOptionLabel = (user: IUser) => {
         return(
             <div className='user-item'>
@@ -274,7 +284,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     />
                 }
                 <div className='ml-3'>
-                    <strong>{user.username}</strong>
+                    <strong>{getUsername(user)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                 </div>
             </div>

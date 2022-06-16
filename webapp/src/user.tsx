@@ -5,6 +5,9 @@ interface IUser {
     id: string,
     username: string,
     email: string,
+    nickname: string,
+    firstname: string,
+    lastname: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     props: Record<string, any>,
     create_at: number,

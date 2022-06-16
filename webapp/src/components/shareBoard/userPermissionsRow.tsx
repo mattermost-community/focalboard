@@ -25,6 +25,16 @@ type Props = {
     onUpdateBoardMember: (member: BoardMember, permission: string) => void
 }
 
+const getUsername = (user: IUser) => {
+    if(user.nickname){
+        return user.nickname
+    }
+    if(user.lastname && user.firstname){
+        return user.firstname + ' ' + user.lastname
+    }
+    return user.username
+}
+
 const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
     const {user, member, isMe} = props
@@ -47,7 +57,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     />
                 }
                 <div className='ml-3'>
-                    <strong>{user.username}</strong>
+                    <strong>{getUsername(user)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     {isMe && <strong className='ml-2 text-light'>{intl.formatMessage({id: 'ShareBoard.userPermissionsYouText', defaultMessage: '(You)'})}</strong>}
                 </div>

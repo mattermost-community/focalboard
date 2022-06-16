@@ -52,6 +52,16 @@ const selectStyles = {
     }),
 }
 
+const getUsername = (user: IUser) => {
+    if(user.nickname){
+        return user.nickname
+    }
+    if(user.lastname && user.firstname){
+        return user.firstname + ' ' + user.lastname
+    }
+    return user.username
+}
+
 const formatOptionLabel = (user: any) => {
     let profileImg
     if (imageURLForUser) {
@@ -66,7 +76,7 @@ const formatOptionLabel = (user: any) => {
                     src={profileImg}
                 />
             )}
-            {user.username}
+            {getUsername(user)}
         </div>
     )
 }
@@ -93,7 +103,7 @@ const UserProperty = (props: Props): JSX.Element => {
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}
             placeholder={'Empty'}
-            getOptionLabel={(o: IUser) => o.username}
+            getOptionLabel={(o: IUser) => o.firstname + " " + o.lastname}
             getOptionValue={(a: IUser) => a.id}
             value={boardUsersById[props.value] || null}
             onChange={(item, action) => {
