@@ -8,6 +8,8 @@ import {generatePath, match as routerMatch} from "react-router-dom"
 
 import {History} from "history"
 
+import {IUser} from './user'
+
 import {Block} from './blocks/block'
 import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
@@ -46,6 +48,9 @@ export const KeyCodes: Record<string, [string, number]> = {
     COMPOSING: ['Composing', 229],
 }
 
+const ShowUsername         = "username"
+const ShowNicknameFullName = "nickname_full_name"
+const ShowFullName         = "full_name"
 class Utils {
     static createGuid(idType: IDType): string {
         const data = Utils.randomArray(16)
@@ -75,6 +80,39 @@ class Utils {
         const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
         return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
+    }
+
+    static getUserDisplayName(user: IUser, nameFormat: string): string {
+        let displayName = user.username
+    
+        if (nameFormat === ShowNicknameFullName) {
+            if( user.nickname != '') {
+                displayName = user.nickname
+            } else {
+                const fullName = Utils.getFullName(user)
+                if(fullName != ""){
+                    displayName = fullName
+                }
+            }
+        } else if (nameFormat == ShowFullName) {
+            const fullName = Utils.getFullName(user)
+            if(fullName != ""){
+                displayName = fullName
+            }
+        }
+        return displayName
+    }
+
+    static getFullName(user: IUser): string {
+        if (user.firstname != "" && user.lastname != "") {
+            return user.firstname + " " + user.lastname
+        } else if (user.firstname != "") {
+            return user.firstname
+        } else if (user.lastname != "") {
+            return user.lastname
+        } else {
+            return ""
+        }
     }
 
     static randomArray(size: number): Uint8Array {

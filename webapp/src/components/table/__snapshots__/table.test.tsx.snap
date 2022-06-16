@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/table/Table extended should match snapshot with CreatedBy 1`] = `
+exports[`components/table/Table extended should match snapshot with CreatedAt 1`] = `
 <div>
   <div
     class="Table"
@@ -460,7 +460,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
 </div>
 `;
 
-exports[`components/table/Table extended should match snapshot with CreatedBy 2`] = `
+exports[`components/table/Table extended should match snapshot with CreatedBy 1`] = `
 <div>
   <div
     class="Table"

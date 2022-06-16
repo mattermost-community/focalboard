@@ -12,6 +12,9 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
 import {getMe, getBoardUsersList} from '../../store/users'
 
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
+
 import {Utils, IDType} from '../../utils'
 import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
@@ -94,6 +97,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const [selectedUser, setSelectedUser] = useState<IUser|null>(null)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -264,16 +268,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
-    const getUsername = (user: IUser) => {
-        if(user.nickname){
-            return user.nickname
-        }
-        if(user.lastname && user.firstname){
-            return user.firstname + ' ' + user.lastname
-        }
-        return user.username
-    }
-    
     const formatOptionLabel = (user: IUser) => {
         return(
             <div className='user-item'>
@@ -284,7 +278,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     />
                 }
                 <div className='ml-3'>
-                    <strong>{getUsername(user)}</strong>
+                    <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                 </div>
             </div>
@@ -337,6 +331,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             key={user.id}
                             user={user}
                             member={members[user.id]}
+                            teammateNameDisplay={clientConfig.teammateNameDisplay}
                             onDeleteBoardMember={onDeleteBoardMember}
                             onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}

@@ -5,12 +5,17 @@ import React from 'react'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
+import {Utils} from '../../../utils'
+
 import {IUser} from '../../../user'
 import {getBoardUsersList, getBoardUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
+import {ClientConfig} from '../../../config/clientConfig'
+import {getClientConfig} from '../../../store/clientConfig'
+import { monitorEventLoopDelay } from 'perf_hooks'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
@@ -52,36 +57,28 @@ const selectStyles = {
     }),
 }
 
-const getUsername = (user: IUser) => {
-    if(user.nickname){
-        return user.nickname
-    }
-    if(user.lastname && user.firstname){
-        return user.firstname + ' ' + user.lastname
-    }
-    return user.username
-}
-
-const formatOptionLabel = (user: any) => {
-    let profileImg
-    if (imageURLForUser) {
-        profileImg = imageURLForUser(user.id)
-    }
-
-    return (
-        <div className='UserProperty-item'>
-            {profileImg && (
-                <img
-                    alt='UserProperty-avatar'
-                    src={profileImg}
-                />
-            )}
-            {getUsername(user)}
-        </div>
-    )
-}
-
 const UserProperty = (props: Props): JSX.Element => {
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
+    
+    const formatOptionLabel = (user: any) => {
+        let profileImg
+        if (imageURLForUser) {
+            profileImg = imageURLForUser(user.id)
+        }
+    
+        return (
+            <div className='UserProperty-item'>
+                {profileImg && (
+                    <img
+                        alt='UserProperty-avatar'
+                        src={profileImg}
+                    />
+                )}
+                {Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
+            </div>
+        )
+    }
+
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
 
     const user = boardUsersById[props.value]
@@ -103,7 +100,7 @@ const UserProperty = (props: Props): JSX.Element => {
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}
             placeholder={'Empty'}
-            getOptionLabel={(o: IUser) => o.firstname + " " + o.lastname}
+            getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
             value={boardUsersById[props.value] || null}
             onChange={(item, action) => {

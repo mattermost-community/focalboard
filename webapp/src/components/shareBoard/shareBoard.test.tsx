@@ -147,6 +147,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 telemetry: true,
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
+                teammateNameDisplay: 'username',
                 featureFlags: {},
             },
         },
@@ -469,6 +470,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users:IUser[] = [
             {id: 'userid1', username: 'username_1'} as IUser,
