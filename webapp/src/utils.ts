@@ -48,7 +48,6 @@ export const KeyCodes: Record<string, [string, number]> = {
     COMPOSING: ['Composing', 229],
 }
 
-const ShowUsername         = "username"
 const ShowNicknameFullName = "nickname_full_name"
 const ShowFullName         = "full_name"
 class Utils {
@@ -83,6 +82,7 @@ class Utils {
     }
 
     static getUserDisplayName(user: IUser, nameFormat: string): string {
+        // default nameFormat = 'username'
         let displayName = user.username
     
         if (nameFormat === ShowNicknameFullName) {
