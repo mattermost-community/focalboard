@@ -433,7 +433,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   />
                 </div>
                 <div
-                  aria-label="Multi Select"
+                  aria-label="Multi select"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -447,7 +447,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   <div
                     class="menu-name"
                   >
-                    Multi Select
+                    Multi select
                   </div>
                   <div
                     class="noicon"

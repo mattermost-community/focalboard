@@ -144,7 +144,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const deleteButton = screen.getByRole('button', {name: /delete/i})
         userEvent.click(deleteButton)
 
-        expect(screen.getByRole('heading', {name: 'Confirm Delete Property'})).toBeInTheDocument()
+        expect(screen.getByRole('heading', {name: 'Confirm delete property'})).toBeInTheDocument()
         expect(screen.getByRole('button', {name: /delete/i})).toBeInTheDocument()
     })
 
