@@ -43,7 +43,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
     const handleEscKeyPress = (e: KeyboardEvent) => {
         if (Utils.isKeyPressed(e, Constants.keyCodes.ESC)) {
             e.preventDefault()
-            setShowSwitcher((show) => !show)
+            setShowSwitcher(false)
         }
     }
 
