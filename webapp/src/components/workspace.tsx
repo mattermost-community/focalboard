@@ -7,7 +7,13 @@ import {FormattedMessage} from 'react-intl'
 import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
-import {getView, getCurrentBoardViews, getCurrentViewGroupBy, getCurrentViewId, getCurrentViewDisplayBy} from '../store/views'
+import {
+    getCurrentBoardViews,
+    getCurrentViewGroupBy,
+    getCurrentViewId,
+    getCurrentViewDisplayBy,
+    getCurrentView
+} from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -32,7 +38,7 @@ function CenterContent(props: Props) {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
-    const activeView = useAppSelector(getView(match.params.viewId))
+    const activeView = useAppSelector(getCurrentView)
     const views = useAppSelector(getCurrentBoardViews)
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)

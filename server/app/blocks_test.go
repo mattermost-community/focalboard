@@ -1,12 +1,15 @@
 package app
 
 import (
+	"database/sql"
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/focalboard/server/model"
-
 	"github.com/stretchr/testify/require"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+
+	"github.com/mattermost/focalboard/server/model"
 )
 
 type blockError struct {
@@ -48,17 +51,63 @@ func TestPatchBlocks(t *testing.T) {
 	defer tearDown()
 
 	t.Run("patchBlocks success scenerio", func(t *testing.T) {
-		blockPatches := model.BlockPatchBatch{}
+		blockPatches := model.BlockPatchBatch{
+			BlockIDs: []string{"block1"},
+			BlockPatches: []model.BlockPatch{
+				{Title: mmModel.NewString("new title")},
+			},
+		}
+
+		block1 := model.Block{ID: "block1"}
+		th.Store.EXPECT().GetBlocksByIDs([]string{"block1"}).Return([]model.Block{block1}, nil)
 		th.Store.EXPECT().PatchBlocks(gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(nil)
+		th.Store.EXPECT().GetBlock("block1").Return(&block1, nil)
+		// this call comes from the WS server notification
+		th.Store.EXPECT().GetMembersForBoard(gomock.Any()).Times(1)
 		err := th.App.PatchBlocks("team-id", &blockPatches, "user-id-1")
 		require.NoError(t, err)
 	})
 
 	t.Run("patchBlocks error scenerio", func(t *testing.T) {
-		blockPatches := model.BlockPatchBatch{}
-		th.Store.EXPECT().PatchBlocks(gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(blockError{"error"})
+		blockPatches := model.BlockPatchBatch{BlockIDs: []string{}}
+		th.Store.EXPECT().GetBlocksByIDs([]string{}).Return(nil, sql.ErrNoRows)
 		err := th.App.PatchBlocks("team-id", &blockPatches, "user-id-1")
-		require.Error(t, err, "error")
+		require.ErrorIs(t, err, sql.ErrNoRows)
+	})
+
+	t.Run("cloud limit error scenario", func(t *testing.T) {
+		th.App.SetCardLimit(5)
+
+		fakeLicense := &mmModel.License{
+			Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
+		}
+
+		blockPatches := model.BlockPatchBatch{
+			BlockIDs: []string{"block1"},
+			BlockPatches: []model.BlockPatch{
+				{Title: mmModel.NewString("new title")},
+			},
+		}
+
+		block1 := model.Block{
+			ID:       "block1",
+			Type:     model.TypeCard,
+			ParentID: "board-id",
+			BoardID:  "board-id",
+			UpdateAt: 100,
+		}
+
+		board1 := &model.Board{
+			ID:   "board-id",
+			Type: model.BoardTypeOpen,
+		}
+
+		th.Store.EXPECT().GetBlocksByIDs([]string{"block1"}).Return([]model.Block{block1}, nil)
+		th.Store.EXPECT().GetBoard("board-id").Return(board1, nil)
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(150), nil)
+		err := th.App.PatchBlocks("team-id", &blockPatches, "user-id-1")
+		require.ErrorIs(t, err, ErrPatchUpdatesLimitedCards)
 	})
 }
 

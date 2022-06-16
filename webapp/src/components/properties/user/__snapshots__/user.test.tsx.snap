@@ -36,10 +36,8 @@ exports[`components/properties/user not readonly 1`] = `
         >
           <input
             aria-autocomplete="list"
-            aria-controls="react-select-3-listbox"
             aria-expanded="false"
             aria-haspopup="true"
-            aria-owns="react-select-3-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
@@ -133,11 +131,9 @@ exports[`components/properties/user not readonly not existing user 1`] = `
         >
           <input
             aria-autocomplete="list"
-            aria-controls="react-select-2-listbox"
             aria-describedby="react-select-2-placeholder"
             aria-expanded="false"
             aria-haspopup="true"
-            aria-owns="react-select-2-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
