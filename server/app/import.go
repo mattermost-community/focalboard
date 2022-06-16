@@ -177,9 +177,6 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					block.UpdateAt = now
 					block.BoardID = boardID
 					boardsAndBlocks.Blocks = append(boardsAndBlocks.Blocks, block)
-					if block.Title == "Meeting Agenda (NEW)" {
-						a.logger.Info(fmt.Sprintf("#### Meeting Agenda (NEW) found: block"))
-					}
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
 				}
