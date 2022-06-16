@@ -104,8 +104,6 @@ func (a *App) ImportArchive(r io.Reader, opt model.ImportArchiveOptions) error {
 // ImportBoardJSONL imports a JSONL file containing blocks for one board. The resulting
 // board id is returned.
 func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (string, error) {
-	fmt.Println("ImportBoardJSONL called fmt")
-	a.logger.Info("ImportBoardJSONL called logger")
 	// TODO: Stream this once `model.GenerateBlockIDs` can take a stream of blocks.
 	//       We don't want to load the whole file in memory, even though it's a single board.
 	boardsAndBlocks := &model.BoardsAndBlocks{
@@ -125,7 +123,6 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	firstLine := true
 	for {
 		line, errRead := readLine(lineReader)
-		a.logger.Info("AAAAAA")
 		if len(line) != 0 {
 			var skip bool
 			if firstLine {
@@ -136,20 +133,15 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 			}
 
 			if !skip {
-				a.logger.Info("BBBB")
 				var archiveLine model.ArchiveLine
 				if err := json.Unmarshal(line, &archiveLine); err != nil {
 					return "", fmt.Errorf("error parsing archive line %d: %w", lineNum, err)
 				}
 
-				a.logger.Info("CCCCCCC")
-
 				// first line must be a board
 				if firstLine && archiveLine.Type == "block" {
 					archiveLine.Type = "board_block"
 				}
-
-				a.logger.Info("DDDDDD " + archiveLine.Type)
 
 				switch archiveLine.Type {
 				case "board":
@@ -157,25 +149,17 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					if err2 := json.Unmarshal(archiveLine.Data, &board); err2 != nil {
 						return "", fmt.Errorf("invalid board in archive line %d: %w", lineNum, err2)
 					}
-
-					a.logger.Info("EEEEEEEE " + board.Title)
 					board.ModifiedBy = userID
 					board.UpdateAt = now
 					board.TeamID = opt.TeamID
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, &board)
 					boardID = board.ID
-					if board.Title == "Meeting Agenda (NEW)" {
-						a.logger.Info(fmt.Sprintf("#### Meeting Agenda (NEW) found: board"))
-					}
 				case "board_block":
 					// legacy archives encoded boards as blocks; we need to convert them to real boards.
 					var block model.Block
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return "", fmt.Errorf("invalid board block in archive line %d: %w", lineNum, err2)
 					}
-
-					a.logger.Info("FFFFFFFFF " + block.Title)
-
 					block.ModifiedBy = userID
 					block.UpdateAt = now
 					board, err := a.blockToBoard(&block, opt)
@@ -189,8 +173,6 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
 					}
-
-					a.logger.Info("FFFFFFFFFFFFF " + block.Title)
 					block.ModifiedBy = userID
 					block.UpdateAt = now
 					block.BoardID = boardID
