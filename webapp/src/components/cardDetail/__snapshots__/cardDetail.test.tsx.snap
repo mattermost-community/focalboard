@@ -6,7 +6,7 @@ exports[`components/cardDetail/CardDetail should render hidden view if limited 1
     class="CardDetail content is-limited"
   >
     <div
-      class="BlockIconSelector"
+      class="IconSelector"
     >
       <div
         class="octo-icon size-l readonly"

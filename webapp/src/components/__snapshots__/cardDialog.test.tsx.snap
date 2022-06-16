@@ -289,6 +289,9 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -307,12 +310,15 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          />
         </div>
         <div
           class="CardDetail content is-limited"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
               class="octo-icon size-l readonly"
