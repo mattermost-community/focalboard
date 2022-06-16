@@ -99,6 +99,9 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                             {id: 'id-5'},
                         ],
                         dateDisplayPropertyId: 'id-5',
+                        properties: {
+                            templateID: 'template_id_1',
+                        },
                     },
                     {
                         id: '2',
@@ -109,6 +112,9 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                             {id: 'id-5'},
                         ],
                         dateDisplayPropertyId: 'id-5',
+                        properties: {
+                            templateID: 'template_id_2',
+                        },
                     },
                 ],
                 membersInBoards: {
@@ -134,6 +140,9 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                     dateDisplayPropertyId: 'global-id-5',
                     isTemplate: true,
                     templateVersion: 2,
+                    properties: {
+                        templateID: 'template_id_global',
+                    },
                 }],
             },
         }
@@ -284,7 +293,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             })
 
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
-            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), '1', team1.id))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'template_id_1', team1.id))
         })
         test('return BoardTemplateSelector and click to add board from global template', async () => {
             render(wrapDNDIntl(
@@ -306,7 +315,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                 userEvent.click(useTemplateButton!)
             })
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
-            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'global-1', team1.id))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'template_id_global', team1.id))
         })
         test('should start product tour on choosing welcome template', async () => {
             render(wrapDNDIntl(
@@ -329,7 +338,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             })
 
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
-            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), '2', team1.id))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'template_id_2', team1.id))
             expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id-1', {
                 updatedFields: {
                     'focalboard_onboardingTourStarted': '1',
