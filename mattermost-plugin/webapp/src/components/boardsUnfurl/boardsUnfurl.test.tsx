@@ -41,10 +41,10 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
         })
 
         const cards = [{...createCard(), title: 'test card'}]
-        const boards = [{...createBoard(), title: 'test board'}]
+        const board = {...createBoard(), title: 'test board'}
 
-        mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards).
-            mockResolvedValueOnce(boards)
+        mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards)
+        mockedOctoClient.getBoard.mockResolvedValueOnce(board)
 
         const component = (
             <ReduxProvider store={store}>
@@ -82,10 +82,10 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
         })
 
         const cards = [{...createCard(), title: 'test card', limited: true}]
-        const boards = [{...createBoard(), title: 'test board'}]
+        const board = {...createBoard(), title: 'test board'}
 
-        mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards).
-            mockResolvedValueOnce(boards)
+        mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards)
+        mockedOctoClient.getBoard.mockResolvedValueOnce(board)
 
         const component = (
             <ReduxProvider store={store}>
