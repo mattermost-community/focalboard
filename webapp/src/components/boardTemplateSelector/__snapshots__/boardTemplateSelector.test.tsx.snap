@@ -24,7 +24,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
@@ -346,7 +346,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
@@ -517,7 +517,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
