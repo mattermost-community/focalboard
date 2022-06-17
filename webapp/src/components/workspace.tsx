@@ -4,8 +4,6 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import ResizablePanels from 'resizable-panels-react'
-
 import {debounce} from "lodash"
 
 import {NumberSize, Resizable} from "re-resizable"
@@ -40,7 +38,9 @@ import {UserConfigPatch} from "../user"
 import octoClient from "../octoClient"
 import {getMe} from "../store/users"
 
-const defaultLHSWidth = 240 //pixels
+const lhsDefaultWidth = 240 //pixels
+const lhsMinWidth = lhsDefaultWidth
+const lhsMaxWidthPercentage = 50
 
 
 type Props = {
@@ -151,11 +151,11 @@ const Workspace = (props: Props) => {
         setBoardTemplateSelectorOpen(false)
     }, [board, viewId])
 
-    const [width, setWidth] = useState<number>(defaultLHSWidth)
+    const [width, setWidth] = useState<number>(lhsDefaultWidth)
     const me = useAppSelector(getMe)
     useEffect(() => {
         if (me && me.props.lhsSize) {
-            setWidth(me.props.lhsSize)
+            setWidth(parseFloat(me.props.lhsSize))
         }
     }, [me])
 
@@ -163,16 +163,27 @@ const Workspace = (props: Props) => {
         if (!me) {
             return
         }
-
-        const userConfigPatch: UserConfigPatch = {
+        octoClient.patchUserConfig(me.id, {
             updatedFields: {
                 lhsSize: size.toString(),
             }
-        }
-        octoClient.patchUserConfig(me.id, userConfigPatch)
+        })
     }, 200)
 
+    console.log(`window.innerWidth / 100 * lhsMaxWidthPercentage: ${window.innerWidth / 100 * lhsMaxWidthPercentage} window.innerWidth: ${window.innerWidth}`)
+    const [maxWidth, setMaxWidth] = useState<number>(10)
+    useEffect(() => {
+        console.log(`Setting maxWidth window.innerWidth: ${window.innerWidth}`)
+        setMaxWidth(window.innerWidth * 100 / lhsMaxWidthPercentage)
+    }, [window.innerWidth])
+
     const lhsResizeHandle = (event: MouseEvent | TouchEvent, direction: Direction, elementRef: HTMLElement, delta: NumberSize) => {
+        if (delta.width === 0) {
+            // This happens when you try changing size to beyond min and max width.
+            // This check avoid unnecessary user pref save API call.
+            return
+        }
+
         const newWidth = width + delta.width
         setWidth(newWidth)
         saveLHSSize(newWidth)
@@ -182,6 +193,8 @@ const Workspace = (props: Props) => {
         <div className='Workspace'>
             {!props.readonly &&
                 <Resizable
+                    minWidth={lhsMinWidth}
+                    maxWidth={'50%'}
                     size={{width: width, height: '100%'}}
                     enable={{right: true}}
                     onResizeStop={lhsResizeHandle}
