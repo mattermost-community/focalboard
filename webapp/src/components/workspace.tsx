@@ -8,6 +8,10 @@ import ResizablePanels from 'resizable-panels-react'
 
 import {debounce} from "lodash"
 
+import {NumberSize, Resizable} from "re-resizable"
+
+import {Direction} from "re-resizable/lib/resizer"
+
 import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard} from '../store/boards'
 import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
@@ -147,13 +151,13 @@ const Workspace = (props: Props) => {
         setBoardTemplateSelectorOpen(false)
     }, [board, viewId])
 
+    const [width, setWidth] = useState<number>(defaultLHSWidth)
     const me = useAppSelector(getMe)
-    if (me) {
-        console.log(`me.props.lhsSize: ${me.props.lhsSize}`)
-    }
-
-    const lhsWidthPercentage = me && me.props.lhsSize ? parseFloat(me.props.lhsSize) : defaultLHSWidth * 100 / window.innerWidth
-    const centerPanelWidthPercentage = 100 - lhsWidthPercentage
+    useEffect(() => {
+        if (me && me.props.lhsSize) {
+            setWidth(me.props.lhsSize)
+        }
+    }, [me])
 
     const saveLHSSize = debounce((size: number) => {
         if (!me) {
@@ -162,53 +166,47 @@ const Workspace = (props: Props) => {
 
         const userConfigPatch: UserConfigPatch = {
             updatedFields: {
-                lhsSize: size.toString()
+                lhsSize: size.toString(),
             }
         }
-
         octoClient.patchUserConfig(me.id, userConfigPatch)
     }, 200)
 
-    const handlePanelResize = (panelSize: Array<number>): void => {
-        if (panelSize.length == 0) {
-            return
-        }
-
-        saveLHSSize(panelSize[0])
+    const lhsResizeHandle = (event: MouseEvent | TouchEvent, direction: Direction, elementRef: HTMLElement, delta: NumberSize) => {
+        const newWidth = width + delta.width
+        setWidth(newWidth)
+        saveLHSSize(newWidth)
     }
 
     return (
         <div className='Workspace'>
-            <ResizablePanels
-                displayDirection="row"
-                width="100%"
-                panelsSize={[lhsWidthPercentage, centerPanelWidthPercentage]}
-                sizeUnitMeasure="%"
-                resizerColor="#353b48"
-                resizerSize="8px"
-                onResize={handlePanelResize}
-            >
-                {!props.readonly &&
+            {!props.readonly &&
+                <Resizable
+                    size={{width: width, height: '100%'}}
+                    enable={{right: true}}
+                    onResizeStop={lhsResizeHandle}
+                >
                     <Sidebar
                         onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                         activeBoardId={board?.id}
                     />
-                }
-                <div className='mainFrame'>
-                    {boardTemplateSelectorOpen &&
-                        <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
-                    {(board?.isTemplate) &&
-                        <div className='banner'>
-                            <FormattedMessage
-                                id='Workspace.editing-board-template'
-                                defaultMessage="You're editing a board template."
-                            />
-                        </div>}
-                    <CenterContent
-                        readonly={props.readonly}
-                    />
-                </div>
-            </ResizablePanels>
+                </Resizable>
+            }
+
+            <div className='mainFrame'>
+                {boardTemplateSelectorOpen &&
+                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
+                {(board?.isTemplate) &&
+                    <div className='banner'>
+                        <FormattedMessage
+                            id='Workspace.editing-board-template'
+                            defaultMessage="You're editing a board template."
+                        />
+                    </div>}
+                <CenterContent
+                    readonly={props.readonly}
+                />
+            </div>
         </div>
     )
 }

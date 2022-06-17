@@ -50,6 +50,7 @@
 		"mini-create-react-context": "^0.4.1",
 		"moment": "^2.29.1",
 		"nanoevents": "^5.1.13",
+		"re-resizable": "^6.9.9",
 		"react": "^17.0.2",
 		"react-day-picker": "^7.4.10",
 		"react-dnd": "^14.0.2",
@@ -63,7 +64,6 @@
 		"react-redux": "^7.2.6",
 		"react-router-dom": "^5.2.1",
 		"react-select": "^5.2.2",
-		"resizable-panels-react": "github:harshilsharma63/resizable-panel-react",
 		"trim-newlines": "^4.0.2"
 	},
 	"jest": {
