@@ -64,8 +64,10 @@ const URLProperty = (props: Props): JSX.Element => {
         )
     }
 
+    const modifier = props.readonly ? 'octo-propertyvalue--readonly' : ''
+
     return (
-        <div className='URLProperty octo-propertyvalue'>
+        <div className={`URLProperty octo-propertyvalue ${modifier}`}>
             <a
                 className='link'
                 href={Utils.ensureProtocol(props.value.trim())}

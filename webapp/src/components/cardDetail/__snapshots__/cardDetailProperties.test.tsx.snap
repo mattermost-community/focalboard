@@ -27,7 +27,7 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
         </div>
       </div>
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue "
         data-testid="select-non-editable"
         tabindex="0"
       >
@@ -121,7 +121,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
         </div>
       </div>
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue "
         data-testid="select-non-editable"
         tabindex="0"
       >
@@ -215,7 +215,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
         </div>
       </div>
       <div
-        class="octo-propertyvalue"
+        class="octo-propertyvalue "
         data-testid="select-non-editable"
         tabindex="0"
       >

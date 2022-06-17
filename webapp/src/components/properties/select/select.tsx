@@ -30,9 +30,10 @@ const SelectProperty = (props: Props) => {
     const finalDisplayValue = displayValue || emptyValue
 
     if (!isEditable || !open) {
+        const modifier = !isEditable ? 'octo-propertyvalue--readonly' : ''
         return (
             <div
-                className='octo-propertyvalue'
+                className={`octo-propertyvalue ${modifier}`}
                 data-testid='select-non-editable'
                 tabIndex={0}
                 onClick={() => setOpen(true)}

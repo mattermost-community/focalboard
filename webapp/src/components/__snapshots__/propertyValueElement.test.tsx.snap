@@ -16,7 +16,7 @@ exports[`components/propertyValueElement Generic fields should allow cancel 1`] 
 exports[`components/propertyValueElement URL fields should allow cancel 1`] = `
 <div>
   <div
-    class="URLProperty octo-propertyvalue"
+    class="URLProperty octo-propertyvalue "
   >
     <a
       class="link"
@@ -70,7 +70,7 @@ exports[`components/propertyValueElement should match snapshot, date, array valu
 exports[`components/propertyValueElement should match snapshot, multi-select 1`] = `
 <div>
   <div
-    class="octo-propertyvalue"
+    class="octo-propertyvalue "
     data-testid="multiselect-non-editable"
     tabindex="0"
   >
@@ -104,7 +104,7 @@ exports[`components/propertyValueElement should match snapshot, person, array va
 exports[`components/propertyValueElement should match snapshot, select 1`] = `
 <div>
   <div
-    class="octo-propertyvalue"
+    class="octo-propertyvalue "
     data-testid="select-non-editable"
     tabindex="0"
   >
@@ -124,7 +124,7 @@ exports[`components/propertyValueElement should match snapshot, select 1`] = `
 exports[`components/propertyValueElement should match snapshot, select, read-only 1`] = `
 <div>
   <div
-    class="octo-propertyvalue"
+    class="octo-propertyvalue octo-propertyvalue--readonly"
     data-testid="select-non-editable"
     tabindex="0"
   >
@@ -144,7 +144,7 @@ exports[`components/propertyValueElement should match snapshot, select, read-onl
 exports[`components/propertyValueElement should match snapshot, url, array value 1`] = `
 <div>
   <div
-    class="URLProperty octo-propertyvalue"
+    class="URLProperty octo-propertyvalue "
   >
     <a
       class="link"
@@ -181,7 +181,7 @@ exports[`components/propertyValueElement should match snapshot, url, array value
 exports[`components/propertyValueElement should match snapshot, url, array value 2`] = `
 <div>
   <div
-    class="URLProperty octo-propertyvalue"
+    class="URLProperty octo-propertyvalue "
   >
     <a
       class="link"

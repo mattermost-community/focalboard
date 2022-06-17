@@ -77,7 +77,11 @@ const UserProperty = (props: Props): JSX.Element => {
     const user = boardUsersById[props.value]
 
     if (props.readonly) {
-        return (<div className='UserProperty octo-propertyvalue readonly'>{user ? formatOptionLabel(user) : props.value}</div>)
+        return (
+            <div className='UserProperty octo-propertyvalue octo-propertyvalue--readonly'>
+                {user ? formatOptionLabel(user) : props.value}
+            </div>
+        )
     }
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
@@ -88,7 +92,7 @@ const UserProperty = (props: Props): JSX.Element => {
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={'UserProperty'}
+            className={'UserProperty octo-propertyvalue'}
             classNamePrefix={'react-select'}
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}

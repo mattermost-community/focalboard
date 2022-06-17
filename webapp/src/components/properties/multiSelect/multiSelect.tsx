@@ -28,9 +28,10 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
     const values = Array.isArray(propertyValue) && propertyValue.length > 0 ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : []
 
     if (!isEditable || !open) {
+        const modifier = !isEditable ? 'octo-propertyvalue--readonly' : ''
         return (
             <div
-                className='octo-propertyvalue'
+                className={`octo-propertyvalue ${modifier}`}
                 tabIndex={0}
                 data-testid='multiselect-non-editable'
                 onClick={() => setOpen(true)}

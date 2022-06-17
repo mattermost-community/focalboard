@@ -177,7 +177,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         )
     } else if (propertyTemplate.type === 'date') {
         if (readOnly) {
-            return <div className='octo-propertyvalue'>{displayValue}</div>
+            return <div className='octo-propertyvalue octo-propertyvalue--readonly'>{displayValue}</div>
         }
         return (
             <DateRange
