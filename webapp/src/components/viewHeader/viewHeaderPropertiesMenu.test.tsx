@@ -84,7 +84,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
         )
         const menuButton = screen.getByRole('button', {name: 'Properties menu'})
         userEvent.click(menuButton)
-        const badgesButton = screen.getByRole('button', {name: 'Comments and Description'})
+        const badgesButton = screen.getByRole('button', {name: 'Comments and description'})
         userEvent.click(badgesButton)
         expect(mockedMutator.changeViewVisibleProperties).toHaveBeenCalledWith(
             activeView.boardId,

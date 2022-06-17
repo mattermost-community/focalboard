@@ -42,6 +42,14 @@ interface Block {
     deleteAt: number
 }
 
+interface FileInfo {
+    url?: string
+    archived?: boolean
+    extension?: string
+    name?: string
+    size?: number
+}
+
 function createBlock(block?: Block): Block {
     const now = Date.now()
     return {
@@ -106,5 +114,5 @@ function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[]
     ]
 }
 
-export type {ContentBlockTypes, BlockTypes}
+export type {ContentBlockTypes, BlockTypes, FileInfo}
 export {blockTypes, contentBlockTypes, Block, BlockPatch, createBlock, createPatchesFromBlocks}
