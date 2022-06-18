@@ -1,0 +1,22 @@
+.ViewMenu {
+
+    margin-top: -367px;
+
+    .view-list {
+        max-height: 10vh;
+        overflow-y: scroll;
+        min-height: 30vh;
+    }
+
+    .subMenu {
+        height: 100%;
+        overflow: visible;
+    }
+
+    @media (max-height: 370px) {
+        .subMenu {
+            height: 50px;
+            overflow-y: scroll;
+        }
+    }
+}
