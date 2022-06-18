@@ -20,6 +20,8 @@ import GalleryIcon from '../widgets/icons/gallery'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
+import './ViewMenu.scss'
+
 type Props = {
     board: Board,
     activeView: BoardView,
@@ -261,65 +263,71 @@ const ViewMenu = (props: Props) => {
     }
 
     return (
-        <Menu>
-            {views.map((view: BoardView) => (
-                <Menu.Text
-                    key={view.id}
-                    id={view.id}
-                    name={view.title}
-                    icon={iconForViewType(view.fields.viewType)}
-                    onClick={handleViewClick}
-                />))}
-            <Menu.Separator/>
-            {!props.readonly &&
+        <div className='ViewMenu'>
+            <Menu>
+                <div className='view-list'>
+                    {views.map((view: BoardView) => (
+                        <Menu.Text
+                            key={view.id}
+                            id={view.id}
+                            name={view.title}
+                            icon={iconForViewType(view.fields.viewType)}
+                            onClick={handleViewClick}
+                        />))}
+                </div>
+                <Menu.Separator/>
+                {!props.readonly &&
                 <Menu.Text
                     id='__duplicateView'
                     name={duplicateViewText}
                     icon={<DuplicateIcon/>}
                     onClick={handleDuplicateView}
                 />
-            }
-            {!props.readonly && views.length > 1 &&
+                }
+                {!props.readonly && views.length > 1 &&
                 <Menu.Text
                     id='__deleteView'
                     name={deleteViewText}
                     icon={<DeleteIcon/>}
                     onClick={handleDeleteView}
                 />
-            }
-            {!props.readonly &&
+                }
+                {!props.readonly &&
                 <Menu.SubMenu
                     id='__addView'
                     name={addViewText}
                     icon={<AddIcon/>}
                 >
-                    <Menu.Text
-                        id='board'
-                        name={boardText}
-                        icon={<BoardIcon/>}
-                        onClick={handleAddViewBoard}
-                    />
-                    <Menu.Text
-                        id='table'
-                        name={tableText}
-                        icon={<TableIcon/>}
-                        onClick={handleAddViewTable}
-                    />
-                    <Menu.Text
-                        id='gallery'
-                        name={galleryText}
-                        icon={<GalleryIcon/>}
-                        onClick={handleAddViewGallery}
-                    />
-                    <Menu.Text
-                        id='calendar'
-                        name='Calendar'
-                        icon={<CalendarIcon/>}
-                        onClick={handleAddViewCalendar}
-                    />
+                    <div className='subMenu'>
+                        <Menu.Text
+                            id='board'
+                            name={boardText}
+                            icon={<BoardIcon/>}
+                            onClick={handleAddViewBoard}
+                        />
+                        <Menu.Text
+                            id='table'
+                            name={tableText}
+                            icon={<TableIcon/>}
+                            onClick={handleAddViewTable}
+                        />
+                        <Menu.Text
+                            id='gallery'
+                            name={galleryText}
+                            icon={<GalleryIcon/>}
+                            onClick={handleAddViewGallery}
+                        />
+                        <Menu.Text
+                            id='calendar'
+                            name='Calendar'
+                            icon={<CalendarIcon/>}
+                            onClick={handleAddViewCalendar}
+                        />
+                    </div>
                 </Menu.SubMenu>
-            }
-        </Menu>
+                }
+            </Menu>
+        </div>
     )
 }
 
