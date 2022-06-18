@@ -213,7 +213,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -233,7 +233,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -339,7 +339,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -359,7 +359,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -673,7 +673,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -693,7 +693,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -803,7 +803,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -823,7 +823,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1141,7 +1141,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1161,7 +1161,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1267,7 +1267,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1287,7 +1287,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1601,7 +1601,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1621,7 +1621,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1731,7 +1731,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -1751,7 +1751,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2046,7 +2046,7 @@ exports[`components/table/Table should match snapshot 1`] = `
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2066,7 +2066,7 @@ exports[`components/table/Table should match snapshot 1`] = `
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue "
+              class="octo-propertyvalue"
               data-testid="select-non-editable"
               tabindex="0"
             >

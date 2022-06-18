@@ -11,6 +11,7 @@ import {useAppSelector} from '../../../store/hooks'
 
 import './user.scss'
 import {getSelectBaseStyle} from '../../../theme'
+import {propertyValueClassName} from '../../propertyValueUtils'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
@@ -78,7 +79,7 @@ const UserProperty = (props: Props): JSX.Element => {
 
     if (props.readonly) {
         return (
-            <div className='UserProperty octo-propertyvalue octo-propertyvalue--readonly'>
+            <div className={`UserProperty ${propertyValueClassName({readonly: true})}`}>
                 {user ? formatOptionLabel(user) : props.value}
             </div>
         )
@@ -92,7 +93,7 @@ const UserProperty = (props: Props): JSX.Element => {
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={'UserProperty octo-propertyvalue'}
+            className={`UserProperty ${propertyValueClassName()}`}
             classNamePrefix={'react-select'}
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}

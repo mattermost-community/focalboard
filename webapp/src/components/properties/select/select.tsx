@@ -7,6 +7,7 @@ import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 
 import Label from '../../../widgets/label'
 import ValueSelector from '../../../widgets/valueSelector'
+import {propertyValueClassName} from '../../propertyValueUtils'
 
 type Props = {
     emptyValue: string
@@ -30,10 +31,9 @@ const SelectProperty = (props: Props) => {
     const finalDisplayValue = displayValue || emptyValue
 
     if (!isEditable || !open) {
-        const modifier = !isEditable ? 'octo-propertyvalue--readonly' : ''
         return (
             <div
-                className={`octo-propertyvalue ${modifier}`}
+                className={propertyValueClassName({readonly: !isEditable})}
                 data-testid='select-non-editable'
                 tabIndex={0}
                 onClick={() => setOpen(true)}

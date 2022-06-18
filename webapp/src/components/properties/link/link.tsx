@@ -12,6 +12,7 @@ import EditIcon from '../../../widgets/icons/edit'
 import IconButton from '../../../widgets/buttons/iconButton'
 import DuplicateIcon from '../../../widgets/icons/duplicate'
 import {sendFlashMessage} from '../../flashMessages'
+import {propertyValueClassName} from '../../propertyValueUtils'
 
 type Props = {
     value: string
@@ -40,7 +41,7 @@ const URLProperty = (props: Props): JSX.Element => {
         return (
             <div className='URLProperty'>
                 <Editable
-                    className='octo-propertyvalue'
+                    className={propertyValueClassName()}
                     ref={editableRef}
                     placeholderText={props.placeholder}
                     value={props.value}
@@ -64,10 +65,8 @@ const URLProperty = (props: Props): JSX.Element => {
         )
     }
 
-    const modifier = props.readonly ? 'octo-propertyvalue--readonly' : ''
-
     return (
-        <div className={`URLProperty octo-propertyvalue ${modifier}`}>
+        <div className={`URLProperty ${propertyValueClassName({readonly: props.readonly})}`}>
             <a
                 className='link'
                 href={Utils.ensureProtocol(props.value.trim())}
