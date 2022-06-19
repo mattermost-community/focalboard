@@ -21,7 +21,7 @@ import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
-import './ViewMenu.scss'
+import './viewMenu.scss'
 
 type Props = {
     board: Board,
