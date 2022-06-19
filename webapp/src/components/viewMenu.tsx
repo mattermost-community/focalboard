@@ -20,7 +20,7 @@ import GalleryIcon from '../widgets/icons/gallery'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
-import './ViewMenu.scss'
+import './viewMenu.scss'
 
 type Props = {
     board: Board,
