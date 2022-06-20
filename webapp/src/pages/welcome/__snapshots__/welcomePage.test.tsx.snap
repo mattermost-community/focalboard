@@ -16,7 +16,7 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
       <div
         class="WelcomePage__subtitle"
       >
-        Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view
+        Boards is a project management tool that helps define, organize, track, and manage work across teams using a familiar Kanban board view.
       </div>
       <img
         alt="Boards Welcome Image"
@@ -65,7 +65,7 @@ exports[`pages/welcome Welcome Page shows Explore Page with subpath 1`] = `
       <div
         class="WelcomePage__subtitle"
       >
-        Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view
+        Boards is a project management tool that helps define, organize, track, and manage work across teams using a familiar Kanban board view.
       </div>
       <img
         alt="Boards Welcome Image"
