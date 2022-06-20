@@ -13,7 +13,6 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry
 import octoClient from '../octoClient'
 
 import NotificationBox from '../widgets/notification-box'
-import './cardLimitNotification.scss'
 
 const snoozeTime = 1000 * 60 * 60 * 24 * 10
 const checkSnoozeInterval = 1000 * 60 * 5
