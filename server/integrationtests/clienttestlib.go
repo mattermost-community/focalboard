@@ -78,6 +78,10 @@ func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string
 	return true
 }
 
+func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool {
+	return false
+}
+
 func getTestConfig() (*config.Configuration, error) {
 	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
