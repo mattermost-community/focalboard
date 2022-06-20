@@ -4,33 +4,30 @@ import React, {useCallback, useEffect, useRef, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
-import {Card} from '../../blocks/card'
-import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
+import {BoardView} from '../../blocks/boardView'
+import {Card} from '../../blocks/card'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
+import {Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import mutator from '../../mutator'
+import {setCurrent as setCurrentCard} from '../../store/cards'
+import {useAppDispatch} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
 import EditableArea from '../../widgets/editableArea'
 import EmojiIcon from '../../widgets/icons/emoji'
-import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-
 import BlockIconSelector from '../blockIconSelector'
 
-import {useAppDispatch} from '../../store/hooks'
-import {setCurrent as setCurrentCard} from '../../store/cards'
-import {Permission} from '../../constants'
-import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
-
-import CommentsList from './commentsList'
-import {CardDetailProvider} from './cardDetailContext'
+import './cardDetail.scss'
 import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
+import {CardDetailProvider} from './cardDetailContext'
 import CardDetailProperties from './cardDetailProperties'
+import CommentsList from './commentsList'
 import useImagePaste from './imagePaste'
-
-import './cardDetail.scss'
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'
@@ -44,6 +41,9 @@ type Props = {
     comments: CommentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
+    hideTitle?: boolean
+    hideProperties?: boolean
+    hideComments?: boolean
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
@@ -105,7 +105,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     size='l'
                     readonly={props.readonly || !canEditBoardCards}
                 />
-                {!props.readonly && canEditBoardCards && !card.fields.icon &&
+                {!props.hideTitle && !props.readonly && canEditBoardCards && !card.fields.icon &&
                     <div className='add-buttons'>
                         <Button
                             onClick={setRandomIcon}
@@ -118,39 +118,45 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         </Button>
                     </div>}
 
-                <EditableArea
-                    ref={titleRef}
-                    className='title'
-                    value={title}
-                    placeholderText='Untitled'
-                    onChange={(newTitle: string) => setTitle(newTitle)}
-                    saveOnEsc={true}
-                    onSave={saveTitle}
-                    onCancel={() => setTitle(props.card.title)}
-                    readonly={props.readonly || !canEditBoardCards}
-                    spellCheck={true}
-                />
+                {!props.hideTitle &&
+                    <EditableArea
+                        ref={titleRef}
+                        className='title'
+                        value={title}
+                        placeholderText='Untitled'
+                        onChange={(newTitle: string) => setTitle(newTitle)}
+                        saveOnEsc={true}
+                        onSave={saveTitle}
+                        onCancel={() => setTitle(props.card.title)}
+                        readonly={props.readonly || !canEditBoardCards}
+                        spellCheck={true}
+                    />
+                }
 
                 {/* Property list */}
 
-                <CardDetailProperties
-                    board={props.board}
-                    card={props.card}
-                    cards={props.cards}
-                    activeView={props.activeView}
-                    views={props.views}
-                    readonly={props.readonly}
-                />
+                {!props.hideProperties &&
+                    <CardDetailProperties
+                        board={props.board}
+                        card={props.card}
+                        cards={props.cards}
+                        activeView={props.activeView}
+                        views={props.views}
+                        readonly={props.readonly}
+                    />
+                }
 
                 {/* Comments */}
 
-                <hr/>
-                <CommentsList
-                    comments={comments}
-                    boardId={card.boardId}
-                    cardId={card.id}
-                    readonly={props.readonly || !canEditBoardCards}
-                />
+                {!props.hideComments && <>
+                    <hr/>
+                    <CommentsList
+                        comments={comments}
+                        boardId={card.boardId}
+                        cardId={card.id}
+                        readonly={props.readonly || !canEditBoardCards}
+                    />
+                </>}
             </div>
 
             {/* Content blocks */}

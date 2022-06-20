@@ -53,6 +53,7 @@
                 display: none !important;
             }
         }
+
         @media screen and (max-width: 975px) {
             position: fixed;
             top: 0;
@@ -104,6 +105,14 @@
         > .content.fullwidth {
             padding-left: 78px;
         }
+    }
+
+    .dialog.fullscreen {
+        margin: 0;
+        max-width: unset !important;
+        height: 100%;
+        width: 100% !important;
+        border-radius: 0;
     }
 
     .cardToolbar {

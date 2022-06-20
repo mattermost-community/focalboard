@@ -6,6 +6,14 @@
                 max-width: 100%;
             }
         }
+
+        .dialog.fullscreen {
+            margin: 0;
+            max-width: unset;
+            height: 100%;
+            width: 100%;
+            border-radius: 0;
+        }
     }
 }
 

@@ -1,9 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, Suspense} from 'react'
+import React, {Suspense, useEffect, useState} from 'react'
+import {useHistory} from 'react-router-dom'
 
 import {Utils} from '../utils'
-import './markdownEditor.scss'
 
 const MarkdownEditorInput = React.lazy(() => import('./markdownEditorInput/markdownEditorInput'))
 
@@ -23,6 +23,9 @@ const MarkdownEditor = (props: Props): JSX.Element => {
     const {placeholderText, onFocus, onBlur, onChange, text, id} = props
     const [isEditing, setIsEditing] = useState(false)
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
+
+    // HACKHACK: Use React Router to navigate
+    const routerHistory = useHistory()
 
     const previewElement = (
         <div
@@ -61,6 +64,20 @@ const MarkdownEditor = (props: Props): JSX.Element => {
             />
         </Suspense>
     )
+
+    // HACKHACK: This is to prevent the crazy-slow loading of a full page navigation
+    useEffect(() => {
+        const localLinks = document.getElementsByClassName('localLink')
+        for (const linkElement of localLinks) {
+            const link = linkElement as HTMLAnchorElement
+            link.addEventListener('click', (event) => {
+                const url = encodeURI((event.target as HTMLElement)?.getAttribute('localHref') || '')
+                routerHistory.push(url)
+                event.preventDefault()
+                return false
+            })
+        }
+    }, [])
 
     const element = (
         <div className={`MarkdownEditor octo-editor ${props.className || ''} ${isEditing ? 'active' : ''}`}>

@@ -87,6 +87,14 @@ export const {updateCards, addCard, addTemplate, setCurrent} = cardsSlice.action
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
+export const getCardById = (state: RootState, cardId: string): Card|undefined => {
+    let card: Card|undefined = state.cards.cards[cardId] || state.cards.templates[cardId]
+    if (!card) {
+        // Try to look up by slug (title)
+        card = getCardBySlug(state, cardId)
+    }
+    return card
+}
 
 export const getSortedCards = createSelector(
     getCards,
@@ -106,8 +114,20 @@ export const getSortedTemplates = createSelector(
 
 export function getCard(cardId: string): (state: RootState) => Card|undefined {
     return (state: RootState): Card|undefined => {
-        return state.cards.cards[cardId] || state.cards.templates[cardId]
+        return getCardById(state, cardId)
     }
+}
+
+function getCardBySlug(state: RootState, slug: string): Card|undefined {
+    let card = Object.values(state.cards.cards).find(o => {
+        return Utils.pageTitleToSlug(o.title) === slug
+    })
+    if (!card) {
+        card = Object.values(state.cards.templates).find(o => {
+            return Utils.pageTitleToSlug(o.title) === slug
+        })
+    }
+    return card
 }
 
 export const getCurrentBoardCards = createSelector(

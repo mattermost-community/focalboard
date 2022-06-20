@@ -1,21 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {marked} from 'marked'
-import {IntlShape} from 'react-intl'
-import moment from 'moment'
-
-import {generatePath, match as routerMatch} from "react-router-dom"
-
 import {History} from "history"
+import {marked} from 'marked'
+import moment from 'moment'
+import {IntlShape} from 'react-intl'
+import {generatePath, match as routerMatch} from "react-router-dom"
 
 import {Block} from './blocks/block'
 import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
+import {BoardCategoryWebsocketData, Category} from './store/sidebar'
 import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
-import {BoardCategoryWebsocketData, Category} from './store/sidebar'
+
+
+
 
 declare let window: IAppWindow
 
@@ -138,7 +139,7 @@ class Utils {
     }
 
     // re-use canvas object for better performance
-    static canvas : HTMLCanvasElement | undefined
+    static canvas: HTMLCanvasElement | undefined
     static getTextWidth(displayText: string, fontDescriptor: string): number {
         if (displayText !== '') {
             if (!Utils.canvas) {
@@ -154,7 +155,7 @@ class Utils {
         return 0
     }
 
-    static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
+    static getFontAndPaddingFromCell = (cell: Element): {fontDescriptor: string, padding: number} => {
         const style = getComputedStyle(cell)
         const padding = Utils.getTotalHorizontalPadding(style)
         return Utils.getFontAndPaddingFromChildren(cell.children, padding)
@@ -162,7 +163,7 @@ class Utils {
 
     // recursive routine to determine the padding and font from its children
     // specifically for the table view
-    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {fontDescriptor: string, padding: number} => {
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number): {fontDescriptor: string, padding: number} => {
         const myResults = {
             fontDescriptor: '',
             padding: pad,
@@ -230,24 +231,69 @@ class Utils {
 
     // Markdown
 
-    static htmlFromMarkdown(text: string): string {
+    static htmlFromMarkdown(markdown: string): string {
         // HACKHACK: Somehow, marked doesn't encode angle brackets
         const renderer = new marked.Renderer()
         renderer.link = (href, title, contents) => {
+            const isLocalLink = href && !(href.startsWith('http:') || href.includes('https:'))
+            if (isLocalLink) {
+                return '<a ' +
+                    'rel="noreferrer" ' +
+                    'class="localLink" ' +
+                    'href="#" ' +
+                    'localHref="' + encodeURI(href) + '"' +
+                    `title="${title ? encodeURI(title) : ''}" ` +
+                    '>' + contents + '</a>'
+            }
+
             return '<a ' +
-                'target="_blank" ' +
+                'target="_blank' +
                 'rel="noreferrer" ' +
+                'class="outboundLink" ' +
                 `href="${encodeURI(href || '')}" ` +
                 `title="${title ? encodeURI(title) : ''}" ` +
                 `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
-            '>' + contents + '</a>'
+                '>' + contents + '</a>'
         }
 
         renderer.table = (header, body) => {
             return `<div class="table-responsive"><table class="markdown__table"><thead>${header}</thead><tbody>${body}</tbody></table></div>`
         }
 
-        return this.htmlFromMarkdownWithRenderer(text, renderer)
+        const preprocessedMarkdown = this.replaceWikiLinks(markdown)
+        return this.htmlFromMarkdownWithRenderer(preprocessedMarkdown, renderer)
+    }
+
+    static pageTitleToSlug(title: string) {
+        const slug = title.toLowerCase().replace(" ", "-")
+        return slug
+    }
+
+    // convert [[<link title> | <page name>]] to [<link title>](<slug>)
+    static replaceWikiLinks(markdown: string) {
+        return markdown.replace(/\[\[([^\]]+)\]\]/g, (allPattern, link) => {
+            // inside of brackets link can be added as:
+            // - page name only [[Calls]], [[Call-Log]];
+            // - link title only [[Call Log]];
+            // - link title and page name [[Call Log|Call-Log]], [[Log|Call Log]].
+
+            let linkTitle = link.replace(/\|([^\|]+)/, "")
+            let pageName = link.replace(/([^\|]+)\|/, "")
+
+            if (!linkTitle) {
+                linkTitle = link
+            }
+
+            if (!pageName) {
+                pageName = link
+            }
+
+            // make sure page name has correct format
+            const slug = this.pageTitleToSlug(pageName)
+
+            link = `[${linkTitle}](${slug})`
+            return link
+        })
     }
 
     static htmlFromMarkdownWithRenderer(text: string, renderer: marked.Renderer): string {

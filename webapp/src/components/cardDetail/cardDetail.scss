@@ -1,4 +1,7 @@
 .CardDetail {
+    font-size: 18px;
+    line-height: 1.6;
+
     .title {
         width: 100%;
         font-size: 32px;
@@ -29,8 +32,6 @@
         flex-direction: column;
         width: 100%;
     }
-
-
 
     .octo-propertyvalue {
         font-size: 14px;
@@ -170,6 +171,14 @@
                 opacity: 0;
                 color: rgba(var(--center-channel-color-rgb), 0.6);
             }
+        }
+
+        a.localLink {
+            color: #0000ff;
+        }
+
+        a.outboundLink {
+            color: #0090ff;
         }
     }
 }

@@ -6,35 +6,31 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
+import {Permission} from '../constants'
 import mutator from '../mutator'
+import {useStickyState} from '../stickyState'
 import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
+import {getUserBlockSubscriptionList} from '../store/initialLoad'
+import {getMe} from '../store/users'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import {IUser} from '../user'
 import {Utils} from '../utils'
+import Button from '../widgets/buttons/button'
+import CheckIcon from '../widgets/icons/check'
+import CloseIcon from '../widgets/icons/close'
 import CompassIcon from '../widgets/icons/compassIcon'
-import DeleteIcon from '../widgets/icons/delete'
 import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
-
-import Button from '../widgets/buttons/button'
-
-import {getUserBlockSubscriptionList} from '../store/initialLoad'
-
-import {IUser} from '../user'
-import {getMe} from '../store/users'
-import {Permission} from '../constants'
-
-import BoardPermissionGate from './permissions/boardPermissionGate'
-
 import CardDetail from './cardDetail/cardDetail'
+import './cardDialog.scss'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
-
-import './cardDialog.scss'
+import BoardPermissionGate from './permissions/boardPermissionGate'
 
 type Props = {
     board: Board
@@ -55,6 +51,10 @@ const CardDialog = (props: Props): JSX.Element => {
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
+    const [showTitle, setShowTitle] = useStickyState(Boolean(true), 'cardShowTitle')
+    const [showProperties, setShowProperties] = useStickyState(Boolean(true), 'cardShowProperties')
+    const [showComments, setShowComments] = useStickyState(Boolean(true), 'cardShowComments')
+    const [fullscreen, setFullscreen] = useStickyState(Boolean(false), 'cardFullscreen')
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -97,45 +97,47 @@ const CardDialog = (props: Props): JSX.Element => {
         },
     }
 
-    const handleDeleteButtonOnClick = () => {
-        // use may be renaming a card title
-        // and accidently delete the card
-        // so adding des
-        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
-            handleDeleteCard()
-            return
-        }
-
-        setShowConfirmationDialogBox(true)
-    }
-
     const menu = (
         <Menu position='left'>
-            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                <Menu.Text
-                    id='delete'
-                    icon={<DeleteIcon/>}
-                    name='Delete'
-                    onClick={handleDeleteButtonOnClick}
-                />
-            </BoardPermissionGate>
-            {me?.id !== 'single-user' &&
-                <Menu.Text
-                    icon={<LinkIcon/>}
-                    id='copy'
-                    name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
-                    onClick={() => {
-                        let cardLink = window.location.href
+            <Menu.Text
+                icon={<LinkIcon/>}
+                id='copy'
+                name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
+                onClick={() => {
+                    let cardLink = window.location.href
 
-                        if (!cardLink.includes(props.cardId)) {
-                            cardLink += `/${props.cardId}`
-                        }
+                    if (!cardLink.includes(props.cardId)) {
+                        cardLink += `/${props.cardId}`
+                    }
 
-                        Utils.copyTextToClipboard(cardLink)
-                        sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                    }}
-                />
-            }
+                    Utils.copyTextToClipboard(cardLink)
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                }}
+            />
+            <Menu.Text
+                icon={showTitle ? <CloseIcon/> : <CheckIcon/>}
+                id='toggleTitle'
+                name={showTitle ? intl.formatMessage({id: 'CardDialog.hideTitle', defaultMessage: 'Hide title'}) : intl.formatMessage({id: 'CardDialog.showTitle', defaultMessage: 'Show title'})}
+                onClick={() => {
+                    setShowTitle(!showTitle)
+                }}
+            />
+            <Menu.Text
+                icon={showProperties ? <CloseIcon/> : <CheckIcon/>}
+                id='toggleProperties'
+                name={showProperties ? intl.formatMessage({id: 'CardDialog.hideProperties', defaultMessage: 'Hide properties'}) : intl.formatMessage({id: 'CardDialog.showProperties', defaultMessage: 'Show properties'})}
+                onClick={() => {
+                    setShowProperties(!showProperties)
+                }}
+            />
+            <Menu.Text
+                icon={showComments ? <CloseIcon/> : <CheckIcon/>}
+                id='toggleComments'
+                name={showComments ? intl.formatMessage({id: 'CardDialog.hideComments', defaultMessage: 'Hide comments'}) : intl.formatMessage({id: 'CardDialog.showComments', defaultMessage: 'Show comments'})}
+                onClick={() => {
+                    setShowComments(!showComments)
+                }}
+            />
             {!isTemplate &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
@@ -179,6 +181,10 @@ const CardDialog = (props: Props): JSX.Element => {
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
     const toolbar = followActionButton(isFollowingCard)
 
+    const toggleFullscreen = () => {
+        setFullscreen(!fullscreen)
+    }
+
     return (
         <>
             <Dialog
@@ -186,6 +192,8 @@ const CardDialog = (props: Props): JSX.Element => {
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && menu}
                 toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
+                showFullscreen={fullscreen}
+                onToggleFullscreen={toggleFullscreen}
             >
                 {isTemplate &&
                     <div className='banner'>
@@ -205,6 +213,9 @@ const CardDialog = (props: Props): JSX.Element => {
                         contents={contents}
                         comments={comments}
                         readonly={props.readonly}
+                        hideTitle={!showTitle}
+                        hideProperties={!showProperties}
+                        hideComments={!showComments}
                     />}
 
                 {!card &&

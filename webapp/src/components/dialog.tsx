@@ -1,14 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useRef} from 'react'
-import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
+import {useIntl} from 'react-intl'
 
 import IconButton from '../widgets/buttons/iconButton'
 import CloseIcon from '../widgets/icons/close'
+import FullscreenIcon from '../widgets/icons/fullscreen'
 import OptionsIcon from '../widgets/icons/options'
 import MenuWrapper from '../widgets/menuWrapper'
 import './dialog.scss'
+
 
 type Props = {
     children: React.ReactNode
@@ -17,7 +19,9 @@ type Props = {
     hideCloseButton?: boolean
     className?: string
     title?: string
+    showFullscreen?: boolean
     onClose: () => void,
+    onToggleFullscreen?: () => void,
 }
 
 const Dialog = (props: Props) => {
@@ -45,7 +49,7 @@ const Dialog = (props: Props) => {
                     }
                     isBackdropClickedRef.current = false
                     props.onClose()
-        
+
                 }}
                 onMouseDown={(e) => {
                     if(e.target === e.currentTarget){
@@ -55,7 +59,7 @@ const Dialog = (props: Props) => {
             >
                 <div
                     role='dialog'
-                    className='dialog'
+                    className={`dialog ${props.showFullscreen ? 'fullscreen' : ''}`}
                 >
                     <div className='toolbar'>
                         {title && <h1 className='text-heading5 mt-2'>{title}</h1>}
@@ -68,8 +72,19 @@ const Dialog = (props: Props) => {
                                 size='medium'
                             />
                         }
+                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}
+                            {props.onToggleFullscreen &&
+                                <div style={{marginLeft: 'auto'}}>
+                                    <IconButton
+                                        onClick={props.onToggleFullscreen}
+                                        icon={<FullscreenIcon/>}
+                                        title={closeDialogText}
+                                        size='medium'
+                                    />
+                                </div>
+                            }
                             {toolsMenu && <MenuWrapper>
                                 <IconButton
                                     size='medium'
