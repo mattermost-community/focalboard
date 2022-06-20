@@ -182,6 +182,8 @@ class CenterPanel extends React.Component<Props, State> {
         this.startBoardsTour()
     }
 
+    showShareButton = !this.props.readonly && this.props.me?.id !== 'single-user'
+
     render(): JSX.Element {
         const {groupByProperty, activeView, board, views, cards, hiddenCardsCount} = this.props
         const {visible: visibleGroups, hidden: hiddenGroups} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
@@ -222,7 +224,7 @@ class CenterPanel extends React.Component<Props, State> {
                             readonly={this.props.readonly}
                         />
                         <div className='shareButtonWrapper'>
-                            {!this.props.readonly &&
+                            {this.showShareButton &&
                              (
                                  <ShareBoardButton
                                      boardId={this.props.board.id}

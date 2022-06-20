@@ -13,7 +13,7 @@ import './notification-box.scss'
 type Props = {
     title: string
     icon?: React.ReactNode
-    children: React.ReactNode
+    children?: React.ReactNode
     onClose?: () => void
     closeTooltip?: string
     className?: string

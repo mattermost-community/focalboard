@@ -10,6 +10,8 @@ import {Utils} from '../utils'
 
 import {Subscription} from '../wsclient'
 
+import {UserSettings} from '../userSettings'
+
 import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -137,6 +139,9 @@ export const getCloudMessageCanceled = createSelector(
     (me): boolean => {
         if (!me) {
             return false
+        }
+        if (me.id === 'single-user') {
+            return UserSettings.hideCloudMessage
         }
         return Boolean(me.props?.focalboard_cloudMessageCanceled)
     },
