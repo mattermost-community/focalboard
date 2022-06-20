@@ -241,7 +241,7 @@ class Utils {
                     'rel="noreferrer" ' +
                     'class="localLink" ' +
                     'href="#" ' +
-                    'localHref="' + encodeURI(href) + '"' +
+                    'localhref="' + encodeURI(href) + '"' +
                     `title="${title ? encodeURI(title) : ''}" ` +
                     '>' + contents + '</a>'
             }
@@ -265,7 +265,7 @@ class Utils {
     }
 
     static pageTitleToSlug(title: string) {
-        const slug = title.toLowerCase().replace(" ", "-")
+        const slug = title.toLowerCase().replace(/ /g, "-")
         return slug
     }
 

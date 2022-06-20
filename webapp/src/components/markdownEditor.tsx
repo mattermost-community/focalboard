@@ -71,7 +71,7 @@ const MarkdownEditor = (props: Props): JSX.Element => {
         for (const linkElement of localLinks) {
             const link = linkElement as HTMLAnchorElement
             link.addEventListener('click', (event) => {
-                const url = encodeURI((event.target as HTMLElement)?.getAttribute('localHref') || '')
+                const url = encodeURI((event.target as HTMLElement)?.getAttribute('localhref') || '')
                 routerHistory.push(url)
                 event.preventDefault()
                 return false
