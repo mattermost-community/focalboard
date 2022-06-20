@@ -251,7 +251,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="CreatedAt octo-propertyvalue readonly"
+              class="CreatedAt octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 15, 2021, 4:22 PM
             </div>
@@ -377,7 +377,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="CreatedAt octo-propertyvalue readonly"
+              class="CreatedAt octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 15, 2021, 4:22 PM
             </div>
@@ -711,7 +711,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
                 class="UserProperty-item"
@@ -841,7 +841,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
                 class="UserProperty-item"
@@ -1179,7 +1179,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedAt octo-propertyvalue readonly"
+              class="LastModifiedAt octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 20, 2021, 12:22 PM
             </div>
@@ -1305,7 +1305,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedAt octo-propertyvalue readonly"
+              class="LastModifiedAt octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 22, 2021, 11:23 AM
             </div>
@@ -1639,7 +1639,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
                 class="UserProperty-item"
@@ -1769,7 +1769,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
                 class="UserProperty-item"
@@ -2556,7 +2556,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2576,7 +2576,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2829,7 +2829,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2849,7 +2849,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
