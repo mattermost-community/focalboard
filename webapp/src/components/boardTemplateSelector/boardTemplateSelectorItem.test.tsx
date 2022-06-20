@@ -105,7 +105,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         props: {}, 
         create_at: 0, 
         update_at: 0, 
-        is_bot: false
+        is_bot: false,
         roles: 'system_user',
     }
 
