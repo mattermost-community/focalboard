@@ -48,8 +48,10 @@ export const KeyCodes: Record<string, [string, number]> = {
     COMPOSING: ['Composing', 229],
 }
 
-const ShowNicknameFullName = "nickname_full_name"
-const ShowFullName         = "full_name"
+export const ShowUsername = 'username'
+export const ShowNicknameFullName = 'nickname_full_name'
+export const ShowFullName         = 'full_name'
+
 class Utils {
     static createGuid(idType: IDType): string {
         const data = Utils.randomArray(16)
@@ -90,13 +92,13 @@ class Utils {
                 displayName = user.nickname
             } else {
                 const fullName = Utils.getFullName(user)
-                if(fullName != ""){
+                if(fullName != ''){
                     displayName = fullName
                 }
             }
         } else if (nameFormat == ShowFullName) {
             const fullName = Utils.getFullName(user)
-            if(fullName != ""){
+            if(fullName != ''){
                 displayName = fullName
             }
         }
@@ -104,14 +106,14 @@ class Utils {
     }
 
     static getFullName(user: IUser): string {
-        if (user.firstname != "" && user.lastname != "") {
-            return user.firstname + " " + user.lastname
-        } else if (user.firstname != "") {
+        if (user.firstname != '' && user.lastname != '') {
+            return user.firstname + ' ' + user.lastname
+        } else if (user.firstname != '') {
             return user.firstname
-        } else if (user.lastname != "") {
+        } else if (user.lastname != '') {
             return user.lastname
         } else {
-            return ""
+            return ''
         }
     }
 
