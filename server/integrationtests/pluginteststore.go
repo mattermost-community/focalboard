@@ -232,5 +232,5 @@ func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, 
 			Name:        "valid-channel-2",
 		}, nil
 	}
-	return nil, errors.New("Channel not found")
+	return nil, errTestStore
 }

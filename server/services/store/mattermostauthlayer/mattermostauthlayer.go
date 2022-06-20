@@ -3,10 +3,8 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
-	"time"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -497,66 +495,6 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 
 	return boardMembers, nil
 }
-func (s *MattermostAuthLayer) boardMembersFromRows(rows *sql.Rows) ([]*model.BoardMember, error) {
-	boardMembers := []*model.BoardMember{}
-
-	for rows.Next() {
-		var boardMember model.BoardMember
-
-		err := rows.Scan(
-			&boardMember.MinimumRole,
-			&boardMember.BoardID,
-			&boardMember.UserID,
-			&boardMember.Roles,
-			&boardMember.SchemeAdmin,
-			&boardMember.SchemeEditor,
-			&boardMember.SchemeCommenter,
-			&boardMember.SchemeViewer,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		boardMembers = append(boardMembers, &boardMember)
-	}
-
-	return boardMembers, nil
-}
-
-func (s *MattermostAuthLayer) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.BoardMemberHistoryEntry, error) {
-	boardMemberHistoryEntries := []*model.BoardMemberHistoryEntry{}
-
-	for rows.Next() {
-		var boardMemberHistoryEntry model.BoardMemberHistoryEntry
-		var insertAt sql.NullString
-
-		err := rows.Scan(
-			&boardMemberHistoryEntry.BoardID,
-			&boardMemberHistoryEntry.UserID,
-			&boardMemberHistoryEntry.Action,
-			&insertAt,
-		)
-		if err != nil {
-			return nil, err
-		}
-
-		// parse the insert_at timestamp which is different based on database type.
-		dateTemplate := "2006-01-02T15:04:05Z0700"
-		if s.dbType == model.MysqlDBType {
-			dateTemplate = "2006-01-02 15:04:05.000000"
-		}
-		ts, err := time.Parse(dateTemplate, insertAt.String)
-		if err != nil {
-			return nil, fmt.Errorf("cannot parse datetime '%s' for board_members_history scan: %w", insertAt.String, err)
-		}
-		boardMemberHistoryEntry.InsertAt = ts
-
-		boardMemberHistoryEntries = append(boardMemberHistoryEntries, &boardMemberHistoryEntry)
-	}
-
-	return boardMemberHistoryEntries, nil
-}
-
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
@@ -586,6 +524,10 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 
 func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
 	explicitMembers, err := s.Store.GetMembersForUser(userID)
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
 
 	query := s.getQueryBuilder().
 		Select("Cm.userID, B.Id").
@@ -621,6 +563,10 @@ func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMe
 
 func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
 	explicitMembers, err := s.Store.GetMembersForBoard(boardID)
+	if err != nil {
+		s.logger.Error(`getMembersForBoard ERROR`, mlog.Err(err))
+		return nil, err
+	}
 
 	query := s.getQueryBuilder().
 		Select("Cm.userID, B.Id").
@@ -631,7 +577,7 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		s.logger.Error(`getMembersForBoard ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
