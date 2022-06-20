@@ -205,7 +205,6 @@ export default class Plugin {
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
-                    console.log("REDIRECTING HERE")
                     browserHistory.push(`/team/${currentTeamID}`)
                     wsClient.subscribeToTeam(currentTeamID)
                 }
@@ -217,11 +216,8 @@ export default class Plugin {
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
 
-            /* TODO: translate Channel Boards string down there*/
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
-                () => (
-                    <RHSChannelBoards/>
-                ),
+                RHSChannelBoards,
                 <ErrorBoundary>
                     <ReduxProvider store={store}>
                         <RHSChannelBoardsHeader/>

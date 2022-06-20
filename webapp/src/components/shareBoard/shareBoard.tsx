@@ -281,9 +281,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
-    // TODO: replace any with Channel type
-    const formatOptionLabel = (userOrChannel: IUser | any) => {
-        if (userOrChannel.username) {
+    const formatOptionLabel = (userOrChannel: IUser | Channel) => {
+        if ((userOrChannel as IUser).username) {
             const user = userOrChannel
             return(
                 <div className='user-item'>
@@ -305,7 +304,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             return null
         }
 
-        const channel = userOrChannel
+        const channel = userOrChannel as Channel
         return(
             <div className='user-item'>
                 {channel.type === 'P' && <PrivateIcon/>}
