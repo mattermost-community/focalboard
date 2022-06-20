@@ -15,7 +15,6 @@ import {wrapDNDIntl, mockStateStore, blocksById} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import mutator from '../../mutator'
-import {RootState} from '../../store'
 
 import Gallery from './gallery'
 
