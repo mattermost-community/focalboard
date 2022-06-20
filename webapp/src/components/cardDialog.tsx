@@ -138,7 +138,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     setShowComments(!showComments)
                 }}
             />
-            {!isTemplate &&
+            {!props.readonly && !isTemplate &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
                         id='makeTemplate'
@@ -190,7 +190,7 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 className='cardDialog'
                 onClose={props.onClose}
-                toolsMenu={!props.readonly && menu}
+                toolsMenu={menu}
                 toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
                 showFullscreen={fullscreen}
                 onToggleFullscreen={toggleFullscreen}
