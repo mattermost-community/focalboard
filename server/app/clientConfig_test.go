@@ -28,6 +28,5 @@ func TestGetClientConfig(t *testing.T) {
 		require.Equal(t, "abcde", clientConfig.TelemetryID)
 		require.Equal(t, 2, len(clientConfig.FeatureFlags))
 		require.Equal(t, "username", clientConfig.TeammateNameDisplay)
-
 	})
 }
