@@ -1,24 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useRef, useEffect} from 'react'
+import React, {useState, forwardRef} from 'react'
 
 type TextInputOptionProps = {
     initialValue: string,
     onValueChanged: (value: string) => void
 }
 
-function TextInputOption(props: TextInputOptionProps): JSX.Element {
-    const nameTextbox = useRef<HTMLInputElement>(null)
+function TextInputOption(props: TextInputOptionProps, ref: React.Ref<HTMLInputElement>): JSX.Element {
     const [value, setValue] = useState(props.initialValue)
-
-    useEffect(() => {
-        nameTextbox.current?.focus()
-        nameTextbox.current?.setSelectionRange(0, value.length)
-    }, [])
 
     return (
         <input
-            ref={nameTextbox}
+            ref={ref}
             type='text'
             className='PropertyMenu menu-textbox menu-option'
             onClick={(e) => e.stopPropagation()}
@@ -39,4 +33,4 @@ function TextInputOption(props: TextInputOptionProps): JSX.Element {
         />)
 }
 
-export default React.memo(TextInputOption)
+export default forwardRef(TextInputOption)

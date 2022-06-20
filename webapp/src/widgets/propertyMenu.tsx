@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useRef, useEffect} from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -91,6 +91,12 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
 
 const PropertyMenu = (props: Props) => {
     const intl = useIntl()
+    const nameRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        nameRef.current?.focus()
+        nameRef.current?.setSelectionRange(0, nameRef.current?.value.length)
+    }, [])
 
     const deleteText = intl.formatMessage({
         id: 'PropertyMenu.Delete',
@@ -102,6 +108,7 @@ const PropertyMenu = (props: Props) => {
             <Menu.TextInput
                 initialValue={props.propertyName}
                 onValueChanged={(n) => props.onTypeAndNameChanged(props.propertyType, n)}
+                ref={nameRef}
             />
             <Menu.SubMenu
                 id='type'
@@ -109,7 +116,7 @@ const PropertyMenu = (props: Props) => {
             >
                 <PropertyTypes
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, props.propertyName)}
+                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, nameRef.current?.value || '')}
                 />
             </Menu.SubMenu>
             <Menu.Text
