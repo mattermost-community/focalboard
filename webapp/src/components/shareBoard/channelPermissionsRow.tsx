@@ -33,7 +33,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
 
     useEffect(() => {
         if (!Utils.isFocalboardPlugin() || !board.channelId) {
-            setLinkedChannel(null);
+            setLinkedChannel(null)
             return
         }
         octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c))
