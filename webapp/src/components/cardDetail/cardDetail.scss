@@ -48,7 +48,7 @@
             white-space: nowrap;
         }
 
-        &:not(.readonly) {
+        &:not(.octo-propertyvalue--readonly) {
             min-width: 180px;
             transition: background 100ms ease-out 0s;
             cursor: pointer;

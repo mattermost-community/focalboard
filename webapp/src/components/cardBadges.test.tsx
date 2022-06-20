@@ -36,8 +36,10 @@ describe('components/cardBadges', () => {
     const state: Partial<RootState> = {
         cards: {
             current: '',
+            limitTimestamp: 0,
             cards: blocksById([card, emptyCard]),
             templates: {},
+            cardHiddenWarning: true,
         },
         comments: {
             comments: blocksById(comments),
