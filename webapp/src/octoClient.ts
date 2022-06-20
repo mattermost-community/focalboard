@@ -141,7 +141,6 @@ class OctoClient {
         }
     }
 
-    // ToDo: document
     private teamPath(teamId?: string): string {
         let teamIdToUse = teamId
         if (!teamId) {
@@ -617,14 +616,6 @@ class OctoClient {
         const path = this.teamPath(teamId) + '/templates'
         return this.getBoardsWithPath(path)
     }
-
-    // Boards
-    // ToDo: .
-    // - goal? make the interface show boards & blocks for boards
-    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
-    // - selectors for boards, current team, board members
-    // - ops to add/delete a board, add/delete board members, change roles? .
-    // - WS definition and implementation
 
     async getBoards(): Promise<Board[]> {
         const path = this.teamPath() + '/boards'

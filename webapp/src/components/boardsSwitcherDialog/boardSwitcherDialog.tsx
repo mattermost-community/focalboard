@@ -56,7 +56,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         }
 
         const items = await octoClient.search(team.id, query)
-        const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+        const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
         return items.map((item) => {
             const resultTitle = item.title || untitledBoardTitle
             const teamTitle = teamsById[item.teamId].title

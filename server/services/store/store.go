@@ -10,10 +10,13 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
+const CardLimitTimestampSystemKey = "card_limit_timestamp"
+
 // Store represents the abstraction of the data storage.
 type Store interface {
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
+	GetBlocksByIDs(ids []string) ([]model.Block, error)
 	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
@@ -139,7 +142,12 @@ type Store interface {
 	// @withTransaction
 	RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error)
 
+	GetUsedCardsCount() (int, error)
+	GetCardLimitTimestamp() (int64, error)
+	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
+
 	DBType() string
 
 	GetLicense() *mmModel.License
+	GetCloudLimits() (*mmModel.ProductLimits, error)
 }

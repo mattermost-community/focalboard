@@ -33,18 +33,18 @@ export default function DeleteBoardDialog(props: Props): JSX.Element {
                         {props.isTemplate &&
                             <FormattedMessage
                                 id='DeleteBoardDialog.confirm-tite-template'
-                                defaultMessage='Confirm Delete Board Template'
+                                defaultMessage='Confirm delete board template'
                             />}
                         {!props.isTemplate &&
                             <FormattedMessage
                                 id='DeleteBoardDialog.confirm-tite'
-                                defaultMessage='Confirm Delete Board'
+                                defaultMessage='Confirm delete board'
                             />}
                     </h2>
                     <p className='body'>
                         {props.isTemplate &&
                             <FormattedMessage
-                                id='DeleteBoardDialog.confirm-info'
+                                id='DeleteBoardDialog.confirm-info-template'
                                 defaultMessage='Are you sure you want to delete the board template “{boardTitle}”?'
                                 values={{
                                     boardTitle: props.boardTitle,

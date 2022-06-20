@@ -47,7 +47,7 @@ describe('Card badges', () => {
         // Show card badges
         cy.log('**Show card badges**')
         cy.findByRole('button', {name: 'Properties menu'}).click()
-        cy.findByRole('button', {name: 'Comments and Description'}).click()
+        cy.findByRole('button', {name: 'Comments and description'}).click()
         cy.findByTitle('This card has a description').should('exist')
         cy.findByTitle('Comments').contains('3').should('exist')
         cy.findByTitle('Checkboxes').contains('2/4').should('exist')
@@ -55,7 +55,7 @@ describe('Card badges', () => {
         // Hide card badges
         cy.log('**Hide card badges**')
         cy.findByRole('button', {name: 'Properties menu'}).click()
-        cy.findByRole('button', {name: 'Comments and Description'}).click()
+        cy.findByRole('button', {name: 'Comments and description'}).click()
         cy.findByTitle('This card has a description').should('not.exist')
         cy.findByTitle('Comments').should('not.exist')
         cy.findByTitle('Checkboxes').should('not.exist')
