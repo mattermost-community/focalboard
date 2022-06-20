@@ -5,9 +5,10 @@ package app
 
 import (
 	"database/sql"
+	"testing"
+
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
-	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"

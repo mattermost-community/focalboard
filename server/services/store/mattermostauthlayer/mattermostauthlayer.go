@@ -3,9 +3,9 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
 	"net/http"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -533,30 +533,4 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 	}
 
 	return nil
-}
-
-// LOL this shouldn't be needed now as we directly work scoped to a team
-func (s *MattermostAuthLayer) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
-	channel, err := s.pluginAPI.GetChannel(workspaceID)
-	if err != nil {
-		s.logger.Error("failed to fetch channel", mlog.String("workspace_id", workspaceID), mlog.Err(errors.New(err.Error())))
-		return nil, errors.New(err.Error())
-	}
-
-	if channel.Type == mmModel.ChannelTypeDirect || channel.Type == mmModel.ChannelTypeGroup {
-		return nil, nil
-	}
-
-	team, err := s.pluginAPI.GetTeam(channel.TeamId)
-	if err != nil {
-		s.logger.Error(
-			"failed to fetch team",
-			mlog.String("team_id", channel.TeamId),
-			mlog.String("channel_id", workspaceID),
-			mlog.Err(errors.New(err.Error())),
-		)
-		return nil, errors.New(err.Error())
-	}
-
-	return team, nil
 }
