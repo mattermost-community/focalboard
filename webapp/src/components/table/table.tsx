@@ -18,6 +18,8 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './table.scss'
 
+import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+
 import TableHeaders from './tableHeaders'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
@@ -37,10 +39,11 @@ type Props = {
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
+    hiddenCardsCount: number
 }
 
 const Table = (props: Props): JSX.Element => {
-    const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
+    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCardsCount} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
@@ -251,6 +254,11 @@ const Table = (props: Props): JSX.Element => {
                     />
                 </div>
             </ColumnResizeProvider>
+
+            {hiddenCardsCount > 0 &&
+            <HiddenCardCount
+                hiddenCardsCount={hiddenCardsCount}
+            />}
         </div>
     )
 }

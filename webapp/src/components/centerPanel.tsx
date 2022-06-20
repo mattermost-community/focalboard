@@ -16,7 +16,8 @@ import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
-import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction} from '../store/cards'
+import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction, showCardHiddenWarning} from '../store/cards'
+import {getCardLimitTimestamp} from '../store/limits'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -51,6 +52,8 @@ import Table from './table/table'
 
 import CalendarFullView from './calendar/fullCalendar'
 
+import CardLimitNotification from './cardLimitNotification'
+
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
@@ -66,6 +69,7 @@ type Props = {
     readonly: boolean
     shownCardId?: string
     showCard: (cardId?: string) => void
+    hiddenCardsCount: number
 }
 
 const CenterPanel = (props: Props) => {
@@ -76,6 +80,7 @@ const CenterPanel = (props: Props) => {
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const me = useAppSelector(getMe)
     const currentCard = useAppSelector(getCurrentCard)
     const dispatch = useAppDispatch()
@@ -198,6 +203,7 @@ const CenterPanel = (props: Props) => {
                     showCard(undefined)
                 },
             )
+            dispatch(showCardHiddenWarning(cardLimitTimestamp > 0))
             await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, [...activeView.fields.cardOrder, newCard.id], 'add-card')
         })
     }, [props.activeView, props.board.id, props.board.cardProperties, props.groupByProperty, showCard])
@@ -349,6 +355,7 @@ const CenterPanel = (props: Props) => {
             className='BoardComponent'
             onClick={backgroundClicked}
         >
+            <CardLimitNotification/>
             {props.shownCardId &&
                 <RootPortal>
                     <CardDialog
@@ -412,6 +419,7 @@ const CenterPanel = (props: Props) => {
                 onCardClicked={cardClicked}
                 addCard={addCard}
                 showCard={showCard}
+                hiddenCardsCount={props.hiddenCardsCount}
             />}
             {activeView.fields.viewType === 'table' &&
                 <Table
@@ -427,6 +435,7 @@ const CenterPanel = (props: Props) => {
                     showCard={showCard}
                     addCard={addCard}
                     onCardClicked={cardClicked}
+                    hiddenCardsCount={props.hiddenCardsCount}
                 />}
             {activeView.fields.viewType === 'calendar' &&
                 <CalendarFullView
@@ -450,6 +459,7 @@ const CenterPanel = (props: Props) => {
                     onCardClicked={cardClicked}
                     selectedCardIds={selectedCardIds}
                     addCard={(show) => addCard('', show)}
+                    hiddenCardsCount={props.hiddenCardsCount}
                 />}
         </div>
     )
