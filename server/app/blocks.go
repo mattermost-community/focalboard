@@ -180,6 +180,28 @@ func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
 	return err
 }
 
+func (a *App) isWithinViewsLimit(boardID string, block model.Block) (bool, error) {
+	limits, err := a.GetBoardsCloudLimits()
+	if err != nil {
+		return false, err
+	}
+
+	if limits.Views == model.LimitUnlimited {
+		return true, nil
+	}
+
+	views, err := a.store.GetBlocksWithParentAndType(boardID, block.ParentID, model.TypeView)
+	if err != nil {
+		return false, err
+	}
+
+	// < rather than <= because we'll be creating new view if this
+	// check passes. When that view is created, the limit will be reached.
+	// That's why we need to check for if existing + the being-created
+	// view doesn't exceed the limit.
+	return len(views) < limits.Views, nil
+}
+
 func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
 	if len(blocks) == 0 {
 		return []model.Block{}, nil
@@ -200,6 +222,20 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 
 	needsNotify := make([]model.Block, 0, len(blocks))
 	for i := range blocks {
+		// this check is needed to whitelist inbuilt template
+		// initialization. They do contain more than 5 views per board.
+		if boardID != "0" && blocks[i].Type == model.TypeView {
+			withinLimit, err := a.isWithinViewsLimit(board.ID, blocks[i])
+			if err != nil {
+				return nil, err
+			}
+
+			if !withinLimit {
+				a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID), mlog.String("team_id", board.TeamID))
+				return nil, ErrViewsLimitReached
+			}
+		}
+
 		err := a.store.InsertBlock(&blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
