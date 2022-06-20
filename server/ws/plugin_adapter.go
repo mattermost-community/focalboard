@@ -255,6 +255,7 @@ func (pa *PluginAdapter) getUserIDsForTeamAndBoard(teamID, boardID string, ensur
 	return completeUserIDs
 }
 
+//nolint:unused
 func (pa *PluginAdapter) unsubscribeListenerFromBlocks(pac *PluginAdapterClient, blockIDs []string) {
 	for _, blockID := range blockIDs {
 		if pac.isSubscribedToBlock(blockID) {

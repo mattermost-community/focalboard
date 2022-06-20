@@ -71,6 +71,7 @@ func (pac *PluginAdapterClient) isSubscribedToTeam(teamID string) bool {
 	return false
 }
 
+//nolint:unused
 func (pac *PluginAdapterClient) isSubscribedToBlock(blockID string) bool {
 	pac.mu.RLock()
 	defer pac.mu.RUnlock()
