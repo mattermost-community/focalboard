@@ -118,7 +118,6 @@ class TestBlockFactory {
         card.title = 'title'
         card.fields.icon = 'i'
         card.fields.properties.property1 = 'value1'
-
         return card
     }
 
@@ -195,6 +194,7 @@ class TestBlockFactory {
             create_at: Date.now(),
             update_at: Date.now(),
             is_bot: false,
+            roles: 'system_user',
         }
     }
 }

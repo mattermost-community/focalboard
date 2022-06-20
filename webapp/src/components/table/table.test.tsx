@@ -99,6 +99,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -127,6 +128,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -155,6 +157,7 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -190,10 +193,72 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('limited card in table view', () => {
+        const callback = jest.fn()
+        const addCard = jest.fn()
+        const boardTest = TestBlockFactory.createBoard()
+        const card1 = TestBlockFactory.createCard(boardTest)
+        const card2 = TestBlockFactory.createCard(boardTest)
+        const mockStore = configureStore([])
+
+        const stateTest = {
+            comments: {
+                comments: {},
+            },
+            contents: {
+                contents: {},
+            },
+            cards: {
+                cards: {
+                    [card1.id]: card1,
+                    [card2.id]: card2,
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: boardTest.id,
+                boards: {
+                    [boardTest.id]: boardTest,
+                },
+                myBoardMemberships: {
+                    [boardTest.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+        }
+
+        const storeTest = mockStore(stateTest)
+        card.limited = true
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={storeTest}>
+                <Table
+                    board={boardTest}
+                    activeView={view}
+                    visibleGroups={[]}
+                    cards={[card1, card2]}
+                    views={[view, view2]}
+                    selectedCardIds={[]}
+                    readonly={true}
+                    cardIdToFocusOnRender=''
+                    showCard={callback}
+                    addCard={addCard}
+                    onCardClicked={jest.fn()}
+                    hiddenCardsCount={2}
+                />
+            </ReduxProvider>,
+        )
+        const {container, getByTitle} = render(component)
+        expect(getByTitle('hidden-card-count')).toHaveTextContent('2')
         expect(container).toMatchSnapshot()
     })
 })
@@ -300,6 +365,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -384,6 +450,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -441,6 +508,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -531,6 +599,7 @@ describe('components/table/Table extended', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
@@ -582,6 +651,7 @@ describe('components/table/Table extended', () => {
                     showCard={jest.fn()}
                     addCard={jest.fn()}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         )
