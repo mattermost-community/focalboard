@@ -79,6 +79,9 @@ func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string
 }
 
 func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool {
+	if channelID == "valid-channel-id" {
+		return true
+	}
 	return false
 }
 
