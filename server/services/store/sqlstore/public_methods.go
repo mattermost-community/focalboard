@@ -20,6 +20,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -252,8 +253,18 @@ func (s *SQLStore) GetSystemSettings() (map[string]string, error) {
 
 }
 
+func (s *SQLStore) GetTeamBoardsInsights(channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
+	return s.getTeamBoardsInsights(s.db, channelIDs, since, offset, limit)
+
+}
+
 func (s *SQLStore) GetUsedCardsCount() (int, error) {
 	return s.getUsedCardsCount(s.db)
+
+}
+
+func (s *SQLStore) GetUserBoardsInsights(userID string, channelIDs []string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
+	return s.getUserBoardsInsights(s.db, userID, channelIDs, since, offset, limit)
 
 }
 
@@ -272,8 +283,17 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
+	return s.getUserTimezone(s.db, userID)
+}
+
 func (s *SQLStore) GetUserWorkspaces(userID string) ([]model.UserWorkspace, error) {
 	return s.getUserWorkspaces(s.db, userID)
+
+}
+
+func (s *SQLStore) GetUserWorkspacesInTeam(userID string, teamID string) ([]model.UserWorkspace, error) {
+	return s.getUserWorkspacesInTeam(s.db, userID, teamID)
 
 }
 
@@ -294,6 +314,11 @@ func (s *SQLStore) GetWorkspaceCount() (int64, error) {
 
 func (s *SQLStore) GetWorkspaceTeam(workspaceID string) (*mmModel.Team, error) {
 	return s.getWorkspaceTeam(s.db, workspaceID)
+
+}
+
+func (s *SQLStore) HasPermissionToTeam(userID string, teamID string) bool {
+	return s.hasPermissionToTeam(s.db, userID, teamID)
 
 }
 
@@ -347,6 +372,11 @@ func (s *SQLStore) InsertBlocks(c store.Container, blocks []model.Block, userID 
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) IsUserGuest(userID string) (bool, error) {
+	return s.isUserGuest(s.db, userID)
 
 }
 
@@ -413,13 +443,14 @@ func (s *SQLStore) RemoveDefaultTemplates(blocks []model.Block) error {
 
 }
 
-func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
-	return s.sendMessage(s.db, message, postType, receipts)
-}
-
-//nolint:typecheck
 func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 	return s.saveFileInfo(s.db, fileInfo)
+
+}
+
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
+
 }
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {

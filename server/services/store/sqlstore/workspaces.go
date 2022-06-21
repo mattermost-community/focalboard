@@ -157,6 +157,10 @@ func (s *SQLStore) getUserWorkspaces(_ sq.BaseRunner, _ string) ([]model.UserWor
 	return nil, fmt.Errorf("GetUserWorkspaces %w", errUnsupportedOperation)
 }
 
+func (s *SQLStore) getUserWorkspacesInTeam(_ sq.BaseRunner, _ string, _ string) ([]model.UserWorkspace, error) {
+	return nil, fmt.Errorf("GetUserWorkspacesInTeam %w", errUnsupportedOperation)
+}
+
 func (s *SQLStore) createPrivateWorkspace(_ sq.BaseRunner, _ string) (string, error) {
 	// for personal server we always have only
 	// a single workspace, with id "0".

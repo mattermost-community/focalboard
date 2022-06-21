@@ -24,11 +24,11 @@ import (
 )
 
 const (
-	sqliteDBType   = "sqlite3"
-	postgresDBType = "postgres"
-	mysqlDBType    = "mysql"
-
-	directChannelType = "D"
+	sqliteDBType              = "sqlite3"
+	postgresDBType            = "postgres"
+	mysqlDBType               = "mysql"
+	nonTemplateFilterMySQL    = "focalboard_blocks.fields LIKE '%\"isTemplate\":false%'"
+	nonTemplateFilterPostgres = "focalboard_blocks.fields ->> 'isTemplate' = 'false'"
 )
 
 var (
@@ -428,6 +428,64 @@ func (s *MattermostAuthLayer) GetUserWorkspaces(userID string) ([]model.UserWork
 	return s.userWorkspacesFromRows(rows)
 }
 
+func (s *MattermostAuthLayer) GetUserWorkspacesInTeam(userID string, teamID string) ([]model.UserWorkspace, error) {
+	var memberWorkspacesQuery, accessibleWorkspacesQuery sq.SelectBuilder
+
+	var nonTemplateFilter string
+
+	switch s.dbType {
+	case mysqlDBType:
+		nonTemplateFilter = nonTemplateFilterMySQL
+	case postgresDBType:
+		nonTemplateFilter = nonTemplateFilterPostgres
+	default:
+		return nil, fmt.Errorf("GetUserWorkspaces - %w", errUnsupportedDatabaseError)
+	}
+
+	memberWorkspacesQuery = s.getQueryBuilder().
+		Select("Channels.ID", "Channels.DisplayName", "COUNT(focalboard_blocks.id)", "Channels.Type", "Channels.Name").
+		From("ChannelMembers").
+		// select channels without a corresponding workspace
+		LeftJoin(
+			"focalboard_blocks ON focalboard_blocks.workspace_id = ChannelMembers.ChannelId AND "+
+				"focalboard_blocks.type = 'board' AND "+
+				nonTemplateFilter,
+		).
+		Join("Channels ON ChannelMembers.ChannelId = Channels.Id").
+		Where(sq.Eq{"ChannelMembers.UserId": userID}).
+		Where(sq.Eq{"Channels.TeamID": teamID}).
+		GroupBy("Channels.Id", "Channels.DisplayName")
+
+	accessibleWorkspacesQuery = s.getQueryBuilder().
+		Select("pc.ID", "pc.DisplayName", "COUNT(focalboard_blocks.id)", "'O' as Type", "pc.Name").Prefix(" UNION ALL ").
+		From("PublicChannels as pc").
+		// select channels without a corresponding workspace
+		LeftJoin(
+			"focalboard_blocks ON focalboard_blocks.workspace_id = pc.ID AND "+
+				"focalboard_blocks.type = 'board' AND "+
+				nonTemplateFilter,
+		).
+		Where(sq.Eq{"pc.TeamID": teamID}).
+		GroupBy("pc.Id", "pc.DisplayName")
+
+	workspacesQuery := memberWorkspacesQuery.SuffixExpr(accessibleWorkspacesQuery)
+
+	rows, err := workspacesQuery.Query()
+	if err != nil {
+		s.logger.Error("ERROR GetUserWorkspaces", mlog.Err(err))
+		return nil, err
+	}
+
+	defer s.CloseRows(rows)
+	memberWorkspaces, err := s.userWorkspacesFromRows(rows)
+	if err != nil {
+		s.logger.Error("ERROR userWorkspacesFromRows", mlog.Err(err))
+		return nil, err
+	}
+
+	return memberWorkspaces, nil
+}
+
 type UserWorkspaceRawModel struct {
 	ID         string `json:"id"`
 	Title      string `json:"title"`
@@ -456,7 +514,7 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 			return nil, err
 		}
 
-		if rawUserWorkspace.Type == directChannelType {
+		if rawUserWorkspace.Type == string(mmModel.ChannelTypeDirect) {
 			userIDs := strings.Split(rawUserWorkspace.Name, "__")
 			usersToFetch = append(usersToFetch, userIDs...)
 		}
@@ -477,7 +535,7 @@ func (s *MattermostAuthLayer) userWorkspacesFromRows(rows *sql.Rows) ([]model.Us
 	userWorkspaces := []model.UserWorkspace{}
 
 	for i := range rawUserWorkspaces {
-		if rawUserWorkspaces[i].Type == directChannelType {
+		if rawUserWorkspaces[i].Type == string(mmModel.ChannelTypeDirect) {
 			userIDs := strings.Split(rawUserWorkspaces[i].Name, "__")
 			names := []string{}
 
@@ -674,6 +732,34 @@ func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
 }
 
+func (s *MattermostAuthLayer) HasPermissionToTeam(userID string, teamID string) bool {
+	return s.pluginAPI.HasPermissionToTeam(userID, teamID, mmModel.PermissionViewTeam)
+}
+
 func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
 	return s.pluginAPI.GetCloudLimits()
+}
+
+func (s *MattermostAuthLayer) IsUserGuest(userID string) (bool, error) {
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return false, err
+	}
+	return strings.Contains(user.Roles, "guest"), nil
+}
+
+func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
+	query := s.getQueryBuilder().
+		Select("timezone").
+		From("Users").
+		Where(sq.Eq{"id": userID})
+	row := query.QueryRow()
+
+	var timezone mmModel.StringMap
+	err := row.Scan(&timezone)
+	if err != nil {
+		return "", err
+	}
+
+	return mmModel.GetPreferredTimezone(timezone), nil
 }

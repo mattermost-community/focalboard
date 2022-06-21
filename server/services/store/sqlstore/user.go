@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -256,6 +257,22 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 	return s.updateUser(db, user)
 }
 
+func (s *SQLStore) hasPermissionToTeam(db sq.BaseRunner, userID string, teamID string) bool {
+	return false
+}
+
 func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
 	return errUnsupportedOperation
+}
+
+func (s *SQLStore) isUserGuest(_ sq.BaseRunner, userID string) (bool, error) {
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return false, err
+	}
+	return strings.Contains(user.Roles, "guest"), nil
+}
+
+func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, userID string) (string, error) {
+	return "", errUnsupportedOperation
 }
