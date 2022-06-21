@@ -363,7 +363,7 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}, {}}, nil)
 
 		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
-		require.NoError(t, err)
+		require.Error(t, err)
 	})
 
 	t.Run("creating multiple views, reaching limit in the process", func(t *testing.T) {
