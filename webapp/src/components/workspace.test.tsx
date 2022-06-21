@@ -164,11 +164,6 @@ describe('src/components/workspace', () => {
                 categoryAttribute1,
             ],
         },
-        limits: {
-            limits: {
-                views: 0,
-            },
-        },
     }
     const store = mockStateStore([thunk], state)
     beforeAll(() => {
@@ -380,11 +375,6 @@ describe('src/components/workspace', () => {
                     categoryAttribute1,
                 ],
             },
-            limits: {
-                limits: {
-                    views: 0,
-                },
-            },
         }
         const localStore = mockStateStore([thunk], localState)
 
@@ -484,11 +474,6 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
-            },
-            limits: {
-                limits: {
-                    views: 0,
-                },
             },
         }
         const localStore = mockStateStore([thunk], localState)
@@ -594,11 +579,6 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
-            },
-            limits: {
-                limits: {
-                    views: 0,
-                },
             },
         }
         const localStore = mockStateStore([thunk], localState)
