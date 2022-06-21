@@ -693,16 +693,6 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 			require.False(t, success)
 		})
 
-		t.Run("no blocks", func(t *testing.T) {
-			dbab := &model.DeleteBoardsAndBlocks{
-				Boards: []string{board.ID},
-			}
-
-			success, resp := th.Client.DeleteBoardsAndBlocks(dbab)
-			th.CheckBadRequest(resp)
-			require.False(t, success)
-		})
-
 		t.Run("boards from different teams", func(t *testing.T) {
 			newOtherTeamsBoard := &model.Board{
 				TeamID: "another-team-id",

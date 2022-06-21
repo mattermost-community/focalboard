@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {BoardsCloudLimits} from "../boardCloudLimits"
+import {BoardsCloudLimits} from '../boardsCloudLimits'
 
 import {initialLoad} from './initialLoad'
 
@@ -31,6 +31,9 @@ const limitsSlice = createSlice({
         setLimits: (state, action: PayloadAction<BoardsCloudLimits>) => {
             state.limits = action.payload
         },
+        setCardLimitTimestamp: (state, action: PayloadAction<number>) => {
+            state.limits.card_limit_timestamp = action.payload
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(initialLoad.fulfilled, (state, action) => {
@@ -40,4 +43,7 @@ const limitsSlice = createSlice({
 })
 
 export const {reducer} = limitsSlice
+export const {setCardLimitTimestamp} = limitsSlice.actions
+
 export const getLimits = (state: RootState): BoardsCloudLimits | undefined => state.limits.limits
+export const getCardLimitTimestamp = (state: RootState): number => state.limits.limits.card_limit_timestamp

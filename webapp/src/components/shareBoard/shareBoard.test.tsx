@@ -104,7 +104,7 @@ const me: IUser = {
     create_at: 0,
     update_at: 0,
     is_bot: false,
-    roles: '',
+    roles: 'system_user',
 }
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()

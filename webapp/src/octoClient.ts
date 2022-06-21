@@ -13,7 +13,8 @@ import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
-import {BoardsCloudLimits} from "./boardCloudLimits"
+
+import {BoardsCloudLimits} from './boardsCloudLimits'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -822,7 +823,10 @@ class OctoClient {
         if (response.status !== 200) {
             return undefined
         }
-        return (await this.getJson(response, {})) as BoardsCloudLimits
+
+        const limits = (await this.getJson(response, {})) as BoardsCloudLimits
+        Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
+        return limits
     }
 }
 

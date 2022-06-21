@@ -37,7 +37,7 @@ export const initialLoad = createAsyncThunk(
             boards,
             boardsMemberships,
             boardTemplates,
-            limits
+            limits,
         }
     },
 )
