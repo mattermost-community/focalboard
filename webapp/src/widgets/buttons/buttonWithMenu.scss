@@ -20,6 +20,10 @@
         }
     }
 
+    .MenuWrapper *:first-child {
+        height: 100%;
+    }
+
     .button-dropdown {
         background-color: rgb(var(--button-bg-rgb));
         border-left: 1px solid rgba(var(--button-color-rgb), 0.2);
