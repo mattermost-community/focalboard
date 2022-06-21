@@ -3,9 +3,13 @@
 
 import React from 'react'
 
-export default function CardSkeleton(props: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
+type Props = {
+    className?: string
+}
+
+export default function CardSkeleton(props: Props): JSX.Element {
     return (
-        <span {...props}>
+        <span className={props.className}>
             <svg
                 width='468'
                 height='521'
