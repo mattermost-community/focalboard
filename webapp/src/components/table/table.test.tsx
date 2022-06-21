@@ -99,6 +99,8 @@ describe('components/table/Table', () => {
                     showCard={callback}
                     addCard={addCard}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -224,8 +226,17 @@ describe('components/table/Table', () => {
                     [card2.id]: card2,
                 },
             },
+            teams: {
+                current: {id: 'team-id'},
+            },
             boards: {
                 current: boardTest.id,
+                boards: {
+                    [boardTest.id]: boardTest,
+                },
+                myBoardMemberships: {
+                    [boardTest.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
         }
 
@@ -644,6 +655,8 @@ describe('components/table/Table extended', () => {
                     showCard={jest.fn()}
                     addCard={jest.fn()}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )

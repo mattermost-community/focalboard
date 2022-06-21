@@ -38,10 +38,12 @@ describe('src/components/gallery/Gallery', () => {
         },
         cards: {
             current: '',
+            limitTimestamp: 0,
             cards: {
                 [card.id]: card,
             },
             templates: {},
+            cardHiddenWarning: true,
         },
         teams: {
             current: {id: 'team-id'},
@@ -63,7 +65,7 @@ describe('src/components/gallery/Gallery', () => {
                 id: 'user_id_1',
                 props: {},
             },
-        }
+        },
     }
     const store = mockStateStore([], state)
     beforeEach(() => {
@@ -80,6 +82,8 @@ describe('src/components/gallery/Gallery', () => {
                     addCard={jest.fn()}
                     selectedCardIds={[card.id]}
                     onCardClicked={jest.fn()}
+                    hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ))
@@ -181,9 +185,13 @@ describe('src/components/gallery/Gallery', () => {
         const boardTest = TestBlockFactory.createBoard()
         const card1 = TestBlockFactory.createCard(boardTest)
         const card3 = TestBlockFactory.createCard(boardTest)
-        const stateTest: Partial<RootState> = {
+        const stateTest = {
             contents: {
                 contents: blocksById(contents),
+                contentsByCard: {
+                    [card.id]: [contents[0], contents[1]],
+                    [card2.id]: [contents[2]],
+                },
             },
             cards: {
                 current: '',
@@ -195,19 +203,29 @@ describe('src/components/gallery/Gallery', () => {
                 cardHiddenWarning: true,
                 limitTimestamp: 2,
             },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
+            },
             comments: {
                 comments: {},
             },
             boards: {
-                current: boardTest.id,
-                boards: {},
-                templates: {},
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
         }
         const storeTest = mockStateStore([], stateTest)
-        beforeEach(() => {
-            jest.clearAllMocks()
-        })
         const {container, getByTitle} = render(wrapDNDIntl(
             <ReduxProvider store={storeTest}>
                 <Gallery

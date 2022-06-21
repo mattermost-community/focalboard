@@ -3,7 +3,7 @@
 exports[`components/properties/multiSelect shows only the selected options when menu is not opened 1`] = `
 <div>
   <div
-    class="octo-propertyvalue"
+    class="octo-propertyvalue octo-propertyvalue--readonly"
     data-testid="multiselect-non-editable"
     tabindex="0"
   >

@@ -81,4 +81,11 @@
         position: relative;
         flex: 0 0 auto;
     }
+
+    .NotificationBox {
+        .AlertIcon {
+            color: #ffbc1f;
+            font-size: 24px;
+        }
+    }
 }

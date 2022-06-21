@@ -216,8 +216,12 @@ func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...interface
 }
 
 func (s *SQLStore) getBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
+	return s.getBoardsFieldsByCondition(db, boardFields(""), conditions...)
+}
+
+func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string, conditions ...interface{}) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
-		Select(boardFields("")...).
+		Select(fields...).
 		From(s.tablePrefix + "boards")
 	for _, c := range conditions {
 		query = query.Where(c)

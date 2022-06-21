@@ -13,7 +13,6 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry
 import octoClient from '../octoClient'
 
 import NotificationBox from '../widgets/notification-box'
-import './cardLimitNotification.scss'
 
 type Props = {
     showHiddenCardNotification: boolean
@@ -88,7 +87,7 @@ const CardLimitNotification = (props: Props) => {
         title = intl.formatMessage(
             {
                 id: 'notification-box-cards-hidden.title',
-                defaultMessage: 'This action has hidden another card',
+                defaultMessage: 'Your action hidden another card',
             },
         )
     }
@@ -146,7 +145,7 @@ const CardLimitNotification = (props: Props) => {
                             >
                                 <FormattedMessage
                                     id='notification-box-card-limit-reached.link'
-                                    defaultMessage='Upgrade to a paid plan'
+                                    defaultMessage='upgrade to a paid plan'
                                 />
                             </a>),
                     }}
@@ -154,7 +153,7 @@ const CardLimitNotification = (props: Props) => {
             {!hasPermissionToUpgrade &&
                 <FormattedMessage
                     id='notification-box.card-limit-reached.not-admin.text'
-                    defaultMessage='To access archived cards, contact your Admin to upgrade to a paid plan.'
+                    defaultMessage='To access archived cards, contact your admin to upgrade to a paid plan.'
                 />}
         </NotificationBox>
     )

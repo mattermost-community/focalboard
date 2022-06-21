@@ -33,9 +33,8 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -138,11 +137,12 @@ func New(params Params) (*Server, error) {
 		Notifications:    notificationService,
 		Logger:           params.Logger,
 		Permissions:      params.PermissionsService,
+		PluginAPI:        params.PluginAPI,
 		SkipTemplateInit: utils.IsRunningUnitTests(),
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
-	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService)
+	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService, params.IsPlugin)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()

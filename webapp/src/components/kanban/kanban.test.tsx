@@ -127,6 +127,8 @@ describe('src/component/kanban/kanban', () => {
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
                     showCard={jest.fn()}
+                    hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         ), {wrapper: MemoryRouter})

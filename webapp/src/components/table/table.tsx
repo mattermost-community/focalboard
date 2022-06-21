@@ -18,6 +18,8 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './table.scss'
 
+import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
+
 import TableHeaders from './tableHeaders'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
@@ -42,7 +44,7 @@ type Props = {
 }
 
 const Table = (props: Props): JSX.Element => {
-    const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
+    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCardsCount} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
@@ -102,7 +104,7 @@ const Table = (props: Props): JSX.Element => {
     const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         onDropToGroup(srcCard, dstCard.fields.properties[activeView.fields.groupById!] as string, dstCard.id)
-    }, [activeView.fields.groupById])
+    }, [activeView.fields.groupById, cards])
 
     const onDropToGroup = useCallback((srcCard: Card, groupID: string, dstCardID: string) => {
         Utils.log(`onDropToGroup: ${srcCard.title}`)
