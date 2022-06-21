@@ -185,7 +185,11 @@ export default class Plugin {
             const goToFocalboardWorkspace = () => {
                 const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {workspaceID: currentChannel})
-                window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
+                if (currentChannel) {
+                    window.open(`${windowAny.frontendBaseURL}/workspace/${currentChannel}`, '_blank', 'noopener')
+                } else {
+                    window.open(`${windowAny.frontendBaseURL}/dashboard`, '_blank', 'noopener')
+                }
             }
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboardWorkspace, 'Boards', 'Boards')
 
