@@ -465,3 +465,7 @@ func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
 }
+
+func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.pluginAPI.GetCloudLimits()
+}

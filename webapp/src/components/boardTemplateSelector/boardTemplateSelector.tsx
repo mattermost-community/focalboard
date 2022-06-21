@@ -64,7 +64,7 @@ const BoardTemplateSelector = (props: Props) => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardTemplate, {board: template.id})
         mutator.deleteBoard(
             template,
-            intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete template'}),
+            intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'}),
             async () => {},
             async () => {
                 showBoard(template.id)
@@ -132,7 +132,7 @@ const BoardTemplateSelector = (props: Props) => {
                     {title || (
                         <FormattedMessage
                             id='BoardTemplateSelector.title'
-                            defaultMessage='Create a Board'
+                            defaultMessage='Create a board'
                         />
                     )}
                 </h1>

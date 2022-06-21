@@ -6,6 +6,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Utils} from '../../../utils'
+import {propertyValueClassName} from '../../propertyValueUtils'
 import './createdAt.scss'
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 const CreatedAt = (props: Props): JSX.Element => {
     const intl = useIntl()
     return (
-        <div className='CreatedAt octo-propertyvalue readonly'>
+        <div className={`CreatedAt ${propertyValueClassName({readonly: true})}`}>
             {Utils.displayDateTime(new Date(props.createAt), intl)}
         </div>
     )

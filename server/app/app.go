@@ -1,6 +1,7 @@
 package app
 
 import (
+	"sync"
 	"time"
 
 	"github.com/mattermost/focalboard/server/auth"
@@ -13,9 +14,10 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -23,6 +25,10 @@ const (
 	blockChangeNotifierPoolSize        = 10
 	blockChangeNotifierShutdownTimeout = time.Second * 10
 )
+
+type pluginAPI interface {
+	GetUsers(options *mmModel.UserGetOptions) ([]*mmModel.User, *mmModel.AppError)
+}
 
 type Services struct {
 	Auth             *auth.Auth
@@ -34,6 +40,7 @@ type Services struct {
 	Logger           *mlog.Logger
 	Permissions      permissions.PermissionsService
 	SkipTemplateInit bool
+	PluginAPI        pluginAPI
 }
 
 type App struct {
@@ -47,6 +54,10 @@ type App struct {
 	notifications       *notify.Service
 	logger              *mlog.Logger
 	blockChangeNotifier *utils.CallbackQueue
+	pluginAPI           pluginAPI
+
+	cardLimitMux sync.RWMutex
+	cardLimit    int
 }
 
 func (a *App) SetConfig(config *config.Configuration) {
@@ -69,7 +80,20 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications:       services.Notifications,
 		logger:              services.Logger,
 		blockChangeNotifier: utils.NewCallbackQueue("blockChangeNotifier", blockChangeNotifierQueueSize, blockChangeNotifierPoolSize, services.Logger),
+		pluginAPI:           services.PluginAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app
+}
+
+func (a *App) CardLimit() int {
+	a.cardLimitMux.RLock()
+	defer a.cardLimitMux.RUnlock()
+	return a.cardLimit
+}
+
+func (a *App) SetCardLimit(cardLimit int) {
+	a.cardLimitMux.Lock()
+	defer a.cardLimitMux.Unlock()
+	a.cardLimit = cardLimit
 }

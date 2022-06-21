@@ -9,6 +9,7 @@ import {IntlProvider} from 'react-intl'
 import '@testing-library/jest-dom'
 
 import {wrapIntl} from '../../../testUtils'
+import {propertyValueClassName} from '../../propertyValueUtils'
 
 import DateRange from '../dateRange/dateRange'
 
@@ -27,7 +28,7 @@ const DateRangeWrapper = (props: Props): JSX.Element => {
     const [value, setValue] = useState(props.initialValue || '')
     return (
         <DateRange
-            className='octo-propertyvalue'
+            className={propertyValueClassName()}
             value={value}
             showEmptyPlaceholder={props.showEmptyPlaceholder}
             onChange={(newValue) => {
