@@ -141,7 +141,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         await loadData()
     }
 
-    const onLinkBoard = async (channel: Channel, confirmed: bool) => {
+    const onLinkBoard = async (channel: Channel, confirmed?: boolean) => {
         if (channel.type === 'O' && !confirmed) {
             setShowLinkChannelConfirmation(channel)
             return
@@ -283,7 +283,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     const formatOptionLabel = (userOrChannel: IUser | Channel) => {
         if ((userOrChannel as IUser).username) {
-            const user = userOrChannel
+            const user = userOrChannel as IUser
             return(
                 <div className='user-item'>
                     {Utils.isFocalboardPlugin() &&
@@ -346,23 +346,27 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             loadOptions={async (inputValue: string) => {
                                 const users = await client.searchTeamUsers(inputValue)
                                 const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
-                                return [
-                                    {label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users},
-                                    {label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels},
-                                ]
+                                const result = []
+                                if (users) {
+                                    result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
+                                }
+                                if (channels) {
+                                    result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                }
+                                return result
                             }}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
                             formatOptionLabel={formatOptionLabel}
                             getOptionValue={(u) => u.id}
-                            getOptionLabel={(u) => u.username || u.display_name}
+                            getOptionLabel={(u: IUser|Channel) => (u as IUser).username || (u as Channel).display_name}
                             isMulti={false}
                             onChange={(newValue) => {
-                                if (newValue?.username) {
+                                if (newValue && (newValue as IUser).username) {
                                     mutator.createBoardMember(boardId, newValue.id)
                                     setSelectedUser(null)
                                 } else if (newValue) {
-                                    onLinkBoard(newValue)
+                                    onLinkBoard(newValue as Channel)
                                 }
                             }}
                         />

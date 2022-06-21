@@ -40,35 +40,36 @@ const RHSChannelBoards = () => {
 
     if (channelBoards.length === 0) {
         return (
-        <div className='focalboard-body'>
-            <div className='RHSChannelBoards empty'>
-                <h2>
-                    <FormattedMessage
-                        id='rhs-boards.no-boards-linked-to-channel'
-                        defaultMessage='No Boards are linked to {channelName} yet'
-                        values={{channelName: currentChannel.display_name}}
-                    />
-                </h2>
-                <div className='empty-paragraph'>
-                    <FormattedMessage
-                        id='rhs-boards.no-boards-linked-to-channel-description'
-                        defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
-                    />
+            <div className='focalboard-body'>
+                <div className='RHSChannelBoards empty'>
+                    <h2>
+                        <FormattedMessage
+                            id='rhs-boards.no-boards-linked-to-channel'
+                            defaultMessage='No Boards are linked to {channelName} yet'
+                            values={{channelName: currentChannel.display_name}}
+                        />
+                    </h2>
+                    <div className='empty-paragraph'>
+                        <FormattedMessage
+                            id='rhs-boards.no-boards-linked-to-channel-description'
+                            defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
+                        />
+                    </div>
+                    <div className='boards-screenshots'><img src={boardsScreenshots}/></div>
+                    <Button
+                        onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
+                        emphasis='primary'
+                        size='medium'
+                    >
+                        <FormattedMessage
+                            id='rhs-boards.link-boards-to-channel'
+                            defaultMessage='Link Boards to {channelName}'
+                            values={{channelName: currentChannel.display_name}}
+                        />
+                    </Button>
                 </div>
-                <div className='boards-screenshots'><img src={boardsScreenshots}/></div>
-                <Button
-                    onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
-                    emphasis='primary'
-                    size='medium'
-                >
-                    <FormattedMessage
-                        id='rhs-boards.link-boards-to-channel'
-                        defaultMessage='Link Boards to {channelName}'
-                        values={{channelName: currentChannel.display_name}}
-                    />
-                </Button>
             </div>
-        </div>
+        )
     }
 
     return (

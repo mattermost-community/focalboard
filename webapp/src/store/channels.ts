@@ -9,7 +9,7 @@ export interface Channel {
     id: string
     name: string
     display_name: string
-    type: 'P'|'O'
+    type: 'P'|'O'|'D'|'G'
 }
 
 type ChannelState = {

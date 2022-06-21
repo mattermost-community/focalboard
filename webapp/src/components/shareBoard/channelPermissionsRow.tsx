@@ -36,7 +36,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
             setLinkedChannel(null)
             return
         }
-        octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c))
+        octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c || null))
     }, [board.channelId])
 
     if (!linkedChannel) {

@@ -794,7 +794,7 @@ class OctoClient {
         return (await this.getJson(response, [])) as Subscription[]
     }
 
-    async searchUserChannels(teamId: string, searchQuery: string): Promise<Channel | undefined> {
+    async searchUserChannels(teamId: string, searchQuery: string): Promise<Channel[] | undefined> {
         const path = `/api/v2/teams/${teamId}/channels?search=${searchQuery}`
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
@@ -804,7 +804,7 @@ class OctoClient {
             return undefined
         }
 
-        return (await this.getJson(response, {}))
+        return (await this.getJson(response, [])) as Channel[]
     }
 
     async getChannel(teamId: string, channelId: string): Promise<Channel | undefined> {
@@ -817,7 +817,7 @@ class OctoClient {
             return undefined
         }
 
-        return (await this.getJson(response, {}))
+        return (await this.getJson(response, {})) as Channel
     }
 
     // onboarding

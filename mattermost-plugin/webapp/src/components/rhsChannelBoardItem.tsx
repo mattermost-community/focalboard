@@ -73,7 +73,7 @@ const RHSChannelBoardItem = (props: Props) => {
                 <FormattedMessage
                     id='rhs-boards.last-update-at'
                     defaultMessage='Last Update at: {datetime}'
-                    values={{datetime: Utils.displayDateTime(new Date(board.updateAt), intl)}}
+                    values={{datetime: Utils.displayDateTime(new Date(board.updateAt), intl as any)}}
                 />
             </div>
         </div>

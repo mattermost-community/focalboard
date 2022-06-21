@@ -3,7 +3,7 @@
 import React, {useState, useMemo, useCallback} from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider, useIntl, FormattedMessage} from 'react-intl'
-import {debounce} from 'lodash'
+import debounce from 'lodash/debounce'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
@@ -65,7 +65,7 @@ const BoardSelector = () => {
         return null
     }
 
-    const linkBoard = async (board: Board, confirmed: boolean): Promise<void> => {
+    const linkBoard = async (board: Board, confirmed?: boolean): Promise<void> => {
         if (!confirmed) {
             setShowLinkBoardConfirmation(board)
             return
@@ -108,7 +108,7 @@ const BoardSelector = () => {
         await mutator.createBoardsAndBlocks(
             {boards: [board], blocks: [view]},
             'add linked board',
-            async (bab: BoardsAndBlocks): Promise<void> {
+            async (bab: BoardsAndBlocks): Promise<void> => {
                 const windowAny: any = window
                 const newBoard = bab.boards[0]
                 // TODO: Maybe create a new event for create linked board
@@ -116,7 +116,7 @@ const BoardSelector = () => {
                 windowAny.WebappUtils.browserHistory.push(`/boards/team/${team.id}/${newBoard.id}`)
                 dispatch(setLinkToChannel(''))
             },
-            () => null,
+            async () => {return},
         )
     }
 
@@ -182,7 +182,7 @@ const BoardSelector = () => {
                             />))}
 
                         {/*when user searched for something and there were no results*/}
-                        {emptyResult && <EmptyResults/>}
+                        {emptyResult && <EmptyResults query={searchQuery}/>}
 
                         {/*default state, when user didn't search for anything. This is the initial screen*/}
                         {!emptyResult && !searchQuery && <EmptySearch/>}
