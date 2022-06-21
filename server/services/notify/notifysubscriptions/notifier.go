@@ -213,6 +213,9 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		MakeCardLink: func(block *model.Block, board *model.Block, card *model.Block) string {
 			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.WorkspaceID, board.ID, card.ID))
 		},
+		MakeBoardLink: func(board *model.Block) string {
+			return fmt.Sprintf("[%s](%s)", board.Title, utils.MakeBoardLink(n.serverRoot, board.WorkspaceID, board.ID))
+		},
 		Logger: n.logger,
 	}
 

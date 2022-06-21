@@ -9,3 +9,7 @@ import "fmt"
 func MakeCardLink(serverRoot string, workspace string, board string, card string) string {
 	return fmt.Sprintf("%s/workspace/%s/%s/0/%s/", serverRoot, workspace, board, card)
 }
+
+func MakeBoardLink(serverRoot string, workspace string, board string) string {
+	return fmt.Sprintf("%s/workspace/%s/%s", serverRoot, workspace, board)
+}

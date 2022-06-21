@@ -50,11 +50,12 @@ func (pd *PluginDelivery) MentionDeliver(mentionUsername string, extract string,
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
 	link := utils.MakeCardLink(pd.serverRoot, evt.Workspace, evt.Board.ID, evt.Card.ID)
+	boardLink := utils.MakeBoardLink(pd.serverRoot, evt.Workspace, evt.Board.ID)
 
 	post := &model.Post{
 		UserId:    pd.botID,
 		ChannelId: channel.Id,
-		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged),
+		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged, boardLink, evt.Board.Title),
 	}
 	return member.UserId, pd.api.CreatePost(post)
 }
