@@ -98,7 +98,8 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
-        const templateID: string = activeTemplate.properties.templateID as string
+        // use properties.trackingTemplateId for in-built templates and id for custom templates
+        const templateID: string = activeTemplate.teamId === '0' ? activeTemplate.properties.trackingTemplateId as string : activeTemplate.id
         await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), templateID, currentTeam?.id)
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
