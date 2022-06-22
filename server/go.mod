@@ -2,8 +2,6 @@ module github.com/mattermost/focalboard/server
 
 go 1.18
 
-replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49
-
 require (
 	github.com/Masterminds/squirrel v1.5.2
 	github.com/go-sql-driver/mysql v1.6.0
@@ -13,7 +11,7 @@ require (
 	github.com/krolaw/zipstream v0.0.0-20180621105154-0a2661891f94
 	github.com/lib/pq v1.10.5
 	github.com/mattermost/mattermost-plugin-api v0.0.27
-	github.com/mattermost/mattermost-server/v6 v6.3.0
+	github.com/mattermost/mattermost-server/v6 v6.7.2
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/oklog/run v1.1.0
@@ -72,7 +70,7 @@ require (
 	github.com/philhofer/fwd v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
-	github.com/prometheus/common v0.32.1 // indirect
+	github.com/prometheus/common v0.33.0 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/rs/xid v1.4.0 // indirect

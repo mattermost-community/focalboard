@@ -9,6 +9,11 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/app"
 	"github.com/mattermost/mattermost-server/v6/product"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
+const (
+	loggerProductName = "boards"
 )
 
 var errServiceTypeAssert = errors.New("type assertion failed")
@@ -21,17 +26,17 @@ func init() {
 }
 
 type Boards struct {
-	teamService    product.TeamService
-	channelService product.ChannelService
-	userService    product.UserService
-	postService    product.PostService
-	botService     product.BotService
-	clusterService product.ClusterService
-	// configService  product.ConfigService
-	logService     product.LogService
-	licenseService product.LicenseService
-	// filestoreService product.FilestoreService
-	routerService product.RouterService
+	teamService      product.TeamService
+	channelService   product.ChannelService
+	userService      product.UserService
+	postService      product.PostService
+	botService       product.BotService
+	clusterService   product.ClusterService
+	configService    product.ConfigService
+	logger           mlog.LoggerIFace
+	licenseService   product.LicenseService
+	filestoreService product.FilestoreService
+	routerService    product.RouterService
 }
 
 func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
@@ -76,13 +81,17 @@ func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (a
 			}
 			boards.clusterService = clusterService
 		case app.ConfigKey:
-			// TODO
-		case app.LogKey:
-			logService, ok := service.(product.LogService)
+			configService, ok := service.(product.ConfigService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
-			boards.logService = logService
+			boards.configService = configService
+		case app.LogKey:
+			logger, ok := service.(mlog.LoggerIFace)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.logger = logger.With(mlog.String("product", loggerProductName))
 		case app.LicenseKey:
 			licenseService, ok := service.(product.LicenseService)
 			if !ok {
@@ -90,7 +99,11 @@ func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (a
 			}
 			boards.licenseService = licenseService
 		case app.FilestoreKey:
-			// TODO
+			filestoreService, ok := service.(product.FilestoreService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.filestoreService = filestoreService
 		case app.RouterKey:
 			routerService, ok := service.(product.RouterService)
 			if !ok {
@@ -105,9 +118,12 @@ func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (a
 }
 
 func (b *Boards) Start() error {
+	b.logger.Info("Starting boards service")
+
 	return nil
 }
 
 func (b *Boards) Stop() error {
+	b.logger.Info("Stopping boards service")
 	return nil
 }
