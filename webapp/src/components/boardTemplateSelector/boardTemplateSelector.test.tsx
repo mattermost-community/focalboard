@@ -294,7 +294,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             })
 
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
-            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'template_id_1', team1.id))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), '1', team1.id))
         })
         test('return BoardTemplateSelector and click to add board from global template', async () => {
             render(wrapDNDIntl(
