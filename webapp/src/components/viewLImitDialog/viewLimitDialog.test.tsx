@@ -27,7 +27,7 @@ const mockedOctoClient = mocked(client, true)
 
 declare let window: IAppWindow
 
-describe('components/viewLimitDialog/ViewL]imitDialog', () => {
+describe('components/viewLimitDialog/ViewLiimitDialog', () => {
     const board: Board = {
         ...TestBlockFactory.createBoard(),
         id: 'board_id_1',
