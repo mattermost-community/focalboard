@@ -101,12 +101,12 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         ],
                         dateDisplayPropertyId: 'id-5',
                         properties: {
-                            templateID: 'template_id_1',
+                            trackingTemplateId: 'template_id_1',
                         },
                     },
                     {
                         id: '2',
-                        teamId: team1.id,
+                        teamId: '0',
                         title: 'Welcome to Boards!',
                         icon: '❄️',
                         cardProperties: [
@@ -114,7 +114,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         ],
                         dateDisplayPropertyId: 'id-5',
                         properties: {
-                            templateID: 'template_id_2',
+                            trackingTemplateId: 'template_id_2',
                         },
                     },
                 ],
@@ -142,7 +142,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                     isTemplate: true,
                     templateVersion: 2,
                     properties: {
-                        templateID: 'template_id_global',
+                        trackingTemplateId: 'template_id_global',
                     },
                 }],
             },
