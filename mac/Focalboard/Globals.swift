@@ -2,13 +2,19 @@
 // See LICENSE.txt for license information.
 
 import Foundation
+import Cocoa
 
 class Globals {
-	static let ProductVersion = 01500
-	static let WhatsNewVersion = 01500
+	static let ProductVersion = 01501
+	static let WhatsNewVersion = 01501
 
 	static var currentWhatsNewVersion: Int {
 		get { return UserDefaults.standard.integer(forKey: "whatsNewVersion") }
 		set { UserDefaults.standard.setValue(newValue, forKey: "whatsNewVersion") }
+	}
+	
+	static func openGetCloudServerUrl() {
+		let url = URL(string: "https://mattermost.com/sign-up/?utm_source=focalboard&utm_campaign=focalboardapp")!
+		NSWorkspace.shared.open(url)
 	}
 }
