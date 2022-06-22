@@ -16,27 +16,27 @@ Like what you see? :eyes: Give us a GitHub Star! :star:
 
 It helps define, organize, track and manage work across individuals and teams. Focalboard comes in two main editions:
 
-* **[Personal Desktop](https://www.focalboard.com/download/personal-edition/desktop/)**: A standalone, single-user Mac, Windows, or Linux desktop app for your own todos and personal projects.
+* **[Mattermost Boards](https://www.focalboard.com/download/mattermost/)**: A self-hosted or **[free cloud server](https://mattermost.com/sign-up/?utm_source=focalboard&utm_campaign=focalboard)** for your team to plan and collaborate.
 
-* **[Mattermost Boards](https://www.focalboard.com/download/mattermost/)**: A self-hosted or cloud server for your team to plan and collaborate.
+* **[Personal Desktop](https://www.focalboard.com/download/personal-edition/desktop/)**: A standalone, single-user [Mac](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8), [Windows](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website), or [Linux](https://www.focalboard.com/download/personal-edition/desktop/#linux-desktop) desktop app for your own todos and personal projects.
 
 Focalboard can also be installed as a standalone **[Personal Server](https://www.focalboard.com/download/personal-edition/ubuntu/)** for development and personal use.
 
 ## Try Focalboard
+
+### Mattermost Boards - [now available as a free cloud server](https://mattermost.com/sign-up/?utm_source=focalboard&utm_campaign=focalboard)
+
+**Mattermost Boards** combines project management tools with messaging and collaboration for teams of all sizes. To access and use **Mattermost Boards**, install or upgrade to Mattermost v6.0 or later as a [self-hosted server](https://docs.mattermost.com/guides/deployment.html?utm_source=focalboard&utm_campaign=focalboard) or [Cloud server](https://mattermost.com/sign-up/?utm_source=focalboard&utm_campaign=focalboard). After logging into Mattermost, select the menu in the top left corner and select **Boards**.
+
+***Mattermost Boards** is installed and enabled by default in Mattermost v6.0 and later.*
+
+See the [plugin setup guide](https://www.focalboard.com/download/mattermost/) for more details.
 
 ### Personal Desktop (Windows, Mac or Linux Desktop)
 
 * **Windows**: Download from the [Windows App Store](https://www.microsoft.com/store/productId/9NLN2T0SX9VF) or download `focalboard-win.zip` from the [latest release](https://github.com/mattermost/focalboard/releases), unpack, and run `Focalboard.exe`.
 * **Mac**: Download from the [Mac App Store](https://apps.apple.com/us/app/focalboard-insiders/id1556908618?mt=12).
 * **Linux Desktop**: Download `focalboard-linux.tar.gz` from the [latest release](https://github.com/mattermost/focalboard/releases), unpack, and open `focalboard-app`.
-
-### Mattermost Boards
-
-**Mattermost Boards** is the Mattermost plugin version of Focalboard that combines project management tools with messaging and collaboration for teams of all sizes. To access and use **Mattermost Boards**, install or upgrade to Mattermost v6.0 or later as a [self-hosted server](https://docs.mattermost.com/guides/deployment.html?utm_source=focalboard&utm_campaign=focalboard) or [Cloud server](https://mattermost.com/get-started/?utm_source=focalboard&utm_campaign=focalboard). After logging into Mattermost, select the menu in the top left corner and select **Boards**.
-
-***Mattermost Boards** is installed and enabled by default in Mattermost v6.0 and later.*
-
-See the [plugin setup guide](https://www.focalboard.com/download/mattermost/) for more details.
 
 ### Personal Server
 
