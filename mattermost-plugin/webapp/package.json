@@ -26,6 +26,7 @@
     "@babel/preset-typescript": "7.16.7",
     "@babel/runtime": "7.17.8",
     "@formatjs/ts-transformer": "3.9.2",
+    "@testing-library/react": "11.2.7",
     "@types/enzyme": "3.10.11",
     "@types/jest": "27.4.1",
     "@types/node": "17.0.23",
@@ -35,6 +36,7 @@
     "@types/react-redux": "7.1.23",
     "@types/react-router-dom": "5.3.3",
     "@types/react-transition-group": "4.4.4",
+    "@types/redux-mock-store": "1.0.3",
     "@typescript-eslint/eslint-plugin": "5.16.0",
     "@typescript-eslint/parser": "5.16.0",
     "babel-eslint": "10.1.0",
@@ -62,9 +64,12 @@
     "imagemin-pngquant": "^9.0.2",
     "imagemin-svgo": "^10.0.1",
     "imagemin-webp": "7.0.0",
+    "isomorphic-fetch": "3.0.0",
     "jest": "27.5.1",
     "jest-canvas-mock": "2.3.1",
     "jest-junit": "13.0.0",
+    "jest-mock": "27.5.1",
+    "redux-mock-store": "1.5.4",
     "sass": "1.49.9",
     "sass-loader": "12.6.0",
     "style-loader": "3.3.1",
@@ -78,14 +83,15 @@
     "glob-parent": "6.0.2",
     "marked": ">=4.0.12",
     "mattermost-redux": "5.33.1",
+    "react": "^17.0.2",
+    "react-dom": "17.0.2",
     "react-intl": "^5.24.7",
+    "react-redux": "^7.2.8",
     "react-router-dom": "5.2.0",
     "trim-newlines": "4.0.2"
   },
   "jest": {
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/enzyme-to-json/serializer"
-    ],
+    "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
       "/node_modules/",
       "/non_npm_dependencies/"

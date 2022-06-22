@@ -9,6 +9,7 @@
     display: flex;
     padding: 22px;
     width: 400px;
+    height: 116px;
     z-index: 1000;
 
     .NotificationBox__icon {
@@ -25,6 +26,10 @@
             margin-bottom: 0;
             line-height: 25px;
         }
+    }
+
+    .IconButton {
+        margin-left: auto;
     }
 
     .octo-tooltip {
