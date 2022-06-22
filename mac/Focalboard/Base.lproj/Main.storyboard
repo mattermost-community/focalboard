@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
-        <plugIn identifier="com.apple.WebKit2IBPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="20037"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -27,6 +27,12 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="showWhatsNew:" target="Ady-hI-5gd" id="dlB-6q-7bK"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Get Mattermost Boards server" id="8YW-NP-PAh">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="getCloudServer:" target="Ady-hI-5gd" id="OvY-fG-Tqt"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
@@ -942,17 +948,17 @@ Thanks so much,
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
-                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eyp-ee-dxf">
-                                <rect key="frame" x="7" y="7" width="289" height="32"/>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WZS-cI-X3m">
+                                <rect key="frame" x="13" y="7" width="314" height="32"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="275" id="Zzi-QI-UrX"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="tZN-oK-pDS"/>
                                 </constraints>
-                                <buttonCell key="cell" type="push" title="Rate Focalboard" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Kt-FU-UP3">
+                                <buttonCell key="cell" type="push" title="Setup free Mattermost Boards server" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="XJY-Vn-Z2s">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="rateButtonClicked:" target="aYX-zT-OJj" id="QqZ-am-cnJ"/>
+                                    <action selector="cloudButtonClicked:" target="Fag-zV-Usm" id="ju3-LN-Zq9"/>
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dYB-Yp-UHf">
@@ -968,13 +974,28 @@ Thanks so much,
                                     <action selector="closeButtonClicked:" target="aYX-zT-OJj" id="run-tB-6Tb"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eyp-ee-dxf">
+                                <rect key="frame" x="325" y="7" width="164" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="150" id="Zzi-QI-UrX"/>
+                                </constraints>
+                                <buttonCell key="cell" type="push" title="Rate Focalboard" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7Kt-FU-UP3">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="rateButtonClicked:" target="aYX-zT-OJj" id="QqZ-am-cnJ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="WZS-cI-X3m" firstAttribute="top" secondItem="baY-7A-lBA" secondAttribute="bottom" constant="20" symbolic="YES" id="29y-HQ-Ik9"/>
+                            <constraint firstItem="WZS-cI-X3m" firstAttribute="leading" secondItem="fy7-95-Eie" secondAttribute="leading" constant="20" symbolic="YES" id="EMs-BU-zTE"/>
                             <constraint firstAttribute="bottom" secondItem="eyp-ee-dxf" secondAttribute="bottom" constant="14" id="Kvc-VM-O1W"/>
                             <constraint firstAttribute="trailing" secondItem="dYB-Yp-UHf" secondAttribute="trailing" constant="32" id="SQ6-Hs-a1n"/>
-                            <constraint firstItem="eyp-ee-dxf" firstAttribute="leading" secondItem="fy7-95-Eie" secondAttribute="leading" constant="14" id="TTF-mb-cZY"/>
                             <constraint firstItem="eyp-ee-dxf" firstAttribute="top" secondItem="baY-7A-lBA" secondAttribute="bottom" constant="20" symbolic="YES" id="UIA-ji-xOe"/>
                             <constraint firstAttribute="trailing" secondItem="baY-7A-lBA" secondAttribute="trailing" constant="20" id="cRi-Tx-jtT"/>
+                            <constraint firstItem="eyp-ee-dxf" firstAttribute="leading" secondItem="WZS-cI-X3m" secondAttribute="trailing" constant="12" symbolic="YES" id="eKo-Qk-lxl"/>
                             <constraint firstAttribute="bottom" secondItem="dYB-Yp-UHf" secondAttribute="bottom" constant="14" id="grP-Cj-Euz"/>
                             <constraint firstItem="baY-7A-lBA" firstAttribute="leading" secondItem="fy7-95-Eie" secondAttribute="leading" constant="20" id="mxh-wg-iXP"/>
                             <constraint firstItem="baY-7A-lBA" firstAttribute="top" secondItem="fy7-95-Eie" secondAttribute="top" constant="20" id="oAR-aZ-gNJ"/>
@@ -982,6 +1003,7 @@ Thanks so much,
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="cloudButton" destination="WZS-cI-X3m" id="4ry-4a-zGW"/>
                         <outlet property="rateButton" destination="eyp-ee-dxf" id="cvh-x3-TPU"/>
                         <outlet property="textView" destination="f3s-Q5-6IG" id="nbt-zY-bAo"/>
                     </connections>
