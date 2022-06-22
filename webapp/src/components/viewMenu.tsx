@@ -245,14 +245,16 @@ const ViewMenu = (props: Props) => {
     return (
         <div className='ViewMenu'>
             <Menu>
-                {views.map((view: BoardView) => (
-                    <Menu.Text
-                        key={view.id}
-                        id={view.id}
-                        name={view.title}
-                        icon={iconForViewType(view.fields.viewType)}
-                        onClick={handleViewClick}
-                    />))}
+                <div className='view-list'>
+                    {views.map((view: BoardView) => (
+                        <Menu.Text
+                            key={view.id}
+                            id={view.id}
+                            name={view.title}
+                            icon={iconForViewType(view.fields.viewType)}
+                            onClick={handleViewClick}
+                        />))}
+                </div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Separator/>
                 </BoardPermissionGate>
