@@ -59,7 +59,8 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         props: {},
         create_at: 0,
         update_at: 0,
-        is_bot: false
+        is_bot: false,
+        roles: 'system_user',
     }
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'

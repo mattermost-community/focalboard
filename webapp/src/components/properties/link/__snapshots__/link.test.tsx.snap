@@ -55,7 +55,7 @@ exports[`components/properties/link should match snapshot for link with non-empt
 exports[`components/properties/link should match snapshot for readonly link with non-empty url 1`] = `
 <div>
   <div
-    class="URLProperty octo-propertyvalue"
+    class="URLProperty octo-propertyvalue octo-propertyvalue--readonly"
   >
     <a
       class="link"

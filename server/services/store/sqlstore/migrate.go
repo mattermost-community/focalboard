@@ -204,11 +204,13 @@ func (s *SQLStore) Migrate() error {
 		if mutexErr != nil {
 			return fmt.Errorf("error creating database mutex: %w", mutexErr)
 		}
-	}
 
-	if s.isPlugin {
 		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
 		mutex.Lock()
+		defer func() {
+			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+			mutex.Unlock()
+		}()
 	}
 
 	if err := s.migrateSchemaVersionTable(src.Migrations()); err != nil {
@@ -220,10 +222,6 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if err := s.runUniqueIDsMigration(); err != nil {
-		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
-			mutex.Unlock()
-		}
 		return fmt.Errorf("error running unique IDs migration: %w", err)
 	}
 
@@ -232,37 +230,19 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if err := s.runCategoryUUIDIDMigration(); err != nil {
-		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
-			mutex.Unlock()
-		}
 		return fmt.Errorf("error running categoryID migration: %w", err)
 	}
 
 	if err := s.deleteOldSchemaMigrationTable(); err != nil {
-		if s.isPlugin {
-			mutex.Unlock()
-		}
 		return err
 	}
 
 	if err := ensureMigrationsAppliedUpToVersion(engine, driver, teamsAndBoardsMigrationRequiredVersion); err != nil {
-		if s.isPlugin {
-			mutex.Unlock()
-		}
 		return err
 	}
 
 	if err := s.migrateTeamLessBoards(); err != nil {
-		if s.isPlugin {
-			mutex.Unlock()
-		}
 		return err
-	}
-
-	if s.isPlugin {
-		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
-		mutex.Unlock()
 	}
 
 	return engine.ApplyAll()

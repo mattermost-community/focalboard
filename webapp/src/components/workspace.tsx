@@ -5,8 +5,8 @@ import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
 import {getCurrentTeam} from '../store/teams'
-import {getCurrentBoard, isLoadingBoard} from '../store/boards'
-import {getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
+import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
+import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
     getCurrentBoardViews,
     getCurrentViewGroupBy,
@@ -37,12 +37,15 @@ function CenterContent(props: Props) {
     const isLoading = useAppSelector(isLoadingBoard)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const board = useAppSelector(getCurrentBoard)
+    const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
     const activeView = useAppSelector(getCurrentView)
     const views = useAppSelector(getCurrentBoardViews)
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
     const clientConfig = useAppSelector(getClientConfig)
+    const hiddenCardsCount = useAppSelector(getCurrentBoardHiddenCardsCount)
+    const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
 
@@ -61,10 +64,19 @@ function CenterContent(props: Props) {
             dispatch(setClientConfig(config))
         }
         wsClient.addOnConfigChange(onConfigChangeHandler)
+
+        const onCardLimitTimestampChangeHandler = (_: WSClient, timestamp: number) => {
+            dispatch(setLimitTimestamp({timestamp, templates}))
+            if (cardLimitTimestamp > timestamp) {
+                dispatch(refreshCards(timestamp))
+            }
+        }
+        wsClient.addOnCardLimitTimestampChange(onCardLimitTimestampChangeHandler)
+
         return () => {
             wsClient.removeOnConfigChange(onConfigChangeHandler)
         }
-    }, [])
+    }, [cardLimitTimestamp, match.params.boardId, templates])
 
     if (board && activeView) {
         let property = groupByProperty
@@ -89,6 +101,7 @@ function CenterContent(props: Props) {
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}
+                hiddenCardsCount={hiddenCardsCount}
             />
         )
     }
