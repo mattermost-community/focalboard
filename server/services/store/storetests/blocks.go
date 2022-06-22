@@ -796,7 +796,6 @@ func testGetBlock(t *testing.T, store store.Store) {
 }
 
 func testDuplicateBlock(t *testing.T, store store.Store) {
-
 	blocksToInsert := subtreeSampleBlocks
 	blocksToInsert = append(blocksToInsert,
 		model.Block{
