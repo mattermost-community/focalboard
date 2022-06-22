@@ -100,6 +100,7 @@ describe('components/table/Table', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -129,6 +130,7 @@ describe('components/table/Table', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -158,6 +160,7 @@ describe('components/table/Table', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -194,6 +197,7 @@ describe('components/table/Table', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -254,6 +258,7 @@ describe('components/table/Table', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={2}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -361,6 +366,7 @@ describe('components/table/Table extended', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -446,6 +452,7 @@ describe('components/table/Table extended', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -504,6 +511,7 @@ describe('components/table/Table extended', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -595,6 +603,7 @@ describe('components/table/Table extended', () => {
                     addCard={addCard}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )
@@ -647,6 +656,7 @@ describe('components/table/Table extended', () => {
                     addCard={jest.fn()}
                     onCardClicked={jest.fn()}
                     hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
                 />
             </ReduxProvider>,
         )

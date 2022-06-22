@@ -67,6 +67,7 @@ function createBlock(block?: Block): Block {
         createAt: block?.createAt || now,
         updateAt: block?.updateAt || now,
         deleteAt: block?.deleteAt || 0,
+        limited: Boolean(block?.limited),
     }
 }
 
