@@ -46,6 +46,11 @@ const ViewMenu = (props: Props) => {
     const handleDuplicateView = useCallback(() => {
         const {board, activeView} = props
         Utils.log('duplicateView')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: board.id, view: activeView.id})
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
