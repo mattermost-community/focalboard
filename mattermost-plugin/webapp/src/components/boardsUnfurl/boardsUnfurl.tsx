@@ -14,9 +14,10 @@ import {Board} from './../../../../../webapp/src/blocks/board'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
 import octoClient from './../../../../../webapp/src/octoClient'
 
-const Avatar = (window as any).Components.Avatar
-const Timestamp = (window as any).Components.Timestamp
-const imageURLForUser = (window as any).Components.imageURLForUser
+const noop = () => ''
+const Avatar = (window as any).Components?.Avatar || noop
+const Timestamp = (window as any).Components?.Timestamp || noop
+const imageURLForUser = (window as any).Components?.imageURLForUser || noop
 
 import './boardsUnfurl.scss'
 import '../../../../../webapp/src/styles/labels.scss'
@@ -53,7 +54,7 @@ class FocalboardEmbeddedData {
     }
 }
 
-const BoardsUnfurl = (props: Props): JSX.Element => {
+export const BoardsUnfurl = (props: Props): JSX.Element => {
     if (!props.embed || !props.embed.data) {
         return <></>
     }
@@ -182,7 +183,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                     </div>
 
                     {/* Body of the Card*/}
-                    {html !== '' &&
+                    {!card.limited && html !== '' &&
                         <div className='body'>
                             <div
                                 dangerouslySetInnerHTML={{__html: html}}
@@ -190,7 +191,16 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                         </div>
                     }
 
+                    {card.limited &&
+                    <p className='limited'>
+                        <FormattedMessage
+                            id='BoardsUnfurl.Limited'
+                            defaultMessage={'Additional details are hidden due to the card being archived'}
+                        />
+                    </p>}
+
                     {/* Footer of the Card*/}
+                    {!card.limited &&
                     <div className='footer'>
                         <div className='avatar'>
                             <Avatar
@@ -245,7 +255,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                                 />
                             </span>
                         </div>
-                    </div>
+                    </div>}
                 </a>
             }
             {loading &&

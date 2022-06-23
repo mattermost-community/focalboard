@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useRef, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, {useCallback, useEffect, useRef, useState, Fragment} from 'react'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
@@ -22,6 +22,8 @@ import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+
+import CardSkeleton from '../../svg/card-skeleton'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
@@ -44,10 +46,12 @@ type Props = {
     comments: CommentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
+    onClose: () => void
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
     const {card, comments} = props
+    const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
     const titleRef = useRef<Focusable>(null)
@@ -60,6 +64,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
+    const intl = useIntl()
 
     useImagePaste(props.board.id, card.id, card.fields.contentOrder)
 
@@ -99,11 +104,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     return (
         <>
-            <div className='CardDetail content'>
+            <div className={`CardDetail content${limited ? ' is-limited' : ''}`}>
                 <BlockIconSelector
                     block={card}
                     size='l'
-                    readonly={props.readonly || !canEditBoardCards}
+                    readonly={props.readonly || !canEditBoardCards || limited}
                 />
                 {!props.readonly && canEditBoardCards && !card.fields.icon &&
                     <div className='add-buttons'>
@@ -127,12 +132,58 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     saveOnEsc={true}
                     onSave={saveTitle}
                     onCancel={() => setTitle(props.card.title)}
-                    readonly={props.readonly || !canEditBoardCards}
+                    readonly={props.readonly || !canEditBoardCards || limited}
                     spellCheck={true}
                 />
 
+                {/* Hidden (limited) card copy + CTA */}
+
+                {limited && <div className='CardDetail__limited-wrapper'>
+                    <CardSkeleton
+                        className='CardDetail__limited-bg'
+                    />
+                    <p className='CardDetail__limited-title'>
+                        <FormattedMessage
+                            id='CardDetail.limited-title'
+                            defaultMessage='This card is hidden'
+                        />
+                    </p>
+                    <p className='CardDetail__limited-body'>
+                        <FormattedMessage
+                            id='CardDetail.limited-body'
+                            defaultMessage='Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.'
+                        />
+                        <br/>
+                        <a
+                            className='CardDetail__limited-link'
+                            role='button'
+                            onClick={() => {
+                                props.onClose();
+                                (window as any).openPricingModal()()
+                            }}
+                        >
+                            <FormattedMessage
+                                id='CardDetial.limited-link'
+                                defaultMessage='Learn more about our plans.'
+                            />
+                        </a>
+                    </p>
+                    <Button
+                        className='CardDetail__limited-button'
+                        onClick={() => {
+                            props.onClose();
+                            (window as any).openPricingModal()()
+                        }}
+                        emphasis='primary'
+                        size='large'
+                    >
+                        {intl.formatMessage({id: 'CardDetail.limited-button', defaultMessage: 'Upgrade'})}
+                    </Button>
+                </div>}
+
                 {/* Property list */}
 
+                {!limited &&
                 <CardDetailProperties
                     board={props.board}
                     card={props.card}
@@ -140,22 +191,24 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     activeView={props.activeView}
                     views={props.views}
                     readonly={props.readonly}
-                />
+                />}
 
                 {/* Comments */}
 
-                <hr/>
-                <CommentsList
-                    comments={comments}
-                    boardId={card.boardId}
-                    cardId={card.id}
-                    readonly={props.readonly || !canEditBoardCards}
-                />
+                {!limited && <Fragment>
+                    <hr/>
+                    <CommentsList
+                        comments={comments}
+                        boardId={card.boardId}
+                        cardId={card.id}
+                        readonly={props.readonly || !canEditBoardCards}
+                    />
+                </Fragment>}
             </div>
 
             {/* Content blocks */}
 
-            <div className='CardDetail content fullwidth content-blocks'>
+            {!limited && <div className='CardDetail content fullwidth content-blocks'>
                 <CardDetailProvider card={card}>
                     <CardDetailContents
                         card={props.card}
@@ -164,7 +217,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     />
                     {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
                 </CardDetailProvider>
-            </div>
+            </div>}
         </>
     )
 }
