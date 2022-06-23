@@ -35,8 +35,8 @@ var (
 // DiffConvOpts provides options when converting diffs to slack attachments.
 type DiffConvOpts struct {
 	Language      string
-	MakeCardLink  func(block *model.Block, board *model.Block, card *model.Block) string
-	MakeBoardLink func(board *model.Block) string
+	MakeCardLink  func(block *model.Block, board *model.Board, card *model.Block) string
+	MakeBoardLink func(board *model.Board) string
 	Logger        *mlog.Logger
 }
 
@@ -57,7 +57,7 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 		}
 
 		if opts.MakeBoardLink == nil {
-			opts.MakeBoardLink = func(board *model.Block) string {
+			opts.MakeBoardLink = func(board *model.Board) string {
 				return fmt.Sprintf("`%s`", board.Title)
 			}
 		}
