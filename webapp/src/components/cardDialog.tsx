@@ -190,8 +190,8 @@ const CardDialog = (props: Props): JSX.Element => {
             <Dialog
                 className='cardDialog'
                 onClose={props.onClose}
-                toolsMenu={menu}
-                toolbar={!isTemplate && Utils.isFocalboardPlugin() && toolbar}
+                toolsMenu={!props.readonly && !card?.limited && menu}
+                toolbar={!isTemplate && Utils.isFocalboardPlugin() && !card?.limited && toolbar}
                 showFullscreen={fullscreen}
                 onToggleFullscreen={toggleFullscreen}
             >
@@ -216,6 +216,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         hideTitle={!showTitle}
                         hideProperties={!showProperties}
                         hideComments={!showComments}
+                        onClose={props.onClose}
                     />}
 
                 {!card &&

@@ -66,6 +66,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		vc.showWindow(self)
 	}
 
+	@IBAction func getCloudServer(_: AnyObject) {
+		Globals.openGetCloudServerUrl()
+	}
+	
 	private func webFolder() -> URL {
 		let url = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
 		return url.appendingPathComponent("Focalboard").appendingPathComponent("server")

@@ -33,6 +33,7 @@ const checkboxBlock: ContentBlock = {
     createAt: 0,
     updateAt: 0,
     deleteAt: 0,
+    limited: false,
 }
 
 const cardDetailContextValue = (autoAdded: boolean): CardDetailContextType => ({

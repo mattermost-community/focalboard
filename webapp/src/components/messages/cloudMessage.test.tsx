@@ -45,6 +45,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: 0,
             is_bot: false,
+            roles: 'system_user',
         }
         const state = {
             users: {
@@ -75,6 +76,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: 0,
             is_bot: false,
+            roles: 'system_user',
         }
         const state = {
             users: {
@@ -103,6 +105,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: 0,
             is_bot: false,
+            roles: 'system_user',
         }
         const state = {
             users: {
@@ -139,6 +142,7 @@ describe('components/messages/CloudMessage', () => {
             create_at: 0,
             update_at: Date.now() - (1000 * 60 * 60 * 24), //24 hours,
             is_bot: false,
+            roles: 'system_user',
         }
         const state = {
             users: {
