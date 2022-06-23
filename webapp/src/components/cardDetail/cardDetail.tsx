@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {Fragment, useCallback, useEffect, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
@@ -29,12 +29,6 @@ import {CardDetailProvider} from './cardDetailContext'
 import CardDetailProperties from './cardDetailProperties'
 import CommentsList from './commentsList'
 import useImagePaste from './imagePaste'
-
-
-
-
-
-
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'
