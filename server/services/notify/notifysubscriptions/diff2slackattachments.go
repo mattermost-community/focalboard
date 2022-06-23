@@ -20,8 +20,7 @@ import (
 
 const (
 	// card change notifications.
-	defAddCardNotify = "{{.Authors | printAuthors \"unknown_user\" }} has added the card {{. | makeLink}}\n"
-	//nolint:lll
+	defAddCardNotify    = "{{.Authors | printAuthors \"unknown_user\" }} has added the card {{. | makeLink}}\n"
 	defModifyCardNotify = "###### {{.Authors | printAuthors \"unknown_user\" }} has modified the card {{. | makeLink}} on the board {{. | makeBoardLink}}\n"
 	defDeleteCardNotify = "{{.Authors | printAuthors \"unknown_user\" }} has deleted the card {{. | makeLink}}\n"
 )
