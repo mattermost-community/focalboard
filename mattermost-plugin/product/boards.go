@@ -119,7 +119,6 @@ func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (a
 
 func (b *Boards) Start() error {
 	b.logger.Info("Starting boards service")
-
 	return nil
 }
 
