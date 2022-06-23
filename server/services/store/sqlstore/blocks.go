@@ -781,6 +781,9 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 	var rootBlock model.Block
 	allBlocks := []model.Block{}
 	for _, block := range blocks {
+		if block.Type == model.TypeComment {
+			continue
+		}
 		if block.ID == blockID {
 			if block.Fields == nil {
 				block.Fields = make(map[string]interface{})
