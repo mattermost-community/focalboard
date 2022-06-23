@@ -77,7 +77,7 @@ const MarkdownEditor = (props: Props): JSX.Element => {
                 return false
             })
         }
-    }, [])
+    })
 
     const element = (
         <div className={`MarkdownEditor octo-editor ${props.className || ''} ${isEditing ? 'active' : ''}`}>
