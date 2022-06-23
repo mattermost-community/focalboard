@@ -104,11 +104,12 @@ const CardDetail = (props: Props): JSX.Element|null => {
     return (
         <>
             <div className={`CardDetail content${limited ? ' is-limited' : ''}`}>
-                <BlockIconSelector
+                {!props.hideTitle &&<BlockIconSelector
                     block={card}
                     size='l'
                     readonly={props.readonly || !canEditBoardCards || limited}
-                />
+                />}
+
                 {!props.hideTitle && !props.readonly && canEditBoardCards && !card.fields.icon &&
                     <div className='add-buttons'>
                         <Button
