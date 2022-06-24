@@ -35,6 +35,7 @@ import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
 
 import './cardDialog.scss'
+import CardRHS from "./cardRHS/cardRHS"
 
 type Props = {
     board: Board
@@ -45,6 +46,7 @@ type Props = {
     onClose: () => void
     showCard: (cardId?: string) => void
     readonly: boolean
+    cardView: 'dialog' | 'rhs'
 }
 
 const CardDialog = (props: Props): JSX.Element => {
@@ -179,9 +181,11 @@ const CardDialog = (props: Props): JSX.Element => {
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
     const toolbar = followActionButton(isFollowingCard)
 
+    const CardView = props.cardView === 'rhs' ? CardRHS : Dialog
+
     return (
-        <>
-            <Dialog
+        <div className='cardViewWrapper'>
+            <CardView
                 className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
@@ -215,10 +219,10 @@ const CardDialog = (props: Props): JSX.Element => {
                             defaultMessage="This card doesn't exist or is inaccessible."
                         />
                     </div>}
-            </Dialog>
+            </CardView>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
-        </>
+        </div>
     )
 }
 

@@ -4,23 +4,14 @@ import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
-import IconButton from '../widgets/buttons/iconButton'
-import CloseIcon from '../widgets/icons/close'
-import OptionsIcon from '../widgets/icons/options'
-import MenuWrapper from '../widgets/menuWrapper'
-import './dialog.scss'
+import './cardRHS.scss'
+import IconButton from "../../widgets/buttons/iconButton"
+import CloseIcon from "../../widgets/icons/close"
+import MenuWrapper from "../../widgets/menuWrapper"
+import OptionsIcon from "../../widgets/icons/options"
+import {CardViewProps} from "../dialog"
 
-export type CardViewProps = {
-    children: React.ReactNode
-    toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
-    toolbar?: React.ReactNode
-    hideCloseButton?: boolean
-    className?: string
-    title?: string
-    onClose: () => void,
-}
-
-const Dialog = (props: CardViewProps): JSX.Element => {
+const CardRHS = (props: CardViewProps): JSX.Element => {
     const {toolsMenu, toolbar, title} = props
     const intl = useIntl()
 
@@ -34,8 +25,7 @@ const Dialog = (props: CardViewProps): JSX.Element => {
     const isBackdropClickedRef = useRef(false)
 
     return (
-        <div className={`Dialog dialog-back ${props.className}`}>
-            <div className='backdrop'/>
+        <div className={`CardRHS ${props.className}`}>
             <div
                 className='wrapper'
                 onClick={(e) => {
@@ -60,6 +50,20 @@ const Dialog = (props: CardViewProps): JSX.Element => {
                     <div className='toolbar'>
                         {title && <h1 className='text-heading5 mt-2'>{title}</h1>}
                         {
+                            toolsMenu &&
+                            <MenuWrapper>
+                                <IconButton
+                                    size='medium'
+                                    icon={<OptionsIcon/>}
+                                />
+                                {toolsMenu}
+                            </MenuWrapper>
+                        }
+                        <div className='toolbar--right'>
+                            {toolbar && <div>{toolbar}</div>}
+                        </div>
+
+                        {
                             !props.hideCloseButton &&
                             <IconButton
                                 onClick={props.onClose}
@@ -68,17 +72,6 @@ const Dialog = (props: CardViewProps): JSX.Element => {
                                 size='medium'
                             />
                         }
-                        <div className='toolbar--right'>
-                            {toolbar && <div>{toolbar}</div>}
-                            {toolsMenu && <MenuWrapper>
-                                <IconButton
-                                    size='medium'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
-                            }
-                        </div>
                     </div>
                     {props.children}
                 </div>
@@ -87,4 +80,4 @@ const Dialog = (props: CardViewProps): JSX.Element => {
     )
 }
 
-export default React.memo(Dialog)
+export default React.memo(CardRHS)

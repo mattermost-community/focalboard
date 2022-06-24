@@ -1,0 +1,99 @@
+.cardViewWrapper {
+    height: 100%;
+}
+
+.CardRHS {
+    height: 100%;
+
+    .backdrop {
+        position: fixed;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(var(--center-channel-color-rgb), 0.5);
+    }
+
+    .wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .toolbar {
+        display: flex;
+        flex-direction: row;
+        padding: 16px;
+        justify-content: space-between;
+    }
+
+    .dialog {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: rgb(var(--center-channel-bg-rgb));
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+        overflow-x: hidden;
+        overflow-y: auto;
+        border-left: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
+
+        @media not screen and (max-width: 975px) {
+            //margin: 72px auto;
+            //max-width: 975px;
+            //height: calc(100% - 144px);
+
+            .hideOnWidescreen {
+                /* Hide elements on larger screens */
+                display: none !important;
+            }
+        }
+        @media screen and (max-width: 975px) {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        > * {
+            flex-shrink: 0;
+        }
+
+        > .banner {
+            background-color: rgba(230, 220, 192, 0.9);
+            text-align: center;
+            padding: 10px;
+            color: #222;
+        }
+
+        > .banner.error {
+            background-color: rgba(230, 192, 192, 0.9);
+        }
+
+        > .toolbar {
+            display: flex;
+            flex-direction: row;
+            padding: 24px;
+            justify-content: space-between;
+        }
+
+        .toolbar--right {
+            display: flex;
+            gap: 8px;
+        }
+
+        > .content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 24px;
+        }
+    }
+
+    .cardToolbar {
+        width: 100%;
+        margin: 0 16px;
+    }
+}

@@ -233,6 +233,8 @@ const Workspace = (props: Props) => {
                     readonly={props.readonly}
                 />
             </div>
+
+            <div id='focalboard-rhs-portal'/>
         </div>
     )
 }

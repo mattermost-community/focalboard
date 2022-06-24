@@ -57,6 +57,7 @@ import CardLimitNotification from './cardLimitNotification'
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
+import RhsPortal from "./rhsPortal/rhsPortal"
 
 type Props = {
     clientConfig?: ClientConfig
@@ -354,13 +355,16 @@ const CenterPanel = (props: Props) => {
         () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
         [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
     )
+
+    const Portal = me && me.props.cardView === 'rhs' ? RhsPortal : RootPortal
+
     return (
         <div
             className='BoardComponent'
             onClick={backgroundClicked}
         >
             {props.shownCardId &&
-                <RootPortal>
+                <Portal>
                     <CardDialog
                         board={board}
                         activeView={activeView}
@@ -371,8 +375,10 @@ const CenterPanel = (props: Props) => {
                         onClose={() => showCard(undefined)}
                         showCard={(cardId) => showCard(cardId)}
                         readonly={props.readonly}
+                        cardView={me?.props.cardView || 'dialog'}
                     />
-                </RootPortal>}
+                </Portal>
+            }
 
             <div className='top-head'>
                 <TopBar/>
