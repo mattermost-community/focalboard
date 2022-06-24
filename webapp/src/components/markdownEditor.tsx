@@ -71,7 +71,12 @@ const MarkdownEditor = (props: Props): JSX.Element => {
         for (const linkElement of localLinks) {
             const link = linkElement as HTMLAnchorElement
             link.addEventListener('click', (event) => {
-                const url = encodeURI((event.target as HTMLElement)?.getAttribute('localhref') || '')
+                let url = encodeURI((event.target as HTMLElement)?.getAttribute('localhref') || '')
+                // Add current query string params to link, e.g read-only token
+                const currentUrl = new URL(window.location.href)
+                if (currentUrl.search) {
+                    url += currentUrl.search
+                }
                 routerHistory.push(url)
                 event.preventDefault()
                 return false
