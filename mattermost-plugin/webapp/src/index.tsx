@@ -144,9 +144,9 @@ const MainApp = (props: Props) => {
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <div id='focalboard-app'>
-                    <App history={browserHistory}/>
+                    <App history={browserHistory} />
                 </div>
-                <div id='focalboard-root-portal'/>
+                <div id='focalboard-root-portal' />
             </ReduxProvider>
         </ErrorBoundary>
     )
@@ -155,7 +155,7 @@ const MainApp = (props: Props) => {
 const HeaderComponent = () => {
     return (
         <ErrorBoundary>
-            <GlobalHeader history={browserHistory}/>
+            <GlobalHeader history={browserHistory} />
         </ErrorBoundary>
     )
 }
@@ -208,7 +208,7 @@ export default class Plugin {
                 window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
             }
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboard, 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon />, goToFocalboard, 'Boards', 'Boards')
             this.registry.registerProduct(
                 '/boards',
                 'product-boards',
@@ -227,7 +227,7 @@ export default class Plugin {
             }
 
             if (registry.registerChannelIntroButtonAction) {
-                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon />, goToFocalboardTemplate, 'Boards')
             }
 
             if (this.registry.registerAppBarComponent) {
@@ -254,7 +254,7 @@ export default class Plugin {
                     try {
                         rudderCfg.setCookieDomain = new URL(siteURL).hostname
                         // eslint-disable-next-line no-empty
-                    } catch (_) {}
+                    } catch (_) { }
                 }
                 rudderAnalytics.load(rudderKey, rudderUrl, rudderCfg)
 
@@ -277,6 +277,14 @@ export default class Plugin {
         if (this.registry?.registerSearchInProductHandler) {
             this.registry?.registerSearchInProductHandler(async (teamID: string, query: string) => {
                 const data = await octoClient.search(teamID, query)
+                return data
+            });
+        }
+
+        // Search In Product handler
+        if (this.registry?.registerRecentlyViewedInProductHandler) {
+            this.registry?.registerRecentlyViewedInProductHandler(async () => {
+                const data = await octoClient.recentlyViewed()
                 return data
             });
         }

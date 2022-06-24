@@ -16,6 +16,6 @@ export interface PluginRegistry {
     unregisterWebSocketEventHandler(event: string)
     registerAppBarComponent(iconURL: string, action: (channel: Channel, member: ChannelMembership) => void, tooltipText: React.ReactNode)
     registerSearchInProductHandler(handler: (teamID: string, query: string) => void)
-
+    registerRecentlyViewedInProductHandler(handler: () => void)
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }

@@ -92,6 +92,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// Board APIs
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/boards/recent", a.sessionRequired(a.handleRecentBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv2.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
 	apiv2.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
@@ -3265,6 +3266,82 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("boardsCount", len(boards))
+	auditRec.Success()
+}
+
+func (a *API) handleRecentBoards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/boards/search searchBoards
+	//
+	// Returns the boards that match with a search term
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: q
+	//   in: query
+	//   description: The search term. Must have at least one character
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Board"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	teamID := mux.Vars(r)["teamID"]
+	term := r.URL.Query().Get("q")
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	if len(term) == 0 {
+		jsonStringResponse(w, http.StatusOK, "[]")
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchBoards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+
+	// retrieve boards list
+	boards, err := a.app.GetUserLastVisitedBoards(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// a.logger.Debug("SearchBoards",
+	// 	mlog.String("teamID", teamID),
+	// 	mlog.Int("boardsCount", len(boards)),
+	// )
+
+	data, err := json.Marshal(boards)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	// auditRec.AddMeta("boardsCount", len(boards))
 	auditRec.Success()
 }
 

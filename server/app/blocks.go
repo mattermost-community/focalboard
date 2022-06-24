@@ -431,7 +431,7 @@ func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 }
 
 func (a *App) SetLastVisitedUserBoards(userID, boardID string) {
-	lastVisitedBoards, err := a.getUserLastVisitedBoards(userID)
+	lastVisitedBoards, err := a.GetUserLastVisitedBoards(userID)
 	if err != nil {
 		return
 	}
@@ -446,7 +446,7 @@ func (a *App) SetLastVisitedUserBoards(userID, boardID string) {
 	_ = a.saveUserLastVisitedBoards(userID, lastVisitedBoards)
 }
 
-func (a *App) getUserLastVisitedBoards(userID string) (map[string]int64, error) {
+func (a *App) GetUserLastVisitedBoards(userID string) (map[string]int64, error) {
 	user, err := a.store.GetUserByID(userID)
 	if err != nil {
 		return nil, err
