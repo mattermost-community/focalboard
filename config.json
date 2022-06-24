@@ -20,5 +20,5 @@
 	"authMode": "native",
 	"logging_cfg_file": "",
 	"audit_cfg_file": "",
-	"enablePublicSharedBoards": false
+	"enablePublicSharedBoards": true
 }
