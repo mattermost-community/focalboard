@@ -31,6 +31,10 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	return board, nil
 }
 
+func (a *App) GetBoards(boardIDs []string) ([]*model.Board, error) {
+	return a.store.GetBoards(boardIDs)
+}
+
 func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
 	license := a.store.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {

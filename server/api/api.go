@@ -3321,12 +3321,22 @@ func (a *API) handleRecentBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.GetUserLastVisitedBoards(userID)
+	boardIDs, err := a.app.GetUserLastVisitedBoards(userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
+	keys := make([]string, 0, len(boardIDs))
+	for k := range boardIDs {
+		keys = append(keys, k)
+	}
+
+	boards, err := a.app.GetBoards(keys)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
 	// a.logger.Debug("SearchBoards",
 	// 	mlog.String("teamID", teamID),
 	// 	mlog.Int("boardsCount", len(boards)),

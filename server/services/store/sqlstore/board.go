@@ -250,6 +250,10 @@ func (s *SQLStore) getBoard(db sq.BaseRunner, boardID string) (*model.Board, err
 	return s.getBoardByCondition(db, sq.Eq{"id": boardID})
 }
 
+func (s *SQLStore) getBoards(db sq.BaseRunner, boardIDs []string) ([]*model.Board, error) {
+	return s.getBoardsByCondition(db, sq.Eq{"id": boardIDs})
+}
+
 func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
