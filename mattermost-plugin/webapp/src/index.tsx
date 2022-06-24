@@ -273,6 +273,14 @@ export default class Plugin {
             }
         }
 
+        // Search In Product handler
+        if (this.registry?.registerSearchInProductHandler) {
+            this.registry?.registerSearchInProductHandler(async (teamID: string, query: string) => {
+                const data = await octoClient.search(teamID, query)
+                return data
+            });
+        }
+
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))

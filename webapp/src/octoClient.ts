@@ -784,6 +784,20 @@ class OctoClient {
         return (await this.getJson(response, [])) as Array<Board>
     }
 
+    async searchBoard(term: string, userId: string): Promise<Array<Board>> {
+        const url = `${this.teamPath()}/boards/term?q=${encodeURIComponent(term)}`
+        const response = await fetch(this.getBaseURL() + url, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Array<Board>
+    }
+
     async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
         const path = `/api/v2/subscriptions/${userId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
