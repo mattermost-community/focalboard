@@ -738,7 +738,6 @@ func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Boa
 
 func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
 	return s.searchUsersByTeam(s.db, teamID, searchQuery)
-
 }
 
 func (s *SQLStore) SetSystemSetting(key string, value string) error {

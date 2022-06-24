@@ -784,22 +784,8 @@ class OctoClient {
         return (await this.getJson(response, [])) as Array<Board>
     }
 
-    async recentlyViewed(): Promise<Array<Board>> {
-        const url = `${this.teamPath()}/boards/recent?q=${encodeURIComponent("test")}`
-        const response = await fetch(this.getBaseURL() + url, {
-            method: 'GET',
-            headers: this.headers(),
-        })
-
-        if (response.status !== 200) {
-            return []
-        }
-
-        return (await this.getJson(response, [])) as Array<Board>
-    }
-
-    async searchBoard(term: string, userId: string): Promise<Array<Board>> {
-        const url = `${this.teamPath()}/boards/term?q=${encodeURIComponent(term)}`
+    async recentViewedBoards(): Promise<Array<Board>> {
+        const url = `${this.teamPath()}/boards/search?q=${encodeURIComponent('test')}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
             headers: this.headers(),

@@ -281,7 +281,7 @@ export default class Plugin {
             });
         }
 
-        // Search In Product handler
+        // Recently Viewed In Product handler
         if (this.registry?.registerRecentlyViewedInProductHandler) {
             this.registry?.registerRecentlyViewedInProductHandler(async () => {
                 const data = await octoClient.recentlyViewed()
