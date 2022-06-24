@@ -9,6 +9,7 @@ import CloseIcon from '../widgets/icons/close'
 import OptionsIcon from '../widgets/icons/options'
 import MenuWrapper from '../widgets/menuWrapper'
 import './dialog.scss'
+import {Board} from "../blocks/board"
 
 export type CardViewProps = {
     children: React.ReactNode
@@ -18,6 +19,7 @@ export type CardViewProps = {
     className?: string
     title?: string
     onClose: () => void,
+    board: Board
 }
 
 const Dialog = (props: CardViewProps): JSX.Element => {

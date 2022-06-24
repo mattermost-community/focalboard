@@ -2,6 +2,10 @@
     height: 100%;
 }
 
+.CardRHSResizeWrapper {
+    height: 100%;
+}
+
 .CardRHS {
     height: 100%;
 
@@ -29,6 +33,7 @@
     }
 
     .dialog {
+        width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -75,8 +80,18 @@
         > .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px;
+            padding: 12px 20px;
             justify-content: space-between;
+            border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
+
+            > .rhsTitle {
+                display: flex;
+            }
+
+            > .toolbarContent {
+                display: flex;
+                gap: 8px;
+            }
         }
 
         .toolbar--right {
@@ -89,6 +104,17 @@
             flex-direction: column;
             align-items: flex-start;
             padding: 10px 24px;
+        }
+
+        .cardHeader {
+            padding-right: 8px;
+            border-right: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
+        }
+        .boardTitle {
+            padding-left: 8px;
+            color: rgba(var(--center-channel-color-rgb), 0.6);
+            font-weight: normal;
+            padding-top: 1px;
         }
     }
 

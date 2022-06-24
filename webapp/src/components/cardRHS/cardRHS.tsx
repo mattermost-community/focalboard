@@ -1,19 +1,29 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef} from 'react'
-import {useIntl} from 'react-intl'
+import React, {useEffect, useRef, useState} from 'react'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import './cardRHS.scss'
+import {NumberSize, Resizable} from "re-resizable"
+
+import {Direction} from "re-resizable/lib/resizer"
+
+import {debounce} from "lodash"
+
 import IconButton from "../../widgets/buttons/iconButton"
 import CloseIcon from "../../widgets/icons/close"
 import MenuWrapper from "../../widgets/menuWrapper"
 import OptionsIcon from "../../widgets/icons/options"
 import {CardViewProps} from "../dialog"
+import octoClient from "../../octoClient"
+import {useAppSelector} from "../../store/hooks"
+import {getMe} from "../../store/users"
 
 const CardRHS = (props: CardViewProps): JSX.Element => {
-    const {toolsMenu, toolbar, title} = props
+    const {toolsMenu, toolbar} = props
     const intl = useIntl()
+    const me = useAppSelector(getMe)
 
     const closeDialogText = intl.formatMessage({
         id: 'Dialog.closeDialog',
@@ -24,59 +34,111 @@ const CardRHS = (props: CardViewProps): JSX.Element => {
 
     const isBackdropClickedRef = useRef(false)
 
+    const [width, setWidth] = useState<number>(420)
+
+    useEffect(() => {
+        if (me && me.props.lhsSize) {
+            setWidth(parseFloat(me.props.rhsSize))
+        }
+    }, [me])
+
+    const saveRHSSize = debounce((size: number) => {
+        if (!me) {
+            return
+        }
+        octoClient.patchUserConfig(me.id, {
+            updatedFields: {
+                rhsSize: size.toString(),
+            }
+        })
+    }, 200)
+
+    const rhsResizeHandler = (event: MouseEvent | TouchEvent, direction: Direction, elementRef: HTMLElement, delta: NumberSize) => {
+        if (delta.width === 0) {
+            // This happens when you try changing size to beyond min and max width.
+            // This check avoid unnecessary user pref save API call.
+            return
+        }
+
+        const newWidth = width + delta.width
+        setWidth(newWidth)
+        saveRHSSize(newWidth)
+    }
+
     return (
-        <div className={`CardRHS ${props.className}`}>
-            <div
-                className='wrapper'
-                onClick={(e) => {
-                    e.stopPropagation()
-                    if(!isBackdropClickedRef.current){
-                        return
-                    }
-                    isBackdropClickedRef.current = false
-                    props.onClose()
-
-                }}
-                onMouseDown={(e) => {
-                    if(e.target === e.currentTarget){
-                        isBackdropClickedRef.current = true
-                    }
-                }}
-            >
+        <Resizable
+            className='CardRHSResizeWrapper'
+            enable={{left: true}}
+            size={{width: width, height: '100%'}}
+            onResizeStop={rhsResizeHandler}
+        >
+            <div className={`CardRHS ${props.className}`}>
                 <div
-                    role='dialog'
-                    className='dialog'
-                >
-                    <div className='toolbar'>
-                        {title && <h1 className='text-heading5 mt-2'>{title}</h1>}
-                        {
-                            toolsMenu &&
-                            <MenuWrapper>
-                                <IconButton
-                                    size='medium'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
+                    className='wrapper'
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        if(!isBackdropClickedRef.current){
+                            return
                         }
-                        <div className='toolbar--right'>
-                            {toolbar && <div>{toolbar}</div>}
-                        </div>
+                        isBackdropClickedRef.current = false
+                        props.onClose()
 
-                        {
-                            !props.hideCloseButton &&
-                            <IconButton
-                                onClick={props.onClose}
-                                icon={<CloseIcon/>}
-                                title={closeDialogText}
-                                size='medium'
-                            />
+                    }}
+                    onMouseDown={(e) => {
+                        if(e.target === e.currentTarget){
+                            isBackdropClickedRef.current = true
                         }
+                    }}
+                >
+                    <div
+                        role='dialog'
+                        className='dialog'
+                    >
+                        <div className='toolbar'>
+                            <div className='rhsTitle'>
+                                {
+                                    <h2 className='text-heading3 mt-2 cardHeader'>
+                                        <FormattedMessage
+                                            id='rhs.title.card'
+                                            defaultMessage='Card'
+                                        />
+                                    </h2>
+                                }
+                                {<h3 className='text-heading2 mt-2 boardTitle'>{props.board.title}</h3>}
+                            </div>
+
+                            <div className='toolbarContent'>
+                                <div className='toolbar--right'>
+                                    {toolbar && <div>{toolbar}</div>}
+                                </div>
+
+                                {
+                                    toolsMenu &&
+                                    <MenuWrapper>
+                                        <IconButton
+                                            size='medium'
+                                            icon={<OptionsIcon/>}
+                                        />
+                                        {toolsMenu}
+                                    </MenuWrapper>
+                                }
+
+                                {
+                                    !props.hideCloseButton &&
+                                    <IconButton
+                                        onClick={props.onClose}
+                                        icon={<CloseIcon/>}
+                                        title={closeDialogText}
+                                        size='medium'
+                                    />
+                                }
+                            </div>
+                        </div>
+                        {props.children}
                     </div>
-                    {props.children}
                 </div>
             </div>
-        </div>
+        </Resizable>
     )
 }
 

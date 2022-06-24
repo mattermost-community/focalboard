@@ -10,7 +10,7 @@ import mutator from '../mutator'
 import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
-import {useAppSelector} from '../store/hooks'
+import {useAppDispatch, useAppSelector} from '../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -24,8 +24,8 @@ import Button from '../widgets/buttons/button'
 
 import {getUserBlockSubscriptionList} from '../store/initialLoad'
 
-import {IUser} from '../user'
-import {getMe} from '../store/users'
+import {IUser, UserConfigPatch} from '../user'
+import {getMe, patchProps} from '../store/users'
 import {Permission} from '../constants'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
@@ -36,6 +36,10 @@ import {sendFlashMessage} from './flashMessages'
 
 import './cardDialog.scss'
 import CardRHS from "./cardRHS/cardRHS"
+
+import octoClient from "../octoClient"
+import DockLeft from "../widgets/icons/dockLeft"
+import DockWindow from "../widgets/icons/dockWindow"
 
 type Props = {
     board: Board
@@ -111,6 +115,51 @@ const CardDialog = (props: Props): JSX.Element => {
         setShowConfirmationDialogBox(true)
     }
 
+    const dispatch = useAppDispatch()
+
+    const changeUserCardView = async (cardView: 'dialog' | 'rhs') => {
+        if (!me) {
+            return
+        }
+
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                cardView,
+            }
+        }
+
+        const newProps = {
+            ...me.props,
+            cardView,
+        }
+        dispatch(patchProps(newProps))
+
+        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        // if (patchedProps) {
+        //     dispatch(patchProps(patchedProps))
+        // }
+    }
+
+    const switchToDialogView = (
+        <Menu.Text
+            id='switchToDialogView'
+            name={intl.formatMessage({id: 'Mutator.switch-to-dialog-view', defaultMessage: 'Switch to dialog view'})}
+            icon={<DockWindow/>}
+            onClick={() => changeUserCardView('dialog')}
+        />
+    )
+
+    const switchToSidebarView = (
+        <Menu.Text
+            id='switchToSidebarView'
+            name={intl.formatMessage({id: 'Mutator.switch-to-sidebar-view', defaultMessage: 'Switch to sidebar view'})}
+            icon={<DockLeft/>}
+            onClick={() => changeUserCardView('rhs')}
+        />
+    )
+
+    const viewSwitcher = props.cardView === 'rhs' ? switchToDialogView : switchToSidebarView
+
     const menu = (
         <Menu position='left'>
             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
@@ -151,6 +200,8 @@ const CardDialog = (props: Props): JSX.Element => {
                     />
                 </BoardPermissionGate>
             }
+
+            {viewSwitcher}
         </Menu>
     )
 
@@ -190,6 +241,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}
                 toolbar={!isTemplate && Utils.isFocalboardPlugin() && !card?.limited && toolbar}
+                board={board}
             >
                 {isTemplate &&
                     <div className='banner'>

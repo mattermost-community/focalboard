@@ -1,19 +1,26 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {forwardRef, useEffect, useRef} from 'react'
+import React, {forwardRef, useCallback, useEffect, useLayoutEffect, useRef} from 'react'
 
 import {EditableProps, Focusable, useEditable} from './editable'
 
 import './editableArea.scss'
+import {useResizeDetector} from "react-resize-detector"
 
 function getBorderWidth(style: CSSStyleDeclaration): number {
     return parseInt(style.borderTopWidth || '0', 10) + parseInt(style.borderBottomWidth || '0', 10)
 }
 
 const EditableArea = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element => {
-    const elementRef = useRef<HTMLTextAreaElement>(null)
     const referenceRef = useRef<HTMLTextAreaElement>(null)
     const heightRef = useRef(0)
+
+    const { width, ref: elementRef } = useResizeDetector({
+        handleWidth: true,
+        handleHeight: false,
+        refreshMode: 'throttle',
+        refreshRate: 500,
+    })
     const elementProps = useEditable(props, ref, elementRef)
 
     useEffect(() => {
@@ -33,7 +40,7 @@ const EditableArea = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Elem
 
             heightRef.current = height
         }
-    })
+    }, [width])
 
     const heightProps = {
         height: heightRef.current,

@@ -158,6 +158,8 @@
   "Mutator.new-board-from-template": "new board from template",
   "Mutator.new-card-from-template": "new card from template",
   "Mutator.new-template-from-card": "new template from card",
+  "Mutator.switch-to-dialog-view": "Switch to dialog view",
+  "Mutator.switch-to-sidebar-view": "Switch to sidebar view",
   "OnboardingTour.AddComments.Body": "You can comment on issues, and even @mention your fellow Mattermost users to get their attention.",
   "OnboardingTour.AddComments.Title": "Add comments",
   "OnboardingTour.AddDescription.Body": "Add a description to your card so your teammates know what the card is about.",
@@ -337,5 +339,6 @@
   "tutorial_tip.got_it": "Got it",
   "tutorial_tip.ok": "Next",
   "tutorial_tip.out": "Opt out of these tips.",
-  "tutorial_tip.seen": "Seen this before?"
+  "tutorial_tip.seen": "Seen this before?",
+  "rhs.title.card": "Card"
 }
