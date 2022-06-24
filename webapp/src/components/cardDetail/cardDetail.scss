@@ -174,7 +174,7 @@
         }
 
         a.localLink {
-            color: #0000ff;
+            color: var(--link-color-rgb);
         }
 
         a.outboundLink {

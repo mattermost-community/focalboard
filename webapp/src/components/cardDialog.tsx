@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {useEffect} from 'preact/hooks'
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
@@ -44,6 +45,14 @@ type Props = {
 }
 
 const CardDialog = (props: Props): JSX.Element => {
+    // TODO: Convert this to React code
+    if (/[?&]fullscreen/.test(location?.search)) {
+        window.localStorage.setItem('cardShowTitle', JSON.stringify(false))
+        window.localStorage.setItem('cardShowProperties', JSON.stringify(false))
+        window.localStorage.setItem('cardShowComments', JSON.stringify(false))
+        window.localStorage.setItem('cardFullscreen', JSON.stringify(true))
+    }
+
     const {board, activeView, cards, views} = props
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
