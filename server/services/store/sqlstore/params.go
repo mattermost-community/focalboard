@@ -4,10 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/mattermost/mattermost-server/v6/plugin"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+// pluginAPI is the interface required my the Params to interact with the mattermost-server.
+// You can use plugin-api or product-api adapter implementations.
+type pluginAPI interface {
+	GetChannel(string) (*mmModel.Channel, *mmModel.AppError)
+}
 
 type Params struct {
 	DBType           string
@@ -18,7 +24,7 @@ type Params struct {
 	IsPlugin         bool
 	IsSingleUser     bool
 	NewMutexFn       MutexFactory
-	PluginAPI        *plugin.API
+	PluginAPI        pluginAPI
 }
 
 func (p Params) CheckValid() error {

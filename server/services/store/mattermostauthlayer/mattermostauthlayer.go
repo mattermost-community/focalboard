@@ -3,10 +3,10 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -25,17 +25,30 @@ func (pe NotSupportedError) Error() string {
 	return pe.msg
 }
 
+// pluginAPI is the interface required my the MattermostAuthLayer to interact with
+// the mattermost-server. You can use plugin-api or product-api adapter implementations.
+type pluginAPI interface {
+	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, *mmModel.AppError)
+	GetUser(userID string) (*mmModel.User, *mmModel.AppError)
+	UpdateUser(user *mmModel.User) (*mmModel.User, *mmModel.AppError)
+	GetUserByEmail(email string) (*mmModel.User, *mmModel.AppError)
+	GetUserByUsername(username string) (*mmModel.User, *mmModel.AppError)
+	GetLicense() *mmModel.License
+	GetFileInfo(fileID string) (*mmModel.FileInfo, *mmModel.AppError)
+	GetCloudLimits() (*mmModel.ProductLimits, error)
+}
+
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
 	dbType    string
 	mmDB      *sql.DB
 	logger    *mlog.Logger
-	pluginAPI plugin.API
+	pluginAPI pluginAPI
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI pluginAPI) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:     store,
 		dbType:    dbType,
@@ -385,17 +398,23 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 }
 
 func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {
-	fileInfo, appErr := s.pluginAPI.GetFileInfo(id)
-	if appErr != nil {
+	fileInfo, err := s.pluginAPI.GetFileInfo(id)
+	if err != nil {
 		// Not finding fileinfo is fine because we don't have data for
 		// any existing files already uploaded in Boards before this code
 		// was deployed.
-		if appErr.StatusCode == http.StatusNotFound {
-			return nil, nil
+		var appErr *mmModel.AppError
+		if errors.As(err, &appErr) {
+			if appErr.StatusCode == http.StatusNotFound {
+				return nil, nil
+			}
 		}
 
-		s.logger.Error("error fetching fileinfo", mlog.String("id", id), mlog.Err(appErr))
-		return nil, appErr
+		s.logger.Error("error fetching fileinfo",
+			mlog.String("id", id),
+			mlog.Err(err),
+		)
+		return nil, err
 	}
 
 	return fileInfo, nil

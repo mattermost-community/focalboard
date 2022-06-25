@@ -26,17 +26,19 @@ func init() {
 }
 
 type Boards struct {
-	teamService      product.TeamService
-	channelService   product.ChannelService
-	userService      product.UserService
-	postService      product.PostService
-	botService       product.BotService
-	clusterService   product.ClusterService
-	configService    product.ConfigService
-	logger           mlog.LoggerIFace
-	licenseService   product.LicenseService
-	filestoreService product.FilestoreService
-	routerService    product.RouterService
+	teamService          product.TeamService
+	channelService       product.ChannelService
+	userService          product.UserService
+	postService          product.PostService
+	botService           product.BotService
+	clusterService       product.ClusterService
+	configService        product.ConfigService
+	logger               mlog.LoggerIFace
+	licenseService       product.LicenseService
+	filestoreService     product.FilestoreService
+	fileInfoStoreService product.FileInfoStoreService
+	routerService        product.RouterService
+	cloudService         product.CloudService
 }
 
 func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
@@ -104,12 +106,24 @@ func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (a
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.filestoreService = filestoreService
+		case app.FileInfoStoreKey:
+			fileInfoStoreService, ok := service.(product.FileInfoStoreService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.fileInfoStoreService = fileInfoStoreService
 		case app.RouterKey:
 			routerService, ok := service.(product.RouterService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.routerService = routerService
+		case app.CloudKey:
+			cloudService, ok := service.(product.CloudService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.cloudService = cloudService
 		case app.HooksKey, app.PermissionsKey:
 			// not needed
 		}
