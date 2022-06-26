@@ -20,12 +20,12 @@ var errServiceTypeAssert = errors.New("type assertion failed")
 
 func init() {
 	app.RegisterProduct("boards", app.ProductManifest{
-		Initializer:  newBoards,
+		Initializer:  newBoardsProduct,
 		Dependencies: map[app.ServiceKey]struct{}{},
 	})
 }
 
-type Boards struct {
+type BoardsProduct struct {
 	teamService          product.TeamService
 	channelService       product.ChannelService
 	userService          product.UserService
@@ -41,8 +41,8 @@ type Boards struct {
 	cloudService         product.CloudService
 }
 
-func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
-	boards := &Boards{}
+func newBoardsProduct(mmServer *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
+	boards := &BoardsProduct{}
 
 	for key, service := range services {
 		switch key {
@@ -131,12 +131,12 @@ func newBoards(mmServer *app.Server, services map[app.ServiceKey]interface{}) (a
 	return boards, nil
 }
 
-func (b *Boards) Start() error {
+func (b *BoardsProduct) Start() error {
 	b.logger.Info("Starting boards service")
 	return nil
 }
 
-func (b *Boards) Stop() error {
+func (b *BoardsProduct) Stop() error {
 	b.logger.Info("Stopping boards service")
 	return nil
 }
