@@ -61,7 +61,7 @@ pygmentsStyle = "manni"
 
     [[menu.postpend]]
       url = "https://github.com/mattermost/focalboard"
-      name = "Github"
+      name = "GitHub"
       weight = 2
 
     # postpended links
