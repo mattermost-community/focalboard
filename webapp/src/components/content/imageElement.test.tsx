@@ -18,7 +18,7 @@ import ImageElement from './imageElement'
 
 jest.mock('../../octoClient')
 const mockedOcto = mocked(octoClient, true)
-mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
+mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 
 describe('components/content/ImageElement', () => {
     const defaultBlock: ImageBlock = {
@@ -36,9 +36,31 @@ describe('components/content/ImageElement', () => {
         createAt: 0,
         updateAt: 0,
         deleteAt: 0,
+        limited: false,
     }
 
     test('should match snapshot', async () => {
+        const component = wrapIntl(
+            <ImageElement
+                block={defaultBlock}
+            />,
+        )
+        let imageContainer: Element | undefined
+        await act(async () => {
+            const {container} = render(component)
+            imageContainer = container
+        })
+        expect(imageContainer).toMatchSnapshot()
+    })
+
+    test('archived file', async () => {
+        mockedOcto.getFileAsDataUrl.mockResolvedValue({
+            archived: true,
+            name: 'Filename',
+            extension: '.txt',
+            size: 165002,
+        })
+
         const component = wrapIntl(
             <ImageElement
                 block={defaultBlock}

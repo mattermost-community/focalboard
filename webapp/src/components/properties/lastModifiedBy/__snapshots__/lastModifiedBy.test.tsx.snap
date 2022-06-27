@@ -3,7 +3,7 @@
 exports[`components/properties/lastModifiedBy should match snapshot 1`] = `
 <div>
   <div
-    class="UserProperty octo-propertyvalue readonly"
+    class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
   >
     <div
       class="UserProperty-item"

@@ -42,14 +42,16 @@ const App = (props: Props): JSX.Element => {
     // removed when anonymous plugin routes are implemented. This
     // check is used to detect if we're running inside the plugin but
     // in a legacy route
-    if (!Utils.isFocalboardLegacy()) {
-        useEffect(() => {
+    useEffect(() => {
+        if (!Utils.isFocalboardLegacy()) {
             wsClient.open()
-            return () => {
+        }
+        return () => {
+            if (!Utils.isFocalboardLegacy()) {
                 wsClient.close()
             }
-        }, [])
-    }
+        }
+    }, [])
 
     useEffect(() => {
         if (me) {
