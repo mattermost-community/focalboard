@@ -17,13 +17,14 @@ import MenuWrapper from "../../widgets/menuWrapper"
 import OptionsIcon from "../../widgets/icons/options"
 import {CardViewProps} from "../dialog"
 import octoClient from "../../octoClient"
-import {useAppSelector} from "../../store/hooks"
-import {getMe} from "../../store/users"
+import {useAppDispatch, useAppSelector} from "../../store/hooks"
+import {getMe, patchProps} from "../../store/users"
 
 const CardRHS = (props: CardViewProps): JSX.Element => {
     const {toolsMenu, toolbar} = props
     const intl = useIntl()
     const me = useAppSelector(getMe)
+    const dispatch = useAppDispatch()
 
     const closeDialogText = intl.formatMessage({
         id: 'Dialog.closeDialog',
@@ -37,20 +38,24 @@ const CardRHS = (props: CardViewProps): JSX.Element => {
     const [width, setWidth] = useState<number>(420)
 
     useEffect(() => {
-        if (me && me.props.lhsSize) {
+        if (me && me.props.rhsSize) {
             setWidth(parseFloat(me.props.rhsSize))
         }
     }, [me])
 
-    const saveRHSSize = debounce((size: number) => {
+    const saveRHSSize = debounce(async (size: number) => {
         if (!me) {
             return
         }
-        octoClient.patchUserConfig(me.id, {
+        const patchedProps = await octoClient.patchUserConfig(me.id, {
             updatedFields: {
                 rhsSize: size.toString(),
             }
         })
+
+        if (patchedProps) {
+            dispatch(patchProps(patchedProps))
+        }
     }, 200)
 
     const rhsResizeHandler = (event: MouseEvent | TouchEvent, direction: Direction, elementRef: HTMLElement, delta: NumberSize) => {
