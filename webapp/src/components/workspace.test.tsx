@@ -72,7 +72,7 @@ card3.id = 'card3'
 card3.title = 'card-3'
 card3.boardId = fakeBoard.id
 
-const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
+const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false, roles: 'system_user'}
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
@@ -112,6 +112,14 @@ describe('src/components/workspace', () => {
             templates: [],
             myBoardMemberships: {
                 [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        limits: {
+            limits: {
+                cards: 0,
+                used_cards: 0,
+                card_limit_timestamp: 0,
+                views: 0,
             },
         },
         globalTemplates: {
@@ -302,6 +310,7 @@ describe('src/components/workspace', () => {
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
+                    roles: 'system_user',
                 },
                 boardUsers: [me],
                 blockSubscriptions: [],
@@ -314,6 +323,14 @@ describe('src/components/workspace', () => {
                 templates: [],
                 myBoardMemberships: {
                     [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            limits: {
+                limits: {
+                    cards: 0,
+                    used_cards: 0,
+                    card_limit_timestamp: 0,
+                    views: 0,
                 },
             },
             globalTemplates: {
@@ -393,6 +410,7 @@ describe('src/components/workspace', () => {
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
+                    roles: 'system_user',
                 },
                 boardUsers: [me],
                 blockSubscriptions: [],
@@ -405,6 +423,14 @@ describe('src/components/workspace', () => {
                 templates: [],
                 myBoardMemberships: {
                     [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            limits: {
+                limits: {
+                    cards: 0,
+                    used_cards: 0,
+                    card_limit_timestamp: 0,
+                    views: 0,
                 },
             },
             globalTemplates: {
@@ -489,6 +515,7 @@ describe('src/components/workspace', () => {
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
+                    roles: 'system_user',
                 },
                 boardUsers: [me],
                 blockSubscriptions: [],
@@ -501,6 +528,14 @@ describe('src/components/workspace', () => {
                 templates: [],
                 myBoardMemberships: {
                     [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            limits: {
+                limits: {
+                    cards: 0,
+                    used_cards: 0,
+                    card_limit_timestamp: 0,
+                    views: 0,
                 },
             },
             globalTemplates: {
