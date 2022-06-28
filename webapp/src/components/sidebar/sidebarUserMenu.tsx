@@ -47,7 +47,7 @@ const SidebarUserMenu = () => {
                                     className='version'
                                     title={`v${Constants.versionString}`}
                                 >
-                                    {Constants.versionDisplayString}
+                                    {`v${Constants.versionString}`}
                                 </div>
                             </div>
                         </div>

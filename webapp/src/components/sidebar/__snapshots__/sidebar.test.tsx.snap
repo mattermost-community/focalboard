@@ -111,7 +111,7 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
                       class="version"
                       title="v7.0.1"
                     >
-                      Jun 2022
+                      v7.0.1
                     </div>
                   </div>
                 </div>
@@ -486,7 +486,7 @@ exports[`components/sidebarSidebar sidebar in dashboard page 1`] = `
                       class="version"
                       title="v7.0.1"
                     >
-                      Jun 2022
+                      v7.0.1
                     </div>
                   </div>
                 </div>
