@@ -126,7 +126,7 @@ server-test-sqlite: templates-archive ## Run server tests using sqlite
 server-test-mini-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
 server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
-	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql
