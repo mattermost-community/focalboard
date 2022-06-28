@@ -56,7 +56,7 @@ exports[`pages/dashboard/DashboardPage base case 1`] = `
                         class="version"
                         title="v7.0.1"
                       >
-                        Jun 2022
+                        v7.0.1
                       </div>
                     </div>
                   </div>
