@@ -34,7 +34,7 @@ const (
 	ErrorNoTeamMessage = "No team"
 )
 
-var errEmpty = errors.New("")
+var errAPINotSupportedInStandaloneMode = errors.New("API not supported in standalone mode")
 
 type PermissionError struct {
 	msg string
@@ -4252,7 +4252,7 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errEmpty)
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errAPINotSupportedInStandaloneMode)
 		return
 	}
 
