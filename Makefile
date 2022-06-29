@@ -40,7 +40,12 @@ server: ## Build server for local environment.
 server-mac: ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
+ifeq ($(FB_PROD),)
 	cd server; env GOOS=darwin GOARCH=$(MAC_GO_ARCH) go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
+else
+# Always build x86 for production, to work on both Apple Silicon and legacy Macs
+	cd server; env GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -ldflags '$(LDFLAGS)' -o ../bin/mac/focalboard-server ./main
+endif
 
 server-linux: ## Build server for Linux.
 	mkdir -p bin/linux
