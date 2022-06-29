@@ -36,7 +36,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmat
           class="ViewLimitDialog_body"
         >
           <img
-            alt="upgrade"
+            alt="upgrade image"
             src="test-file-stub"
           />
           <h2
@@ -146,7 +146,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show view limit dialog 1`] 
           class="ViewLimitDialog_body"
         >
           <img
-            alt="upgrade"
+            alt="upgrade image"
             src="test-file-stub"
           />
           <h2

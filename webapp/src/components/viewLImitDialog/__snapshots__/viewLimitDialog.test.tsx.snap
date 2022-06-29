@@ -36,7 +36,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
           class="ViewLimitDialog_body"
         >
           <img
-            alt="upgrade"
+            alt="upgrade image"
             src="test-file-stub"
           />
           <h2
@@ -112,7 +112,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
           class="ViewLimitDialog_body"
         >
           <img
-            alt="upgrade"
+            alt="upgrade image"
             src="test-file-stub"
           />
           <h2
