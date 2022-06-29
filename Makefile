@@ -18,6 +18,12 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
+RACE = -race
+
+ifeq ($(OS),Windows_NT)
+	RACE := ''
+endif
+
 # MAC cpu architecture
 ifeq ($(shell uname -m),arm64)
 	MAC_GO_ARCH := arm64
@@ -126,7 +132,7 @@ server-test-sqlite: templates-archive ## Run server tests using sqlite
 server-test-mini-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
 server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
-	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -v -count=1 -timeout=30m ./...
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' $(RACE) -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql
