@@ -124,7 +124,7 @@ exports[`components/propertyValueElement should match snapshot, select 1`] = `
 exports[`components/propertyValueElement should match snapshot, select, read-only 1`] = `
 <div>
   <div
-    class="octo-propertyvalue"
+    class="octo-propertyvalue octo-propertyvalue--readonly"
     data-testid="select-non-editable"
     tabindex="0"
   >

@@ -11,6 +11,7 @@ import {Utils} from '../../../utils'
 import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
+import {propertyValueClassName} from '../../propertyValueUtils'
 import './lastModifiedAt.scss'
 
 type Props = {
@@ -31,7 +32,7 @@ const LastModifiedAt = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='LastModifiedAt octo-propertyvalue readonly'>
+        <div className={`LastModifiedAt ${propertyValueClassName({readonly: true})}`}>
             {Utils.displayDateTime(new Date(latestBlock.updateAt), intl)}
         </div>
     )

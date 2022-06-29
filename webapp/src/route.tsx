@@ -30,8 +30,9 @@ function FBRoute(props: RouteProps) {
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     let redirect: React.ReactNode = null
+    const disableTour = clientConfig?.featureFlags?.disableTour || false
 
-    const showWelcomePage = !clientConfig.featureFlags.disableTour &&
+    const showWelcomePage = !disableTour &&
         Utils.isFocalboardPlugin() &&
         (me?.id !== 'single-user') &&
         props.path !== '/welcome' &&
