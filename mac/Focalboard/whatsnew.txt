@@ -1,6 +1,12 @@
-Welcome to Focalboard v0.11.0!
+Welcome to Focalboard v7.2!
 
-Thank you contributors! There are a number of improvements in this release, and one major new feature:
+Mattermost Boards is now availalbe as a Cloud service. Set up your free server via the button below to collaborate with your team.
+
+Mattermost Boards combines all the features of Focalboard with real-time collaboration, calls, and playbooks.
+
+You can export boards from Focalboard and import them into Mattermost Boards, and pick up where you left off.
+
+Thank you contributors! Recent improvements include:
 
 * Calendar view. Thanks @sbishel!
 

@@ -10,13 +10,21 @@ import './hiddenCardCount.scss'
 
 type Props = {
     hiddenCardsCount: number
+    showHiddenCardNotification: (show: boolean) => void
 }
 
 const HiddenCardCount = (props: Props): JSX.Element => {
     const intl = useIntl()
+
+    const onClickHandler = () => {
+        props.showHiddenCardNotification(true)
+    }
     return (
-        <div className='HiddenCardCount'>
-            <div className='hidden-card-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards Hidden'})}</div>
+        <div
+            className='HiddenCardCount'
+            onClick={onClickHandler}
+        >
+            <div className='hidden-card-title'>{intl.formatMessage({id: 'limitedCard.title', defaultMessage: 'Cards hidden'})}</div>
             <Button title='hidden-card-count'>{props.hiddenCardsCount}</Button>
         </div>
     )

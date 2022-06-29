@@ -65,7 +65,7 @@ exports[`src/components/gallery/Gallery limited card count check 1`] = `
         <div
           class="hidden-card-title"
         >
-          Cards Hidden
+          Cards hidden
         </div>
         <button
           class="Button"

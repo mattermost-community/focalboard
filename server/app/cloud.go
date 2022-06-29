@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -253,4 +255,56 @@ func newErrBoardNotFoundInTemplateMap(id string) *errBoardNotFoundInTemplateMap 
 
 func (eb *errBoardNotFoundInTemplateMap) Error() string {
 	return fmt.Sprintf("board %q not found in template map", eb.id)
+}
+
+func (a *App) NotifyPortalAdminsUpgradeRequest(teamID string) error {
+	if a.pluginAPI == nil {
+		return ErrNilPluginAPI
+	}
+
+	team, err := a.store.GetTeam(teamID)
+	if err != nil {
+		return err
+	}
+
+	var ofWhat string
+	if team == nil {
+		ofWhat = "your organization"
+	} else {
+		ofWhat = team.Title
+	}
+
+	message := fmt.Sprintf("A member of %s has notified you to upgrade this workspace before the trial ends.", ofWhat)
+
+	page := 0
+	getUsersOptions := &mmModel.UserGetOptions{
+		Active:  true,
+		Role:    mmModel.SystemAdminRoleId,
+		PerPage: 50,
+		Page:    page,
+	}
+
+	for ; true; page++ {
+		getUsersOptions.Page = page
+		systemAdmins, appErr := a.pluginAPI.GetUsers(getUsersOptions)
+		if appErr != nil {
+			a.logger.Error("failed to fetch system admins", mlog.Int("page_size", getUsersOptions.PerPage), mlog.Int("page", page), mlog.Err(appErr))
+			return appErr
+		}
+
+		if len(systemAdmins) == 0 {
+			break
+		}
+
+		receiptUserIDs := []string{}
+		for _, systemAdmin := range systemAdmins {
+			receiptUserIDs = append(receiptUserIDs, systemAdmin.Id)
+		}
+
+		if err := a.store.SendMessage(message, "custom_cloud_upgrade_nudge", receiptUserIDs); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

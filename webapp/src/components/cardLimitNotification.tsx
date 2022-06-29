@@ -16,10 +16,15 @@ import octoClient from '../octoClient'
 
 import './cardLimitNotification.scss'
 
+type Props = {
+    showHiddenCardNotification: boolean
+    hiddenCardCountNotificationHandler: (show: boolean) => void
+}
+
 const snoozeTime = 1000 * 60 * 60 * 24 * 10
 const checkSnoozeInterval = 1000 * 60 * 5
 
-const CardLimitNotification = () => {
+const CardLimitNotification = (props: Props) => {
     const intl = useIntl()
     const [time, setTime] = useState(Date.now())
     const [showNotifyAdminSuccess, setShowNotifyAdminSuccess] = useState<boolean>(false)
@@ -71,6 +76,10 @@ const CardLimitNotification = () => {
         {cards: hiddenCards},
     )
 
+    if (!show && props.showHiddenCardNotification) {
+        show = true
+    }
+
     if (hiddenCards > 0 && time > snoozedUntil) {
         show = true
     }
@@ -120,12 +129,17 @@ const CardLimitNotification = () => {
         return null
     }
 
+    const hidHiddenCardNotification = () => {
+        show = false
+        props.hiddenCardCountNotificationHandler(false)
+    }
+
     return (
         <NotificationBox
             icon={<AlertIcon/>}
             title={title}
-            onClose={onClose}
-            closeTooltip={intl.formatMessage({
+            onClose={props.showHiddenCardNotification ? hidHiddenCardNotification : onClose}
+            closeTooltip={props.showHiddenCardNotification ? '' : intl.formatMessage({
                 id: 'notification-box-card-limit-reached.close-tooltip',
                 defaultMessage: 'Snooze for 10 days',
             })}

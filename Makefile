@@ -29,11 +29,13 @@ all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
+	cd mattermost-plugin/webapp; npm install
 
 ci: server-test
 	cd webapp; npm run check
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
+	cd mattermost-plugin/webapp; npm run test
 
 templates-archive: ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
@@ -124,7 +126,7 @@ server-test-sqlite: templates-archive ## Run server tests using sqlite
 server-test-mini-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
 server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
-	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql
