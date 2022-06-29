@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
@@ -17,6 +19,11 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+var systemsBot = &mmModel.Bot{
+	Username:    mmModel.BotSystemBotUsername,
+	DisplayName: "System",
+}
 
 type NotSupportedError struct {
 	msg string
@@ -34,10 +41,19 @@ type MattermostAuthLayer struct {
 	logger      *mlog.Logger
 	pluginAPI   plugin.API
 	tablePrefix string
+	client      *pluginapi.Client
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API, tablePrefix string) (*MattermostAuthLayer, error) {
+func New(
+	dbType string,
+	db *sql.DB,
+	store store.Store,
+	logger *mlog.Logger,
+	pluginAPI plugin.API,
+	tablePrefix string,
+	client *pluginapi.Client,
+) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:       store,
 		dbType:      dbType,
@@ -45,6 +61,7 @@ func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, plug
 		logger:      logger,
 		pluginAPI:   pluginAPI,
 		tablePrefix: tablePrefix,
+		client:      client,
 	}
 
 	return layer, nil
@@ -384,6 +401,7 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		DeleteAt:    mmUser.DeleteAt,
 		IsBot:       mmUser.IsBot,
 		IsGuest:     mmUser.IsGuest(),
+		Roles:       mmUser.Roles,
 	}
 }
 
@@ -709,4 +727,52 @@ func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Cha
 		return nil, err
 	}
 	return channel, nil
+}
+
+func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
+	botID, err := s.client.Bot.EnsureBot(systemsBot)
+	if err != nil {
+		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
+		return "", err
+	}
+
+	return botID, nil
+}
+
+func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
+	botID, err := s.getSystemBotID()
+	if err != nil {
+		return err
+	}
+
+	for _, receipt := range receipts {
+		channel, err := s.pluginAPI.GetDirectChannel(botID, receipt)
+		if err != nil {
+			s.logger.Error(
+				"failed to get DM channel between system bot and user for receipt",
+				mlog.String("receipt", receipt),
+				mlog.String("user_id", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+
+		post := &mmModel.Post{
+			Message:   message,
+			UserId:    botID,
+			ChannelId: channel.Id,
+			Type:      postType,
+		}
+
+		if _, err := s.pluginAPI.CreatePost(post); err != nil {
+			s.logger.Error(
+				"failed to send message to receipt from SendMessage",
+				mlog.String("receipt", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+	}
+
+	return nil
 }
