@@ -18,10 +18,10 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
-RACE = ''
+RACE = '-race'
 
 ifeq ($(OS),Windows_NT)
-	RACE := '-race'
+	RACE := ''
 endif
 
 # MAC cpu architecture
