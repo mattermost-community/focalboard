@@ -21,6 +21,7 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import {setTeam} from '../../../webapp/src/store/teams'
+import WithWebSockets from '../../../webapp/src/components/withWebSockets'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -118,8 +119,6 @@ function customHistory() {
 let browserHistory: History<unknown>
 
 const MainApp = (props: Props) => {
-    wsClient.initPlugin(manifest.id, manifest.version, props.webSocketClient)
-
     useEffect(() => {
         document.body.classList.add('focalboard-body')
         document.body.classList.add('app__body')
@@ -140,10 +139,12 @@ const MainApp = (props: Props) => {
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
-                <div id='focalboard-app'>
-                    <App history={browserHistory}/>
-                </div>
-                <div id='focalboard-root-portal'/>
+                <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                    <div id='focalboard-app'>
+                        <App history={browserHistory}/>
+                    </div>
+                    <div id='focalboard-root-portal'/>
+                </WithWebSockets>
             </ReduxProvider>
         </ErrorBoundary>
     )
@@ -173,6 +174,31 @@ export default class Plugin {
 
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
+
+        // register websocket handlers
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
+            let preferences
+            try {
+                preferences = JSON.parse(e.data.preferences)
+            } catch {
+                preferences = []
+            }
+            if (preferences) {
+                for (const preference of preferences) {
+                    if (preference.category === 'theme' && theme !== preference.value) {
+                        setMattermostTheme(JSON.parse(preference.value))
+                        theme = preference.value
+                    }
+                }
+            }
+        })
+
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         let prevTeamID: string
         mmStore.subscribe(() => {
@@ -188,9 +214,7 @@ export default class Plugin {
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
-                    console.log("REDIRECTING HERE")
                     browserHistory.push(`/team/${currentTeamID}`)
-                    wsClient.subscribeToTeam(currentTeamID)
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
@@ -270,29 +294,6 @@ export default class Plugin {
             }
         }
 
-        // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
-        this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
-        this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
-            let preferences
-            try {
-                preferences = JSON.parse(e.data.preferences)
-            } catch {
-                preferences = []
-            }
-            if (preferences) {
-                for (const preference of preferences) {
-                    if (preference.category === 'theme' && theme !== preference.value) {
-                        setMattermostTheme(JSON.parse(preference.value))
-                        theme = preference.value
-                    }
-                }
-            }
-        })
         windowAny.setTeamInSidebar = (teamID: string) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore

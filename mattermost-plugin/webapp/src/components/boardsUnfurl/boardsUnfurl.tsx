@@ -7,12 +7,18 @@ import {connect} from 'react-redux'
 import {GlobalState} from 'mattermost-redux/types/store'
 import {getCurrentUserLocale} from 'mattermost-redux/selectors/entities/i18n'
 
+import WithWebSockets from '../../../../../webapp/src/components/withWebSockets'
+import {useWebsockets} from '../../../../../webapp/src/hooks/websockets'
+
 import {getMessages} from './../../../../../webapp/src/i18n'
 import {Utils} from './../../../../../webapp/src/utils'
+import {Block} from './../../../../../webapp/src/blocks/block'
 import {Card} from './../../../../../webapp/src/blocks/card'
 import {Board} from './../../../../../webapp/src/blocks/board'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
 import octoClient from './../../../../../webapp/src/octoClient'
+import wsClient, {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
+import manifest from '../../manifest'
 
 const Avatar = (window as any).Components.Avatar
 const Timestamp = (window as any).Components.Timestamp
@@ -26,6 +32,7 @@ type Props = {
         data: string,
     },
     locale: string,
+    webSocketClient: MMWebSocketClient,
 }
 
 function mapStateToProps(state: GlobalState) {
@@ -58,7 +65,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         return <></>
     }
 
-    const {embed, locale} = props
+    const {embed, locale, webSocketClient} = props
     const focalboardInformation: FocalboardEmbeddedData = new FocalboardEmbeddedData(embed.data)
     const {teamID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
@@ -109,6 +116,26 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         }
         fetchData()
     }, [originalPath])
+
+    useWebsockets(teamID, (wsClient: WSClient) => {
+        const onChangeHandler = (_: WSClient, blocks: Block[]): void => {
+            const cardBlock: Block|undefined = blocks.find(b => b.id === cardID)
+            if (cardBlock && !cardBlock.deleteAt) {
+                setCard(cardBlock as Card)
+            }
+
+            const contentBlock: Block|undefined = blocks.find(b => b.id === content?.id)
+            if (contentBlock && !contentBlock.deleteAt) {
+                setContent(contentBlock)
+            }
+        }
+
+        wsClient.addOnChange(onChangeHandler, 'block')
+
+        return () => {
+            wsClient.removeOnChange(onChangeHandler, 'block')
+        }
+    }, [cardID, content?.id])
 
     let remainder = 0
     let html = ''
@@ -163,94 +190,96 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
             messages={getMessages(locale)}
             locale={locale}
         >
-            {!loading && (!card || !board) && <></>}
-            {!loading && card && board &&
-                <a
-                    className='FocalboardUnfurl'
-                    href={`${baseURL}${originalPath}`}
-                    rel='noopener noreferrer'
-                    target='_blank'
-                >
+            <WithWebSockets manifest={manifest} webSocketClient={webSocketClient}>
+                {!loading && (!card || !board) && <></>}
+                {!loading && card && board &&
+                    <a
+                        className='FocalboardUnfurl'
+                        href={`${baseURL}${originalPath}`}
+                        rel='noopener noreferrer'
+                        target='_blank'
+                    >
 
-                    {/* Header of the Card*/}
-                    <div className='header'>
-                        <span className='icon'>{card.fields?.icon}</span>
-                        <div className='information'>
-                            <span className='card_title'>{card.title}</span>
-                            <span className='board_title'>{board.title}</span>
-                        </div>
-                    </div>
-
-                    {/* Body of the Card*/}
-                    {html !== '' &&
-                        <div className='body'>
-                            <div
-                                dangerouslySetInnerHTML={{__html: html}}
-                            />
-                        </div>
-                    }
-
-                    {/* Footer of the Card*/}
-                    <div className='footer'>
-                        <div className='avatar'>
-                            <Avatar
-                                size={'md'}
-                                url={imageURLForUser(card.createdBy)}
-                                className={'avatar-post-preview'}
-                            />
-                        </div>
-                        <div className='timestamp_properties'>
-                            <div className='properties'>
-                                {propertiesToDisplay.map((property) => (
-                                    <div
-                                        key={property.optionValue}
-                                        className={`property ${property.optionValueColour}`}
-                                        title={`${property.optionName}`}
-                                        style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
-                                    >
-                                        {property.optionValue}
-                                    </div>
-                                ))}
-                                {remainder > 0 &&
-                                    <span className='remainder'>
-                                        <FormattedMessage
-                                            id='BoardsUnfurl.Remainder'
-                                            defaultMessage='+{remainder} more'
-                                            values={{
-                                                remainder,
-                                            }}
-                                        />
-                                    </span>
-                                }
+                        {/* Header of the Card*/}
+                        <div className='header'>
+                            <span className='icon'>{card.fields?.icon}</span>
+                            <div className='information'>
+                                <span className='card_title'>{card.title}</span>
+                                <span className='board_title'>{board.title}</span>
                             </div>
-                            <span className='post-preview__time'>
-                                <FormattedMessage
-                                    id='BoardsUnfurl.Updated'
-                                    defaultMessage='Updated {time}'
-                                    values={{
-                                        time: (
-                                            <Timestamp
-                                                value={card.updateAt}
-                                                units={[
-                                                    'now',
-                                                    'minute',
-                                                    'hour',
-                                                    'day',
-                                                ]}
-                                                useTime={false}
-                                                day={'numeric'}
-                                            />
-                                        ),
-                                    }}
-                                />
-                            </span>
                         </div>
-                    </div>
-                </a>
-            }
-            {loading &&
-                <div style={{height: '302px'}}/>
-            }
+
+                        {/* Body of the Card*/}
+                        {html !== '' &&
+                            <div className='body'>
+                                <div
+                                    dangerouslySetInnerHTML={{__html: html}}
+                                />
+                            </div>
+                        }
+
+                        {/* Footer of the Card*/}
+                        <div className='footer'>
+                            <div className='avatar'>
+                                <Avatar
+                                    size={'md'}
+                                    url={imageURLForUser(card.createdBy)}
+                                    className={'avatar-post-preview'}
+                                />
+                            </div>
+                            <div className='timestamp_properties'>
+                                <div className='properties'>
+                                    {propertiesToDisplay.map((property) => (
+                                        <div
+                                            key={property.optionValue}
+                                            className={`property ${property.optionValueColour}`}
+                                            title={`${property.optionName}`}
+                                            style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
+                                        >
+                                            {property.optionValue}
+                                        </div>
+                                    ))}
+                                    {remainder > 0 &&
+                                        <span className='remainder'>
+                                            <FormattedMessage
+                                                id='BoardsUnfurl.Remainder'
+                                                defaultMessage='+{remainder} more'
+                                                values={{
+                                                    remainder,
+                                                }}
+                                            />
+                                        </span>
+                                    }
+                                </div>
+                                <span className='post-preview__time'>
+                                    <FormattedMessage
+                                        id='BoardsUnfurl.Updated'
+                                        defaultMessage='Updated {time}'
+                                        values={{
+                                            time: (
+                                                <Timestamp
+                                                    value={card.updateAt}
+                                                    units={[
+                                                        'now',
+                                                        'minute',
+                                                        'hour',
+                                                        'day',
+                                                    ]}
+                                                    useTime={false}
+                                                    day={'numeric'}
+                                                />
+                                            ),
+                                        }}
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                }
+                {loading &&
+                    <div style={{height: '302px'}}/>
+                }
+            </WithWebSockets>
         </IntlProvider>
     )
 }
