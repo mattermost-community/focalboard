@@ -98,9 +98,11 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
-        // use properties.trackingTemplateId for in-built templates and id for custom templates
-        const templateID: string = activeTemplate.teamId === '0' ? activeTemplate.properties.trackingTemplateId as string : activeTemplate.id
-        await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), templateID, currentTeam?.id)
+        if (activeTemplate.teamId === '0') {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId: activeTemplate.properties.trackingTemplateId as string})
+        }
+
+        await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
         }

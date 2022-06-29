@@ -75,6 +75,7 @@ class TelemetryClient {
     }
 
     trackEvent(category: string, event: string, props?: IEventProps): void {
+        console.log(`trackEvent category: ${category}, event: ${event}, props: ${JSON.stringify(props)}`)
         if (this.telemetryHandler) {
             const userId = this.user?.id
             this.telemetryHandler.trackEvent(userId || '', '', category, event, props)
