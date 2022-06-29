@@ -97,7 +97,7 @@ export const ViewLimitModal = (props: Props): JSX.Element => {
             <div className='ViewLimitDialog_body'>
                 <img
                     src={Utils.buildURL(upgradeImage, true)}
-                    alt={'upgrade'}
+                    alt={intl.formatMessage({id: 'ViewLimitDialog.UpgradeImg.AltText', defaultMessage: 'upgrade image'})}
                 />
                 <h2 className='header text-heading5'>
                     {heading}
@@ -112,7 +112,10 @@ export const ViewLimitModal = (props: Props): JSX.Element => {
                     className='cancel'
                     onClick={props.onClose}
                 >
-                    {intl.formatMessage({id: 'ConfirmationDialog.cancel-action', defaultMessage: 'Cancel'})}
+                    <FormattedMessage
+                        id='ConfirmationDialog.cancel-action'
+                        defaultMessage='Cancel'
+                    />
                 </Button>
                 <Button
                     size='medium'

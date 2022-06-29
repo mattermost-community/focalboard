@@ -343,5 +343,6 @@
   "ViewLimitDialog.PrimaryButton.Title.RegularUser": "Notify Admin",
   "ViewLimitDialog.Subtext.Admin": "Upgrade to our Professional or Enterprise plan to have unlimited views per boards, unlimited cards and more.",
   "ViewLimitDialog.Subtext.Admin.PricingPageLink": "Learn more about our plans.",
-  "ViewLimitDialog.PrimaryButton.Title.Admin": "Upgrade"
+  "ViewLimitDialog.PrimaryButton.Title.Admin": "Upgrade",
+  "ViewLimitDialog.UpgradeImg.AltText": "upgrade image"
 }
