@@ -736,6 +736,11 @@ func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*mode
 
 }
 
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
+
+}
+
 func (s *SQLStore) SetSystemSetting(key string, value string) error {
 	return s.setSystemSetting(s.db, key, value)
 

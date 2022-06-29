@@ -29,6 +29,7 @@ type Props = {
     views: BoardView[],
     intl: IntlShape
     readonly: boolean
+    allowCreateView: () => boolean
 }
 
 const ViewMenu = (props: Props) => {
@@ -46,6 +47,11 @@ const ViewMenu = (props: Props) => {
     const handleDuplicateView = useCallback(() => {
         const {board, activeView} = props
         Utils.log('duplicateView')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: board.id, view: activeView.id})
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
@@ -92,6 +98,11 @@ const ViewMenu = (props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: board.id, view: activeView.id})
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
@@ -119,6 +130,11 @@ const ViewMenu = (props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-table')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
         view.fields.viewType = 'table'
@@ -149,6 +165,11 @@ const ViewMenu = (props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-gallery')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
         view.fields.viewType = 'gallery'
@@ -177,6 +198,12 @@ const ViewMenu = (props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-calendar')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
+
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar view'})
         view.fields.viewType = 'calendar'
