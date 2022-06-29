@@ -1,31 +1,45 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
+import React, {useState, useCallback} from 'react'
+import {useIntl} from 'react-intl'
 
-import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
+import {IPropertyOption} from '../../../blocks/board'
 
 import Label from '../../../widgets/label'
+import {Utils} from '../../../utils'
+import mutator from '../../../mutator'
 import ValueSelector from '../../../widgets/valueSelector'
 import {propertyValueClassName} from '../../propertyValueUtils'
 
-type Props = {
-    emptyValue: string
-    propertyValue: string
-    propertyTemplate: IPropertyTemplate
-    onCreate: (value: string) => void
-    onChange: (value: string) => void
-    onChangeColor: (option: IPropertyOption, color: string) => void
-    onDeleteOption: (option: IPropertyOption) => void
-    onDeleteValue: () => void;
-    isEditable: boolean
-}
+import PropertyProps from '../index'
 
-const SelectProperty = (props: Props) => {
-    const {emptyValue, propertyValue, propertyTemplate, isEditable} = props
+const SelectProperty = (props: PropertyProps) => {
+    const {emptyValue, value, propertyTemplate, board, card} = props
+    const intl = useIntl()
+
     const [open, setOpen] = useState(false)
+    const isEditable = !props.readOnly && Boolean(board)
 
-    const option = propertyTemplate.options.find((o) => o.id === propertyValue)
+    const onCreate = useCallback((newValue) => {
+        const option: IPropertyOption = {
+            id: Utils.createGuid(IDType.BlockID),
+            value: newValue,
+            color: 'propColorDefault',
+        }
+        mutator.insertPropertyOption(board.id, board.cardProperties, propertyTemplate, option, 'add property option').then(() => {
+            mutator.changePropertyValue(board.id, card, propertyTemplate.id, option.id)
+        })
+    }, [board, board.id, props.card, propertyTemplate.id])
+
+    const emptyDisplayValue = props.showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
+
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate])
+    const onChangeColor = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
+    const onDeleteOption = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
+    const onDeleteValue = useCallback(() => mutator.changePropertyValue(board.id, card, propertyTemplate.id, ''), [card, propertyTemplate.id])
+
+    const option = propertyTemplate.options.find((o: IPropertyOption) => o.id === value)
     const propertyColorCssClassName = option?.color || ''
     const displayValue = option?.value
     const finalDisplayValue = displayValue || emptyValue
@@ -46,14 +60,14 @@ const SelectProperty = (props: Props) => {
     }
     return (
         <ValueSelector
-            emptyValue={emptyValue}
+            emptyValue={emptyDisplayValue}
             options={propertyTemplate.options}
-            value={propertyTemplate.options.find((p) => p.id === propertyValue)}
-            onCreate={props.onCreate}
-            onChange={(value) => props.onChange(value as string)}
-            onChangeColor={props.onChangeColor}
-            onDeleteOption={props.onDeleteOption}
-            onDeleteValue={props.onDeleteValue}
+            value={propertyTemplate.options.find((p: IPropertyOption) => p.id === value)}
+            onCreate={onCreate}
+            onChange={onChange}
+            onChangeColor={onChangeColor}
+            onDeleteOption={onDeleteOption}
+            onDeleteValue={onDeleteValue}
             onBlur={() => setOpen(false)}
         />
     )

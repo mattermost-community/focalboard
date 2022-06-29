@@ -6,6 +6,7 @@ import {useIntl, IntlShape} from 'react-intl'
 import {PropertyType} from '../blocks/board'
 import {Utils} from '../utils'
 import Menu from '../widgets/menu'
+import registry from '../components/properties'
 import './propertyMenu.scss'
 
 type Props = {
@@ -18,7 +19,6 @@ type Props = {
 
 export function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     switch (type) {
-    case 'text': return intl.formatMessage({id: 'PropertyType.Text', defaultMessage: 'Text'})
     case 'number': return intl.formatMessage({id: 'PropertyType.Number', defaultMessage: 'Number'})
     case 'select': return intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
     case 'multiSelect': return intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
@@ -28,8 +28,6 @@ export function typeDisplayName(intl: IntlShape, type: PropertyType): string {
     case 'url': return intl.formatMessage({id: 'PropertyType.URL', defaultMessage: 'URL'})
     case 'email': return intl.formatMessage({id: 'PropertyType.Email', defaultMessage: 'Email'})
     case 'phone': return intl.formatMessage({id: 'PropertyType.Phone', defaultMessage: 'Phone'})
-    case 'createdTime': return intl.formatMessage({id: 'PropertyType.CreatedTime', defaultMessage: 'Created time'})
-    case 'createdBy': return intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created by'})
     case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last updated time'})
     case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Last updated by'})
     case 'date': return intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
@@ -43,22 +41,6 @@ function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
     return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${typeDisplayName(intl, type)}`
 }
 
-export const propertyTypesList: PropertyType[] = [
-    'text',
-    'number',
-    'email',
-    'phone',
-    'url',
-    'select',
-    'multiSelect',
-    'date',
-    'person',
-    'checkbox',
-    'createdTime',
-    'createdBy',
-    'updatedTime',
-    'updatedBy',
-]
 
 type TypesProps = {
     label: string
@@ -76,12 +58,12 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
             <Menu.Separator/>
 
             {
-                propertyTypesList.map((type) => (
+                registry.list().map((p) => (
                     <Menu.Text
-                        key={type}
-                        id={type}
-                        name={typeDisplayName(intl, type)}
-                        onClick={() => props.onTypeSelected(type)}
+                        key={p.type}
+                        id={p.type}
+                        name={p.displayName(intl)}
+                        onClick={() => props.onTypeSelected(p.type)}
                     />
                 ))
             }
