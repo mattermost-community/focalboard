@@ -83,7 +83,12 @@ class Utils {
         return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
     }
 
-    static getUserDisplayName(user: IUser, nameFormat: string): string {
+    static getUserDisplayName(user: IUser, configNameFormat: string, userNameFormat: string): string {
+        let nameFormat = configNameFormat    
+        if(userNameFormat){
+            nameFormat=userNameFormat
+        }
+    
         // default nameFormat = 'username'
         let displayName = user.username
     

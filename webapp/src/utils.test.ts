@@ -205,31 +205,31 @@ describe('utils', () => {
         }
 
         it('should display username, by default', () => {
-            const displayName = Utils.getUserDisplayName(user, '')
+            const displayName = Utils.getUserDisplayName(user, '', '')
             expect(displayName).toEqual('username_1')
         })
         it('should display nickname', () => {
-            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName)
+            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName, '')
             expect(displayName).toEqual('nickname')
         })
         it('should display fullname', () => {
-            const displayName = Utils.getUserDisplayName(user, ShowFullName)
+            const displayName = Utils.getUserDisplayName(user, ShowFullName, '')
             expect(displayName).toEqual('firstname lastname')
         })
         it('should display username', () => {
-            const displayName = Utils.getUserDisplayName(user, ShowUsername)
+            const displayName = Utils.getUserDisplayName(user, ShowUsername, '')
             expect(displayName).toEqual('username_1')
         })
         it('should display full name, no nickname', () => {
             user.nickname = ''
-            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName)
+            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName, '')
             expect(displayName).toEqual('firstname lastname')
         })
         it('should display username, no nickname, no full name', () => {
             user.nickname = ''
             user.firstname = ''
             user.lastname = ''
-            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName)
+            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName, '')
             expect(displayName).toEqual('username_1')
         })
     })

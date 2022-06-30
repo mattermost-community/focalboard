@@ -45,6 +45,7 @@ import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
 import './shareBoard.scss'
+import { config } from 'process'
 
 type Props = {
     onClose: () => void
@@ -278,7 +279,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     />
                 }
                 <div className='ml-3'>
-                    <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
+                    <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay, me?.props?.teammateNameDisplay)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                 </div>
             </div>
@@ -331,7 +332,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             key={user.id}
                             user={user}
                             member={members[user.id]}
-                            teammateNameDisplay={clientConfig.teammateNameDisplay}
+                            teammateNameDisplay={me?.props?.teammateNameDisplay || clientConfig.teammateNameDisplay}
                             onDeleteBoardMember={onDeleteBoardMember}
                             onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}

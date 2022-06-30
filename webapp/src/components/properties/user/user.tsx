@@ -8,6 +8,8 @@ import {CSSObject} from '@emotion/serialize'
 import {Utils} from '../../../utils'
 
 import {IUser} from '../../../user'
+import {getMe} from '../../../store/users'
+
 import {getBoardUsersList, getBoardUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
 
@@ -59,7 +61,8 @@ const selectStyles = {
 
 const UserProperty = (props: Props): JSX.Element => {
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
-    
+    const me = useAppSelector<IUser|null>(getMe)
+
     const formatOptionLabel = (user: any) => {
         let profileImg
         if (imageURLForUser) {
@@ -74,7 +77,7 @@ const UserProperty = (props: Props): JSX.Element => {
                         src={profileImg}
                     />
                 )}
-                {Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
+                {Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay, me?.props?.teammateNameDisplay)}
             </div>
         )
     }
