@@ -1,0 +1,114 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+import React, {useCallback} from 'react'
+import Select from 'react-select'
+import {CSSObject} from '@emotion/serialize'
+
+import {IUser} from '../../user'
+import {getBoardUsersList, getBoardUsers} from '../../store/users'
+import {useAppSelector} from '../../store/hooks'
+import mutator from '../../mutator'
+
+import './person.scss'
+import {getSelectBaseStyle} from '../../theme'
+import {propertyValueClassName} from '../propertyValueUtils'
+
+import {PropertyProps} from '../types'
+
+const imageURLForUser = (window as any).Components?.imageURLForUser
+
+const selectStyles = {
+    ...getSelectBaseStyle(),
+    option: (provided: CSSObject, state: {isFocused: boolean}): CSSObject => ({
+        ...provided,
+        background: state.isFocused ? 'rgba(var(--center-channel-color-rgb), 0.1)' : 'rgb(var(--center-channel-bg-rgb))',
+        color: state.isFocused ? 'rgb(var(--center-channel-color-rgb))' : 'rgb(var(--center-channel-color-rgb))',
+        padding: '8px',
+    }),
+    control: (): CSSObject => ({
+        border: 0,
+        width: '100%',
+        margin: '0',
+    }),
+    valueContainer: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        padding: 'unset',
+        overflow: 'unset',
+    }),
+    singleValue: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        position: 'static',
+        top: 'unset',
+        transform: 'unset',
+    }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        width: 'unset',
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        minWidth: '260px',
+    }),
+}
+
+const formatOptionLabel = (user: any) => {
+    let profileImg
+    if (imageURLForUser) {
+        profileImg = imageURLForUser(user.id)
+    }
+
+    return (
+        <div className='Person-item'>
+            {profileImg && (
+                <img
+                    alt='Person-avatar'
+                    src={profileImg}
+                />
+            )}
+            {user.username}
+        </div>
+    )
+}
+
+const Person = (props: PropertyProps): JSX.Element => {
+    const {card, board, propertyTemplate, propertyValue, readOnly} = props
+    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
+
+    const user = boardUsersById[propertyValue as string]
+
+    if (readOnly) {
+        return (
+            <div className={`Person ${propertyValueClassName({readonly: true})}`}>
+                {user ? formatOptionLabel(user) : propertyValue}
+            </div>
+        )
+    }
+
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
+
+    return (
+        <Select
+            options={boardUsers}
+            isSearchable={true}
+            isClearable={true}
+            backspaceRemovesValue={true}
+            className={`Person ${propertyValueClassName()}`}
+            classNamePrefix={'react-select'}
+            formatOptionLabel={formatOptionLabel}
+            styles={selectStyles}
+            placeholder={'Empty'}
+            getOptionLabel={(o: IUser) => o.username}
+            getOptionValue={(a: IUser) => a.id}
+            value={boardUsersById[propertyValue as string] || null}
+            onChange={(item, action) => {
+                if (action.action === 'select-option') {
+                    onChange(item?.id || '')
+                } else if (action.action === 'clear') {
+                    onChange('')
+                }
+            }}
+        />
+    )
+}
+
+export default Person
