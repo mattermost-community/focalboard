@@ -8,6 +8,7 @@ import '@testing-library/jest-dom'
 import {wrapIntl} from '../testUtils'
 
 import PropertyMenu from './propertyMenu'
+import propsRegistry from '../components/properties'
 
 describe('widgets/PropertyMenu', () => {
     beforeEach(() => {
@@ -22,7 +23,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'email of a person'}
-                propertyType={'email'}
+                propertyType={propsRegistry.get('email')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -37,7 +38,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'email of a person'}
-                propertyType={'email'}
+                propertyType={propsRegistry.get('email')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -53,7 +54,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -71,7 +72,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -89,7 +90,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,

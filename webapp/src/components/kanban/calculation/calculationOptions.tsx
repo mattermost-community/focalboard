@@ -7,7 +7,7 @@ import {
     CommonCalculationOptionProps,
     optionsByType,
 } from '../../calculations/options'
-import {IPropertyTemplate, PropertyType} from '../../../blocks/board'
+import {IPropertyTemplate, PropertyTypeEnum} from '../../../blocks/board'
 
 import './calculationOption.scss'
 import {Option, OptionProps} from './kanbanOption'
@@ -18,12 +18,12 @@ type Props = CommonCalculationOptionProps & {
 }
 
 // contains mapping of property types which are effectly the same as other property type.
-const equivalentPropertyType = new Map<PropertyType, PropertyType>([
+const equivalentPropertyType = new Map<PropertyTypeEnum, PropertyTypeEnum>([
     ['createdTime', 'date'],
     ['updatedTime', 'date'],
 ])
 
-export function getEquivalentPropertyType(propertyType: PropertyType): PropertyType {
+export function getEquivalentPropertyType(propertyType: PropertyTypeEnum): PropertyTypeEnum {
     return equivalentPropertyType.get(propertyType) || propertyType
 }
 

@@ -8,13 +8,14 @@ import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
 import {createCard} from '../../../blocks/card'
+import {IPropertyTemplate, Board} from '../../../blocks/board'
 import {wrapIntl} from '../../../testUtils'
 
 import {createCommentBlock} from '../../../blocks/commentBlock'
 
-import LastModifiedAt from './lastModifiedAt'
+import UpdatedTime from './updatedTime'
 
-describe('components/properties/lastModifiedAt', () => {
+describe('components/properties/updatedTime', () => {
     test('should match snapshot', () => {
         const card = createCard()
         card.id = 'card-id-1'
@@ -40,7 +41,14 @@ describe('components/properties/lastModifiedAt', () => {
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <LastModifiedAt card={card}/>
+                <UpdatedTime
+                    card={card}
+                    board={{} as Board}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyValue={''}
+                    readOnly={false}
+                    showEmptyPlaceholder={false}
+                />
             </ReduxProvider>,
         )
 

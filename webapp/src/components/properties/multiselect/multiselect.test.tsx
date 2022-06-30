@@ -6,7 +6,8 @@ import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
 
-import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
+import {IPropertyOption, IPropertyTemplate, Board} from '../../../blocks/board'
+import {Card} from '../../../blocks/card'
 
 import MultiSelect from './multiselect'
 
@@ -53,15 +54,12 @@ describe('components/properties/multiSelect', () => {
 
         const {container} = render(
             <MultiSelect
-                isEditable={false}
-                emptyValue={''}
+                readOnly={true}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={jest.fn()}
-                onChangeColor={jest.fn()}
-                onDeleteOption={jest.fn()}
-                onCreate={jest.fn()}
-                onDeleteValue={jest.fn()}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )
@@ -78,15 +76,12 @@ describe('components/properties/multiSelect', () => {
 
         render(
             <MultiSelect
-                isEditable={true}
-                emptyValue={''}
+                readOnly={false}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={[]}
-                onChange={jest.fn()}
-                onChangeColor={jest.fn()}
-                onDeleteOption={jest.fn()}
-                onCreate={jest.fn()}
-                onDeleteValue={jest.fn()}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )
@@ -103,15 +98,12 @@ describe('components/properties/multiSelect', () => {
 
         render(
             <MultiSelect
-                isEditable={true}
-                emptyValue={''}
+                readOnly={false}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={onChange}
-                onChangeColor={jest.fn()}
-                onDeleteOption={jest.fn()}
-                onCreate={jest.fn()}
-                onDeleteValue={jest.fn()}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )
@@ -130,15 +122,12 @@ describe('components/properties/multiSelect', () => {
 
         render(
             <MultiSelect
-                isEditable={true}
-                emptyValue={''}
+                readOnly={false}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={jest.fn()}
-                onChangeColor={jest.fn()}
-                onDeleteOption={jest.fn()}
-                onCreate={jest.fn()}
-                onDeleteValue={onDeleteValue}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )
@@ -160,15 +149,12 @@ describe('components/properties/multiSelect', () => {
 
         render(
             <MultiSelect
-                isEditable={true}
-                emptyValue={''}
+                readOnly={false}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={jest.fn()}
-                onChangeColor={jest.fn()}
-                onDeleteOption={jest.fn()}
-                onCreate={onCreate}
-                onDeleteValue={jest.fn()}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )
@@ -189,15 +175,12 @@ describe('components/properties/multiSelect', () => {
         const onDeleteOption = jest.fn()
         render(
             <MultiSelect
-                isEditable={true}
-                emptyValue={''}
+                readOnly={false}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={jest.fn()}
-                onChangeColor={jest.fn()}
-                onDeleteOption={onDeleteOption}
-                onCreate={jest.fn()}
-                onDeleteValue={jest.fn()}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )
@@ -222,15 +205,12 @@ describe('components/properties/multiSelect', () => {
         const onChangeColor = jest.fn()
         render(
             <MultiSelect
-                isEditable={true}
-                emptyValue={''}
+                readOnly={false}
+                showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                onChange={jest.fn()}
-                onChangeColor={onChangeColor}
-                onDeleteOption={jest.fn()}
-                onCreate={jest.fn()}
-                onDeleteValue={jest.fn()}
+                card={{} as Card}
+                board={{} as Board}
             />,
             {wrapper: Wrapper},
         )

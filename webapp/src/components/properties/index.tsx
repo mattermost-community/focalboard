@@ -1,4 +1,4 @@
-import {PropertyType as PropertyTypeEnum} from '../../blocks/board'
+import {PropertyTypeEnum} from '../../blocks/board'
 
 import CreatedTimeProperty from './createdTime/property'
 import CreatedByProperty from './createdBy/property'

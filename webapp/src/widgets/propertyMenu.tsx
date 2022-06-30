@@ -3,10 +3,9 @@
 import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
-import {PropertyType} from '../blocks/board'
-import {Utils} from '../utils'
 import Menu from '../widgets/menu'
 import registry from '../components/properties'
+import {PropertyType} from '../components/properties/types'
 import './propertyMenu.scss'
 
 type Props = {
@@ -17,30 +16,9 @@ type Props = {
     onDelete: (id: string) => void
 }
 
-export function typeDisplayName(intl: IntlShape, type: PropertyType): string {
-    switch (type) {
-    case 'number': return intl.formatMessage({id: 'PropertyType.Number', defaultMessage: 'Number'})
-    case 'select': return intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
-    case 'multiSelect': return intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
-    case 'person': return intl.formatMessage({id: 'PropertyType.Person', defaultMessage: 'Person'})
-    case 'file': return intl.formatMessage({id: 'PropertyType.File', defaultMessage: 'File or media'})
-    case 'checkbox': return intl.formatMessage({id: 'PropertyType.Checkbox', defaultMessage: 'Checkbox'})
-    case 'url': return intl.formatMessage({id: 'PropertyType.URL', defaultMessage: 'URL'})
-    case 'email': return intl.formatMessage({id: 'PropertyType.Email', defaultMessage: 'Email'})
-    case 'phone': return intl.formatMessage({id: 'PropertyType.Phone', defaultMessage: 'Phone'})
-    case 'updatedTime': return intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last updated time'})
-    case 'updatedBy': return intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Last updated by'})
-    case 'date': return intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
-    default: {
-        Utils.assertFailure(`typeDisplayName, unhandled type: ${type}`)
-        return type
-    }
-    }
-}
 function typeMenuTitle(intl: IntlShape, type: PropertyType): string {
-    return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${typeDisplayName(intl, type)}`
+    return `${intl.formatMessage({id: 'PropertyMenu.typeTitle', defaultMessage: 'Type'})}: ${type.displayName(intl)}`
 }
-
 
 type TypesProps = {
     label: string
@@ -63,7 +41,7 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
                         key={p.type}
                         id={p.type}
                         name={p.displayName(intl)}
-                        onClick={() => props.onTypeSelected(p.type)}
+                        onClick={() => props.onTypeSelected(p)}
                     />
                 ))
             }

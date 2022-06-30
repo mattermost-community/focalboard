@@ -10,13 +10,13 @@ import configureStore from 'redux-mock-store'
 import {createCard} from '../../../blocks/card'
 import {IUser} from '../../../user'
 
-import {createBoard} from '../../../blocks/board'
+import {createBoard, IPropertyTemplate} from '../../../blocks/board'
 
 import {createCommentBlock} from '../../../blocks/commentBlock'
 
-import LastModifiedBy from './lastModifiedBy'
+import UpdatedBy from './updatedBy'
 
-describe('components/properties/lastModifiedBy', () => {
+describe('components/properties/updatedBy', () => {
     test('should match snapshot', () => {
         const card = createCard()
         card.id = 'card-id-1'
@@ -46,9 +46,13 @@ describe('components/properties/lastModifiedBy', () => {
 
         const component = (
             <ReduxProvider store={store}>
-                <LastModifiedBy
+                <UpdatedBy
                     card={card}
                     board={board}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyValue={''}
+                    readOnly={false}
+                    showEmptyPlaceholder={false}
                 />
             </ReduxProvider>
         )

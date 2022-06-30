@@ -2,7 +2,7 @@ import React from 'react'
 import {IntlShape} from 'react-intl'
 
 import {Card} from '../../blocks/card'
-import {Board, IPropertyTemplate, PropertyType as PropertyTypeEnum} from '../../blocks/board'
+import {Board, IPropertyTemplate, PropertyTypeEnum} from '../../blocks/board'
 import {Option} from '../calculations/options'
 
 export type PropertyProps = {

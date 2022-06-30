@@ -11,13 +11,14 @@ import {createIntl} from 'react-intl'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {PropertyType} from '../../blocks/board'
 import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import mutator from '../../mutator'
-import {propertyTypesList, typeDisplayName} from '../../widgets/propertyMenu'
 
 import CardDetailProperties from './cardDetailProperties'
+
+import propsRegistry from '../properties'
+import {PropertyType} from '../properties/types'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
@@ -159,8 +160,8 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const selectProperty = screen.getByText(/select property type/i)
         expect(selectProperty).toBeInTheDocument()
 
-        propertyTypesList.forEach((type: PropertyType) => {
-            const typeButton = screen.getByRole('button', {name: typeDisplayName(intl, type)})
+        propsRegistry.list().forEach((type: PropertyType) => {
+            const typeButton = screen.getByRole('button', {name: type.displayName(intl)})
             expect(typeButton).toBeInTheDocument()
         })
     })
