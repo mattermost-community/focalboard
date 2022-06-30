@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	defaultTemplateVersion = 3
+	defaultTemplateVersion = 4
 )
 
 //go:embed templates.boardarchive

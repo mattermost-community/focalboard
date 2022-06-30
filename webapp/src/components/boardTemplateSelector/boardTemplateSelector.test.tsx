@@ -17,6 +17,8 @@ import {Utils} from '../../utils'
 import {UserWorkspace} from '../../user'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
+import TelemetryClient from '../../telemetry/telemetryClient'
+
 import BoardTemplateSelector from './boardTemplateSelector'
 
 jest.mock('react-router-dom', () => {
@@ -36,6 +38,9 @@ jest.mock('../../octoClient', () => {
 })
 jest.mock('../../utils')
 jest.mock('../../mutator')
+
+jest.mock('../../telemetry/telemetryClient')
+const mockedTelemetry = mocked(TelemetryClient, true)
 
 describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     const mockedUtils = mocked(Utils, true)
@@ -107,6 +112,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         dateDisplayPropertyId: 'global-id-5',
                         isTemplate: true,
                         templateVer: 2,
+                        trackingTemplateId: 'template_id_global',
                     },
                 }],
             },
@@ -282,6 +288,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             })
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(expect.anything(), expect.anything(), expect.anything(), expect.anything(), true))
+            await waitFor(() => expect(mockedTelemetry.trackEvent).toBeCalledWith('boards', 'createBoardViaTemplate', {boardTemplateId: 'template_id_global'}))
         })
     })
 })

@@ -95,6 +95,10 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
+        if (activeTemplate.workspaceId === '0') {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId: activeTemplate.fields.trackingTemplateId as string})
+        }
+
         await mutator.addBoardFromTemplate(intl, showBoard, () => showBoard(currentBoard.id), activeTemplate.id, activeTemplate.workspaceId === '0')
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()

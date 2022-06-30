@@ -1,8 +1,11 @@
 package sqlstore
 
 import (
+	//nolint:gosec
+	"crypto/md5"
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -30,6 +33,8 @@ func (re RootIDNilError) Error() string {
 type BlockNotFoundErr struct {
 	blockID string
 }
+
+var ErrInvalidIsTemplateProperty = errors.New("invalid isTemplate property value")
 
 func (be BlockNotFoundErr) Error() string {
 	return fmt.Sprintf("block not found (block id: %s", be.blockID)
@@ -360,6 +365,24 @@ func (s *SQLStore) getParentID(db sq.BaseRunner, c store.Container, blockID stri
 func (s *SQLStore) insertBlock(db sq.BaseRunner, c store.Container, block *model.Block, userID string) error {
 	if block.RootID == "" {
 		return RootIDNilError{}
+	}
+
+	// Generate tracking IDs for in-built templates
+	if block.Type == model.TypeBoard {
+		isTemplate := false
+		if isTemplateStr, ok := block.Fields["isTemplate"]; ok {
+			var ok bool
+			isTemplate, ok = isTemplateStr.(bool)
+			if !ok {
+				return fmt.Errorf("blockID: %s %w", block.ID, ErrInvalidIsTemplateProperty)
+			}
+		}
+
+		if isTemplate && c.WorkspaceID == "0" {
+			//nolint:gosec
+			// we don't need cryptographically secure hash, so MD5 is fine
+			block.Fields["trackingTemplateId"] = fmt.Sprintf("%x", md5.Sum([]byte(block.Title)))
+		}
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)

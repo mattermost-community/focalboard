@@ -28,6 +28,7 @@ type BoardFields = {
     isTemplate?: boolean
     cardProperties: IPropertyTemplate[]
     columnCalculations: Record<string, string>
+    trackingTemplateId?: string
 }
 
 type Board = Block & {
@@ -59,7 +60,7 @@ function createBoard(block?: Block): Board {
         })
     }
 
-    return {
+    const board = {
         ...createBlock(block),
         type: 'board',
         fields: {
@@ -71,7 +72,13 @@ function createBoard(block?: Block): Board {
             columnCalculations: block?.fields.columnCalculations || [],
             cardProperties,
         },
+    } as Board
+
+    if (block?.fields.trackingTemplateId) {
+        board.fields.trackingTemplateId = block?.fields.trackingTemplateId
     }
+
+    return board
 }
 
 type BoardGroup = {
