@@ -14,6 +14,7 @@ import MultiSelectProperty from './multiselect/property'
 import DateProperty from './date/property'
 import PersonProperty from './person/property'
 import CheckboxProperty from './checkbox/property'
+import UnknownProperty from './unknown/property'
 
 import {PropertyType} from './types'
 
@@ -36,7 +37,7 @@ class PropertiesRegistry {
     }
 
     get(type: PropertyTypeEnum) {
-        return this.properties[type]
+        return this.properties[type] || UnknownProperty
     }
 }
 
