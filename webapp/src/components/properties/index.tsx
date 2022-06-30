@@ -1,34 +1,21 @@
-import React from 'react'
-import {IntlShape} from 'react-intl'
-
-import {Card} from '../../blocks/card'
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {PropertyType as PropertyTypeEnum} from '../../blocks/board'
 
 import CreatedTimeProperty from './createdTime/property'
+import CreatedByProperty from './createdBy/property'
+import UpdatedTimeProperty from './updatedTime/property'
+import UpdatedByProperty from './updatedBy/property'
 import TextProperty from './text/property'
 import EmailProperty from './email/property'
 import PhoneProperty from './phone/property'
 import NumberProperty from './number/property'
 import UrlProperty from './url/property'
 import SelectProperty from './select/property'
+import MultiSelectProperty from './multiselect/property'
+import DateProperty from './date/property'
+import PersonProperty from './person/property'
+import CheckboxProperty from './checkbox/property'
 
-export type PropertyProps = {
-    card: Card,
-    board: Board,
-    readOnly?: boolean,
-    value?: string | string[],
-    propertyTemplate?: IPropertyTemplate,
-    extraData?: Record<string, string>,
-    showEmptyPlaceholder?: boolean,
-}
-
-type PropertyType = {
-    Editor: React.FunctionComponent<PropertyProps>,
-    Value: React.FunctionComponent<PropertyProps>,
-    name: string,
-    type: string,
-    displayName: (intl: IntlShape) => string,
-}
+import {PropertyType} from './types'
 
 class PropertiesRegistry {
     properties: {[key:string]: PropertyType} = {}
@@ -48,28 +35,25 @@ class PropertiesRegistry {
         return this.propertiesList
     }
 
-    get(type: string) {
+    get(type: PropertyTypeEnum) {
         return this.properties[type]
     }
 }
 
 const registry = new PropertiesRegistry()
-// export const propertyTypesList: PropertyType[] = [
-//     'multiSelect',
-//     'date',
-//     'person',
-//     'checkbox',
-//     'createdTime',
-//     'createdBy',
-//     'updatedTime',
-//     'updatedBy',
-// ]
 registry.register(TextProperty)
 registry.register(NumberProperty)
 registry.register(EmailProperty)
 registry.register(PhoneProperty)
 registry.register(UrlProperty)
-registry.register(CreatedTimeProperty)
 registry.register(SelectProperty)
+registry.register(MultiSelectProperty)
+registry.register(DateProperty)
+registry.register(PersonProperty)
+registry.register(CheckboxProperty)
+registry.register(CreatedByProperty)
+registry.register(CreatedTimeProperty)
+registry.register(UpdatedByProperty)
+registry.register(UpdatedTimeProperty)
 
 export default registry

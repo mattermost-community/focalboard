@@ -9,35 +9,15 @@ import {IntlProvider} from 'react-intl'
 import '@testing-library/jest-dom'
 
 import {wrapIntl} from '../../../testUtils'
-import {propertyValueClassName} from '../../propertyValueUtils'
+import {IPropertyTemplate, Board} from '../../../blocks/board'
+import {Card} from '../../../blocks/card'
 
-import DateRange from '../dateRange/dateRange'
+import DateProp from './date'
 
 // create Dates for specific days for this year.
 const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))
 const June15Local = new Date(new Date().getFullYear(), 5, 15, 12)
 const June20 = new Date(Date.UTC(new Date().getFullYear(), 5, 20, 12))
-
-type Props = {
-    initialValue?: string
-    showEmptyPlaceholder?: boolean
-    onChange?: (value: string) => void
-}
-
-const DateRangeWrapper = (props: Props): JSX.Element => {
-    const [value, setValue] = useState(props.initialValue || '')
-    return (
-        <DateRange
-            className={propertyValueClassName()}
-            value={value}
-            showEmptyPlaceholder={props.showEmptyPlaceholder}
-            onChange={(newValue) => {
-                setValue(newValue)
-                props.onChange?.(newValue)
-            }}
-        />
-    )
-}
 
 describe('components/properties/dateRange', () => {
     beforeEach(() => {
@@ -48,9 +28,13 @@ describe('components/properties/dateRange', () => {
 
     test('returns default correctly', () => {
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue=''
-                onChange={jest.fn()}
+            <DateProp
+                propertyValue=''
+                showEmptyPlaceholder={false}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 
@@ -61,9 +45,13 @@ describe('components/properties/dateRange', () => {
     test('returns local correctly - es local', () => {
         const component = (
             <IntlProvider locale='es'>
-                <DateRangeWrapper
-                    initialValue={June15Local.getTime().toString()}
-                    onChange={jest.fn()}
+                <DateProp
+                    propertyValue={June15Local.getTime().toString()}
+                    showEmptyPlaceholder={false}
+                    readOnly={false}
+                    board={{} as Board}
+                    card={{} as Card}
+                    propertyTemplate={{} as IPropertyTemplate}
                 />
             </IntlProvider>
         )
@@ -77,10 +65,13 @@ describe('components/properties/dateRange', () => {
     test('handles calendar click event', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue=''
+            <DateProp
+                propertyValue=''
                 showEmptyPlaceholder={true}
-                onChange={callback}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 
@@ -103,10 +94,13 @@ describe('components/properties/dateRange', () => {
     test('handles setting range', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue={''}
+            <DateProp
+                propertyValue={''}
                 showEmptyPlaceholder={true}
-                onChange={callback}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 
@@ -139,9 +133,13 @@ describe('components/properties/dateRange', () => {
     test('handle clear', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue={June15Local.getTime().toString()}
-                onChange={callback}
+            <DateProp
+                propertyValue={June15Local.getTime().toString()}
+                showEmptyPlaceholder={false}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 
@@ -163,9 +161,13 @@ describe('components/properties/dateRange', () => {
     test('set via text input', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
-                onChange={callback}
+            <DateProp
+                propertyValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+                showEmptyPlaceholder={false}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 
@@ -199,9 +201,13 @@ describe('components/properties/dateRange', () => {
 
         const component = (
             <IntlProvider locale='es'>
-                <DateRangeWrapper
-                    initialValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
-                    onChange={callback}
+                <DateProp
+                    propertyValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+                    showEmptyPlaceholder={false}
+                    readOnly={false}
+                    board={{} as Board}
+                    card={{} as Card}
+                    propertyTemplate={{} as IPropertyTemplate}
                 />
             </IntlProvider>
         )
@@ -233,9 +239,13 @@ describe('components/properties/dateRange', () => {
     test('cancel set via text input', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
-                onChange={callback}
+            <DateProp
+                propertyValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
+                showEmptyPlaceholder={false}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 
@@ -262,10 +272,13 @@ describe('components/properties/dateRange', () => {
     test('handles `Today` button click event', () => {
         const callback = jest.fn()
         const component = wrapIntl(
-            <DateRangeWrapper
-                initialValue={''}
+            <DateProp
+                propertyValue={''}
                 showEmptyPlaceholder={true}
-                onChange={callback}
+                readOnly={false}
+                board={{} as Board}
+                card={{} as Card}
+                propertyTemplate={{} as IPropertyTemplate}
             />,
         )
 

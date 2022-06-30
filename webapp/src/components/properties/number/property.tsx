@@ -1,8 +1,9 @@
 import {IntlShape} from 'react-intl'
 import Number from './number'
 import {Options} from '../../calculations/options'
+import {PropertyType} from '../types'
 
-const NumberProperty = {
+const NumberProperty: PropertyType = {
     Editor: Number,
     Value: Number,
     name: 'Number',
@@ -13,7 +14,7 @@ const NumberProperty = {
         Options.countValue, Options.countUniqueValue, Options.sum,
         Options.average, Options.median, Options.min, Options.max,
         Options.range],
-    displayValue: (block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape) => propertyValue,
+    displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
 };
 
 export default NumberProperty;

@@ -5,20 +5,17 @@ import React from 'react'
 
 import {useIntl} from 'react-intl'
 
-import {Card} from '../../../blocks/card'
 import {Block} from '../../../blocks/block'
 import {Utils} from '../../../utils'
 import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
 import {propertyValueClassName} from '../../propertyValueUtils'
-import './lastModifiedAt.scss'
+import './updatedTime.scss'
 
-type Props = {
-    card: Card,
-}
+import {PropertyProps} from '../types'
 
-const LastModifiedAt = (props: Props): JSX.Element => {
+const UpdatedTime = (props: PropertyProps): JSX.Element => {
     const intl = useIntl()
     const lastContent = useAppSelector(getLastCardContent(props.card.id || '')) as Block
     const lastComment = useAppSelector(getLastCardComment(props.card.id)) as Block
@@ -32,10 +29,10 @@ const LastModifiedAt = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className={`LastModifiedAt ${propertyValueClassName({readonly: true})}`}>
+        <div className={`UpdatedTime ${propertyValueClassName({readonly: true})}`}>
             {Utils.displayDateTime(new Date(latestBlock.updateAt), intl)}
         </div>
     )
 }
 
-export default LastModifiedAt
+export default UpdatedTime

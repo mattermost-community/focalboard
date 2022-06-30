@@ -18,67 +18,6 @@ import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
-        let displayValue: string | string[] | undefined
-        switch (propertyTemplate.type) {
-        case 'select': {
-            // The property value is the id of the template
-            if (propertyValue) {
-                const option = propertyTemplate.options.find((o) => o.id === propertyValue)
-                if (!option) {
-                    Utils.assertFailure(`Invalid select option ID ${propertyValue}, block.title: ${block.title}`)
-                }
-                displayValue = option?.value || '(Unknown)'
-            }
-            break
-        }
-        case 'multiSelect': {
-            if (propertyValue?.length) {
-                const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))
-                if (!options.length) {
-                    Utils.assertFailure(`Invalid multiSelect option IDs ${propertyValue}, block.title: ${block.title}`)
-                }
-                displayValue = options.map((o) => o.value)
-            }
-            break
-        }
-        case 'createdTime': {
-            displayValue = Utils.displayDateTime(new Date(block.createAt), intl)
-            break
-        }
-        case 'updatedTime': {
-            displayValue = Utils.displayDateTime(new Date(block.updateAt), intl)
-            break
-        }
-        case 'date': {
-            if (propertyValue) {
-                const singleDate = new Date(parseInt(propertyValue as string, 10))
-                if (singleDate && DateUtils.isDate(singleDate)) {
-                    displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
-                } else {
-                    try {
-                        const dateValue = JSON.parse(propertyValue as string)
-                        if (dateValue.from) {
-                            displayValue = Utils.displayDate(new Date(dateValue.from), intl)
-                        }
-                        if (dateValue.to) {
-                            displayValue += ' -> '
-                            displayValue += Utils.displayDate(new Date(dateValue.to), intl)
-                        }
-                    } catch {
-                        // do nothing
-                    }
-                }
-            }
-            break
-        }
-        default:
-            displayValue = propertyValue
-        }
-
-        return displayValue
-    }
-
     static hydrateBlock(block: Block): Block {
         switch (block.type) {
         case 'view': { return createBoardView(block) }

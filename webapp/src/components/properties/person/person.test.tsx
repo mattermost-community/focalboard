@@ -13,8 +13,10 @@ import {act} from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 
 import {wrapIntl} from '../../../testUtils'
+import {IPropertyTemplate, Board} from '../../../blocks/board'
+import {Card} from '../../../blocks/card'
 
-import UserProperty from './user'
+import Person from './person'
 
 describe('components/properties/user', () => {
     const mockStore = configureStore([])
@@ -34,15 +36,17 @@ describe('components/properties/user', () => {
         },
     }
 
-    test('not readonly not existing user', async () => {
+    test('not readOnly not existing user', async () => {
         const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <UserProperty
-                    value={'user-id-2'}
-                    readonly={false}
-                    onChange={() => {
-                    }}
+                <Person
+                    propertyValue={'user-id-2'}
+                    readOnly={false}
+                    showEmptyPlaceholder={false}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{} as Board}
+                    card={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -61,11 +65,13 @@ describe('components/properties/user', () => {
         const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <UserProperty
-                    value={'user-id-1'}
-                    readonly={false}
-                    onChange={() => {
-                    }}
+                <Person
+                    propertyValue={'user-id-1'}
+                    readOnly={false}
+                    showEmptyPlaceholder={false}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{} as Board}
+                    card={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -84,11 +90,13 @@ describe('components/properties/user', () => {
         const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <UserProperty
-                    value={'user-id-1'}
-                    readonly={true}
-                    onChange={() => {
-                    }}
+                <Person
+                    propertyValue={'user-id-1'}
+                    readOnly={true}
+                    showEmptyPlaceholder={false}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{} as Board}
+                    card={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -107,11 +115,13 @@ describe('components/properties/user', () => {
         const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
-                <UserProperty
-                    value={'user-id-1'}
-                    readonly={false}
-                    onChange={() => {
-                    }}
+                <Person
+                    propertyValue={'user-id-1'}
+                    readOnly={false}
+                    showEmptyPlaceholder={false}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{} as Board}
+                    card={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -127,7 +137,7 @@ describe('components/properties/user', () => {
         if (container) {
             // this is the actual element where the click event triggers
             // opening of the dropdown
-            const userProperty = container.querySelector('.UserProperty > div > div:nth-child(1) > div:nth-child(2) > input')
+            const userProperty = container.querySelector('.Person > div > div:nth-child(1) > div:nth-child(2) > input')
             expect(userProperty).not.toBeNull()
 
             act(() => {

@@ -8,7 +8,7 @@ import {IntlProvider} from 'react-intl'
 
 import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 
-import MultiSelect from './multiSelect'
+import MultiSelect from './multiselect'
 
 function buildMultiSelectPropertyTemplate(options: IPropertyOption[] = []) : IPropertyTemplate {
     return {

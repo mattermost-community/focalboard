@@ -3,20 +3,15 @@
 
 import React from 'react'
 
-import {Card} from '../../../blocks/card'
-import {Board} from '../../../blocks/board'
 import {Block} from '../../../blocks/block'
 import {useAppSelector} from '../../../store/hooks'
 import {getLastCardContent} from '../../../store/contents'
 import {getLastCardComment} from '../../../store/comments'
-import UserProperty from '../user/user'
+import Person from '../person/person'
 
-type Props = {
-    card: Card,
-    board?: Board,
-}
+import {PropertyProps} from '../types'
 
-const LastModifiedBy = (props: Props): JSX.Element => {
+const LastModifiedBy = (props: PropertyProps): JSX.Element => {
     const lastContent = useAppSelector(getLastCardContent(props.card.id || '')) as Block
     const lastComment = useAppSelector(getLastCardComment(props.card.id)) as Block
 
@@ -29,10 +24,10 @@ const LastModifiedBy = (props: Props): JSX.Element => {
     }
 
     return (
-        <UserProperty
-            value={latestBlock.modifiedBy}
-            readonly={true} // created by is an immutable property, so will always be readonly
-            onChange={() => { }} // since created by is immutable, we don't need to handle onChange
+        <Person
+            {...props}
+            propertyValue={latestBlock.modifiedBy}
+            readOnly={true} // created by is an immutable property, so will always be readonly
         />
     )
 }

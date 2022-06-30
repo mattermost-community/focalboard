@@ -1,18 +1,18 @@
 import {IntlShape} from 'react-intl'
-import CreatedBy from './createdBy'
+import UpdatedBy from './updatedBy'
 import {Options} from '../../calculations/options'
 import {PropertyType} from '../types'
 
-const CreatedByProperty: PropertyType = {
-    Editor: CreatedBy,
-    Value: CreatedBy,
-    name: 'Created By',
-    type: 'createdBy',
-    displayName: (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created by'}),
+const UpdatedByProperty: PropertyType = {
+    Editor: UpdatedBy,
+    Value: UpdatedBy,
+    name: 'Last Modified By',
+    type: 'updatedBy',
+    displayName: (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Last Modified by'}),
     calculationOptions: [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue],
     displayValue: (propertyValue: string | string[] | undefined) => propertyValue
 };
 
-export default CreatedByProperty;
+export default UpdatedByProperty;

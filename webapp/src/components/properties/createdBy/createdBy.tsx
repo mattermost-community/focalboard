@@ -3,15 +3,15 @@
 
 import React from 'react'
 
-import UserProperty from '../user/user'
-import {PropertyProps} from '../'
+import Person from '../person/person'
+import {PropertyProps} from '../types'
 
 const CreatedBy = (props: PropertyProps): JSX.Element => {
     return (
-        <UserProperty
-            value={props.card.createdBy}
-            readonly={true} // created by is an immutable property, so will always be readonly
-            onChange={() => {}} // since created by is immutable, we don't need to handle onChange
+        <Person
+            {...props}
+            propertyValue={props.card.createdBy}
+            readOnly={true} // created by is an immutable property, so will always be readonly
         />
     )
 }

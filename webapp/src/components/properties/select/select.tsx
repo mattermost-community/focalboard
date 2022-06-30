@@ -7,15 +7,15 @@ import {useIntl} from 'react-intl'
 import {IPropertyOption} from '../../../blocks/board'
 
 import Label from '../../../widgets/label'
-import {Utils} from '../../../utils'
+import {Utils, IDType} from '../../../utils'
 import mutator from '../../../mutator'
 import ValueSelector from '../../../widgets/valueSelector'
 import {propertyValueClassName} from '../../propertyValueUtils'
 
-import PropertyProps from '../index'
+import {PropertyProps} from '../types'
 
 const SelectProperty = (props: PropertyProps) => {
-    const {emptyValue, value, propertyTemplate, board, card} = props
+    const {propertyValue, propertyTemplate, board, card} = props
     const intl = useIntl()
 
     const [open, setOpen] = useState(false)
@@ -39,10 +39,10 @@ const SelectProperty = (props: PropertyProps) => {
     const onDeleteOption = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
     const onDeleteValue = useCallback(() => mutator.changePropertyValue(board.id, card, propertyTemplate.id, ''), [card, propertyTemplate.id])
 
-    const option = propertyTemplate.options.find((o: IPropertyOption) => o.id === value)
+    const option = propertyTemplate.options.find((o: IPropertyOption) => o.id === propertyValue)
     const propertyColorCssClassName = option?.color || ''
     const displayValue = option?.value
-    const finalDisplayValue = displayValue || emptyValue
+    const finalDisplayValue = displayValue || emptyDisplayValue
 
     if (!isEditable || !open) {
         return (
@@ -62,7 +62,7 @@ const SelectProperty = (props: PropertyProps) => {
         <ValueSelector
             emptyValue={emptyDisplayValue}
             options={propertyTemplate.options}
-            value={propertyTemplate.options.find((p: IPropertyOption) => p.id === value)}
+            value={propertyTemplate.options.find((p: IPropertyOption) => p.id === propertyValue)}
             onCreate={onCreate}
             onChange={onChange}
             onChangeColor={onChangeColor}

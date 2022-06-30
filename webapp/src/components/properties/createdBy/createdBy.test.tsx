@@ -8,7 +8,8 @@ import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
 import {IUser} from '../../../user'
-import {createCard} from '../../../blocks/card'
+import {createCard, Card} from '../../../blocks/card'
+import {Board, IPropertyTemplate} from '../../../blocks/board'
 
 import CreatedBy from './createdBy'
 
@@ -28,7 +29,14 @@ describe('components/properties/createdBy', () => {
 
         const component = (
             <ReduxProvider store={store}>
-                <CreatedBy userID='user-id-1'/>
+                <CreatedBy
+                    board={{} as Board}
+                    card={{createdBy: 'user-id-1'} as Card}
+                    readOnly={false}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyValue={''}
+                    showEmptyPlaceholder={false}
+                />
             </ReduxProvider>
         )
 

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo, useState} from 'react'
+import React, {useMemo, useState, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -8,23 +8,21 @@ import DayPicker from 'react-day-picker/DayPicker'
 
 import moment from 'moment'
 
+import mutator from '../../../mutator'
+
 import Editable from '../../../widgets/editable'
 import SwitchOption from '../../../widgets/menu/switchOption'
 import Button from '../../../widgets/buttons/button'
 
 import Modal from '../../../components/modal'
 import ModalWrapper from '../../../components/modalWrapper'
+import {propertyValueClassName} from '../../../components/propertyValueUtils'
 
 import 'react-day-picker/lib/style.css'
-import './dateRange.scss'
+import './date.scss'
 import {Utils} from '../../../utils'
 
-type Props = {
-    className: string
-    value: string
-    showEmptyPlaceholder?: boolean
-    onChange: (value: string) => void
-}
+import {PropertyProps} from '../types'
 
 export type DateProperty = {
     from?: number
@@ -56,9 +54,17 @@ function datePropertyToString(dateProperty: DateProperty): string {
 
 const loadedLocales: Record<string, moment.Locale> = {}
 
-function DateRange(props: Props): JSX.Element {
-    const {className, value, showEmptyPlaceholder, onChange} = props
+function DateRange(props: PropertyProps): JSX.Element {
+    const {propertyValue, propertyTemplate, showEmptyPlaceholder, readOnly, board, card} = props
+    const [value, setValue] = useState(propertyValue)
     const intl = useIntl()
+
+    const onChange = useCallback((newValue) => {
+        if (value !== newValue) {
+            setValue(newValue)
+            mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue)
+        }
+    }, [value, board.id, card, propertyTemplate.id])
 
     const getDisplayDate = (date: Date | null | undefined) => {
         let displayDate = ''
@@ -153,6 +159,12 @@ function DateRange(props: Props): JSX.Element {
     if (!buttonText && showEmptyPlaceholder) {
         buttonText = intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})
     }
+
+    const className = propertyValueClassName({readonly: readOnly})
+    if (readOnly) {
+        return <div className={className}>{displayValue}</div>
+    }
+
     return (
         <div className={`DateRange ${displayValue ? '' : 'empty'} ` + className}>
             <Button

@@ -1,25 +1,22 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useCallback} from 'react'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
 import {IUser} from '../../../user'
 import {getBoardUsersList, getBoardUsers} from '../../../store/users'
 import {useAppSelector} from '../../../store/hooks'
+import mutator from '../../../mutator'
 
-import './user.scss'
+import './person.scss'
 import {getSelectBaseStyle} from '../../../theme'
 import {propertyValueClassName} from '../../propertyValueUtils'
 
-const imageURLForUser = (window as any).Components?.imageURLForUser
+import {PropertyProps} from '../types'
 
-type Props = {
-    value: string,
-    readonly: boolean,
-    onChange: (value: string) => void,
-}
+const imageURLForUser = (window as any).Components?.imageURLForUser
 
 const selectStyles = {
     ...getSelectBaseStyle(),
@@ -60,10 +57,10 @@ const formatOptionLabel = (user: any) => {
     }
 
     return (
-        <div className='UserProperty-item'>
+        <div className='Person-item'>
             {profileImg && (
                 <img
-                    alt='UserProperty-avatar'
+                    alt='Person-avatar'
                     src={profileImg}
                 />
             )}
@@ -72,15 +69,17 @@ const formatOptionLabel = (user: any) => {
     )
 }
 
-const UserProperty = (props: Props): JSX.Element => {
+const Person = (props: PropertyProps): JSX.Element => {
+    const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
-    const user = boardUsersById[props.value]
+    const user = boardUsersById[propertyValue as string]
 
-    if (props.readonly) {
+    if (readOnly) {
         return (
-            <div className={`UserProperty ${propertyValueClassName({readonly: true})}`}>
-                {user ? formatOptionLabel(user) : props.value}
+            <div className={`Person ${propertyValueClassName({readonly: true})}`}>
+                {user ? formatOptionLabel(user) : propertyValue}
             </div>
         )
     }
@@ -93,23 +92,23 @@ const UserProperty = (props: Props): JSX.Element => {
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={`UserProperty ${propertyValueClassName()}`}
+            className={`Person ${propertyValueClassName()}`}
             classNamePrefix={'react-select'}
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}
             placeholder={'Empty'}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
-            value={boardUsersById[props.value] || null}
+            value={boardUsersById[propertyValue as string] || null}
             onChange={(item, action) => {
                 if (action.action === 'select-option') {
-                    props.onChange(item?.id || '')
+                    onChange(item?.id || '')
                 } else if (action.action === 'clear') {
-                    props.onChange('')
+                    onChange('')
                 }
             }}
         />
     )
 }
 
-export default UserProperty
+export default Person

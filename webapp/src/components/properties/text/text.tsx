@@ -4,7 +4,7 @@
 import React from 'react'
 
 
-import {PropertyProps} from '../index'
+import {PropertyProps} from '../types'
 import BaseTextEditor from '../baseTextEditor'
 
 const Text = (props: PropertyProps): JSX.Element => {

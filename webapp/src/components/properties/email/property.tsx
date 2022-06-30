@@ -1,8 +1,9 @@
 import {IntlShape} from 'react-intl'
 import Email from './email'
 import {Options} from '../../calculations/options'
+import {PropertyType} from '../types'
 
-const EmailProperty = {
+const EmailProperty: PropertyType = {
     Editor: Email,
     Value: Email,
     name: 'Email',
@@ -11,7 +12,7 @@ const EmailProperty = {
     calculationOptions: [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue],
-    displayValue: (block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape) => propertyValue,
+    displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
 };
 
 export default EmailProperty;

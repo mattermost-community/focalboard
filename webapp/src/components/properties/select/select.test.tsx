@@ -6,7 +6,8 @@ import '@testing-library/jest-dom'
 
 import userEvent from '@testing-library/user-event'
 
-import {IPropertyTemplate} from '../../../blocks/board'
+import {Board, IPropertyTemplate} from '../../../blocks/board'
+import {Card} from '../../../blocks/card'
 
 import {wrapIntl} from '../../../testUtils'
 
@@ -37,16 +38,6 @@ function selectPropertyTemplate(): IPropertyTemplate {
     }
 }
 
-function selectCallbacks() {
-    return {
-        onCreate: jest.fn(),
-        onChange: jest.fn(),
-        onChangeColor: jest.fn(),
-        onDeleteOption: jest.fn(),
-        onDeleteValue: jest.fn(),
-    }
-}
-
 describe('components/properties/select', () => {
     const nonEditableSelectTestId = 'select-non-editable'
 
@@ -58,11 +49,12 @@ describe('components/properties/select', () => {
 
         const {container} = render(wrapIntl(
             <Select
-                emptyValue={''}
+                board={{} as Board}
+                card={{} as Card}
                 propertyTemplate={propertyTemplate}
                 propertyValue={option.id}
-                isEditable={false}
-                {...selectCallbacks()}
+                readOnly={true}
+                showEmptyPlaceholder={false}
             />,
         ))
 
@@ -78,11 +70,12 @@ describe('components/properties/select', () => {
 
         const {container} = render(wrapIntl(
             <Select
-                emptyValue={emptyValue}
+                board={{} as Board}
+                card={{} as Card}
+                showEmptyPlaceholder={true}
                 propertyTemplate={propertyTemplate}
                 propertyValue={''}
-                isEditable={false}
-                {...selectCallbacks()}
+                readOnly={true}
             />,
         ))
 
@@ -98,11 +91,12 @@ describe('components/properties/select', () => {
 
         render(wrapIntl(
             <Select
-                emptyValue={''}
+                board={{} as Board}
+                card={{} as Card}
                 propertyTemplate={propertyTemplate}
                 propertyValue={selected.id}
-                isEditable={true}
-                {...selectCallbacks()}
+                showEmptyPlaceholder={false}
+                readOnly={false}
             />,
         ))
 
@@ -123,16 +117,15 @@ describe('components/properties/select', () => {
     it('can select the option from menu', () => {
         const propertyTemplate = selectPropertyTemplate()
         const optionToSelect = propertyTemplate.options[2]
-        const onChange = jest.fn()
 
         render(wrapIntl(
             <Select
-                emptyValue={'Empty'}
+                board={{} as Board}
+                card={{} as Card}
                 propertyTemplate={propertyTemplate}
                 propertyValue={''}
-                isEditable={true}
-                {...selectCallbacks()}
-                onChange={onChange}
+                showEmptyPlaceholder={false}
+                readOnly={false}
             />,
         ))
 
@@ -140,22 +133,21 @@ describe('components/properties/select', () => {
         userEvent.click(screen.getByText(optionToSelect.value))
 
         expect(clearButton()).not.toBeInTheDocument()
-        expect(onChange).toHaveBeenCalledWith(optionToSelect.id)
+        expect('on-change').toHaveBeenCalledWith(optionToSelect.id)
     })
 
     it('can clear the selected option', () => {
         const propertyTemplate = selectPropertyTemplate()
         const selected = propertyTemplate.options[1]
-        const onDeleteValue = jest.fn()
 
         render(wrapIntl(
             <Select
-                emptyValue={'Empty'}
+                board={{} as Board}
+                card={{} as Card}
                 propertyTemplate={propertyTemplate}
                 propertyValue={selected.id}
-                isEditable={true}
-                {...selectCallbacks()}
-                onDeleteValue={onDeleteValue}
+                showEmptyPlaceholder={false}
+                readOnly={false}
             />,
         ))
 
@@ -165,29 +157,28 @@ describe('components/properties/select', () => {
         expect(clear).toBeInTheDocument()
         userEvent.click(clear!)
 
-        expect(onDeleteValue).toHaveBeenCalled()
+        expect('on-delete-value').toHaveBeenCalled()
     })
 
     it('can create new option', () => {
         const propertyTemplate = selectPropertyTemplate()
         const initialOption = propertyTemplate.options[0]
         const newOption = 'new-option'
-        const onCreate = jest.fn()
 
         render(wrapIntl(
             <Select
-                emptyValue={'Empty'}
+                board={{} as Board}
+                card={{} as Card}
                 propertyTemplate={propertyTemplate}
                 propertyValue={initialOption.id}
-                isEditable={true}
-                {...selectCallbacks()}
-                onCreate={onCreate}
+                showEmptyPlaceholder={false}
+                readOnly={false}
             />,
         ))
 
         userEvent.click(screen.getByTestId(nonEditableSelectTestId))
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), `${newOption}{enter}`)
 
-        expect(onCreate).toHaveBeenCalledWith(newOption)
+        expect('on-create').toHaveBeenCalledWith(newOption)
     })
 })

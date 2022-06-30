@@ -1,8 +1,9 @@
 import {IntlShape} from 'react-intl'
 import Phone from './phone'
 import {Options} from '../../calculations/options'
+import {PropertyType} from '../types'
 
-const PhoneProperty = {
+const PhoneProperty: PropertyType = {
     Editor: Phone,
     Value: Phone,
     name: 'Phone',
@@ -11,7 +12,7 @@ const PhoneProperty = {
     calculationOptions: [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue],
-    displayValue: (block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape) => propertyValue,
+    displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
 };
 
 export default PhoneProperty;

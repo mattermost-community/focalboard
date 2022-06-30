@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
+import React from 'react'
 import {render, screen} from '@testing-library/react'
 
 import {mocked} from 'jest-mock'
@@ -10,10 +10,11 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
 import {wrapIntl} from '../../../testUtils'
+import {TestBlockFactory} from '../../../test/testBlockFactory'
 import {Utils} from '../../../utils'
 import {sendFlashMessage} from '../../flashMessages'
 
-import Link from './link'
+import Url from './url'
 
 jest.mock('../../flashMessages')
 
@@ -23,29 +24,20 @@ const mockedSendFlashMessage = mocked(sendFlashMessage, true)
 describe('components/properties/link', () => {
     beforeEach(jest.clearAllMocks)
 
-    const linkCallbacks = {
-        onChange: jest.fn(),
-        onSave: jest.fn(),
-        onCancel: jest.fn(),
-        validator: jest.fn(() => true),
-    }
-
-    const LinkWrapper = (props: {url: string}) => {
-        const [value, setValue] = useState(props.url)
-        return (
-            <Link
-                {...linkCallbacks}
-                value={value}
-                onChange={(text) => setValue(text)}
-            />
-        )
+    const board = TestBlockFactory.createBoard()
+    const baseData = {
+        card: TestBlockFactory.createCard(),
+        board,
+        propertyTemplate: board.cardProperties[0],
+        readOnly: false,
+        showEmptyPlaceholder: false,
     }
 
     it('should match snapshot for link with empty url', () => {
         const {container} = render(wrapIntl((
-            <Link
-                {...linkCallbacks}
-                value=''
+            <Url
+                {...baseData}
+                propertyValue=''
             />
         )))
         expect(container).toMatchSnapshot()
@@ -53,9 +45,9 @@ describe('components/properties/link', () => {
 
     it('should match snapshot for link with non-empty url', () => {
         const {container} = render(wrapIntl((
-            <Link
-                {...linkCallbacks}
-                value='https://github.com/mattermost/focalboard'
+            <Url
+                {...baseData}
+                propertyValue='https://github.com/mattermost/focalboard'
             />
         )))
         expect(container).toMatchSnapshot()
@@ -63,17 +55,17 @@ describe('components/properties/link', () => {
 
     it('should match snapshot for readonly link with non-empty url', () => {
         const {container} = render(wrapIntl((
-            <Link
-                {...linkCallbacks}
-                value='https://github.com/mattermost/focalboard'
-                readonly={true}
+            <Url
+                {...baseData}
+                propertyValue='https://github.com/mattermost/focalboard'
+                readOnly={true}
             />
         )))
         expect(container).toMatchSnapshot()
     })
 
     it('should change to link after entering url', () => {
-        render(wrapIntl(<LinkWrapper url=''/>))
+        render(wrapIntl(<Url {...baseData} propertyValue=''/>))
 
         const url = 'https://mattermost.com'
         const input = screen.getByRole('textbox')
@@ -84,11 +76,11 @@ describe('components/properties/link', () => {
         expect(link).toHaveTextContent(url)
         expect(screen.getByRole('button', {name: 'Edit'})).toBeInTheDocument()
         expect(screen.getByRole('button', {name: 'Copy'})).toBeInTheDocument()
-        expect(linkCallbacks.onSave).toHaveBeenCalled()
+        expect('onsave').toHaveBeenCalled() // TODO: See how i can text this
     })
 
     it('should allow to edit link url', () => {
-        render(wrapIntl(<LinkWrapper url='https://mattermost.com'/>))
+        render(wrapIntl(<Url {...baseData} propertyValue='https://mattermost.com'/>))
 
         screen.getByRole('button', {name: 'Edit'}).click()
         const newURL = 'https://github.com/mattermost'
@@ -102,7 +94,7 @@ describe('components/properties/link', () => {
 
     it('should allow to copy url', () => {
         const url = 'https://mattermost.com'
-        render(wrapIntl(<LinkWrapper url={url}/>))
+        render(wrapIntl(<Url {...baseData} propertyValue={url}/>))
         screen.getByRole('button', {name: 'Copy'}).click()
         expect(mockedCopy).toHaveBeenCalledWith(url)
         expect(mockedSendFlashMessage).toHaveBeenCalledWith({content: 'Copied!', severity: 'high'})

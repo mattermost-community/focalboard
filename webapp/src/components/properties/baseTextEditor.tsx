@@ -6,19 +6,14 @@ import React, {useCallback, useState, useRef, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 
 import mutator from '../../mutator'
-import {OctoUtils} from '../../octoUtils'
 import Editable from '../../widgets/editable'
 
 import {propertyValueClassName} from '../propertyValueUtils'
-import {PropertyProps} from './index'
+import {PropertyProps} from './types'
 
 const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellCheck?: boolean}): JSX.Element => {
-    if(!props.propertyTemplate) {
-        return <></>;
-    }
-
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id || ''] || '')
-    const onCancel = useCallback(() => setValue(props.value || ''), [props.value])
+    const onCancel = useCallback(() => setValue(props.propertyValue || ''), [props.propertyValue])
 
     const saveTextProperty = useCallback(() => {
         if (value !== (props.card.fields.properties[props.propertyTemplate?.id || ''] || '')) {
@@ -30,7 +25,6 @@ const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellC
     saveTextPropertyRef.current = saveTextProperty
 
     const intl = useIntl()
-    const displayValue = OctoUtils.propertyDisplayValue(props.card, props.value, props.propertyTemplate, intl)
     const emptyDisplayValue = props.showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
 
     useEffect(() => {
@@ -54,7 +48,7 @@ const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellC
             />
         )
     }
-    return <div className={propertyValueClassName({readonly: true})}>{displayValue}</div>
+    return <div className={propertyValueClassName({readonly: true})}>{props.propertyValue}</div>
 }
 
 export default BaseTextEditor

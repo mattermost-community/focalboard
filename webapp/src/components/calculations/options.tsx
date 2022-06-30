@@ -12,7 +12,7 @@ import {getSelectBaseStyle} from '../../theme'
 import ChevronUp from '../../widgets/icons/chevronUp'
 import {IPropertyTemplate} from '../../blocks/board'
 
-type Option = {
+export type Option = {
     label: string
     value: string
     displayName: string
@@ -159,7 +159,7 @@ const DropdownIndicator = (props: DropdownIndicatorProps<Option, false>) => {
 }
 
 // Calculation option props shared by all implementations of calculation options
-type CommonCalculationOptionProps = {
+export type CommonCalculationOptionProps = {
     value: string,
     menuOpen: boolean
     onClose?: () => void
@@ -173,7 +173,7 @@ type BaseCalculationOptionProps = CommonCalculationOptionProps & {
     options: Option[]
 }
 
-const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
+export const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
     const intl = useIntl()
 
     return (
@@ -206,10 +206,4 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             }}
         />
     )
-}
-
-export {
-    CalculationOptions,
-    Option,
-    CommonCalculationOptionProps,
 }

@@ -14,7 +14,7 @@ import DuplicateIcon from '../../../widgets/icons/duplicate'
 import {sendFlashMessage} from '../../flashMessages'
 import {propertyValueClassName} from '../../propertyValueUtils'
 
-import {PropertyProps} from '../index'
+import {PropertyProps} from '../types'
 
 import './url.scss'
 
@@ -25,7 +25,7 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
 
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id || ''] || '')
     const [isEditing, setIsEditing] = useState(false)
-    const isEmpty = !(props.value as string)?.trim()
+    const isEmpty = !(props.propertyValue as string)?.trim()
     const showEditable = !props.readOnly && (isEditing || isEmpty)
     const editableRef = useRef<Focusable>(null)
     const intl = useIntl()
@@ -70,7 +70,7 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
                     }}
                     onCancel={() => {
                         setIsEditing(false)
-                        setValue(props.value || '')
+                        setValue(props.propertyValue || '')
                     }}
                     onFocus={() => {
                         setIsEditing(true)
@@ -88,12 +88,12 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
         <div className={`URLProperty ${propertyValueClassName({readonly: props.readOnly})}`}>
             <a
                 className='link'
-                href={Utils.ensureProtocol((props.value as string).trim())}
+                href={Utils.ensureProtocol((props.propertyValue as string).trim())}
                 target='_blank'
                 rel='noreferrer'
                 onClick={(event) => event.stopPropagation()}
             >
-                {props.value}
+                {props.propertyValue}
             </a>
             {!props.readOnly &&
             <IconButton
@@ -108,7 +108,7 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
                 icon={<DuplicateIcon/>}
                 onClick={(e) => {
                     e.stopPropagation()
-                    Utils.copyTextToClipboard(props.value as string)
+                    Utils.copyTextToClipboard(props.propertyValue as string)
                     sendFlashMessage({content: intl.formatMessage({id: 'URLProperty.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
             />

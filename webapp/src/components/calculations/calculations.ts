@@ -9,7 +9,7 @@ import {Card} from '../../blocks/card'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
-import {DateProperty} from '../properties/dateRange/dateRange'
+import {DateProperty} from '../properties/date/date'
 
 const ROUNDED_DECIMAL_PLACES = 2
 
@@ -270,6 +270,7 @@ function getTimestampsFromPropertyValue(value: number | string | string[]): numb
         return [value]
     }
     if (typeof value === 'string') {
+        // TODO: Move this as part of the DateProperty itself
         let property: DateProperty
         try {
             property = JSON.parse(value)

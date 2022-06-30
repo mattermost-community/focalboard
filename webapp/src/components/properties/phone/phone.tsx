@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-import {PropertyProps} from '../index'
+import {PropertyProps} from '../types'
 import BaseTextEditor from '../baseTextEditor'
 
 const Phone = (props: PropertyProps): JSX.Element => {
