@@ -10,7 +10,7 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/krolaw/zipstream v0.0.0-20180621105154-0a2661891f94
 	github.com/lib/pq v1.10.6
-	github.com/mattermost/mattermost-plugin-api v0.0.21
+	github.com/mattermost/mattermost-plugin-api v0.0.28-0.20220623051512-0afd85e854d4
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20220630162014-b45ff0be5d61
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
@@ -37,8 +37,8 @@ require (
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/graph-gophers/graphql-go v1.4.0 // indirect
 	github.com/hashicorp/go-hclog v1.2.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
@@ -95,7 +95,6 @@ require (
 	golang.org/x/sys v0.0.0-20220614162138-6c1b26c55098 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.11 // indirect
-	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
 	google.golang.org/genproto v0.0.0-20220614165028-45ed7f3ff16e // indirect
 	google.golang.org/grpc v1.47.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
