@@ -27,7 +27,7 @@ const ViewHeaderDisplayByMenu = (props: Props) => {
     const createdDateName = propsRegistry.get('createdTime').displayName(intl)
 
     const getDateProperties = () : IPropertyTemplate[] => {
-        return properties?.filter((o: IPropertyTemplate) => o.type === 'date' || o.type === 'createdTime' || o.type === 'updatedTime')
+        return properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).isDate)
     }
 
     return (

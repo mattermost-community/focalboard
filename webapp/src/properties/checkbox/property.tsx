@@ -1,7 +1,9 @@
 import {IntlShape} from 'react-intl'
 import Checkbox from './checkbox'
-import {Options} from '../calculations/options'
+import {Options} from '../../components/calculations/options'
 import {PropertyType} from '../types'
+import {exportAsString} from '../propertyValueUtils'
+import {defaultValueLength} from '../propertyValueUtils'
 
 const CheckboxProperty: PropertyType = {
     Editor: Checkbox,
@@ -13,6 +15,10 @@ const CheckboxProperty: PropertyType = {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue],
     displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
+    exportValue: exportAsString,
+    valueLength: defaultValueLength,
 };
 
-export default CheckboxProperty;
+CheckboxProperty.exportValue.bind(CheckboxProperty)
+
+export default CheckboxProperty

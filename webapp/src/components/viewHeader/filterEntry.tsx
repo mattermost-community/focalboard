@@ -13,6 +13,7 @@ import {BoardView} from '../../blocks/boardView'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import propsRegistry from '../../properties'
 
 import FilterValue from './filterValue'
 
@@ -40,7 +41,7 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
+                    {board.cardProperties.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).canFilter).map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}

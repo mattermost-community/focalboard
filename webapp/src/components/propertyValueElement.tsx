@@ -6,9 +6,9 @@ import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
-import {propertyValueClassName} from './propertyValueUtils'
+import {propertyValueClassName} from '../properties/propertyValueUtils'
 
-import registry from './properties'
+import propsRegistry from '../properties'
 
 type Props = {
     board: Board
@@ -24,7 +24,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
     const intl = useIntl()
     const propertyValue = card.fields.properties[propertyTemplate.id]
 
-    const property = registry.get(propertyTemplate.type)
+    const property = propsRegistry.get(propertyTemplate.type)
     if (property) {
         const Editor = property.Editor
         return (

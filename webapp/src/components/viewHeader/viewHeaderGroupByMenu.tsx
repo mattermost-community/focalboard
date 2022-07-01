@@ -16,6 +16,7 @@ import ShowIcon from '../../widgets/icons/show'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../../store/cards'
 import {getVisibleAndHiddenGroups} from '../../boardUtils'
+import propsRegistry from '../../properties'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -97,7 +98,7 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                         />
                         <Menu.Separator/>
                     </>}
-                {properties?.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
+                {properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).canGroup).map((option: IPropertyTemplate) => (
                     <Menu.Text
                         key={option.id}
                         id={option.id}

@@ -2,6 +2,8 @@ import {IntlShape} from 'react-intl'
 import Person from './person'
 import {Options} from '../../components/calculations/options'
 import {PropertyType} from '../types'
+import {exportAsString} from '../propertyValueUtils'
+import {defaultValueLength} from '../propertyValueUtils'
 
 const PersonProperty: PropertyType = {
     Editor: Person,
@@ -13,6 +15,10 @@ const PersonProperty: PropertyType = {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue],
     displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
+    exportValue: exportAsString,
+    valueLength: defaultValueLength,
 };
+
+PersonProperty.exportValue.bind(PersonProperty)
 
 export default PersonProperty;

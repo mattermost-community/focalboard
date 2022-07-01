@@ -73,26 +73,7 @@ const TableHeaders = (props: Props): JSX.Element => {
                 thisLen = Utils.getTextWidth(card.title, columnFontPadding.fontDescriptor) + columnFontPadding.padding
             } else if (template) {
                 const property = propsRegistry.get(template.type)
-                const displayValue = property.displayValue(card.fields.properties[columnID], card, template as IPropertyTemplate, intl) || ''
-                switch (template.type) {
-                case 'select': {
-                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor)
-                    break
-                }
-                case 'multiSelect': {
-                    if (displayValue) {
-                        const displayValues = displayValue as string[]
-                        displayValues.forEach((value) => {
-                            thisLen += Utils.getTextWidth(value.toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
-                        })
-                    }
-                    break
-                }
-                default: {
-                    thisLen = Utils.getTextWidth(displayValue.toString(), columnFontPadding.fontDescriptor)
-                    break
-                }
-                }
+                property.valueLength(card.fields.properties[columnID], card, template as IPropertyTemplate, intl, columnFontPadding.fontDescriptor, perItemPadding)
                 thisLen += columnFontPadding.padding
             }
             if (thisLen > longestSize) {

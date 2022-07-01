@@ -80,17 +80,7 @@ class CsvExporter {
             visibleProperties.forEach((template: IPropertyTemplate) => {
                 const propertyValue = card.fields.properties[template.id]
                 const property = propsRegistry.get(template.type)
-                const displayValue = property.displayValue(propertyValue, card, template, intl)
-                if (template.type === 'number') {
-                    const numericValue = propertyValue ? Number(propertyValue).toString() : ''
-                    row.push(numericValue)
-                } else if (template.type === 'multiSelect') {
-                    const multiSelectValue = ((displayValue as unknown || []) as string[]).join('|')
-                    row.push(multiSelectValue)
-                } else {
-                    // Export as string
-                    row.push(`"${this.encodeText(displayValue as string)}"`)
-                }
+                row.push(property.exportValue(propertyValue, card, template, intl))
             })
             rows.push(row)
         })

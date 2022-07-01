@@ -5,12 +5,16 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 import {PropertyType} from '../types'
+import {exportAsString} from '../propertyValueUtils'
+import {selectValueLength} from '../propertyValueUtils'
 
 const SelectProperty: PropertyType = {
     Editor: Select,
     Value: Select,
     name: 'Select',
     type: 'select',
+    canGroup: true,
+    canFilter: true,
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'}),
     calculationOptions: [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
@@ -24,7 +28,11 @@ const SelectProperty: PropertyType = {
             return option?.value || '(Unknown)'
         }
         return ''
-    }
+    },
+    exportValue: exportAsString,
+    valueLength: selectValueLength,
 };
+
+SelectProperty.exportValue.bind(SelectProperty)
 
 export default SelectProperty;
