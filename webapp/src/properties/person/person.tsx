@@ -12,7 +12,6 @@ import mutator from '../../mutator'
 
 import './person.scss'
 import {getSelectBaseStyle} from '../../theme'
-import {propertyValueClassName} from '../propertyValueUtils'
 
 import {PropertyProps} from '../types'
 
@@ -78,7 +77,7 @@ const Person = (props: PropertyProps): JSX.Element => {
 
     if (readOnly) {
         return (
-            <div className={`Person ${propertyValueClassName({readonly: true})}`}>
+            <div className={`Person ${props.property.valueClassName(true)}`}>
                 {user ? formatOptionLabel(user) : propertyValue}
             </div>
         )
@@ -92,7 +91,7 @@ const Person = (props: PropertyProps): JSX.Element => {
             isSearchable={true}
             isClearable={true}
             backspaceRemovesValue={true}
-            className={`Person ${propertyValueClassName()}`}
+            className={`Person ${props.property.valueClassName(props.readOnly)}`}
             classNamePrefix={'react-select'}
             formatOptionLabel={formatOptionLabel}
             styles={selectStyles}

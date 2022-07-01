@@ -6,14 +6,13 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Utils} from '../../utils'
-import {propertyValueClassName} from '../propertyValueUtils'
 import {PropertyProps} from '../types'
 import './createdTime.scss'
 
 const CreatedTime = (props: PropertyProps): JSX.Element => {
     const intl = useIntl()
     return (
-        <div className={`CreatedTime ${propertyValueClassName({readonly: true})}`}>
+        <div className={`CreatedTime ${props.property.valueClassName(true)}`}>
             {Utils.displayDateTime(new Date(props.card.createAt), intl)}
         </div>
     )

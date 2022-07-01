@@ -11,7 +11,6 @@ import mutator from '../../mutator'
 
 import Label from '../../widgets/label'
 import ValueSelector from '../../widgets/valueSelector'
-import {propertyValueClassName} from '../propertyValueUtils'
 
 import {PropertyProps} from '../types'
 
@@ -51,7 +50,7 @@ const MultiSelectProperty = (props: PropertyProps): JSX.Element => {
     if (!isEditable || !open) {
         return (
             <div
-                className={propertyValueClassName({readonly: !isEditable})}
+                className={props.property.valueClassName(!isEditable)}
                 tabIndex={0}
                 data-testid='multiselect-non-editable'
                 onClick={() => setOpen(true)}

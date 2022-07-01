@@ -1,11 +1,10 @@
 import {IntlShape} from 'react-intl'
-import Number from './number'
+import NumberProp from './number'
 import {Options} from '../../components/calculations/options'
 import {PropertyType, PropertyTypeEnum} from '../types'
-import {exportAsNumber} from '../propertyValueUtils'
 
 export default class NumberProperty extends PropertyType {
-    Editor = Number
+    Editor = NumberProp
     name = 'Number'
     type = 'number' as PropertyTypeEnum
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Number', defaultMessage: 'Number'})
@@ -14,5 +13,6 @@ export default class NumberProperty extends PropertyType {
         Options.countValue, Options.countUniqueValue, Options.sum,
         Options.average, Options.median, Options.min, Options.max,
         Options.range]
-    exportValue = exportAsNumber
+
+    exportValue = (value: string | string[] | undefined): string => (value ? Number(value).toString() : '')
 }

@@ -10,7 +10,6 @@ import Label from '../../widgets/label'
 import {Utils, IDType} from '../../utils'
 import mutator from '../../mutator'
 import ValueSelector from '../../widgets/valueSelector'
-import {propertyValueClassName} from '../propertyValueUtils'
 
 import {PropertyProps} from '../types'
 
@@ -47,7 +46,7 @@ const SelectProperty = (props: PropertyProps) => {
     if (!isEditable || !open) {
         return (
             <div
-                className={propertyValueClassName({readonly: !isEditable})}
+                className={props.property.valueClassName(!isEditable)}
                 data-testid='select-non-editable'
                 tabIndex={0}
                 onClick={() => setOpen(true)}

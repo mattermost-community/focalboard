@@ -21,7 +21,6 @@ import {Utils} from '../../utils'
 import 'react-day-picker/lib/style.css'
 import './date.scss'
 
-import {propertyValueClassName} from '../propertyValueUtils'
 import {PropertyProps} from '../types'
 
 export type DateProperty = {
@@ -160,7 +159,7 @@ function DateRange(props: PropertyProps): JSX.Element {
         buttonText = intl.formatMessage({id: 'DateRange.empty', defaultMessage: 'Empty'})
     }
 
-    const className = propertyValueClassName({readonly: readOnly})
+    const className = props.property.valueClassName(readOnly)
     if (readOnly) {
         return <div className={className}>{displayValue}</div>
     }

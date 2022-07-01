@@ -4,7 +4,6 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 import {PropertyType, PropertyTypeEnum} from '../types'
-import {selectValueLength} from '../propertyValueUtils'
 
 export default class SelectProperty extends PropertyType {
     Editor = Select
@@ -12,8 +11,10 @@ export default class SelectProperty extends PropertyType {
     type = 'select' as PropertyTypeEnum
     canGroup = true
     canFilter = true
+
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
-    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
+
+    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate, _: IntlShape) => {
         if (propertyValue) {
             const option = propertyTemplate.options.find((o) => o.id === propertyValue)
             if (!option) {
@@ -23,5 +24,9 @@ export default class SelectProperty extends PropertyType {
         }
         return ''
     }
-    valueLength = selectValueLength
+
+    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
+        const displayValue = this.displayValue(value, card, template, intl) || ''
+        return Utils.getTextWidth(displayValue.toString().toUpperCase(), fontDescriptor)
+    }
 }

@@ -8,7 +8,6 @@ import {useIntl} from 'react-intl'
 import mutator from '../mutator'
 import Editable from '../widgets/editable'
 
-import {propertyValueClassName} from './propertyValueUtils'
 import {PropertyProps} from './types'
 
 const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellCheck?: boolean}): JSX.Element => {
@@ -36,7 +35,7 @@ const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellC
     if (!props.readOnly) {
         return (
             <Editable
-                className={propertyValueClassName()}
+                className={props.property.valueClassName(props.readOnly)}
                 placeholderText={emptyDisplayValue}
                 value={value.toString()}
                 autoExpand={true}
@@ -48,7 +47,7 @@ const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellC
             />
         )
     }
-    return <div className={propertyValueClassName({readonly: true})}>{props.propertyValue}</div>
+    return <div className={props.property.valueClassName(true)}>{props.propertyValue}</div>
 }
 
 export default BaseTextEditor

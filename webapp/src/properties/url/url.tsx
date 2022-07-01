@@ -12,7 +12,6 @@ import EditIcon from '../../widgets/icons/edit'
 import IconButton from '../../widgets/buttons/iconButton'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import {sendFlashMessage} from '../../components/flashMessages'
-import {propertyValueClassName} from '../propertyValueUtils'
 
 import {PropertyProps} from '../types'
 
@@ -57,7 +56,7 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
         return (
             <div className='URLProperty'>
                 <Editable
-                    className={propertyValueClassName()}
+                    className={props.property.valueClassName(props.readOnly)}
                     ref={editableRef}
                     placeholderText={emptyDisplayValue}
                     value={value as string}
@@ -85,7 +84,7 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
     }
 
     return (
-        <div className={`URLProperty ${propertyValueClassName({readonly: props.readOnly})}`}>
+        <div className={`URLProperty ${props.property.valueClassName(props.readOnly)}`}>
             <a
                 className='link'
                 href={Utils.ensureProtocol((props.propertyValue as string).trim())}
