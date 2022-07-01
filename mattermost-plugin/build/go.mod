@@ -2,11 +2,9 @@ module github.com/mattermost/mattermost-plugin-starter-template/build
 
 go 1.18
 
-replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220601144141-e54977931ccd
-
 require (
 	github.com/go-git/go-git/v5 v5.1.0
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220601144141-e54977931ccd
+	github.com/mattermost/mattermost-server/v6 v6.7.2
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.1
 	sigs.k8s.io/yaml v1.2.0
@@ -25,7 +23,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/graph-gophers/graphql-go v1.4.0 // indirect
-	github.com/imdario/mergo v0.3.9 // indirect
+	github.com/imdario/mergo v0.3.12 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20190725054713-01f96b0aa0cd // indirect
