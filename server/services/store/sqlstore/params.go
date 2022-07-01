@@ -9,9 +9,9 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-// pluginAPI is the interface required my the Params to interact with the mattermost-server.
+// servicesAPI is the interface required my the Params to interact with the mattermost-server.
 // You can use plugin-api or product-api adapter implementations.
-type pluginAPI interface {
+type servicesAPI interface {
 	GetChannelByID(string) (*mmModel.Channel, error)
 }
 
@@ -24,7 +24,7 @@ type Params struct {
 	IsPlugin         bool
 	IsSingleUser     bool
 	NewMutexFn       MutexFactory
-	PluginAPI        pluginAPI
+	ServicesAPI      servicesAPI
 }
 
 func (p Params) CheckValid() error {

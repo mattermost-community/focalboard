@@ -12,7 +12,7 @@ import (
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/ws"
 
-	mockservicesapi "github.com/mattermost/focalboard/mattermost-plugin/server/boards/mocks"
+	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
 
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"

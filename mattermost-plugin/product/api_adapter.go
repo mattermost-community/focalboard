@@ -6,11 +6,11 @@ package product
 import (
 	"database/sql"
 
-	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
-
 	"github.com/mattermost/mattermost-server/v6/app/request"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
+	"github.com/mattermost/focalboard/server/model"
 )
 
 // serviceAPIAdapter is an adapter that flattens the APIs provided by suite services so they can
@@ -201,4 +201,4 @@ func (a *serviceAPIAdapter) GetDiagnosticId() string {
 }
 
 // Ensure the adapter implements ServicesAPI
-var _ boards.ServicesAPI = &serviceAPIAdapter{}
+var _ model.ServicesAPI = &serviceAPIAdapter{}

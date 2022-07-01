@@ -9,6 +9,7 @@ import (
 	"sync"
 
 	"github.com/mattermost/focalboard/server/auth"
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
@@ -54,11 +55,11 @@ type BoardsApp struct {
 	server          *server.Server
 	wsPluginAdapter ws.PluginAdapterInterface
 
-	servicesAPI ServicesAPI
+	servicesAPI model.ServicesAPI
 	logger      mlog.LoggerIFace
 }
 
-func NewBoardsApp(api ServicesAPI) (*BoardsApp, error) {
+func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	mmconfig := api.GetConfig()
 	logger := api.GetLogger()
 
@@ -83,7 +84,7 @@ func NewBoardsApp(api ServicesAPI) (*BoardsApp, error) {
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return cluster.NewMutex(&mutexAPIAdapter{api: api}, name)
 		},
-		PluginAPI: api,
+		ServicesAPI: api,
 	}
 
 	var db store.Store

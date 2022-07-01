@@ -6,7 +6,7 @@ package main
 import (
 	"database/sql"
 
-	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
@@ -208,4 +208,4 @@ func (a *pluginAPIAdapter) GetDiagnosticId() string {
 }
 
 // Ensure the adapter implements ServicesAPI
-var _ boards.ServicesAPI = &pluginAPIAdapter{}
+var _ model.ServicesAPI = &pluginAPIAdapter{}

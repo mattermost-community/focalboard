@@ -25,7 +25,7 @@ const (
 
 type notifyBackendParams struct {
 	cfg         *config.Configuration
-	servicesAPI ServicesAPI
+	servicesAPI model.ServicesAPI
 	permissions permissions.PermissionsService
 	appAPI      *appAPI
 	serverRoot  string
@@ -70,7 +70,7 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscr
 	return backend, nil
 }
 
-func createDelivery(servicesAPI ServicesAPI, serverRoot string) (*plugindelivery.PluginDelivery, error) {
+func createDelivery(servicesAPI model.ServicesAPI, serverRoot string) (*plugindelivery.PluginDelivery, error) {
 	bot := &mm_model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,

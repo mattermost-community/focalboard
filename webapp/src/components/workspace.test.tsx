@@ -72,7 +72,16 @@ card3.id = 'card3'
 card3.title = 'card-3'
 card3.boardId = fakeBoard.id
 
-const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false, roles: 'system_user'}
+const me: IUser = {
+    id: 'user-id-1',
+    username: 'username_1',
+    email: '',
+    props: {},
+    create_at: 0,
+    update_at: 0,
+    is_bot: false,
+    roles: 'system_user',
+}
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'

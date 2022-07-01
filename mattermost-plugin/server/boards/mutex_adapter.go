@@ -9,10 +9,12 @@ import (
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+
+	"github.com/mattermost/focalboard/server/model"
 )
 
 type mutexAPIAdapter struct {
-	api ServicesAPI
+	api model.ServicesAPI
 }
 
 func (m *mutexAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, *mm_model.AppError) {

@@ -23,7 +23,7 @@ type SQLStore struct {
 	isSingleUser     bool
 	logger           mlog.LoggerIFace
 	NewMutexFn       MutexFactory
-	pluginAPI        pluginAPI
+	servicesAPI      servicesAPI
 	isBinaryParam    bool
 }
 
@@ -48,7 +48,7 @@ func New(params Params) (*SQLStore, error) {
 		isPlugin:         params.IsPlugin,
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
-		pluginAPI:        params.PluginAPI,
+		servicesAPI:      params.ServicesAPI,
 	}
 
 	var err error

@@ -17,6 +17,11 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+var systemsBot = &mmModel.Bot{
+	Username:    mmModel.BotSystemBotUsername,
+	DisplayName: "System",
+}
+
 type NotSupportedError struct {
 	msg string
 }
@@ -25,9 +30,9 @@ func (pe NotSupportedError) Error() string {
 	return pe.msg
 }
 
-// pluginAPI is the interface required my the MattermostAuthLayer to interact with
+// servicesAPI is the interface required my the MattermostAuthLayer to interact with
 // the mattermost-server. You can use plugin-api or product-api adapter implementations.
-type pluginAPI interface {
+type servicesAPI interface {
 	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error)
 	GetUserByID(userID string) (*mmModel.User, error)
 	UpdateUser(user *mmModel.User) (*mmModel.User, error)
@@ -36,25 +41,27 @@ type pluginAPI interface {
 	GetLicense() *mmModel.License
 	GetFileInfo(fileID string) (*mmModel.FileInfo, error)
 	GetCloudLimits() (*mmModel.ProductLimits, error)
+	EnsureBot(bot *mmModel.Bot) (string, error)
+	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
 }
 
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	dbType    string
-	mmDB      *sql.DB
-	logger    mlog.LoggerIFace
-	pluginAPI pluginAPI
+	dbType      string
+	mmDB        *sql.DB
+	logger      mlog.LoggerIFace
+	servicesAPI servicesAPI
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger mlog.LoggerIFace, pluginAPI pluginAPI) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger mlog.LoggerIFace, api servicesAPI) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
-		Store:     store,
-		dbType:    dbType,
-		mmDB:      db,
-		logger:    logger,
-		pluginAPI: pluginAPI,
+		Store:       store,
+		dbType:      dbType,
+		mmDB:        db,
+		logger:      logger,
+		servicesAPI: api,
 	}
 
 	return layer, nil
@@ -83,7 +90,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 }
 
 func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUserByID(userID)
+	mmuser, err := s.servicesAPI.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +99,7 @@ func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
 }
 
 func (s *MattermostAuthLayer) GetUserByEmail(email string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUserByEmail(email)
+	mmuser, err := s.servicesAPI.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +108,7 @@ func (s *MattermostAuthLayer) GetUserByEmail(email string) (*model.User, error) 
 }
 
 func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUserByUsername(username)
+	mmuser, err := s.servicesAPI.GetUserByUsername(username)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +133,7 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	user, err := s.pluginAPI.GetUserByID(userID)
+	user, err := s.servicesAPI.GetUserByID(userID)
 	if err != nil {
 		s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
 		return err
@@ -144,7 +151,7 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 
 	user.Props = props
 
-	if _, err := s.pluginAPI.UpdateUser(user); err != nil {
+	if _, err := s.servicesAPI.UpdateUser(user); err != nil {
 		s.logger.Error("failed to update user", mlog.String("userID", userID), mlog.Err(err))
 		return err
 	}
@@ -362,7 +369,7 @@ func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {
 func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, error) {
 	// we emulate a private workspace by creating
 	// a DM channel from the user to themselves.
-	channel, err := s.pluginAPI.GetDirectChannel(userID, userID)
+	channel, err := s.servicesAPI.GetDirectChannel(userID, userID)
 	if err != nil {
 		s.logger.Error("error fetching private workspace", mlog.String("userID", userID), mlog.Err(err))
 		return "", err
@@ -394,11 +401,12 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		DeleteAt:    mmUser.DeleteAt,
 		IsBot:       mmUser.IsBot,
 		IsGuest:     mmUser.IsGuest(),
+		Roles:       mmUser.Roles,
 	}
 }
 
 func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {
-	fileInfo, err := s.pluginAPI.GetFileInfo(id)
+	fileInfo, err := s.servicesAPI.GetFileInfo(id)
 	if err != nil {
 		// Not finding fileinfo is fine because we don't have data for
 		// any existing files already uploaded in Boards before this code
@@ -482,9 +490,57 @@ func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 }
 
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
-	return s.pluginAPI.GetLicense()
+	return s.servicesAPI.GetLicense()
 }
 
 func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
-	return s.pluginAPI.GetCloudLimits()
+	return s.servicesAPI.GetCloudLimits()
+}
+
+func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
+	botID, err := s.servicesAPI.EnsureBot(systemsBot)
+	if err != nil {
+		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
+		return "", err
+	}
+
+	return botID, nil
+}
+
+func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
+	botID, err := s.getSystemBotID()
+	if err != nil {
+		return err
+	}
+
+	for _, receipt := range receipts {
+		channel, err := s.servicesAPI.GetDirectChannel(botID, receipt)
+		if err != nil {
+			s.logger.Error(
+				"failed to get DM channel between system bot and user for receipt",
+				mlog.String("receipt", receipt),
+				mlog.String("user_id", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+
+		post := &mmModel.Post{
+			Message:   message,
+			UserId:    botID,
+			ChannelId: channel.Id,
+			Type:      postType,
+		}
+
+		if _, err := s.servicesAPI.CreatePost(post); err != nil {
+			s.logger.Error(
+				"failed to send message to receipt from SendMessage",
+				mlog.String("receipt", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+	}
+
+	return nil
 }

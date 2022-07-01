@@ -159,6 +159,11 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                     dateDisplayPropertyId: 'global-id-5',
                 }],
             },
+            limits: {
+                limits: {
+                    views: 0,
+                },
+            },
         }
         store = mockStateStore([], state)
     })

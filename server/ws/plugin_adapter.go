@@ -34,7 +34,7 @@ type PluginAdapterInterface interface {
 }
 
 type PluginAdapter struct {
-	api            pluginAPI
+	api            servicesAPI
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
 	store          Store
@@ -49,14 +49,14 @@ type PluginAdapter struct {
 	listenersByBlock map[string][]*PluginAdapterClient
 }
 
-// PluginAPI is the interface required by the PluginAdapter to interact with
-// the mattermost-server. You can use plugin-api or product-api adapter implementations.
-type pluginAPI interface {
+// servicesAPI is the interface required by the PluginAdapter to interact with
+// the mattermost-server.
+type servicesAPI interface {
 	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mmModel.WebsocketBroadcast)
 	PublishPluginClusterEvent(ev mmModel.PluginClusterEvent, opts mmModel.PluginClusterEventSendOptions) error
 }
 
-func NewPluginAdapter(api pluginAPI, auth auth.AuthInterface, store Store, logger mlog.LoggerIFace) *PluginAdapter {
+func NewPluginAdapter(api servicesAPI, auth auth.AuthInterface, store Store, logger mlog.LoggerIFace) *PluginAdapter {
 	return &PluginAdapter{
 		api:               api,
 		auth:              auth,

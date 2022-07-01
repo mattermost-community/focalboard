@@ -420,7 +420,7 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 		// no common teams found. Let's try finding the best suitable team
 		if board.Type == "D" {
 			// get DM's creator and pick one of their team
-			channel, err := (s.pluginAPI).GetChannelByID(board.ChannelID)
+			channel, err := (s.servicesAPI).GetChannelByID(board.ChannelID)
 			if err != nil {
 				s.logger.Error("failed to fetch DM channel for board",
 					mlog.String("board_id", board.ID),

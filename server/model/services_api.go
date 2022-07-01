@@ -3,7 +3,7 @@
 
 //go:generate mockgen --build_flags= -destination=mocks/mockservicesapi.go -package mocks . ServicesAPI
 
-package boards
+package model
 
 import (
 	"database/sql"

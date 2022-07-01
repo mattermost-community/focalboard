@@ -14,6 +14,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -23,6 +24,10 @@ const (
 	blockChangeNotifierPoolSize        = 10
 	blockChangeNotifierShutdownTimeout = time.Second * 10
 )
+
+type servicesAPI interface {
+	GetUsers(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
+}
 
 type Services struct {
 	Auth             *auth.Auth
@@ -34,6 +39,7 @@ type Services struct {
 	Logger           mlog.LoggerIFace
 	Permissions      permissions.PermissionsService
 	SkipTemplateInit bool
+	ServicesAPI      servicesAPI
 }
 
 type App struct {
@@ -47,6 +53,7 @@ type App struct {
 	notifications       *notify.Service
 	logger              mlog.LoggerIFace
 	blockChangeNotifier *utils.CallbackQueue
+	servicesAPI         servicesAPI
 
 	cardLimitMux sync.RWMutex
 	cardLimit    int
@@ -72,6 +79,7 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications:       services.Notifications,
 		logger:              services.Logger,
 		blockChangeNotifier: utils.NewCallbackQueue("blockChangeNotifier", blockChangeNotifierQueueSize, blockChangeNotifierPoolSize, services.Logger),
+		servicesAPI:         services.ServicesAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app
