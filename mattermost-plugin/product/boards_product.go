@@ -43,7 +43,6 @@ func init() {
 			app.KVStoreKey:       {},
 			app.StoreKey:         {},
 			app.SystemKey:        {},
-			app.HooksKey:         {},
 		},
 	})
 }
@@ -66,7 +65,6 @@ type boardsProduct struct {
 	kvStoreService       product.KVStoreService
 	storeService         product.StoreService
 	systemService        product.SystemService
-	hooksService         product.HooksService
 
 	boardsApp *boards.BoardsApp
 }
@@ -178,12 +176,7 @@ func newBoardsProduct(mmServer *app.Server, services map[app.ServiceKey]interfac
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.systemService = systemService
-		case app.HooksKey:
-			hooksService, ok := service.(product.HooksService)
-			if !ok {
-				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
-			}
-			boards.hooksService = hooksService
+		case app.HooksKey: // not needed
 		}
 	}
 	return boards, nil
@@ -204,41 +197,71 @@ func (b *boardsProduct) Stop() error {
 //
 
 func (bp *boardsProduct) OnConfigurationChange() error {
+	if bp.boardsApp == nil {
+		return nil
+	}
 	return bp.boardsApp.OnConfigurationChange()
 }
 
 func (bp *boardsProduct) OnWebSocketConnect(webConnID, userID string) {
+	if bp.boardsApp == nil {
+		return
+	}
 	bp.boardsApp.OnWebSocketConnect(webConnID, userID)
 }
 
 func (bp *boardsProduct) OnWebSocketDisconnect(webConnID, userID string) {
+	if bp.boardsApp == nil {
+		return
+	}
 	bp.boardsApp.OnWebSocketDisconnect(webConnID, userID)
 }
 
 func (bp *boardsProduct) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm_model.WebSocketRequest) {
+	if bp.boardsApp == nil {
+		return
+	}
 	bp.boardsApp.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
 func (bp *boardsProduct) OnDeactivate() error {
+	if bp.boardsApp == nil {
+		return nil
+	}
 	return bp.boardsApp.OnDeactivate()
 }
 
 func (bp *boardsProduct) OnPluginClusterEvent(ctx *plugin.Context, ev mm_model.PluginClusterEvent) {
+	if bp.boardsApp == nil {
+		return
+	}
 	bp.boardsApp.OnPluginClusterEvent(ctx, ev)
 }
 
 func (bp *boardsProduct) MessageWillBePosted(ctx *plugin.Context, post *mm_model.Post) (*mm_model.Post, string) {
+	if bp.boardsApp == nil {
+		return post, ""
+	}
 	return bp.boardsApp.MessageWillBePosted(ctx, post)
 }
 
 func (bp *boardsProduct) MessageWillBeUpdated(ctx *plugin.Context, newPost, oldPost *mm_model.Post) (*mm_model.Post, string) {
+	if bp.boardsApp == nil {
+		return newPost, ""
+	}
 	return bp.boardsApp.MessageWillBeUpdated(ctx, newPost, oldPost)
 }
 
 func (bp *boardsProduct) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
+	if bp.boardsApp == nil {
+		return
+	}
 	bp.boardsApp.OnCloudLimitsUpdated(limits)
 }
 
 func (bp *boardsProduct) RunDataRetention(nowTime, batchSize int64) (int64, error) {
+	if bp.boardsApp == nil {
+		return 0, nil
+	}
 	return bp.boardsApp.RunDataRetention(nowTime, batchSize)
 }
