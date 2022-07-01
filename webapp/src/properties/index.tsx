@@ -13,6 +13,7 @@ import SelectProperty from './select/property'
 import MultiSelectProperty from './multiselect/property'
 import DateProperty from './date/property'
 import PersonProperty from './person/property'
+import PeopleProperty from './people/property'
 import CheckboxProperty from './checkbox/property'
 import UnknownProperty from './unknown/property'
 
@@ -21,6 +22,7 @@ import {PropertyType} from './types'
 class PropertiesRegistry {
     properties: {[key:string]: PropertyType} = {}
     propertiesList: PropertyType[] = []
+    unknownProperty: PropertyType = new UnknownProperty()
 
     register(prop: PropertyType) {
         this.properties[prop.type] = prop
@@ -37,24 +39,25 @@ class PropertiesRegistry {
     }
 
     get(type: PropertyTypeEnum) {
-        return this.properties[type] || UnknownProperty
+        return this.properties[type] || this.unknownProperty
     }
 }
 
 const registry = new PropertiesRegistry()
-registry.register(TextProperty)
-registry.register(NumberProperty)
-registry.register(EmailProperty)
-registry.register(PhoneProperty)
-registry.register(UrlProperty)
-registry.register(SelectProperty)
-registry.register(MultiSelectProperty)
-registry.register(DateProperty)
-registry.register(PersonProperty)
-registry.register(CheckboxProperty)
-registry.register(CreatedByProperty)
-registry.register(CreatedTimeProperty)
-registry.register(UpdatedByProperty)
-registry.register(UpdatedTimeProperty)
+registry.register(new TextProperty())
+registry.register(new NumberProperty())
+registry.register(new EmailProperty())
+registry.register(new PhoneProperty())
+registry.register(new UrlProperty())
+registry.register(new SelectProperty())
+registry.register(new MultiSelectProperty())
+registry.register(new DateProperty())
+registry.register(new PersonProperty())
+registry.register(new CheckboxProperty())
+registry.register(new CreatedByProperty())
+registry.register(new CreatedTimeProperty())
+registry.register(new UpdatedByProperty())
+registry.register(new UpdatedTimeProperty())
+registry.register(new PeopleProperty())
 
 export default registry

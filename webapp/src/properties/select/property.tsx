@@ -1,24 +1,19 @@
 import {IntlShape} from 'react-intl'
 import Select from './select'
-import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
-import {PropertyType} from '../types'
-import {exportAsString} from '../propertyValueUtils'
+import {PropertyType, PropertyTypeEnum} from '../types'
 import {selectValueLength} from '../propertyValueUtils'
 
-const SelectProperty: PropertyType = {
-    Editor: Select,
-    name: 'Select',
-    type: 'select',
-    canGroup: true,
-    canFilter: true,
-    displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'}),
-    calculationOptions: [Options.none, Options.count, Options.countEmpty,
-        Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
-        Options.countValue, Options.countUniqueValue],
-    displayValue: (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
+export default class SelectProperty extends PropertyType {
+    Editor = Select
+    name = 'Select'
+    type = 'select' as PropertyTypeEnum
+    canGroup = true
+    canFilter = true
+    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
+    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
         if (propertyValue) {
             const option = propertyTemplate.options.find((o) => o.id === propertyValue)
             if (!option) {
@@ -27,11 +22,6 @@ const SelectProperty: PropertyType = {
             return option?.value || '(Unknown)'
         }
         return ''
-    },
-    exportValue: exportAsString,
-    valueLength: selectValueLength,
-};
-
-SelectProperty.exportValue.bind(SelectProperty)
-
-export default SelectProperty;
+    }
+    valueLength = selectValueLength
+}

@@ -1,24 +1,11 @@
 import {IntlShape} from 'react-intl'
 import CreatedBy from './createdBy'
-import {Options} from '../../components/calculations/options'
-import {PropertyType} from '../types'
-import {exportAsString} from '../propertyValueUtils'
-import {defaultValueLength} from '../propertyValueUtils'
+import {PropertyType, PropertyTypeEnum} from '../types'
 
-const CreatedByProperty: PropertyType = {
-    Editor: CreatedBy,
-    name: 'Created By',
-    type: 'createdBy',
-    isReadOnly: true,
-    displayName: (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created by'}),
-    calculationOptions: [Options.none, Options.count, Options.countEmpty,
-        Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
-        Options.countValue, Options.countUniqueValue],
-    displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
-    exportValue: exportAsString,
-    valueLength: defaultValueLength,
-};
-
-CreatedByProperty.exportValue.bind(CreatedByProperty)
-
-export default CreatedByProperty;
+export default class CreatedByProperty extends PropertyType {
+    Editor = CreatedBy
+    name = 'Created By'
+    type = 'createdBy' as PropertyTypeEnum
+    isReadOnly = true
+    displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created by'})
+}

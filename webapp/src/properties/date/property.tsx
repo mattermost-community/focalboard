@@ -4,9 +4,7 @@ import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
-import {PropertyType} from '../types'
-import {exportAsString} from '../propertyValueUtils'
-import {defaultValueLength} from '../propertyValueUtils'
+import {PropertyType, PropertyTypeEnum} from '../types'
 
 import DateComponent, {createDatePropertyFromString} from './date'
 
@@ -16,16 +14,16 @@ const timeZoneOffset = (date: number): number => {
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
 
-const DateProperty: PropertyType = {
-    Editor: DateComponent,
-    name: 'Date',
-    type: 'date',
-    isDate: true,
-    displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'}),
-    calculationOptions: [Options.none, Options.count, Options.countEmpty,
+export default class DateProperty extends PropertyType {
+    Editor = DateComponent
+    name = 'Date'
+    type = 'date' as PropertyTypeEnum
+    isDate = true
+    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
+    calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
-        Options.countValue, Options.countUniqueValue],
-    displayValue: (propertyValue: string | string[] | undefined, _1: Card, _2: IPropertyTemplate, intl: IntlShape) => {
+        Options.countValue, Options.countUniqueValue]
+    displayValue = (propertyValue: string | string[] | undefined, _1: Card, _2: IPropertyTemplate, intl: IntlShape) => {
         let displayValue = ''
         if (propertyValue && typeof propertyValue === "string") {
             const singleDate = new Date(parseInt(propertyValue, 10))
@@ -47,10 +45,9 @@ const DateProperty: PropertyType = {
             }
         }
         return displayValue
-    },
-    exportValue: exportAsString,
-    valueLength: defaultValueLength,
-    getDateFrom: (value: string | string[] | undefined, card: Card) => {
+    }
+
+    getDateFrom = (value: string | string[] | undefined, card: Card) => {
         const dateProperty = createDatePropertyFromString(value as string)
         if (!dateProperty.from) {
             return new Date(card.createAt || 0)
@@ -59,9 +56,9 @@ const DateProperty: PropertyType = {
         const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
         dateFrom.setHours(0, 0, 0, 0)
         return dateFrom
-    },
+    }
 
-    getDateTo: (value: string | string[] | undefined, card: Card) => {
+    getDateTo = (value: string | string[] | undefined, card: Card) => {
         const dateProperty = createDatePropertyFromString(value as string)
         if (!dateProperty.from) {
             return new Date(card.createAt || 0)
@@ -74,8 +71,4 @@ const DateProperty: PropertyType = {
         dateTo.setHours(0, 0, 0, 0)
         return dateTo
     }
-};
-
-DateProperty.exportValue.bind(DateProperty)
-
-export default DateProperty;
+}
