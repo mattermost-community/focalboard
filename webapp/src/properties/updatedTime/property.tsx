@@ -10,7 +10,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const UpdatedTimeProperty: PropertyType = {
     Editor: UpdatedTime,
-    Value: UpdatedTime,
     name: 'Last Modified At',
     type: 'updatedTime',
     isDate: true,

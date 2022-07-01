@@ -10,7 +10,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const CreatedAtProperty: PropertyType = {
     Editor: CreatedTime,
-    Value: CreatedTime,
     name: 'Created At',
     type: 'createdTime',
     isDate: true,

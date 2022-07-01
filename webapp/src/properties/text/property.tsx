@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const TextProperty: PropertyType = {
     Editor: Text,
-    Value: Text,
     name: 'Text',
     type: 'text',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Text', defaultMessage: 'Text'}),
@@ -15,6 +14,7 @@ const TextProperty: PropertyType = {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue],
     displayValue: (propertyValue: string | string[] | undefined) => propertyValue,
+    getValue: (propertyValue: string | string[] | undefined) => propertyValue,
     exportValue: exportAsString,
     valueLength: defaultValueLength,
 };

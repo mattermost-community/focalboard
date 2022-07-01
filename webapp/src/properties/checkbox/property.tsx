@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const CheckboxProperty: PropertyType = {
     Editor: Checkbox,
-    Value: Checkbox,
     name: 'Checkbox',
     type: 'checkbox',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Checkbox', defaultMessage: 'Checkbox'}),

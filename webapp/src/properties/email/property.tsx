@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const EmailProperty: PropertyType = {
     Editor: Email,
-    Value: Email,
     name: 'Email',
     type: 'email',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Email', defaultMessage: 'Email'}),

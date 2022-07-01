@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const PersonProperty: PropertyType = {
     Editor: Person,
-    Value: Person,
     name: 'Person',
     type: 'person',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Person', defaultMessage: 'Person'}),

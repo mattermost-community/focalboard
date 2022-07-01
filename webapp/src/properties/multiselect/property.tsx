@@ -10,7 +10,6 @@ import {multiSelectValueLength} from '../propertyValueUtils'
 
 const MultiSelectProperty: PropertyType = {
     Editor: MultiSelect,
-    Value: MultiSelect,
     name: 'MultiSelect',
     type: 'multiSelect',
     canFilter: true,

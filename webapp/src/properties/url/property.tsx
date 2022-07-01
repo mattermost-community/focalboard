@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const UrlProperty: PropertyType = {
     Editor: Url,
-    Value: Url,
     name: 'Url',
     type: 'url',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Url', defaultMessage: 'Url'}),

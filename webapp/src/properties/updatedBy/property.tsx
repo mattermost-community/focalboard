@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const UpdatedByProperty: PropertyType = {
     Editor: UpdatedBy,
-    Value: UpdatedBy,
     name: 'Last Modified By',
     type: 'updatedBy',
     isReadOnly: true,

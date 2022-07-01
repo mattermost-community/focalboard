@@ -16,7 +16,6 @@ export type PropertyProps = {
 
 export type PropertyType = {
     Editor: React.FunctionComponent<PropertyProps>,
-    Value: React.FunctionComponent<PropertyProps>,
     name: string,
     type: PropertyTypeEnum,
     isDate?: boolean,
@@ -27,8 +26,7 @@ export type PropertyType = {
     displayName: (intl: IntlShape) => string,
     displayValue: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined,
     exportValue: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape) => string,
-    valueLength: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding: number) => number
-    getDateFrom?: (value: string | string[] | undefined, card: Card) => Date
-    getDateTo?: (value: string | string[] | undefined, card: Card) => Date
+    valueLength: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding: number) => number,
+    getDateFrom?: (value: string | string[] | undefined, card: Card) => Date,
+    getDateTo?: (value: string | string[] | undefined, card: Card) => Date,
 }
-

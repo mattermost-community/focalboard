@@ -10,7 +10,6 @@ import {selectValueLength} from '../propertyValueUtils'
 
 const SelectProperty: PropertyType = {
     Editor: Select,
-    Value: Select,
     name: 'Select',
     type: 'select',
     canGroup: true,

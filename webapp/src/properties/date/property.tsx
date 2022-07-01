@@ -18,7 +18,6 @@ const timeZoneOffset = (date: number): number => {
 
 const DateProperty: PropertyType = {
     Editor: DateComponent,
-    Value: DateComponent,
     name: 'Date',
     type: 'date',
     isDate: true,

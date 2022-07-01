@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const CreatedByProperty: PropertyType = {
     Editor: CreatedBy,
-    Value: CreatedBy,
     name: 'Created By',
     type: 'createdBy',
     isReadOnly: true,

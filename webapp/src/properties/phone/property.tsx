@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const PhoneProperty: PropertyType = {
     Editor: Phone,
-    Value: Phone,
     name: 'Phone',
     type: 'phone',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Phone', defaultMessage: 'Phone'}),

@@ -7,7 +7,6 @@ import {defaultValueLength} from '../propertyValueUtils'
 
 const UnkownProperty: PropertyType = {
     Editor: Text,
-    Value: Text,
     name: 'Text',
     type: 'unknown',
     displayName: (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Unknown', defaultMessage: 'Unknown'}),
