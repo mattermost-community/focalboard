@@ -4,8 +4,8 @@ import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import Menu from '../widgets/menu'
-import registry from '../components/properties'
-import {PropertyType} from '../components/properties/types'
+import propsRegistry from '../properties'
+import {PropertyType} from '../properties/types'
 import './propertyMenu.scss'
 
 type Props = {
@@ -36,7 +36,7 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
             <Menu.Separator/>
 
             {
-                registry.list().map((p) => (
+                propsRegistry.list().map((p) => (
                     <Menu.Text
                         key={p.type}
                         id={p.type}

@@ -1,4 +1,4 @@
-// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+e/ Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
@@ -21,8 +21,8 @@ import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
-import propRegistry from '../../components/properties'
-import {PropertyType} from '../../components/properties/types'
+import propRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
 type Props = {
     board: Board

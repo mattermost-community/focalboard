@@ -8,7 +8,7 @@ import '@testing-library/jest-dom'
 import {wrapIntl} from '../testUtils'
 
 import PropertyMenu from './propertyMenu'
-import propsRegistry from '../components/properties'
+import propsRegistry from '../properties'
 
 describe('widgets/PropertyMenu', () => {
     beforeEach(() => {

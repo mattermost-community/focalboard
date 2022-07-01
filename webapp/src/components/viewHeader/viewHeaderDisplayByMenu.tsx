@@ -12,7 +12,7 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import CheckIcon from '../../widgets/icons/check'
 
-import propsRegistry from '../../components/properties'
+import propsRegistry from '../../properties'
 
 type Props = {
     properties: readonly IPropertyTemplate[]

@@ -18,7 +18,7 @@ import {Card} from '../../blocks/card'
 
 import Person from './person'
 
-describe('components/properties/user', () => {
+describe('properties/user', () => {
     const mockStore = configureStore([])
     const state = {
         users: {

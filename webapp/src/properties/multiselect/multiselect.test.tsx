@@ -45,7 +45,7 @@ const Wrapper = ({children}: WrapperProps) => {
     return <IntlProvider locale='en'>{children}</IntlProvider>
 }
 
-describe('components/properties/multiSelect', () => {
+describe('properties/multiSelect', () => {
     const nonEditableMultiSelectTestId = 'multiselect-non-editable'
 
     it('shows only the selected options when menu is not opened', () => {

@@ -16,7 +16,7 @@ import {createCommentBlock} from '../../blocks/commentBlock'
 
 import UpdatedBy from './updatedBy'
 
-describe('components/properties/updatedBy', () => {
+describe('properties/updatedBy', () => {
     test('should match snapshot', () => {
         const card = createCard()
         card.id = 'card-id-1'

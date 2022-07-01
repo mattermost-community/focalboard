@@ -15,7 +15,7 @@ import {createCommentBlock} from '../../blocks/commentBlock'
 
 import UpdatedTime from './updatedTime'
 
-describe('components/properties/updatedTime', () => {
+describe('properties/updatedTime', () => {
     test('should match snapshot', () => {
         const card = createCard()
         card.id = 'card-id-1'

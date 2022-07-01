@@ -38,7 +38,7 @@ function selectPropertyTemplate(): IPropertyTemplate {
     }
 }
 
-describe('components/properties/select', () => {
+describe('properties/select', () => {
     const nonEditableSelectTestId = 'select-non-editable'
 
     const clearButton = () => screen.queryByRole('button', {name: /clear/i})

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/properties/link should match snapshot for link with empty url 1`] = `
+exports[`properties/link should match snapshot for link with empty url 1`] = `
 <div>
   <div
     class="URLProperty"
@@ -15,7 +15,7 @@ exports[`components/properties/link should match snapshot for link with empty ur
 </div>
 `;
 
-exports[`components/properties/link should match snapshot for link with non-empty url 1`] = `
+exports[`properties/link should match snapshot for link with non-empty url 1`] = `
 <div>
   <div
     class="URLProperty octo-propertyvalue"
@@ -52,7 +52,7 @@ exports[`components/properties/link should match snapshot for link with non-empt
 </div>
 `;
 
-exports[`components/properties/link should match snapshot for readonly link with non-empty url 1`] = `
+exports[`properties/link should match snapshot for readonly link with non-empty url 1`] = `
 <div>
   <div
     class="URLProperty octo-propertyvalue octo-propertyvalue--readonly"

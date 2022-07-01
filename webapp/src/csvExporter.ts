@@ -7,7 +7,7 @@ import {Board, IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
 import {Utils} from './utils'
 import {IAppWindow} from './types'
-import propsRegistry from './components/properties'
+import propsRegistry from './properties'
 
 declare let window: IAppWindow
 const hashSignToken = '___hash_sign___'

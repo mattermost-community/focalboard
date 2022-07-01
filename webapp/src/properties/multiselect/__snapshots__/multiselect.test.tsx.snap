@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/properties/multiSelect shows only the selected options when menu is not opened 1`] = `
+exports[`properties/multiSelect shows only the selected options when menu is not opened 1`] = `
 <div>
   <div
     class="octo-propertyvalue octo-propertyvalue--readonly"

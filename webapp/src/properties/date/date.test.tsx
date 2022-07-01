@@ -19,7 +19,7 @@ const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))
 const June15Local = new Date(new Date().getFullYear(), 5, 15, 12)
 const June20 = new Date(Date.UTC(new Date().getFullYear(), 5, 20, 12))
 
-describe('components/properties/dateRange', () => {
+describe('properties/dateRange', () => {
     beforeEach(() => {
         // Quick fix to disregard console error when unmounting a component
         console.error = jest.fn()

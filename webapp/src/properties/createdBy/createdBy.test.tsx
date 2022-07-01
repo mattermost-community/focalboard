@@ -13,7 +13,7 @@ import {Board, IPropertyTemplate} from '../../blocks/board'
 
 import CreatedBy from './createdBy'
 
-describe('components/properties/createdBy', () => {
+describe('properties/createdBy', () => {
     test('should match snapshot', () => {
         const card = createCard()
         card.createdBy = 'user-id-1'

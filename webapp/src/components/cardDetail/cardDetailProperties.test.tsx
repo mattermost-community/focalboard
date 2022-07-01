@@ -14,11 +14,10 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import mutator from '../../mutator'
+import propsRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
 import CardDetailProperties from './cardDetailProperties'
-
-import propsRegistry from '../properties'
-import {PropertyType} from '../properties/types'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)

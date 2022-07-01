@@ -10,7 +10,7 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-import propsRegistry from '../../components/properties'
+import propsRegistry from '../../properties'
 
 import './table.scss'
 

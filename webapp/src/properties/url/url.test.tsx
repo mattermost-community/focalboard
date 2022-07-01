@@ -21,7 +21,7 @@ jest.mock('../../flashMessages')
 const mockedCopy = jest.spyOn(Utils, 'copyTextToClipboard').mockImplementation(() => true)
 const mockedSendFlashMessage = mocked(sendFlashMessage, true)
 
-describe('components/properties/link', () => {
+describe('properties/link', () => {
     beforeEach(jest.clearAllMocks)
 
     const board = TestBlockFactory.createBoard()
