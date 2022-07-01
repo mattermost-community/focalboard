@@ -38,7 +38,7 @@ type PluginAdapter struct {
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
 	store          Store
-	logger         *mlog.Logger
+	logger         mlog.LoggerIFace
 
 	listenersMU       sync.RWMutex
 	listeners         map[string]*PluginAdapterClient
@@ -56,7 +56,7 @@ type pluginAPI interface {
 	PublishPluginClusterEvent(ev mmModel.PluginClusterEvent, opts mmModel.PluginClusterEventSendOptions) error
 }
 
-func NewPluginAdapter(api pluginAPI, auth auth.AuthInterface, store Store, logger *mlog.Logger) *PluginAdapter {
+func NewPluginAdapter(api pluginAPI, auth auth.AuthInterface, store Store, logger mlog.LoggerIFace) *PluginAdapter {
 	return &PluginAdapter{
 		api:               api,
 		auth:              auth,

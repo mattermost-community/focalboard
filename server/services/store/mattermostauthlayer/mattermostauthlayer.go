@@ -28,13 +28,13 @@ func (pe NotSupportedError) Error() string {
 // pluginAPI is the interface required my the MattermostAuthLayer to interact with
 // the mattermost-server. You can use plugin-api or product-api adapter implementations.
 type pluginAPI interface {
-	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, *mmModel.AppError)
-	GetUser(userID string) (*mmModel.User, *mmModel.AppError)
-	UpdateUser(user *mmModel.User) (*mmModel.User, *mmModel.AppError)
-	GetUserByEmail(email string) (*mmModel.User, *mmModel.AppError)
-	GetUserByUsername(username string) (*mmModel.User, *mmModel.AppError)
+	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error)
+	GetUserByID(userID string) (*mmModel.User, error)
+	UpdateUser(user *mmModel.User) (*mmModel.User, error)
+	GetUserByEmail(email string) (*mmModel.User, error)
+	GetUserByUsername(username string) (*mmModel.User, error)
 	GetLicense() *mmModel.License
-	GetFileInfo(fileID string) (*mmModel.FileInfo, *mmModel.AppError)
+	GetFileInfo(fileID string) (*mmModel.FileInfo, error)
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 }
 
@@ -43,12 +43,12 @@ type MattermostAuthLayer struct {
 	store.Store
 	dbType    string
 	mmDB      *sql.DB
-	logger    *mlog.Logger
+	logger    mlog.LoggerIFace
 	pluginAPI pluginAPI
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI pluginAPI) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger mlog.LoggerIFace, pluginAPI pluginAPI) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:     store,
 		dbType:    dbType,
@@ -83,7 +83,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 }
 
 func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUser(userID)
+	mmuser, err := s.pluginAPI.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +126,7 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	user, err := s.pluginAPI.GetUser(userID)
+	user, err := s.pluginAPI.GetUserByID(userID)
 	if err != nil {
 		s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
 		return err

@@ -51,7 +51,7 @@ type Server struct {
 	auth             *auth.Auth
 	singleUserToken  string
 	isMattermostAuth bool
-	logger           *mlog.Logger
+	logger           mlog.LoggerIFace
 	store            Store
 }
 
@@ -68,7 +68,7 @@ func (wss *websocketSession) isAuthenticated() bool {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger *mlog.Logger, store Store) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger mlog.LoggerIFace, store Store) *Server {
 	return &Server{
 		listeners:        make(map[*websocketSession]bool),
 		listenersByTeam:  make(map[string][]*websocketSession),

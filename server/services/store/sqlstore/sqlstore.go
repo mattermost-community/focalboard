@@ -21,7 +21,7 @@ type SQLStore struct {
 	connectionString string
 	isPlugin         bool
 	isSingleUser     bool
-	logger           *mlog.Logger
+	logger           mlog.LoggerIFace
 	NewMutexFn       MutexFactory
 	pluginAPI        pluginAPI
 	isBinaryParam    bool

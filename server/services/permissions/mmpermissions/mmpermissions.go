@@ -8,19 +8,20 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type APIInterface interface {
 	HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool
-	LogError(string, ...interface{})
 }
 
 type Service struct {
-	store permissions.Store
-	api   APIInterface
+	store  permissions.Store
+	api    APIInterface
+	logger mlog.LoggerIFace
 }
 
-func New(store permissions.Store, api APIInterface) *Service {
+func New(store permissions.Store, api APIInterface, logger mlog.LoggerIFace) *Service {
 	return &Service{
 		store: store,
 		api:   api,
@@ -51,10 +52,10 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		}
 		board = boards[0]
 	} else if err != nil {
-		s.api.LogError("error getting board",
-			"boardID", boardID,
-			"userID", userID,
-			"error", err,
+		s.logger.Error("error getting board",
+			mlog.String("boardID", boardID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return false
 	}
@@ -70,10 +71,10 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		return false
 	}
 	if err != nil {
-		s.api.LogError("error getting member for board",
-			"boardID", boardID,
-			"userID", userID,
-			"error", err,
+		s.logger.Error("error getting member for board",
+			mlog.String("boardID", boardID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return false
 	}

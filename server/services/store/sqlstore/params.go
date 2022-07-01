@@ -12,14 +12,14 @@ import (
 // pluginAPI is the interface required my the Params to interact with the mattermost-server.
 // You can use plugin-api or product-api adapter implementations.
 type pluginAPI interface {
-	GetChannel(string) (*mmModel.Channel, *mmModel.AppError)
+	GetChannelByID(string) (*mmModel.Channel, error)
 }
 
 type Params struct {
 	DBType           string
 	ConnectionString string
 	TablePrefix      string
-	Logger           *mlog.Logger
+	Logger           mlog.LoggerIFace
 	DB               *sql.DB
 	IsPlugin         bool
 	IsSingleUser     bool

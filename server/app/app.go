@@ -14,8 +14,6 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -26,10 +24,6 @@ const (
 	blockChangeNotifierShutdownTimeout = time.Second * 10
 )
 
-type pluginAPI interface {
-	GetUsers(options *mmModel.UserGetOptions) ([]*mmModel.User, *mmModel.AppError)
-}
-
 type Services struct {
 	Auth             *auth.Auth
 	Store            store.Store
@@ -37,10 +31,9 @@ type Services struct {
 	Webhook          *webhook.Client
 	Metrics          *metrics.Metrics
 	Notifications    *notify.Service
-	Logger           *mlog.Logger
+	Logger           mlog.LoggerIFace
 	Permissions      permissions.PermissionsService
 	SkipTemplateInit bool
-	PluginAPI        pluginAPI
 }
 
 type App struct {
@@ -52,9 +45,8 @@ type App struct {
 	webhook             *webhook.Client
 	metrics             *metrics.Metrics
 	notifications       *notify.Service
-	logger              *mlog.Logger
+	logger              mlog.LoggerIFace
 	blockChangeNotifier *utils.CallbackQueue
-	pluginAPI           pluginAPI
 
 	cardLimitMux sync.RWMutex
 	cardLimit    int
@@ -80,7 +72,6 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications:       services.Notifications,
 		logger:              services.Logger,
 		blockChangeNotifier: utils.NewCallbackQueue("blockChangeNotifier", blockChangeNotifierQueueSize, blockChangeNotifierPoolSize, services.Logger),
-		pluginAPI:           services.PluginAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app

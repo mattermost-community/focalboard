@@ -101,8 +101,8 @@ func (m pluginAPIMock) GetDirectChannel(userID1, userID2 string) (*mm_model.Chan
 	return nil, nil
 }
 
-func (m pluginAPIMock) CreatePost(post *mm_model.Post) error {
-	return nil
+func (m pluginAPIMock) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
+	return post, nil
 }
 
 func (m pluginAPIMock) GetUserByID(userID string) (*mm_model.User, error) {

@@ -51,7 +51,7 @@ type API struct {
 	permissions     permissions.PermissionsService
 	singleUserToken string
 	MattermostAuth  bool
-	logger          *mlog.Logger
+	logger          mlog.LoggerIFace
 	audit           *audit.Audit
 	isPlugin        bool
 }
@@ -61,7 +61,7 @@ func NewAPI(
 	singleUserToken string,
 	authService string,
 	permissions permissions.PermissionsService,
-	logger *mlog.Logger,
+	logger mlog.LoggerIFace,
 	audit *audit.Audit,
 	isPlugin bool,
 ) *API {
