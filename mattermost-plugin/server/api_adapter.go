@@ -18,6 +18,15 @@ type storeService interface {
 	GetMasterDB() (*sql.DB, error)
 }
 
+// normalizeAppError returns a truly nil error if appErr is nil
+// See https://golang.org/doc/faq#nil_error for more details.
+func normalizeAppErr(appErr *mm_model.AppError) error {
+	if appErr == nil {
+		return nil
+	}
+	return appErr
+}
+
 // pluginAPIAdapter is an adapter that ensures all Plugin API methods have the same signature as the
 // services API.
 // Note: this will be removed when plugin builds are no longer needed
@@ -40,15 +49,18 @@ func newServiceAPIAdapter(api plugin.API, storeService storeService, logger mlog
 //
 
 func (a *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
-	return a.api.GetDirectChannel(userID1, userID2)
+	channel, appErr := a.api.GetDirectChannel(userID1, userID2)
+	return channel, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
-	return a.api.GetChannel(channelID)
+	channel, appErr := a.api.GetChannel(channelID)
+	return channel, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
-	return a.api.GetChannelMember(channelID, userID)
+	member, appErr := a.api.GetChannelMember(channelID, userID)
+	return member, normalizeAppErr(appErr)
 }
 
 //
@@ -56,7 +68,8 @@ func (a *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*m
 //
 
 func (a *pluginAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
-	return a.api.CreatePost(post)
+	post, appErr := a.api.CreatePost(post)
+	return post, normalizeAppErr(appErr)
 }
 
 //
@@ -64,23 +77,28 @@ func (a *pluginAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, erro
 //
 
 func (a *pluginAPIAdapter) GetUserByID(userID string) (*mm_model.User, error) {
-	return a.api.GetUser(userID)
+	user, appErr := a.api.GetUser(userID)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) GetUserByUsername(name string) (*mm_model.User, error) {
-	return a.api.GetUserByUsername(name)
+	user, appErr := a.api.GetUserByUsername(name)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) GetUserByEmail(email string) (*mm_model.User, error) {
-	return a.api.GetUserByEmail(email)
+	user, appErr := a.api.GetUserByEmail(email)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, error) {
-	return a.api.UpdateUser(user)
+	user, appErr := a.api.UpdateUser(user)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
-	return a.api.GetUsers(options)
+	users, appErr := a.api.GetUsers(options)
+	return users, normalizeAppErr(appErr)
 }
 
 //
@@ -88,11 +106,13 @@ func (a *pluginAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions
 //
 
 func (a *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
-	return a.api.GetTeamMember(teamID, userID)
+	member, appErr := a.api.GetTeamMember(teamID, userID)
+	return member, normalizeAppErr(appErr)
 }
 
 func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
-	return a.api.CreateTeamMember(teamID, userID)
+	member, appErr := a.api.CreateTeamMember(teamID, userID)
+	return member, normalizeAppErr(appErr)
 }
 
 //
@@ -121,7 +141,8 @@ func (a *pluginAPIAdapter) GetLicense() *mm_model.License {
 // FileInfoStore service
 //
 func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
-	return a.api.GetFileInfo(fileID)
+	fi, appErr := a.api.GetFileInfo(fileID)
+	return fi, normalizeAppErr(appErr)
 }
 
 //
@@ -190,7 +211,8 @@ func (a *pluginAPIAdapter) GetLogger() mlog.LoggerIFace {
 // KVStore service
 //
 func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
-	return a.api.KVSetWithOptions(key, value, options)
+	b, appErr := a.api.KVSetWithOptions(key, value, options)
+	return b, normalizeAppErr(appErr)
 }
 
 //

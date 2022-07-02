@@ -224,13 +224,6 @@ func (bp *boardsProduct) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	bp.boardsApp.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
-func (bp *boardsProduct) OnDeactivate() error {
-	if bp.boardsApp == nil {
-		return nil
-	}
-	return bp.boardsApp.OnDeactivate()
-}
-
 func (bp *boardsProduct) OnPluginClusterEvent(ctx *plugin.Context, ev mm_model.PluginClusterEvent) {
 	if bp.boardsApp == nil {
 		return

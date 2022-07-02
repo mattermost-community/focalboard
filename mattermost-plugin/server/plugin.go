@@ -45,11 +45,16 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	p.boardsApp = boardsApp
-	return nil
+	return p.boardsApp.Start()
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
 func (p *Plugin) OnConfigurationChange() error {
+	// Have we been setup by OnActivate?
+	if p.boardsApp == nil {
+		return nil
+	}
+
 	return p.boardsApp.OnConfigurationChange()
 }
 
@@ -66,7 +71,7 @@ func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm
 }
 
 func (p *Plugin) OnDeactivate() error {
-	return p.boardsApp.OnDeactivate()
+	return p.boardsApp.Stop()
 }
 
 func (p *Plugin) OnPluginClusterEvent(ctx *plugin.Context, ev mmModel.PluginClusterEvent) {

@@ -158,24 +158,23 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 		}
 	}
 
-	if err := server.Start(); err != nil {
-		return nil, fmt.Errorf("Error starting Boards server: %w", err)
-	}
-
-	boardsApp := &BoardsApp{
+	return &BoardsApp{
 		server:          server,
 		wsPluginAdapter: wsPluginAdapter,
 		servicesAPI:     api,
 		logger:          logger,
-	}
-	return boardsApp, nil
-
+	}, nil
 }
 
-// ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
-func (b *BoardsApp) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
-	router := b.server.GetRootRouter()
-	router.ServeHTTP(w, r)
+func (b *BoardsApp) Start() error {
+	if err := b.server.Start(); err != nil {
+		return fmt.Errorf("Error starting Boards server: %w", err)
+	}
+	return nil
+}
+
+func (b *BoardsApp) Stop() error {
+	return b.server.Shutdown()
 }
 
 //
@@ -202,10 +201,6 @@ func (b *BoardsApp) WebSocketMessageHasBeenPosted(webConnID, userID string, req 
 	b.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
-func (b *BoardsApp) OnDeactivate() error {
-	return b.server.Shutdown()
-}
-
 func (b *BoardsApp) OnPluginClusterEvent(_ *plugin.Context, ev mm_model.PluginClusterEvent) {
 	b.wsPluginAdapter.HandleClusterEvent(ev)
 }
@@ -214,4 +209,10 @@ func (b *BoardsApp) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
 	if err := b.server.App().SetCloudLimits(limits); err != nil {
 		b.logger.Error("Error setting the cloud limits for Boards", mlog.Err(err))
 	}
+}
+
+// ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
+func (b *BoardsApp) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
+	router := b.server.GetRootRouter()
+	router.ServeHTTP(w, r)
 }

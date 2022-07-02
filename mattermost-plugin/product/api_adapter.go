@@ -13,6 +13,15 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
+// normalizeAppError returns a truly nil error if appErr is nil
+// See https://golang.org/doc/faq#nil_error for more details.
+func normalizeAppErr(appErr *mm_model.AppError) error {
+	if appErr == nil {
+		return nil
+	}
+	return appErr
+}
+
 // serviceAPIAdapter is an adapter that flattens the APIs provided by suite services so they can
 // be used as per the Plugin API.
 // Note: when supporting a plugin build is no longer needed this adapter may be removed as the Boards app
@@ -34,15 +43,18 @@ func newServiceAPIAdapter(api *boardsProduct) *serviceAPIAdapter {
 //
 
 func (a *serviceAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
-	return a.api.channelService.GetDirectChannel(userID1, userID2)
+	channel, appErr := a.api.channelService.GetDirectChannel(userID1, userID2)
+	return channel, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
-	return a.api.channelService.GetChannelByID(channelID)
+	channel, appErr := a.api.channelService.GetChannelByID(channelID)
+	return channel, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
-	return a.api.channelService.GetChannelMember(channelID, userID)
+	member, appErr := a.api.channelService.GetChannelMember(channelID, userID)
+	return member, normalizeAppErr(appErr)
 }
 
 //
@@ -50,7 +62,8 @@ func (a *serviceAPIAdapter) GetChannelMember(channelID string, userID string) (*
 //
 
 func (a *serviceAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
-	return a.api.postService.CreatePost(a.ctx, post)
+	post, appErr := a.api.postService.CreatePost(a.ctx, post)
+	return post, normalizeAppErr(appErr)
 }
 
 //
@@ -58,23 +71,28 @@ func (a *serviceAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, err
 //
 
 func (a *serviceAPIAdapter) GetUserByID(userID string) (*mm_model.User, error) {
-	return a.api.userService.GetUser(userID)
+	user, appErr := a.api.userService.GetUser(userID)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) GetUserByUsername(name string) (*mm_model.User, error) {
-	return a.api.userService.GetUserByUsername(name)
+	user, appErr := a.api.userService.GetUserByUsername(name)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) GetUserByEmail(email string) (*mm_model.User, error) {
-	return a.api.userService.GetUserByEmail(email)
+	user, appErr := a.api.userService.GetUserByEmail(email)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, error) {
-	return a.api.userService.UpdateUser(user, true)
+	user, appErr := a.api.userService.UpdateUser(user, true)
+	return user, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
-	return a.api.userService.GetUsersFromProfiles(options)
+	user, appErr := a.api.userService.GetUsersFromProfiles(options)
+	return user, normalizeAppErr(appErr)
 }
 
 //
@@ -82,11 +100,13 @@ func (a *serviceAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOption
 //
 
 func (a *serviceAPIAdapter) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
-	return a.api.teamService.GetMember(teamID, userID)
+	member, appErr := a.api.teamService.GetMember(teamID, userID)
+	return member, normalizeAppErr(appErr)
 }
 
 func (a *serviceAPIAdapter) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
-	return a.api.teamService.CreateMember(a.ctx, teamID, userID)
+	member, appErr := a.api.teamService.CreateMember(a.ctx, teamID, userID)
+	return member, normalizeAppErr(appErr)
 }
 
 //
@@ -115,7 +135,8 @@ func (a *serviceAPIAdapter) GetLicense() *mm_model.License {
 // FileInfoStore service
 //
 func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
-	return a.api.fileInfoStoreService.GetFileInfo(fileID)
+	fi, appErr := a.api.fileInfoStoreService.GetFileInfo(fileID)
+	return fi, normalizeAppErr(appErr)
 }
 
 //
@@ -183,7 +204,8 @@ func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 // KVStore service
 //
 func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
-	return a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
+	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
+	return b, normalizeAppErr(appErr)
 }
 
 //
