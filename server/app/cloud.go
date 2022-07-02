@@ -286,7 +286,7 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(teamID string) error {
 
 	for ; true; page++ {
 		getUsersOptions.Page = page
-		systemAdmins, appErr := a.servicesAPI.GetUsers(getUsersOptions)
+		systemAdmins, appErr := a.servicesAPI.GetUsersFromProfiles(getUsersOptions)
 		if appErr != nil {
 			a.logger.Error("failed to fetch system admins", mlog.Int("page_size", getUsersOptions.PerPage), mlog.Int("page", page), mlog.Err(appErr))
 			return appErr

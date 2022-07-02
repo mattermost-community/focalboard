@@ -287,19 +287,19 @@ func (mr *MockServicesAPIMockRecorder) GetUserByUsername(arg0 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockServicesAPI)(nil).GetUserByUsername), arg0)
 }
 
-// GetUsers mocks base method.
-func (m *MockServicesAPI) GetUsers(arg0 *model.UserGetOptions) ([]*model.User, error) {
+// GetUsersFromProfiles mocks base method.
+func (m *MockServicesAPI) GetUsersFromProfiles(arg0 *model.UserGetOptions) ([]*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUsers", arg0)
+	ret := m.ctrl.Call(m, "GetUsersFromProfiles", arg0)
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUsers indicates an expected call of GetUsers.
-func (mr *MockServicesAPIMockRecorder) GetUsers(arg0 interface{}) *gomock.Call {
+// GetUsersFromProfiles indicates an expected call of GetUsersFromProfiles.
+func (mr *MockServicesAPIMockRecorder) GetUsersFromProfiles(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsers", reflect.TypeOf((*MockServicesAPI)(nil).GetUsers), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersFromProfiles", reflect.TypeOf((*MockServicesAPI)(nil).GetUsersFromProfiles), arg0)
 }
 
 // HasPermissionToTeam mocks base method.

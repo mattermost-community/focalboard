@@ -26,7 +26,7 @@ const (
 )
 
 type servicesAPI interface {
-	GetUsers(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
+	GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
 }
 
 type Services struct {

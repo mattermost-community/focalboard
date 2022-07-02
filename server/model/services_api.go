@@ -26,7 +26,7 @@ type ServicesAPI interface {
 	GetUserByUsername(name string) (*mm_model.User, error)
 	GetUserByEmail(email string) (*mm_model.User, error)
 	UpdateUser(user *mm_model.User) (*mm_model.User, error)
-	GetUsers(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
+	GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
 
 	// Team service
 	GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error)

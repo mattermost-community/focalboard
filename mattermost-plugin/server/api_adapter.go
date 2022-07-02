@@ -79,7 +79,7 @@ func (a *pluginAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, erro
 	return a.api.UpdateUser(user)
 }
 
-func (a *pluginAPIAdapter) GetUsers(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
+func (a *pluginAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
 	return a.api.GetUsers(options)
 }
 

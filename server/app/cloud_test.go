@@ -668,7 +668,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    0,
 		}
-		servicesAPI.EXPECT().GetUsers(getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1, sysAdmin2}, nil)
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1, sysAdmin2}, nil)
 
 		getUsersOptionsPage1 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -676,7 +676,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    1,
 		}
-		servicesAPI.EXPECT().GetUsers(getUsersOptionsPage1).Return([]*mmModel.User{}, nil)
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage1).Return([]*mmModel.User{}, nil)
 
 		th.App.servicesAPI = servicesAPI
 
@@ -701,7 +701,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    0,
 		}
-		servicesAPI.EXPECT().GetUsers(getUsersOptionsPage0).Return([]*mmModel.User{}, nil)
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage0).Return([]*mmModel.User{}, nil)
 
 		th.App.servicesAPI = servicesAPI
 
@@ -735,7 +735,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    0,
 		}
-		servicesAPI.EXPECT().GetUsers(getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1}, nil)
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1}, nil)
 
 		getUsersOptionsPage1 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -743,7 +743,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    1,
 		}
-		servicesAPI.EXPECT().GetUsers(getUsersOptionsPage1).Return([]*mmModel.User{sysAdmin2}, nil)
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage1).Return([]*mmModel.User{sysAdmin2}, nil)
 
 		getUsersOptionsPage2 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -751,7 +751,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    2,
 		}
-		servicesAPI.EXPECT().GetUsers(getUsersOptionsPage2).Return([]*mmModel.User{}, nil)
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage2).Return([]*mmModel.User{}, nil)
 
 		th.App.servicesAPI = servicesAPI
 

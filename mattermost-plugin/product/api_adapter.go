@@ -73,8 +73,8 @@ func (a *serviceAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, err
 	return a.api.userService.UpdateUser(user, true)
 }
 
-func (a *serviceAPIAdapter) GetUsers(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
-	return a.api.userService.GetUsers(options)
+func (a *serviceAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error) {
+	return a.api.userService.GetUsersFromProfiles(options)
 }
 
 //
