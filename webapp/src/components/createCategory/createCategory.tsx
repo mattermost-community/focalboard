@@ -9,6 +9,7 @@ import Dialog from '../dialog'
 import Button from '../../widgets/buttons/button'
 
 import './createCategory.scss'
+import CloseCircle from "../../widgets/icons/closeCircle"
 
 type Props = {
     initialValue?: string
@@ -40,16 +41,24 @@ const CreateCategory = (props: Props): JSX.Element => {
         >
             <div className='CreateCategory'>
                 <h3>{props.title}</h3>
-                <input
-                    className='categoryNameInput'
-                    type='text'
-                    placeholder={placeholder}
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    autoFocus={true}
-                    maxLength={100}
-                    onKeyUp={handleKeypress}
-                />
+                <div className='inputWrapper'>
+                    <input
+                        className='categoryNameInput'
+                        type='text'
+                        placeholder={placeholder}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        autoFocus={true}
+                        maxLength={100}
+                        onKeyUp={handleKeypress}
+                    />
+                    {
+                        Boolean(name) &&
+                        <div className='clearBtn' onClick={() => setName('')}>
+                            <CloseCircle/>
+                        </div>
+                    }
+                </div>
                 <div className='createCategoryActions'>
                     <Button
                         size={'medium'}
