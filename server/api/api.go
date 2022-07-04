@@ -34,6 +34,8 @@ const (
 	ErrorNoTeamMessage = "No team"
 )
 
+var errAPINotSupportedInStandaloneMode = errors.New("API not supported in standalone mode")
+
 type PermissionError struct {
 	msg string
 }
@@ -168,6 +170,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// limits
 	apiv2.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
 
 	// System APIs
 	r.HandleFunc("/hello", a.handleHello).Methods("GET")
@@ -4228,6 +4231,37 @@ func (a *API) handleHello(w http.ResponseWriter, r *http.Request) {
 	//   '200':
 	//     description: success
 	stringResponse(w, "Hello")
+}
+
+func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v2/teams/{teamID}/notifyadminupgrade handleNotifyAdminUpgrade
+	//
+	// Notifies admins for upgrade request.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errAPINotSupportedInStandaloneMode)
+		return
+	}
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	if err := a.app.NotifyPortalAdminsUpgradeRequest(teamID); err != nil {
+		jsonStringResponse(w, http.StatusOK, "{}")
+	}
 }
 
 // Response helpers

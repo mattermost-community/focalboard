@@ -18,6 +18,12 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
+RACE = -race
+
+ifeq ($(OS),Windows_NT)
+	RACE := ''
+endif
+
 # MAC cpu architecture
 ifeq ($(shell uname -m),arm64)
 	MAC_GO_ARCH := arm64
@@ -47,7 +53,12 @@ server: templates-archive ## Build server for local environment.
 server-mac: templates-archive ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
+ifeq ($(FB_PROD),)
 	cd server; env GOOS=darwin GOARCH=$(MAC_GO_ARCH) go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/mac/focalboard-server ./main
+else
+# Always build x86 for production, to work on both Apple Silicon and legacy Macs
+	cd server; env GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/mac/focalboard-server ./main
+endif
 
 server-linux: templates-archive ## Build server for Linux.
 	mkdir -p bin/linux
@@ -126,7 +137,7 @@ server-test-sqlite: templates-archive ## Run server tests using sqlite
 server-test-mini-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
 server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
-	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' $(RACE) -v -count=1 -timeout=30m ./...
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql

@@ -135,6 +135,11 @@ describe('components/centerPanel', () => {
                 [card2.id]: [comment2],
             },
         },
+        imits: {
+            limits: {
+                views: 0,
+            },
+        },
     }
     const store = mockStateStore([], state)
     beforeAll(() => {

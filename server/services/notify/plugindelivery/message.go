@@ -11,14 +11,14 @@ import (
 
 const (
 	// TODO: localize these when i18n is available.
-	defCommentTemplate     = "@%s mentioned you in a comment on the card [%s](%s)\n> %s"
-	defDescriptionTemplate = "@%s mentioned you in the card [%s](%s)\n> %s"
+	defCommentTemplate     = "@%s mentioned you in a comment on the card [%s](%s) in board [%s](%s)\n> %s"
+	defDescriptionTemplate = "@%s mentioned you in the card [%s](%s) in board [%s](%s)\n> %s"
 )
 
-func formatMessage(author string, extract string, card string, link string, block *model.Block) string {
+func formatMessage(author string, extract string, card string, link string, block *model.Block, boardLink string, board string) string {
 	template := defDescriptionTemplate
 	if block.Type == model.TypeComment {
 		template = defCommentTemplate
 	}
-	return fmt.Sprintf(template, author, card, link, extract)
+	return fmt.Sprintf(template, author, card, link, board, boardLink, extract)
 }
