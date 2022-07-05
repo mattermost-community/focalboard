@@ -4,6 +4,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -16,6 +17,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+var ErrPluginNotAllowed = errors.New("Boards plugin not allowed while Boards product enabled.")
+
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
 	plugin.MattermostPlugin
@@ -24,6 +27,11 @@ type Plugin struct {
 }
 
 func (p *Plugin) OnActivate() error {
+	if p.API.GetConfig().FeatureFlags.BoardsProduct {
+		p.API.LogError(ErrPluginNotAllowed.Error())
+		return ErrPluginNotAllowed
+	}
+
 	client := pluginapi.NewClient(p.API, p.Driver)
 
 	logger, _ := mlog.NewLogger()

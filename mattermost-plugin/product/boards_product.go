@@ -182,13 +182,39 @@ func newBoardsProduct(mmServer *app.Server, services map[app.ServiceKey]interfac
 	return boards, nil
 }
 
-func (b *boardsProduct) Start() error {
-	b.logger.Info("Starting boards service")
+func (bp *boardsProduct) Start() error {
+	if !bp.configService.Config().FeatureFlags.BoardsProduct {
+		bp.logger.Info("Boards product disabled via feature flag")
+		return nil
+	}
+
+	bp.logger.Info("Starting boards service")
+
+	adapter := newServiceAPIAdapter(bp)
+	boardsApp, err := boards.NewBoardsApp(adapter)
+	if err != nil {
+		return fmt.Errorf("Failed to create Boards service: %w", err)
+	}
+
+	bp.boardsApp = boardsApp
+	if err := bp.boardsApp.Start(); err != nil {
+		return fmt.Errorf("Failed to start Boards service: %w", err)
+	}
+
 	return nil
 }
 
-func (b *boardsProduct) Stop() error {
-	b.logger.Info("Stopping boards service")
+func (bp *boardsProduct) Stop() error {
+	bp.logger.Info("Stopping boards service")
+
+	if bp.boardsApp == nil {
+		return nil
+	}
+
+	if err := bp.boardsApp.Stop(); err != nil {
+		return fmt.Errorf("Error while stopping Boards service: %w", err)
+	}
+
 	return nil
 }
 
