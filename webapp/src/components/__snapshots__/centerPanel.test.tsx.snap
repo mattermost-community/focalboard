@@ -720,9 +720,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
         </button>
       </div>
     </div>
-    <div
-      class="NotificationBox"
-    >
+    <div>
       <div
         class="NotificationBox__icon"
       >
