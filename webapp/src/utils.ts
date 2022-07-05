@@ -18,6 +18,7 @@ import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
 import {BoardCategoryWebsocketData, Category} from './store/sidebar'
+import {UserSettings} from './userSettings'
 
 declare let window: IAppWindow
 
@@ -83,10 +84,10 @@ class Utils {
         return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
     }
 
-    static getUserDisplayName(user: IUser, configNameFormat: string, userNameFormat: string): string {
+    static getUserDisplayName(user: IUser, configNameFormat: string): string {
         let nameFormat = configNameFormat    
-        if(userNameFormat){
-            nameFormat=userNameFormat
+        if(UserSettings.nameFormat){
+            nameFormat=UserSettings.nameFormat
         }
     
         // default nameFormat = 'username'

@@ -12,6 +12,8 @@ import {GlobalState} from 'mattermost-redux/types/store'
 import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
+import {UserSettings} from '../../../webapp/src/userSettings'
+
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
@@ -174,6 +176,7 @@ export default class Plugin {
 
         this.registry = registry
 
+        UserSettings.nameFormat = mmStore.getState().entities.preferences.myPreferences['display_settings--name_format'].value || null
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
@@ -293,6 +296,9 @@ export default class Plugin {
                     if (preference.category === 'theme' && theme !== preference.value) {
                         setMattermostTheme(JSON.parse(preference.value))
                         theme = preference.value
+                    }
+                    if(preference.category === 'display_settings' && preference.name === 'name_format'){
+                        UserSettings.nameFormat = preference.value
                     }
                 }
             }
