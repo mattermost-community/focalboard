@@ -134,7 +134,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
                  COALESCE(B.title, ''),
-                (B.fields->>'description')::text,
+                 COALESCE((B.fields->>'description')::text, ''),
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.type,
                  COALESCE(B.title, ''),
-                 (B.fields->>'description')::text,
+                 COALESCE((B.fields->>'description')::text, ''),
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
                  COALESCE(B.title, ''),
-                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+                 COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history (
       SELECT B.id, B.insert_at, C.TeamId, B.channel_id, B.created_by, B.modified_by, C.Type,
                  COALESCE(B.title, ''),
-                 JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')),
+                 COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
@@ -195,7 +195,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
                  COALESCE(B.title, ''),
-                 (fields->>'description')::text,
+                 COALESCE((fields->>'description')::text, ''),
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
                  COALESCE(B.title, ''),
-                 (fields->>'description')::text,
+                 COALESCE((fields->>'description')::text, ''),
                  B.fields->>'icon',
                  COALESCE((fields->'showDescription')::text::boolean, false),
                  COALESCE((fields->'isTemplate')::text::boolean, false),
@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
                  COALESCE(B.title, ''),
-                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+                 COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history (
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
                  COALESCE(B.title, ''),
-                 JSON_UNQUOTE(JSON_EXTRACT(fields,'$.description')),
+                 COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')),
                  COALESCE(B.fields->'$.showDescription', 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
@@ -251,7 +251,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
                  COALESCE(title, ''),
-                 json_extract(fields, '$.description'),
+                 COALESCE(json_extract(fields, '$.description'), ''),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
                  COALESCE(json_extract(fields, '$.templateVer'), 0),
                  '{}', json_extract(fields, '$.cardProperties'), create_at,
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
   INSERT INTO {{.prefix}}boards_history
       SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
                  COALESCE(title, ''),
-                 json_extract(fields, '$.description'),
+                 COALESCE(json_extract(fields, '$.description'), ''),
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
                  COALESCE(json_extract(fields, '$.templateVer'), 0),
                  '{}', json_extract(fields, '$.cardProperties'), create_at,

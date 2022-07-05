@@ -234,3 +234,26 @@ func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, 
 	}
 	return nil, errTestStore
 }
+
+func (s *PluginTestStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
+	boards, err := s.Store.SearchBoardsForUser(term, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	teams, err := s.GetTeamsForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	resultBoards := []*model.Board{}
+	for _, board := range boards {
+		for _, team := range teams {
+			if team.ID == board.TeamID {
+				resultBoards = append(resultBoards, board)
+				break
+			}
+		}
+	}
+	return resultBoards, nil
+}
