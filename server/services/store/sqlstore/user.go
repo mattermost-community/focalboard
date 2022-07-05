@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -11,6 +12,10 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
+var (
+	errUnsupportedOperation = errors.New("unsupported operation")
 )
 
 type UserNotFoundError struct {
@@ -264,4 +269,8 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 	}
 
 	return s.updateUser(db, user)
+}
+
+func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
+	return errUnsupportedOperation
 }

@@ -13,12 +13,10 @@ type Props = {
 
 // Switch is an on-off style switch / checkbox
 function Switch(props: Props): JSX.Element {
-    let switchSize = 'size--small'
-    if (props.size === 'medium') {
-        switchSize = 'size--medium'
-    }
-
-    const className = `Switch override-main ${switchSize}${props.isOn ? ' on' : ''}`
+    const switchSize = `size--${props.size === 'medium' ? 'medium' : 'small'}`
+    const switchIsOn = props.isOn ? ' on' : ''
+    const switchIsReadonly = props.readOnly ? ' readonly' : ''
+    const className = `Switch override-main ${switchSize}${switchIsOn}${switchIsReadonly}`
     return (
         <div
             className={className}

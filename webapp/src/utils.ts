@@ -26,6 +26,9 @@ const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
 
+export const SYSTEM_ADMIN_ROLE = 'system_admin'
+export const TEAM_ADMIN_ROLE = 'team_admin'
+
 export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData | BoardType | BoardMember | null
 
 // eslint-disable-next-line no-shadow
@@ -746,7 +749,27 @@ class Utils {
 
     // Clamps a number between a ceiling and a floor, inclusive. Optionally absolute value, too.
     static clamp(number: number, min: number, max: number, absolute?: boolean) : number {
-        return absolute ? Math.abs(Math.max(min, Math.min(number, max))) : Math.max(min, Math.min(number, max))
+        return absolute ? Math.abs(Math.max(min, Math.min(number, max))) : Math.max(min, Math.min(number, max))    
+    }
+
+    static spaceSeparatedStringIncludes(item: string, spaceSeparated?: string): boolean {
+        if (spaceSeparated) {
+            const items = spaceSeparated?.split(' ')
+            return items.includes(item)
+        }
+        return false
+    }
+
+    static isSystemAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(SYSTEM_ADMIN_ROLE, roles)
+    }
+
+    static isTeamAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(TEAM_ADMIN_ROLE, roles)
+    }
+
+    static isAdmin(roles: string): boolean {
+        return Utils.isSystemAdmin(roles) || Utils.isTeamAdmin(roles)
     }
 }
 
