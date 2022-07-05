@@ -218,7 +218,11 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
 
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
-                RHSChannelBoards,
+                () => (
+                    <ReduxProvider store={store}>
+                        <RHSChannelBoards/>
+                    </ReduxProvider>
+                ),
                 <ErrorBoundary>
                     <ReduxProvider store={store}>
                         <RHSChannelBoardsHeader/>
@@ -259,7 +263,11 @@ export default class Plugin {
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         }
 
-        this.boardSelectorId = this.registry.registerRootComponent(BoardSelector)
+        this.boardSelectorId = this.registry.registerRootComponent(() => (
+            <ReduxProvider store={store}>
+                <BoardSelector/>
+            </ReduxProvider>
+        ))
 
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {

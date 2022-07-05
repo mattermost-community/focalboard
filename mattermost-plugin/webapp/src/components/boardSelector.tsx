@@ -1,14 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useMemo, useCallback} from 'react'
-import {Provider as ReduxProvider} from 'react-redux'
 import {IntlProvider, useIntl, FormattedMessage} from 'react-intl'
 import debounce from 'lodash/debounce'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 
-import store from '../../../../webapp/src/store'
 import octoClient from '../../../../webapp/src/octoClient'
 import mutator from '../../../../webapp/src/mutator'
 import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
@@ -193,12 +191,6 @@ const BoardSelector = () => {
     )
 }
 
-const ConnectedBoardSelector = () => (
-    <ReduxProvider store={store}>
-        <IntlBoardSelector/>
-    </ReduxProvider>
-)
-
 const IntlBoardSelector = () => {
     const language = useAppSelector<string>(getLanguage)
 
@@ -212,4 +204,4 @@ const IntlBoardSelector = () => {
     )
 }
 
-export default ConnectedBoardSelector
+export default IntlBoardSelector

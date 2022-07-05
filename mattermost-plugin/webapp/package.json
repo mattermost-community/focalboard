@@ -110,7 +110,10 @@
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy",
       "^.+\\.(scss|css)$": "<rootDir>/tests/style_mock.json",
       "^.*i18n.*\\.(json)$": "<rootDir>/tests/i18n_mock.json",
-      "^bundle-loader\\?lazy\\!(.*)$": "$1"
+      "^bundle-loader\\?lazy\\!(.*)$": "$1",
+      "^react$": "<rootDir>/../../webapp/node_modules/react",
+      "^react-redux$": "<rootDir>/../../webapp/node_modules/react-redux",
+      "^react-intl$": "<rootDir>/../../webapp/node_modules/react-intl"
     },
     "moduleDirectories": [
       "",

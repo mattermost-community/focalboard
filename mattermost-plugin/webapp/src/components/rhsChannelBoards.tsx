@@ -1,13 +1,11 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React  from 'react'
-import {Provider as ReduxProvider} from 'react-redux'
 import {FormattedMessage, IntlProvider} from 'react-intl'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 
-import store from '../../../../webapp/src/store'
 import {getCurrentTeam} from '../../../../webapp/src/store/teams'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {getMySortedBoards, setLinkToChannel} from '../../../../webapp/src/store/boards'
@@ -105,12 +103,6 @@ const RHSChannelBoards = () => {
     )
 }
 
-const ConnectedRHSChannelBoards = () => (
-    <ReduxProvider store={store}>
-        <IntlRHSChannelBoards/>
-    </ReduxProvider>
-)
-
 const IntlRHSChannelBoards = () => {
     const language = useAppSelector<string>(getLanguage)
 
@@ -124,4 +116,4 @@ const IntlRHSChannelBoards = () => {
     )
 }
 
-export default ConnectedRHSChannelBoards
+export default IntlRHSChannelBoards
