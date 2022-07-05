@@ -43,13 +43,10 @@ ci: server-test
 	cd webapp; npm run cypress:ci
 	cd mattermost-plugin/webapp; npm run test
 
-setup-go-work: ## Sets up your go.work file for local development
-	./scripts/setup_go_work.sh
+setup-go-work: ## Sets up a go.work file
+	go run mattermost-plugin/build/gowork/main.go
 
-setup-go-work-ci: ## Sets up a go.work file for CI
-	./scripts/setup_go_work_ci.sh
-
-templates-archive: setup-go-work-ci ## Build templates archive file
+templates-archive: setup-go-work ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
 
 server: templates-archive ## Build server for local environment.
