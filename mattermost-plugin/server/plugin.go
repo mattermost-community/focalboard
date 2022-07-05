@@ -109,7 +109,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API, client)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API, storeParams.TablePrefix, client)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %w", err2)
 		}
