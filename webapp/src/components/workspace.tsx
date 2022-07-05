@@ -34,13 +34,11 @@ import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector
 import './workspace.scss'
 import Sidebar from "./sidebar/sidebar"
 
-import {UserConfigPatch} from "../user"
 import octoClient from "../octoClient"
 import {getMe} from "../store/users"
 
 const lhsDefaultWidth = 240 //pixels
 const lhsMinWidth = lhsDefaultWidth
-const lhsMaxWidthPercentage = 50
 
 
 type Props = {
@@ -183,13 +181,6 @@ const Workspace = (props: Props) => {
         })
     }, 200)
 
-    console.log(`window.innerWidth / 100 * lhsMaxWidthPercentage: ${window.innerWidth / 100 * lhsMaxWidthPercentage} window.innerWidth: ${window.innerWidth}`)
-    const [maxWidth, setMaxWidth] = useState<number>(10)
-    useEffect(() => {
-        console.log(`Setting maxWidth window.innerWidth: ${window.innerWidth}`)
-        setMaxWidth(window.innerWidth * 100 / lhsMaxWidthPercentage)
-    }, [window.innerWidth])
-
     const lhsResizeHandle = (event: MouseEvent | TouchEvent, direction: Direction, elementRef: HTMLElement, delta: NumberSize) => {
         if (delta.width === 0) {
             // This happens when you try changing size to beyond min and max width.
@@ -207,7 +198,7 @@ const Workspace = (props: Props) => {
             {!props.readonly &&
                 <Resizable
                     minWidth={lhsMinWidth}
-                    maxWidth={'50%'}
+                    maxWidth={'35%'}
                     size={{width: width, height: '100%'}}
                     enable={{right: true}}
                     onResizeStop={lhsResizeHandle}

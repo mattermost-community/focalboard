@@ -28,18 +28,19 @@ import {IUser, UserConfigPatch} from '../user'
 import {getMe, patchProps} from '../store/users'
 import {Permission} from '../constants'
 
+import octoClient from "../octoClient"
+import DockLeft from "../widgets/icons/dockLeft"
+import DockWindow from "../widgets/icons/dockWindow"
+
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
-import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
 
 import './cardDialog.scss'
 import CardRHS from "./cardRHS/cardRHS"
 
-import octoClient from "../octoClient"
-import DockLeft from "../widgets/icons/dockLeft"
-import DockWindow from "../widgets/icons/dockWindow"
+import DialogCardView from "./dialogCardView"
 
 type Props = {
     board: Board
@@ -135,9 +136,9 @@ const CardDialog = (props: Props): JSX.Element => {
         dispatch(patchProps(newProps))
 
         const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        // if (patchedProps) {
-        //     dispatch(patchProps(patchedProps))
-        // }
+        if (patchedProps) {
+            dispatch(patchProps(patchedProps))
+        }
     }
 
     const switchToDialogView = (
@@ -232,7 +233,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const isFollowingCard = Boolean(followingCards.find((following) => following.blockId === props.cardId))
     const toolbar = followActionButton(isFollowingCard)
 
-    const CardView = props.cardView === 'rhs' ? CardRHS : Dialog
+    const CardView = props.cardView === 'rhs' ? CardRHS : DialogCardView
 
     return (
         <div className='cardViewWrapper'>

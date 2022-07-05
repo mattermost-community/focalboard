@@ -9,9 +9,8 @@ import CloseIcon from '../widgets/icons/close'
 import OptionsIcon from '../widgets/icons/options'
 import MenuWrapper from '../widgets/menuWrapper'
 import './dialog.scss'
-import {Board} from "../blocks/board"
 
-export type CardViewProps = {
+export type DialogProps = {
     children: React.ReactNode
     toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
     toolbar?: React.ReactNode
@@ -19,10 +18,9 @@ export type CardViewProps = {
     className?: string
     title?: string
     onClose: () => void,
-    board: Board
 }
 
-const Dialog = (props: CardViewProps): JSX.Element => {
+const Dialog = (props: DialogProps): JSX.Element => {
     const {toolsMenu, toolbar, title} = props
     const intl = useIntl()
 

@@ -15,10 +15,11 @@ import IconButton from "../../widgets/buttons/iconButton"
 import CloseIcon from "../../widgets/icons/close"
 import MenuWrapper from "../../widgets/menuWrapper"
 import OptionsIcon from "../../widgets/icons/options"
-import {CardViewProps} from "../dialog"
 import octoClient from "../../octoClient"
 import {useAppDispatch, useAppSelector} from "../../store/hooks"
 import {getMe, patchProps} from "../../store/users"
+import {CardViewProps} from "../dialogCardView"
+import PanelResizeHandle from "../../widgets/panelResizeHandle/panelResizeHandle"
 
 const CardRHS = (props: CardViewProps): JSX.Element => {
     const {toolsMenu, toolbar} = props
@@ -70,12 +71,18 @@ const CardRHS = (props: CardViewProps): JSX.Element => {
         saveRHSSize(newWidth)
     }
 
+    const handleComponent = React.useMemo(() => (<PanelResizeHandle/>), [])
+
     return (
         <Resizable
             className='CardRHSResizeWrapper'
             enable={{left: true}}
+            maxWidth='100%'
             size={{width: width, height: '100%'}}
             onResizeStop={rhsResizeHandler}
+            handleComponent={{
+                left: handleComponent,
+            }}
         >
             <div className={`CardRHS ${props.className}`}>
                 <div
