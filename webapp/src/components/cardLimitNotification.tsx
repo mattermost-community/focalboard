@@ -11,7 +11,7 @@ import {getMe, patchProps, getCardLimitSnoozeUntil, getCardHiddenWarningSnoozeUn
 import {getCurrentBoardHiddenCardsCount, getCardHiddenWarning} from '../store/cards'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import CheckIcon from '../widgets/icons/check'
-import NotificationBox from '../widgets/notification-box'
+import NotificationBox from '../widgets/notificationBox/notificationBox'
 import octoClient from '../octoClient'
 
 import './cardLimitNotification.scss'
