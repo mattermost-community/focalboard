@@ -43,8 +43,11 @@ ci: server-test
 	cd webapp; npm run cypress:ci
 	cd mattermost-plugin/webapp; npm run test
 
-setup-go-work: ## Sets up your go.work file
+setup-go-work: ## Sets up your go.work file for local development
 	./scripts/setup_go_work.sh
+
+setup-go-work-ci: ## Sets up a go.work file for CI
+	./scripts/setup_go_work_ci.sh
 
 templates-archive: ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
@@ -106,7 +109,7 @@ generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go generate ./...
 
-server-lint: setup-go-work templates-archive ## Run linters on server code.
+server-lint: setup-go-work-ci templates-archive ## Run linters on server code.
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
