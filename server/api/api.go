@@ -1098,7 +1098,6 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-	a.logger.Debug(string(userData))
 
 	jsonBytesResponse(w, http.StatusOK, userData)
 
