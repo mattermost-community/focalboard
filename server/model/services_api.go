@@ -64,5 +64,5 @@ type ServicesAPI interface {
 	GetMasterDB() (*sql.DB, error)
 
 	// System service
-	GetDiagnosticId() string
+	GetDiagnosticID() string
 }

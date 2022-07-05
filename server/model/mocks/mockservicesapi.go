@@ -140,18 +140,18 @@ func (mr *MockServicesAPIMockRecorder) GetConfig() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetConfig", reflect.TypeOf((*MockServicesAPI)(nil).GetConfig))
 }
 
-// GetDiagnosticId mocks base method.
-func (m *MockServicesAPI) GetDiagnosticId() string {
+// GetDiagnosticID mocks base method.
+func (m *MockServicesAPI) GetDiagnosticID() string {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetDiagnosticId")
+	ret := m.ctrl.Call(m, "GetDiagnosticID")
 	ret0, _ := ret[0].(string)
 	return ret0
 }
 
-// GetDiagnosticId indicates an expected call of GetDiagnosticId.
-func (mr *MockServicesAPIMockRecorder) GetDiagnosticId() *gomock.Call {
+// GetDiagnosticID indicates an expected call of GetDiagnosticID.
+func (mr *MockServicesAPIMockRecorder) GetDiagnosticID() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDiagnosticId", reflect.TypeOf((*MockServicesAPI)(nil).GetDiagnosticId))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDiagnosticID", reflect.TypeOf((*MockServicesAPI)(nil).GetDiagnosticID))
 }
 
 // GetDirectChannel mocks base method.

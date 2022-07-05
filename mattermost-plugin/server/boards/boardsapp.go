@@ -67,7 +67,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	if mmconfig.ServiceSettings.SiteURL != nil {
 		baseURL = *mmconfig.ServiceSettings.SiteURL
 	}
-	serverID := api.GetDiagnosticId()
+	serverID := api.GetDiagnosticID()
 	cfg := createBoardsConfig(*mmconfig, baseURL, serverID)
 	sqlDB, err := api.GetMasterDB()
 	if err != nil {

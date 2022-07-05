@@ -189,7 +189,7 @@ func (a *serviceAPIAdapter) GetMasterDB() (*sql.DB, error) {
 //
 // System service.
 //
-func (a *serviceAPIAdapter) GetDiagnosticId() string {
+func (a *serviceAPIAdapter) GetDiagnosticID() string {
 	return a.api.systemService.GetDiagnosticId()
 }
 

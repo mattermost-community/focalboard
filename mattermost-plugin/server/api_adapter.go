@@ -195,7 +195,7 @@ func (a *pluginAPIAdapter) GetMasterDB() (*sql.DB, error) {
 //
 // System service.
 //
-func (a *pluginAPIAdapter) GetDiagnosticId() string {
+func (a *pluginAPIAdapter) GetDiagnosticID() string {
 	return a.api.GetDiagnosticId()
 }
 
