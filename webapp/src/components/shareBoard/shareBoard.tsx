@@ -45,7 +45,6 @@ import TeamPermissionsRow from './teamPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
 import './shareBoard.scss'
-import { config } from 'process'
 
 type Props = {
     onClose: () => void
