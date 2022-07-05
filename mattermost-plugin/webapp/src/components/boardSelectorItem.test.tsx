@@ -12,8 +12,24 @@ import {wrapIntl} from '../../tests/utils'
 import BoardSelectorItem from './boardSelectorItem'
 
 describe('components/boardSelectorItem', () => {
+    it('renders board without title', async () => {
+        const board = createBoard()
+        board.title = ""
+
+        const {container} = render(wrapIntl(
+            <BoardSelectorItem
+                item={board}
+                currentChannel={board.channelId || ''}
+                linkBoard={jest.fn()}
+                unlinkBoard={jest.fn()}
+            />,
+        ))
+        expect(container).toMatchSnapshot()
+    })
+
     it('renders linked board', async () => {
         const board = createBoard()
+        board.title = "Test title"
 
         const {container} = render(wrapIntl(
             <BoardSelectorItem
@@ -28,6 +44,7 @@ describe('components/boardSelectorItem', () => {
 
     it('renders not linked board', async () => {
         const board = createBoard()
+        board.title = "Test title"
 
         const {container} = render(wrapIntl(
             <BoardSelectorItem
@@ -46,7 +63,7 @@ describe('components/boardSelectorItem', () => {
         const linkBoard = jest.fn()
         const unlinkBoard = jest.fn()
 
-        const {container} = render(wrapIntl(
+        render(wrapIntl(
             <BoardSelectorItem
                 item={board}
                 currentChannel={'other-channel'}
@@ -67,7 +84,7 @@ describe('components/boardSelectorItem', () => {
         const linkBoard = jest.fn()
         const unlinkBoard = jest.fn()
 
-        const {container} = render(wrapIntl(
+        render(wrapIntl(
             <BoardSelectorItem
                 item={board}
                 currentChannel={board.channelId || ''}

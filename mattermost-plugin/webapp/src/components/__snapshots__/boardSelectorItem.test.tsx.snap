@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/boardSelectorItem renders linked board 1`] = `
+exports[`components/boardSelectorItem renders board without title 1`] = `
 <div>
   <div
     class="BoardSelectorItem"
@@ -36,6 +36,42 @@ exports[`components/boardSelectorItem renders linked board 1`] = `
 </div>
 `;
 
+exports[`components/boardSelectorItem renders linked board 1`] = `
+<div>
+  <div
+    class="BoardSelectorItem"
+  >
+    <span
+      class="icon"
+    />
+    <div
+      class="resultLine"
+    >
+      <div
+        class="resultTitle"
+      >
+        Test title
+      </div>
+      <div
+        class="resultDescription"
+      />
+    </div>
+    <div
+      class="linkUnlinkButton"
+    >
+      <button
+        class="Button emphasis--secondary"
+        type="button"
+      >
+        <span>
+          Unlink
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`components/boardSelectorItem renders not linked board 1`] = `
 <div>
   <div
@@ -50,7 +86,7 @@ exports[`components/boardSelectorItem renders not linked board 1`] = `
       <div
         class="resultTitle"
       >
-        Untitled Board
+        Test title
       </div>
       <div
         class="resultDescription"
