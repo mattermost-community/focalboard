@@ -106,7 +106,7 @@ generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go generate ./...
 
-server-lint: templates-archive ## Run linters on server code.
+server-lint: setup-go-work templates-archive ## Run linters on server code.
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
