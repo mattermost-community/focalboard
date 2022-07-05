@@ -49,7 +49,7 @@ setup-go-work: ## Sets up your go.work file for local development
 setup-go-work-ci: ## Sets up a go.work file for CI
 	./scripts/setup_go_work_ci.sh
 
-templates-archive: ## Build templates archive file
+templates-archive: setup-go-work-ci ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
 
 server: templates-archive ## Build server for local environment.
@@ -109,7 +109,7 @@ generate: ## Install and run code generators.
 	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
 	cd server; go generate ./...
 
-server-lint: setup-go-work-ci templates-archive ## Run linters on server code.
+server-lint: templates-archive ## Run linters on server code.
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
