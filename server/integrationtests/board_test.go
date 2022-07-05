@@ -585,6 +585,50 @@ func TestSearchBoards(t *testing.T) {
 			})
 		}
 	})
+
+	t.Run("should only return boards in the teams that the user belongs to", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+
+		b1, err := th.Server.App().CreateBoard(
+			&model.Board{Title: "public board", Type: model.BoardTypeOpen, TeamID: "test-team"},
+			userAdmin,
+			true,
+		)
+		require.NoError(t, err)
+
+		_, err = th.Server.App().CreateBoard(
+			&model.Board{Title: "private board", Type: model.BoardTypePrivate, TeamID: "test-team"},
+			userAdmin,
+			false,
+		)
+		require.NoError(t, err)
+
+		_, err = th.Server.App().CreateBoard(
+			&model.Board{Title: "public board in empty team", Type: model.BoardTypeOpen, TeamID: "empty-team"},
+			userAdmin,
+			true,
+		)
+		require.NoError(t, err)
+
+		_, err = th.Server.App().CreateBoard(
+			&model.Board{Title: "private board in empty team", Type: model.BoardTypePrivate, TeamID: "empty-team"},
+			userAdmin,
+			true,
+		)
+		require.NoError(t, err)
+
+		boards, resp := clients.Viewer.SearchBoardsForTeam(testTeamID, "board")
+		th.CheckOK(resp)
+
+		boardIDs := []string{}
+		for _, board := range boards {
+			boardIDs = append(boardIDs, board.ID)
+		}
+
+		require.ElementsMatch(t, []string{b1.ID}, boardIDs)
+	})
 }
 
 func TestGetBoard(t *testing.T) {
