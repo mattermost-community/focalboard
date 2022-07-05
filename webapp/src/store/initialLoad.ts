@@ -54,7 +54,7 @@ export const initialReadOnlyLoad = createAsyncThunk(
         if (!board) {
             throw new Error(ErrorId.InvalidReadOnlyBoard)
         }
-        
+
         return {board, blocks}
     },
 )
