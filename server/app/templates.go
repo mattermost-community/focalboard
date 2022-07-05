@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	defaultTemplateVersion = 3
+	defaultTemplateVersion = 4
 )
 
 func (a *App) InitTemplates() error {
