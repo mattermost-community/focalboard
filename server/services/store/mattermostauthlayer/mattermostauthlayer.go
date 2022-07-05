@@ -753,50 +753,6 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 	return members, nil
 }
 
-// searchBoardsForUser returns all boards that match with the
-// term that are either private and which the user is a member of, or
-// they're open, regardless of the user membership.
-// Search is case-insensitive.
-func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
-	// TODO: Make this efficient
-	members, err := s.GetMembersForUser(userID)
-	if err != nil {
-		return nil, err
-	}
-
-	explicitBoards, err := s.Store.SearchBoardsForUser(term, userID)
-	if err != nil {
-		return nil, err
-	}
-
-	explicitBoardsExists := map[string]bool{}
-	for _, b := range explicitBoards {
-		explicitBoardsExists[b.ID] = true
-	}
-
-	boards := explicitBoards
-	for _, m := range members {
-		if explicitBoardsExists[m.BoardID] {
-			continue
-		}
-
-		board, err := s.GetBoard(m.BoardID)
-		if err != nil {
-			return nil, err
-		}
-		for _, q := range strings.Fields(term) {
-			if !strings.Contains(board.Title, q) {
-				continue
-			}
-		}
-		if board.IsTemplate {
-			continue
-		}
-		boards = append(boards, board)
-	}
-	return boards, nil
-}
-
 func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
 	// TODO: Make this efficient
 	members, err := s.GetMembersForUser(userID)
