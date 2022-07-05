@@ -70,7 +70,7 @@ func (b *BoardsApp) setConfiguration(configuration *configuration) {
 // OnConfigurationChange is invoked when configuration changes may have been made.
 func (b *BoardsApp) OnConfigurationChange() error {
 	// Have we been setup by OnActivate?
-	if b.wsPluginAdapter == nil {
+	if b.server == nil {
 		return nil
 	}
 	mmconfig := b.servicesAPI.GetConfig()

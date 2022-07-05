@@ -17,7 +17,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var ErrPluginNotAllowed = errors.New("Boards plugin not allowed while Boards product enabled.")
+var ErrPluginNotAllowed = errors.New("boards plugin not allowed while Boards product enabled")
 
 // Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
 type Plugin struct {
@@ -49,7 +49,7 @@ func (p *Plugin) OnActivate() error {
 
 	boardsApp, err := boards.NewBoardsApp(adapter)
 	if err != nil {
-		return fmt.Errorf("Cannot activate plugin: %w", err)
+		return fmt.Errorf("cannot activate plugin: %w", err)
 	}
 
 	p.boardsApp = boardsApp

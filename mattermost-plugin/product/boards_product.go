@@ -193,12 +193,12 @@ func (bp *boardsProduct) Start() error {
 	adapter := newServiceAPIAdapter(bp)
 	boardsApp, err := boards.NewBoardsApp(adapter)
 	if err != nil {
-		return fmt.Errorf("Failed to create Boards service: %w", err)
+		return fmt.Errorf("failed to create Boards service: %w", err)
 	}
 
 	bp.boardsApp = boardsApp
 	if err := bp.boardsApp.Start(); err != nil {
-		return fmt.Errorf("Failed to start Boards service: %w", err)
+		return fmt.Errorf("failed to start Boards service: %w", err)
 	}
 
 	return nil
@@ -212,7 +212,7 @@ func (bp *boardsProduct) Stop() error {
 	}
 
 	if err := bp.boardsApp.Stop(); err != nil {
-		return fmt.Errorf("Error while stopping Boards service: %w", err)
+		return fmt.Errorf("error while stopping Boards service: %w", err)
 	}
 
 	return nil

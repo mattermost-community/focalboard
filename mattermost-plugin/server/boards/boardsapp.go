@@ -71,7 +71,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	cfg := createBoardsConfig(*mmconfig, baseURL, serverID)
 	sqlDB, err := api.GetMasterDB()
 	if err != nil {
-		return nil, fmt.Errorf("Cannot access database while initializing Boards: %w", err)
+		return nil, fmt.Errorf("cannot access database while initializing Boards: %w", err)
 	}
 
 	storeParams := sqlstore.Params{
@@ -142,7 +142,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 
 	server, err := server.New(params)
 	if err != nil {
-		return nil, fmt.Errorf("Error initalizing the server: %w", err)
+		return nil, fmt.Errorf("error initializing the server: %w", err)
 	}
 
 	backendParams.appAPI.init(db, server.App())
@@ -150,11 +150,11 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	if utils.IsCloudLicense(api.GetLicense()) {
 		limits, err := api.GetCloudLimits()
 		if err != nil {
-			return nil, fmt.Errorf("Error fetching cloud limits when starting Boards: %w", err)
+			return nil, fmt.Errorf("error fetching cloud limits when starting Boards: %w", err)
 		}
 
 		if err := server.App().SetCloudLimits(limits); err != nil {
-			return nil, fmt.Errorf("Error setting cloud limits when starting Boards: %w", err)
+			return nil, fmt.Errorf("error setting cloud limits when starting Boards: %w", err)
 		}
 	}
 
@@ -168,7 +168,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 
 func (b *BoardsApp) Start() error {
 	if err := b.server.Start(); err != nil {
-		return fmt.Errorf("Error starting Boards server: %w", err)
+		return fmt.Errorf("error starting Boards server: %w", err)
 	}
 	return nil
 }

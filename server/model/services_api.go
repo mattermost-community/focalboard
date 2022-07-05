@@ -54,16 +54,6 @@ type ServicesAPI interface {
 	// Config service
 	GetConfig() *mm_model.Config
 
-	// FileStore service
-	/*
-		Reader(path string) (filestore.ReadCloseSeeker, error)
-		FileExists(path string) (bool, error)
-		CopyFile(oldPath, newPath string) error
-		MoveFile(oldPath, newPath string) error
-		WriteFile(fr io.Reader, path string) (int64, error)
-		RemoveFile(path string) error
-	*/
-
 	// Logger service
 	GetLogger() mlog.LoggerIFace
 

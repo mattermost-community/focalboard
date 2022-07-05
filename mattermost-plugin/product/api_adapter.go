@@ -39,7 +39,7 @@ func newServiceAPIAdapter(api *boardsProduct) *serviceAPIAdapter {
 }
 
 //
-// Channels service
+// Channels service.
 //
 
 func (a *serviceAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
@@ -58,7 +58,7 @@ func (a *serviceAPIAdapter) GetChannelMember(channelID string, userID string) (*
 }
 
 //
-// Post service
+// Post service.
 //
 
 func (a *serviceAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
@@ -67,7 +67,7 @@ func (a *serviceAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, err
 }
 
 //
-// User service
+// User service.
 //
 
 func (a *serviceAPIAdapter) GetUserByID(userID string) (*mm_model.User, error) {
@@ -96,7 +96,7 @@ func (a *serviceAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOption
 }
 
 //
-// Team service
+// Team service.
 //
 
 func (a *serviceAPIAdapter) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
@@ -110,7 +110,7 @@ func (a *serviceAPIAdapter) CreateMember(teamID string, userID string) (*mm_mode
 }
 
 //
-// Permissions service
+// Permissions service.
 //
 
 func (a *serviceAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
@@ -118,21 +118,21 @@ func (a *serviceAPIAdapter) HasPermissionToTeam(userID, teamID string, permissio
 }
 
 //
-// Bot service
+// Bot service.
 //
 func (a *serviceAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 	return a.api.botService.EnsureBot(a.ctx, boardsProductID, bot)
 }
 
 //
-// License service
+// License service.
 //
 func (a *serviceAPIAdapter) GetLicense() *mm_model.License {
 	return a.api.licenseService.GetLicense()
 }
 
 //
-// FileInfoStore service
+// FileInfoStore service.
 //
 func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
 	fi, appErr := a.api.fileInfoStoreService.GetFileInfo(fileID)
@@ -140,7 +140,7 @@ func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, erro
 }
 
 //
-// Cluster store
+// Cluster store.
 //
 func (a *serviceAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
 	a.api.clusterService.PublishWebSocketEvent(boardsProductID, event, payload, broadcast)
@@ -151,57 +151,28 @@ func (a *serviceAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterE
 }
 
 //
-// Cloud service
+// Cloud service.
 //
 func (a *serviceAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 	return a.api.cloudService.GetCloudLimits()
 }
 
 //
-// Config service
+// Config service.
 //
 func (a *serviceAPIAdapter) GetConfig() *mm_model.Config {
 	return a.api.configService.Config()
 }
 
 //
-// FileStore service
-//
-/*
-func (a *serviceAPIAdapter) Reader(path string) (filestore.ReadCloseSeeker, error) {
-	return a.api.filestoreService.Reader(path)
-}
-
-func (a *serviceAPIAdapter) FileExists(path string) (bool, error) {
-	return a.api.filestoreService.FileExists(path)
-}
-
-func (a *serviceAPIAdapter) CopyFile(oldPath, newPath string) error {
-	return a.api.filestoreService.CopyFile(oldPath, newPath)
-}
-
-func (a *serviceAPIAdapter) MoveFile(oldPath, newPath string) error {
-	return a.api.filestoreService.MoveFile(oldPath, newPath)
-}
-
-func (a *serviceAPIAdapter) WriteFile(fr io.Reader, path string) (int64, error) {
-	return a.api.filestoreService.WriteFile(fr, path)
-}
-
-func (a *serviceAPIAdapter) RemoveFile(path string) error {
-	return a.api.filestoreService.RemoveFile(path)
-}
-*/
-
-//
-// Logger service
+// Logger service.
 //
 func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 	return a.api.logger
 }
 
 //
-// KVStore service
+// KVStore service.
 //
 func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
 	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
@@ -209,18 +180,18 @@ func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options m
 }
 
 //
-// Store service
+// Store service.
 //
 func (a *serviceAPIAdapter) GetMasterDB() (*sql.DB, error) {
 	return a.api.storeService.GetMasterDB(), nil
 }
 
 //
-// System service
+// System service.
 //
 func (a *serviceAPIAdapter) GetDiagnosticId() string {
 	return a.api.systemService.GetDiagnosticId()
 }
 
-// Ensure the adapter implements ServicesAPI
+// Ensure the adapter implements ServicesAPI.
 var _ model.ServicesAPI = &serviceAPIAdapter{}

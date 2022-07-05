@@ -29,7 +29,7 @@ func normalizeAppErr(appErr *mm_model.AppError) error {
 
 // pluginAPIAdapter is an adapter that ensures all Plugin API methods have the same signature as the
 // services API.
-// Note: this will be removed when plugin builds are no longer needed
+// Note: this will be removed when plugin builds are no longer needed.
 type pluginAPIAdapter struct {
 	api          plugin.API
 	storeService storeService
@@ -45,7 +45,7 @@ func newServiceAPIAdapter(api plugin.API, storeService storeService, logger mlog
 }
 
 //
-// Channels service
+// Channels service.
 //
 
 func (a *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
@@ -64,7 +64,7 @@ func (a *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*m
 }
 
 //
-// Post service
+// Post service.
 //
 
 func (a *pluginAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
@@ -73,7 +73,7 @@ func (a *pluginAPIAdapter) CreatePost(post *mm_model.Post) (*mm_model.Post, erro
 }
 
 //
-// User service
+// User service.
 //
 
 func (a *pluginAPIAdapter) GetUserByID(userID string) (*mm_model.User, error) {
@@ -102,7 +102,7 @@ func (a *pluginAPIAdapter) GetUsersFromProfiles(options *mm_model.UserGetOptions
 }
 
 //
-// Team service
+// Team service.
 //
 
 func (a *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
@@ -116,7 +116,7 @@ func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model
 }
 
 //
-// Permissions service
+// Permissions service.
 //
 
 func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
@@ -124,21 +124,21 @@ func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission
 }
 
 //
-// Bot service
+// Bot service.
 //
 func (a *pluginAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 	return a.api.EnsureBotUser(bot)
 }
 
 //
-// License service
+// License service.
 //
 func (a *pluginAPIAdapter) GetLicense() *mm_model.License {
 	return a.api.GetLicense()
 }
 
 //
-// FileInfoStore service
+// FileInfoStore service.
 //
 func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
 	fi, appErr := a.api.GetFileInfo(fileID)
@@ -146,7 +146,7 @@ func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error
 }
 
 //
-// Cluster store
+// Cluster store.
 //
 func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
 	a.api.PublishWebSocketEvent(event, payload, broadcast)
@@ -157,58 +157,28 @@ func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEv
 }
 
 //
-// Cloud service
+// Cloud service.
 //
 func (a *pluginAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 	return a.api.GetCloudLimits()
 }
 
 //
-// Config service
+// Config service.
 //
 func (a *pluginAPIAdapter) GetConfig() *mm_model.Config {
 	return a.api.GetUnsanitizedConfig()
 }
 
 //
-// FileStore service
-//
-
-/*
-func (a *pluginAPIAdapter) Reader(path string) (filestore.ReadCloseSeeker, error) {
-	return a.api.File.filestoreService.Reader(path)
-}
-
-func (a *pluginAPIAdapter) FileExists(path string) (bool, error) {
-	return a.api.File.filestoreService.FileExists(path)
-}
-
-func (a *pluginAPIAdapter) CopyFile(oldPath, newPath string) error {
-	return a.api.filestoreService.CopyFile(oldPath, newPath)
-}
-
-func (a *pluginAPIAdapter) MoveFile(oldPath, newPath string) error {
-	return a.api.filestoreService.MoveFile(oldPath, newPath)
-}
-
-func (a *pluginAPIAdapter) WriteFile(fr io.Reader, path string) (int64, error) {
-	return a.api.filestoreService.WriteFile(fr, path)
-}
-
-func (a *pluginAPIAdapter) RemoveFile(path string) error {
-	return a.api.filestoreService.RemoveFile(path)
-}
-*/
-
-//
-// Logger service
+// Logger service.
 //
 func (a *pluginAPIAdapter) GetLogger() mlog.LoggerIFace {
 	return a.logger
 }
 
 //
-// KVStore service
+// KVStore service.
 //
 func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
 	b, appErr := a.api.KVSetWithOptions(key, value, options)
@@ -216,18 +186,18 @@ func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options mm
 }
 
 //
-// Store service
+// Store service.
 //
 func (a *pluginAPIAdapter) GetMasterDB() (*sql.DB, error) {
 	return a.storeService.GetMasterDB()
 }
 
 //
-// System service
+// System service.
 //
 func (a *pluginAPIAdapter) GetDiagnosticId() string {
 	return a.api.GetDiagnosticId()
 }
 
-// Ensure the adapter implements ServicesAPI
+// Ensure the adapter implements ServicesAPI.
 var _ model.ServicesAPI = &pluginAPIAdapter{}
