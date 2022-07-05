@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/go-git/go-git/v5 v5.1.0
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220630162014-b45ff0be5d61
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220705131644-b99bd0d04915
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.2
 	sigs.k8s.io/yaml v1.2.0
