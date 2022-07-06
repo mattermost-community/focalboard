@@ -10,7 +10,7 @@ export const TelemetryActions = {
     ClickChannelHeader: 'clickChannelHeader',
     ClickChannelIntro: 'channelIntro_boardLink',
     ViewBoard: 'viewBoard',
-    CreateBoard: 'createBoard',
+    CreateEmptyBoard: 'createBoard',
     DuplicateBoard: 'duplicateBoard',
     DeleteBoard: 'deleteBoard',
     DeleteBoardTemplate: 'deleteBoardTemplate',
