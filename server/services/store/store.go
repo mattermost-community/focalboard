@@ -57,7 +57,6 @@ type Store interface {
 	GetUserByID(userID string) (*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
-	GetUserPreferences(userID string)
 	CreateUser(user *model.User) error
 	UpdateUser(user *model.User) error
 	UpdateUserPassword(username, password string) error
