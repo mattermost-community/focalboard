@@ -12,6 +12,8 @@ import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
+import './filterValue.scss'
+
 type Props = {
     view: BoardView
     filter: FilterClause
@@ -35,7 +37,7 @@ const filterValue = (props: Props): JSX.Element|null => {
     }
 
     return (
-        <MenuWrapper>
+        <MenuWrapper className='filterValue'>
             <Button>{displayValue}</Button>
             <Menu>
                 {template.options.map((o) => (

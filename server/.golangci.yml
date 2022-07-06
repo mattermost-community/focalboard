@@ -65,3 +65,4 @@ linters:
     - unconvert
     - unused
     - whitespace
+    - gocyclo

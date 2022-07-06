@@ -150,4 +150,6 @@ type Store interface {
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)
+
+	SendMessage(message, postType string, receipts []string) error
 }

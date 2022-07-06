@@ -13,6 +13,7 @@ import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
+
 import {BoardsCloudLimits} from './boardsCloudLimits'
 
 //
@@ -808,7 +809,14 @@ class OctoClient {
         return (await this.getJson(response, {})) as PrepareOnboardingResponse
     }
 
-    // limits
+    async notifyAdminUpgrade(): Promise<void> {
+        const path = `${this.teamsPath()}/notifyadminupgrade`
+        await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+    }
+
     async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
         const path = '/api/v2/limits'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
