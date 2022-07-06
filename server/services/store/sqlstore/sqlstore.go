@@ -9,6 +9,7 @@ import (
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -32,14 +33,6 @@ type SQLStore struct {
 // MutexFactory is used by the store in plugin mode to generate
 // a cluster mutex.
 type MutexFactory func(name string) (*cluster.Mutex, error)
-
-type NotSupportedError struct {
-	msg string
-}
-
-func (pe NotSupportedError) Error() string {
-	return pe.msg
-}
 
 // New creates a new SQL implementation of the store.
 func New(params Params) (*SQLStore, error) {
@@ -136,9 +129,9 @@ func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, err
 }
 
 func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query string) ([]*mmModel.Channel, error) {
-	return nil, NotSupportedError{"search user channels not supported on standalone mode"}
+	return nil, store.NotSupportedError{"search user channels not supported on standalone mode"}
 }
 
 func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmModel.Channel, error) {
-	return nil, NotSupportedError{"get channel not supported on standalone mode"}
+	return nil, store.NotSupportedError{"get channel not supported on standalone mode"}
 }

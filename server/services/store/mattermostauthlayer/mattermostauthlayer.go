@@ -25,14 +25,6 @@ var systemsBot = &mmModel.Bot{
 	DisplayName: "System",
 }
 
-type NotSupportedError struct {
-	msg string
-}
-
-func (pe NotSupportedError) Error() string {
-	return pe.msg
-}
-
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
@@ -117,19 +109,19 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 }
 
 func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
-	return NotSupportedError{"no user creation allowed from focalboard, create it using mattermost"}
+	return store.NotSupportedError{"no user creation allowed from focalboard, create it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateUser(user *model.User) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
@@ -178,27 +170,27 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 }
 
 func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model.Session, error) {
-	return nil, NotSupportedError{"sessions not used when using mattermost"}
+	return nil, store.NotSupportedError{"sessions not used when using mattermost"}
 }
 
 func (s *MattermostAuthLayer) CreateSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) RefreshSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) UpdateSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) DeleteSession(sessionID string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
 }
 
 func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {

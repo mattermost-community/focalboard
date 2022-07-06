@@ -154,3 +154,11 @@ type Store interface {
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	SendMessage(message, postType string, receipts []string) error
 }
+
+type NotSupportedError struct {
+	msg string
+}
+
+func (pe NotSupportedError) Error() string {
+	return pe.msg
+}
