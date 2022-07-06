@@ -1,4 +1,4 @@
-CREATE TABLE {{.prefix}}file_info (
+CREATE TABLE IF NOT EXISTS {{.prefix}}file_info (
     id varchar(26) NOT NULL,
     create_at BIGINT NOT NULL,
     delete_at BIGINT,

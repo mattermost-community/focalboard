@@ -14,6 +14,8 @@ import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
 
+import {BoardsCloudLimits} from './boardsCloudLimits'
+
 //
 // OctoClient is the client interface to the server APIs
 //
@@ -141,7 +143,6 @@ class OctoClient {
         }
     }
 
-    // ToDo: document
     private teamPath(teamId?: string): string {
         let teamIdToUse = teamId
         if (!teamId) {
@@ -618,14 +619,6 @@ class OctoClient {
         return this.getBoardsWithPath(path)
     }
 
-    // Boards
-    // ToDo: .
-    // - goal? make the interface show boards & blocks for boards
-    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
-    // - selectors for boards, current team, board members
-    // - ops to add/delete a board, add/delete board members, change roles? .
-    // - WS definition and implementation
-
     async getBoards(): Promise<Board[]> {
         const path = this.teamPath() + '/boards'
         return this.getBoardsWithPath(path)
@@ -814,6 +807,26 @@ class OctoClient {
         }
 
         return (await this.getJson(response, {})) as PrepareOnboardingResponse
+    }
+
+    async notifyAdminUpgrade(): Promise<void> {
+        const path = `${this.teamsPath()}/notifyadminupgrade`
+        await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+    }
+
+    async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
+        const path = '/api/v2/limits'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        const limits = (await this.getJson(response, {})) as BoardsCloudLimits
+        Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
+        return limits
     }
 }
 

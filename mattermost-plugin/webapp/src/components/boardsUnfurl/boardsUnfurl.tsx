@@ -20,9 +20,11 @@ import octoClient from './../../../../../webapp/src/octoClient'
 import wsClient, {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
 import manifest from '../../manifest'
 
-const Avatar = (window as any).Components.Avatar
-const Timestamp = (window as any).Components.Timestamp
-const imageURLForUser = (window as any).Components.imageURLForUser
+
+const noop = () => ''
+const Avatar = (window as any).Components?.Avatar || noop
+const Timestamp = (window as any).Components?.Timestamp || noop
+const imageURLForUser = (window as any).Components?.imageURLForUser || noop
 
 import './boardsUnfurl.scss'
 import '../../../../../webapp/src/styles/labels.scss'
@@ -60,7 +62,7 @@ class FocalboardEmbeddedData {
     }
 }
 
-const BoardsUnfurl = (props: Props): JSX.Element => {
+export const BoardsUnfurl = (props: Props): JSX.Element => {
     if (!props.embed || !props.embed.data) {
         return <></>
     }
@@ -210,7 +212,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                         </div>
 
                         {/* Body of the Card*/}
-                        {html !== '' &&
+                        {!card.limited && html !== '' &&
                             <div className='body'>
                                 <div
                                     dangerouslySetInnerHTML={{__html: html}}
@@ -218,62 +220,71 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                             </div>
                         }
 
-                        {/* Footer of the Card*/}
-                        <div className='footer'>
-                            <div className='avatar'>
-                                <Avatar
-                                    size={'md'}
-                                    url={imageURLForUser(card.createdBy)}
-                                    className={'avatar-post-preview'}
+                        {card.limited &&
+                            <p className='limited'>
+                                <FormattedMessage
+                                    id='BoardsUnfurl.Limited'
+                                    defaultMessage={'Additional details are hidden due to the card being archived'}
                                 />
-                            </div>
-                            <div className='timestamp_properties'>
-                                <div className='properties'>
-                                    {propertiesToDisplay.map((property) => (
-                                        <div
-                                            key={property.optionValue}
-                                            className={`property ${property.optionValueColour}`}
-                                            title={`${property.optionName}`}
-                                            style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
-                                        >
-                                            {property.optionValue}
-                                        </div>
-                                    ))}
-                                    {remainder > 0 &&
-                                        <span className='remainder'>
-                                            <FormattedMessage
-                                                id='BoardsUnfurl.Remainder'
-                                                defaultMessage='+{remainder} more'
-                                                values={{
-                                                    remainder,
-                                                }}
-                                            />
-                                        </span>
-                                    }
-                                </div>
-                                <span className='post-preview__time'>
-                                    <FormattedMessage
-                                        id='BoardsUnfurl.Updated'
-                                        defaultMessage='Updated {time}'
-                                        values={{
-                                            time: (
-                                                <Timestamp
-                                                    value={card.updateAt}
-                                                    units={[
-                                                        'now',
-                                                        'minute',
-                                                        'hour',
-                                                        'day',
-                                                    ]}
-                                                    useTime={false}
-                                                    day={'numeric'}
-                                                />
-                                            ),
-                                        }}
+                            </p>}
+
+                        {/* Footer of the Card*/}
+                        {!card.limited &&
+                            <div className='footer'>
+                                <div className='avatar'>
+                                    <Avatar
+                                        size={'md'}
+                                        url={imageURLForUser(card.createdBy)}
+                                        className={'avatar-post-preview'}
                                     />
-                                </span>
-                            </div>
-                        </div>
+                                </div>
+                                <div className='timestamp_properties'>
+                                    <div className='properties'>
+                                        {propertiesToDisplay.map((property) => (
+                                            <div
+                                                key={property.optionValue}
+                                                className={`property ${property.optionValueColour}`}
+                                                title={`${property.optionName}`}
+                                                style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
+                                            >
+                                                {property.optionValue}
+                                            </div>
+                                        ))}
+                                        {remainder > 0 &&
+                                            <span className='remainder'>
+                                                <FormattedMessage
+                                                    id='BoardsUnfurl.Remainder'
+                                                    defaultMessage='+{remainder} more'
+                                                    values={{
+                                                        remainder,
+                                                    }}
+                                                />
+                                            </span>
+                                        }
+                                    </div>
+                                    <span className='post-preview__time'>
+                                        <FormattedMessage
+                                            id='BoardsUnfurl.Updated'
+                                            defaultMessage='Updated {time}'
+                                            values={{
+                                                time: (
+                                                    <Timestamp
+                                                        value={card.updateAt}
+                                                        units={[
+                                                            'now',
+                                                            'minute',
+                                                            'hour',
+                                                            'day',
+                                                        ]}
+                                                        useTime={false}
+                                                        day={'numeric'}
+                                                    />
+                                                ),
+                                            }}
+                                        />
+                                    </span>
+                                </div>
+                            </div>}
                     </a>
                 }
                 {loading &&

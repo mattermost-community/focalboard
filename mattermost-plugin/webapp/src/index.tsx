@@ -40,7 +40,10 @@ import wsClient, {
     ACTION_UPDATE_BLOCK,
     ACTION_UPDATE_CLIENT_CONFIG,
     ACTION_UPDATE_SUBSCRIPTION,
-    ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BOARD_CATEGORY, ACTION_UPDATE_BOARD,
+    ACTION_UPDATE_CARD_LIMIT_TIMESTAMP,
+    ACTION_UPDATE_CATEGORY,
+    ACTION_UPDATE_BOARD_CATEGORY,
+    ACTION_UPDATE_BOARD,
 } from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -50,6 +53,7 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge";
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -180,8 +184,10 @@ export default class Plugin {
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
+        this.registry?.registerPostTypeComponent('custom_cloud_upgrade_nudge', CloudUpgradeNudge)
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
             let preferences
             try {

@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strings"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -17,6 +20,11 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+var systemsBot = &mmModel.Bot{
+	Username:    mmModel.BotSystemBotUsername,
+	DisplayName: "System",
+}
+
 type NotSupportedError struct {
 	msg string
 }
@@ -28,20 +36,32 @@ func (pe NotSupportedError) Error() string {
 // Store represents the abstraction of the data storage.
 type MattermostAuthLayer struct {
 	store.Store
-	dbType    string
-	mmDB      *sql.DB
-	logger    *mlog.Logger
-	pluginAPI plugin.API
+	dbType      string
+	mmDB        *sql.DB
+	logger      *mlog.Logger
+	pluginAPI   plugin.API
+	tablePrefix string
+	client      *pluginapi.Client
 }
 
 // New creates a new SQL implementation of the store.
-func New(dbType string, db *sql.DB, store store.Store, logger *mlog.Logger, pluginAPI plugin.API) (*MattermostAuthLayer, error) {
+func New(
+	dbType string,
+	db *sql.DB,
+	store store.Store,
+	logger *mlog.Logger,
+	pluginAPI plugin.API,
+	tablePrefix string,
+	client *pluginapi.Client,
+) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
-		Store:     store,
-		dbType:    dbType,
-		mmDB:      db,
-		logger:    logger,
-		pluginAPI: pluginAPI,
+		Store:       store,
+		dbType:      dbType,
+		mmDB:        db,
+		logger:      logger,
+		pluginAPI:   pluginAPI,
+		tablePrefix: tablePrefix,
+		client:      client,
 	}
 
 	return layer, nil
@@ -216,7 +236,8 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 		Select("t.Id", "t.DisplayName").
 		From("Teams as t").
 		Join("TeamMembers as tm on t.Id=tm.TeamId").
-		Where(sq.Eq{"tm.UserId": userID})
+		Where(sq.Eq{"tm.UserId": userID}).
+		Where(sq.Eq{"tm.DeleteAt": 0})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -381,6 +402,7 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		DeleteAt:    mmUser.DeleteAt,
 		IsBot:       mmUser.IsBot,
 		IsGuest:     mmUser.IsGuest(),
+		Roles:       mmUser.Roles,
 	}
 }
 
@@ -464,4 +486,189 @@ func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.pluginAPI.GetLicense()
+}
+
+func boardFields(prefix string) []string {
+	fields := []string{
+		"id",
+		"team_id",
+		"COALESCE(channel_id, '')",
+		"COALESCE(created_by, '')",
+		"modified_by",
+		"type",
+		"title",
+		"description",
+		"icon",
+		"show_description",
+		"is_template",
+		"template_version",
+		"COALESCE(properties, '{}')",
+		"COALESCE(card_properties, '[]')",
+		"create_at",
+		"update_at",
+		"delete_at",
+	}
+
+	if prefix == "" {
+		return fields
+	}
+
+	prefixedFields := make([]string, len(fields))
+	for i, field := range fields {
+		if strings.HasPrefix(field, "COALESCE(") {
+			prefixedFields[i] = strings.Replace(field, "COALESCE(", "COALESCE("+prefix, 1)
+		} else {
+			prefixedFields[i] = prefix + field
+		}
+	}
+	return prefixedFields
+}
+
+// SearchBoardsForUser returns all boards that match with the
+// term that are either private and which the user is a member of, or
+// they're open, regardless of the user membership.
+// Search is case-insensitive.
+func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		Distinct().
+		From(s.tablePrefix + "boards as b").
+		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
+		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Eq{"tm.userID": userID}).
+		Where(sq.Eq{"tm.deleteAt": 0}).
+		Where(sq.Or{
+			sq.Eq{"b.type": model.BoardTypeOpen},
+			sq.And{
+				sq.Eq{"b.type": model.BoardTypePrivate},
+				sq.Eq{"bm.user_id": userID},
+			},
+		})
+
+	if term != "" {
+		// break search query into space separated words
+		// and search for each word.
+		// This should later be upgraded to industrial-strength
+		// word tokenizer, that uses much more than space
+		// to break words.
+
+		conditions := sq.Or{}
+
+		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		}
+
+		query = query.Where(conditions)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
+func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
+	boards := []*model.Board{}
+
+	for rows.Next() {
+		var board model.Board
+		var propertiesBytes []byte
+		var cardPropertiesBytes []byte
+
+		err := rows.Scan(
+			&board.ID,
+			&board.TeamID,
+			&board.ChannelID,
+			&board.CreatedBy,
+			&board.ModifiedBy,
+			&board.Type,
+			&board.Title,
+			&board.Description,
+			&board.Icon,
+			&board.ShowDescription,
+			&board.IsTemplate,
+			&board.TemplateVersion,
+			&propertiesBytes,
+			&cardPropertiesBytes,
+			&board.CreateAt,
+			&board.UpdateAt,
+			&board.DeleteAt,
+		)
+		if err != nil {
+			s.logger.Error("boardsFromRows scan error", mlog.Err(err))
+			return nil, err
+		}
+
+		err = json.Unmarshal(propertiesBytes, &board.Properties)
+		if err != nil {
+			s.logger.Error("board properties unmarshal error", mlog.Err(err))
+			return nil, err
+		}
+		err = json.Unmarshal(cardPropertiesBytes, &board.CardProperties)
+		if err != nil {
+			s.logger.Error("board card properties unmarshal error", mlog.Err(err))
+			return nil, err
+		}
+
+		boards = append(boards, &board)
+	}
+
+	return boards, nil
+}
+
+func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.pluginAPI.GetCloudLimits()
+}
+
+func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
+	botID, err := s.client.Bot.EnsureBot(systemsBot)
+	if err != nil {
+		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
+		return "", err
+	}
+
+	return botID, nil
+}
+
+func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
+	botID, err := s.getSystemBotID()
+	if err != nil {
+		return err
+	}
+
+	for _, receipt := range receipts {
+		channel, err := s.pluginAPI.GetDirectChannel(botID, receipt)
+		if err != nil {
+			s.logger.Error(
+				"failed to get DM channel between system bot and user for receipt",
+				mlog.String("receipt", receipt),
+				mlog.String("user_id", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+
+		post := &mmModel.Post{
+			Message:   message,
+			UserId:    botID,
+			ChannelId: channel.Id,
+			Type:      postType,
+		}
+
+		if _, err := s.pluginAPI.CreatePost(post); err != nil {
+			s.logger.Error(
+				"failed to send message to receipt from SendMessage",
+				mlog.String("receipt", receipt),
+				mlog.Err(err),
+			)
+			continue
+		}
+	}
+
+	return nil
 }

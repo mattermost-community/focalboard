@@ -10,8 +10,6 @@ import {Constants} from "../constants"
 
 import {RootState} from './index'
 
-// ToDo: move this to team templates or simply templates
-
 export const fetchGlobalTemplates = createAsyncThunk(
     'globalTemplates/fetch',
     async () => {

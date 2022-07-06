@@ -110,7 +110,7 @@ const WelcomePage = () => {
                 <div className='WelcomePage__subtitle'>
                     <FormattedMessage
                         id='WelcomePage.Description'
-                        defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view'
+                        defaultMessage='Boards is a project management tool that helps define, organize, track, and manage work across teams using a familiar Kanban board view.'
                     />
                 </div>
 
