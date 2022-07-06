@@ -65,7 +65,6 @@ describe('Card URL Property', () => {
 
         // Add table view
         addView('Table')
-        showURLProperty()
 
         // Check buttons
         cy.log('**Check buttons**')
