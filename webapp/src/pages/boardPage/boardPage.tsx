@@ -68,7 +68,6 @@ const BoardPage = (props: Props): JSX.Element => {
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
-    const boardId = match.params.boardId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -131,7 +130,7 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-        wsClient.addOnReconnect(() => dispatch(loadAction(boardId)))
+        wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
 
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
             if (subscription.subscriberId === me?.id) {
@@ -148,7 +147,7 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-            wsClient.removeOnReconnect(() => dispatch(loadAction(boardId)))
+            wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         }
     })
 
@@ -173,25 +172,25 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [])
 
     useEffect(() => {
-        dispatch(loadAction(boardId))
+        dispatch(loadAction(match.params.boardId))
 
-        if (boardId) {
+        if (match.params.boardId) {
             // set the active board
-            dispatch(setCurrentBoard(boardId))
+            dispatch(setCurrentBoard(match.params.boardId))
 
             // and set it as most recently viewed board
-            UserSettings.setLastBoardID(teamId, boardId)
+            UserSettings.setLastBoardID(teamId, match.params.boardId)
 
             if (viewId && viewId !== Constants.globalTeamId) {
                 dispatch(setCurrentView(viewId))
-                UserSettings.setLastViewId(boardId, viewId)
+                UserSettings.setLastViewId(match.params.boardId, viewId)
             }
 
             if (!props.readonly && me) {
-                loadOrJoinBoard(me.id, teamId, boardId)
+                loadOrJoinBoard(me.id, teamId, match.params.boardId)
             }
         }
-    }, [teamId, boardId, viewId, me?.id])
+    }, [teamId, match.params.boardId, viewId, me?.id])
 
     if (props.readonly) {
         useEffect(() => {
