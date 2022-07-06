@@ -165,7 +165,13 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 	if err != nil {
 		return nil, nil, err
 	}
-	bab.Blocks = blocks
+	newBlocks := []model.Block{}
+	for _, b := range blocks {
+		if b.Type != model.TypeComment {
+			newBlocks = append(newBlocks, b)
+		}
+	}
+	bab.Blocks = newBlocks
 
 	bab, err = model.GenerateBoardsAndBlocksIDs(bab, nil)
 	if err != nil {

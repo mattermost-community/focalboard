@@ -8,6 +8,7 @@ import {IPropertyOption, IPropertyTemplate} from '../../../blocks/board'
 import Label from '../../../widgets/label'
 
 import ValueSelector from '../../../widgets/valueSelector'
+import {propertyValueClassName} from '../../propertyValueUtils'
 
 type Props = {
     emptyValue: string;
@@ -30,7 +31,7 @@ const MultiSelectProperty = (props: Props): JSX.Element => {
     if (!isEditable || !open) {
         return (
             <div
-                className='octo-propertyvalue'
+                className={propertyValueClassName({readonly: !isEditable})}
                 tabIndex={0}
                 data-testid='multiselect-non-editable'
                 onClick={() => setOpen(true)}

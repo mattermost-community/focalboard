@@ -44,6 +44,11 @@ export const TelemetryActions = {
     StartTour: 'welcomeScreen_startTour',
     SkipTour: 'welcomeScreen_skipTour',
     CloudMoreInfo: 'cloud_more_info',
+    ViewLimitReached: 'limit_ViewLimitReached',
+    ViewLimitCTAPerformed: 'limit_ViewLimitLinkOpen',
+    LimitCardCTAPerformed: 'limit_CardLimitCTAPerformed',
+    LimitCardLimitReached: 'limit_cardLimitReached',
+    LimitCardLimitLinkOpen: 'limit_cardLimitLinkOpen',
 }
 
 interface IEventProps {

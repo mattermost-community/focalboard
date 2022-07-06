@@ -68,5 +68,5 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 		return
 	}
 
-	pa.sendTeamMessageSkipCluster(websocketActionUpdateBlock, clusterMessage.TeamID, clusterMessage.Payload)
+	pa.sendTeamMessageSkipCluster(action, clusterMessage.TeamID, clusterMessage.Payload)
 }
