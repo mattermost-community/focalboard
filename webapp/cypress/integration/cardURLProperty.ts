@@ -72,6 +72,7 @@ describe('Card URL Property', () => {
         cy.findByRole('button', {name: 'Edit'}).should('exist')
         cy.findByRole('button', {name: 'Copy'}).should('not.exist')
 
+        /*        
         // Add gallery view
         addView('Gallery')
         showURLProperty()
@@ -81,6 +82,7 @@ describe('Card URL Property', () => {
         cy.findByRole('link', {name: changedURL}).realHover()
         cy.findByRole('button', {name: 'Edit'}).should('not.exist')
         cy.findByRole('button', {name: 'Copy'}).should('exist')
+*/
 
         // Add calendar view
         addView('Calendar')
