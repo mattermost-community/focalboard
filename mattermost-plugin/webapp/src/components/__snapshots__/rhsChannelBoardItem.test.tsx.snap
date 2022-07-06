@@ -33,7 +33,7 @@ exports[`components/rhsChannelBoardItem render board 1`] = `
     <div
       class="date"
     >
-      Last Update at: July 05, 11:46 AM
+      Last update at: July 06, 8:48 AM
     </div>
   </div>
 </div>
@@ -77,7 +77,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
             >
               <div>
                 <div
-                  aria-label="Unlink Board"
+                  aria-label="Unlink board"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -91,7 +91,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                   <div
                     class="menu-name"
                   >
-                    Unlink Board
+                    Unlink board
                   </div>
                   <div
                     class="noicon"
@@ -135,7 +135,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
     <div
       class="date"
     >
-      Last Update at: July 05, 11:46 AM
+      Last update at: July 06, 8:48 AM
     </div>
   </div>
 </div>

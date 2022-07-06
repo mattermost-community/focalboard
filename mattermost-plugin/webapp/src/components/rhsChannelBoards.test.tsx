@@ -5,12 +5,8 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {render, screen} from '@testing-library/react'
 
-import userEvent from '@testing-library/user-event'
-
 import {createBoard} from '../../../../webapp/src/blocks/board'
-import {wrapIntl} from '../../tests/utils'
-import {mockStateStore} from '../../../../webapp/src/testUtils'
-
+import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
 
 import RHSChannelBoards from './rhsChannelBoards'
 

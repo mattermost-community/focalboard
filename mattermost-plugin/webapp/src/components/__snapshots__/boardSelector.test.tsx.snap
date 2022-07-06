@@ -47,14 +47,14 @@ exports[`components/boardSelector renders with no results 1`] = `
                 <h3
                   class="text-heading4"
                 >
-                  Link Boards
+                  Link boards
                 </h3>
                 <button
                   class="Button emphasis--secondary"
                   type="button"
                 >
                   <span>
-                    Create a Board
+                    Create a board
                   </span>
                 </button>
               </div>
@@ -150,14 +150,14 @@ exports[`components/boardSelector renders with some results 1`] = `
                 <h3
                   class="text-heading4"
                 >
-                  Link Boards
+                  Link boards
                 </h3>
                 <button
                   class="Button emphasis--secondary"
                   type="button"
                 >
                   <span>
-                    Create a Board
+                    Create a board
                   </span>
                 </button>
               </div>
@@ -190,7 +190,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                   <div
                     class="resultTitle"
                   >
-                    Untitled Board
+                    Untitled board
                   </div>
                   <div
                     class="resultDescription"
@@ -221,7 +221,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                   <div
                     class="resultTitle"
                   >
-                    Untitled Board
+                    Untitled board
                   </div>
                   <div
                     class="resultDescription"
@@ -252,7 +252,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                   <div
                     class="resultTitle"
                   >
-                    Untitled Board
+                    Untitled board
                   </div>
                   <div
                     class="resultDescription"
@@ -327,14 +327,14 @@ exports[`components/boardSelector renders without start searching 1`] = `
                 <h3
                   class="text-heading4"
                 >
-                  Link Boards
+                  Link boards
                 </h3>
                 <button
                   class="Button emphasis--secondary"
                   type="button"
                 >
                   <span>
-                    Create a Board
+                    Create a board
                   </span>
                 </button>
               </div>

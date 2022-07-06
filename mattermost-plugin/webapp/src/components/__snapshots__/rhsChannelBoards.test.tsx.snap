@@ -14,7 +14,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
         <span
           class="linked-boards"
         >
-          Linked Boards
+          Linked boards
         </span>
         <button
           class="Button emphasis--primary"
@@ -41,7 +41,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
             <span
               class="title"
             >
-              Untitled Board
+              Untitled board
             </span>
             <div
               aria-label="menuwrapper"
@@ -62,7 +62,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           <div
             class="date"
           >
-            Last Update at: July 05, 10:28 AM
+            Last update at: July 06, 8:48 AM
           </div>
         </div>
         <div
@@ -75,7 +75,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
             <span
               class="title"
             >
-              Untitled Board
+              Untitled board
             </span>
             <div
               aria-label="menuwrapper"
@@ -96,7 +96,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           <div
             class="date"
           >
-            Last Update at: July 05, 10:28 AM
+            Last update at: July 06, 8:48 AM
           </div>
         </div>
       </div>
@@ -114,7 +114,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
       class="RHSChannelBoards empty"
     >
       <h2>
-        No Boards are linked to Channel Name yet
+        No boards are linked to Channel Name yet
       </h2>
       <div
         class="empty-paragraph"
@@ -133,7 +133,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
         type="button"
       >
         <span>
-          Link Boards to Channel Name
+          Link boards to Channel Name
         </span>
       </button>
     </div>

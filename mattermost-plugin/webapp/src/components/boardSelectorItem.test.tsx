@@ -7,7 +7,7 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import {createBoard} from '../../../../webapp/src/blocks/board'
-import {wrapIntl} from '../../tests/utils'
+import {wrapIntl} from '../../../../webapp/src/testUtils'
 
 import BoardSelectorItem from './boardSelectorItem'
 

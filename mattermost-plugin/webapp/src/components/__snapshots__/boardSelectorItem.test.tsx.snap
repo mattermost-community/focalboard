@@ -14,7 +14,7 @@ exports[`components/boardSelectorItem renders board without title 1`] = `
       <div
         class="resultTitle"
       >
-        Untitled Board
+        Untitled board
       </div>
       <div
         class="resultDescription"

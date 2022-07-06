@@ -10,7 +10,7 @@ import octoClient from '../../../../webapp/src/octoClient'
 import userEvent from '@testing-library/user-event'
 import {mockStateStore} from '../../../../webapp/src/testUtils'
 import {createBoard} from '../../../../webapp/src/blocks/board'
-import {wrapIntl} from '../../tests/utils'
+import {wrapIntl} from '../../../../webapp/src/testUtils'
 
 import BoardSelector from './boardSelector'
 
