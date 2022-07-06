@@ -21,7 +21,7 @@ import ImageElement from '../content/imageElement'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
 import CardBadges from '../cardBadges'
-import OptionsMenu from '../../components/optionsMenu/optionsMenu'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
 type Props = {
     board: Board
@@ -72,7 +72,7 @@ const GalleryCard = (props: Props) => {
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <OptionsMenu
+                    <CardActionsMenu
                         cardId={card!.id}
                         onClickDelete={() => mutator.deleteBlock(card, 'delete card')}
                         onClickDuplicate={() => {

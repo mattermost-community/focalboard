@@ -6,7 +6,7 @@ import {useIntl} from 'react-intl'
 
 import DeleteIcon from '../../widgets/icons/delete'
 import Menu from '../../widgets/menu'
-import BoardPermissionGate from '../../components/permissions/boardPermissionGate'
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import LinkIcon from '../../widgets/icons/Link'
 import {Utils} from '../../utils'
@@ -23,7 +23,7 @@ type Props = {
     children?: ReactNode
 }
 
-export const OptionsMenu = (props: Props): JSX.Element => {
+export const CardActionsMenu = (props: Props): JSX.Element => {
     const {cardId} = props
 
     const me = useAppSelector<IUser|null>(getMe)
@@ -35,14 +35,14 @@ export const OptionsMenu = (props: Props): JSX.Element => {
                 <Menu.Text
                     icon={<DeleteIcon/>}
                     id='delete'
-                    name={intl.formatMessage({id: 'OptionsMenu.delete', defaultMessage: 'Delete'})}
+                    name={intl.formatMessage({id: 'CardActionsMenu.delete', defaultMessage: 'Delete'})}
                     onClick={props.onClickDelete}
                 />
                 {props.onClickDuplicate &&
                 <Menu.Text
                     icon={<DuplicateIcon/>}
                     id='duplicate'
-                    name={intl.formatMessage({id: 'OptionsMenu.duplicate', defaultMessage: 'Duplicate'})}
+                    name={intl.formatMessage({id: 'CardActionsMenu.duplicate', defaultMessage: 'Duplicate'})}
                     onClick={props.onClickDuplicate}
                 />}
             </BoardPermissionGate>
@@ -50,7 +50,7 @@ export const OptionsMenu = (props: Props): JSX.Element => {
                 <Menu.Text
                     icon={<LinkIcon/>}
                     id='copy'
-                    name={intl.formatMessage({id: 'OptionsMenu.copyLink', defaultMessage: 'Copy link'})}
+                    name={intl.formatMessage({id: 'CardActionsMenu.copyLink', defaultMessage: 'Copy link'})}
                     onClick={() => {
                         let cardLink = window.location.href
 
@@ -59,7 +59,7 @@ export const OptionsMenu = (props: Props): JSX.Element => {
                         }
 
                         Utils.copyTextToClipboard(cardLink)
-                        sendFlashMessage({content: intl.formatMessage({id: 'OptionsMenu.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
+                        sendFlashMessage({content: intl.formatMessage({id: 'CardActionsMenu.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                     }}
                 />
             }
@@ -68,4 +68,4 @@ export const OptionsMenu = (props: Props): JSX.Element => {
     )
 }
 
-export default OptionsMenu
+export default CardActionsMenu

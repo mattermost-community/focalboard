@@ -9,13 +9,13 @@ import {Provider as ReduxProvider} from 'react-redux'
 import { TestBlockFactory } from '../../test/testBlockFactory'
 import {mockDOM, mockStateStore, wrapIntl} from '../../testUtils'
 
-import OptionsMenu from './optionsMenu'
+import CardActionsMenu from './cardActionsMenu'
 
 beforeAll(() => {
     mockDOM()
 })
 
-describe('components/optionsMenu', () => {
+describe('components/cardActionsMenu', () => {
     const board = TestBlockFactory.createBoard()
     board.id = 'boardId'
 
@@ -46,7 +46,7 @@ describe('components/optionsMenu', () => {
         await act(async () => {
             const result = render(wrapIntl(
                 <ReduxProvider store={store}>
-                    <OptionsMenu
+                    <CardActionsMenu
                         cardId='123'
                         onClickDelete={jest.fn()}
                     />
@@ -62,7 +62,7 @@ describe('components/optionsMenu', () => {
         await act(async () => {
             const result = render(wrapIntl(
                 <ReduxProvider store={store}>
-                    <OptionsMenu
+                    <CardActionsMenu
                         cardId='123'
                         onClickDelete={jest.fn()}
                         onClickDuplicate={jest.fn()}
@@ -79,14 +79,14 @@ describe('components/optionsMenu', () => {
         await act(async () => {
             const result = render(wrapIntl(
                 <ReduxProvider store={store}>
-                    <OptionsMenu
+                    <CardActionsMenu
                         cardId='123'
                         onClickDelete={jest.fn()}
                     >
                         <React.Fragment>
                             Test.
                         </React.Fragment>
-                    </OptionsMenu>
+                    </CardActionsMenu>
                 </ReduxProvider>,
             ))
             container = result.container

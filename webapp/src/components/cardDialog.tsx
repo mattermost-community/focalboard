@@ -32,7 +32,7 @@ import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
 
 import './cardDialog.scss'
-import OptionsMenu from './optionsMenu/optionsMenu'
+import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
 
 type Props = {
     board: Board
@@ -108,7 +108,7 @@ const CardDialog = (props: Props): JSX.Element => {
     }
 
     const menu = (
-        <OptionsMenu
+        <CardActionsMenu
             cardId={props.cardId}
             onClickDelete={handleDeleteButtonOnClick}
         >
@@ -125,7 +125,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     />
                 </BoardPermissionGate>
             }
-        </OptionsMenu>
+        </CardActionsMenu>
     )
 
     const followActionButton = (following: boolean): React.ReactNode => {

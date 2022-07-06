@@ -24,7 +24,7 @@ import CardBadges from '../cardBadges'
 import './fullcalendar.scss'
 import MenuWrapper from '../../widgets/menuWrapper'
 import IconButton from '../../widgets/buttons/iconButton'
-import OptionsMenu from '../../components/optionsMenu/optionsMenu'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import OptionsIcon from '../../widgets/icons/options'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -138,7 +138,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <OptionsMenu
+                    <CardActionsMenu
                         cardId={card.id}
                         onClickDelete={() => mutator.deleteBlock(card, 'delete card')}
                         onClickDuplicate={() => {

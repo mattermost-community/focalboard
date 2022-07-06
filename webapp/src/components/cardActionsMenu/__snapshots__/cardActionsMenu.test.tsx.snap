@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/optionsMenu should match snapshot 1`] = `
+exports[`components/cardActionsMenu should match snapshot 1`] = `
 <div>
   <div
     class="Menu noselect left "
@@ -92,7 +92,7 @@ exports[`components/optionsMenu should match snapshot 1`] = `
 </div>
 `;
 
-exports[`components/optionsMenu should match snapshot w/ children prop 1`] = `
+exports[`components/cardActionsMenu should match snapshot w/ children prop 1`] = `
 <div>
   <div
     class="Menu noselect left "
@@ -186,7 +186,7 @@ exports[`components/optionsMenu should match snapshot w/ children prop 1`] = `
 </div>
 `;
 
-exports[`components/optionsMenu should match snapshot w/ onClickDuplicate prop 1`] = `
+exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate prop 1`] = `
 <div>
   <div
     class="Menu noselect left "

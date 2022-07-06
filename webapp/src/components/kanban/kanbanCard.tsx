@@ -20,7 +20,7 @@ import './kanbanCard.scss'
 import CardBadges from '../cardBadges'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
-import OptionsMenu from '../../components/optionsMenu/optionsMenu'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
 export const OnboardingCardClassName = 'onboardingCard'
 
@@ -104,7 +104,7 @@ const KanbanCard = (props: Props) => {
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <OptionsMenu
+                    <CardActionsMenu
                         cardId={card!.id}
                         onClickDelete={handleDeleteButtonOnClick}
                         onClickDuplicate={() => {
