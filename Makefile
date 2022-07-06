@@ -18,6 +18,12 @@ LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
 
+RACE = -race
+
+ifeq ($(OS),Windows_NT)
+	RACE := ''
+endif
+
 # MAC cpu architecture
 ifeq ($(shell uname -m),arm64)
 	MAC_GO_ARCH := arm64
@@ -29,11 +35,13 @@ all: webapp server ## Build server and webapp.
 
 prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
+	cd mattermost-plugin/webapp; npm install
 
 ci: server-test
 	cd webapp; npm run check
 	cd webapp; npm run test
 	cd webapp; npm run cypress:ci
+	cd mattermost-plugin/webapp; npm run test
 
 templates-archive: ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
@@ -45,7 +53,12 @@ server: templates-archive ## Build server for local environment.
 server-mac: templates-archive ## Build server for Mac.
 	mkdir -p bin/mac
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=mac")
+ifeq ($(FB_PROD),)
 	cd server; env GOOS=darwin GOARCH=$(MAC_GO_ARCH) go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/mac/focalboard-server ./main
+else
+# Always build x86 for production, to work on both Apple Silicon and legacy Macs
+	cd server; env GOOS=darwin GOARCH=amd64 CGO_ENABLED=1 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/mac/focalboard-server ./main
+endif
 
 server-linux: templates-archive ## Build server for Linux.
 	mkdir -p bin/linux
@@ -115,20 +128,20 @@ watch-server-test: modd-precheck ## Run server tests watching for changes
 
 server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
 
-server-test-sqlite: export FB_UNIT_TESTING=1
+server-test-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
 server-test-sqlite: templates-archive ## Run server tests using sqlite
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-sqlite-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-sqlite-profile.coverage
 
-server-test-mini-sqlite: export FB_UNIT_TESTING=1
+server-test-mini-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
 server-test-mini-sqlite: templates-archive ## Run server tests using sqlite
-	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' -race -v -count=1 -timeout=30m ./...
+	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' $(RACE) -v -count=1 -timeout=30m ./...
 
-server-test-mysql: export FB_UNIT_TESTING=1
-server-test-mysql: export FB_STORE_TEST_DB_TYPE=mysql
-server-test-mysql: export FB_STORE_TEST_DOCKER_PORT=44445
+server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
+server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql
+server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44445
 
 server-test-mysql: templates-archive ## Run server tests using mysql
 	@echo Starting docker container for mysql
@@ -140,9 +153,9 @@ server-test-mysql: templates-archive ## Run server tests using mysql
 	cd mattermost-plugin/server; go tool cover -func plugin-mysql-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 
-server-test-postgres: export FB_UNIT_TESTING=1
-server-test-postgres: export FB_STORE_TEST_DB_TYPE=postgres
-server-test-postgres: export FB_STORE_TEST_DOCKER_PORT=44446
+server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
+server-test-postgres: export FOCALBOARD_STORE_TEST_DB_TYPE=postgres
+server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
 
 server-test-postgres: templates-archive ## Run server tests using postgres
 	@echo Starting docker container for postgres

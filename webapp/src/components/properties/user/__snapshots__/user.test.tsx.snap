@@ -3,7 +3,7 @@
 exports[`components/properties/user not readonly 1`] = `
 <div>
   <div
-    class="UserProperty css-b62m3t-container"
+    class="UserProperty octo-propertyvalue css-b62m3t-container"
   >
     <span
       class="css-1f43avz-a11yText-A11yText"
@@ -36,10 +36,8 @@ exports[`components/properties/user not readonly 1`] = `
         >
           <input
             aria-autocomplete="list"
-            aria-controls="react-select-3-listbox"
             aria-expanded="false"
             aria-haspopup="true"
-            aria-owns="react-select-3-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
@@ -103,7 +101,7 @@ exports[`components/properties/user not readonly 1`] = `
 exports[`components/properties/user not readonly not existing user 1`] = `
 <div>
   <div
-    class="UserProperty css-b62m3t-container"
+    class="UserProperty octo-propertyvalue css-b62m3t-container"
   >
     <span
       class="css-1f43avz-a11yText-A11yText"
@@ -133,11 +131,9 @@ exports[`components/properties/user not readonly not existing user 1`] = `
         >
           <input
             aria-autocomplete="list"
-            aria-controls="react-select-2-listbox"
             aria-describedby="react-select-2-placeholder"
             aria-expanded="false"
             aria-haspopup="true"
-            aria-owns="react-select-2-listbox"
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
@@ -184,7 +180,7 @@ exports[`components/properties/user not readonly not existing user 1`] = `
 exports[`components/properties/user readonly view 1`] = `
 <div>
   <div
-    class="UserProperty octo-propertyvalue readonly"
+    class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
   >
     <div
       class="UserProperty-item"
@@ -198,7 +194,7 @@ exports[`components/properties/user readonly view 1`] = `
 exports[`components/properties/user user dropdown open 1`] = `
 <div>
   <div
-    class="UserProperty css-b62m3t-container"
+    class="UserProperty octo-propertyvalue css-b62m3t-container"
   >
     <span
       class="css-1f43avz-a11yText-A11yText"

@@ -67,6 +67,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         description: 'test',
         showDescription: false,
         type: 'board',
+        minimumRole: 'editor',
         isTemplate: true,
         templateVersion: 0,
         icon: '🚴🏻‍♂️',
@@ -84,6 +85,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         updateAt: 20,
         deleteAt: 0,
         type: 'board',
+        minimumRole: 'editor',
         icon: '🚴🏻‍♂️',
         description: 'test',
         showDescription: false,
@@ -94,13 +96,14 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
     }
 
     const me: IUser = {
-        id: 'user-id-1', 
-        username: 'username_1', 
-        email: '', 
-        props: {}, 
-        create_at: 0, 
-        update_at: 0, 
-        is_bot: false
+        id: 'user-id-1',
+        username: 'username_1',
+        email: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        roles: 'system_user',
     }
 
     let store:MockStoreEnhanced<unknown, unknown>

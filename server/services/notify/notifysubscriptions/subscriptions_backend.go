@@ -10,7 +10,6 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions"
-	"github.com/mattermost/focalboard/server/ws"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -22,10 +21,9 @@ const (
 
 type BackendParams struct {
 	ServerRoot             string
-	Store                  Store
+	AppAPI                 AppAPI
 	Permissions            permissions.PermissionsService
 	Delivery               SubscriptionDelivery
-	WSAdapter              ws.Adapter
 	Logger                 *mlog.Logger
 	NotifyFreqCardSeconds  int
 	NotifyFreqBoardSeconds int
@@ -33,11 +31,10 @@ type BackendParams struct {
 
 // Backend provides the notification backend for subscriptions.
 type Backend struct {
-	store                  Store
+	appAPI                 AppAPI
 	permissions            permissions.PermissionsService
 	delivery               SubscriptionDelivery
 	notifier               *notifier
-	wsAdapter              ws.Adapter
 	logger                 *mlog.Logger
 	notifyFreqCardSeconds  int
 	notifyFreqBoardSeconds int
@@ -45,11 +42,10 @@ type Backend struct {
 
 func New(params BackendParams) *Backend {
 	return &Backend{
-		store:                  params.Store,
+		appAPI:                 params.AppAPI,
 		delivery:               params.Delivery,
 		permissions:            params.Permissions,
 		notifier:               newNotifier(params),
-		wsAdapter:              params.WSAdapter,
 		logger:                 params.Logger,
 		notifyFreqCardSeconds:  params.NotifyFreqCardSeconds,
 		notifyFreqBoardSeconds: params.NotifyFreqBoardSeconds,
@@ -105,17 +101,16 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 			SubscriberID:   evt.ModifiedBy.UserID,
 		}
 
-		if _, err = b.store.CreateSubscription(sub); err != nil {
+		if _, err = b.appAPI.CreateSubscription(sub); err != nil {
 			b.logger.Warn("Cannot subscribe card author to card",
 				mlog.String("card_id", evt.BlockChanged.ID),
 				mlog.Err(err),
 			)
 		}
-		b.wsAdapter.BroadcastSubscriptionChange(evt.TeamID, sub)
 	}
 
 	// notify board subscribers
-	subs, err := b.store.GetSubscribersForBlock(evt.Board.ID)
+	subs, err := b.appAPI.GetSubscribersForBlock(evt.Board.ID)
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for board %s: %w", evt.Board.ID, err))
 	}
@@ -128,7 +123,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	}
 
 	// notify card subscribers
-	subs, err = b.store.GetSubscribersForBlock(evt.Card.ID)
+	subs, err = b.appAPI.GetSubscribersForBlock(evt.Card.ID)
 	if err != nil {
 		merr.Append(fmt.Errorf("cannot fetch subscribers for card %s: %w", evt.Card.ID, err))
 	}
@@ -138,7 +133,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 	// notify block subscribers (if/when other types can be subscribed to)
 	if evt.Board.ID != evt.BlockChanged.ID && evt.Card.ID != evt.BlockChanged.ID {
-		subs, err := b.store.GetSubscribersForBlock(evt.BlockChanged.ID)
+		subs, err := b.appAPI.GetSubscribersForBlock(evt.BlockChanged.ID)
 		if err != nil {
 			merr.Append(fmt.Errorf("cannot fetch subscribers for block %s: %w", evt.BlockChanged.ID, err))
 		}
@@ -161,7 +156,7 @@ func (b *Backend) notifySubscribers(subs []*model.Subscriber, blockID string, id
 		ModifiedByID: modifiedByID,
 	}
 
-	hint, err := b.store.UpsertNotificationHint(hint, b.getBlockUpdateFreq(idType))
+	hint, err := b.appAPI.UpsertNotificationHint(hint, b.getBlockUpdateFreq(idType))
 	if err != nil {
 		return fmt.Errorf("cannot upsert notification hint: %w", err)
 	}
@@ -200,7 +195,7 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 	}
 
 	var err error
-	if sub, err = b.store.CreateSubscription(sub); err != nil {
+	if _, err = b.appAPI.CreateSubscription(sub); err != nil {
 		b.logger.Warn("Cannot subscribe mentioned user to card",
 			mlog.String("user_id", userID),
 			mlog.String("card_id", evt.Card.ID),
@@ -208,16 +203,9 @@ func (b *Backend) OnMention(userID string, evt notify.BlockChangeEvent) {
 		)
 		return
 	}
-	b.wsAdapter.BroadcastSubscriptionChange(evt.TeamID, sub)
 
 	b.logger.Debug("Subscribed mentioned user to card",
 		mlog.String("user_id", userID),
 		mlog.String("card_id", evt.Card.ID),
 	)
-}
-
-// BroadcastSubscriptionChange sends a websocket message with details of the changed subscription to all
-// connected users in the team.
-func (b *Backend) BroadcastSubscriptionChange(teamID string, subscription *model.Subscription) {
-	b.wsAdapter.BroadcastSubscriptionChange(teamID, subscription)
 }

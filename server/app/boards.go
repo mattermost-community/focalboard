@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package app
 
 import (
@@ -150,11 +153,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 
 	// copy any file attachments from the duplicated blocks.
 	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
-		dbab := model.NewDeleteBoardsAndBlocksFromBabs(bab)
-		if err = a.store.DeleteBoardsAndBlocks(dbab, userID); err != nil {
-			a.logger.Error("Cannot delete board after duplication error when copying block's files", mlog.String("boardID", bab.Boards[0].ID), mlog.Err(err))
-		}
-		return nil, nil, fmt.Errorf("could not copy files while duplicating board %s: %w", boardID, err)
+		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
 	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.
@@ -203,6 +202,18 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		}
 		return nil
 	})
+
+	if len(bab.Blocks) != 0 {
+		go func() {
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after duplicating a board",
+					mlog.Err(uErr),
+				)
+			}
+		}()
+	}
+
 	return bab, members, err
 }
 
@@ -276,6 +287,15 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 		a.wsAdapter.BroadcastBoardDelete(board.TeamID, boardID)
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a board",
+				mlog.Err(err),
+			)
+		}
+	}()
 
 	return nil
 }
@@ -454,6 +474,15 @@ func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
 		a.wsAdapter.BroadcastBoardChange(board.TeamID, board)
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after undeleting a board",
+				mlog.Err(err),
+			)
+		}
+	}()
 
 	return nil
 }

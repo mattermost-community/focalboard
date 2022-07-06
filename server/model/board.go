@@ -7,10 +7,19 @@ import (
 )
 
 type BoardType string
+type BoardRole string
 
 const (
 	BoardTypeOpen    BoardType = "O"
 	BoardTypePrivate BoardType = "P"
+)
+
+const (
+	BoardRoleNone      BoardRole = ""
+	BoardRoleViewer    BoardRole = "viewer"
+	BoardRoleCommenter BoardRole = "commenter"
+	BoardRoleEditor    BoardRole = "editor"
+	BoardRoleAdmin     BoardRole = "admin"
 )
 
 // Board groups a set of blocks and its layout
@@ -39,6 +48,10 @@ type Board struct {
 	// The type of the board
 	// required: true
 	Type BoardType `json:"type"`
+
+	// The minimum role applied when somebody joins the board
+	// required: true
+	MinimumRole BoardRole `json:"minimumRole"`
 
 	// The title of the board
 	// required: false
@@ -92,6 +105,10 @@ type BoardPatch struct {
 	// required: false
 	Type *BoardType `json:"type"`
 
+	// The minimum role applied when somebody joins the board
+	// required: false
+	MinimumRole *BoardRole `json:"minimumRole"`
+
 	// The title of the board
 	// required: false
 	Title *string `json:"title"`
@@ -139,6 +156,10 @@ type BoardMember struct {
 	// The independent roles of the user on the board
 	// required: false
 	Roles string `json:"roles"`
+
+	// Minimum role because the board configuration
+	// required: false
+	MinimumRole string `json:"minimumRole"`
 
 	// Marks the user as an admin of the board
 	// required: true
@@ -221,6 +242,10 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		board.Title = *p.Title
 	}
 
+	if p.MinimumRole != nil {
+		board.MinimumRole = *p.MinimumRole
+	}
+
 	if p.Description != nil {
 		board.Description = *p.Description
 	}
@@ -296,9 +321,17 @@ func IsBoardTypeValid(t BoardType) bool {
 	return t == BoardTypeOpen || t == BoardTypePrivate
 }
 
+func IsBoardMinimumRoleValid(r BoardRole) bool {
+	return r == BoardRoleNone || r == BoardRoleAdmin || r == BoardRoleEditor || r == BoardRoleCommenter || r == BoardRoleViewer
+}
+
 func (p *BoardPatch) IsValid() error {
 	if p.Type != nil && !IsBoardTypeValid(*p.Type) {
 		return InvalidBoardErr{"invalid-board-type"}
+	}
+
+	if p.MinimumRole != nil && !IsBoardMinimumRoleValid(*p.MinimumRole) {
+		return InvalidBoardErr{"invalid-board-minimum-role"}
 	}
 
 	return nil
@@ -320,6 +353,11 @@ func (b *Board) IsValid() error {
 	if !IsBoardTypeValid(b.Type) {
 		return InvalidBoardErr{"invalid-board-type"}
 	}
+
+	if !IsBoardMinimumRoleValid(b.MinimumRole) {
+		return InvalidBoardErr{"invalid-board-minimum-role"}
+	}
+
 	return nil
 }
 

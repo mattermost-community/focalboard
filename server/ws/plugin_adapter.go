@@ -30,6 +30,7 @@ type PluginAdapterInterface interface {
 	BroadcastBlockChange(teamID string, block model.Block)
 	BroadcastBlockDelete(teamID, blockID, parentID string)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
+	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
@@ -381,22 +382,14 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	}
 }
 
-func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {
+// sendMessageToAll will send a websocket message to all clients on all nodes.
+func (pa *PluginAdapter) sendMessageToAll(event string, payload map[string]interface{}) {
 	// Empty &mmModel.WebsocketBroadcast will send to all users
-	pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, payload, &mmModel.WebsocketBroadcast{})
-}
-
-func (pa *PluginAdapter) sendMessageToAll(payload map[string]interface{}) {
-	go func() {
-		clusterMessage := &ClusterMessage{Payload: payload}
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
-	}()
-
-	pa.sendMessageToAllSkipCluster(payload)
+	pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{})
 }
 
 func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
-	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
+	pa.sendMessageToAll(websocketActionUpdateConfig, utils.StructToMap(pluginConfig))
 }
 
 // sendUserMessageSkipCluster sends the message to specific users.
@@ -600,4 +593,17 @@ func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription
 	}
 
 	pa.sendTeamMessage(websocketActionUpdateSubscription, teamID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCardLimitTimestampChange(cardLimitTimestamp int64) {
+	pa.logger.Debug("BroadcastCardLimitTimestampChange",
+		mlog.Int64("cardLimitTimestamp", cardLimitTimestamp),
+	)
+
+	message := UpdateCardLimitTimestamp{
+		Action:    websocketActionUpdateCardLimitTimestamp,
+		Timestamp: cardLimitTimestamp,
+	}
+
+	pa.sendMessageToAll(websocketActionUpdateCardLimitTimestamp, utils.StructToMap(message))
 }

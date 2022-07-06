@@ -25,7 +25,7 @@ const TopBar = (): JSX.Element => {
                 >
                     <FormattedMessage
                         id='TopBar.give-feedback'
-                        defaultMessage='Give Feedback'
+                        defaultMessage='Give feedback'
                     />
                 </a>
                 <div className='versionFrame'>
@@ -33,7 +33,7 @@ const TopBar = (): JSX.Element => {
                         className='version'
                         title={`v${Constants.versionString}`}
                     >
-                        {Constants.versionDisplayString}
+                        {`v${Constants.versionString}`}
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@ const TopBar = (): JSX.Element => {
             >
                 <FormattedMessage
                     id='TopBar.give-feedback'
-                    defaultMessage='Give Feedback'
+                    defaultMessage='Give feedback'
                 />
             </a>
             <a

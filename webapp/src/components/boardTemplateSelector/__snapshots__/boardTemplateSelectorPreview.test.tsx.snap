@@ -127,13 +127,19 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            title=""
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >

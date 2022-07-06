@@ -12,6 +12,7 @@ import {Subscription} from '../wsclient'
 
 // TODO: change this whene the initial load is complete
 // import {initialLoad} from './initialLoad'
+import {UserSettings} from '../userSettings'
 
 import {RootState} from './index'
 
@@ -59,6 +60,11 @@ const usersSlice = createSlice({
                 state.boardUsers[user.id] = user
             })
         },
+        removeBoardUsersById: (state, action: PayloadAction<string[]>) => {
+            action.payload.forEach((userId: string) => {
+                delete state.boardUsers[userId]
+            })
+        },
         followBlock: (state, action: PayloadAction<Subscription>) => {
             state.blockSubscriptions.push(action.payload)
         },
@@ -96,7 +102,7 @@ const usersSlice = createSlice({
     },
 })
 
-export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
+export const {setMe, setBoardUsers, removeBoardUsersById, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
@@ -140,4 +146,45 @@ export const getOnboardingTourStep = createSelector(
 export const getOnboardingTourCategory = createSelector(
     getMe,
     (me): string => (me ? me.props?.focalboard_tourCategory : ''),
+)
+
+export const getCloudMessageCanceled = createSelector(
+    getMe,
+    (me): boolean => {
+        if (!me) {
+            return false
+        }
+        if (me.id === 'single-user') {
+            return UserSettings.hideCloudMessage
+        }
+        return Boolean(me.props?.focalboard_cloudMessageCanceled)
+    },
+)
+
+export const getCardLimitSnoozeUntil = createSelector(
+    getMe,
+    (me): number => {
+        if (!me) {
+            return 0
+        }
+        try {
+            return parseInt(me.props?.focalboard_cardLimitSnoozeUntil, 10) || 0
+        } catch (_) {
+            return 0
+        }
+    },
+)
+
+export const getCardHiddenWarningSnoozeUntil = createSelector(
+    getMe,
+    (me): number => {
+        if (!me) {
+            return 0
+        }
+        try {
+            return parseInt(me.props?.focalboard_cardHiddenWarningSnoozeUntil, 10) || 0
+        } catch (_) {
+            return 0
+        }
+    },
 )
