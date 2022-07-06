@@ -10,7 +10,7 @@ import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
-import {Channel} from '../../store/channels'
+import {Channel, ChannelTypeOpen, ChannelTypePrivate} from '../../store/channels'
 import {getMe, getBoardUsersList} from '../../store/users'
 
 import {Utils, IDType} from '../../utils'
@@ -99,7 +99,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
     const [showLinkChannelConfirmation, setShowLinkChannelConfirmation] = useState<Channel|null>(null)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
-    const [selectedUser, setSelectedUser] = useState<IUser|any|null>(null)
+    const [selectedUser, setSelectedUser] = useState<IUser|Channel|null>(null)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -142,7 +142,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     const onLinkBoard = async (channel: Channel, confirmed?: boolean) => {
-        if (channel.type === 'O' && !confirmed) {
+        if (channel.type === ChannelTypeOpen && !confirmed) {
             setShowLinkChannelConfirmation(channel)
             return
         }
@@ -307,8 +307,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         const channel = userOrChannel as Channel
         return(
             <div className='user-item'>
-                {channel.type === 'P' && <PrivateIcon/>}
-                {channel.type === 'O' && <PublicIcon/>}
+                {channel.type === ChannelTypePrivate && <PrivateIcon/>}
+                {channel.type === ChannelTypeOpen && <PublicIcon/>}
                 <div className='ml-3'>
                     <strong>{channel.display_name}</strong>
                 </div>

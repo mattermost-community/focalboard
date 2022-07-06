@@ -26,7 +26,7 @@ export const EmptySearch = () => (
         </div>
         <h4 className='text-heading4'>
             <FormattedMessage
-                id='FindBoFindBoardsDialog.IntroText'
+                id='FindBoardsDialog.IntroText'
                 defaultMessage='Search for boards'
             />
         </h4>

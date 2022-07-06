@@ -5,11 +5,18 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 import {RootState} from './index'
 
+export const ChannelTypeOpen = 'O'
+export const ChannelTypePrivate = 'P'
+export const ChannelTypeDirectMessage = 'D'
+export const ChannelTypeGroupMessage = 'G'
+const channelTypes = [ChannelTypeOpen, ChannelTypePrivate, ChannelTypeDirectMessage, ChannelTypeGroupMessage]
+type ChannelType = typeof channelTypes[number]
+
 export interface Channel {
     id: string
     name: string
     display_name: string
-    type: 'P'|'O'|'D'|'G'
+    type: ChannelType
 }
 
 type ChannelState = {

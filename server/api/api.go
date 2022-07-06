@@ -2225,10 +2225,8 @@ func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
-	// retrieve boards list
 	channels, err := a.app.SearchUserChannels(teamID, userID, searchQuery)
 	if err != nil {
-		fmt.Println(err)
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
@@ -2310,7 +2308,6 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 
 	channel, err := a.app.GetChannel(teamID, channelID)
 	if err != nil {
-		fmt.Println(err)
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}

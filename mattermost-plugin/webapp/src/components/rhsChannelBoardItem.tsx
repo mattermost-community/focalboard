@@ -40,7 +40,7 @@ const RHSChannelBoardItem = (props: Props) => {
         mutator.updateBoard(newBoard, board, 'unlinked channel')
     }
 
-    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
 
     return (
         <div
@@ -59,7 +59,7 @@ const RHSChannelBoardItem = (props: Props) => {
                         <Menu.Text
                             key={`unlinkBoard-${board.id}`}
                             id='unlinkBoard'
-                            name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink Board'})}
+                            name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
                             icon={<DeleteIcon/>}
                             onClick={() => {
                                 onUnlinkBoard(board)
@@ -72,7 +72,7 @@ const RHSChannelBoardItem = (props: Props) => {
             <div className='date'>
                 <FormattedMessage
                     id='rhs-boards.last-update-at'
-                    defaultMessage='Last Update at: {datetime}'
+                    defaultMessage='Last update at: {datetime}'
                     values={{datetime: Utils.displayDateTime(new Date(board.updateAt), intl as any)}}
                 />
             </div>

@@ -19,7 +19,7 @@ type Props = {
 const BoardSelectorItem = (props: Props) => {
     const {item, currentChannel} = props
     const intl = useIntl()
-    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled Board'})
+    const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
     const resultTitle = item.title || untitledBoardTitle
     return (
         <div className='BoardSelectorItem'>

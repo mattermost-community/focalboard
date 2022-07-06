@@ -43,7 +43,7 @@ const RHSChannelBoards = () => {
                     <h2>
                         <FormattedMessage
                             id='rhs-boards.no-boards-linked-to-channel'
-                            defaultMessage='No Boards are linked to {channelName} yet'
+                            defaultMessage='No boards are linked to {channelName} yet'
                             values={{channelName: currentChannel.display_name}}
                         />
                     </h2>
@@ -61,7 +61,7 @@ const RHSChannelBoards = () => {
                     >
                         <FormattedMessage
                             id='rhs-boards.link-boards-to-channel'
-                            defaultMessage='Link Boards to {channelName}'
+                            defaultMessage='Link boards to {channelName}'
                             values={{channelName: currentChannel.display_name}}
                         />
                     </Button>
@@ -77,7 +77,7 @@ const RHSChannelBoards = () => {
                     <span className='linked-boards'>
                         <FormattedMessage
                             id='rhs-boards.linked-boards'
-                            defaultMessage='Linked Boards'
+                            defaultMessage='Linked boards'
                         />
                     </span>
                     <Button
