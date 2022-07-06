@@ -10,9 +10,11 @@ import {IUser, UserConfigPatch} from '../user'
 import {getMe, patchProps, getCardLimitSnoozeUntil, getCardHiddenWarningSnoozeUntil} from '../store/users'
 import {getCurrentBoardHiddenCardsCount, getCardHiddenWarning} from '../store/cards'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import CheckIcon from '../widgets/icons/check'
+import NotificationBox from '../widgets/notificationBox/notificationBox'
 import octoClient from '../octoClient'
 
-import NotificationBox from '../widgets/notification-box'
+import './cardLimitNotification.scss'
 
 type Props = {
     showHiddenCardNotification: boolean
@@ -25,6 +27,7 @@ const checkSnoozeInterval = 1000 * 60 * 5
 const CardLimitNotification = (props: Props) => {
     const intl = useIntl()
     const [time, setTime] = useState(Date.now())
+    const [showNotifyAdminSuccess, setShowNotifyAdminSuccess] = useState<boolean>(false)
 
     const hiddenCards = useAppSelector<number>(getCurrentBoardHiddenCardsCount)
     const cardHiddenWarning = useAppSelector<boolean>(getCardHiddenWarning)
@@ -108,6 +111,13 @@ const CardLimitNotification = (props: Props) => {
         }
     }, [show])
 
+    const handleContactAdminClicked = useCallback(async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardCTAPerformed)
+
+        await octoClient.notifyAdminUpgrade()
+        setShowNotifyAdminSuccess(true)
+    }, [me?.id])
+
     const onClick = useCallback(() => {
         (window as any).openPricingModal()()
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
@@ -153,7 +163,26 @@ const CardLimitNotification = (props: Props) => {
             {!hasPermissionToUpgrade &&
                 <FormattedMessage
                     id='notification-box.card-limit-reached.not-admin.text'
-                    defaultMessage='To access archived cards, contact your admin to upgrade to a paid plan.'
+                    defaultMessage='To access archived cards, you can {contactLink} to upgrade to a paid plan.'
+                    values={{
+                        contactLink: (
+                            <a
+                                onClick={handleContactAdminClicked}
+                            >
+                                <FormattedMessage
+                                    id='notification-box-card-limit-reached.contact-link'
+                                    defaultMessage='notify your admin'
+                                />
+                            </a>),
+                    }}
+                />}
+
+            {showNotifyAdminSuccess &&
+                <NotificationBox
+                    className='NotifyAdminSuccessNotify'
+                    icon={<CheckIcon/>}
+                    title={intl.formatMessage({id: 'ViewLimitDialog.notifyAdmin.Success', defaultMessage: 'Your admin has been notified'})}
+                    onClose={() => setShowNotifyAdminSuccess(false)}
                 />}
         </NotificationBox>
     )
