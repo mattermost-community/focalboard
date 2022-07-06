@@ -157,9 +157,13 @@ type Store interface {
 }
 
 type NotSupportedError struct {
-	Msg string
+	msg string
+}
+
+func NewNotSupportedError(msg string) NotSupportedError {
+	return NotSupportedError{msg: msg}
 }
 
 func (pe NotSupportedError) Error() string {
-	return pe.Msg
+	return pe.msg
 }
