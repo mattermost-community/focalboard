@@ -39,6 +39,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -144,6 +145,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -177,6 +179,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -195,6 +198,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -208,6 +212,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -224,6 +229,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -237,6 +243,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -265,6 +272,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -346,6 +354,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -367,6 +376,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -379,6 +389,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -387,6 +398,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -408,6 +420,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -433,6 +446,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -445,6 +459,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -453,6 +468,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -475,6 +491,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -484,6 +501,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -526,6 +544,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -550,6 +569,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -559,6 +579,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -601,6 +622,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -624,6 +646,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -649,6 +672,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -661,6 +685,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -669,6 +694,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -711,6 +737,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           Cards hidden
         </div>
         <button
+          class="Button"
           title="hidden-card-count"
           type="button"
         >
@@ -744,6 +771,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
         </a>
       </div>
       <button
+        class="IconButton"
         type="button"
       >
         <i
@@ -794,6 +822,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -899,6 +928,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -932,6 +962,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -950,6 +981,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -963,6 +995,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -979,6 +1012,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -992,6 +1026,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1020,6 +1055,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1075,6 +1111,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -1092,6 +1129,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1100,6 +1138,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -1127,6 +1166,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="2"
               type="button"
             >
@@ -1144,6 +1184,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1152,6 +1193,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -1179,6 +1221,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -1196,6 +1239,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1204,6 +1248,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -1215,6 +1260,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-header-cell narrow"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1231,6 +1277,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1252,6 +1299,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1285,6 +1333,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1308,6 +1357,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1319,6 +1369,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1371,6 +1422,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -1476,6 +1528,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -1509,6 +1562,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1527,6 +1581,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1540,6 +1595,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1556,6 +1612,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1569,6 +1626,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1597,6 +1655,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1678,6 +1737,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1699,6 +1759,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1711,6 +1772,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -1719,6 +1781,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1740,6 +1803,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1765,6 +1829,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1777,6 +1842,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -1785,6 +1851,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1807,6 +1874,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -1816,6 +1884,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1858,6 +1927,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -1882,6 +1952,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -1891,6 +1962,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1933,6 +2005,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -1956,6 +2029,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1981,6 +2055,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1993,6 +2068,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2001,6 +2077,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2167,6 +2244,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             class="ShareBoardLoginButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Login"
               type="button"
             >
@@ -2198,6 +2276,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2270,6 +2349,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -2291,6 +2371,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2312,6 +2393,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -2338,6 +2420,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2360,6 +2443,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -2369,6 +2453,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2412,6 +2497,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -2436,6 +2522,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -2445,6 +2532,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2488,6 +2576,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -2511,6 +2600,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -2537,6 +2627,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2614,6 +2705,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -2719,6 +2811,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -2752,6 +2845,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2770,6 +2864,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -2783,6 +2878,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -2799,6 +2895,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -2812,6 +2909,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -2840,6 +2938,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -2921,6 +3020,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2942,6 +3042,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2954,6 +3055,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2962,6 +3064,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2983,6 +3086,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3008,6 +3112,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3020,6 +3125,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3028,6 +3134,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3050,6 +3157,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -3059,6 +3167,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3101,6 +3210,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -3125,6 +3235,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -3134,6 +3245,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3176,6 +3288,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -3199,6 +3312,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3224,6 +3338,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3236,6 +3351,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3244,6 +3360,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3321,6 +3438,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -3426,6 +3544,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -3459,6 +3578,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3477,6 +3597,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -3490,6 +3611,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -3506,6 +3628,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -3519,6 +3642,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -3547,6 +3671,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -3628,6 +3753,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3649,6 +3775,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3661,6 +3788,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3669,6 +3797,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3690,6 +3819,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3715,6 +3845,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3727,6 +3858,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3735,6 +3867,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3757,6 +3890,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -3766,6 +3900,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3808,6 +3943,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -3832,6 +3968,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -3841,6 +3978,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3883,6 +4021,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -3906,6 +4045,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3931,6 +4071,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3943,6 +4084,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3951,6 +4093,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4028,6 +4171,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -4133,6 +4277,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -4166,6 +4311,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4184,6 +4330,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -4197,6 +4344,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -4213,6 +4361,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -4226,6 +4375,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -4254,6 +4404,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -4335,6 +4486,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4356,6 +4508,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4368,6 +4521,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4376,6 +4530,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4397,6 +4552,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4422,6 +4578,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4434,6 +4591,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4442,6 +4600,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4464,6 +4623,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -4473,6 +4633,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4515,6 +4676,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -4539,6 +4701,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -4548,6 +4711,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4590,6 +4754,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -4613,6 +4778,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4638,6 +4804,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4650,6 +4817,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4658,6 +4826,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4735,6 +4904,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -4840,6 +5010,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -4873,6 +5044,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4891,6 +5063,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -4904,6 +5077,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -4920,6 +5094,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -4933,6 +5108,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -4961,6 +5137,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -5042,6 +5219,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5063,6 +5241,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5075,6 +5254,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5083,6 +5263,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5104,6 +5285,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5129,6 +5311,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5141,6 +5324,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5149,6 +5333,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5171,6 +5356,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -5180,6 +5366,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5222,6 +5409,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5246,6 +5434,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -5255,6 +5444,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5297,6 +5487,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5320,6 +5511,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5345,6 +5537,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5357,6 +5550,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5365,6 +5559,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5442,6 +5637,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -5547,6 +5743,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -5580,6 +5777,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5598,6 +5796,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -5611,6 +5810,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -5627,6 +5827,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -5640,6 +5841,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -5668,6 +5870,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -5749,6 +5952,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5770,6 +5974,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5782,6 +5987,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5790,6 +5996,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5811,6 +6018,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5836,6 +6044,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5848,6 +6057,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5856,6 +6066,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5878,6 +6089,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -5887,6 +6099,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5929,6 +6142,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5953,6 +6167,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -5962,6 +6177,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6004,6 +6220,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -6027,6 +6244,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6052,6 +6270,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6064,6 +6283,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6072,6 +6292,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6149,6 +6370,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -6254,6 +6476,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -6287,6 +6510,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6305,6 +6529,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -6318,6 +6543,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -6334,6 +6560,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -6347,6 +6574,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -6375,6 +6603,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -6456,6 +6685,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6477,6 +6707,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6489,6 +6720,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6497,6 +6729,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6518,6 +6751,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6543,6 +6777,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6555,6 +6790,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6563,6 +6799,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6585,6 +6822,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -6594,6 +6832,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6636,6 +6875,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -6660,6 +6900,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -6669,6 +6910,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6711,6 +6953,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -6734,6 +6977,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6759,6 +7003,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6771,6 +7016,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6779,6 +7025,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6856,6 +7103,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -6961,6 +7209,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -6994,6 +7243,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7012,6 +7262,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7025,6 +7276,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7041,6 +7293,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7054,6 +7307,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7082,6 +7336,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7163,6 +7418,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7184,6 +7440,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -7196,6 +7453,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -7204,6 +7462,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7225,6 +7484,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7250,6 +7510,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -7262,6 +7523,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -7270,6 +7532,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7292,6 +7555,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -7301,6 +7565,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7343,6 +7608,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -7367,6 +7633,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -7376,6 +7643,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7418,6 +7686,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -7441,6 +7710,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7466,6 +7736,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -7478,6 +7749,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -7486,6 +7758,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7563,6 +7836,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -7668,6 +7942,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -7701,6 +7976,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7719,6 +7995,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7732,6 +8009,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7748,6 +8026,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7761,6 +8040,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7789,6 +8069,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7870,6 +8151,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7891,6 +8173,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -7903,6 +8186,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -7911,6 +8195,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7932,6 +8217,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -7957,6 +8243,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -7969,6 +8256,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -7977,6 +8265,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7999,6 +8288,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -8008,6 +8298,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8050,6 +8341,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -8074,6 +8366,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -8083,6 +8376,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8125,6 +8419,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -8148,6 +8443,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8173,6 +8469,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8185,6 +8482,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8193,6 +8491,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8270,6 +8569,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -8375,6 +8675,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -8408,6 +8709,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8426,6 +8728,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8439,6 +8742,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8455,6 +8759,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -8468,6 +8773,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -8496,6 +8802,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -8577,6 +8884,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8598,6 +8906,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8610,6 +8919,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8618,6 +8928,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8639,6 +8950,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8664,6 +8976,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8676,6 +8989,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8684,6 +8998,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8706,6 +9021,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -8715,6 +9031,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8757,6 +9074,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -8781,6 +9099,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -8790,6 +9109,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8832,6 +9152,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -8855,6 +9176,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8880,6 +9202,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8892,6 +9215,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8900,6 +9224,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8977,6 +9302,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -9082,6 +9408,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -9115,6 +9442,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -9133,6 +9461,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9144,6 +9473,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -9157,6 +9487,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -9185,6 +9516,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -9231,6 +9563,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -9291,6 +9624,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -9396,6 +9730,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -9429,6 +9764,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -9447,6 +9783,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9460,6 +9797,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9476,6 +9814,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -9489,6 +9828,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -9517,6 +9857,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -9572,6 +9913,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -9589,6 +9931,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -9597,6 +9940,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -9624,6 +9968,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="1"
               type="button"
             >
@@ -9641,6 +9986,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -9649,6 +9995,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -9676,6 +10023,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -9693,6 +10041,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -9701,6 +10050,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -9712,6 +10062,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-header-cell narrow"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9728,6 +10079,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9749,6 +10101,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -9772,6 +10125,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </div>
           </div>
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9783,6 +10137,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9835,6 +10190,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -9893,6 +10249,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -9926,6 +10283,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -9944,6 +10302,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9957,6 +10316,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -9973,6 +10333,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -9986,6 +10347,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -10014,6 +10376,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -10069,6 +10432,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -10086,6 +10450,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -10094,6 +10459,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -10121,6 +10487,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="1"
               type="button"
             >
@@ -10138,6 +10505,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -10146,6 +10514,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -10173,6 +10542,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -10190,6 +10560,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -10198,6 +10569,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -10209,6 +10581,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-header-cell narrow"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -10225,6 +10598,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -10246,6 +10620,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -10269,6 +10644,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </div>
           </div>
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -10280,6 +10656,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -10332,6 +10709,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -10437,6 +10815,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -10470,6 +10849,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -10488,6 +10868,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -10501,6 +10882,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -10517,6 +10899,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -10530,6 +10913,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -10558,6 +10942,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -10639,6 +11024,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -10660,6 +11046,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -10672,6 +11059,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -10680,6 +11068,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -10701,6 +11090,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -10726,6 +11116,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -10738,6 +11129,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -10746,6 +11138,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -10768,6 +11161,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 >
                   <button
                     aria-label="MenuBtn"
+                    class="IconButton"
                     title="MenuBtn"
                     type="button"
                   >
@@ -10777,6 +11171,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   </button>
                 </div>
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -10819,6 +11214,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -10842,6 +11238,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -10867,6 +11264,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -10879,6 +11277,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -10887,6 +11286,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
