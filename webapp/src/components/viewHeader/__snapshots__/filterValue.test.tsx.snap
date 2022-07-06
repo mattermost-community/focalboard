@@ -4,7 +4,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper filterValue"
     role="button"
   >
     <button
@@ -86,7 +86,7 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper filterValue"
     role="button"
   >
     <button
@@ -105,7 +105,7 @@ exports[`components/viewHeader/filterValue return filterValue and click Status w
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper filterValue"
     role="button"
   >
     <button
