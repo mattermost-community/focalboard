@@ -278,6 +278,24 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 	return s.boardsFromRows(rows)
 }
 
+func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, teamID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Eq{"b.id": boardIDs})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardsInTeamByIds ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
 	// Generate tracking IDs for in-built templates
 	if board.IsTemplate && board.TeamID == model.GlobalTeamID {

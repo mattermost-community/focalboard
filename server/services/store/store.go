@@ -90,6 +90,7 @@ type Store interface {
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
 	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
 
@@ -156,9 +157,9 @@ type Store interface {
 }
 
 type NotSupportedError struct {
-	msg string
+	Msg string
 }
 
 func (pe NotSupportedError) Error() string {
-	return pe.msg
+	return pe.Msg
 }

@@ -746,40 +746,21 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 }
 
 func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
-	// TODO: Make this efficient
 	members, err := s.GetMembersForUser(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	explicitBoards, err := s.Store.GetBoardsForUserAndTeam(userID, teamID)
+	boardIDs := []string{}
+	for _, m := range members {
+		boardIDs = append(boardIDs, m.BoardID)
+	}
+
+	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
 	if err != nil {
 		return nil, err
 	}
 
-	explicitBoardsExists := map[string]bool{}
-	for _, b := range explicitBoards {
-		explicitBoardsExists[b.ID] = true
-	}
-
-	boards := explicitBoards
-	for _, m := range members {
-		if explicitBoardsExists[m.BoardID] {
-			continue
-		}
-
-		board, err := s.GetBoard(m.BoardID)
-		if err != nil {
-			return nil, err
-		}
-		if board.TeamID != teamID {
-			continue
-		}
-		if board.IsTemplate {
-			continue
-		}
-		boards = append(boards, board)
-	}
 	return boards, nil
 }
 

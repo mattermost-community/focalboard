@@ -354,6 +354,11 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 }
 
+func (s *SQLStore) GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error) {
+	return s.getBoardsInTeamByIds(s.db, boardIDs, teamID)
+
+}
+
 func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
 	return s.getCardLimitTimestamp(s.db)
 
