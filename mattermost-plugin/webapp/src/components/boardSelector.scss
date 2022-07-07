@@ -1,5 +1,4 @@
-
-.BoardSwitcherDialog {
+.BoardSelector {
     color: rgba(var(--center-channel-color-rgb));
 
     .dialog {
@@ -8,15 +7,14 @@
         }
     }
 
-    .wrapper {
-        .dialog {
-            .toolbar {
-                flex-direction: row-reverse;
-                padding: 0;
-                position: absolute;
-                right: 18px;
-                top: 18px;
-            }
+    .heading {
+        display: flex;
+        align-items: center;
+        margin-right: 35px;
+        margin-top: 5px;
+
+        .text-heading4 {
+            flex-grow: 1;
         }
     }
 
@@ -25,10 +23,25 @@
             position: relative;
             width: 600px;
             height: 450px;
+
+            .toolbar {
+                flex-direction: row-reverse;
+                padding: 0;
+                position: absolute;
+                right: 18px;
+                top: 18px;
+            }
+        }
+        .confirmation-dialog-box {
+            .dialog {
+                position: fixed;
+                width: 500px;
+                height: auto;
+            }
         }
     }
 
-    .BoardSwitcherDialogBody {
+    .BoardSelectorBody {
         display: flex;
         flex-direction: column;
         height: 100%;
