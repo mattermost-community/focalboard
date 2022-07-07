@@ -7,6 +7,8 @@ import debounce from 'lodash/debounce'
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 
+import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
+
 import octoClient from '../../../../webapp/src/octoClient'
 import mutator from '../../../../webapp/src/mutator'
 import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
@@ -20,6 +22,7 @@ import SearchIcon from '../../../../webapp/src/widgets/icons/search'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 import {getCurrentLinkToChannel, setLinkToChannel} from '../../../../webapp/src/store/boards'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../../webapp/src/telemetry/telemetryClient'
+import {WSClient} from '../../../../webapp/src/wsclient'
 
 import BoardSelectorItem from './boardSelectorItem'
 
@@ -55,6 +58,31 @@ const BoardSelector = () => {
     const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [searchHandler])
 
     const emptyResult = results.length === 0 && !isSearching && searchQuery
+
+    useWebsockets(team?.id || '', (wsClient: WSClient) => {
+        const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
+            const newResults = [...results]
+            let updated = false
+            results.forEach((board, idx) => {
+                for (const newBoard of boards) {
+                    if (newBoard.id == board.id) {
+                        newResults[idx] = newBoard
+                        updated = true
+                    }
+                }
+            })
+            if (updated) {
+                setResults(newResults)
+            }
+        }
+
+        wsClient.addOnChange(onChangeBoardHandler, 'board')
+
+        return () => {
+            wsClient.removeOnChange(onChangeBoardHandler, 'board')
+        }
+    }, [results])
+
 
     if (!team) {
         return null

@@ -6,14 +6,19 @@ import {FormattedMessage, IntlProvider} from 'react-intl'
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 
+import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
+
+import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
 import {getCurrentTeam} from '../../../../webapp/src/store/teams'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
-import {getMySortedBoards, setLinkToChannel} from '../../../../webapp/src/store/boards'
+import {getMySortedBoards, setLinkToChannel, updateBoards, updateMembers} from '../../../../webapp/src/store/boards'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 
 import RHSChannelBoardItem from './rhsChannelBoardItem'
+
+import {WSClient} from '../../../../webapp/src/wsclient'
 
 import './rhsChannelBoards.scss'
 
@@ -24,6 +29,23 @@ const RHSChannelBoards = () => {
     const team = useAppSelector(getCurrentTeam)
     const currentChannel = useAppSelector(getCurrentChannel);
     const dispatch = useAppDispatch()
+
+    useWebsockets(team?.id || '', (wsClient: WSClient) => {
+        const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
+            dispatch(updateBoards(boards))
+        }
+        const onChangeMemberHandler = (_: WSClient, members: BoardMember[]): void => {
+            dispatch(updateMembers(members))
+        }
+
+        wsClient.addOnChange(onChangeBoardHandler, 'board')
+        wsClient.addOnChange(onChangeMemberHandler, 'boardMembers')
+
+        return () => {
+            wsClient.removeOnChange(onChangeBoardHandler, 'board')
+            wsClient.removeOnChange(onChangeMemberHandler, 'boardMembers')
+        }
+    }, [team?.id])
 
     if (!boards) {
         return null

@@ -245,9 +245,11 @@ export default class Plugin {
             windowAny.frontendBaseURL = subpath + '/boards'
 
             const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
-                () => (
+                (props: {webSocketClient: MMWebSocketClient}) => (
                     <ReduxProvider store={store}>
-                        <RHSChannelBoards/>
+                        <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                            <RHSChannelBoards/>
+                        </WithWebSockets>
                     </ReduxProvider>
                 ),
                 <ErrorBoundary>
@@ -290,9 +292,11 @@ export default class Plugin {
             this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
         }
 
-        this.boardSelectorId = this.registry.registerRootComponent(() => (
+        this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
             <ReduxProvider store={store}>
-                <BoardSelector/>
+                <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                    <BoardSelector/>
+                </WithWebSockets>
             </ReduxProvider>
         ))
 

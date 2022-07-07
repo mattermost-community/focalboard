@@ -95,7 +95,7 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
     },
 )
 
-export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMember[]>) => {
+export const updateMembersHandler = (state: BoardsState, action: PayloadAction<BoardMember[]>) => {
     if (action.payload.length === 0) {
         return
     }
@@ -140,7 +140,7 @@ const boardsSlice = createSlice({
                 }
             }
         },
-        updateMembers,
+        updateMembers: updateMembersHandler,
     },
 
     extraReducers: (builder) => {
@@ -192,11 +192,11 @@ const boardsSlice = createSlice({
             }, {})
             state.membersInBoards[boardId] = boardMembersMap
         })
-        builder.addCase(updateMembersEnsuringBoardsAndUsers.fulfilled, updateMembers)
+        builder.addCase(updateMembersEnsuringBoardsAndUsers.fulfilled, updateMembersHandler)
     },
 })
 
-export const {updateBoards, setCurrent, setLinkToChannel} = boardsSlice.actions
+export const {updateBoards, setCurrent, setLinkToChannel, updateMembers} = boardsSlice.actions
 export const {reducer} = boardsSlice
 
 export const getBoards = (state: RootState): {[key: string]: Board} => state.boards?.boards || {}
