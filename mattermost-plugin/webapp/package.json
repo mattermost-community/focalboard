@@ -27,8 +27,10 @@
     "@babel/runtime": "7.17.8",
     "@formatjs/ts-transformer": "3.9.2",
     "@testing-library/react": "11.2.7",
+    "@testing-library/user-event": "14.2.1",
     "@types/enzyme": "3.10.11",
     "@types/jest": "27.4.1",
+    "@types/lodash": "4.14.182",
     "@types/node": "17.0.23",
     "@types/react": "17.0.42",
     "@types/react-dom": "17.0.14",
@@ -106,9 +108,12 @@
     ],
     "moduleNameMapper": {
       "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy",
-      "^.+\\.(css|less|scss)$": "identity-obj-proxy",
+      "^.+\\.(scss|css)$": "<rootDir>/tests/style_mock.json",
       "^.*i18n.*\\.(json)$": "<rootDir>/tests/i18n_mock.json",
-      "^bundle-loader\\?lazy\\!(.*)$": "$1"
+      "^bundle-loader\\?lazy\\!(.*)$": "$1",
+      "^react$": "<rootDir>/../../webapp/node_modules/react",
+      "^react-redux$": "<rootDir>/../../webapp/node_modules/react-redux",
+      "^react-intl$": "<rootDir>/../../webapp/node_modules/react-intl"
     },
     "moduleDirectories": [
       "",

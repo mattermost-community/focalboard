@@ -59,6 +59,7 @@ type BoardMember = {
     schemeEditor: boolean
     schemeCommenter: boolean
     schemeViewer: boolean
+    synthetic: boolean
 }
 
 type BoardsAndBlocks = {
