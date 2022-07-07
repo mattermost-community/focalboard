@@ -1,3 +1,5 @@
+@import '../styles/z-index';
+
 .CenterPanel {
     flex: 1 1 auto;
     display: flex;
@@ -39,11 +41,11 @@
     }
 
     > .top-head {
+        @include z-index(center-panel);
         position: sticky;
         top: 0;
         left: 0;
         background: rgb(var(--center-channel-bg-rgb));
-        z-index: 100;
 
         > .mid-head {
             margin-top: 24px;

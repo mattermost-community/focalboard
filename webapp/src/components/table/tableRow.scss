@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .TableRow {
     .open-button {
         display: none;
@@ -34,6 +36,7 @@
         }
         
         .action-cell {
+            @include z-index(table-row-action-cell);
             flex: 0 0 auto;
             display: flex;
             flex-direction: row;
@@ -48,7 +51,6 @@
             text-overflow: ellipsis;
             background-color: rgb(255, 255, 255);
             position: fixed;
-            z-index: 100;
         }
 
         .octo-table-cell-btn {
