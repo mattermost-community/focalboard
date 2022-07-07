@@ -354,6 +354,11 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 }
 
+func (s *SQLStore) GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error) {
+	return s.getBoardsInTeamByIds(s.db, boardIDs, teamID)
+
+}
+
 func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
 	return s.getCardLimitTimestamp(s.db)
 
@@ -361,6 +366,11 @@ func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
 
 func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 	return s.getCategory(s.db, id)
+
+}
+
+func (s *SQLStore) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
+	return s.getChannel(s.db, teamID, channelID)
 
 }
 
@@ -728,6 +738,11 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
 	return s.searchBoardsForUser(s.db, term, userID)
+
+}
+
+func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
+	return s.searchUserChannels(s.db, teamID, userID, query)
 
 }
 

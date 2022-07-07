@@ -90,7 +90,7 @@ const CardLimitNotification = (props: Props) => {
         title = intl.formatMessage(
             {
                 id: 'notification-box-cards-hidden.title',
-                defaultMessage: 'Your action hidden another card',
+                defaultMessage: 'This action has hidden another card',
             },
         )
     }
@@ -155,7 +155,7 @@ const CardLimitNotification = (props: Props) => {
                             >
                                 <FormattedMessage
                                     id='notification-box-card-limit-reached.link'
-                                    defaultMessage='upgrade to a paid plan'
+                                    defaultMessage='Upgrade to a paid plan'
                                 />
                             </a>),
                     }}
