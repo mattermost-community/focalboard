@@ -128,8 +128,8 @@ func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission
 	return a.api.HasPermissionToTeam(userID, teamID, permission)
 }
 
-func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserId string, channelID string, permission *mm_model.Permission) bool {
-	return a.api.HasPermissionToChannel(askingUserId, channelID, permission)
+func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserID string, channelID string, permission *mm_model.Permission) bool {
+	return a.api.HasPermissionToChannel(askingUserID, channelID, permission)
 }
 
 //

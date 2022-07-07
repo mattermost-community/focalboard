@@ -35,7 +35,7 @@ type ServicesAPI interface {
 
 	// Permissions service
 	HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool
-	HasPermissionToChannel(askingUserId string, channelID string, permission *mm_model.Permission) bool
+	HasPermissionToChannel(askingUserID string, channelID string, permission *mm_model.Permission) bool
 
 	// Bot service
 	EnsureBot(bot *mm_model.Bot) (string, error)

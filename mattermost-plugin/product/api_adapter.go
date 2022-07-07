@@ -125,8 +125,8 @@ func (a *serviceAPIAdapter) HasPermissionToTeam(userID, teamID string, permissio
 	return a.api.permissionsService.HasPermissionToTeam(userID, teamID, permission)
 }
 
-func (a *serviceAPIAdapter) HasPermissionToChannel(askingUserId string, channelID string, permission *mm_model.Permission) bool {
-	return a.api.permissionsService.HasPermissionToChannel(askingUserId, channelID, permission)
+func (a *serviceAPIAdapter) HasPermissionToChannel(askingUserID string, channelID string, permission *mm_model.Permission) bool {
+	return a.api.permissionsService.HasPermissionToChannel(askingUserID, channelID, permission)
 }
 
 //
