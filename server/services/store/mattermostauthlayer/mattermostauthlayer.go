@@ -674,7 +674,7 @@ func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMe
 	}
 
 	query := s.getQueryBuilder().
-		Select("Cm.userID, B.Id").
+		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
 		Where(sq.Eq{"CM.userID": userID})
@@ -713,7 +713,7 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 	}
 
 	query := s.getQueryBuilder().
-		Select("Cm.userID, B.Id").
+		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
 		Where(sq.Eq{"B.id": boardID}).
