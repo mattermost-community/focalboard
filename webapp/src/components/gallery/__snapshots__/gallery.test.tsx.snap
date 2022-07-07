@@ -282,6 +282,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   />
                 </div>
               </div>
+              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
@@ -413,6 +414,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   />
                 </div>
               </div>
+              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
