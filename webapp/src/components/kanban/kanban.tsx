@@ -50,6 +50,8 @@ const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
 const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
+    console.log('Rendering Kanban')
+
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
 
     if (!groupByProperty) {
@@ -332,4 +334,4 @@ const Kanban = (props: Props) => {
     )
 }
 
-export default injectIntl(Kanban)
+export default injectIntl(React.memo(Kanban))

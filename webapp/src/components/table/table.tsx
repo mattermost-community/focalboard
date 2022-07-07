@@ -265,4 +265,4 @@ const Table = (props: Props): JSX.Element => {
     )
 }
 
-export default Table
+export default React.memo(Table)
