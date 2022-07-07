@@ -150,7 +150,13 @@ const BoardSelector = () => {
         <div className='focalboard-body'>
             <Dialog
                 className='BoardSelector'
-                onClose={() => dispatch(setLinkToChannel(''))}
+                onClose={() => {
+                    dispatch(setLinkToChannel(''))
+                    setResults([])
+                    setIsSearching(false)
+                    setSearchQuery('')
+                    setShowLinkBoardConfirmation(null)
+                }}
             >
                 {showLinkBoardConfirmation &&
                     <ConfirmationDialog

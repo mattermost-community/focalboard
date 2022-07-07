@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React  from 'react'
+import React, {useEffect}  from 'react'
 import {FormattedMessage, IntlProvider} from 'react-intl'
 
 import {getMessages} from '../../../../webapp/src/i18n'
@@ -10,6 +10,7 @@ import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
 
 import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
 import {getCurrentTeam} from '../../../../webapp/src/store/teams'
+import {initialLoad} from '../../../../webapp/src/store/initialLoad'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {getMySortedBoards, setLinkToChannel, updateBoards, updateMembers} from '../../../../webapp/src/store/boards'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
@@ -29,6 +30,12 @@ const RHSChannelBoards = () => {
     const team = useAppSelector(getCurrentTeam)
     const currentChannel = useAppSelector(getCurrentChannel);
     const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        if (team?.id) {
+            dispatch(initialLoad())
+        }
+    }, [team?.id]);
 
     useWebsockets(team?.id || '', (wsClient: WSClient) => {
         const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
