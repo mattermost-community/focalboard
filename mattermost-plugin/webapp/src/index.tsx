@@ -177,7 +177,7 @@ export default class Plugin {
 
         this.registry = registry
 
-        UserSettings.nameFormat = mmStore.getState().entities.preferences.myPreferences['display_settings--name_format'].value || null
+        UserSettings.nameFormat = mmStore.getState().entities.preferences?.myPreferences['display_settings--name_format']?.value || null
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
