@@ -1,4 +1,4 @@
-CREATE TABLE {{.prefix}}categories (
+CREATE TABLE IF NOT EXISTS {{.prefix}}categories (
     id varchar(36) NOT NULL,
     name varchar(100) NOT NULL,
     user_id varchar(36) NOT NULL,

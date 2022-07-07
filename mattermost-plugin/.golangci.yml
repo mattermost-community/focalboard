@@ -67,6 +67,7 @@ linters:
     - unconvert
     - unused
     - whitespace
+    - gocyclo
 
 issues:
   exclude-rules:

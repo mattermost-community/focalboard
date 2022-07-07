@@ -18,6 +18,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
@@ -108,7 +109,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API, storeParams.TablePrefix, client)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %w", err2)
 		}
@@ -152,6 +153,9 @@ func (p *Plugin) OnActivate() error {
 		WSAdapter:          p.wsPluginAdapter,
 		NotifyBackends:     notifyBackends,
 		PermissionsService: permissionsService,
+		PluginAPI:          p.API,
+		Client:             client,
+		IsPlugin:           true,
 	}
 
 	server, err := server.New(params)
@@ -161,6 +165,19 @@ func (p *Plugin) OnActivate() error {
 	}
 
 	backendParams.appAPI.init(db, server.App())
+
+	if utils.IsCloudLicense(p.API.GetLicense()) {
+		limits, err := p.API.GetCloudLimits()
+		if err != nil {
+			fmt.Println("ERROR FETCHING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+			return err
+		}
+
+		if err := server.App().SetCloudLimits(limits); err != nil {
+			fmt.Println("ERROR SETTING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+			return err
+		}
+	}
 
 	p.server = server
 	return server.Start()
@@ -509,4 +526,10 @@ func isBoardsLink(link string) bool {
 
 	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 	return teamID != "" && boardID != "" && viewID != "" && cardID != ""
+}
+
+func (p *Plugin) OnCloudLimitsUpdated(limits *mmModel.ProductLimits) {
+	if err := p.server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("Error setting the cloud limits for Boards", err)
+	}
 }

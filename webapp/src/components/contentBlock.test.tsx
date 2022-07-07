@@ -34,7 +34,7 @@ describe('components/contentBlock', () => {
     const mockedOcto = mocked(octoClient, true)
 
     mockedUtils.createGuid.mockReturnValue('test-id')
-    mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
+    mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 
     const board = TestBlockFactory.createBoard()
     board.cardProperties = []
