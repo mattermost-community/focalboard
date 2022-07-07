@@ -111,6 +111,21 @@ func (mr *MockServicesAPIMockRecorder) GetChannelMember(arg0, arg1 interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChannelMember", reflect.TypeOf((*MockServicesAPI)(nil).GetChannelMember), arg0, arg1)
 }
 
+// GetChannelsForTeamForUser mocks base method.
+func (m *MockServicesAPI) GetChannelsForTeamForUser(arg0, arg1 string, arg2 bool) (model.ChannelList, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetChannelsForTeamForUser", arg0, arg1, arg2)
+	ret0, _ := ret[0].(model.ChannelList)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetChannelsForTeamForUser indicates an expected call of GetChannelsForTeamForUser.
+func (mr *MockServicesAPIMockRecorder) GetChannelsForTeamForUser(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChannelsForTeamForUser", reflect.TypeOf((*MockServicesAPI)(nil).GetChannelsForTeamForUser), arg0, arg1, arg2)
+}
+
 // GetCloudLimits mocks base method.
 func (m *MockServicesAPI) GetCloudLimits() (*model.ProductLimits, error) {
 	m.ctrl.T.Helper()
@@ -300,6 +315,20 @@ func (m *MockServicesAPI) GetUsersFromProfiles(arg0 *model.UserGetOptions) ([]*m
 func (mr *MockServicesAPIMockRecorder) GetUsersFromProfiles(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersFromProfiles", reflect.TypeOf((*MockServicesAPI)(nil).GetUsersFromProfiles), arg0)
+}
+
+// HasPermissionToChannel mocks base method.
+func (m *MockServicesAPI) HasPermissionToChannel(arg0, arg1 string, arg2 *model.Permission) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPermissionToChannel", arg0, arg1, arg2)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// HasPermissionToChannel indicates an expected call of HasPermissionToChannel.
+func (mr *MockServicesAPIMockRecorder) HasPermissionToChannel(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPermissionToChannel", reflect.TypeOf((*MockServicesAPI)(nil).HasPermissionToChannel), arg0, arg1, arg2)
 }
 
 // HasPermissionToTeam mocks base method.

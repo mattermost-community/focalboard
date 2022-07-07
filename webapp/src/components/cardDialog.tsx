@@ -14,8 +14,6 @@ import {useAppSelector} from '../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
-import DeleteIcon from '../widgets/icons/delete'
-import LinkIcon from '../widgets/icons/Link'
 import Menu from '../widgets/menu'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
@@ -32,9 +30,9 @@ import BoardPermissionGate from './permissions/boardPermissionGate'
 
 import CardDetail from './cardDetail/cardDetail'
 import Dialog from './dialog'
-import {sendFlashMessage} from './flashMessages'
 
 import './cardDialog.scss'
+import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
 
 type Props = {
     board: Board
@@ -110,32 +108,10 @@ const CardDialog = (props: Props): JSX.Element => {
     }
 
     const menu = (
-        <Menu position='left'>
-            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                <Menu.Text
-                    id='delete'
-                    icon={<DeleteIcon/>}
-                    name='Delete'
-                    onClick={handleDeleteButtonOnClick}
-                />
-            </BoardPermissionGate>
-            {me?.id !== 'single-user' &&
-                <Menu.Text
-                    icon={<LinkIcon/>}
-                    id='copy'
-                    name={intl.formatMessage({id: 'CardDialog.copyLink', defaultMessage: 'Copy link'})}
-                    onClick={() => {
-                        let cardLink = window.location.href
-
-                        if (!cardLink.includes(props.cardId)) {
-                            cardLink += `/${props.cardId}`
-                        }
-
-                        Utils.copyTextToClipboard(cardLink)
-                        sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                    }}
-                />
-            }
+        <CardActionsMenu
+            cardId={props.cardId}
+            onClickDelete={handleDeleteButtonOnClick}
+        >
             {!isTemplate &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
                     <Menu.Text
@@ -149,7 +125,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     />
                 </BoardPermissionGate>
             }
-        </Menu>
+        </CardActionsMenu>
     )
 
     const followActionButton = (following: boolean): React.ReactNode => {

@@ -63,6 +63,11 @@ func (a *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*m
 	return member, normalizeAppErr(appErr)
 }
 
+func (a *pluginAPIAdapter) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mm_model.ChannelList, error) {
+	channels, appErr := a.api.GetChannelsForTeamForUser(teamID, userID, includeDeleted)
+	return channels, normalizeAppErr(appErr)
+}
+
 //
 // Post service.
 //
@@ -121,6 +126,10 @@ func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model
 
 func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
 	return a.api.HasPermissionToTeam(userID, teamID, permission)
+}
+
+func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserId string, channelID string, permission *mm_model.Permission) bool {
+	return a.api.HasPermissionToChannel(askingUserId, channelID, permission)
 }
 
 //

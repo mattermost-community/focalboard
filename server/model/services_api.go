@@ -17,6 +17,7 @@ type ServicesAPI interface {
 	GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error)
 	GetChannelByID(channelID string) (*mm_model.Channel, error)
 	GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error)
+	GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mm_model.ChannelList, error)
 
 	// Post service
 	CreatePost(post *mm_model.Post) (*mm_model.Post, error)
@@ -34,6 +35,7 @@ type ServicesAPI interface {
 
 	// Permissions service
 	HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool
+	HasPermissionToChannel(askingUserId string, channelID string, permission *mm_model.Permission) bool
 
 	// Bot service
 	EnsureBot(bot *mm_model.Bot) (string, error)

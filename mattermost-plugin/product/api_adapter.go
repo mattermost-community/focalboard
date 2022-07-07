@@ -57,6 +57,14 @@ func (a *serviceAPIAdapter) GetChannelMember(channelID string, userID string) (*
 	return member, normalizeAppErr(appErr)
 }
 
+func (a *serviceAPIAdapter) GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mm_model.ChannelList, error) {
+	opts := &mm_model.ChannelSearchOpts{
+		IncludeDeleted: includeDeleted,
+	}
+	channels, appErr := a.api.channelService.GetChannelsForTeamForUser(teamID, userID, opts)
+	return channels, normalizeAppErr(appErr)
+}
+
 //
 // Post service.
 //
@@ -115,6 +123,10 @@ func (a *serviceAPIAdapter) CreateMember(teamID string, userID string) (*mm_mode
 
 func (a *serviceAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
 	return a.api.permissionsService.HasPermissionToTeam(userID, teamID, permission)
+}
+
+func (a *serviceAPIAdapter) HasPermissionToChannel(askingUserId string, channelID string, permission *mm_model.Permission) bool {
+	return a.api.permissionsService.HasPermissionToChannel(askingUserId, channelID, permission)
 }
 
 //

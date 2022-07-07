@@ -35,6 +35,9 @@ func (pe NotSupportedError) Error() string {
 // the mattermost-server. You can use plugin-api or product-api adapter implementations.
 type servicesAPI interface {
 	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error)
+	GetChannelByID(channelID string) (*mmModel.Channel, error)
+	GetChannelMember(channelID string, userID string) (*mmModel.ChannelMember, error)
+	GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mmModel.ChannelList, error)
 	GetUserByID(userID string) (*mmModel.User, error)
 	UpdateUser(user *mmModel.User) (*mmModel.User, error)
 	GetUserByEmail(email string) (*mmModel.User, error)
@@ -120,19 +123,19 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 }
 
 func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
-	return NotSupportedError{"no user creation allowed from focalboard, create it using mattermost"}
+	return store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUser(user *model.User) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
@@ -181,27 +184,27 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 }
 
 func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model.Session, error) {
-	return nil, NotSupportedError{"sessions not used when using mattermost"}
+	return nil, store.NewNotSupportedError("sessions not used when using mattermost")
 }
 
 func (s *MattermostAuthLayer) CreateSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) RefreshSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) DeleteSession(sessionID string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
@@ -632,6 +635,184 @@ func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, er
 
 func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
 	return s.servicesAPI.GetCloudLimits()
+}
+
+func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) ([]*model.BoardMember, error) {
+	boardMembers := []*model.BoardMember{}
+
+	for rows.Next() {
+		var boardMember model.BoardMember
+
+		err := rows.Scan(
+			&boardMember.UserID,
+			&boardMember.BoardID,
+		)
+		if err != nil {
+			return nil, err
+		}
+		boardMember.Roles = "editor"
+		boardMember.SchemeEditor = true
+		boardMember.Synthetic = true
+
+		boardMembers = append(boardMembers, &boardMember)
+	}
+
+	return boardMembers, nil
+}
+
+func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
+	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	if model.IsErrNotFound(err) {
+		b, err := s.Store.GetBoard(boardID)
+		if err != nil {
+			return nil, err
+		}
+		if b.ChannelID != "" {
+			_, err := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
+			if err != nil {
+				return nil, err
+			}
+			return &model.BoardMember{
+				BoardID:         boardID,
+				UserID:          userID,
+				Roles:           "editor",
+				SchemeAdmin:     false,
+				SchemeEditor:    true,
+				SchemeCommenter: false,
+				SchemeViewer:    false,
+				Synthetic:       true,
+			}, nil
+		}
+	}
+	return bm, nil
+}
+
+func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
+	explicitMembers, err := s.Store.GetMembersForUser(userID)
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	query := s.getQueryBuilder().
+		Select("Cm.userID, B.Id").
+		From(s.tablePrefix + "boards AS B").
+		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Where(sq.Eq{"CM.userID": userID})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	members := []*model.BoardMember{}
+	existingMembers := map[string]bool{}
+	for _, m := range explicitMembers {
+		members = append(members, m)
+		existingMembers[m.BoardID] = true
+	}
+	for _, m := range implicitMembers {
+		if !existingMembers[m.BoardID] {
+			members = append(members, m)
+		}
+	}
+
+	return members, nil
+}
+
+func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
+	explicitMembers, err := s.Store.GetMembersForBoard(boardID)
+	if err != nil {
+		s.logger.Error(`getMembersForBoard ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	query := s.getQueryBuilder().
+		Select("Cm.userID, B.Id").
+		From(s.tablePrefix + "boards AS B").
+		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Where(sq.Eq{"B.id": boardID}).
+		Where(sq.NotEq{"B.channel_id": ""})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForBoard ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	members := []*model.BoardMember{}
+	existingMembers := map[string]bool{}
+	for _, m := range explicitMembers {
+		members = append(members, m)
+		existingMembers[m.UserID] = true
+	}
+	for _, m := range implicitMembers {
+		if !existingMembers[m.UserID] {
+			members = append(members, m)
+		}
+	}
+
+	return members, nil
+}
+
+func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
+	members, err := s.GetMembersForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	boardIDs := []string{}
+	for _, m := range members {
+		boardIDs = append(boardIDs, m.BoardID)
+	}
+
+	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	return boards, nil
+}
+
+func (s *MattermostAuthLayer) SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error) {
+	channels, err := s.servicesAPI.GetChannelsForTeamForUser(teamID, userID, false)
+	if err != nil {
+		return nil, err
+	}
+
+	result := []*mmModel.Channel{}
+	count := 0
+	for _, channel := range channels {
+		if channel.Type != mmModel.ChannelTypeDirect &&
+			channel.Type != mmModel.ChannelTypeGroup &&
+			(strings.Contains(channel.Name, query) || strings.Contains(channel.DisplayName, query)) {
+			result = append(result, channel)
+			count++
+			if count >= 10 {
+				break
+			}
+		}
+	}
+	return result, nil
+}
+
+func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Channel, error) {
+	channel, err := s.servicesAPI.GetChannelByID(channelID)
+	if err != nil {
+		return nil, err
+	}
+	return channel, nil
 }
 
 func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
