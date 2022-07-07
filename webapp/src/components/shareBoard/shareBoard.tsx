@@ -305,6 +305,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u) => u.username}
                             isMulti={false}
+                            placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people'})}
                             onChange={(newValue) => {
                                 if (newValue) {
                                     mutator.createBoardMember(boardId, newValue.id)
