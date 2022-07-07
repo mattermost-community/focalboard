@@ -71,7 +71,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                     class=" css-14el2xx-placeholder"
                     id="react-select-4-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -280,7 +280,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                     class=" css-14el2xx-placeholder"
                     id="react-select-4-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -489,7 +489,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                     class=" css-14el2xx-placeholder"
                     id="react-select-5-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -721,7 +721,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-10-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -928,7 +928,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-10-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -1349,7 +1349,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-11-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -1556,7 +1556,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-11-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -1977,7 +1977,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                     class=" css-14el2xx-placeholder"
                     id="react-select-6-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2209,7 +2209,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                     class=" css-14el2xx-placeholder"
                     id="react-select-7-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2441,7 +2441,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
                     class=" css-14el2xx-placeholder"
                     id="react-select-2-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2650,7 +2650,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                     class=" css-14el2xx-placeholder"
                     id="react-select-3-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2859,7 +2859,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                     class=" css-14el2xx-placeholder"
                     id="react-select-9-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -3068,7 +3068,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                     class=" css-14el2xx-placeholder"
                     id="react-select-8-placeholder"
                   >
-                    Select...
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"

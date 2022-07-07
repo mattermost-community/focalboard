@@ -512,7 +512,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
-        const selectElement = screen.getByText('Select...')
+        const selectElement = screen.getByText('Search for people')
         expect(selectElement).toBeDefined()
 
         await act(async () => {
@@ -561,7 +561,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
-        const selectElement = screen.getByText('Select...')
+        const selectElement = screen.getByText('Search for people')
         expect(selectElement).toBeDefined()
 
         await act(async () => {
