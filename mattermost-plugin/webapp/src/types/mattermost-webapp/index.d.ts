@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {Channel, ChannelMembership} from 'mattermost-redux/types/channels';
+import {Channel, ChannelMembership} from 'mattermost-redux/types/channels'
 
 export interface PluginRegistry {
     registerPostTypeComponent(typeName: string, component: React.ElementType)
@@ -15,7 +15,8 @@ export interface PluginRegistry {
     registerWebSocketEventHandler(event: string, handler: (e: any) => void)
     unregisterWebSocketEventHandler(event: string)
     registerAppBarComponent(iconURL: string, action: (channel: Channel, member: ChannelMembership) => void, tooltipText: React.ReactNode)
-    registerRightHandSidebarComponent(component: React.ElementType, title: string): {id: string; showRHSPlugin: any; hideRHSPlugin: any; toggleRHSPlugin: any}
+    registerRightHandSidebarComponent(component: React.ElementType, title: React.Element): {id: string; showRHSPlugin: any; hideRHSPlugin: any; toggleRHSPlugin: any}
+    registerRootComponent(component: React.ElementType)
 
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }

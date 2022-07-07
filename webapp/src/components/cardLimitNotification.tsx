@@ -10,16 +10,24 @@ import {IUser, UserConfigPatch} from '../user'
 import {getMe, patchProps, getCardLimitSnoozeUntil, getCardHiddenWarningSnoozeUntil} from '../store/users'
 import {getCurrentBoardHiddenCardsCount, getCardHiddenWarning} from '../store/cards'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
+import CheckIcon from '../widgets/icons/check'
+import NotificationBox from '../widgets/notificationBox/notificationBox'
 import octoClient from '../octoClient'
 
-import NotificationBox from '../widgets/notification-box'
+import './cardLimitNotification.scss'
+
+type Props = {
+    showHiddenCardNotification: boolean
+    hiddenCardCountNotificationHandler: (show: boolean) => void
+}
 
 const snoozeTime = 1000 * 60 * 60 * 24 * 10
 const checkSnoozeInterval = 1000 * 60 * 5
 
-const CardLimitNotification = () => {
+const CardLimitNotification = (props: Props) => {
     const intl = useIntl()
     const [time, setTime] = useState(Date.now())
+    const [showNotifyAdminSuccess, setShowNotifyAdminSuccess] = useState<boolean>(false)
 
     const hiddenCards = useAppSelector<number>(getCurrentBoardHiddenCardsCount)
     const cardHiddenWarning = useAppSelector<boolean>(getCardHiddenWarning)
@@ -68,6 +76,10 @@ const CardLimitNotification = () => {
         {cards: hiddenCards},
     )
 
+    if (!show && props.showHiddenCardNotification) {
+        show = true
+    }
+
     if (hiddenCards > 0 && time > snoozedUntil) {
         show = true
     }
@@ -78,7 +90,7 @@ const CardLimitNotification = () => {
         title = intl.formatMessage(
             {
                 id: 'notification-box-cards-hidden.title',
-                defaultMessage: 'Your action hidden another card',
+                defaultMessage: 'This action has hidden another card',
             },
         )
     }
@@ -99,6 +111,13 @@ const CardLimitNotification = () => {
         }
     }, [show])
 
+    const handleContactAdminClicked = useCallback(async () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardCTAPerformed)
+
+        await octoClient.notifyAdminUpgrade()
+        setShowNotifyAdminSuccess(true)
+    }, [me?.id])
+
     const onClick = useCallback(() => {
         (window as any).openPricingModal()()
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
@@ -110,12 +129,17 @@ const CardLimitNotification = () => {
         return null
     }
 
+    const hidHiddenCardNotification = () => {
+        show = false
+        props.hiddenCardCountNotificationHandler(false)
+    }
+
     return (
         <NotificationBox
             icon={<AlertIcon/>}
             title={title}
-            onClose={onClose}
-            closeTooltip={intl.formatMessage({
+            onClose={props.showHiddenCardNotification ? hidHiddenCardNotification : onClose}
+            closeTooltip={props.showHiddenCardNotification ? '' : intl.formatMessage({
                 id: 'notification-box-card-limit-reached.close-tooltip',
                 defaultMessage: 'Snooze for 10 days',
             })}
@@ -131,7 +155,7 @@ const CardLimitNotification = () => {
                             >
                                 <FormattedMessage
                                     id='notification-box-card-limit-reached.link'
-                                    defaultMessage='upgrade to a paid plan'
+                                    defaultMessage='Upgrade to a paid plan'
                                 />
                             </a>),
                     }}
@@ -139,7 +163,26 @@ const CardLimitNotification = () => {
             {!hasPermissionToUpgrade &&
                 <FormattedMessage
                     id='notification-box.card-limit-reached.not-admin.text'
-                    defaultMessage='To access archived cards, contact your admin to upgrade to a paid plan.'
+                    defaultMessage='To access archived cards, you can {contactLink} to upgrade to a paid plan.'
+                    values={{
+                        contactLink: (
+                            <a
+                                onClick={handleContactAdminClicked}
+                            >
+                                <FormattedMessage
+                                    id='notification-box-card-limit-reached.contact-link'
+                                    defaultMessage='notify your admin'
+                                />
+                            </a>),
+                    }}
+                />}
+
+            {showNotifyAdminSuccess &&
+                <NotificationBox
+                    className='NotifyAdminSuccessNotify'
+                    icon={<CheckIcon/>}
+                    title={intl.formatMessage({id: 'ViewLimitDialog.notifyAdmin.Success', defaultMessage: 'Your admin has been notified'})}
+                    onClose={() => setShowNotifyAdminSuccess(false)}
                 />}
         </NotificationBox>
     )

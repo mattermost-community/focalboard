@@ -9,10 +9,12 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBoards} from './store/sidebar'
+import {Channel} from './store/channels'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
+
 import {BoardsCloudLimits} from './boardsCloudLimits'
 
 //
@@ -794,6 +796,32 @@ class OctoClient {
         return (await this.getJson(response, [])) as Subscription[]
     }
 
+    async searchUserChannels(teamId: string, searchQuery: string): Promise<Channel[] | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels?search=${searchQuery}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as Channel[]
+    }
+
+    async getChannel(teamId: string, channelId: string): Promise<Channel | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels/${channelId}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as Channel
+    }
+
     // onboarding
     async prepareOnboarding(teamId: string): Promise<PrepareOnboardingResponse | undefined> {
         const path = `/api/v2/teams/${teamId}/onboard`
@@ -808,7 +836,14 @@ class OctoClient {
         return (await this.getJson(response, {})) as PrepareOnboardingResponse
     }
 
-    // limits
+    async notifyAdminUpgrade(): Promise<void> {
+        const path = `${this.teamsPath()}/notifyadminupgrade`
+        await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+    }
+
     async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
         const path = '/api/v2/limits'
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
