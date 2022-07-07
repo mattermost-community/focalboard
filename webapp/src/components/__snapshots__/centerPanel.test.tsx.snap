@@ -767,7 +767,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
         </p>
         Card limit reached, to view older cards, 
         <a>
-          upgrade to a paid plan
+          Upgrade to a paid plan
         </a>
       </div>
       <button

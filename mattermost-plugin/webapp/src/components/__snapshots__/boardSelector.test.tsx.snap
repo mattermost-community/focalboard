@@ -1,0 +1,383 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/boardSelector renders with no results 1`] = `
+<div>
+  <div
+    class="focalboard-body"
+  >
+    <div
+      class="Dialog dialog-back BoardSelector"
+    >
+      <div
+        class="backdrop"
+      />
+      <div
+        class="wrapper"
+      >
+        <div
+          class="dialog"
+          role="dialog"
+        >
+          <div
+            class="toolbar"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+            <div
+              class="toolbar--right"
+            />
+          </div>
+          <div
+            class="BoardSelectorBody"
+          >
+            <div
+              class="head"
+            >
+              <div
+                class="heading"
+              >
+                <h3
+                  class="text-heading4"
+                >
+                  Link boards
+                </h3>
+                <button
+                  class="Button emphasis--secondary"
+                  type="button"
+                >
+                  <span>
+                    Create a board
+                  </span>
+                </button>
+              </div>
+              <div
+                class="queryWrapper"
+              >
+                <i
+                  class="CompassIcon icon-magnify MagnifyIcon"
+                />
+                <input
+                  class="searchQuery"
+                  maxlength="100"
+                  placeholder="Search for boards"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="searchResults"
+            >
+              <div
+                class="noResults"
+              >
+                <div
+                  class="iconWrapper"
+                >
+                  <i
+                    class="CompassIcon icon-magnify MagnifyIcon"
+                  />
+                </div>
+                <h4
+                  class="text-heading4"
+                >
+                  No results for "test"
+                </h4>
+                <span>
+                  Check the spelling or try another search.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/boardSelector renders with some results 1`] = `
+<div>
+  <div
+    class="focalboard-body"
+  >
+    <div
+      class="Dialog dialog-back BoardSelector"
+    >
+      <div
+        class="backdrop"
+      />
+      <div
+        class="wrapper"
+      >
+        <div
+          class="dialog"
+          role="dialog"
+        >
+          <div
+            class="toolbar"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+            <div
+              class="toolbar--right"
+            />
+          </div>
+          <div
+            class="BoardSelectorBody"
+          >
+            <div
+              class="head"
+            >
+              <div
+                class="heading"
+              >
+                <h3
+                  class="text-heading4"
+                >
+                  Link boards
+                </h3>
+                <button
+                  class="Button emphasis--secondary"
+                  type="button"
+                >
+                  <span>
+                    Create a board
+                  </span>
+                </button>
+              </div>
+              <div
+                class="queryWrapper"
+              >
+                <i
+                  class="CompassIcon icon-magnify MagnifyIcon"
+                />
+                <input
+                  class="searchQuery"
+                  maxlength="100"
+                  placeholder="Search for boards"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="searchResults"
+            >
+              <div
+                class="BoardSelectorItem"
+              >
+                <span
+                  class="icon"
+                />
+                <div
+                  class="resultLine"
+                >
+                  <div
+                    class="resultTitle"
+                  >
+                    Untitled board
+                  </div>
+                  <div
+                    class="resultDescription"
+                  />
+                </div>
+                <div
+                  class="linkUnlinkButton"
+                >
+                  <button
+                    class="Button emphasis--primary"
+                    type="button"
+                  >
+                    <span>
+                      Link
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="BoardSelectorItem"
+              >
+                <span
+                  class="icon"
+                />
+                <div
+                  class="resultLine"
+                >
+                  <div
+                    class="resultTitle"
+                  >
+                    Untitled board
+                  </div>
+                  <div
+                    class="resultDescription"
+                  />
+                </div>
+                <div
+                  class="linkUnlinkButton"
+                >
+                  <button
+                    class="Button emphasis--primary"
+                    type="button"
+                  >
+                    <span>
+                      Link
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="BoardSelectorItem"
+              >
+                <span
+                  class="icon"
+                />
+                <div
+                  class="resultLine"
+                >
+                  <div
+                    class="resultTitle"
+                  >
+                    Untitled board
+                  </div>
+                  <div
+                    class="resultDescription"
+                  />
+                </div>
+                <div
+                  class="linkUnlinkButton"
+                >
+                  <button
+                    class="Button emphasis--primary"
+                    type="button"
+                  >
+                    <span>
+                      Link
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/boardSelector renders without start searching 1`] = `
+<div>
+  <div
+    class="focalboard-body"
+  >
+    <div
+      class="Dialog dialog-back BoardSelector"
+    >
+      <div
+        class="backdrop"
+      />
+      <div
+        class="wrapper"
+      >
+        <div
+          class="dialog"
+          role="dialog"
+        >
+          <div
+            class="toolbar"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+            <div
+              class="toolbar--right"
+            />
+          </div>
+          <div
+            class="BoardSelectorBody"
+          >
+            <div
+              class="head"
+            >
+              <div
+                class="heading"
+              >
+                <h3
+                  class="text-heading4"
+                >
+                  Link boards
+                </h3>
+                <button
+                  class="Button emphasis--secondary"
+                  type="button"
+                >
+                  <span>
+                    Create a board
+                  </span>
+                </button>
+              </div>
+              <div
+                class="queryWrapper"
+              >
+                <i
+                  class="CompassIcon icon-magnify MagnifyIcon"
+                />
+                <input
+                  class="searchQuery"
+                  maxlength="100"
+                  placeholder="Search for boards"
+                  type="text"
+                />
+              </div>
+            </div>
+            <div
+              class="searchResults"
+            >
+              
+              
+              <div
+                class="noResults introScreen"
+              >
+                <div
+                  class="iconWrapper"
+                >
+                  <i
+                    class="CompassIcon icon-magnify MagnifyIcon"
+                  />
+                </div>
+                <h4
+                  class="text-heading4"
+                >
+                  Search for boards
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
