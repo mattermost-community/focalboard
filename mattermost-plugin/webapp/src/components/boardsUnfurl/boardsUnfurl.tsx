@@ -1,29 +1,27 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
-import {connect} from 'react-redux'
-
-import {GlobalState} from 'mattermost-redux/types/store'
-import {getCurrentUserLocale} from 'mattermost-redux/selectors/entities/i18n'
+import {IntlProvider, FormattedMessage, useIntl} from 'react-intl'
 
 import WithWebSockets from '../../../../../webapp/src/components/withWebSockets'
 import {useWebsockets} from '../../../../../webapp/src/hooks/websockets'
 
+import {getLanguage} from '../../../../../webapp/src/store/language'
 import {getMessages} from './../../../../../webapp/src/i18n'
 import {Utils} from './../../../../../webapp/src/utils'
 import {Block} from './../../../../../webapp/src/blocks/block'
 import {Card} from './../../../../../webapp/src/blocks/card'
 import {Board} from './../../../../../webapp/src/blocks/board'
+import {useAppSelector} from '../../../../../webapp/src/store/hooks'
+import {getCurrentTeam} from '../../../../../webapp/src/store/teams'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
 import octoClient from './../../../../../webapp/src/octoClient'
-import wsClient, {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
+import {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
 import manifest from '../../manifest'
 
 
 const noop = () => ''
 const Avatar = (window as any).Components?.Avatar || noop
-const Timestamp = (window as any).Components?.Timestamp || noop
 const imageURLForUser = (window as any).Components?.imageURLForUser || noop
 
 import './boardsUnfurl.scss'
@@ -33,16 +31,7 @@ type Props = {
     embed: {
         data: string,
     },
-    locale: string,
     webSocketClient: MMWebSocketClient,
-}
-
-function mapStateToProps(state: GlobalState) {
-    const locale = getCurrentUserLocale(state)
-
-    return {
-        locale,
-    }
 }
 
 class FocalboardEmbeddedData {
@@ -67,8 +56,11 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
         return <></>
     }
 
-    const {embed, locale, webSocketClient} = props
+    const intl = useIntl()
+
+    const {embed, webSocketClient} = props
     const focalboardInformation: FocalboardEmbeddedData = new FocalboardEmbeddedData(embed.data)
+    const currentTeam = useAppSelector(getCurrentTeam)
     const {teamID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
 
@@ -119,7 +111,7 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
         fetchData()
     }, [originalPath])
 
-    useWebsockets(teamID, (wsClient: WSClient) => {
+    useWebsockets(currentTeam?.id || '', (wsClient: WSClient) => {
         const onChangeHandler = (_: WSClient, blocks: Block[]): void => {
             const cardBlock: Block|undefined = blocks.find(b => b.id === cardID)
             if (cardBlock && !cardBlock.deleteAt) {
@@ -188,111 +180,107 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
     }
 
     return (
-        <IntlProvider
-            messages={getMessages(locale)}
-            locale={locale}
-        >
-            <WithWebSockets manifest={manifest} webSocketClient={webSocketClient}>
-                {!loading && (!card || !board) && <></>}
-                {!loading && card && board &&
-                    <a
-                        className='FocalboardUnfurl'
-                        href={`${baseURL}${originalPath}`}
-                        rel='noopener noreferrer'
-                        target='_blank'
-                    >
+        <WithWebSockets manifest={manifest} webSocketClient={webSocketClient}>
+            {!loading && (!card || !board) && <></>}
+            {!loading && card && board &&
+                <a
+                    className='FocalboardUnfurl'
+                    href={`${baseURL}${originalPath}`}
+                    rel='noopener noreferrer'
+                    target='_blank'
+                >
 
-                        {/* Header of the Card*/}
-                        <div className='header'>
-                            <span className='icon'>{card.fields?.icon}</span>
-                            <div className='information'>
-                                <span className='card_title'>{card.title}</span>
-                                <span className='board_title'>{board.title}</span>
-                            </div>
+                    {/* Header of the Card*/}
+                    <div className='header'>
+                        <span className='icon'>{card.fields?.icon}</span>
+                        <div className='information'>
+                            <span className='card_title'>{card.title}</span>
+                            <span className='board_title'>{board.title}</span>
                         </div>
+                    </div>
 
-                        {/* Body of the Card*/}
-                        {!card.limited && html !== '' &&
-                            <div className='body'>
-                                <div
-                                    dangerouslySetInnerHTML={{__html: html}}
+                    {/* Body of the Card*/}
+                    {!card.limited && html !== '' &&
+                        <div className='body'>
+                            <div
+                                dangerouslySetInnerHTML={{__html: html}}
+                            />
+                        </div>
+                    }
+
+                    {card.limited &&
+                        <p className='limited'>
+                            <FormattedMessage
+                                id='BoardsUnfurl.Limited'
+                                defaultMessage={'Additional details are hidden due to the card being archived'}
+                            />
+                        </p>}
+
+                    {/* Footer of the Card*/}
+                    {!card.limited &&
+                        <div className='footer'>
+                            <div className='avatar'>
+                                <Avatar
+                                    size={'md'}
+                                    url={imageURLForUser(card.createdBy)}
+                                    className={'avatar-post-preview'}
                                 />
                             </div>
-                        }
-
-                        {card.limited &&
-                            <p className='limited'>
-                                <FormattedMessage
-                                    id='BoardsUnfurl.Limited'
-                                    defaultMessage={'Additional details are hidden due to the card being archived'}
-                                />
-                            </p>}
-
-                        {/* Footer of the Card*/}
-                        {!card.limited &&
-                            <div className='footer'>
-                                <div className='avatar'>
-                                    <Avatar
-                                        size={'md'}
-                                        url={imageURLForUser(card.createdBy)}
-                                        className={'avatar-post-preview'}
+                            <div className='timestamp_properties'>
+                                <div className='properties'>
+                                    {propertiesToDisplay.map((property) => (
+                                        <div
+                                            key={property.optionValue}
+                                            className={`property ${property.optionValueColour}`}
+                                            title={`${property.optionName}`}
+                                            style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
+                                        >
+                                            {property.optionValue}
+                                        </div>
+                                    ))}
+                                    {remainder > 0 &&
+                                        <span className='remainder'>
+                                            <FormattedMessage
+                                                id='BoardsUnfurl.Remainder'
+                                                defaultMessage='+{remainder} more'
+                                                values={{
+                                                    remainder,
+                                                }}
+                                            />
+                                        </span>
+                                    }
+                                </div>
+                                <span className='post-preview__time'>
+                                    <FormattedMessage
+                                        id='BoardsUnfurl.Updated'
+                                        defaultMessage='Updated {time}'
+                                        values={{
+                                            time: Utils.displayDateTime(new Date(card.updateAt), intl)
+                                        }}
                                     />
-                                </div>
-                                <div className='timestamp_properties'>
-                                    <div className='properties'>
-                                        {propertiesToDisplay.map((property) => (
-                                            <div
-                                                key={property.optionValue}
-                                                className={`property ${property.optionValueColour}`}
-                                                title={`${property.optionName}`}
-                                                style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
-                                            >
-                                                {property.optionValue}
-                                            </div>
-                                        ))}
-                                        {remainder > 0 &&
-                                            <span className='remainder'>
-                                                <FormattedMessage
-                                                    id='BoardsUnfurl.Remainder'
-                                                    defaultMessage='+{remainder} more'
-                                                    values={{
-                                                        remainder,
-                                                    }}
-                                                />
-                                            </span>
-                                        }
-                                    </div>
-                                    <span className='post-preview__time'>
-                                        <FormattedMessage
-                                            id='BoardsUnfurl.Updated'
-                                            defaultMessage='Updated {time}'
-                                            values={{
-                                                time: (
-                                                    <Timestamp
-                                                        value={card.updateAt}
-                                                        units={[
-                                                            'now',
-                                                            'minute',
-                                                            'hour',
-                                                            'day',
-                                                        ]}
-                                                        useTime={false}
-                                                        day={'numeric'}
-                                                    />
-                                                ),
-                                            }}
-                                        />
-                                    </span>
-                                </div>
-                            </div>}
-                    </a>
-                }
-                {loading &&
-                    <div style={{height: '302px'}}/>
-                }
-            </WithWebSockets>
+                                </span>
+                            </div>
+                        </div>}
+                </a>
+            }
+            {loading &&
+                <div style={{height: '302px'}}/>
+            }
+        </WithWebSockets>
+    )
+}
+
+const IntlBoardsUnfurl = (props: Props) => {
+    const language = useAppSelector<string>(getLanguage)
+
+    return (
+        <IntlProvider
+            locale={language.split(/[_]/)[0]}
+            messages={getMessages(language)}
+        >
+            <BoardsUnfurl {...props}/>
         </IntlProvider>
     )
 }
 
-export default connect(mapStateToProps)(BoardsUnfurl)
+export default IntlBoardsUnfurl

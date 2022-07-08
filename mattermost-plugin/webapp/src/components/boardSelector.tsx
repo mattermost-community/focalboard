@@ -109,8 +109,7 @@ const BoardSelector = () => {
     }
 
     const unlinkBoard = async (board: Board): Promise<void> => {
-        const newBoard = createBoard(board)
-        newBoard.channelId = ''
+        const newBoard = createBoard({...board, channelId: ''})
         await mutator.updateBoard(newBoard, board, 'unlinked channel')
         for (const result of results) {
             if (result.id == board.id) {

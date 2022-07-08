@@ -289,7 +289,18 @@ export default class Plugin {
                 this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Boards')
             }
 
-            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
+            this.registry.registerPostWillRenderEmbedComponent(
+                (embed) => embed.type === 'boards',
+                (props: {embed: {data: string}, webSocketClient: MMWebSocketClient}) => (
+                    <ReduxProvider store={store}>
+                        <BoardsUnfurl
+                            embed={props.embed}
+                            webSocketClient={props.webSocketClient}
+                        />
+                    </ReduxProvider>
+                ),
+                false
+            )
         }
 
         this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
