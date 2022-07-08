@@ -12,8 +12,11 @@ import RHSChannelBoards from './rhsChannelBoards'
 
 describe('components/rhsChannelBoards', () => {
     const board1 = createBoard()
+    board1.updateAt = 1657311058157
     const board2 = createBoard()
     const board3 = createBoard()
+    board3.updateAt = 1657311058157
+
     board1.channelId = 'channel-id'
     board3.channelId = 'channel-id'
 
