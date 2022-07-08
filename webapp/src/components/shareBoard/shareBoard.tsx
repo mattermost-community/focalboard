@@ -297,7 +297,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         />
                     }
                     <div className='ml-3'>
-                        <strong>{user.username}</strong>
+                        <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                         <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     </div>
                 </div>
