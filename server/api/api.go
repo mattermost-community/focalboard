@@ -92,6 +92,8 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	}
 
 	// Board APIs
+	apiv2.HandleFunc("/teams/{teamID}/channels", a.sessionRequired(a.handleSearchMyChannels)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/channels/{channelID}", a.sessionRequired(a.handleGetChannel)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
@@ -2170,6 +2172,168 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
+func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/channels searchMyChannels
+	//
+	// Returns the user available channels
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: search
+	//   in: query
+	//   description: string to filter channels list
+	//   required: false
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Channel"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
+	query := r.URL.Query()
+	searchQuery := query.Get("search")
+
+	teamID := mux.Vars(r)["teamID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchMyChannels", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+
+	channels, err := a.app.SearchUserChannels(teamID, userID, searchQuery)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetUserChannels",
+		mlog.String("teamID", teamID),
+		mlog.Int("channelsCount", len(channels)),
+	)
+
+	data, err := json.Marshal(channels)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("channelsCount", len(channels))
+	auditRec.Success()
+}
+
+func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/channels/{channelID} getChannel
+	//
+	// Returns the requested channel
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: channelID
+	//   in: path
+	//   description: Channel ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Channel"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
+	teamID := mux.Vars(r)["teamID"]
+	channelID := mux.Vars(r)["channelID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	if !a.permissions.HasPermissionToChannel(userID, channelID, model.PermissionReadChannel) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to channel"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getChannel", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+	auditRec.AddMeta("channelID", teamID)
+
+	channel, err := a.app.GetChannel(teamID, channelID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetChannel",
+		mlog.String("teamID", teamID),
+		mlog.String("channelID", channelID),
+	)
+
+	if channel.TeamId != teamID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	data, err := json.Marshal(channel)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
 func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /teams/{teamID}/boards getBoards
 	//
@@ -2826,6 +2990,12 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 	if patch.Type != nil || patch.MinimumRole != nil {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+			return
+		}
+	}
+	if patch.ChannelID != nil {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board access"})
 			return
 		}
 	}
