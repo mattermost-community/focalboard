@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 
@@ -24,7 +26,7 @@ func TestInsertBlock(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	t.Run("success scenerio", func(t *testing.T) {
+	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
 		block := model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
@@ -35,7 +37,7 @@ func TestInsertBlock(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("error scenerio", func(t *testing.T) {
+	t.Run("error scenario", func(t *testing.T) {
 		boardID := testBoardID
 		block := model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
@@ -50,7 +52,7 @@ func TestPatchBlocks(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	t.Run("patchBlocks success scenerio", func(t *testing.T) {
+	t.Run("patchBlocks success scenario", func(t *testing.T) {
 		blockPatches := model.BlockPatchBatch{
 			BlockIDs: []string{"block1"},
 			BlockPatches: []model.BlockPatch{
@@ -68,7 +70,7 @@ func TestPatchBlocks(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("patchBlocks error scenerio", func(t *testing.T) {
+	t.Run("patchBlocks error scenario", func(t *testing.T) {
 		blockPatches := model.BlockPatchBatch{BlockIDs: []string{}}
 		th.Store.EXPECT().GetBlocksByIDs([]string{}).Return(nil, sql.ErrNoRows)
 		err := th.App.PatchBlocks("team-id", &blockPatches, "user-id-1")
@@ -115,7 +117,7 @@ func TestDeleteBlock(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	t.Run("success scenerio", func(t *testing.T) {
+	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
 		board := &model.Board{ID: boardID}
 		block := model.Block{
@@ -130,7 +132,7 @@ func TestDeleteBlock(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("error scenerio", func(t *testing.T) {
+	t.Run("error scenario", func(t *testing.T) {
 		boardID := testBoardID
 		board := &model.Board{ID: boardID}
 		block := model.Block{
@@ -149,7 +151,7 @@ func TestUndeleteBlock(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	t.Run("success scenerio", func(t *testing.T) {
+	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
 		board := &model.Board{ID: boardID}
 		block := model.Block{
@@ -168,7 +170,7 @@ func TestUndeleteBlock(t *testing.T) {
 		require.NoError(t, err)
 	})
 
-	t.Run("error scenerio", func(t *testing.T) {
+	t.Run("error scenario", func(t *testing.T) {
 		block := model.Block{
 			ID: "block-id",
 		}
@@ -180,5 +182,228 @@ func TestUndeleteBlock(t *testing.T) {
 		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
 		_, err := th.App.UndeleteBlock("block-id", "user-id-1")
 		require.Error(t, err, "error")
+	})
+}
+
+func TestIsWithinViewsLimit(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	fakeLicense := &mmModel.License{
+		Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
+	}
+
+	t.Run("within views limit", func(t *testing.T) {
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(2),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{{}}, nil)
+
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		assert.NoError(t, err)
+		assert.True(t, withinLimits)
+	})
+
+	t.Run("view limit exactly reached", func(t *testing.T) {
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(1),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{{}}, nil)
+
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		assert.NoError(t, err)
+		assert.False(t, withinLimits)
+	})
+
+	t.Run("view limit already exceeded", func(t *testing.T) {
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(2),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{{}, {}, {}}, nil)
+
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		assert.NoError(t, err)
+		assert.False(t, withinLimits)
+	})
+
+	t.Run("creating first view", func(t *testing.T) {
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(2),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{}, nil)
+
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		assert.NoError(t, err)
+		assert.True(t, withinLimits)
+	})
+
+	t.Run("is not a cloud SKU so limits don't apply", func(t *testing.T) {
+		nonCloudLicense := &mmModel.License{
+			Features: &mmModel.Features{Cloud: mmModel.NewBool(false)},
+		}
+		th.Store.EXPECT().GetLicense().Return(nonCloudLicense)
+
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		assert.NoError(t, err)
+		assert.True(t, withinLimits)
+	})
+}
+
+func TestInsertBlocks(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("success scenario", func(t *testing.T) {
+		boardID := testBoardID
+		block := model.Block{BoardID: boardID}
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		require.NoError(t, err)
+	})
+
+	t.Run("error scenario", func(t *testing.T) {
+		boardID := testBoardID
+		block := model.Block{BoardID: boardID}
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(blockError{"error"})
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		require.Error(t, err, "error")
+	})
+
+	t.Run("create view within limits", func(t *testing.T) {
+		boardID := testBoardID
+		block := model.Block{
+			Type:     model.TypeView,
+			ParentID: "parent_id",
+			BoardID:  boardID,
+		}
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		// setting up mocks for limits
+		fakeLicense := &mmModel.License{
+			Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
+		}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(2),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}}, nil)
+
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		require.NoError(t, err)
+	})
+
+	t.Run("create view exceeding limits", func(t *testing.T) {
+		boardID := testBoardID
+		block := model.Block{
+			Type:     model.TypeView,
+			ParentID: "parent_id",
+			BoardID:  boardID,
+		}
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		// setting up mocks for limits
+		fakeLicense := &mmModel.License{
+			Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
+		}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(2),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}, {}}, nil)
+
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		require.Error(t, err)
+	})
+
+	t.Run("creating multiple views, reaching limit in the process", func(t *testing.T) {
+		t.Skipf("Will be fixed soon")
+
+		boardID := testBoardID
+		view1 := model.Block{
+			Type:     model.TypeView,
+			ParentID: "parent_id",
+			BoardID:  boardID,
+		}
+
+		view2 := model.Block{
+			Type:     model.TypeView,
+			ParentID: "parent_id",
+			BoardID:  boardID,
+		}
+
+		board := &model.Board{ID: boardID}
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.Store.EXPECT().InsertBlock(&view1, "user-id-1").Return(nil).Times(2)
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil).Times(2)
+
+		// setting up mocks for limits
+		fakeLicense := &mmModel.License{
+			Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
+		}
+		th.Store.EXPECT().GetLicense().Return(fakeLicense).Times(2)
+
+		cloudLimit := &mmModel.ProductLimits{
+			Boards: &mmModel.BoardsLimits{
+				Views: mmModel.NewInt(2),
+			},
+		}
+		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil).Times(2)
+		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil).Times(2)
+		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil).Times(2)
+		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}}, nil).Times(2)
+
+		_, err := th.App.InsertBlocks([]model.Block{view1, view2}, "user-id-1", false)
+		require.Error(t, err)
 	})
 }

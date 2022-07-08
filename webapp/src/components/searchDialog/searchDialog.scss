@@ -59,6 +59,10 @@
                 cursor: pointer;
                 overflow: hidden;
 
+                &.freesize {
+                    height: unset;
+                }
+
                 &:hover {
                     background: rgba(var(--center-channel-color-rgb), 0.08);
                 }

@@ -4,6 +4,7 @@ import {History} from "history"
 import {marked} from 'marked'
 import moment from 'moment'
 import {IntlShape} from 'react-intl'
+
 import {generatePath, match as routerMatch} from "react-router-dom"
 
 import {Block} from './blocks/block'
@@ -13,10 +14,9 @@ import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
 import {BoardCategoryWebsocketData, Category} from './store/sidebar'
 import {IAppWindow} from './types'
+import {IUser} from './user'
+import {UserSettings} from './userSettings'
 import {ChangeHandlerType, WSMessage} from './wsclient'
-
-
-
 
 declare let window: IAppWindow
 
@@ -26,6 +26,9 @@ const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+export const SYSTEM_ADMIN_ROLE = 'system_admin'
+export const TEAM_ADMIN_ROLE = 'team_admin'
 
 export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData | BoardType | BoardMember | null
 
@@ -46,6 +49,10 @@ export const KeyCodes: Record<string, [string, number]> = {
     ENTER: ['Enter', 13],
     COMPOSING: ['Composing', 229],
 }
+
+export const ShowUsername = 'username'
+export const ShowNicknameFullName = 'nickname_full_name'
+export const ShowFullName         = 'full_name'
 
 class Utils {
     static createGuid(idType: IDType): string {
@@ -76,6 +83,45 @@ class Utils {
         const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
         return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
+    }
+
+    static getUserDisplayName(user: IUser, configNameFormat: string): string {
+        let nameFormat = configNameFormat
+        if(UserSettings.nameFormat){
+            nameFormat=UserSettings.nameFormat
+        }
+
+        // default nameFormat = 'username'
+        let displayName = user.username
+
+        if (nameFormat === ShowNicknameFullName) {
+            if( user.nickname != '') {
+                displayName = user.nickname
+            } else {
+                const fullName = Utils.getFullName(user)
+                if(fullName != ''){
+                    displayName = fullName
+                }
+            }
+        } else if (nameFormat == ShowFullName) {
+            const fullName = Utils.getFullName(user)
+            if(fullName != ''){
+                displayName = fullName
+            }
+        }
+        return displayName
+    }
+
+    static getFullName(user: IUser): string {
+        if (user.firstname != '' && user.lastname != '') {
+            return user.firstname + ' ' + user.lastname
+        } else if (user.firstname != '') {
+            return user.firstname
+        } else if (user.lastname != '') {
+            return user.lastname
+        } else {
+            return ''
+        }
     }
 
     static randomArray(size: number): Uint8Array {
@@ -788,6 +834,26 @@ class Utils {
         } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
 
         return bytes.toFixed(dp) + ' ' + units[u]
+    }
+
+    static spaceSeparatedStringIncludes(item: string, spaceSeparated?: string): boolean {
+        if (spaceSeparated) {
+            const items = spaceSeparated?.split(' ')
+            return items.includes(item)
+        }
+        return false
+    }
+
+    static isSystemAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(SYSTEM_ADMIN_ROLE, roles)
+    }
+
+    static isTeamAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(TEAM_ADMIN_ROLE, roles)
+    }
+
+    static isAdmin(roles: string): boolean {
+        return Utils.isSystemAdmin(roles) || Utils.isTeamAdmin(roles)
     }
 }
 

@@ -1,6 +1,5 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {useEffect} from 'preact/hooks'
 import React, {useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
@@ -15,7 +14,6 @@ import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
-import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {getMe} from '../store/users'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {IUser} from '../user'
@@ -32,6 +30,9 @@ import './cardDialog.scss'
 import Dialog from './dialog'
 import {sendFlashMessage} from './flashMessages'
 import BoardPermissionGate from './permissions/boardPermissionGate'
+
+import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
+import './cardDialog.scss'
 
 type Props = {
     board: Board
@@ -106,8 +107,36 @@ const CardDialog = (props: Props): JSX.Element => {
         },
     }
 
+    const handleDeleteButtonOnClick = () => {
+        // use may be renaming a card title
+        // and accidently delete the card
+        // so adding des
+        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+            handleDeleteCard()
+            return
+        }
+
+        setShowConfirmationDialogBox(true)
+    }
+
     const menu = (
-        <Menu position='left'>
+        <CardActionsMenu
+            cardId={props.cardId}
+            onClickDelete={handleDeleteButtonOnClick}
+        >
+            {!isTemplate &&
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                    <Menu.Text
+                        id='makeTemplate'
+                        icon={
+                            <CompassIcon
+                                icon='plus'
+                            />}
+                        name='New template from card'
+                        onClick={makeTemplateClicked}
+                    />
+                </BoardPermissionGate>
+            }
             <Menu.Text
                 icon={<LinkIcon/>}
                 id='copy'
@@ -122,7 +151,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     Utils.copyTextToClipboard(cardLink)
                     sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
-            />
+            />,
             <Menu.Text
                 icon={showTitle ? <CloseIcon/> : <CheckIcon/>}
                 id='toggleTitle'
@@ -130,7 +159,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 onClick={() => {
                     setShowTitle(!showTitle)
                 }}
-            />
+            />,
             <Menu.Text
                 icon={showProperties ? <CloseIcon/> : <CheckIcon/>}
                 id='toggleProperties'
@@ -138,7 +167,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 onClick={() => {
                     setShowProperties(!showProperties)
                 }}
-            />
+            />,
             <Menu.Text
                 icon={showComments ? <CloseIcon/> : <CheckIcon/>}
                 id='toggleComments'
@@ -147,20 +176,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     setShowComments(!showComments)
                 }}
             />
-            {!props.readonly && !isTemplate &&
-                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.Text
-                        id='makeTemplate'
-                        icon={
-                            <CompassIcon
-                                icon='plus'
-                            />}
-                        name='New template from card'
-                        onClick={makeTemplateClicked}
-                    />
-                </BoardPermissionGate>
-            }
-        </Menu>
+        </CardActionsMenu>
     )
 
     const followActionButton = (following: boolean): React.ReactNode => {

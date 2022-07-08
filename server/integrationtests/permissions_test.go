@@ -665,6 +665,58 @@ func TestPermissionsPatchBoardMinimumRole(t *testing.T) {
 	})
 }
 
+func TestPermissionsPatchBoardChannelId(t *testing.T) {
+	patch := toJSON(t, map[string]string{"channelId": "valid-channel-id"})
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userEditor, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}", methodPatch, patch, userAdmin, http.StatusOK, 1},
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
 func TestPermissionsDeleteBoard(t *testing.T) {
 	ttCases := []TestCase{
 		{"/boards/{PRIVATE_BOARD_ID}", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
@@ -3364,5 +3416,83 @@ func TestPermissionsMinimumRolesApplied(t *testing.T) {
 			ttCases := ttCasesF(t, th, "admin", testData)
 			runTestCases(t, ttCases, testData, clients)
 		})
+	})
+}
+
+func TestPermissionsChannels(t *testing.T) {
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			{"/teams/test-team/channels", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/channels", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+			{"/teams/test-team/channels", methodGet, "", userTeamMember, http.StatusOK, 2},
+			{"/teams/test-team/channels", methodGet, "", userViewer, http.StatusOK, 2},
+			{"/teams/test-team/channels", methodGet, "", userCommenter, http.StatusOK, 2},
+			{"/teams/test-team/channels", methodGet, "", userEditor, http.StatusOK, 2},
+			{"/teams/test-team/channels", methodGet, "", userAdmin, http.StatusOK, 2},
+		}
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			{"/teams/test-team/channels", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/channels", methodGet, "", userNoTeamMember, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels", methodGet, "", userTeamMember, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels", methodGet, "", userViewer, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels", methodGet, "", userCommenter, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels", methodGet, "", userEditor, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels", methodGet, "", userAdmin, http.StatusNotImplemented, 0},
+		}
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsChannel(t *testing.T) {
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userTeamMember, http.StatusOK, 1},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userViewer, http.StatusOK, 1},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userCommenter, http.StatusOK, 1},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userEditor, http.StatusOK, 1},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userAdmin, http.StatusOK, 1},
+
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userViewer, http.StatusForbidden, 0},
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userCommenter, http.StatusForbidden, 0},
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userEditor, http.StatusForbidden, 0},
+			{"/teams/test-team/channels/not-valid-channel-id", methodGet, "", userAdmin, http.StatusForbidden, 0},
+		}
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userNoTeamMember, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userTeamMember, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userViewer, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userCommenter, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userEditor, http.StatusNotImplemented, 0},
+			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userAdmin, http.StatusNotImplemented, 0},
+		}
+		runTestCases(t, ttCases, testData, clients)
 	})
 }
