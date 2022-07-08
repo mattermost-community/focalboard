@@ -7,7 +7,7 @@ import {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
-import {initialLoad, initialReadOnlyLoad, loadBoardData} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad, loadBoardData, loadBoards} from './initialLoad'
 
 import {addBoardUsers, removeBoardUsersById, setBoardUsers} from './users'
 
@@ -176,6 +176,12 @@ const boardsSlice = createSlice({
             state.myBoardMemberships = {}
             action.payload.boardsMemberships.forEach((boardMember) => {
                 state.myBoardMemberships[boardMember.boardId] = boardMember
+            })
+        })
+        builder.addCase(loadBoards.fulfilled, (state, action) => {
+            state.boards = {}
+            action.payload.boards.forEach((board) => {
+                state.boards[board.id] = board
             })
         })
         builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {

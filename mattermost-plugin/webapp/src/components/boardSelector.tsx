@@ -11,7 +11,7 @@ import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
 
 import octoClient from '../../../../webapp/src/octoClient'
 import mutator from '../../../../webapp/src/mutator'
-import {getCurrentTeam, getAllTeams, Team} from '../../../../webapp/src/store/teams'
+import {getCurrentTeamId, getAllTeams, Team} from '../../../../webapp/src/store/teams'
 import {createBoard, BoardsAndBlocks, Board} from '../../../../webapp/src/blocks/board'
 import {createBoardView} from '../../../../webapp/src/blocks/boardView'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
@@ -34,7 +34,7 @@ const BoardSelector = () => {
         teamsById[t.id] = t
     })
     const intl = useIntl()
-    const team = useAppSelector(getCurrentTeam)
+    const teamId = useAppSelector(getCurrentTeamId)
     const currentChannel = useAppSelector(getCurrentLinkToChannel)
     const dispatch = useAppDispatch()
 
@@ -46,20 +46,20 @@ const BoardSelector = () => {
     const searchHandler = useCallback(async (query: string): Promise<void> => {
         setSearchQuery(query)
 
-        if (query.trim().length === 0 || !team) {
+        if (query.trim().length === 0 || !teamId) {
             return
         }
-        const items = await octoClient.search(team.id, query)
+        const items = await octoClient.search(teamId, query)
 
         setResults(items)
         setIsSearching(false)
-    }, [team?.id])
+    }, [teamId])
 
     const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [searchHandler])
 
     const emptyResult = results.length === 0 && !isSearching && searchQuery
 
-    useWebsockets(team?.id || '', (wsClient: WSClient) => {
+    useWebsockets(teamId, (wsClient: WSClient) => {
         const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
             const newResults = [...results]
             let updated = false
@@ -84,7 +84,7 @@ const BoardSelector = () => {
     }, [results])
 
 
-    if (!team) {
+    if (!teamId) {
         return null
     }
     if (!currentChannel) {
@@ -96,33 +96,18 @@ const BoardSelector = () => {
             setShowLinkBoardConfirmation(board)
             return
         }
-        const newBoard = createBoard(board)
-        newBoard.channelId = currentChannel
+        const newBoard = createBoard({...board, channelId: currentChannel})
         await mutator.updateBoard(newBoard, board, 'linked channel')
-        for (const result of results) {
-            if (result.id == board.id) {
-                result.channelId = currentChannel
-                setResults([...results])
-            }
-        }
         setShowLinkBoardConfirmation(null)
     }
 
     const unlinkBoard = async (board: Board): Promise<void> => {
         const newBoard = createBoard({...board, channelId: ''})
         await mutator.updateBoard(newBoard, board, 'unlinked channel')
-        for (const result of results) {
-            if (result.id == board.id) {
-                result.channelId = ''
-                setResults([...results])
-            }
-        }
     }
 
     const newLinkedBoard = async (): Promise<void> => {
-        const board = createBoard()
-        board.teamId = team.id
-        board.channelId = currentChannel
+        const board = {...createBoard(), teamId, channelId: currentChannel}
 
         const view = createBoardView()
         view.fields.viewType = 'board'
@@ -138,7 +123,7 @@ const BoardSelector = () => {
                 const newBoard = bab.boards[0]
                 // TODO: Maybe create a new event for create linked board
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
-                windowAny.WebappUtils.browserHistory.push(`/boards/team/${team.id}/${newBoard.id}`)
+                windowAny.WebappUtils.browserHistory.push(`/boards/team/${teamId}/${newBoard.id}`)
                 dispatch(setLinkToChannel(''))
             },
             async () => {return},

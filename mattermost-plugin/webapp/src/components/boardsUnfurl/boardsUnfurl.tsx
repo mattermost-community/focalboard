@@ -13,7 +13,7 @@ import {Block} from './../../../../../webapp/src/blocks/block'
 import {Card} from './../../../../../webapp/src/blocks/card'
 import {Board} from './../../../../../webapp/src/blocks/board'
 import {useAppSelector} from '../../../../../webapp/src/store/hooks'
-import {getCurrentTeam} from '../../../../../webapp/src/store/teams'
+import {getCurrentTeamId} from '../../../../../webapp/src/store/teams'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
 import octoClient from './../../../../../webapp/src/octoClient'
 import {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
@@ -31,7 +31,7 @@ type Props = {
     embed: {
         data: string,
     },
-    webSocketClient: MMWebSocketClient,
+    webSocketClient?: MMWebSocketClient,
 }
 
 class FocalboardEmbeddedData {
@@ -60,7 +60,7 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
 
     const {embed, webSocketClient} = props
     const focalboardInformation: FocalboardEmbeddedData = new FocalboardEmbeddedData(embed.data)
-    const currentTeam = useAppSelector(getCurrentTeam)
+    const currentTeamId = useAppSelector(getCurrentTeamId)
     const {teamID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
 
@@ -111,7 +111,7 @@ export const BoardsUnfurl = (props: Props): JSX.Element => {
         fetchData()
     }, [originalPath])
 
-    useWebsockets(currentTeam?.id || '', (wsClient: WSClient) => {
+    useWebsockets(currentTeamId, (wsClient: WSClient) => {
         const onChangeHandler = (_: WSClient, blocks: Block[]): void => {
             const cardBlock: Block|undefined = blocks.find(b => b.id === cardID)
             if (cardBlock && !cardBlock.deleteAt) {

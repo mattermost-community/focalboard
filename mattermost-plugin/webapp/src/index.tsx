@@ -238,6 +238,8 @@ export default class Plugin {
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
+                octoClient.teamId = currentTeamID
+                store.dispatch(initialLoad())
             }
         })
 
@@ -356,7 +358,6 @@ export default class Plugin {
             // @ts-ignore
             return mmStore.getState().entities.teams.currentTeamId
         }
-        store.dispatch(initialLoad())
     }
 
     uninitialize(): void {

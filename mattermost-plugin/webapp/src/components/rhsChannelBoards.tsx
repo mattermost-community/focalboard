@@ -9,8 +9,8 @@ import {getLanguage} from '../../../../webapp/src/store/language'
 import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
 
 import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
-import {getCurrentTeam} from '../../../../webapp/src/store/teams'
-import {initialLoad} from '../../../../webapp/src/store/initialLoad'
+import {getCurrentTeamId} from '../../../../webapp/src/store/teams'
+import {loadBoards} from '../../../../webapp/src/store/initialLoad'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {getMySortedBoards, setLinkToChannel, updateBoards, updateMembers} from '../../../../webapp/src/store/boards'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
@@ -27,17 +27,15 @@ const boardsScreenshots = (window as any).baseURL + '/public/boards-screenshots.
 
 const RHSChannelBoards = () => {
     const boards = useAppSelector(getMySortedBoards)
-    const team = useAppSelector(getCurrentTeam)
+    const teamId = useAppSelector(getCurrentTeamId)
     const currentChannel = useAppSelector(getCurrentChannel);
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        if (team?.id) {
-            dispatch(initialLoad())
-        }
-    }, [team?.id]);
+        dispatch(loadBoards())
+    }, []);
 
-    useWebsockets(team?.id || '', (wsClient: WSClient) => {
+    useWebsockets(teamId || '', (wsClient: WSClient) => {
         const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
             dispatch(updateBoards(boards))
         }
@@ -52,12 +50,12 @@ const RHSChannelBoards = () => {
             wsClient.removeOnChange(onChangeBoardHandler, 'board')
             wsClient.removeOnChange(onChangeMemberHandler, 'boardMembers')
         }
-    }, [team?.id])
+    }, [])
 
     if (!boards) {
         return null
     }
-    if (!team) {
+    if (!teamId) {
         return null
     }
     if (!currentChannel) {

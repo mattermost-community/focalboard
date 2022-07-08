@@ -599,7 +599,9 @@ class WSClient {
                 this.sendUnsubscribeToTeamCommand(teamId)
             }
 
-            this.teamId = ''
+            if (teamId == this.teamId) {
+                this.teamId = ''
+            }
             delete this.subscriptions.Teams[teamId]
         }
     }
