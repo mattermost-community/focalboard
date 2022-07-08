@@ -266,4 +266,4 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     )
 }
 
-export default CalendarFullView
+export default React.memo(CalendarFullView)

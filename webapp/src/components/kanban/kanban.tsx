@@ -332,4 +332,4 @@ const Kanban = (props: Props) => {
     )
 }
 
-export default injectIntl(Kanban)
+export default injectIntl(React.memo(Kanban))
