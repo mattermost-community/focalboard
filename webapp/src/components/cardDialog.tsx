@@ -14,6 +14,7 @@ import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
+import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {getMe} from '../store/users'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {IUser} from '../user'
@@ -151,7 +152,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     Utils.copyTextToClipboard(cardLink)
                     sendFlashMessage({content: intl.formatMessage({id: 'CardDialog.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
                 }}
-            />,
+            />
             <Menu.Text
                 icon={showTitle ? <CloseIcon/> : <CheckIcon/>}
                 id='toggleTitle'
@@ -159,7 +160,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 onClick={() => {
                     setShowTitle(!showTitle)
                 }}
-            />,
+            />
             <Menu.Text
                 icon={showProperties ? <CloseIcon/> : <CheckIcon/>}
                 id='toggleProperties'
@@ -167,7 +168,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 onClick={() => {
                     setShowProperties(!showProperties)
                 }}
-            />,
+            />
             <Menu.Text
                 icon={showComments ? <CloseIcon/> : <CheckIcon/>}
                 id='toggleComments'
