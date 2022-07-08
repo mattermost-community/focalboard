@@ -301,9 +301,14 @@ describe('components/table/Table extended', () => {
                 board_id: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
+        clientConfig: {
+            value: {
+                teammateNameDisplay: 'username',
+            },
+        },
     }
 
-    test('should match snapshot with CreatedBy', async () => {
+    test('should match snapshot with CreatedAt', async () => {
         const board = TestBlockFactory.createBoard()
 
         const dateCreatedId = Utils.createGuid(IDType.User)
