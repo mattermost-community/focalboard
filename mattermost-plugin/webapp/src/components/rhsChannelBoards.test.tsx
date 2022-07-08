@@ -3,7 +3,7 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {render, screen} from '@testing-library/react'
+import {render} from '@testing-library/react'
 
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
