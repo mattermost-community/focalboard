@@ -43,5 +43,5 @@ $z-index: (
 }
 
 @mixin z-index($key) {
-    z-index: z-index($key);
+    z-index: z-index($key); /* stylelint-disable-line property-disallowed-list */
 }
