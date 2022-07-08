@@ -37,11 +37,7 @@ prebuild: ## Run prebuild actions (install dependencies etc.).
 	cd webapp; npm install
 	cd mattermost-plugin/webapp; npm install
 
-ci: server-test
-	cd webapp; npm run check
-	cd webapp; npm run test
-	cd webapp; npm run cypress:ci
-	cd mattermost-plugin/webapp; npm run test
+ci: webapp-ci server-test ## Simulate CI, locally.
 
 templates-archive: ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
@@ -169,6 +165,13 @@ server-test-postgres: templates-archive ## Run server tests using postgres
 
 webapp: ## Build webapp.
 	cd webapp; npm run pack
+
+webapp-ci: ## Webapp CI: linting & testing.
+	cd webapp; npm run check
+	cd mattermost-plugin/webapp; npm run lint
+	cd webapp; npm run test
+	cd mattermost-plugin/webapp; npm run test
+	cd webapp; npm run cypress:ci
 
 webapp-test: ## jest tests for webapp
 	cd webapp; npm run test
