@@ -11,6 +11,7 @@ import {mocked} from 'jest-mock'
 
 import {IUser} from '../../user'
 import {ISharing} from '../../blocks/sharing'
+import {Channel} from '../../store/channels'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 import client from '../../octoClient'
@@ -100,6 +101,9 @@ const me: IUser = {
     id: 'user-id-1',
     username: 'username_1',
     email: '',
+    nickname: '',
+    firstname: '',
+    lastname: '',
     props: {},
     create_at: 0,
     update_at: 0,
@@ -156,6 +160,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 telemetry: true,
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
+                teammateNameDisplay: 'username',
                 featureFlags: {},
             },
         },
@@ -478,6 +483,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users:IUser[] = [
             {id: 'userid1', username: 'username_1'} as IUser,
@@ -485,8 +491,15 @@ describe('src/components/shareBoard/shareBoard', () => {
             {id: 'userid3', username: 'username_3'} as IUser,
             {id: 'userid4', username: 'username_4'} as IUser,
         ]
+        const channels:Channel[] = [
+            {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
+            {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
+            {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
+            {id: 'channel4', type: 'O', display_name: 'Channel 4'} as Channel,
+        ]
 
         mockedOctoClient.searchTeamUsers.mockResolvedValue(users)
+        mockedOctoClient.searchUserChannels.mockResolvedValue(channels)
 
         let container
         await act(async () => {
@@ -504,7 +517,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
-        const selectElement = screen.getByText('Select...')
+        const selectElement = screen.getByText('Search for people')
         expect(selectElement).toBeDefined()
 
         await act(async () => {
@@ -527,8 +540,15 @@ describe('src/components/shareBoard/shareBoard', () => {
             {id: 'userid3', username: 'username_3'} as IUser,
             {id: 'userid4', username: 'username_4'} as IUser,
         ]
+        const channels:Channel[] = [
+            {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
+            {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
+            {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
+            {id: 'channel4', type: 'O', display_name: 'Channel 4'} as Channel,
+        ]
 
         mockedOctoClient.searchTeamUsers.mockResolvedValue(users)
+        mockedOctoClient.searchUserChannels.mockResolvedValue(channels)
 
         let container
         await act(async () => {
@@ -546,7 +566,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
-        const selectElement = screen.getByText('Select...')
+        const selectElement = screen.getByText('Search for people')
         expect(selectElement).toBeDefined()
 
         await act(async () => {

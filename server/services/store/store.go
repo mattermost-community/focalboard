@@ -90,6 +90,7 @@ type Store interface {
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
 	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
 
@@ -150,6 +151,19 @@ type Store interface {
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)
-
+	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
+	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	SendMessage(message, postType string, receipts []string) error
+}
+
+type NotSupportedError struct {
+	msg string
+}
+
+func NewNotSupportedError(msg string) NotSupportedError {
+	return NotSupportedError{msg: msg}
+}
+
+func (pe NotSupportedError) Error() string {
+	return pe.msg
 }

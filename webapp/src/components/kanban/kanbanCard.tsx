@@ -11,27 +11,16 @@ import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
-import DeleteIcon from '../../widgets/icons/delete'
-import DuplicateIcon from '../../widgets/icons/duplicate'
-import LinkIcon from '../../widgets/icons/Link'
 import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
-import {Permission} from '../../constants'
-import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
-import {IUser} from '../../user'
-import {getMe} from '../../store/users'
-import {useAppSelector} from '../../store/hooks'
-
-import BoardPermissionGate from '../permissions/boardPermissionGate'
-
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import './kanbanCard.scss'
 import CardBadges from '../cardBadges'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
 export const OnboardingCardClassName = 'onboardingCard'
 
@@ -54,7 +43,6 @@ const KanbanCard = (props: Props) => {
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
-    const me = useAppSelector<IUser|null>(getMe)
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
     if (props.isManualSort && isOver) {
         className += ' dragover'
@@ -116,54 +104,26 @@ const KanbanCard = (props: Props) => {
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name={intl.formatMessage({id: 'KanbanCard.delete', defaultMessage: 'Delete'})}
-                                onClick={handleDeleteButtonOnClick}
-                            />
-                            <Menu.Text
-                                icon={<DuplicateIcon/>}
-                                id='duplicate'
-                                name={intl.formatMessage({id: 'KanbanCard.duplicate', defaultMessage: 'Duplicate'})}
-                                onClick={() => {
-                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                    mutator.duplicateCard(
-                                        card.id,
-                                        board.id,
-                                        false,
-                                        'duplicate card',
-                                        false,
-                                        async (newCardId) => {
-                                            props.showCard(newCardId)
-                                        },
-                                        async () => {
-                                            props.showCard(undefined)
-                                        },
-                                    )
-                                }}
-                            />
-                        </BoardPermissionGate>
-                        {me?.id !== 'single-user' &&
-                            <Menu.Text
-                                icon={<LinkIcon/>}
-                                id='copy'
-                                name={intl.formatMessage({id: 'KanbanCard.copyLink', defaultMessage: 'Copy link'})}
-                                onClick={() => {
-                                    let cardLink = window.location.href
-
-                                    if (!cardLink.includes(card.id)) {
-                                        cardLink += `/${card.id}`
-                                    }
-
-                                    Utils.copyTextToClipboard(cardLink)
-                                    sendFlashMessage({content: intl.formatMessage({id: 'KanbanCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                                }}
-                            />
-                        }
-                    </Menu>
+                    <CardActionsMenu
+                        cardId={card!.id}
+                        onClickDelete={handleDeleteButtonOnClick}
+                        onClickDuplicate={() => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                            mutator.duplicateCard(
+                                card.id,
+                                board.id,
+                                false,
+                                'duplicate card',
+                                false,
+                                async (newCardId) => {
+                                    props.showCard(newCardId)
+                                },
+                                async () => {
+                                    props.showCard(undefined)
+                                },
+                            )
+                        }}
+                    />
                 </MenuWrapper>
                 }
 

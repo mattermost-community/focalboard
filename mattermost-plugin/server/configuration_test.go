@@ -62,11 +62,16 @@ func TestOnConfigurationChange(t *testing.T) {
 	baseDataRetentionSettings := &serverModel.DataRetentionSettings{
 		BoardsRetentionDays: &intRef,
 	}
+	usernameRef := "username"
+	baseTeamSettings := &serverModel.TeamSettings{
+		TeammateNameDisplay: &usernameRef,
+	}
 
 	baseConfig := &serverModel.Config{
 		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
+		TeamSettings:          *baseTeamSettings,
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {

@@ -37,7 +37,10 @@ describe('components/markdownEditor', () => {
             boards: {
                 [board1.id]: board1,
             }
-        }
+        },
+        clientConfig: {
+            value: {},
+        },
     }
     const store = mockStateStore([], state)
     test('should match snapshot', async () => {

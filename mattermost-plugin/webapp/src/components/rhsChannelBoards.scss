@@ -1,0 +1,47 @@
+.RHSChannelBoards {
+    padding: 20px;
+
+    &.empty {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        padding: 60px;
+    }
+
+    .rhs-boards-header {
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+    }
+
+    >h2 {
+        text-align: center;
+    }
+
+    .empty-paragraph {
+        text-align: justify;
+        text-align-last: center;
+    }
+
+    .boards-screenshots {
+        margin: 24px 0;
+    }
+
+    .linked-boards {
+        flex-grow: 1;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .rhs-boards-list {
+        overflow-y: scroll;
+    }
+
+    .Button {
+        width: auto;
+        align-self: center;
+    }
+}

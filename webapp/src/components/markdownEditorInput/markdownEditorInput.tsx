@@ -21,9 +21,13 @@ import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin
 
 import './markdownEditorInput.scss'
 
-import {BoardTypeOpen} from "../../blocks/board"
-import {getCurrentBoard} from "../../store/boards"
-import octoClient from "../../octoClient"
+import {BoardTypeOpen} from '../../blocks/board'
+import {getCurrentBoard} from '../../store/boards'
+import octoClient from '../../octoClient'
+
+import {Utils} from '../../utils'
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
 
 import Entry from './entryComponent/entryComponent'
 
@@ -33,6 +37,7 @@ type MentionUser = {
     name: string
     avatar: string
     is_bot: boolean
+    displayName: string
 }
 
 type Props = {
@@ -48,6 +53,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const board = useAppSelector(getCurrentBoard)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
 
     const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
@@ -65,7 +71,8 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             (user) => ({
                 name: user.username,
                 avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
-                is_bot: user.is_bot}
+                is_bot: user.is_bot,
+                displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
             ))
         setSuggestions(mentions)
     }
