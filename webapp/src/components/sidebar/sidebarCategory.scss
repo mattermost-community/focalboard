@@ -14,8 +14,9 @@
 
         &:hover {
             display: flex;
+
             .octo-sidebar-title {
-                color: rgba(var(--sidebar-text-rgb), 1.0);
+                color: rgba(var(--sidebar-text-rgb), 1);
             }
         }
 
