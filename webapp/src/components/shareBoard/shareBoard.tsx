@@ -13,6 +13,9 @@ import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
 import {Channel, ChannelTypeOpen, ChannelTypePrivate} from '../../store/channels'
 import {getMe, getBoardUsersList} from '../../store/users'
 
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
+
 import {Utils, IDType} from '../../utils'
 import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
@@ -100,6 +103,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [showLinkChannelConfirmation, setShowLinkChannelConfirmation] = useState<Channel|null>(null)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const [selectedUser, setSelectedUser] = useState<IUser|Channel|null>(null)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -293,7 +297,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         />
                     }
                     <div className='ml-3'>
-                        <strong>{user.username}</strong>
+                        <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                         <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     </div>
                 </div>
@@ -390,6 +394,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             key={user.id}
                             user={user}
                             member={members[user.id]}
+                            teammateNameDisplay={me?.props?.teammateNameDisplay || clientConfig.teammateNameDisplay}
                             onDeleteBoardMember={onDeleteBoardMember}
                             onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}
