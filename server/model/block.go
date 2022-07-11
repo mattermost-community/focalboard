@@ -227,6 +227,7 @@ func (b Block) GetLimited() Block {
 		Title:       b.Title,
 		ID:          b.ID,
 		ParentID:    b.ParentID,
+		BoardID:     b.BoardID,
 		Schema:      b.Schema,
 		Type:        b.Type,
 		CreateAt:    b.CreateAt,
