@@ -104,6 +104,7 @@ describe('Card URL Property', () => {
         cy.findByText('Add view').realHover()
         cy.findByRole('button', {name: type}).click()
         cy.wait('@getUser')
+        cy.wait(2000)
         cy.findByRole('textbox', {name: `${type} view`}).should('exist')
     }
 
