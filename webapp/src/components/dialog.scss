@@ -1,16 +1,18 @@
+@import '../styles/z-index';
+
 .Dialog {
     &.dialog-back {
+        @include z-index(dialog-back);
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 200;
     }
 
     .backdrop {
+        @include z-index(dialog-backdrop);
         position: fixed;
-        z-index: -1;
         width: 100%;
         height: 100%;
         background-color: rgba(var(--center-channel-color-rgb), 0.5);
