@@ -79,10 +79,19 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 	}
 
 	if oldCardLimit != cardLimit {
+		a.logger.Info(
+			"setting new cloud limits",
+			mlog.Int("oldCardLimit", oldCardLimit),
+			mlog.Int("cardLimit", cardLimit),
+		)
 		a.SetCardLimit(cardLimit)
 		return a.doUpdateCardLimitTimestamp()
 	}
 
+	a.logger.Info(
+		"setting new cloud limits, equivalent to the existing ones",
+		mlog.Int("cardLimit", cardLimit),
+	)
 	return nil
 }
 

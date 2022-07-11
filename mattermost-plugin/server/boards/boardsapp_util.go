@@ -91,6 +91,7 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
 		EnableDataRetention:      enableBoardsDeletion,
 		DataRetentionDays:        *mmconfig.DataRetentionSettings.BoardsRetentionDays,
+		TeammateNameDisplay:      *mmconfig.TeamSettings.TeammateNameDisplay,
 	}
 }
 

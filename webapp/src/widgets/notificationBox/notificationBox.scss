@@ -1,4 +1,7 @@
+@import '../../styles/z-index';
+
 .NotificationBox {
+    @include z-index(notification-box);
     position: fixed;
     bottom: 52px;
     right: 32px;
@@ -9,7 +12,6 @@
     display: flex;
     padding: 22px;
     width: 400px;
-    z-index: 1000;
 
     .NotificationBox__icon {
         margin-right: 10px;

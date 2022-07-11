@@ -26,6 +26,13 @@ type User struct {
 	// required: true
 	Email string `json:"-"`
 
+	// The user's nickname
+	Nickname string `json:"nickname"`
+	// The user's first name
+	FirstName string `json:"firstname"`
+	// The user's last name
+	LastName string `json:"lastname"`
+
 	// swagger:ignore
 	Password string `json:"-"`
 

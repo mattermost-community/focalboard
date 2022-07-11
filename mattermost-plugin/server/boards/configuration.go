@@ -96,6 +96,7 @@ func (b *BoardsApp) OnConfigurationChange() error {
 	}
 	b.server.Config().EnableDataRetention = enableBoardsDeletion
 	b.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
+	b.server.Config().TeammateNameDisplay = *mmconfig.TeamSettings.TeammateNameDisplay
 
 	b.server.UpdateAppConfig()
 	b.wsPluginAdapter.BroadcastConfigChange(*b.server.App().GetClientConfig())

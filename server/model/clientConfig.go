@@ -15,6 +15,10 @@ type ClientConfig struct {
 	// required: true
 	EnablePublicSharedBoards bool `json:"enablePublicSharedBoards"`
 
+	// Is public shared boards enabled
+	// required: true
+	TeammateNameDisplay string `json:"teammateNameDisplay"`
+
 	// The server feature flags
 	// required: true
 	FeatureFlags map[string]string `json:"featureFlags"`
