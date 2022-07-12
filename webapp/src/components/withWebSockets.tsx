@@ -43,18 +43,18 @@ const WithWebSockets = (props: Props): React.ReactElement => {
         }
 
         if (!props.webSocketClient) {
-            Utils.logError('Trying to initialise websocket plugin without base connection. Aborting')
+            Utils.logWarn('Trying to initialise Boards websocket in plugin mode without base connection. Aborting')
             return
         }
 
         if (!props.manifest?.id || !props.manifest?.version) {
-            Utils.logError('Trying to initialise websocket plugin with an incomplete manifest. Aborting')
+            Utils.logError('Trying to initialise Boards websocket in plugin mode with an incomplete manifest. Aborting')
             return
         }
 
         wsClient.initPlugin(props.manifest?.id, props.manifest?.version, props.webSocketClient)
         wsClient.open()
-    }, [])
+    }, [props.webSocketClient])
 
     useEffect(() => {
         // if we're running on a plugin instance or we don't have a
