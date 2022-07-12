@@ -89,7 +89,7 @@ describe('components/sidebarCategory', () => {
         expect(container).toMatchSnapshot()
 
         // testing collapsed state of category
-        const subItems = container.querySelectorAll('.category > .IconButton')
+        const subItems = container.querySelectorAll('.category')
         expect(subItems).toBeDefined()
         userEvent.click(subItems[0] as Element)
         expect(container).toMatchSnapshot()
