@@ -52,6 +52,7 @@ func makeGoWork(ci bool) string {
 		b.WriteString("use ./linux\n")
 	} else {
 		b.WriteString("use ../mattermost-server\n")
+		b.WriteString("use ../enterprise\n")
 	}
 
 	return b.String()
