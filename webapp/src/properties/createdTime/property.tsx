@@ -1,10 +1,13 @@
 import {IntlShape} from 'react-intl'
-import CreatedTime from './createdTime'
+
 import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import CreatedTime from './createdTime'
 
 export default class CreatedAtProperty extends PropertyType {
     Editor = CreatedTime

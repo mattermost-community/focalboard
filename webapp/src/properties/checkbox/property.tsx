@@ -1,6 +1,8 @@
 import {IntlShape} from 'react-intl'
-import Checkbox from './checkbox'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import Checkbox from './checkbox'
 
 export default class CheckboxProperty extends PropertyType {
     Editor = Checkbox

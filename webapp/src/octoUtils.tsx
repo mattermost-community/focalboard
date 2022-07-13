@@ -3,10 +3,7 @@
 
 import {IntlShape} from 'react-intl'
 
-import {DateUtils} from 'react-day-picker'
-
 import {Block, createBlock} from './blocks/block'
-import {IPropertyTemplate} from './blocks/board'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'

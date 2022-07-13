@@ -1,6 +1,8 @@
 import {IntlShape} from 'react-intl'
-import UpdatedBy from './updatedBy'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import UpdatedBy from './updatedBy'
 
 export default class UpdatedByProperty extends PropertyType {
     Editor = UpdatedBy

@@ -1,9 +1,11 @@
 import {IntlShape} from 'react-intl'
-import Select from './select'
+
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import Select from './select'
 
 export default class SelectProperty extends PropertyType {
     Editor = Select
@@ -14,7 +16,7 @@ export default class SelectProperty extends PropertyType {
 
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
 
-    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate, _: IntlShape) => {
+    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
         if (propertyValue) {
             const option = propertyTemplate.options.find((o) => o.id === propertyValue)
             if (!option) {
@@ -25,8 +27,8 @@ export default class SelectProperty extends PropertyType {
         return ''
     }
 
-    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
-        const displayValue = this.displayValue(value, card, template, intl) || ''
+    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, _: IntlShape, fontDescriptor: string): number => {
+        const displayValue = this.displayValue(value, card, template) || ''
         return Utils.getTextWidth(displayValue.toString().toUpperCase(), fontDescriptor)
     }
 }

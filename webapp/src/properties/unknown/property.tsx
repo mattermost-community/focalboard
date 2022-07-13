@@ -1,4 +1,5 @@
 import {IntlShape} from 'react-intl'
+
 import Text from '../text/text'
 import {PropertyType, PropertyTypeEnum} from '../types'
 

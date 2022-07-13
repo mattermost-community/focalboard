@@ -1,6 +1,8 @@
 import {IntlShape} from 'react-intl'
-import CreatedBy from './createdBy'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import CreatedBy from './createdBy'
 
 export default class CreatedByProperty extends PropertyType {
     Editor = CreatedBy

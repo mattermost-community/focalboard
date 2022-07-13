@@ -6,9 +6,9 @@ import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import {wrapIntl} from '../testUtils'
+import propsRegistry from '../properties'
 
 import PropertyMenu from './propertyMenu'
-import propsRegistry from '../properties'
 
 describe('widgets/PropertyMenu', () => {
     beforeEach(() => {

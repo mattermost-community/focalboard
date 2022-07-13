@@ -1,6 +1,8 @@
 import {IntlShape} from 'react-intl'
-import Phone from './phone'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import Phone from './phone'
 
 export default class PhoneProperty extends PropertyType {
     Editor = Phone

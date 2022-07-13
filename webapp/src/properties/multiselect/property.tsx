@@ -1,9 +1,12 @@
 import {IntlShape} from 'react-intl'
-import MultiSelect from './multiselect'
+
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import MultiSelect from './multiselect'
 
 export default class MultiSelectProperty extends PropertyType {
     Editor = MultiSelect
@@ -11,7 +14,7 @@ export default class MultiSelectProperty extends PropertyType {
     type = 'multiSelect' as PropertyTypeEnum
     canFilter = true
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
-    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate, _: IntlShape) => {
+    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
         if (propertyValue?.length) {
             const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))
             if (!options.length) {
@@ -22,20 +25,20 @@ export default class MultiSelectProperty extends PropertyType {
         return ''
     }
 
-    exportValue = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape): string => {
-        const displayValue = this.displayValue(value, card, template, intl)
+    exportValue = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate): string => {
+        const displayValue = this.displayValue(value, card, template)
         return ((displayValue as unknown || []) as string[]).join('|')
     }
 
-    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number): number => {
-        const displayValue = this.displayValue(value, card, template, intl)
+    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, _: IntlShape, fontDescriptor: string, perItemPadding?: number): number => {
+        const displayValue = this.displayValue(value, card, template)
         if (!displayValue) {
             return 0
         }
         const displayValues = displayValue as string[]
         let result = 0
-        displayValues.forEach((value) => {
-            result += Utils.getTextWidth(value.toUpperCase(), fontDescriptor) + (perItemPadding || 0)
+        displayValues.forEach((v) => {
+            result += Utils.getTextWidth(v.toUpperCase(), fontDescriptor) + (perItemPadding || 0)
         })
         return result
     }

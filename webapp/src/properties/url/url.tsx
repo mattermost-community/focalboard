@@ -19,7 +19,7 @@ import './url.scss'
 
 const URLProperty = (props: PropertyProps): JSX.Element => {
     if(!props.propertyTemplate) {
-        return <></>;
+        return <></>
     }
 
     const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id || ''] || '')

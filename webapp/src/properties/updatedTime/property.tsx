@@ -1,10 +1,12 @@
 import {IntlShape} from 'react-intl'
-import UpdatedTime from './updatedTime'
+
 import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import UpdatedTime from './updatedTime'
 
 export default class UpdatedTimeProperty extends PropertyType {
     Editor = UpdatedTime

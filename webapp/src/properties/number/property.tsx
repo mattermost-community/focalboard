@@ -1,7 +1,9 @@
 import {IntlShape} from 'react-intl'
-import NumberProp from './number'
+
 import {Options} from '../../components/calculations/options'
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import NumberProp from './number'
 
 export default class NumberProperty extends PropertyType {
     Editor = NumberProp

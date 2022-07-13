@@ -1,6 +1,8 @@
 import {IntlShape} from 'react-intl'
-import Text from './text'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import Text from './text'
 
 export default class TextProperty extends PropertyType {
     Editor = Text

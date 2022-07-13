@@ -1,5 +1,7 @@
 import {IntlShape} from 'react-intl'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
 import Email from './email'
 
 export default class EmailProperty extends PropertyType {

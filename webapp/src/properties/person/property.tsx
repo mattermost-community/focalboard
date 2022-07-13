@@ -1,6 +1,8 @@
 import {IntlShape} from 'react-intl'
-import Person from './person'
+
 import {PropertyType, PropertyTypeEnum} from '../types'
+
+import Person from './person'
 
 export default class PersonProperty extends PropertyType {
     Editor = Person

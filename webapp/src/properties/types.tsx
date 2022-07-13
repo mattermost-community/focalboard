@@ -24,21 +24,26 @@ export type PropertyProps = {
 }
 
 export abstract class PropertyType {
-    isDate: boolean = false
-    canGroup: boolean = false
-    canFilter: boolean = false
-    isReadOnly: boolean = false
+    isDate = false
+    canGroup = false
+    canFilter = false
+    isReadOnly = false
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue]
     displayValue: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined
     getDateFrom: (value: string | string[] | undefined, card: Card) => Date
     getDateTo: (value: string | string[] | undefined, card: Card) => Date
+    valueLength: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number) => number
 
     constructor() {
         this.displayValue = (value: string | string[] | undefined) => value
         this.getDateFrom = (_: string | string[] | undefined, card: Card) => new Date(card.createAt || 0)
         this.getDateTo = (_: string | string[] | undefined, card: Card) => new Date(card.createAt || 0)
+        this.valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
+            const displayValue = this.displayValue(value, card, template, intl) || ''
+            return Utils.getTextWidth(displayValue.toString(), fontDescriptor)
+        }
     }
 
     exportValue = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape): string => {
@@ -46,10 +51,6 @@ export abstract class PropertyType {
         return `"${encodeText(displayValue as string)}"`
     }
 
-    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, _?: number): number => {
-        const displayValue = this.displayValue(value, card, template, intl) || ''
-        return Utils.getTextWidth(displayValue.toString(), fontDescriptor)
-    }
 
     valueClassName = (readonly: boolean): string => {
         return `octo-propertyvalue${readonly ? ' octo-propertyvalue--readonly' : ''}`
