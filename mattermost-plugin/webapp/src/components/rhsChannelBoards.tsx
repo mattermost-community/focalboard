@@ -28,7 +28,7 @@ const boardsScreenshots = (window as any).baseURL + '/public/boards-screenshots.
 const RHSChannelBoards = () => {
     const boards = useAppSelector(getMySortedBoards)
     const teamId = useAppSelector(getCurrentTeamId)
-    const currentChannel = useAppSelector(getCurrentChannel);
+    const currentChannel = useAppSelector(getCurrentChannel)
     const dispatch = useAppDispatch()
 
     useEffect(() => {

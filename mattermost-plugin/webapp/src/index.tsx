@@ -12,6 +12,8 @@ import {GlobalState} from 'mattermost-redux/types/store'
 import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
+import {UserSettings} from '../../../webapp/src/userSettings'
+
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
@@ -58,7 +60,7 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
-import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge";
+import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -183,6 +185,7 @@ export default class Plugin {
 
         this.registry = registry
 
+        UserSettings.nameFormat = mmStore.getState().entities.preferences?.myPreferences['display_settings--name_format']?.value || null
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
 
@@ -207,6 +210,9 @@ export default class Plugin {
                     if (preference.category === 'theme' && theme !== preference.value) {
                         setMattermostTheme(JSON.parse(preference.value))
                         theme = preference.value
+                    }
+                    if(preference.category === 'display_settings' && preference.name === 'name_format'){
+                        UserSettings.nameFormat = preference.value
                     }
                 }
             }

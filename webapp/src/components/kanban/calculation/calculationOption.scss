@@ -1,3 +1,5 @@
+@import '../../../styles/z-index';
+
 .KanbanCalculationOptions_CustomOption {
     color: rgba(var(--center-channel-color-rgb), 1);
     min-height: 36px;
@@ -41,12 +43,12 @@
     }
 
     .dropdown-submenu {
+        @include z-index(calculation-dropdown);
         position: fixed;
         overflow: auto;
         background: rgb(var(--center-channel-bg-rgb));
         border: 0;
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
-        z-index: 999;
         padding: 8px 0;
         border-radius: 4px;
     }

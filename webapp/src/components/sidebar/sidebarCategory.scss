@@ -13,8 +13,11 @@
         }
 
         &:hover {
-            background-color: rgba(var(--sidebar-text-rgb), 0.08);
             display: flex;
+
+            .octo-sidebar-title {
+                color: rgba(var(--sidebar-text-rgb), 1);
+            }
         }
 
         &.subitem {
@@ -137,6 +140,7 @@
         text-overflow: ellipsis;
         display: flex;
         align-items: baseline;
+        color: rgba(var(--sidebar-text-rgb), 0.6);
 
         .octo-icon {
             margin-right: 6px;

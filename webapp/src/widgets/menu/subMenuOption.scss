@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .Menu .menu-options .SubMenuOption.open-left {
     padding: 4px 5px;
 
@@ -18,8 +20,8 @@
     }
 
     .SubMenu {
+        @include z-index(sub-menu-option-sub-menu);
         position: absolute;
-        z-index: 16;
         min-width: 180px;
         background-color: rgb(var(--center-channel-bg-rgb));
         color: rgb(var(--center-channel-color-rgb));

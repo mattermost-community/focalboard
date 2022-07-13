@@ -266,7 +266,7 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
 		Join("TeamMembers as tm ON tm.UserID = u.ID").
@@ -291,7 +291,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 
 func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
 		Join("TeamMembers as tm ON tm.UserID = u.id").
@@ -332,6 +332,10 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 		err := rows.Scan(
 			&user.ID,
 			&user.Username,
+			&user.Email,
+			&user.Nickname,
+			&user.FirstName,
+			&user.LastName,
 			&propsBytes,
 			&user.CreateAt,
 			&user.UpdateAt,
@@ -385,6 +389,9 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		Username:    mmUser.Username,
 		Email:       mmUser.Email,
 		Password:    mmUser.Password,
+		Nickname:    mmUser.Nickname,
+		FirstName:   mmUser.FirstName,
+		LastName:    mmUser.LastName,
 		MfaSecret:   mmUser.MfaSecret,
 		AuthService: mmUser.AuthService,
 		AuthData:    authData,
@@ -674,7 +681,7 @@ func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMe
 	}
 
 	query := s.getQueryBuilder().
-		Select("Cm.userID, B.Id").
+		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
 		Where(sq.Eq{"CM.userID": userID})
@@ -713,7 +720,7 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 	}
 
 	query := s.getQueryBuilder().
-		Select("Cm.userID, B.Id").
+		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
 		Where(sq.Eq{"B.id": boardID}).

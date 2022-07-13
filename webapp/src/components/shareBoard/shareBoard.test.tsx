@@ -101,6 +101,9 @@ const me: IUser = {
     id: 'user-id-1',
     username: 'username_1',
     email: '',
+    nickname: '',
+    firstname: '',
+    lastname: '',
     props: {},
     create_at: 0,
     update_at: 0,
@@ -157,6 +160,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 telemetry: true,
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
+                teammateNameDisplay: 'username',
                 featureFlags: {},
             },
         },
@@ -238,7 +242,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
+        const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -269,7 +273,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
+        const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
         expect(copyLinkElement).toBeDefined()
 
         await act(async () => {
@@ -279,7 +283,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
 
-        const copiedLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
+        const copiedLinkElement = screen.getByRole('button', {name: 'Copied!'})
         expect(copiedLinkElement).toBeDefined()
         expect(copiedLinkElement.textContent).toContain('Copied!')
     })
@@ -479,6 +483,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users:IUser[] = [
             {id: 'userid1', username: 'username_1'} as IUser,
