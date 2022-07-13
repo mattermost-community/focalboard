@@ -14,6 +14,7 @@ import {createBoard, IPropertyTemplate} from '../../blocks/board'
 
 import {createCommentBlock} from '../../blocks/commentBlock'
 
+import UpdatedByProperty from './property'
 import UpdatedBy from './updatedBy'
 
 describe('properties/updatedBy', () => {
@@ -52,6 +53,7 @@ describe('properties/updatedBy', () => {
         const component = (
             <ReduxProvider store={store}>
                 <UpdatedBy
+                    property={new UpdatedByProperty()}
                     card={card}
                     board={board}
                     propertyTemplate={{} as IPropertyTemplate}

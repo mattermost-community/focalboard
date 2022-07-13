@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`properties/lastModifiedBy should match snapshot 1`] = `
+exports[`properties/updatedBy should match snapshot 1`] = `
 <div>
   <div
-    class="UserProperty octo-propertyvalue octo-propertyvalue--readonly"
+    class="Person octo-propertyvalue octo-propertyvalue--readonly"
   >
     <div
-      class="UserProperty-item"
+      class="Person-item"
     >
       username_1
     </div>

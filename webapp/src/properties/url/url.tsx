@@ -75,6 +75,9 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
                         setIsEditing(true)
                     }}
                     validator={() => {
+                        if (value === '') {
+                            return true
+                        }
                         const urlRegexp = /(((.+:(?:\/\/)?)?(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/
                         return urlRegexp.test(value as string)
                     }}

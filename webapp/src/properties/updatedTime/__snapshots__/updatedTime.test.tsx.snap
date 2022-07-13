@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`properties/lastModifiedAt should match snapshot 1`] = `
+exports[`properties/updatedTime should match snapshot 1`] = `
 <div>
   <div
-    class="LastModifiedAt octo-propertyvalue octo-propertyvalue--readonly"
+    class="UpdatedTime octo-propertyvalue octo-propertyvalue--readonly"
   >
     June 15, 2021, 4:22 PM
   </div>

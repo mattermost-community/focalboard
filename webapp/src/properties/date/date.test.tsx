@@ -1,18 +1,24 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState} from 'react'
+import React from 'react'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {IntlProvider} from 'react-intl'
+import {mocked} from 'jest-mock'
 
 import '@testing-library/jest-dom'
 
 import {wrapIntl} from '../../testUtils'
-import {IPropertyTemplate, Board} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {IPropertyTemplate, createBoard} from '../../blocks/board'
+import {createCard} from '../../blocks/card'
+import mutator from '../../mutator'
 
+import DateProperty from './property'
 import DateProp from './date'
+
+jest.mock('../../mutator')
+const mockedMutator = mocked(mutator, true)
 
 // create Dates for specific days for this year.
 const June15 = new Date(Date.UTC(new Date().getFullYear(), 5, 15, 12))
@@ -20,21 +26,32 @@ const June15Local = new Date(new Date().getFullYear(), 5, 15, 12)
 const June20 = new Date(Date.UTC(new Date().getFullYear(), 5, 20, 12))
 
 describe('properties/dateRange', () => {
+    const card = createCard()
+    const board = createBoard()
+    const propertyTemplate: IPropertyTemplate = {
+        id: "test",
+        name: "test",
+        type: "date",
+        options: [],
+    }
+
     beforeEach(() => {
         // Quick fix to disregard console error when unmounting a component
         console.error = jest.fn()
         document.execCommand = jest.fn()
+        jest.resetAllMocks()
     })
 
     test('returns default correctly', () => {
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue=''
                 showEmptyPlaceholder={false}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -46,12 +63,13 @@ describe('properties/dateRange', () => {
         const component = (
             <IntlProvider locale='es'>
                 <DateProp
+                    property={new DateProperty()}
                     propertyValue={June15Local.getTime().toString()}
                     showEmptyPlaceholder={false}
                     readOnly={false}
-                    board={{} as Board}
-                    card={{} as Card}
-                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{...board}}
+                    card={{...card}}
+                    propertyTemplate={propertyTemplate}
                 />
             </IntlProvider>
         )
@@ -63,15 +81,15 @@ describe('properties/dateRange', () => {
     })
 
     test('handles calendar click event', () => {
-        const callback = jest.fn()
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue=''
                 showEmptyPlaceholder={true}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -87,20 +105,19 @@ describe('properties/dateRange', () => {
         userEvent.click(day)
         userEvent.click(modal)
 
-        const rObject = {from: fifteenth}
-        expect(callback).toHaveBeenCalledWith(JSON.stringify(rObject))
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify({from: fifteenth}))
     })
 
     test('handles setting range', () => {
-        const callback = jest.fn()
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue={''}
                 showEmptyPlaceholder={true}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -126,20 +143,19 @@ describe('properties/dateRange', () => {
         userEvent.click(end)
         userEvent.click(modal)
 
-        const rObject = {from: fifteenth, to: twentieth}
-        expect(callback).toHaveBeenCalledWith(JSON.stringify(rObject))
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify({from: fifteenth, to: twentieth}))
     })
 
     test('handle clear', () => {
-        const callback = jest.fn()
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue={June15Local.getTime().toString()}
                 showEmptyPlaceholder={false}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -155,19 +171,19 @@ describe('properties/dateRange', () => {
         userEvent.click(clear)
         userEvent.click(modal)
 
-        expect(callback).toHaveBeenCalledWith('')
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, '')
     })
 
     test('set via text input', () => {
-        const callback = jest.fn()
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
                 showEmptyPlaceholder={false}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -192,22 +208,21 @@ describe('properties/dateRange', () => {
         userEvent.click(modal)
 
         // {from: '2021-07-15', to: '2021-07-20'}
-        const retVal = '{"from":' + July15.getTime().toString() + ',"to":' + July20.getTime().toString() + '}'
-        expect(callback).toHaveBeenCalledWith(retVal)
+        const retVal = {from: July15.getTime(), to: July20.getTime()}
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify(retVal))
     })
 
     test('set via text input, es locale', () => {
-        const callback = jest.fn()
-
         const component = (
             <IntlProvider locale='es'>
                 <DateProp
+                    property={new DateProperty()}
                     propertyValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
                     showEmptyPlaceholder={false}
                     readOnly={false}
-                    board={{} as Board}
-                    card={{} as Card}
-                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{...board}}
+                    card={{...card}}
+                    propertyTemplate={propertyTemplate}
                 />
             </IntlProvider>
         )
@@ -232,20 +247,20 @@ describe('properties/dateRange', () => {
         userEvent.click(modal)
 
         // {from: '2021-07-15', to: '2021-07-20'}
-        const retVal = '{"from":' + July15.getTime().toString() + ',"to":' + July20.getTime().toString() + '}'
-        expect(callback).toHaveBeenCalledWith(retVal)
+        const retVal = {from: July15.getTime(), to: July20.getTime()}
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify(retVal))
     })
 
     test('cancel set via text input', () => {
-        const callback = jest.fn()
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue={'{"from": ' + June15.getTime().toString() + ',"to": ' + June20.getTime().toString() + '}'}
                 showEmptyPlaceholder={false}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -265,20 +280,20 @@ describe('properties/dateRange', () => {
         userEvent.click(modal)
 
         // const retVal = {from: '2021-06-15', to: '2021-06-20'}
-        const retVal = '{"from":' + June15.getTime().toString() + ',"to":' + June20.getTime().toString() + '}'
-        expect(callback).toHaveBeenCalledWith(retVal)
+        const retVal = {from: June15.getTime(), to: June20.getTime()}
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify(retVal))
     })
 
     test('handles `Today` button click event', () => {
-        const callback = jest.fn()
         const component = wrapIntl(
             <DateProp
+                property={new DateProperty()}
                 propertyValue={''}
                 showEmptyPlaceholder={true}
                 readOnly={false}
-                board={{} as Board}
-                card={{} as Card}
-                propertyTemplate={{} as IPropertyTemplate}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
             />,
         )
 
@@ -298,7 +313,6 @@ describe('properties/dateRange', () => {
         userEvent.click(day)
         userEvent.click(modal)
 
-        const rObject = {from: today}
-        expect(callback).toHaveBeenCalledWith(JSON.stringify(rObject))
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify({from: today}))
     })
 })

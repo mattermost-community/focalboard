@@ -3,15 +3,21 @@
 import React from 'react'
 import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
+import {mocked} from 'jest-mock'
 
 import userEvent from '@testing-library/user-event'
 
-import {Board, IPropertyTemplate} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {IPropertyTemplate, createBoard} from '../../blocks/board'
+import {createCard} from '../../blocks/card'
 
 import {wrapIntl} from '../../testUtils'
+import mutator from '../../mutator'
 
+import SelectProperty from './property'
 import Select from './select'
+
+jest.mock('../../mutator')
+const mockedMutator = mocked(mutator, true)
 
 function selectPropertyTemplate(): IPropertyTemplate {
     return {
@@ -42,6 +48,8 @@ describe('properties/select', () => {
     const nonEditableSelectTestId = 'select-non-editable'
 
     const clearButton = () => screen.queryByRole('button', {name: /clear/i})
+    const board = createBoard()
+    const card = createCard()
 
     it('shows the selected option', () => {
         const propertyTemplate = selectPropertyTemplate()
@@ -49,8 +57,9 @@ describe('properties/select', () => {
 
         const {container} = render(wrapIntl(
             <Select
-                board={{} as Board}
-                card={{} as Card}
+                property={new SelectProperty()}
+                board={{...board}}
+                card={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={option.id}
                 readOnly={true}
@@ -70,8 +79,9 @@ describe('properties/select', () => {
 
         const {container} = render(wrapIntl(
             <Select
-                board={{} as Board}
-                card={{} as Card}
+                property={new SelectProperty()}
+                board={{...board}}
+                card={{...card}}
                 showEmptyPlaceholder={true}
                 propertyTemplate={propertyTemplate}
                 propertyValue={''}
@@ -91,8 +101,9 @@ describe('properties/select', () => {
 
         render(wrapIntl(
             <Select
-                board={{} as Board}
-                card={{} as Card}
+                property={new SelectProperty()}
+                board={{...board}}
+                card={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={selected.id}
                 showEmptyPlaceholder={false}
@@ -120,8 +131,9 @@ describe('properties/select', () => {
 
         render(wrapIntl(
             <Select
-                board={{} as Board}
-                card={{} as Card}
+                property={new SelectProperty()}
+                board={{...board}}
+                card={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={''}
                 showEmptyPlaceholder={false}
@@ -133,7 +145,7 @@ describe('properties/select', () => {
         userEvent.click(screen.getByText(optionToSelect.value))
 
         expect(clearButton()).not.toBeInTheDocument()
-        expect('on-change').toHaveBeenCalledWith(optionToSelect.id)
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, optionToSelect.id)
     })
 
     it('can clear the selected option', () => {
@@ -142,8 +154,9 @@ describe('properties/select', () => {
 
         render(wrapIntl(
             <Select
-                board={{} as Board}
-                card={{} as Card}
+                property={new SelectProperty()}
+                board={{...board}}
+                card={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={selected.id}
                 showEmptyPlaceholder={false}
@@ -157,7 +170,7 @@ describe('properties/select', () => {
         expect(clear).toBeInTheDocument()
         userEvent.click(clear!)
 
-        expect('on-delete-value').toHaveBeenCalled()
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, '')
     })
 
     it('can create new option', () => {
@@ -167,8 +180,9 @@ describe('properties/select', () => {
 
         render(wrapIntl(
             <Select
-                board={{} as Board}
-                card={{} as Card}
+                property={new SelectProperty()}
+                board={{...board}}
+                card={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={initialOption.id}
                 showEmptyPlaceholder={false}
@@ -176,9 +190,12 @@ describe('properties/select', () => {
             />,
         ))
 
+        mockedMutator.insertPropertyOption.mockResolvedValue()
+
         userEvent.click(screen.getByTestId(nonEditableSelectTestId))
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), `${newOption}{enter}`)
 
-        expect('on-create').toHaveBeenCalledWith(newOption)
+        expect(mockedMutator.insertPropertyOption).toHaveBeenCalledWith(board.id, board.cardProperties, propertyTemplate, expect.objectContaining({value: newOption}), 'add property option')
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, 'option-3')
     })
 })

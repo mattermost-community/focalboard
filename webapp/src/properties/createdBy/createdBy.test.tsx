@@ -11,6 +11,7 @@ import {IUser} from '../../user'
 import {createCard, Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 
+import CreatedByProperty from './property'
 import CreatedBy from './createdBy'
 
 describe('properties/createdBy', () => {
@@ -35,6 +36,7 @@ describe('properties/createdBy', () => {
         const component = (
             <ReduxProvider store={store}>
                 <CreatedBy
+                    property={new CreatedByProperty}
                     board={{} as Board}
                     card={{createdBy: 'user-id-1'} as Card}
                     readOnly={false}

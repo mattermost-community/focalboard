@@ -13,6 +13,7 @@ import {wrapIntl} from '../../testUtils'
 
 import {createCommentBlock} from '../../blocks/commentBlock'
 
+import UpdatedTimeProperty from './property'
 import UpdatedTime from './updatedTime'
 
 describe('properties/updatedTime', () => {
@@ -42,6 +43,7 @@ describe('properties/updatedTime', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <UpdatedTime
+                    property={new UpdatedTimeProperty()}
                     card={card}
                     board={{} as Board}
                     propertyTemplate={{} as IPropertyTemplate}

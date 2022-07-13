@@ -13,22 +13,29 @@ import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {Utils} from '../../utils'
 import {sendFlashMessage} from '../../components/flashMessages'
+import mutator from '../../mutator'
 
+import UrlProperty from './property'
 import Url from './url'
 
-jest.mock('../../flashMessages')
+jest.mock('../../components/flashMessages')
+jest.mock('../../mutator')
 
 const mockedCopy = jest.spyOn(Utils, 'copyTextToClipboard').mockImplementation(() => true)
 const mockedSendFlashMessage = mocked(sendFlashMessage, true)
+const mockedMutator = mocked(mutator, true)
 
 describe('properties/link', () => {
     beforeEach(jest.clearAllMocks)
 
     const board = TestBlockFactory.createBoard()
+    const card = TestBlockFactory.createCard()
+    const propertyTemplate = board.cardProperties[0]
     const baseData = {
-        card: TestBlockFactory.createCard(),
+        property: new UrlProperty(),
+        card,
         board,
-        propertyTemplate: board.cardProperties[0],
+        propertyTemplate,
         readOnly: false,
         showEmptyPlaceholder: false,
     }
@@ -71,12 +78,7 @@ describe('properties/link', () => {
         const input = screen.getByRole('textbox')
         userEvent.type(input, `${url}{enter}`)
 
-        const link = screen.getByRole('link')
-        expect(link).toHaveAttribute('href', url)
-        expect(link).toHaveTextContent(url)
-        expect(screen.getByRole('button', {name: 'Edit'})).toBeInTheDocument()
-        expect(screen.getByRole('button', {name: 'Copy'})).toBeInTheDocument()
-        expect('onsave').toHaveBeenCalled() // TODO: See how i can text this
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, url)
     })
 
     it('should allow to edit link url', () => {
@@ -87,9 +89,7 @@ describe('properties/link', () => {
         const input = screen.getByRole('textbox')
         userEvent.clear(input)
         userEvent.type(input, `${newURL}{enter}`)
-        const link = screen.getByRole('link')
-        expect(link).toHaveAttribute('href', newURL)
-        expect(link).toHaveTextContent(newURL)
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, newURL)
     })
 
     it('should allow to copy url', () => {

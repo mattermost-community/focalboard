@@ -16,6 +16,7 @@ import {wrapIntl} from '../../testUtils'
 import {IPropertyTemplate, Board} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 
+import PersonProperty from './property'
 import Person from './person'
 
 describe('properties/user', () => {
@@ -46,6 +47,7 @@ describe('properties/user', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Person
+                    property={new PersonProperty()}
                     propertyValue={'user-id-2'}
                     readOnly={false}
                     showEmptyPlaceholder={false}
@@ -71,6 +73,7 @@ describe('properties/user', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Person
+                    property={new PersonProperty()}
                     propertyValue={'user-id-1'}
                     readOnly={false}
                     showEmptyPlaceholder={false}
@@ -96,6 +99,7 @@ describe('properties/user', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Person
+                    property={new PersonProperty()}
                     propertyValue={'user-id-1'}
                     readOnly={true}
                     showEmptyPlaceholder={false}
@@ -121,6 +125,7 @@ describe('properties/user', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Person
+                    property={new PersonProperty()}
                     propertyValue={'user-id-1'}
                     readOnly={false}
                     showEmptyPlaceholder={false}

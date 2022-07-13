@@ -5,11 +5,17 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import {IntlProvider} from 'react-intl'
+import {mocked} from 'jest-mock'
 
-import {IPropertyOption, IPropertyTemplate, Board} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {IPropertyOption, IPropertyTemplate, createBoard} from '../../blocks/board'
+import {createCard} from '../../blocks/card'
+import mutator from '../../mutator'
 
+import MultiSelectProperty from './property'
 import MultiSelect from './multiselect'
+
+jest.mock('../../mutator')
+const mockedMutator = mocked(mutator, true)
 
 function buildMultiSelectPropertyTemplate(options: IPropertyOption[] = []) : IPropertyTemplate {
     return {
@@ -48,18 +54,26 @@ const Wrapper = ({children}: WrapperProps) => {
 describe('properties/multiSelect', () => {
     const nonEditableMultiSelectTestId = 'multiselect-non-editable'
 
+    const board = createBoard()
+    const card = createCard()
+
+    beforeEach(() => {
+        jest.resetAllMocks()
+    })
+
     it('shows only the selected options when menu is not opened', () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1', 'multi-option-2']
 
         const {container} = render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={true}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -76,12 +90,13 @@ describe('properties/multiSelect', () => {
 
         render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={false}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={[]}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -94,16 +109,16 @@ describe('properties/multiSelect', () => {
     it('can select a option', async () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1']
-        const onChange = jest.fn()
 
         render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={false}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -112,22 +127,22 @@ describe('properties/multiSelect', () => {
 
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'b{enter}')
 
-        expect(onChange).toHaveBeenCalledWith(['multi-option-1', 'multi-option-2'])
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['multi-option-1', 'multi-option-2'])
     })
 
     it('can unselect a option', async () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
-        const propertyValue = ['multi-option-1']
-        const onDeleteValue = jest.fn()
+        const propertyValue = ['multi-option-1', 'multi-option-2']
 
         render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={false}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -136,51 +151,48 @@ describe('properties/multiSelect', () => {
 
         userEvent.click(screen.getAllByRole('button', {name: /clear/i})[0])
 
-        const valueToRemove = propertyTemplate.options.find((option: IPropertyOption) => option.id === propertyValue[0])
-        const selectedValues = propertyTemplate.options.filter((option: IPropertyOption) => propertyValue.includes(option.id))
-
-        expect(onDeleteValue).toHaveBeenCalledWith(valueToRemove, selectedValues)
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['multi-option-2'])
     })
 
     it('can create a new option', async () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1', 'multi-option-2']
-        const onCreate = jest.fn()
 
         render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={false}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
 
-        userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
+        mockedMutator.insertPropertyOption.mockResolvedValue()
 
+        userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'new-value{enter}')
 
-        const selectedValues = propertyTemplate.options.filter((option: IPropertyOption) => propertyValue.includes(option.id))
-
-        expect(onCreate).toHaveBeenCalledWith('new-value', selectedValues)
+        expect(mockedMutator.insertPropertyOption).toHaveBeenCalledWith(board.id, board.cardProperties, propertyTemplate, expect.objectContaining({value: 'new-value'}), 'add property option')
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['option-3'])
     })
 
     it('can delete a option', () => {
         const propertyTemplate = buildMultiSelectPropertyTemplate()
         const propertyValue = ['multi-option-1', 'multi-option-2']
 
-        const onDeleteOption = jest.fn()
         render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={false}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -193,7 +205,7 @@ describe('properties/multiSelect', () => {
 
         const optionToDelete = propertyTemplate.options.find((option: IPropertyOption) => option.id === propertyValue[0])
 
-        expect(onDeleteOption).toHaveBeenCalledWith(optionToDelete)
+        expect(mockedMutator.deletePropertyOption).toHaveBeenCalledWith(board.id, board.cardProperties, propertyTemplate, optionToDelete)
     })
 
     it('can change color for any option', () => {
@@ -202,15 +214,15 @@ describe('properties/multiSelect', () => {
         const newColorKey = 'propColorYellow'
         const newColorValue = 'yellow'
 
-        const onChangeColor = jest.fn()
         render(
             <MultiSelect
+                property={new MultiSelectProperty()}
                 readOnly={false}
                 showEmptyPlaceholder={false}
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
-                card={{} as Card}
-                board={{} as Board}
+                board={{...board}}
+                card={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -223,6 +235,6 @@ describe('properties/multiSelect', () => {
 
         const selectedOption = propertyTemplate.options.find((option: IPropertyOption) => option.id === propertyValue[0])
 
-        expect(onChangeColor).toHaveBeenCalledWith(selectedOption, newColorKey)
+        expect(mockedMutator.changePropertyOptionColor).toHaveBeenCalledWith(board.id, board.cardProperties, propertyTemplate, selectedOption, newColorKey)
     })
 })

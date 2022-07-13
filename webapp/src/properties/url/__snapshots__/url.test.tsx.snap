@@ -7,6 +7,7 @@ exports[`properties/link should match snapshot for link with empty url 1`] = `
   >
     <input
       class="Editable octo-propertyvalue"
+      placeholder=""
       style="width: 5px;"
       title=""
       value=""
