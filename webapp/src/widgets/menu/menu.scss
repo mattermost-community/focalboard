@@ -13,6 +13,7 @@
     position: absolute;
     background-color: rgb(var(--center-channel-bg-rgb));
     color: rgb(var(--center-channel-color-rgb));
+    border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
 
