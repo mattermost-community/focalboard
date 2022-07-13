@@ -6,8 +6,9 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {render, screen, act} from '@testing-library/react'
 import {mocked} from 'jest-mock'
 
-import octoClient from '../../../../webapp/src/octoClient'
 import userEvent from '@testing-library/user-event'
+
+import octoClient from '../../../../webapp/src/octoClient'
 import {mockStateStore} from '../../../../webapp/src/testUtils'
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {wrapIntl} from '../../../../webapp/src/testUtils'

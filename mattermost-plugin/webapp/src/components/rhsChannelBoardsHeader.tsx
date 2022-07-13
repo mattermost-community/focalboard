@@ -10,7 +10,7 @@ import {useAppSelector} from '../../../../webapp/src/store/hooks'
 
 const RHSChannelBoardsHeader = () => {
     const appBarIconURL = (window as any).baseURL + '/public/app-bar-icon.png'
-    const currentChannel = useAppSelector(getCurrentChannel);
+    const currentChannel = useAppSelector(getCurrentChannel)
     const language = useAppSelector<string>(getLanguage)
 
     if (!currentChannel) {
