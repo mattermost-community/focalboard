@@ -40,10 +40,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: npm ci
-      run: cd webapp; npm ci
-
-    - name: ESLint
-      run: cd webapp; npm run check
+      run: |
+        cd webapp && npm ci && cd -
+        cd mattermost-plugin/webapp && npm ci
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -67,11 +66,8 @@ jobs:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
-    - name: "Test webapp: Jest"
-      run: cd webapp; npm run test
-
-    - name: "Test webapp: Cypress"
-      run: "cd webapp; npm run cypress:ci"
+    - name: Lint & test webapp
+      run: make webapp-ci
 
   ci-windows-server:
     runs-on: windows-2022
