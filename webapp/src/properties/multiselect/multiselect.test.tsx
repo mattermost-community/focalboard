@@ -177,7 +177,6 @@ describe('properties/multiSelect', () => {
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'new-value{enter}')
 
         expect(mockedMutator.insertPropertyOption).toHaveBeenCalledWith(board.id, board.cardProperties, propertyTemplate, expect.objectContaining({value: 'new-value'}), 'add property option')
-        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['option-3'])
     })
 
     it('can delete a option', () => {
