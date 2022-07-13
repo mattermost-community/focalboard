@@ -153,6 +153,11 @@
         }
     }
 
+    .octo-sidebar-icon > .Icon {
+        width: 19px;
+        vertical-align: top;
+    }
+
     .Menu.noselect.left {
         position: fixed;
         right: calc(100% - 480px + 50px);

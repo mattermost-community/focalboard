@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .CardDetail {
     .title {
         width: 100%;
@@ -72,8 +74,8 @@
     }
 
     .ValueSelector__menu {
+        @include z-index(card-value-selector-menu);
         max-width: 100%;
-        z-index: 10;
 
         .value-menu-option {
             justify-content: space-between;

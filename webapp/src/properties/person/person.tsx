@@ -5,15 +5,18 @@ import React, {useCallback} from 'react'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
+import {Utils} from '../../utils'
 import {IUser} from '../../user'
 import {getBoardUsersList, getBoardUsers} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import mutator from '../../mutator'
-
-import './person.scss'
 import {getSelectBaseStyle} from '../../theme'
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
 
 import {PropertyProps} from '../types'
+
+import './person.scss'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
@@ -49,27 +52,30 @@ const selectStyles = {
     }),
 }
 
-const formatOptionLabel = (user: any) => {
-    let profileImg
-    if (imageURLForUser) {
-        profileImg = imageURLForUser(user.id)
-    }
-
-    return (
-        <div className='Person-item'>
-            {profileImg && (
-                <img
-                    alt='Person-avatar'
-                    src={profileImg}
-                />
-            )}
-            {user.username}
-        </div>
-    )
-}
-
 const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
+
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
+
+    const formatOptionLabel = (user: any) => {
+        let profileImg
+        if (imageURLForUser) {
+            profileImg = imageURLForUser(user.id)
+        }
+
+        return (
+            <div className='Person-item'>
+                {profileImg && (
+                    <img
+                        alt='Person-avatar'
+                        src={profileImg}
+                    />
+                )}
+                {Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
+            </div>
+        )
+    }
+
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 

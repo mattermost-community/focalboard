@@ -42,6 +42,11 @@ describe('properties/updatedBy', () => {
                     [card.id]: [comment],
                 },
             },
+            clientConfig: {
+                value: {
+                    teammateNameDisplay: 'username',
+                },
+            },
         })
 
         const component = (

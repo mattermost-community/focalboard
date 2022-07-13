@@ -25,6 +25,11 @@ describe('properties/createdBy', () => {
                     'user-id-1': {username: 'username_1'} as IUser,
                 },
             },
+            clientConfig: {
+                value: {
+                    teammateNameDisplay: 'username',
+                },
+            },
         })
 
         const component = (

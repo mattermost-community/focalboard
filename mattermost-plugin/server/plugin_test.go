@@ -68,6 +68,10 @@ func TestSetConfiguration(t *testing.T) {
 	baseDataRetentionSettings := &model.DataRetentionSettings{
 		BoardsRetentionDays: &days,
 	}
+	usernameRef := "username"
+	baseTeamSettings := &model.TeamSettings{
+		TeammateNameDisplay: &usernameRef,
+	}
 
 	baseConfig := &model.Config{
 		FeatureFlags:          baseFeatureFlags,
@@ -75,6 +79,7 @@ func TestSetConfiguration(t *testing.T) {
 		SqlSettings:           *baseSQLSettings,
 		FileSettings:          *baseFileSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
+		TeamSettings:          *baseTeamSettings,
 	}
 
 	t.Run("test enable telemetry", func(t *testing.T) {

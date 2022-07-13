@@ -9,6 +9,7 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBoards} from './store/sidebar'
+import {Channel} from './store/channels'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
@@ -795,6 +796,32 @@ class OctoClient {
         return (await this.getJson(response, [])) as Subscription[]
     }
 
+    async searchUserChannels(teamId: string, searchQuery: string): Promise<Channel[] | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels?search=${searchQuery}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as Channel[]
+    }
+
+    async getChannel(teamId: string, channelId: string): Promise<Channel | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels/${channelId}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as Channel
+    }
+
     // onboarding
     async prepareOnboarding(teamId: string): Promise<PrepareOnboardingResponse | undefined> {
         const path = `/api/v2/teams/${teamId}/onboard`
@@ -810,7 +837,7 @@ class OctoClient {
     }
 
     async notifyAdminUpgrade(): Promise<void> {
-        const path = `${this.teamsPath()}/notifyadminupgrade`
+        const path = `${this.teamPath()}/notifyadminupgrade`
         await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
             method: 'POST',

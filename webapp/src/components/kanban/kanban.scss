@@ -1,8 +1,11 @@
+@import '../../styles/z-index';
+
 .Kanban {
     overflow: auto;
     flex: 1;
 
     .octo-board-header {
+        @include z-index(kanban-board-header);
         display: flex;
         flex-direction: row;
         width: max-content;
@@ -11,7 +14,6 @@
         color: #909090;
         position: sticky;
         top: 0;
-        z-index: 1;
         background: rgb(var(--center-channel-bg-rgb));
     }
 

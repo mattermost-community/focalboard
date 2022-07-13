@@ -1,6 +1,8 @@
 package sqlstore
 
 import (
+	//nolint:gosec
+	"crypto/md5"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -276,7 +278,32 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 	return s.boardsFromRows(rows)
 }
 
+func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, teamID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Eq{"b.id": boardIDs})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardsInTeamByIds ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
+	// Generate tracking IDs for in-built templates
+	if board.IsTemplate && board.TeamID == model.GlobalTeamID {
+		//nolint:gosec
+		// we don't need cryptographically secure hash, so MD5 is fine
+		board.Properties["trackingTemplateId"] = fmt.Sprintf("%x", md5.Sum([]byte(board.Title)))
+	}
+
 	propertiesBytes, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		s.logger.Error(
@@ -335,6 +362,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Where(sq.Eq{"id": board.ID}).
 			Set("modified_by", userID).
 			Set("type", board.Type).
+			Set("channel_id", board.ChannelID).
 			Set("minimum_role", board.MinimumRole).
 			Set("title", board.Title).
 			Set("description", board.Description).
@@ -746,8 +774,8 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.CreatedBy,
 		modifiedBy,
 		board.Type,
-		board.MinimumRole,
 		board.Title,
+		board.MinimumRole,
 		board.Description,
 		board.Icon,
 		board.ShowDescription,

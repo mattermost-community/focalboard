@@ -34,6 +34,11 @@ describe('properties/user', () => {
                 },
             },
         },
+        clientConfig: {
+            value: {
+                teammateNameDisplay: 'username',
+            },
+        },
     }
 
     test('not readOnly not existing user', async () => {
