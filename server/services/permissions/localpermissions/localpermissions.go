@@ -30,6 +30,13 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 	return true
 }
 
+func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {
+	if userID == "" || channelID == "" || permission == nil {
+		return false
+	}
+	return true
+}
+
 func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool {
 	if userID == "" || boardID == "" || permission == nil {
 		return false
@@ -46,6 +53,17 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 			mlog.Err(err),
 		)
 		return false
+	}
+
+	switch member.MinimumRole {
+	case "admin":
+		member.SchemeAdmin = true
+	case "editor":
+		member.SchemeEditor = true
+	case "commenter":
+		member.SchemeCommenter = true
+	case "viewer":
+		member.SchemeViewer = true
 	}
 
 	switch permission {

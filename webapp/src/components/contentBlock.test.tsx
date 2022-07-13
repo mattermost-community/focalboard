@@ -34,7 +34,7 @@ describe('components/contentBlock', () => {
     const mockedOcto = mocked(octoClient, true)
 
     mockedUtils.createGuid.mockReturnValue('test-id')
-    mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
+    mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 
     const board = TestBlockFactory.createBoard()
     board.cardProperties = []
@@ -65,6 +65,9 @@ describe('components/contentBlock', () => {
         addBlock: jest.fn(),
     })
 
+    const board1 = TestBlockFactory.createBoard()
+    board1.id = 'board-id-1'
+
     const state = {
         users: {
             boardUsers: {
@@ -74,6 +77,15 @@ describe('components/contentBlock', () => {
                 4: {username: 'f'},
                 5: {username: 'g'},
             },
+        },
+        boards: {
+            current: 'board-id-1',
+            boards: {
+                [board1.id]: board1,
+            }
+        },
+        clientConfig: {
+            value: {},
         },
     }
     const store = mockStateStore([], state)

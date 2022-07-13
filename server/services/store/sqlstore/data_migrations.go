@@ -386,7 +386,7 @@ func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
 		},
 	}
 
-	boards, err := s.getBoardsByCondition(tx, conditions)
+	boards, err := s.getLegacyBoardsByCondition(tx, conditions)
 	if err != nil && model.IsErrNotFound(err) {
 		return []*model.Board{}, nil
 	}

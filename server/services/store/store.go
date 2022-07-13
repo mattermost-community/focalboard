@@ -10,10 +10,13 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
+const CardLimitTimestampSystemKey = "card_limit_timestamp"
+
 // Store represents the abstraction of the data storage.
 type Store interface {
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
+	GetBlocksByIDs(ids []string) ([]model.Block, error)
 	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
@@ -89,6 +92,7 @@ type Store interface {
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
 	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
 
@@ -116,6 +120,9 @@ type Store interface {
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
 
+	GetFileInfo(id string) (*mmModel.FileInfo, error)
+	SaveFileInfo(fileInfo *mmModel.FileInfo) error
+
 	// @withTransaction
 	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
 
@@ -138,7 +145,27 @@ type Store interface {
 	// @withTransaction
 	RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error)
 
+	GetUsedCardsCount() (int, error)
+	GetCardLimitTimestamp() (int64, error)
+	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
+
 	DBType() string
 
 	GetLicense() *mmModel.License
+	GetCloudLimits() (*mmModel.ProductLimits, error)
+	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
+	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
+	SendMessage(message, postType string, receipts []string) error
+}
+
+type NotSupportedError struct {
+	msg string
+}
+
+func NewNotSupportedError(msg string) NotSupportedError {
+	return NotSupportedError{msg: msg}
+}
+
+func (pe NotSupportedError) Error() string {
+	return pe.msg
 }

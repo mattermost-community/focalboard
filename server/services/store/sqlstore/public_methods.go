@@ -294,6 +294,11 @@ func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBl
 
 }
 
+func (s *SQLStore) GetBlocksByIDs(ids []string) ([]model.Block, error) {
+	return s.getBlocksByIDs(s.db, ids)
+
+}
+
 func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 
@@ -349,8 +354,33 @@ func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*mod
 
 }
 
+func (s *SQLStore) GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error) {
+	return s.getBoardsInTeamByIds(s.db, boardIDs, teamID)
+
+}
+
+func (s *SQLStore) GetCardLimitTimestamp() (int64, error) {
+	return s.getCardLimitTimestamp(s.db)
+
+}
+
 func (s *SQLStore) GetCategory(id string) (*model.Category, error) {
 	return s.getCategory(s.db, id)
+
+}
+
+func (s *SQLStore) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
+	return s.getChannel(s.db, teamID, channelID)
+
+}
+
+func (s *SQLStore) GetCloudLimits() (*mmModel.ProductLimits, error) {
+	return s.getCloudLimits(s.db)
+
+}
+
+func (s *SQLStore) GetFileInfo(id string) (*mmModel.FileInfo, error) {
+	return s.getFileInfo(s.db, id)
 
 }
 
@@ -461,6 +491,10 @@ func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Boa
 
 func (s *SQLStore) GetUserBoardsInsights(userID string, duration string) ([]*model.BoardInsight, error) {
 	return s.getUserBoardsInsights(s.db, userID, duration)
+}
+
+func (s *SQLStore) GetUsedCardsCount() (int, error) {
+	return s.getUsedCardsCount(s.db)
 
 }
 
@@ -701,6 +735,11 @@ func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) 
 
 }
 
+func (s *SQLStore) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
+	return s.saveFileInfo(s.db, fileInfo)
+
+}
+
 func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error) {
 	return s.saveMember(s.db, bm)
 
@@ -711,8 +750,18 @@ func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Boa
 
 }
 
+func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
+	return s.searchUserChannels(s.db, teamID, userID, query)
+
+}
+
 func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
 	return s.searchUsersByTeam(s.db, teamID, searchQuery)
+
+}
+
+func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
+	return s.sendMessage(s.db, message, postType, receipts)
 
 }
 
@@ -766,6 +815,11 @@ func (s *SQLStore) UndeleteBoard(boardID string, modifiedBy string) error {
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) UpdateCardLimitTimestamp(cardLimit int) (int64, error) {
+	return s.updateCardLimitTimestamp(s.db, cardLimit)
 
 }
 

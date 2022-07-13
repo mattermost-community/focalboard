@@ -32,7 +32,7 @@ var (
 // blocks.
 type notifier struct {
 	serverRoot  string
-	store       Store
+	store       AppAPI
 	permissions permissions.PermissionsService
 	delivery    SubscriptionDelivery
 	logger      *mlog.Logger
@@ -46,7 +46,7 @@ type notifier struct {
 func newNotifier(params BackendParams) *notifier {
 	return &notifier{
 		serverRoot:  params.ServerRoot,
-		store:       params.Store,
+		store:       params.AppAPI,
 		permissions: params.Permissions,
 		delivery:    params.Delivery,
 		logger:      params.Logger,
@@ -204,6 +204,9 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		MakeCardLink: func(block *model.Block, board *model.Board, card *model.Block) string {
 			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.TeamID, board.ID, card.ID))
 		},
+		MakeBoardLink: func(board *model.Board) string {
+			return fmt.Sprintf("[%s](%s)", board.Title, utils.MakeBoardLink(n.serverRoot, board.TeamID, board.ID))
+		},
 		Logger: n.logger,
 	}
 
@@ -243,7 +246,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 				mlog.String("subscriber_type", string(sub.SubscriberType)),
 			)
 
-			if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+			if err = n.delivery.SubscriptionDeliverSlackAttachments(board.TeamID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 					sub.SubscriberID, sub.SubscriberType, err))
 			}

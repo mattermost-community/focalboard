@@ -1,6 +1,8 @@
 package sqlstore
 
 import (
+	//nolint:gosec
+	"crypto/md5"
 	"database/sql"
 	"encoding/json"
 	"fmt"
@@ -31,6 +33,7 @@ func boardFields(prefix string) []string {
 		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
+		"minimum_role",
 		"title",
 		"description",
 		"icon",
@@ -67,6 +70,7 @@ func boardHistoryFields() []string {
 		"COALESCE(created_by, '')",
 		"COALESCE(modified_by, '')",
 		"type",
+		"minimum_role",
 		"COALESCE(title, '')",
 		"COALESCE(description, '')",
 		"COALESCE(icon, '')",
@@ -84,13 +88,14 @@ func boardHistoryFields() []string {
 }
 
 var boardMemberFields = []string{
-	"board_id",
-	"user_id",
-	"roles",
-	"scheme_admin",
-	"scheme_editor",
-	"scheme_commenter",
-	"scheme_viewer",
+	"COALESCE(B.minimum_role, '')",
+	"BM.board_id",
+	"BM.user_id",
+	"BM.roles",
+	"BM.scheme_admin",
+	"BM.scheme_editor",
+	"BM.scheme_commenter",
+	"BM.scheme_viewer",
 }
 
 func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
@@ -108,6 +113,7 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.CreatedBy,
 			&board.ModifiedBy,
 			&board.Type,
+			&board.MinimumRole,
 			&board.Title,
 			&board.Description,
 			&board.Icon,
@@ -149,6 +155,7 @@ func (s *SQLStore) boardMembersFromRows(rows *sql.Rows) ([]*model.BoardMember, e
 		var boardMember model.BoardMember
 
 		err := rows.Scan(
+			&boardMember.MinimumRole,
 			&boardMember.BoardID,
 			&boardMember.UserID,
 			&boardMember.Roles,
@@ -211,8 +218,12 @@ func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...interface
 }
 
 func (s *SQLStore) getBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
+	return s.getBoardsFieldsByCondition(db, boardFields(""), conditions...)
+}
+
+func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string, conditions ...interface{}) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
-		Select(boardFields("")...).
+		Select(fields...).
 		From(s.tablePrefix + "boards")
 	for _, c := range conditions {
 		query = query.Where(c)
@@ -267,7 +278,32 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 	return s.boardsFromRows(rows)
 }
 
+func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, teamID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Eq{"b.id": boardIDs})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getBoardsInTeamByIds ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
+	// Generate tracking IDs for in-built templates
+	if board.IsTemplate && board.TeamID == model.GlobalTeamID {
+		//nolint:gosec
+		// we don't need cryptographically secure hash, so MD5 is fine
+		board.Properties["trackingTemplateId"] = fmt.Sprintf("%x", md5.Sum([]byte(board.Title)))
+	}
+
 	propertiesBytes, err := s.MarshalJSONB(board.Properties)
 	if err != nil {
 		s.logger.Error(
@@ -308,6 +344,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"modified_by":      userID,
 		"type":             board.Type,
 		"title":            board.Title,
+		"minimum_role":     board.MinimumRole,
 		"description":      board.Description,
 		"icon":             board.Icon,
 		"show_description": board.ShowDescription,
@@ -325,6 +362,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Where(sq.Eq{"id": board.ID}).
 			Set("modified_by", userID).
 			Set("type", board.Type).
+			Set("channel_id", board.ChannelID).
+			Set("minimum_role", board.MinimumRole).
 			Set("title", board.Title).
 			Set("description", board.Description).
 			Set("icon", board.Icon).
@@ -398,6 +437,7 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		"created_by":       board.CreatedBy,
 		"modified_by":      userID,
 		"type":             board.Type,
+		"minimum_role":     board.MinimumRole,
 		"title":            board.Title,
 		"description":      board.Description,
 		"icon":             board.Icon,
@@ -536,9 +576,10 @@ func (s *SQLStore) deleteMember(db sq.BaseRunner, boardID, userID string) error 
 func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"board_id": boardID}).
-		Where(sq.Eq{"user_id": userID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.board_id": boardID}).
+		Where(sq.Eq{"BM.user_id": userID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -562,8 +603,9 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"user_id": userID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.user_id": userID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -583,8 +625,9 @@ func (s *SQLStore) getMembersForUser(db sq.BaseRunner, userID string) ([]*model.
 func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*model.BoardMember, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardMemberFields...).
-		From(s.tablePrefix + "board_members").
-		Where(sq.Eq{"board_id": boardID})
+		From(s.tablePrefix + "board_members AS BM").
+		LeftJoin(s.tablePrefix + "boards AS B ON B.id=BM.board_id").
+		Where(sq.Eq{"BM.board_id": boardID})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -711,6 +754,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"modified_by",
 		"type",
 		"title",
+		"minimum_role",
 		"description",
 		"icon",
 		"show_description",
@@ -731,6 +775,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		modifiedBy,
 		board.Type,
 		board.Title,
+		board.MinimumRole,
 		board.Description,
 		board.Icon,
 		board.ShowDescription,

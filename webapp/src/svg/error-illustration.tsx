@@ -3,9 +3,9 @@
 
 import React from 'react'
 
-export default function ErrorIllustration(props: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
+export default function ErrorIllustration(): JSX.Element {
     return (
-        <span {...props}>
+        <span>
             <svg
                 width='355'
                 height='250'

@@ -138,3 +138,11 @@ func (m pluginAPIMock) GetChannelByID(channelID string) (*mm_model.Channel, erro
 func (m pluginAPIMock) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
 	return nil, model.NewErrNotFound(userID)
 }
+
+func (m pluginAPIMock) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+	member := &mm_model.TeamMember{
+		UserId: userID,
+		TeamId: teamID,
+	}
+	return member, nil
+}

@@ -1,6 +1,10 @@
+@import '../../styles/z-index';
+
 .Table {
     margin-top: 16px;
     padding-bottom: 0 !important;
+    margin-left: 20px !important;
+    padding-left: 0 !important;
     overflow: auto;
     position: relative;
     flex: 1;
@@ -174,6 +178,7 @@
         display: flex;
         flex-direction: column;
         width: fit-content;
+        padding-left: 60px;
     }
 
     .octo-table-header,
@@ -189,9 +194,9 @@
     }
 
     .octo-table-header {
+        @include z-index(table-header);
         position: sticky;
         top: -2px;
-        z-index: 1;
         background: rgb(var(--center-channel-bg-rgb));
         width: fit-content;
 
@@ -235,5 +240,9 @@
             text-overflow: ellipsis;
             overflow: hidden;
         }
+    }
+
+    @media screen and (max-width: 768px) {
+        margin-left: 0 !important;
     }
 }

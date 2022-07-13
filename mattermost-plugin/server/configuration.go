@@ -68,7 +68,7 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
-func (p *Plugin) OnConfigurationChange() error { //nolint
+func (p *Plugin) OnConfigurationChange() error {
 	// Have we been setup by OnActivate?
 	if p.wsPluginAdapter == nil {
 		return nil
@@ -96,6 +96,7 @@ func (p *Plugin) OnConfigurationChange() error { //nolint
 	}
 	p.server.Config().EnableDataRetention = enableBoardsDeletion
 	p.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
+	p.server.Config().TeammateNameDisplay = *mmconfig.TeamSettings.TeammateNameDisplay
 
 	p.server.UpdateAppConfig()
 	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())

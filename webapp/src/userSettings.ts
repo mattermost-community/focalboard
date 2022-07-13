@@ -17,6 +17,8 @@ export enum UserSettingKey {
     RandomIcons = 'randomIcons',
     MobileWarningClosed = 'mobileWarningClosed',
     WelcomePageViewed = 'welcomePageViewed',
+    HideCloudMessage = 'hideCloudMessage',
+    NameFormat = 'nameFormat'
 }
 
 export class UserSettings {
@@ -146,6 +148,23 @@ export class UserSettings {
     static set mobileWarningClosed(newValue: boolean) {
         UserSettings.set(UserSettingKey.MobileWarningClosed, String(newValue))
     }
+
+    static get hideCloudMessage(): boolean {
+        return localStorage.getItem(UserSettingKey.HideCloudMessage) === 'true'
+    }
+
+    static set hideCloudMessage(newValue: boolean) {
+        localStorage.setItem(UserSettingKey.HideCloudMessage, JSON.stringify(newValue))
+    }
+
+    static get nameFormat(): string | null {
+        return UserSettings.get(UserSettingKey.NameFormat)
+    }
+
+    static set nameFormat(newValue: string | null) {
+        UserSettings.set(UserSettingKey.NameFormat, newValue)
+    }
+
 }
 
 export function exportUserSettingsBlob(): string {

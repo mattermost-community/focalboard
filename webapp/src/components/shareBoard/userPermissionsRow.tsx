@@ -21,13 +21,14 @@ type Props = {
     user: IUser
     member: BoardMember
     isMe: boolean
+    teammateNameDisplay: string,
     onDeleteBoardMember: (member: BoardMember) => void
     onUpdateBoardMember: (member: BoardMember, permission: string) => void
 }
 
 const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
-    const {user, member, isMe} = props
+    const {user, member, isMe, teammateNameDisplay} = props
     let currentRole = 'Viewer'
     if (member.schemeAdmin) {
         currentRole = 'Admin'
@@ -40,12 +41,14 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
     return (
         <div className='user-item'>
             <div className='user-item__content'>
-                <img
-                    src={Utils.getProfilePicture(user.id)}
-                    className='user-item__img'
-                />
+                {Utils.isFocalboardPlugin() &&
+                    <img
+                        src={Utils.getProfilePicture(user.id)}
+                        className='user-item__img'
+                    />
+                }
                 <div className='ml-3'>
-                    <strong>{user.username}</strong>
+                    <strong>{Utils.getUserDisplayName(user, teammateNameDisplay)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     {isMe && <strong className='ml-2 text-light'>{intl.formatMessage({id: 'ShareBoard.userPermissionsYouText', defaultMessage: '(You)'})}</strong>}
                 </div>

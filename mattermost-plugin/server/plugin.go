@@ -18,6 +18,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
@@ -108,7 +109,7 @@ func (p *Plugin) OnActivate() error {
 		return fmt.Errorf("error initializing the DB: %w", err)
 	}
 	if cfg.AuthMode == server.MattermostAuthMod {
-		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API)
+		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, p.API, storeParams.TablePrefix, client)
 		if err2 != nil {
 			return fmt.Errorf("error initializing the DB: %w", err2)
 		}
@@ -122,9 +123,8 @@ func (p *Plugin) OnActivate() error {
 	backendParams := notifyBackendParams{
 		cfg:         cfg,
 		client:      client,
-		store:       db,
+		appAPI:      &appAPI{store: db},
 		permissions: permissionsService,
-		wsAdapter:   p.wsPluginAdapter,
 		serverRoot:  baseURL + "/boards",
 		logger:      logger,
 	}
@@ -153,12 +153,30 @@ func (p *Plugin) OnActivate() error {
 		WSAdapter:          p.wsPluginAdapter,
 		NotifyBackends:     notifyBackends,
 		PermissionsService: permissionsService,
+		PluginAPI:          p.API,
+		Client:             client,
+		IsPlugin:           true,
 	}
 
 	server, err := server.New(params)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER", err)
 		return err
+	}
+
+	backendParams.appAPI.init(db, server.App())
+
+	if utils.IsCloudLicense(p.API.GetLicense()) {
+		limits, err := p.API.GetCloudLimits()
+		if err != nil {
+			fmt.Println("ERROR FETCHING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+			return err
+		}
+
+		if err := server.App().SetCloudLimits(limits); err != nil {
+			fmt.Println("ERROR SETTING CLOUD LIMITS WHEN STARTING THE PLUGIN", err)
+			return err
+		}
 	}
 
 	p.server = server
@@ -243,6 +261,7 @@ func (p *Plugin) createBoardsConfig(mmconfig mmModel.Config, baseURL string, ser
 		NotifyFreqBoardSeconds:   getPluginSettingInt(mmconfig, notifyFreqBoardSecondsKey, 86400),
 		EnableDataRetention:      enableBoardsDeletion,
 		DataRetentionDays:        *mmconfig.DataRetentionSettings.BoardsRetentionDays,
+		TeammateNameDisplay:      *mmconfig.TeamSettings.TeammateNameDisplay,
 	}
 }
 
@@ -508,4 +527,10 @@ func isBoardsLink(link string) bool {
 
 	teamID, boardID, viewID, cardID := returnBoardsParams(pathSplit)
 	return teamID != "" && boardID != "" && viewID != "" && cardID != ""
+}
+
+func (p *Plugin) OnCloudLimitsUpdated(limits *mmModel.ProductLimits) {
+	if err := p.server.App().SetCloudLimits(limits); err != nil {
+		fmt.Println("Error setting the cloud limits for Boards", err)
+	}
 }

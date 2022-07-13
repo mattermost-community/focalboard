@@ -19,6 +19,43 @@ type Props = {
     initialData?: Array<ReactNode>
 }
 
+export const EmptySearch = () => (
+    <div className='noResults introScreen'>
+        <div className='iconWrapper'>
+            <Search/>
+        </div>
+        <h4 className='text-heading4'>
+            <FormattedMessage
+                id='FindBoardsDialog.IntroText'
+                defaultMessage='Search for boards'
+            />
+        </h4>
+    </div>
+)
+
+export const EmptyResults = (props: {query: string}) => (
+    <div className='noResults'>
+        <div className='iconWrapper'>
+            <Search/>
+        </div>
+        <h4 className='text-heading4'>
+            <FormattedMessage
+                id='FindBoardsDialog.NoResultsFor'
+                defaultMessage='No results for "{searchQuery}"'
+                values={{
+                    searchQuery: props.query,
+                }}
+            />
+        </h4>
+        <span>
+            <FormattedMessage
+                id='FindBoardsDialog.NoResultsSubtext'
+                defaultMessage='Check the spelling or try another search.'
+            />
+        </span>
+    </div>
+)
+
 const SearchDialog = (props: Props): JSX.Element => {
     const [results, setResults] = useState<Array<ReactNode>>(props.initialData || [])
     const [isSearching, setIsSearching] = useState<boolean>(false)
@@ -49,6 +86,7 @@ const SearchDialog = (props: Props): JSX.Element => {
                         <Search/>
                         <input
                             className='searchQuery'
+                            placeholder='Search for boards'
                             type='text'
                             onChange={(e) => debouncedSearchHandler(e.target.value)}
                             autoFocus={true}
@@ -70,45 +108,10 @@ const SearchDialog = (props: Props): JSX.Element => {
                     }
 
                     {/*when user searched for something and there were no results*/}
-                    {
-                        emptyResult &&
-                        <div className='noResults'>
-                            <div className='iconWrapper'>
-                                <Search/>
-                            </div>
-                            <h4 className='text-heading4'>
-                                <FormattedMessage
-                                    id='FindBoardsDialog.NoResultsFor'
-                                    defaultMessage='No results for "{searchQuery}"'
-                                    values={{
-                                        searchQuery,
-                                    }}
-                                />
-                            </h4>
-                            <span>
-                                <FormattedMessage
-                                    id='FindBoardsDialog.NoResultsSubtext'
-                                    defaultMessage='Check the spelling or try another search.'
-                                />
-                            </span>
-                        </div>
-                    }
+                    {emptyResult && <EmptyResults query={searchQuery}/>}
 
                     {/*default state, when user didn't search for anything. This is the initial screen*/}
-                    {
-                        !emptyResult && !searchQuery &&
-                        <div className='noResults introScreen'>
-                            <div className='iconWrapper'>
-                                <Search/>
-                            </div>
-                            <h4 className='text-heading4'>
-                                <FormattedMessage
-                                    id='FindBoFindBoardsDialog.IntroText'
-                                    defaultMessage='Search for boards'
-                                />
-                            </h4>
-                        </div>
-                    }
+                    {!emptyResult && !searchQuery && <EmptySearch/>}
                 </div>
             </div>
         </Dialog>

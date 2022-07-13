@@ -1,7 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
-import {useDragLayer} from 'react-dnd'
 
 import {Card} from '../../blocks/card'
 import {Board} from '../../blocks/board'
@@ -14,7 +13,6 @@ import TableRow from './tableRow'
 type Props = {
     board: Board
     activeView: BoardView
-    columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     cards: readonly Card[]
     selectedCardIds: string[]
     readonly: boolean
@@ -32,23 +30,10 @@ const TableRows = (props: Props): JSX.Element => {
         props.onCardClicked(e, card)
     }, [props.onCardClicked])
 
-    const {offset, resizingColumn} = useDragLayer((monitor) => {
-        if (monitor.getItemType() === 'horizontalGrip') {
-            return {
-                offset: monitor.getDifferenceFromInitialOffset()?.x || 0,
-                resizingColumn: monitor.getItem()?.id,
-            }
-        }
-        return {
-            offset: 0,
-            resizingColumn: '',
-        }
-    })
-
     return (
         <>
             {cards.map((card, idx) => {
-                const tableRow = (
+                return (
                     <TableRow
                         key={card.id + card.updateAt}
                         board={board}
@@ -66,12 +51,7 @@ const TableRows = (props: Props): JSX.Element => {
                         showCard={props.showCard}
                         readonly={props.readonly}
                         onDrop={props.onDrop}
-                        offset={offset}
-                        resizingColumn={resizingColumn}
-                        columnRefs={props.columnRefs}
                     />)
-
-                return tableRow
             })}
         </>
     )
