@@ -793,11 +793,6 @@ class Utils {
         return bytes.toFixed(dp) + ' ' + units[u]
     }
 
-    // Clamps a number between a ceiling and a floor, inclusive. Optionally absolute value, too.
-    static clamp(number: number, min: number, max: number, absolute?: boolean) : number {
-        return absolute ? Math.abs(Math.max(min, Math.min(number, max))) : Math.max(min, Math.min(number, max))    
-    }
-
     static spaceSeparatedStringIncludes(item: string, spaceSeparated?: string): boolean {
         if (spaceSeparated) {
             const items = spaceSeparated?.split(' ')

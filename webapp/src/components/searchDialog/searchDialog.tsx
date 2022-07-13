@@ -82,13 +82,13 @@ const SearchDialog = (props: Props): JSX.Element => {
         if (Utils.isKeyPressed(e, Constants.keyCodes.DOWN)) {
             e.preventDefault()
             if (results.length > 0)
-                setSelected(Utils.clamp(selected + 1, 0, results.length - 1))
+                setSelected(((selected + 1) < results.length) ? (selected + 1) : selected)
         }
 
         if (Utils.isKeyPressed(e, Constants.keyCodes.UP)) {
             e.preventDefault()
             if (results.length > 0)
-                setSelected(Utils.clamp(selected - 1, 0, results.length - 1))
+                setSelected(((selected - 1) > -1) ? (selected - 1) : selected)
         }
     }
 
