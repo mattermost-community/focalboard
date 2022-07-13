@@ -13,7 +13,6 @@ import SelectProperty from './select/property'
 import MultiSelectProperty from './multiselect/property'
 import DateProperty from './date/property'
 import PersonProperty from './person/property'
-import PeopleProperty from './people/property'
 import CheckboxProperty from './checkbox/property'
 import UnknownProperty from './unknown/property'
 
@@ -30,7 +29,7 @@ class PropertiesRegistry {
     }
 
     unregister(prop: PropertyType) {
-        delete(this.properties[prop.type])
+        delete this.properties[prop.type]
         this.propertiesList = this.propertiesList.filter((p) => p.type == prop.type)
     }
 
@@ -54,10 +53,9 @@ registry.register(new MultiSelectProperty())
 registry.register(new DateProperty())
 registry.register(new PersonProperty())
 registry.register(new CheckboxProperty())
-registry.register(new CreatedByProperty())
 registry.register(new CreatedTimeProperty())
-registry.register(new UpdatedByProperty())
+registry.register(new CreatedByProperty())
 registry.register(new UpdatedTimeProperty())
-registry.register(new PeopleProperty())
+registry.register(new UpdatedByProperty())
 
 export default registry

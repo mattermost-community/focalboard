@@ -46,7 +46,7 @@ export abstract class PropertyType {
         return `"${encodeText(displayValue as string)}"`
     }
 
-    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
+    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, _?: number): number => {
         const displayValue = this.displayValue(value, card, template, intl) || ''
         return Utils.getTextWidth(displayValue.toString(), fontDescriptor)
     }

@@ -6,5 +6,5 @@ export default class UrlProperty extends PropertyType {
     Editor = Url
     name = 'Url'
     type = 'url' as PropertyTypeEnum
-    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Url', defaultMessage: 'Url'})
+    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Url', defaultMessage: 'URL'})
 }

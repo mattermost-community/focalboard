@@ -12,7 +12,7 @@ export default class UpdatedTimeProperty extends PropertyType {
     type = 'updatedTime' as PropertyTypeEnum
     isDate = true
     isReadOnly = true
-    displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last Modified at'})
+    displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last updated time'})
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue, Options.earliest,

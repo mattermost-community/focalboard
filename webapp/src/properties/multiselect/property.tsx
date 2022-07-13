@@ -10,7 +10,7 @@ export default class MultiSelectProperty extends PropertyType {
     name = 'MultiSelect'
     type = 'multiSelect' as PropertyTypeEnum
     canFilter = true
-    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'MultiSelect'})
+    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
     displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate, _: IntlShape) => {
         if (propertyValue?.length) {
             const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))
@@ -27,7 +27,7 @@ export default class MultiSelectProperty extends PropertyType {
         return ((displayValue as unknown || []) as string[]).join('|')
     }
 
-    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding: number): number => {
+    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number): number => {
         const displayValue = this.displayValue(value, card, template, intl)
         if (!displayValue) {
             return 0
@@ -35,7 +35,7 @@ export default class MultiSelectProperty extends PropertyType {
         const displayValues = displayValue as string[]
         let result = 0
         displayValues.forEach((value) => {
-            result += Utils.getTextWidth(value.toUpperCase(), fontDescriptor) + perItemPadding
+            result += Utils.getTextWidth(value.toUpperCase(), fontDescriptor) + (perItemPadding || 0)
         })
         return result
     }
