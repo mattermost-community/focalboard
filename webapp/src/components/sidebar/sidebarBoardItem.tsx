@@ -114,7 +114,7 @@ const SidebarBoardItem = (props: Props) => {
                 onClick={() => props.showBoard(board.id)}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon}
+                    {board.icon || <BoardIcon/>}
                 </div>
                 <div
                     className='octo-sidebar-title'
