@@ -7,18 +7,20 @@ import WithWebSockets from '../../../../../webapp/src/components/withWebSockets'
 import {useWebsockets} from '../../../../../webapp/src/hooks/websockets'
 
 import {getLanguage} from '../../../../../webapp/src/store/language'
+import {useAppSelector} from '../../../../../webapp/src/store/hooks'
+import {getCurrentTeamId} from '../../../../../webapp/src/store/teams'
+
+import {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
+import manifest from '../../manifest'
+
 import {getMessages} from './../../../../../webapp/src/i18n'
 import {Utils} from './../../../../../webapp/src/utils'
 import {Block} from './../../../../../webapp/src/blocks/block'
 import {Card} from './../../../../../webapp/src/blocks/card'
 import {Board} from './../../../../../webapp/src/blocks/board'
-import {useAppSelector} from '../../../../../webapp/src/store/hooks'
-import {getCurrentTeamId} from '../../../../../webapp/src/store/teams'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
-import octoClient from './../../../../../webapp/src/octoClient'
-import {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
-import manifest from '../../manifest'
 
+import octoClient from './../../../../../webapp/src/octoClient'
 
 const noop = () => ''
 const Avatar = (window as any).Components?.Avatar || noop

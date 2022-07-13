@@ -17,9 +17,9 @@ import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 
-import RHSChannelBoardItem from './rhsChannelBoardItem'
-
 import {WSClient} from '../../../../webapp/src/wsclient'
+
+import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 import './rhsChannelBoards.scss'
 
@@ -33,7 +33,7 @@ const RHSChannelBoards = () => {
 
     useEffect(() => {
         dispatch(loadBoards())
-    }, []);
+    }, [])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
         const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
