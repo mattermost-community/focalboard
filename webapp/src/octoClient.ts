@@ -837,7 +837,7 @@ class OctoClient {
     }
 
     async notifyAdminUpgrade(): Promise<void> {
-        const path = `${this.teamsPath()}/notifyadminupgrade`
+        const path = `${this.teamPath()}/notifyadminupgrade`
         await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
             method: 'POST',

@@ -59,7 +59,7 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
-import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge";
+import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
