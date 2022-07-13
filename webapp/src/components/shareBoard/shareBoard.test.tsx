@@ -276,16 +276,15 @@ describe('src/components/shareBoard/shareBoard', () => {
         const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
         expect(copyLinkElement).toBeDefined()
 
-        await act(async () => {
+        act(() => {
             userEvent.click(copyLinkElement!)
         })
 
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
 
-        const copiedLinkElement = screen.getByRole('button', {name: 'Copied!'})
+        const copiedLinkElement = screen.getByText('Copied!')
         expect(copiedLinkElement).toBeDefined()
-        expect(copiedLinkElement.textContent).toContain('Copied!')
     })
 
     test('return shareBoard and click Regenerate token', async () => {

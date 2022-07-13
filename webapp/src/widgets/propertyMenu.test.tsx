@@ -63,7 +63,7 @@ describe('widgets/PropertyMenu', () => {
         const input = getByDisplayValue(/test-property/i)
         fireEvent.change(input, {target: {value: 'changed name'}})
         fireEvent.blur(input)
-        expect(callback).toHaveBeenCalledWith('text', 'changed name')
+        expect(callback).toHaveBeenCalledWith(propsRegistry.get('text'), 'changed name')
     })
 
     test('handles type change event', async () => {

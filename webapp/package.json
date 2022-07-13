@@ -83,7 +83,7 @@
 		],
 		"maxWorkers": "50%",
 		"testEnvironment": "jsdom",
-		"collectCoverage": false,
+		"collectCoverage": true,
 		"collectCoverageFrom": [
 			"src/**/*.{ts,tsx,js,jsx}",
 			"!src/test/**"

@@ -191,7 +191,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -400,7 +400,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -830,7 +830,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -1260,7 +1260,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -1458,7 +1458,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -1888,7 +1888,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -2561,7 +2561,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -2770,7 +2770,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -2979,7 +2979,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -3188,7 +3188,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i

@@ -88,30 +88,7 @@ describe('components/propertyValueElement', () => {
             type: 'url',
             options: [],
         }
-        card.fields.properties.property_url = ['http://localhost']
-
-        const component = wrapDNDIntl(
-            <PropertyValueElement
-                board={board}
-                readOnly={false}
-                card={card}
-                propertyTemplate={propertyTemplate}
-                showEmptyPlaceholder={true}
-            />,
-        )
-
-        const {container} = render(component)
-        expect(container).toMatchSnapshot()
-    })
-
-    test('should match snapshot, url, array value', () => {
-        const propertyTemplate: IPropertyTemplate = {
-            id: 'property_url',
-            name: 'Property URL',
-            type: 'url',
-            options: [],
-        }
-        card.fields.properties.property_url = ['http://localhost']
+        card.fields.properties.property_url = 'http://localhost'
 
         const component = wrapDNDIntl(
             <PropertyValueElement
@@ -134,7 +111,7 @@ describe('components/propertyValueElement', () => {
             type: 'text',
             options: [],
         }
-        card.fields.properties.person = ['value1', 'value2']
+        card.fields.properties.person = 'value1'
 
         const component = wrapDNDIntl(
             <PropertyValueElement
@@ -157,7 +134,7 @@ describe('components/propertyValueElement', () => {
             type: 'date',
             options: [],
         }
-        card.fields.properties.date = ['invalid date']
+        card.fields.properties.date = 'invalid date'
 
         const component = wrapDNDIntl(
             <PropertyValueElement
