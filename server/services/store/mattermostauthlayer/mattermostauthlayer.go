@@ -23,14 +23,6 @@ var systemsBot = &mmModel.Bot{
 	DisplayName: "System",
 }
 
-type NotSupportedError struct {
-	msg string
-}
-
-func (pe NotSupportedError) Error() string {
-	return pe.msg
-}
-
 // servicesAPI is the interface required my the MattermostAuthLayer to interact with
 // the mattermost-server. You can use plugin-api or product-api adapter implementations.
 type servicesAPI interface {

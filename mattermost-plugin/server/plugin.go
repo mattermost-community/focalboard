@@ -12,7 +12,7 @@ import (
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -74,7 +74,7 @@ func (p *Plugin) OnWebSocketDisconnect(webConnID, userID string) {
 	p.boardsApp.OnWebSocketDisconnect(webConnID, userID)
 }
 
-func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest) {
+func (p *Plugin) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm_model.WebSocketRequest) {
 	p.boardsApp.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
@@ -82,19 +82,19 @@ func (p *Plugin) OnDeactivate() error {
 	return p.boardsApp.Stop()
 }
 
-func (p *Plugin) OnPluginClusterEvent(ctx *plugin.Context, ev mmModel.PluginClusterEvent) {
+func (p *Plugin) OnPluginClusterEvent(ctx *plugin.Context, ev mm_model.PluginClusterEvent) {
 	p.boardsApp.OnPluginClusterEvent(ctx, ev)
 }
 
-func (p *Plugin) MessageWillBePosted(ctx *plugin.Context, post *mmModel.Post) (*mmModel.Post, string) {
+func (p *Plugin) MessageWillBePosted(ctx *plugin.Context, post *mm_model.Post) (*mm_model.Post, string) {
 	return p.boardsApp.MessageWillBePosted(ctx, post)
 }
 
-func (p *Plugin) MessageWillBeUpdated(ctx *plugin.Context, newPost, oldPost *mmModel.Post) (*mmModel.Post, string) {
+func (p *Plugin) MessageWillBeUpdated(ctx *plugin.Context, newPost, oldPost *mm_model.Post) (*mm_model.Post, string) {
 	return p.boardsApp.MessageWillBeUpdated(ctx, newPost, oldPost)
 }
 
-func (p *Plugin) OnCloudLimitsUpdated(limits *mmModel.ProductLimits) {
+func (p *Plugin) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
 	p.boardsApp.OnCloudLimitsUpdated(limits)
 }
 
