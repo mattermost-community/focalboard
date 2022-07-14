@@ -444,6 +444,10 @@ func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
 	return a.store.SearchBoardsForUser(term, userID)
 }
 
+func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUserInTeam(teamID, term, userID)
+}
+
 func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
 	boards, err := a.store.GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
 	if err != nil {

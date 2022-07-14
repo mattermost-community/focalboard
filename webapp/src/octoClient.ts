@@ -773,7 +773,21 @@ class OctoClient {
     }
 
     async search(teamID: string, query: string): Promise<Array<Board>> {
-        const url = `${this.teamPath()}/boards/search?q=${encodeURIComponent(query)}`
+        const url = `${this.teamPath(teamID)}/boards/search?q=${encodeURIComponent(query)}`
+        const response = await fetch(this.getBaseURL() + url, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Array<Board>
+    }
+
+    async searchAll(query: string): Promise<Array<Board>> {
+        const url = `/api/v2/boards/search?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
             headers: this.headers(),

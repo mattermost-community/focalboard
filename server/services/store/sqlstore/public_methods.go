@@ -741,6 +741,11 @@ func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Boa
 
 }
 
+func (s *SQLStore) SearchBoardsForUserInTeam(teamID string, term string, userID string) ([]*model.Board, error) {
+	return s.searchBoardsForUserInTeam(s.db, teamID, term, userID)
+
+}
+
 func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
 	return s.searchUserChannels(s.db, teamID, userID, query)
 

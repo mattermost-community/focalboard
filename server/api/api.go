@@ -98,6 +98,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv2.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/search", a.sessionRequired(a.handleSearchAllBoards)).Methods("GET")
 	apiv2.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
 	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
@@ -3366,7 +3367,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /teams/{teamID}/boards/search searchBoards
 	//
-	// Returns the boards that match with a search term
+	// Returns the boards that match with a search term in the team
 	//
 	// ---
 	// produces:
@@ -3415,7 +3416,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, userID)
+	boards, err := a.app.SearchBoardsForUserInTeam(teamID, term, userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3423,6 +3424,69 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("SearchBoards",
 		mlog.String("teamID", teamID),
+		mlog.Int("boardsCount", len(boards)),
+	)
+
+	data, err := json.Marshal(boards)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("boardsCount", len(boards))
+	auditRec.Success()
+}
+
+func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /boards/search searchBoards
+	//
+	// Returns the boards that match with a search term
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: q
+	//   in: query
+	//   description: The search term. Must have at least one character
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Board"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	term := r.URL.Query().Get("q")
+	userID := getUserID(r)
+
+	if len(term) == 0 {
+		jsonStringResponse(w, http.StatusOK, "[]")
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchAllBoards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	// retrieve boards list
+	boards, err := a.app.SearchBoardsForUser(term, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("SearchAllBoards",
 		mlog.Int("boardsCount", len(boards)),
 	)
 
