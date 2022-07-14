@@ -101,6 +101,7 @@ type Store interface {
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	SearchBoardsForUser(term, userID string) ([]*model.Board, error)
+	SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)
