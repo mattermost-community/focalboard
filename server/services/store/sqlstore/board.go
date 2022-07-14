@@ -684,6 +684,52 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string) ([
 	return s.boardsFromRows(rows)
 }
 
+// searchBoardsForUserInTeam returns all boards that match with the
+// term that are either private and which the user is a member of, or
+// they're open, regardless of the user membership.
+// Search is case-insensitive.
+func (s *SQLStore) searchBoardsForUserInTeam(db sq.BaseRunner, teamID, term, userID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder(db).
+		Select(boardFields("b.")...).
+		Distinct().
+		From(s.tablePrefix + "boards as b").
+		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Or{
+			sq.Eq{"b.type": model.BoardTypeOpen},
+			sq.And{
+				sq.Eq{"b.type": model.BoardTypePrivate},
+				sq.Eq{"bm.user_id": userID},
+			},
+		})
+
+	if term != "" {
+		// break search query into space separated words
+		// and search for each word.
+		// This should later be upgraded to industrial-strength
+		// word tokenizer, that uses much more than space
+		// to break words.
+
+		conditions := sq.Or{}
+
+		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		}
+
+		query = query.Where(conditions)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
 func (s *SQLStore) getBoardHistory(db sq.BaseRunner, boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error) {
 	var order string
 	if opts.Descending {

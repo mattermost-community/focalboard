@@ -4,11 +4,17 @@
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {render} from '@testing-library/react'
+import {mocked} from 'jest-mock'
+import thunk from 'redux-thunk'
 
+import octoClient from '../../../../webapp/src/octoClient'
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
 
 import RHSChannelBoards from './rhsChannelBoards'
+
+jest.mock('../../../../webapp/src/octoClient')
+const mockedOctoClient = mocked(octoClient, true)
 
 describe('components/rhsChannelBoards', () => {
     const board1 = createBoard()
@@ -29,6 +35,7 @@ describe('components/rhsChannelBoards', () => {
         teams: {
             allTeams: [team],
             current: team,
+            currentId: team.id,
         },
         language: {
             value: 'en',
@@ -55,8 +62,13 @@ describe('components/rhsChannelBoards', () => {
         },
     }
 
+    beforeEach(() => {
+        mockedOctoClient.getBoards.mockResolvedValue([board1, board2, board3])
+        jest.clearAllMocks()
+    })
+
     it('renders the RHS for channel boards', async () => {
-        const store = mockStateStore([], state)
+        const store = mockStateStore([thunk], state)
         const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
                 <RHSChannelBoards/>
@@ -67,7 +79,7 @@ describe('components/rhsChannelBoards', () => {
 
     it('renders with empty list of boards', async () => {
         const localState = {...state, boards: {...state.boards, boards: {}}}
-        const store = mockStateStore([], localState)
+        const store = mockStateStore([thunk], localState)
         const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
                 <RHSChannelBoards/>

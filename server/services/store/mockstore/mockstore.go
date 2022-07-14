@@ -1278,6 +1278,21 @@ func (mr *MockStoreMockRecorder) SearchBoardsForUser(arg0, arg1 interface{}) *go
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUser", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUser), arg0, arg1)
 }
 
+// SearchBoardsForUserInTeam mocks base method.
+func (m *MockStore) SearchBoardsForUserInTeam(arg0, arg1, arg2 string) ([]*model.Board, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchBoardsForUserInTeam", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*model.Board)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchBoardsForUserInTeam indicates an expected call of SearchBoardsForUserInTeam.
+func (mr *MockStoreMockRecorder) SearchBoardsForUserInTeam(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUserInTeam", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUserInTeam), arg0, arg1, arg2)
+}
+
 // SearchUserChannels mocks base method.
 func (m *MockStore) SearchUserChannels(arg0, arg1, arg2 string) ([]*model0.Channel, error) {
 	m.ctrl.T.Helper()
