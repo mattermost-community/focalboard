@@ -388,6 +388,7 @@ func (s *SQLStore) createTempSchemaTable() error {
 
 	return nil
 }
+
 func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
 	query := s.getQueryBuilder(s.db).
 		Insert(s.tablePrefix+tempSchemaMigrationTableName).
