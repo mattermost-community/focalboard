@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React  from 'react'
-import {FormattedMessage, IntlProvider} from 'react-intl'
+import {FormattedMessage, IntlProvider, useIntl} from 'react-intl'
 
 import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
@@ -24,6 +24,7 @@ const RHSChannelBoards = () => {
     const team = useAppSelector(getCurrentTeam)
     const currentChannel = useAppSelector(getCurrentChannel)
     const dispatch = useAppDispatch()
+    const intl = useIntl()
 
     if (!boards) {
         return null
@@ -36,6 +37,17 @@ const RHSChannelBoards = () => {
     }
     const channelBoards = boards.filter((b) => b.channelId === currentChannel.id)
 
+    let channelName = currentChannel.display_name
+    let headerChannelName = currentChannel.display_name
+
+    if (currentChannel.type === 'D') {
+        channelName = intl.formatMessage({id: 'rhs-boards.dm', defaultMessage: 'DM'})
+        headerChannelName = intl.formatMessage({id: 'rhs-boards.header.dm', defaultMessage: 'this Direct Message'})
+    } else if (currentChannel.type === 'G') {
+        channelName = intl.formatMessage({id: 'rhs-boards.gm', defaultMessage: 'GM'})
+        headerChannelName = intl.formatMessage({id: 'rhs-boards.header.gm', defaultMessage: 'this Group Message'})
+    }
+
     if (channelBoards.length === 0) {
         return (
             <div className='focalboard-body'>
@@ -44,7 +56,7 @@ const RHSChannelBoards = () => {
                         <FormattedMessage
                             id='rhs-boards.no-boards-linked-to-channel'
                             defaultMessage='No boards are linked to {channelName} yet'
-                            values={{channelName: currentChannel.display_name}}
+                            values={{channelName: headerChannelName}}
                         />
                     </h2>
                     <div className='empty-paragraph'>
@@ -62,7 +74,7 @@ const RHSChannelBoards = () => {
                         <FormattedMessage
                             id='rhs-boards.link-boards-to-channel'
                             defaultMessage='Link boards to {channelName}'
-                            values={{channelName: currentChannel.display_name}}
+                            values={{channelName: channelName}}
                         />
                     </Button>
                 </div>

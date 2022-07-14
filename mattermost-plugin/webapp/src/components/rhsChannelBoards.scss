@@ -1,5 +1,9 @@
 .RHSChannelBoards {
     padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
     &.empty {
         display: flex;
@@ -19,6 +23,7 @@
 
     >h2 {
         text-align: center;
+        word-wrap: anywhere;
     }
 
     .empty-paragraph {
@@ -37,11 +42,22 @@
     }
 
     .rhs-boards-list {
-        overflow-y: scroll;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
     .Button {
         width: auto;
         align-self: center;
+        max-width: 100%;
+
+        span {
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }
