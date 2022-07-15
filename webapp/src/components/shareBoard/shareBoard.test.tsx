@@ -242,7 +242,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
+        const copyLinkElement = screen.getByTitle('Copy internal link')
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -273,7 +273,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy link'})
+        const copyLinkElement = screen.getByTitle('Copy internal link')
         expect(copyLinkElement).toBeDefined()
 
         await act(async () => {
@@ -283,7 +283,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
 
-        const copiedLinkElement = screen.getByRole('button', {name: 'Copied!'})
+        const copiedLinkElement = screen.getByText('Copied!')
         expect(copiedLinkElement).toBeDefined()
         expect(copiedLinkElement.textContent).toContain('Copied!')
     })
