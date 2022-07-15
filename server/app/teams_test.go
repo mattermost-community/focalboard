@@ -57,14 +57,16 @@ func TestGetRootTeam(t *testing.T) {
 			th, tearDown := SetupTestHelper(t)
 			defer tearDown()
 			th.Store.EXPECT().GetTeam("0").Return(tc.teamToReturnBeforeUpsert, nil)
-			th.Store.EXPECT().UpsertTeamSignupToken(gomock.Any()).DoAndReturn(
-				func(arg0 model.Team) error {
-					if tc.isError {
-						return errUpsertSignupToken
-					}
-					th.Store.EXPECT().GetTeam("0").Return(tc.teamToReturnAfterUpsert, nil)
-					return nil
-				})
+			if tc.teamToReturnBeforeUpsert == nil {
+				th.Store.EXPECT().UpsertTeamSignupToken(gomock.Any()).DoAndReturn(
+					func(arg0 model.Team) error {
+						if tc.isError {
+							return errUpsertSignupToken
+						}
+						th.Store.EXPECT().GetTeam("0").Return(tc.teamToReturnAfterUpsert, nil)
+						return nil
+					})
+			}
 			rootTeam, err := th.App.GetRootTeam()
 
 			if tc.isError {

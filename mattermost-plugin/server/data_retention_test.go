@@ -26,7 +26,6 @@ func SetupTestHelperMockStore(t *testing.T) *TestHelperMockStore {
 	th := &TestHelperMockStore{}
 
 	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 	mockStore := mockstore.NewMockStore(ctrl)
 
 	th.Server = newTestServerMock(mockStore)
