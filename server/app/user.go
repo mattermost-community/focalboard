@@ -26,10 +26,6 @@ func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[st
 	return user.Props, nil
 }
 
-func (a *App) GetUserBoardsInsights(userID string, duration string) ([]*model.BoardInsight, error) {
-	return a.store.GetUserBoardsInsights(userID, duration)
-}
-
 func (a *App) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
 	return a.store.SearchUserChannels(teamID, userID, query)
 }

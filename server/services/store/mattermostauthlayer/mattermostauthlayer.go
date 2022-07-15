@@ -848,3 +848,19 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 
 	return nil
 }
+
+func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
+	query := s.getQueryBuilder().
+		Select("timezone").
+		From("Users").
+		Where(sq.Eq{"id": userID})
+	row := query.QueryRow()
+
+	var timezone mmModel.StringMap
+	err := row.Scan(&timezone)
+	if err != nil {
+		return "", err
+	}
+
+	return mmModel.GetPreferredTimezone(timezone), nil
+}

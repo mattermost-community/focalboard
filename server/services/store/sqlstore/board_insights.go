@@ -2,16 +2,19 @@ package sqlstore
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 
 	sq "github.com/Masterminds/squirrel"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, duration string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
 	/**
 	Some squirrel issues to note here are
 	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
@@ -85,7 +88,7 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 	)
 
 	var args []interface{}
-	args = append(args, s.durationSelector(duration), teamID, s.durationSelector(duration), teamID)
+	args = append(args, mmModel.GetTimeForMillis(since).Format(time.RFC3339), teamID, mmModel.GetTimeForMillis(since).Format(time.RFC3339), teamID)
 	rows, err := db.Query(insightsQueryStr, args...)
 
 	if err != nil {
@@ -98,10 +101,12 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, durati
 	if err != nil {
 		return nil, err
 	}
-	return boardsInsights, nil
+	boardInsightsPaginated := model.GetTopBoardInsightsListWithPagination(boardsInsights, limit)
+
+	return boardInsightsPaginated, nil
 }
 
-func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, duration string) ([]*model.BoardInsight, error) {
+func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
 	/**
 	Some squirrel issues to note here are
 	1. https://github.com/Masterminds/squirrel/issues/285 - since we're using 1+ sub queries. When placeholders are counted for second query, the placeholder names are repeated.
@@ -177,7 +182,7 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 	)
 
 	var args []interface{}
-	args = append(args, s.durationSelector(duration), s.durationSelector(duration), userID, userID)
+	args = append(args, mmModel.GetTimeForMillis(since).Format(time.RFC3339), mmModel.GetTimeForMillis(since).Format(time.RFC3339), userID, userID)
 	rows, err := db.Query(insightsQueryStr, args...)
 
 	if err != nil {
@@ -190,7 +195,9 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, userID string, durati
 	if err != nil {
 		return nil, err
 	}
-	return boardsInsights, nil
+	boardInsightsPaginated := model.GetTopBoardInsightsListWithPagination(boardsInsights, limit)
+
+	return boardInsightsPaginated, nil
 }
 
 func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
@@ -210,6 +217,37 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 			return nil, err
 		}
 		boardsInsights = append(boardsInsights, &boardInsight)
+	}
+	return boardsInsights, nil
+}
+
+func populateIcons(s *SQLStore, db sq.BaseRunner, boardsInsights []*model.BoardInsight) ([]*model.BoardInsight, error) {
+	qb := s.getQueryBuilder(db)
+	for _, boardInsight := range boardsInsights {
+		// querying raw instead of calling store.GetBoardsFromSameID needs container, and this function has no context on channel ID
+		// performance wise, this is better since 1) it's querying for only fields 2) it's querying for only one row.
+		boardID := boardInsight.BoardID
+		iconQuery := qb.Select("COALESCE(fields, '{}')").From(s.tablePrefix + "blocks").Where(sq.Eq{"id": boardID})
+		iconQueryString, args, err := iconQuery.ToSql()
+		if err != nil {
+			s.logger.Error(`Query parsing error while getting icons`, mlog.Err(err))
+			return nil, err
+		}
+		row := s.db.QueryRow(iconQueryString, args...)
+		var fieldsJSON string
+		var fields map[string]interface{}
+		err = row.Scan(
+			&fieldsJSON,
+		)
+		if err != nil {
+			return nil, err
+		}
+		err = json.Unmarshal([]byte(fieldsJSON), &fields)
+		if err != nil {
+			s.logger.Error(`ERROR unmarshalling populateIcons fields`, mlog.Err(err))
+			return nil, err
+		}
+		boardInsight.Icon = fields["icon"].(string)
 	}
 	return boardsInsights, nil
 }

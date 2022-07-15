@@ -63,7 +63,3 @@ func (a *App) UpsertTeamSignupToken(team model.Team) error {
 func (a *App) GetTeamCount() (int64, error) {
 	return a.store.GetTeamCount()
 }
-
-func (a *App) GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error) {
-	return a.store.GetTeamBoardsInsights(teamID, duration)
-}

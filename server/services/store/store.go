@@ -64,7 +64,6 @@ type Store interface {
 	GetUsersByTeam(teamID string) ([]*model.User, error)
 	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
-	GetUserBoardsInsights(userID string, duration string) ([]*model.BoardInsight, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -83,7 +82,6 @@ type Store interface {
 	GetTeamsForUser(userID string) ([]*model.Team, error)
 	GetAllTeams() ([]*model.Team, error)
 	GetTeamCount() (int64, error)
-	GetTeamBoardsInsights(teamID string, duration string) ([]*model.BoardInsight, error)
 
 	InsertBoard(board *model.Board, userID string) (*model.Board, error)
 	// @withTransaction
@@ -156,6 +154,11 @@ type Store interface {
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	SendMessage(message, postType string, receipts []string) error
+
+	// Insights
+	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error)
+	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error)
+	GetUserTimezone(userID string) (string, error)
 }
 
 type NotSupportedError struct {

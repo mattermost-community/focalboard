@@ -274,3 +274,7 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
 	return errUnsupportedOperation
 }
+
+func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
+	return "", errUnsupportedOperation
+}

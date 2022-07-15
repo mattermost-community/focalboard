@@ -20,6 +20,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/utils"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -130,7 +131,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
-	apiv2.HandleFunc("/teams/{teamID}/boards/insights", a.sessionRequired(a.handleTeamBoardsInsights)).Methods("GET")
 
 	// User APIs
 	apiv2.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
@@ -138,7 +138,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 	apiv2.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
-	apiv2.HandleFunc("/users/{userID}/boards/insights", a.sessionRequired(a.handleUserBoardsInsights)).Methods("GET")
 
 	// BoardsAndBlocks APIs
 	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
@@ -178,6 +177,10 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 
 	// System APIs
 	r.HandleFunc("/hello", a.handleHello).Methods("GET")
+
+	// Insights APIs
+	apiv2.HandleFunc("/teams/{teamID}/boards/insights", a.sessionRequired(a.handleTeamBoardsInsights)).Methods("GET")
+	apiv2.HandleFunc("/users/me/boards/insights", a.sessionRequired(a.handleUserBoardsInsights)).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -2108,7 +2111,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /teams/{teamID}/boards/insights getTeamUsers
+	// swagger:operation GET /teams/{teamID}/boards/insights handleTeamBoardsInsights
 	//
 	// Returns team boards insights
 	//
@@ -2121,9 +2124,19 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//   description: Team ID
 	//   required: true
 	//   type: string
-	// - name: duration
+	// - name: time_range
 	//   in: query
 	//   description: duration of data to calculate insights for
+	//   required: true
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: page offset for top boards
+	//   required: true
+	//   type: string
+	// - name: per_page
+	//   in: query
+	//   description: limit for boards in a page.
 	//   required: true
 	//   type: string
 	// security:
@@ -2144,7 +2157,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	teamID := vars["teamID"]
 	userID := getUserID(r)
 	query := r.URL.Query()
-	duration := query.Get("duration")
+	timeRange := query.Get("time_range")
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
@@ -2154,9 +2167,35 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getTeamBoardsInsights", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
-	boardsInsights, err := a.app.GetTeamBoardsInsights(teamID, duration)
+	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
+		return
+	}
+	perPage, err := strconv.Atoi(query.Get("per_page"))
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
+		return
+	}
+
+	userTimezone, aErr := a.app.GetUserTimezone(userID)
+	if aErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error getting time zone of user", aErr)
+		return
+	}
+	userLocation, _ := time.LoadLocation(userTimezone)
+	if userLocation == nil {
+		userLocation = time.Now().UTC().Location()
+	}
+	// get unix time for duration
+	startTime := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
+	boardsInsights, err := a.app.GetTeamBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
+		StartUnixMilli: mmModel.GetMillisForTime(*startTime),
+		Page:           page,
+		PerPage:        perPage,
+	})
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "time_range="+timeRange, err)
 		return
 	}
 
@@ -2168,7 +2207,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("boardInsightCount", len(boardsInsights))
+	auditRec.AddMeta("teamBoardsInsightCount", len(boardsInsights.Items))
 	auditRec.Success()
 }
 
@@ -2181,14 +2220,24 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
-	// - name: userID
+	// - name: teamID
 	//   in: path
-	//   description: User ID
+	//   description: Team ID
 	//   required: true
 	//   type: string
-	// - name: duration
+	// - name: time_range
 	//   in: query
 	//   description: duration of data to calculate insights for
+	//   required: true
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: page offset for top boards
+	//   required: true
+	//   type: string
+	// - name: per_page
+	//   in: query
+	//   description: limit for boards in a page.
 	//   required: true
 	//   type: string
 	// security:
@@ -2204,30 +2253,56 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	userID := vars["userID"]
+	userID := getUserID(r)
 	query := r.URL.Query()
-	duration := query.Get("duration")
+	teamID := query.Get("team_id")
+	timeRange := query.Get("time_range")
 
-	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-
-	boardsInsights, err := a.app.GetUserBoardsInsights(userID, duration)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "duration="+duration, err)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
 		return
 	}
 
+	auditRec := a.makeAuditRecord(r, "getUserBoardsInsights", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	page, err := strconv.Atoi(query.Get("page"))
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
+		return
+	}
+	perPage, err := strconv.Atoi(query.Get("per_page"))
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
+		return
+	}
+	userTimezone, aErr := a.app.GetUserTimezone(userID)
+	if aErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error getting time zone of user", aErr)
+		return
+	}
+	userLocation, _ := time.LoadLocation(userTimezone)
+	if userLocation == nil {
+		userLocation = time.Now().UTC().Location()
+	}
+	// get unix time for duration
+	startTime := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
+	boardsInsights, err := a.app.GetUserBoardsInsights(userID, teamID, &mmModel.InsightsOpts{
+		StartUnixMilli: mmModel.GetMillisForTime(*startTime),
+		Page:           page,
+		PerPage:        perPage,
+	})
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "time_range="+timeRange, err)
+		return
+	}
 	data, err := json.Marshal(boardsInsights)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
 	jsonBytesResponse(w, http.StatusOK, data)
 
-	auditRec.AddMeta("boardInsightCount", len(boardsInsights))
+	auditRec.AddMeta("userBoardInsightCount", len(boardsInsights.Items))
 	auditRec.Success()
 }
 
