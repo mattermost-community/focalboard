@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type ClusterMessage struct {
@@ -17,9 +16,9 @@ type ClusterMessage struct {
 func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *ClusterMessage) {
 	b, err := json.Marshal(clusterMessage)
 	if err != nil {
-		pa.logger.Error("couldn't get JSON bytes from cluster message",
-			mlog.String("id", id),
-			mlog.Err(err),
+		pa.api.LogError("couldn't get JSON bytes from cluster message",
+			"id", id,
+			"err", err,
 		)
 		return
 	}
@@ -30,21 +29,21 @@ func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *Cluster
 	}
 
 	if err := pa.api.PublishPluginClusterEvent(event, opts); err != nil {
-		pa.logger.Error("error publishing cluster event",
-			mlog.String("id", id),
-			mlog.Err(err),
+		pa.api.LogError("error publishing cluster event",
+			"id", id,
+			"err", err,
 		)
 	}
 }
 
 func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
-	pa.logger.Debug("received cluster event", mlog.String("id", ev.Id))
+	pa.api.LogDebug("received cluster event", "id", ev.Id)
 
 	var clusterMessage ClusterMessage
 	if err := json.Unmarshal(ev.Data, &clusterMessage); err != nil {
-		pa.logger.Error("cannot unmarshal cluster message data",
-			mlog.String("id", ev.Id),
-			mlog.Err(err),
+		pa.api.LogError("cannot unmarshal cluster message data",
+			"id", ev.Id,
+			"err", err,
 		)
 		return
 	}
@@ -62,9 +61,9 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 	}
 	if action == "" {
 		// no action was specified in the event; assume block change and warn.
-		pa.logger.Warn("cannot determine action from cluster message data",
-			mlog.String("id", ev.Id),
-			mlog.Map("payload", clusterMessage.Payload),
+		pa.api.LogWarn("cannot determine action from cluster message data",
+			"id", ev.Id,
+			"payload", clusterMessage.Payload,
 		)
 		return
 	}

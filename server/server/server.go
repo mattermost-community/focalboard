@@ -53,7 +53,7 @@ type Server struct {
 	store                  store.Store
 	filesBackend           filestore.FileBackend
 	telemetry              *telemetry.Service
-	logger                 mlog.LoggerIFace
+	logger                 *mlog.Logger
 	cleanUpSessionsTask    *scheduler.ScheduledTask
 	metricsServer          *metrics.Service
 	metricsService         *metrics.Metrics
@@ -137,7 +137,7 @@ func New(params Params) (*Server, error) {
 		Notifications:    notificationService,
 		Logger:           params.Logger,
 		Permissions:      params.PermissionsService,
-		ServicesAPI:      params.ServicesAPI,
+		PluginAPI:        params.PluginAPI,
 		SkipTemplateInit: utils.IsRunningUnitTests(),
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
@@ -207,7 +207,7 @@ func New(params Params) (*Server, error) {
 	return &server, nil
 }
 
-func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.LoggerIFace) (store.Store, error) {
+func NewStore(config *config.Configuration, isSingleUser bool, logger *mlog.Logger) (store.Store, error) {
 	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
 	if err != nil {
 		logger.Error("connectDatabase failed", mlog.Err(err))
@@ -350,7 +350,7 @@ func (s *Server) Config() *config.Configuration {
 	return s.config
 }
 
-func (s *Server) Logger() mlog.LoggerIFace {
+func (s *Server) Logger() *mlog.Logger {
 	return s.logger
 }
 
@@ -418,7 +418,7 @@ type telemetryOptions struct {
 	cfg         *config.Configuration
 	telemetryID string
 	serverID    string
-	logger      mlog.LoggerIFace
+	logger      *mlog.Logger
 	singleUser  bool
 }
 
@@ -494,7 +494,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 	return telemetryService
 }
 
-func initNotificationService(backends []notify.Backend, logger mlog.LoggerIFace) (*notify.Service, error) {
+func initNotificationService(backends []notify.Backend, logger *mlog.Logger) (*notify.Service, error) {
 	loggerBackend := notifylogger.New(logger, mlog.LvlDebug)
 
 	backends = append(backends, loggerBackend)

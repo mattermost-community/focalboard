@@ -26,11 +26,11 @@ type CallbackQueue struct {
 
 	idone uint32
 
-	logger mlog.LoggerIFace
+	logger *mlog.Logger
 }
 
 // NewCallbackQueue creates a new CallbackQueue and starts a thread pool to service it.
-func NewCallbackQueue(name string, queueSize int, poolSize int, logger mlog.LoggerIFace) *CallbackQueue {
+func NewCallbackQueue(name string, queueSize int, poolSize int, logger *mlog.Logger) *CallbackQueue {
 	cn := &CallbackQueue{
 		name:     name,
 		poolSize: poolSize,

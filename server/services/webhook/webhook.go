@@ -34,11 +34,11 @@ func (wh *Client) NotifyUpdate(block model.Block) {
 // Client is a webhook client.
 type Client struct {
 	config *config.Configuration
-	logger mlog.LoggerIFace
+	logger *mlog.Logger
 }
 
 // NewClient creates a new Client.
-func NewClient(config *config.Configuration, logger mlog.LoggerIFace) *Client {
+func NewClient(config *config.Configuration, logger *mlog.Logger) *Client {
 	return &Client{
 		config: config,
 		logger: logger,

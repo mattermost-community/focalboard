@@ -14,11 +14,11 @@ const (
 )
 
 type Backend struct {
-	logger mlog.LoggerIFace
+	logger *mlog.Logger
 	level  mlog.Level
 }
 
-func New(logger mlog.LoggerIFace, level mlog.Level) *Backend {
+func New(logger *mlog.Logger, level mlog.Level) *Backend {
 	return &Backend{
 		logger: logger,
 		level:  level,

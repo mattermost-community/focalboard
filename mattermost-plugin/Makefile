@@ -60,9 +60,6 @@ all: check-style test dist
 apply:
 	./build/bin/manifest apply
 
-setup-go-work: ## Sets up a go.work file
-	cd ..; go run ./mattermost-plugin/build/gowork/main.go
-
 ## Runs eslint and golangci-lint
 .PHONY: check-style
 check-style: webapp/node_modules
@@ -83,7 +80,7 @@ ifneq ($(HAS_SERVER),)
 	golangci-lint run ./...
 endif
 
-templates-archive: setup-go-work ## Build templates archive file
+templates-archive: ## Build templates archive file
 	cd ../server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive" 
 
 ## Builds the server, if it exists, for all supported architectures.

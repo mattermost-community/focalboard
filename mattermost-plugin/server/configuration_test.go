@@ -1,21 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package main
 
 import (
 	"testing"
 
-	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/integrationtests"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/ws"
 
-	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
-
 	serverModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -43,16 +40,16 @@ func newTestServer() *server.Server {
 	return integrationtests.NewTestServerPluginMode()
 }
 func TestConfigurationNullConfiguration(t *testing.T) {
-	boardsApp := &BoardsApp{}
-	assert.NotNil(t, boardsApp.getConfiguration())
+	plugin := &Plugin{}
+	assert.NotNil(t, plugin.getConfiguration())
 }
 
 func TestOnConfigurationChange(t *testing.T) {
 	stringRef := ""
 
 	basePlugins := make(map[string]map[string]interface{})
-	basePlugins[PluginName] = make(map[string]interface{})
-	basePlugins[PluginName][SharedBoardsName] = true
+	basePlugins[pluginName] = make(map[string]interface{})
+	basePlugins[pluginName][sharedBoardsName] = true
 
 	baseFeatureFlags := &serverModel.FeatureFlags{
 		BoardsFeatureFlags: "Feature1-Feature2",
@@ -80,29 +77,26 @@ func TestOnConfigurationChange(t *testing.T) {
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
+		api := &plugintest.API{}
+		api.On("GetUnsanitizedConfig").Return(baseConfig)
+		api.On("GetConfig").Return(baseConfig)
 
-		ctrl := gomock.NewController(t)
-		api := mockservicesapi.NewMockServicesAPI(ctrl)
-		api.EXPECT().GetConfig().Return(baseConfig)
+		p := Plugin{}
+		p.SetAPI(api)
+		p.server = th.Server
+		p.wsPluginAdapter = &FakePluginAdapter{}
 
-		b := &BoardsApp{
-			server:          th.Server,
-			wsPluginAdapter: &FakePluginAdapter{},
-			servicesAPI:     api,
-			logger:          mlog.CreateConsoleTestLogger(true, mlog.LvlError),
-		}
-
-		err := b.OnConfigurationChange()
+		err := p.OnConfigurationChange()
 		assert.NoError(t, err)
 		assert.Equal(t, 1, count)
 
 		// make sure both App and Server got updated
-		assert.True(t, b.server.Config().EnablePublicSharedBoards)
-		assert.True(t, b.server.App().GetClientConfig().EnablePublicSharedBoards)
+		assert.True(t, p.server.Config().EnablePublicSharedBoards)
+		assert.True(t, p.server.App().GetClientConfig().EnablePublicSharedBoards)
 
-		assert.Equal(t, "true", b.server.Config().FeatureFlags["Feature1"])
-		assert.Equal(t, "true", b.server.Config().FeatureFlags["Feature2"])
-		assert.Equal(t, "", b.server.Config().FeatureFlags["Feature3"])
+		assert.Equal(t, "true", p.server.Config().FeatureFlags["Feature1"])
+		assert.Equal(t, "true", p.server.Config().FeatureFlags["Feature2"])
+		assert.Equal(t, "", p.server.Config().FeatureFlags["Feature3"])
 	})
 }
 

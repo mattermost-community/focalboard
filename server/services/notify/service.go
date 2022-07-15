@@ -42,11 +42,11 @@ type Backend interface {
 type Service struct {
 	mux      sync.RWMutex
 	backends []Backend
-	logger   mlog.LoggerIFace
+	logger   *mlog.Logger
 }
 
 // New creates a notification service with one or more Backends capable of sending notifications.
-func New(logger mlog.LoggerIFace, backends ...Backend) (*Service, error) {
+func New(logger *mlog.Logger, backends ...Backend) (*Service, error) {
 	notify := &Service{
 		backends: make([]Backend, 0, len(backends)),
 		logger:   logger,

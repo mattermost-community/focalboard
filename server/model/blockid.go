@@ -12,7 +12,7 @@ import (
 // keeping consistent any references that other blocks would made to
 // the original IDs, so a tree of blocks can get new IDs and maintain
 // its shape.
-func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
+func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 	blockIDs := map[string]BlockType{}
 	referenceIDs := map[string]bool{}
 	for _, block := range blocks {
@@ -99,7 +99,7 @@ func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
 	return newBlocks
 }
 
-func fixFieldIDs(block *Block, fieldName string, getExistingOrOldID func(string) string, logger mlog.LoggerIFace) {
+func fixFieldIDs(block *Block, fieldName string, getExistingOrOldID func(string) string, logger *mlog.Logger) {
 	field, typeOk := block.Fields[fieldName].([]interface{})
 	if !typeOk {
 		logger.Warn(
