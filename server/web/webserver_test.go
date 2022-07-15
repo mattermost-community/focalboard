@@ -3,9 +3,8 @@ package web
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
-
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_NewServer(t *testing.T) {
@@ -16,7 +15,7 @@ func Test_NewServer(t *testing.T) {
 		ssl                bool
 		port               int
 		localOnly          bool
-		logger             mlog.LoggerIFace
+		logger             *mlog.Logger
 		expectedBaseURL    string
 		expectedServerAddr string
 	}{

@@ -1,10 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package main
 
 import (
-	"os"
 	"testing"
 	"time"
 
@@ -13,10 +12,9 @@ import (
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
-	"github.com/stretchr/testify/assert"
-
 	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/stretchr/testify/assert"
 )
 
 type TestHelperMockStore struct {
@@ -24,24 +22,17 @@ type TestHelperMockStore struct {
 	Store  *mockstore.MockStore
 }
 
-func SetupTestHelperMockStore(t *testing.T) (*TestHelperMockStore, func()) {
+func SetupTestHelperMockStore(t *testing.T) *TestHelperMockStore {
 	th := &TestHelperMockStore{}
 
-	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
-	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
-
 	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 	mockStore := mockstore.NewMockStore(ctrl)
-
-	tearDown := func() {
-		defer ctrl.Finish()
-		os.Setenv("FOCALBOARD_UNIT_TESTING", origUnitTesting)
-	}
 
 	th.Server = newTestServerMock(mockStore)
 	th.Store = mockStore
 
-	return th, tearDown
+	return th
 }
 
 func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
@@ -76,19 +67,15 @@ func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
 }
 
 func TestRunDataRetention(t *testing.T) {
-	th, tearDown := SetupTestHelperMockStore(t)
-	defer tearDown()
-
-	b := &BoardsApp{
-		server: th.Server,
-		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
-	}
+	th := SetupTestHelperMockStore(t)
+	plugin := Plugin{}
+	plugin.server = th.Server
 
 	now := time.Now().UnixNano()
 
 	t.Run("test null license", func(t *testing.T) {
 		th.Store.EXPECT().GetLicense().Return(nil)
-		_, err := b.RunDataRetention(now, 10)
+		_, err := plugin.RunDataRetention(now, 10)
 		assert.NotNil(t, err)
 		assert.Equal(t, ErrInsufficientLicense, err)
 	})
@@ -103,7 +90,7 @@ func TestRunDataRetention(t *testing.T) {
 				},
 			},
 		)
-		_, err := b.RunDataRetention(now, 10)
+		_, err := plugin.RunDataRetention(now, 10)
 		assert.NotNil(t, err)
 		assert.Equal(t, ErrInsufficientLicense, err)
 	})
@@ -117,7 +104,7 @@ func TestRunDataRetention(t *testing.T) {
 				},
 			})
 
-		count, err := b.RunDataRetention(now, 10)
+		count, err := plugin.RunDataRetention(now, 10)
 		assert.Nil(t, err)
 		assert.Equal(t, int64(0), count)
 	})
@@ -132,9 +119,9 @@ func TestRunDataRetention(t *testing.T) {
 			})
 
 		th.Store.EXPECT().RunDataRetention(gomock.Any(), int64(10)).Return(int64(100), nil)
-		b.server.Config().EnableDataRetention = true
+		plugin.server.Config().EnableDataRetention = true
 
-		count, err := b.RunDataRetention(now, 10)
+		count, err := plugin.RunDataRetention(now, 10)
 
 		assert.Nil(t, err)
 		assert.Equal(t, int64(100), count)

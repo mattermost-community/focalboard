@@ -52,7 +52,7 @@ type diffGenerator struct {
 	store        AppAPI
 	hint         *model.NotificationHint
 	lastNotifyAt int64
-	logger       mlog.LoggerIFace
+	logger       *mlog.Logger
 }
 
 func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {

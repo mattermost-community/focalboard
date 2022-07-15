@@ -32,7 +32,7 @@ type BackendParams struct {
 	AppAPI      AppAPI
 	Permissions permissions.PermissionsService
 	Delivery    MentionDelivery
-	Logger      mlog.LoggerIFace
+	Logger      *mlog.Logger
 }
 
 // Backend provides the notification backend for @mentions.
@@ -40,7 +40,7 @@ type Backend struct {
 	appAPI      AppAPI
 	permissions permissions.PermissionsService
 	delivery    MentionDelivery
-	logger      mlog.LoggerIFace
+	logger      *mlog.Logger
 
 	mux       sync.RWMutex
 	listeners []MentionListener
@@ -150,7 +150,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	return merr.ErrorOrNil()
 }
 
-func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger mlog.LoggerIFace) {
+func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger *mlog.Logger) {
 	// don't let panicky listeners stop notifications
 	defer func() {
 		if r := recover(); r != nil {

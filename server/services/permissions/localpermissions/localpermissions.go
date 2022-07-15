@@ -13,10 +13,10 @@ import (
 
 type Service struct {
 	store  permissions.Store
-	logger mlog.LoggerIFace
+	logger *mlog.Logger
 }
 
-func New(store permissions.Store, logger mlog.LoggerIFace) *Service {
+func New(store permissions.Store, logger *mlog.Logger) *Service {
 	return &Service{
 		store:  store,
 		logger: logger,

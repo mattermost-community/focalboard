@@ -22,7 +22,7 @@ type TestHelper struct {
 	App          *App
 	Store        *mockstore.MockStore
 	FilesBackend *mocks.FileBackend
-	logger       mlog.LoggerIFace
+	logger       *mlog.Logger
 }
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {

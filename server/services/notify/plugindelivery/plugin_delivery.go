@@ -7,13 +7,13 @@ import (
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
-type servicesAPI interface {
+type PluginAPI interface {
 	// GetDirectChannel gets a direct message channel.
 	// If the channel does not exist it will create it.
 	GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error)
 
 	// CreatePost creates a post.
-	CreatePost(post *mm_model.Post) (*mm_model.Post, error)
+	CreatePost(post *mm_model.Post) error
 
 	// GetUserByID gets a user by their ID.
 	GetUserByID(userID string) (*mm_model.User, error)
@@ -39,11 +39,11 @@ type servicesAPI interface {
 type PluginDelivery struct {
 	botID      string
 	serverRoot string
-	api        servicesAPI
+	api        PluginAPI
 }
 
 // New creates a PluginDelivery instance.
-func New(botID string, serverRoot string, api servicesAPI) *PluginDelivery {
+func New(botID string, serverRoot string, api PluginAPI) *PluginDelivery {
 	return &PluginDelivery{
 		botID:      botID,
 		serverRoot: serverRoot,

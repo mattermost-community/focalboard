@@ -4,27 +4,21 @@ import (
 	"database/sql"
 	"fmt"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
-
-// servicesAPI is the interface required my the Params to interact with the mattermost-server.
-// You can use plugin-api or product-api adapter implementations.
-type servicesAPI interface {
-	GetChannelByID(string) (*mmModel.Channel, error)
-}
 
 type Params struct {
 	DBType           string
 	ConnectionString string
 	TablePrefix      string
-	Logger           mlog.LoggerIFace
+	Logger           *mlog.Logger
 	DB               *sql.DB
 	IsPlugin         bool
 	IsSingleUser     bool
 	NewMutexFn       MutexFactory
-	ServicesAPI      servicesAPI
+	PluginAPI        *plugin.API
 }
 
 func (p Params) CheckValid() error {

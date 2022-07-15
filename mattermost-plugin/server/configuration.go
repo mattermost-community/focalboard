@@ -1,4 +1,4 @@
-package boards
+package main
 
 import (
 	"reflect"
@@ -29,15 +29,15 @@ func (c *configuration) Clone() *configuration {
 // getConfiguration retrieves the active configuration under lock, making it safe to use
 // concurrently. The active configuration may change underneath the client of this method, but
 // the struct returned by this API call is considered immutable.
-func (b *BoardsApp) getConfiguration() *configuration {
-	b.configurationLock.RLock()
-	defer b.configurationLock.RUnlock()
+func (p *Plugin) getConfiguration() *configuration {
+	p.configurationLock.RLock()
+	defer p.configurationLock.RUnlock()
 
-	if b.configuration == nil {
+	if p.configuration == nil {
 		return &configuration{}
 	}
 
-	return b.configuration
+	return p.configuration
 }
 
 // setConfiguration replaces the active configuration under lock.
@@ -49,11 +49,11 @@ func (b *BoardsApp) getConfiguration() *configuration {
 // This method panics if setConfiguration is called with the existing configuration. This almost
 // certainly means that the configuration was modified without being cloned and may result in
 // an unsafe access.
-func (b *BoardsApp) setConfiguration(configuration *configuration) {
-	b.configurationLock.Lock()
-	defer b.configurationLock.Unlock()
+func (p *Plugin) setConfiguration(configuration *configuration) {
+	p.configurationLock.Lock()
+	defer p.configurationLock.Unlock()
 
-	if configuration != nil && b.configuration == configuration {
+	if configuration != nil && p.configuration == configuration {
 		// Ignore assignment if the configuration struct is empty. Go will optimize the
 		// allocation for same to point at the same memory address, breaking the check
 		// above.
@@ -64,41 +64,41 @@ func (b *BoardsApp) setConfiguration(configuration *configuration) {
 		panic("setConfiguration called with the existing configuration")
 	}
 
-	b.configuration = configuration
+	p.configuration = configuration
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
-func (b *BoardsApp) OnConfigurationChange() error {
+func (p *Plugin) OnConfigurationChange() error {
 	// Have we been setup by OnActivate?
-	if b.server == nil {
+	if p.wsPluginAdapter == nil {
 		return nil
 	}
-	mmconfig := b.servicesAPI.GetConfig()
+	mmconfig := p.API.GetConfig()
 
 	// handle plugin configuration settings
 	enableShareBoards := false
-	if mmconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
+	if mmconfig.PluginSettings.Plugins[pluginName][sharedBoardsName] == true {
 		enableShareBoards = true
 	}
 	configuration := &configuration{
 		EnablePublicSharedBoards: enableShareBoards,
 	}
-	b.setConfiguration(configuration)
-	b.server.Config().EnablePublicSharedBoards = enableShareBoards
+	p.setConfiguration(configuration)
+	p.server.Config().EnablePublicSharedBoards = enableShareBoards
 
 	// handle feature flags
-	b.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
+	p.server.Config().FeatureFlags = parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
 	// handle Data Retention settings
 	enableBoardsDeletion := false
 	if mmconfig.DataRetentionSettings.EnableBoardsDeletion != nil {
 		enableBoardsDeletion = true
 	}
-	b.server.Config().EnableDataRetention = enableBoardsDeletion
-	b.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
-	b.server.Config().TeammateNameDisplay = *mmconfig.TeamSettings.TeammateNameDisplay
+	p.server.Config().EnableDataRetention = enableBoardsDeletion
+	p.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
+	p.server.Config().TeammateNameDisplay = *mmconfig.TeamSettings.TeammateNameDisplay
 
-	b.server.UpdateAppConfig()
-	b.wsPluginAdapter.BroadcastConfigChange(*b.server.App().GetClientConfig())
+	p.server.UpdateAppConfig()
+	p.wsPluginAdapter.BroadcastConfigChange(*p.server.App().GetClientConfig())
 	return nil
 }

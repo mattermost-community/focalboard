@@ -1,4 +1,4 @@
-package boards
+package main
 
 import (
 	"fmt"
@@ -11,6 +11,8 @@ import (
 	"github.com/mattermost/focalboard/server/services/notify/plugindelivery"
 	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 
@@ -25,15 +27,15 @@ const (
 
 type notifyBackendParams struct {
 	cfg         *config.Configuration
-	servicesAPI model.ServicesAPI
+	client      *pluginapi.Client
 	permissions permissions.PermissionsService
 	appAPI      *appAPI
 	serverRoot  string
-	logger      mlog.LoggerIFace
+	logger      *mlog.Logger
 }
 
 func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Backend, error) {
-	delivery, err := createDelivery(params.servicesAPI, params.serverRoot)
+	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +53,7 @@ func createMentionsNotifyBackend(params notifyBackendParams) (*notifymentions.Ba
 }
 
 func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscriptions.Backend, error) {
-	delivery, err := createDelivery(params.servicesAPI, params.serverRoot)
+	delivery, err := createDelivery(params.client, params.serverRoot)
 	if err != nil {
 		return nil, err
 	}
@@ -70,18 +72,58 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscr
 	return backend, nil
 }
 
-func createDelivery(servicesAPI model.ServicesAPI, serverRoot string) (*plugindelivery.PluginDelivery, error) {
+func createDelivery(client *pluginapi.Client, serverRoot string) (*plugindelivery.PluginDelivery, error) {
 	bot := &mm_model.Bot{
 		Username:    botUsername,
 		DisplayName: botDisplayname,
 		Description: botDescription,
 	}
-	botID, err := servicesAPI.EnsureBot(bot)
+	botID, err := client.Bot.EnsureBot(bot)
 	if err != nil {
 		return nil, fmt.Errorf("failed to ensure %s bot: %w", botDisplayname, err)
 	}
 
-	return plugindelivery.New(botID, serverRoot, servicesAPI), nil
+	pluginAPI := &pluginAPIAdapter{client: client}
+
+	return plugindelivery.New(botID, serverRoot, pluginAPI), nil
+}
+
+// pluginAPIAdapter provides a simple wrapper around the component based Plugin API
+// which flattens the API to satisfy an interface.
+type pluginAPIAdapter struct {
+	client *pluginapi.Client
+}
+
+func (da *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
+	return da.client.Channel.GetDirect(userID1, userID2)
+}
+
+func (da *pluginAPIAdapter) CreatePost(post *mm_model.Post) error {
+	return da.client.Post.CreatePost(post)
+}
+
+func (da *pluginAPIAdapter) GetUserByID(userID string) (*mm_model.User, error) {
+	return da.client.User.Get(userID)
+}
+
+func (da *pluginAPIAdapter) GetUserByUsername(name string) (*mm_model.User, error) {
+	return da.client.User.GetByUsername(name)
+}
+
+func (da *pluginAPIAdapter) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+	return da.client.Team.GetMember(teamID, userID)
+}
+
+func (da *pluginAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
+	return da.client.Channel.Get(channelID)
+}
+
+func (da *pluginAPIAdapter) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
+	return da.client.Channel.GetMember(channelID, userID)
+}
+
+func (da *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+	return da.client.Team.CreateMember(teamID, userID)
 }
 
 type appIface interface {

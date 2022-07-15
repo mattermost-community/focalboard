@@ -263,16 +263,11 @@ func stopServer() {
 		return
 	}
 
-	logger := pServer.Logger()
-
 	err := pServer.Shutdown()
 	if err != nil {
-		logger.Error("server.Shutdown ERROR", mlog.Err(err))
+		pServer.Logger().Error("server.Shutdown ERROR", mlog.Err(err))
 	}
-
-	if l, ok := logger.(*mlog.Logger); ok {
-		_ = l.Shutdown()
-	}
+	_ = pServer.Logger().Shutdown()
 	pServer = nil
 }
 
