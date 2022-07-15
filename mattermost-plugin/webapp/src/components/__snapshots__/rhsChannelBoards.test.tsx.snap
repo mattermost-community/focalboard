@@ -37,7 +37,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           <div
             class="board-info"
           >
-
+            
             <span
               class="title"
             >
@@ -73,7 +73,7 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           <div
             class="board-info"
           >
-
+            
             <span
               class="title"
             >
