@@ -27,7 +27,6 @@ type TestHelper struct {
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
 	filesBackend := &mocks.FileBackend{}
