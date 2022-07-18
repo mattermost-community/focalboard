@@ -13,7 +13,9 @@ import (
 )
 
 func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
-	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id, boards.icon, boards.title, count(boards_history.id) as count, boards_history.modified_by, boards.created_by").Prefix("(").
+	boardsHistoryQuery := s.getQueryBuilder(db).
+		Select("boards.id, boards.icon, boards.title, count(boards_history.id) as count, boards_history.modified_by, boards.created_by").
+		Prefix("(").
 		From(s.tablePrefix + "boards_history as boards_history").
 		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
 		Where(sq.Gt{"boards_history.insert_at": mmModel.GetTimeForMillis(since).Format(time.RFC3339)}).
@@ -22,7 +24,9 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, userID
 		Where(sq.Eq{"boards.delete_at": 0}).
 		GroupBy("boards.id, boards_history.id, boards_history.modified_by")
 
-	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id, boards.icon, boards.title, count(blocks_history.id) as count, blocks_history.modified_by, boards.created_by").Prefix(") UNION ALL (").
+	blocksHistoryQuery := s.getQueryBuilder(db).
+		Select("boards.id, boards.icon, boards.title, count(blocks_history.id) as count, blocks_history.modified_by, boards.created_by").
+		Prefix(") UNION ALL (").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "boards as boards on blocks_history.id = boards.id").
 		Where(sq.Gt{"blocks_history.insert_at": mmModel.GetTimeForMillis(since).Format(time.RFC3339)}).
@@ -57,8 +61,9 @@ func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, userID
 }
 
 func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
-
-	boardsHistoryQuery := s.getQueryBuilder(db).Select("boards.id, boards.icon, boards.title, count(boards_history.id) as count, boards_history.modified_by, boards.created_by").Prefix("(").
+	boardsHistoryQuery := s.getQueryBuilder(db).
+		Select("boards.id, boards.icon, boards.title, count(boards_history.id) as count, boards_history.modified_by, boards.created_by").
+		Prefix("(").
 		From(s.tablePrefix + "boards_history as boards_history").
 		Join(s.tablePrefix + "boards as boards on boards_history.id = boards.id").
 		Where(sq.Gt{"boards_history.insert_at": mmModel.GetTimeForMillis(since).Format(time.RFC3339)}).
@@ -67,7 +72,9 @@ func (s *SQLStore) getUserBoardsInsights(db sq.BaseRunner, teamID string, userID
 		Where(sq.Eq{"boards.delete_at": 0}).
 		GroupBy("boards.id, boards_history.id, boards_history.modified_by")
 
-	blocksHistoryQuery := s.getQueryBuilder(db).Select("boards.id, boards.icon, boards.title, count(blocks_history.id) as count, blocks_history.modified_by, boards.created_by").Prefix(") UNION ALL (").
+	blocksHistoryQuery := s.getQueryBuilder(db).
+		Select("boards.id, boards.icon, boards.title, count(blocks_history.id) as count, blocks_history.modified_by, boards.created_by").
+		Prefix(") UNION ALL (").
 		From(s.tablePrefix + "blocks_history as blocks_history").
 		Join(s.tablePrefix + "boards as boards on blocks_history.id = boards.id").
 		Where(sq.Gt{"blocks_history.insert_at": mmModel.GetTimeForMillis(since).Format(time.RFC3339)}).
