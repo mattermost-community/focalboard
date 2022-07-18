@@ -67,7 +67,6 @@ type TestHelper struct {
 
 type FakePermissionPluginAPI struct{}
 
-func (*FakePermissionPluginAPI) LogError(str string, params ...interface{}) {}
 func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
 	if userID == userNoTeamMember {
 		return false
@@ -195,7 +194,7 @@ func NewTestServerPluginMode() *server.Server {
 
 	db := NewPluginTestStore(innerStore)
 
-	permissionsService := mmpermissions.New(db, &FakePermissionPluginAPI{})
+	permissionsService := mmpermissions.New(db, &FakePermissionPluginAPI{}, logger)
 
 	params := server.Params{
 		Cfg:                cfg,
@@ -345,7 +344,11 @@ func (th *TestHelper) InitBasic() *TestHelper {
 var ErrRegisterFail = errors.New("register failed")
 
 func (th *TestHelper) TearDown() {
-	defer func() { _ = th.Server.Logger().Shutdown() }()
+	logger := th.Server.Logger()
+
+	if l, ok := logger.(*mlog.Logger); ok {
+		defer func() { _ = l.Shutdown() }()
+	}
 
 	err := th.Server.Shutdown()
 	if err != nil {
@@ -355,7 +358,7 @@ func (th *TestHelper) TearDown() {
 	os.RemoveAll(th.Server.Config().FilesPath)
 
 	if err := os.Remove(th.Server.Config().DBConfigString); err == nil {
-		th.Server.Logger().Debug("Removed test database", mlog.String("file", th.Server.Config().DBConfigString))
+		logger.Debug("Removed test database", mlog.String("file", th.Server.Config().DBConfigString))
 	}
 }
 
