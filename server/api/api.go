@@ -137,6 +137,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 	apiv2.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
+	apiv2.HandleFunc("/users/{teamID}", a.sessionRequired(a.handleGetUsersByTeamIdAndIds)).Methods("POST")
 
 	// BoardsAndBlocks APIs
 	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
@@ -1048,6 +1049,43 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, userData)
 	auditRec.Success()
 }
+
+func (a *API) handleGetUsersByTeamIdAndIds(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var requestData []string
+	if err = json.Unmarshal(requestBody, &requestData); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getUserByTeamIdAndIds", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+
+	users, err := a.app.GetUsersByTeamIdAndIds(teamID, requestData);
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	userData, err := json.Marshal(users)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(userData[:]))
+	auditRec.Success()
+}
+
 
 func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /users/me getMe
