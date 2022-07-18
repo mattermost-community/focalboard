@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"strings"
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 
@@ -288,8 +288,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) GetUsersByTeamIdAndIDs(teamID string, userIDs []string) ([]*model.User, error) {
-
+func (s *MattermostAuthLayer) GetUsersByTeamIDAndIDs(teamID string, userIDs []string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at").
@@ -415,7 +414,6 @@ func (s *MattermostAuthLayer) usersFromRowsWithoutBot(rows *sql.Rows) ([]*model.
 	}
 
 	return users, nil
-
 }
 
 func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {

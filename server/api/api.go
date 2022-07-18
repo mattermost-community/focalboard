@@ -137,7 +137,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 	apiv2.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
-	apiv2.HandleFunc("/users/{teamID}", a.sessionRequired(a.handleGetUsersByTeamIdAndIds)).Methods("POST")
+	apiv2.HandleFunc("/users/{teamID}", a.sessionRequired(a.handleGetUsersByTeamIDAndIds)).Methods("POST")
 
 	// BoardsAndBlocks APIs
 	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleCreateBoardsAndBlocks)).Methods("POST")
@@ -1050,7 +1050,31 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleGetUsersByTeamIdAndIds(w http.ResponseWriter, r *http.Request) {
+func (a *API) handleGetUsersByTeamIDAndIds(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /users/{userID} getUser
+	//
+	// Returns a user[]
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/User"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -1070,7 +1094,7 @@ func (a *API) handleGetUsersByTeamIdAndIds(w http.ResponseWriter, r *http.Reques
 	auditRec := a.makeAuditRecord(r, "getUserByTeamIdAndIds", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
 
-	users, err := a.app.GetUsersByTeamIdAndIds(teamID, requestData);
+	users, err := a.app.GetUsersByTeamIDAndIds(teamID, requestData)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
@@ -1082,10 +1106,9 @@ func (a *API) handleGetUsersByTeamIdAndIds(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	jsonStringResponse(w, http.StatusOK, string(userData[:]))
+	jsonStringResponse(w, http.StatusOK, string(userData))
 	auditRec.Success()
 }
-
 
 func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /users/me getMe

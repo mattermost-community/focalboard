@@ -1009,6 +1009,15 @@ func (m *MockStore) GetUserByID(arg0 string) (*model.User, error) {
 	return ret0, ret1
 }
 
+//GetUsersByTeamIDAndIDs mocks base method
+func (m *MockStore) GetUsersByTeamIDAndIDs(arg0 string, arg1 []string) ([]*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUsersByTeamIDAndIDs", arg0, arg1)
+	ret0, _ := ret[0].([]*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
 // GetUserByID indicates an expected call of GetUserByID.
 func (mr *MockStoreMockRecorder) GetUserByID(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
