@@ -654,10 +654,16 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 			return nil, err
 		}
 		if b.ChannelID != "" {
-			_, err := s.pluginAPI.GetChannelMember(b.ChannelID, userID)
-			if err != nil {
-				return nil, err
+			_, appErr := s.pluginAPI.GetChannelMember(b.ChannelID, userID)
+			if appErr != nil {
+				if appErr.StatusCode == http.StatusNotFound {
+					// Plugin API returns error if channel member doesn't exist.
+					// We're fine if it doesn't exist, so its not an error for us.
+					return nil, nil
+				}
+				return nil, appErr
 			}
+
 			return &model.BoardMember{
 				BoardID:         boardID,
 				UserID:          userID,
