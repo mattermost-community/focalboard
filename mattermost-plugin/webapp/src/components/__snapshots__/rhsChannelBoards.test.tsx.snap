@@ -58,7 +58,9 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
               </button>
             </div>
           </div>
-          <div />
+          <div
+            class="description"
+          />
           <div
             class="date"
           >
@@ -92,7 +94,9 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
               </button>
             </div>
           </div>
-          <div />
+          <div
+            class="description"
+          />
           <div
             class="date"
           >
