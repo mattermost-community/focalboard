@@ -102,7 +102,7 @@ func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, er
 }
 
 func (s *SQLStore) getUsersByTeamIdAndIDs(db sq.BaseRunner, _ string, userIDs []string) ([]*model.User, error) {
-	return s.getUsersByCondition(db, sq.Eq{"id": userIDs})
+	return s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
 }
 
 func (s *SQLStore) getUserByEmail(db sq.BaseRunner, email string) (*model.User, error) {

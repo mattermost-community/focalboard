@@ -34,20 +34,10 @@ export const fetchBoardMembers = createAsyncThunk(
         for (const member of members) {
             userArr.push(member.userId)
         }
+        /* eslint-enable no-await-in-loop */
+
         const usersData = await client.getUserByTeamIdAndIDs(teamId, userArr)
         users.push(...usersData)
-
-        /* eslint-enable no-await-in-loop */
-
-        /* eslint-disable no-await-in-loop */
-        // for (const member of members) {
-        //     // TODO #2968 we should fetch this in bulk
-        //     const user = await client.getUser(member.userId)
-        //     if (user) {
-        //         users.push(user)
-        //     }
-        // }
-        /* eslint-enable no-await-in-loop */
 
         thunkAPI.dispatch(setBoardUsers(users))
         return members
