@@ -294,7 +294,7 @@ func (s *MattermostAuthLayer) GetUsersByTeamIdAndIDs(teamID string, userIDs []st
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.ID").
+		Join("TeamMembers as tm ON tm.UserID = u.id").
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID}).
@@ -307,7 +307,7 @@ func (s *MattermostAuthLayer) GetUsersByTeamIdAndIDs(teamID string, userIDs []st
 	}
 	defer s.CloseRows(rows)
 
-	users, err := s.usersFromRows(rows)
+	users, err := s.usersFromRowsWithoutBot(rows)
 	if err != nil {
 		return nil, err
 	}
@@ -381,6 +381,41 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 	}
 
 	return users, nil
+}
+
+func (s *MattermostAuthLayer) usersFromRowsWithoutBot(rows *sql.Rows) ([]*model.User, error) {
+	users := []*model.User{}
+
+	for rows.Next() {
+		var user model.User
+		var propsBytes []byte
+
+		err := rows.Scan(
+			&user.ID,
+			&user.Username,
+			&user.Email,
+			&user.Nickname,
+			&user.FirstName,
+			&user.LastName,
+			&propsBytes,
+			&user.CreateAt,
+			&user.UpdateAt,
+			&user.DeleteAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(propsBytes, &user.Props)
+		if err != nil {
+			return nil, err
+		}
+
+		users = append(users, &user)
+	}
+
+	return users, nil
+
 }
 
 func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {
