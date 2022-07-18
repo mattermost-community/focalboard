@@ -14,6 +14,7 @@ func TestTeamBoardsInsights(t *testing.T) {
 		th := SetupTestHelperWithToken(t).Start()
 		defer th.TearDown()
 
+		user, _ := th.Client.GetMe()
 		board1 := th.CreateBoard("team-id", model.BoardTypeOpen)
 		board2 := th.CreateBoard("team-id", model.BoardTypeOpen)
 		initialID1 := utils.NewID(utils.IDTypeBlock)
@@ -51,21 +52,21 @@ func TestTeamBoardsInsights(t *testing.T) {
 		newBlocks2, resp = th.Client.InsertBlocks(board2.ID, newBlocks2)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks2, 1)
-		insights, resp := th.Client.GetTeamBoardsInsights("team-id", "4%20day")
+		insights, resp := th.Client.GetTeamBoardsInsights("team-id", user.ID, "28_day", 0, 10)
 		require.NoError(t, resp.Error)
 		require.Len(t, insights, 2)
 
 		// following two asserts ensure that boards with activity are ordered by BoardInsight.ActivityCount
-		require.Equal(t, board1.ID, insights[0].BoardID)
-		require.Equal(t, board2.ID, insights[1].BoardID)
-		require.Equal(t, "3", insights[0].ActivityCount)
+		require.Equal(t, board1.ID, insights.Items[0].BoardID)
+		require.Equal(t, board2.ID, insights.Items[1].BoardID)
+		require.Equal(t, "3", insights.Items[0].ActivityCount)
 	})
 
 	t.Run("Boards without activity should not be included in insights", func(t *testing.T) {
 		th := SetupTestHelperWithToken(t).Start()
 		defer th.TearDown()
-
-		insights, resp := th.Client.GetTeamBoardsInsights("team-id", "4%20day")
+		user, _ := th.Client.GetMe()
+		insights, resp := th.Client.GetTeamBoardsInsights("team-id", user.ID, "28_day", 0, 10)
 		require.NoError(t, resp.Error)
 		require.Len(t, insights, 0)
 	})
@@ -75,7 +76,6 @@ func TestUserBoardsInsights(t *testing.T) {
 	t.Run("Boards with activity should be included in insights", func(t *testing.T) {
 		th := SetupTestHelperWithToken(t).Start()
 		defer th.TearDown()
-
 		board := th.CreateBoard("team-id", model.BoardTypeOpen)
 
 		initialID1 := utils.NewID(utils.IDTypeBlock)
@@ -101,12 +101,12 @@ func TestUserBoardsInsights(t *testing.T) {
 		require.Len(t, newBlocks, 2)
 
 		me, _ := th.Client.GetMe()
-		insights, resp := th.Client.GetUserBoardsInsights(me.ID, "4%20day")
+		insights, resp := th.Client.GetUserBoardsInsights("team-id", me.ID, "28_day", 0, 10)
 		require.NoError(t, resp.Error)
 		require.Len(t, insights, 1)
 
-		require.Equal(t, board.ID, insights[0].BoardID)
-		require.Equal(t, "3", insights[0].ActivityCount)
+		require.Equal(t, board.ID, insights.Items[0].BoardID)
+		require.Equal(t, "3", insights.Items[0].ActivityCount)
 	})
 
 	t.Run("Boards without activity should not be included in insights", func(t *testing.T) {
@@ -114,7 +114,7 @@ func TestUserBoardsInsights(t *testing.T) {
 		defer th.TearDown()
 
 		me, _ := th.Client.GetMe()
-		insights, resp := th.Client.GetUserBoardsInsights(me.ID, "4%20day")
+		insights, resp := th.Client.GetUserBoardsInsights("team-id", me.ID, "28_day", 0, 10)
 		require.NoError(t, resp.Error)
 		require.Len(t, insights, 0)
 	})

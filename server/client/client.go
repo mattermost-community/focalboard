@@ -206,24 +206,34 @@ func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	return model.TeamFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) GetTeamBoardsInsights(teamID string, duration string) ([]model.BoardInsight, *Response) {
-	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights?duration="+duration, "")
+func (c *Client) GetTeamBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
+	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v", timeRange, page, perPage)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights"+query, "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	return model.BoardInsightsFromJSON(r.Body), BuildResponse(r)
+	var boardInsightsList *model.BoardInsightsList
+	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
+		return nil, BuildErrorResponse(r, jsonErr)
+	}
+	return boardInsightsList, BuildResponse(r)
 }
 
-func (c *Client) GetUserBoardsInsights(userID string, duration string) ([]model.BoardInsight, *Response) {
-	r, err := c.DoAPIGet(c.GetUserRoute(userID)+"/boards/insights?duration="+duration, "")
+func (c *Client) GetUserBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
+	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v&team_id=%v", timeRange, page, perPage, teamID)
+	r, err := c.DoAPIGet(c.GetMeRoute()+"/boards/insights"+query, "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	return model.BoardInsightsFromJSON(r.Body), BuildResponse(r)
+	var boardInsightsList *model.BoardInsightsList
+	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
+		return nil, BuildErrorResponse(r, jsonErr)
+	}
+	return boardInsightsList, BuildResponse(r)
 }
 
 func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
