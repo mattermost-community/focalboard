@@ -134,7 +134,7 @@ func (dbab *PatchBoardsAndBlocks) IsValid() error {
 	return nil
 }
 
-func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger *mlog.Logger) (*BoardsAndBlocks, error) {
+func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger mlog.LoggerIFace) (*BoardsAndBlocks, error) {
 	if err := bab.IsValid(); err != nil {
 		return nil, err
 	}

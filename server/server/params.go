@@ -3,29 +3,26 @@ package server
 import (
 	"fmt"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/ws"
 
-	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 type Params struct {
 	Cfg                *config.Configuration
 	SingleUserToken    string
 	DBStore            store.Store
-	Logger             *mlog.Logger
+	Logger             mlog.LoggerIFace
 	ServerID           string
 	WSAdapter          ws.Adapter
 	NotifyBackends     []notify.Backend
 	PermissionsService permissions.PermissionsService
-	PluginAPI          plugin.API
-	Client             *pluginapi.Client
+	ServicesAPI        model.ServicesAPI
 	IsPlugin           bool
 }
 

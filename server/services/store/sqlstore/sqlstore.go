@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"net/url"
 
-	"github.com/mattermost/mattermost-server/v6/plugin"
-
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -24,9 +22,9 @@ type SQLStore struct {
 	connectionString string
 	isPlugin         bool
 	isSingleUser     bool
-	logger           *mlog.Logger
+	logger           mlog.LoggerIFace
 	NewMutexFn       MutexFactory
-	pluginAPI        *plugin.API
+	servicesAPI      servicesAPI
 	isBinaryParam    bool
 }
 
@@ -51,7 +49,7 @@ func New(params Params) (*SQLStore, error) {
 		isPlugin:         params.IsPlugin,
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
-		pluginAPI:        params.PluginAPI,
+		servicesAPI:      params.ServicesAPI,
 	}
 
 	var err error

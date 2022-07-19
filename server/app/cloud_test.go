@@ -7,7 +7,6 @@ import (
 	"database/sql"
 	"testing"
 
-	"github.com/mattermost/mattermost-server/v6/plugin/plugintest"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/golang/mock/gomock"
@@ -16,6 +15,7 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/model"
+	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
 )
 
 func TestIsCloud(t *testing.T) {
@@ -649,7 +649,8 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 	defer tearDown()
 
 	t.Run("should send message", func(t *testing.T) {
-		pluginAPI := &plugintest.API{}
+		ctrl := gomock.NewController(t)
+		servicesAPI := mockservicesapi.NewMockServicesAPI(ctrl)
 
 		sysAdmin1 := &mmModel.User{
 			Id:       "michael-scott",
@@ -667,7 +668,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    0,
 		}
-		pluginAPI.On("GetUsers", getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1, sysAdmin2}, nil).Once()
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1, sysAdmin2}, nil)
 
 		getUsersOptionsPage1 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -675,9 +676,9 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    1,
 		}
-		pluginAPI.On("GetUsers", getUsersOptionsPage1).Return([]*mmModel.User{}, nil).Once()
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage1).Return([]*mmModel.User{}, nil)
 
-		th.App.pluginAPI = pluginAPI
+		th.App.servicesAPI = servicesAPI
 
 		team := &model.Team{
 			Title: "Dunder Mifflin",
@@ -691,7 +692,8 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 	})
 
 	t.Run("no sys admins found", func(t *testing.T) {
-		pluginAPI := &plugintest.API{}
+		ctrl := gomock.NewController(t)
+		servicesAPI := mockservicesapi.NewMockServicesAPI(ctrl)
 
 		getUsersOptionsPage0 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -699,9 +701,9 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    0,
 		}
-		pluginAPI.On("GetUsers", getUsersOptionsPage0).Return([]*mmModel.User{}, nil).Once()
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage0).Return([]*mmModel.User{}, nil)
 
-		th.App.pluginAPI = pluginAPI
+		th.App.servicesAPI = servicesAPI
 
 		team := &model.Team{
 			Title: "Dunder Mifflin",
@@ -714,7 +716,8 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 	})
 
 	t.Run("iterate multiple pages", func(t *testing.T) {
-		pluginAPI := &plugintest.API{}
+		ctrl := gomock.NewController(t)
+		servicesAPI := mockservicesapi.NewMockServicesAPI(ctrl)
 
 		sysAdmin1 := &mmModel.User{
 			Id:       "michael-scott",
@@ -732,7 +735,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    0,
 		}
-		pluginAPI.On("GetUsers", getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1}, nil).Once()
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage0).Return([]*mmModel.User{sysAdmin1}, nil)
 
 		getUsersOptionsPage1 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -740,7 +743,7 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    1,
 		}
-		pluginAPI.On("GetUsers", getUsersOptionsPage1).Return([]*mmModel.User{sysAdmin2}, nil).Once()
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage1).Return([]*mmModel.User{sysAdmin2}, nil)
 
 		getUsersOptionsPage2 := &mmModel.UserGetOptions{
 			Active:  true,
@@ -748,9 +751,9 @@ func TestNotifyPortalAdminsUpgradeRequest(t *testing.T) {
 			PerPage: 50,
 			Page:    2,
 		}
-		pluginAPI.On("GetUsers", getUsersOptionsPage2).Return([]*mmModel.User{}, nil).Once()
+		servicesAPI.EXPECT().GetUsersFromProfiles(getUsersOptionsPage2).Return([]*mmModel.User{}, nil)
 
-		th.App.pluginAPI = pluginAPI
+		th.App.servicesAPI = servicesAPI
 
 		team := &model.Team{
 			Title: "Dunder Mifflin",
