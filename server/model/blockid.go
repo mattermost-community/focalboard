@@ -54,7 +54,7 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 		}
 
 		if _, ok := block.Fields["defaultTemplateId"]; ok {
-			defaultTemplateId, typeOk := block.Fields["defaultTemplateId"].(string)
+			defaultTemplateID, typeOk := block.Fields["defaultTemplateId"].(string)
 			if !typeOk {
 				logger.Warn(
 					"type assertion failed for default template ID when saving reference block IDs",
@@ -65,7 +65,7 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 				)
 				continue
 			}
-			referenceIDs[defaultTemplateId] = true
+			referenceIDs[defaultTemplateID] = true
 		}
 	}
 
@@ -93,7 +93,6 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 		return utils.NewID(BlockType2IDType(blockIDs[id]))
 	}
 
-
 	newBlocks := make([]Block, len(blocks))
 	for i, block := range blocks {
 		block.ID = getExistingOrNewID(block.ID)
@@ -110,8 +109,8 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 		}
 
 		if _, ok := blockMod.Fields["defaultTemplateId"]; ok {
-			defaultTemplateId, typeOk := blockMod.Fields["defaultTemplateId"].(string)
-			if !typeOk  {
+			defaultTemplateID, typeOk := blockMod.Fields["defaultTemplateId"].(string)
+			if !typeOk {
 				logger.Warn(
 					"type assertion failed for default template ID when saving reference block IDs",
 					mlog.String("blockID", blockMod.ID),
@@ -120,7 +119,7 @@ func GenerateBlockIDs(blocks []Block, logger *mlog.Logger) []Block {
 					mlog.String("defaultTemplateId", fmt.Sprintf("%v", blockMod.Fields["defaultTemplateId"])),
 				)
 			} else {
-				blockMod.Fields["defaultTemplateId"] = getExistingOrOldID(defaultTemplateId)
+				blockMod.Fields["defaultTemplateId"] = getExistingOrOldID(defaultTemplateID)
 			}
 		}
 
