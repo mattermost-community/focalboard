@@ -26,6 +26,7 @@ func TestSQLStore(t *testing.T) {
 	t.Run("DataRetention", func(t *testing.T) { storetests.StoreTestDataRetention(t, SetupTests) })
 	t.Run("CloudStore", func(t *testing.T) { storetests.StoreTestCloudStore(t, SetupTests) })
 	t.Run("StoreTestFileStore", func(t *testing.T) { storetests.StoreTestFileStore(t, SetupTests) })
+	t.Run("BoardsInsightsStore", func(t *testing.T) { storetests.StoreTestBoardsInsightsStore(t, SetupTests) })
 }
 
 //  tests for  utility functions inside sqlstore.go

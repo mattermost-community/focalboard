@@ -12,7 +12,11 @@ func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.
 	if !licenseAndGuestCheckFlag {
 		return nil, err
 	}
-	return a.store.GetTeamBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage)
+	boardIDs, err := getUserBoards(userID, teamID, a)
+	if err != nil {
+		return nil, err
+	}
+	return a.store.GetTeamBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
 }
 
 func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
@@ -21,7 +25,11 @@ func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.
 	if !licenseAndGuestCheckFlag {
 		return nil, err
 	}
-	return a.store.GetUserBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage)
+	boardIDs, err := getUserBoards(userID, teamID, a)
+	if err != nil {
+		return nil, err
+	}
+	return a.store.GetUserBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
 }
 
 func licenseAndGuestCheck(a *App, userID string) (bool, error) {
@@ -47,4 +55,17 @@ func licenseAndGuestCheck(a *App, userID string) (bool, error) {
 
 func (a *App) GetUserTimezone(userID string) (string, error) {
 	return a.store.GetUserTimezone(userID)
+}
+
+func getUserBoards(userID string, teamID string, a *App) ([]string, error) {
+	// get boards accessible by user and filter boardIDs
+	boards, err := a.store.GetBoardsForUserAndTeam(userID, teamID)
+	if err != nil {
+		return nil, errors.New("error getting boards for user")
+	}
+	var boardIDs []string
+	for _, board := range boards {
+		boardIDs = append(boardIDs, board.ID)
+	}
+	return boardIDs, nil
 }

@@ -469,8 +469,8 @@ func (s *SQLStore) GetTeam(ID string) (*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
-	return s.getTeamBoardsInsights(s.db, teamID, userID, since, offset, limit)
+func (s *SQLStore) GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+	return s.getTeamBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
 
 }
 
@@ -494,8 +494,8 @@ func (s *SQLStore) GetUsedCardsCount() (int, error) {
 
 }
 
-func (s *SQLStore) GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int) (*model.BoardInsightsList, error) {
-	return s.getUserBoardsInsights(s.db, teamID, userID, since, offset, limit)
+func (s *SQLStore) GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+	return s.getUserBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
 
 }
 
