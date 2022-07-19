@@ -27,6 +27,7 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	UploadFormFileKey      = "file"
+	True                   = "true"
 )
 
 const (
@@ -841,7 +842,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	val := r.URL.Query().Get("disable_notify")
-	disableNotify := val == "true"
+	disableNotify := val == True
 
 	// in phase 1 we use "manage_board_cards", but we would have to
 	// check on specific actions for phase 2
@@ -3180,7 +3181,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == "true")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3283,7 +3284,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 	)
 
-	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == "true")
+	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
