@@ -287,6 +287,16 @@ func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Blo
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) InsertBlocksDisableNotify(boardID string, blocks []model.Block) ([]model.Block, *Response) {
+	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+"?disable_notify=true", toJSON(blocks))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
 	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID), "")
 	if err != nil {
