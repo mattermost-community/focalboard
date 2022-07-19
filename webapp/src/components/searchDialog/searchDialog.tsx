@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {MutableRefObject, ReactNode, useEffect, useMemo, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 
 import './searchDialog.scss'
 import {FormattedMessage} from 'react-intl'
@@ -18,11 +18,11 @@ type Props = {
     subTitle?: string | ReactNode
     searchHandler: (query: string) => Promise<Array<ReactNode>>
     initialData?: Array<ReactNode>
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    refs: MutableRefObject<any>
+    selected: number
+    setSelected: (n: number) => void
 }
 
-export const EmptySearch = () => (
+export const EmptySearch = (): JSX.Element => (
     <div className='noResults introScreen'>
         <div className='iconWrapper'>
             <Search/>
@@ -36,7 +36,7 @@ export const EmptySearch = () => (
     </div>
 )
 
-export const EmptyResults = (props: {query: string}) => (
+export const EmptyResults = (props: {query: string}): JSX.Element => (
     <div className='noResults'>
         <div className='iconWrapper'>
             <Search/>
@@ -60,10 +60,10 @@ export const EmptyResults = (props: {query: string}) => (
 )
 
 const SearchDialog = (props: Props): JSX.Element => {
+    const {selected, setSelected} = props
     const [results, setResults] = useState<Array<ReactNode>>(props.initialData || [])
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
-    const [selected, setSelected] = useState<number>(-1)
 
     const searchHandler = async (query: string): Promise<void> => {
         setIsSearching(true)
@@ -92,26 +92,14 @@ const SearchDialog = (props: Props): JSX.Element => {
         }
     }
 
-    const handleEnterKeyPress = (e: KeyboardEvent) => {
-        if (Utils.isKeyPressed(e, Constants.keyCodes.ENTER) && selected >= 0) {
-            e.preventDefault()
-            props.refs.current[selected].current.click()
-        }
-    }
-
     useEffect(() => {
-        if (selected >= 0)
-            props.refs.current[selected].current.parentElement.focus()
-
         document.addEventListener('keydown', handleUpDownKeyPress)
-        document.addEventListener('keydown', handleEnterKeyPress)
 
         // cleanup function
         return () => {
             document.removeEventListener('keydown', handleUpDownKeyPress)
-            document.removeEventListener('keydown', handleEnterKeyPress)
         }
-    }, [selected, results])
+    }, [results, selected])
 
     return (
         <Dialog

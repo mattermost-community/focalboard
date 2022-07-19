@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode, useRef, createRef} from 'react'
+import React, {ReactNode, useRef, createRef, useState, useEffect, MutableRefObject} from 'react'
 
 import './boardSwitcherDialog.scss'
 import {useIntl} from 'react-intl'
@@ -15,12 +15,19 @@ import {useAppSelector} from '../../store/hooks'
 import {getAllTeams, getCurrentTeam, Team} from '../../store/teams'
 import {getMe} from '../../store/users'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
+import { Constants } from '../../constants'
+import { Utils } from '../../utils'
 
 type Props = {
     onClose: () => void
 }
 
 const BoardSwitcherDialog = (props: Props): JSX.Element => {
+    const [selected, setSelected] = useState<number>(-1)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [refs, setRefs] = useState<MutableRefObject<any>>(useRef([]))
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [IDs, setIDs] = useState<any>({})
     const intl = useIntl()
     const team = useAppSelector(getCurrentTeam)
     const me = useAppSelector(getMe)
@@ -50,8 +57,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const teamsById:Record<string, Team> = {}
     useAppSelector(getAllTeams).forEach((t) => teamsById[t.id] = t)
 
-    const refs = useRef([])
-
     const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
         if (query.trim().length === 0 || !team) {
             return []
@@ -60,9 +65,15 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         const items = await octoClient.searchAll(query)
         const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
         refs.current = items.map((_, i) => refs.current[i] ?? createRef())
+        setRefs(refs)
         return items.map((item, i) => {
             const resultTitle = item.title || untitledBoardTitle
             const teamTitle = teamsById[item.teamId].title
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            setIDs((prevIDs: any) => ({
+                ...prevIDs,
+                [i]: [item.teamId, item.id]
+            }))
             return (
                 <div
                     key={item.id}
@@ -79,13 +90,34 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         })
     }
 
+    const handleEnterKeyPress = (e: KeyboardEvent) => {
+        if (Utils.isKeyPressed(e, Constants.keyCodes.ENTER) && selected > -1) {
+            e.preventDefault()
+            const [teamId, id] = IDs[selected]
+            selectBoard(teamId, id)
+        }
+    }
+
+    useEffect(() => {
+        if (selected >= 0)
+            refs.current[selected].current.parentElement.focus()
+
+        document.addEventListener('keydown', handleEnterKeyPress)
+
+        // cleanup function
+        return () => {
+            document.removeEventListener('keydown', handleEnterKeyPress)
+        }
+    }, [selected, refs, IDs])
+
     return (
         <SearchDialog
             onClose={props.onClose}
             title={title}
             subTitle={subTitle}
             searchHandler={searchHandler}
-            refs={refs}
+            selected={selected}
+            setSelected={(n: number) => setSelected(n)}
         />
     )
 }
