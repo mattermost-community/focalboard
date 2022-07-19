@@ -5,7 +5,6 @@ package sqlstore
 
 import (
 	"testing"
-	"time"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/storetests"
@@ -30,41 +29,6 @@ func TestSQLStore(t *testing.T) {
 }
 
 //  tests for  utility functions inside sqlstore.go
-func TestDurationSelector(t *testing.T) {
-	store, tearDown := SetupTests(t)
-	sqlStore := store.(*SQLStore)
-	defer tearDown()
-
-	t.Run("Test day", func(t *testing.T) {
-		timeString := sqlStore.durationSelector("2 days")
-		timeFromTestTarget, err := time.Parse(time.RFC3339, timeString)
-		require.NoError(t, err)
-		timeAfter := time.Now().AddDate(0, 0, -1)
-		timeBefore := time.Now().AddDate(0, 0, -3)
-		require.Equal(t, timeFromTestTarget.Before(timeAfter), true)
-		require.Equal(t, timeFromTestTarget.After(timeBefore), true)
-	})
-
-	t.Run("Test month", func(t *testing.T) {
-		timeString := sqlStore.durationSelector("2 months")
-		timeFromTestTarget, err := time.Parse(time.RFC3339, timeString)
-		require.NoError(t, err)
-		timeAfter := time.Now().AddDate(0, -2, 1)
-		timeBefore := time.Now().AddDate(0, -2, -1)
-		require.Equal(t, timeFromTestTarget.Before(timeAfter), true)
-		require.Equal(t, timeFromTestTarget.After(timeBefore), true)
-	})
-
-	t.Run("Test year", func(t *testing.T) {
-		timeString := sqlStore.durationSelector("2 years")
-		timeFromTestTarget, err := time.Parse(time.RFC3339, timeString)
-		require.NoError(t, err)
-		timeAfter := time.Now().AddDate(-2, 0, 1)
-		timeBefore := time.Now().AddDate(-2, 0, -1)
-		require.Equal(t, timeFromTestTarget.Before(timeAfter), true)
-		require.Equal(t, timeFromTestTarget.After(timeBefore), true)
-	})
-}
 
 func TestConcatenationSelector(t *testing.T) {
 	store, tearDown := SetupTests(t)
@@ -87,29 +51,13 @@ func TestElementInColumn(t *testing.T) {
 	sqlStore := store.(*SQLStore)
 	defer tearDown()
 
-	inLiteral := sqlStore.elementInColumn(1, "test_column")
+	inLiteral := sqlStore.elementInColumn("test_column")
 	switch sqlStore.dbType {
 	case model.SqliteDBType:
-		require.Equal(t, inLiteral, "instr(test_column, $1) > 0")
+		require.Equal(t, inLiteral, "instr(test_column, ?) > 0")
 	case model.MysqlDBType:
 		require.Equal(t, inLiteral, "instr(test_column, ?) > 0")
 	case model.PostgresDBType:
-		require.Equal(t, inLiteral, "position($1 in test_column) > 0")
-	}
-}
-
-func TestParameterPlaceholder(t *testing.T) {
-	store, tearDown := SetupTests(t)
-	sqlStore := store.(*SQLStore)
-	defer tearDown()
-
-	parameterPlaceholder := sqlStore.parameterPlaceholder(2)
-	switch sqlStore.dbType {
-	case model.SqliteDBType:
-		require.Equal(t, parameterPlaceholder, "$2")
-	case model.PostgresDBType:
-		require.Equal(t, parameterPlaceholder, "$2")
-	case model.MysqlDBType:
-		require.Equal(t, parameterPlaceholder, "?")
+		require.Equal(t, inLiteral, "position(? in test_column) > 0")
 	}
 }
