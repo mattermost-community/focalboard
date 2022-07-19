@@ -32,11 +32,11 @@ type Server struct {
 	basePrefix string
 	port       int
 	ssl        bool
-	logger     *mlog.Logger
+	logger     mlog.LoggerIFace
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool, logger *mlog.Logger) *Server {
+func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool, logger mlog.LoggerIFace) *Server {
 	r := mux.NewRouter()
 
 	basePrefix := os.Getenv("FOCALBOARD_HTTP_SERVER_BASEPATH")
