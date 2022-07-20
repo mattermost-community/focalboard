@@ -35,7 +35,7 @@ var assets embed.FS
 
 const (
 	uniqueIDsMigrationRequiredVersion        = 14
-	teamsAndBoardsMigrationRequiredVersion   = 18
+	teamLessBoardsMigrationRequiredVersion   = 18
 	categoriesUUIDIDMigrationRequiredVersion = 20
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
@@ -115,12 +115,16 @@ func (s *SQLStore) Migrate() error {
 
 	var db *sql.DB
 	if s.dbType != model.SqliteDBType {
+		s.logger.Debug("Getting migrations connection")
 		db, err = s.getMigrationConnection()
 		if err != nil {
 			return err
 		}
 
-		defer db.Close()
+		defer func() {
+			s.logger.Debug("Closing migrations connection")
+			db.Close()
+		}()
 	}
 
 	if s.dbType == model.PostgresDBType {
@@ -205,10 +209,10 @@ func (s *SQLStore) Migrate() error {
 			return fmt.Errorf("error creating database mutex: %w", mutexErr)
 		}
 
-		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
+		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
 		mutex.Lock()
 		defer func() {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
 			mutex.Unlock()
 		}()
 	}
@@ -217,7 +221,7 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
-	if err := ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); err != nil {
+	if err := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); err != nil {
 		return err
 	}
 
@@ -225,7 +229,15 @@ func (s *SQLStore) Migrate() error {
 		return fmt.Errorf("error running unique IDs migration: %w", err)
 	}
 
-	if err := ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); err != nil {
+	if err := s.ensureMigrationsAppliedUpToVersion(engine, driver, teamLessBoardsMigrationRequiredVersion); err != nil {
+		return err
+	}
+
+	if err := s.migrateTeamLessBoards(); err != nil {
+		return err
+	}
+
+	if err := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); err != nil {
 		return err
 	}
 
@@ -237,13 +249,13 @@ func (s *SQLStore) Migrate() error {
 		return err
 	}
 
-	if err := ensureMigrationsAppliedUpToVersion(engine, driver, teamsAndBoardsMigrationRequiredVersion); err != nil {
+	appliedMigrations, err := driver.AppliedMigrations()
+	if err != nil {
 		return err
 	}
 
-	if err := s.migrateTeamLessBoards(); err != nil {
-		return err
-	}
+	s.logger.Debug("== Applying all remaining migrations ====================",
+		mlog.Int("current_version", len(appliedMigrations)))
 
 	return engine.ApplyAll()
 }
@@ -460,18 +472,27 @@ func (s *SQLStore) deleteOldSchemaMigrationTable() error {
 	return nil
 }
 
-func ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
+func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
 	applied, err := driver.AppliedMigrations()
 	if err != nil {
 		return err
 	}
 	currentVersion := len(applied)
 
+	s.logger.Debug("== Ensuring migrations applied up to version ====================",
+		mlog.Int("version", version),
+		mlog.Int("current_version", currentVersion))
+
 	// if the target version is below or equal to the current one, do
 	// not migrate either because is not needed (both are equal) or
 	// because it would downgrade the database (is below)
 	if version <= currentVersion {
+		s.logger.Debug("-- There is no need of applying any migration --------------------")
 		return nil
+	}
+
+	for _, migration := range applied {
+		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
 	}
 
 	if _, err = engine.Apply(version - currentVersion); err != nil {
