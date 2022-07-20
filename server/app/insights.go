@@ -63,7 +63,8 @@ func getUserBoards(userID string, teamID string, a *App) ([]string, error) {
 	if err != nil {
 		return nil, errors.New("error getting boards for user")
 	}
-	var boardIDs []string
+	boardIDs := make([]string, 0, len(boards))
+
 	for _, board := range boards {
 		boardIDs = append(boardIDs, board.ID)
 	}

@@ -10,7 +10,6 @@ import (
 
 const (
 	testInsightsUserID1 = "user-id-1"
-	testInsightsUserID2 = "user-id-2"
 )
 
 func StoreTestBoardsInsightsStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
