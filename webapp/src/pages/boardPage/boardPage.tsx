@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useMemo, useCallback} from 'react'
+import React, {useEffect, useState, useMemo, useCallback, useRef} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch} from 'react-router-dom'
@@ -24,6 +24,7 @@ import {
     getCurrentBoardId,
     setCurrent as setCurrentBoard,
     fetchBoardMembers,
+    addMyBoardMemberships,
 } from '../../store/boards'
 import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
@@ -70,6 +71,13 @@ const BoardPage = (props: Props): JSX.Element => {
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
+
+    // used for websocket event callback functions
+    // to not get stuck with initial value of `me`, which is null.
+    const meRef = useRef<IUser | null>(null)
+    useEffect(() => {
+        meRef.current = me
+    }, [me])
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -125,6 +133,11 @@ const BoardPage = (props: Props): JSX.Element => {
 
         const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
             dispatch(updateMembersEnsuringBoardsAndUsers(members))
+
+            if (meRef.current !== null) {
+                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === meRef.current!.id)
+                dispatch(addMyBoardMemberships(myBoardMemberships))
+            }
         }
 
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
