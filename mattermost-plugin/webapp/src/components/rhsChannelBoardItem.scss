@@ -3,7 +3,6 @@
     text-align: left;
     border: 1px solid #cccccc;
     border-radius: 5px;
-    margin-top: 10px;
     cursor: pointer;
     color: rgb(var(--center-channel-color-rgb));
 
@@ -22,6 +21,16 @@
         .title {
             font-weight: 600;
             flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+    }
+
+    .description {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 }

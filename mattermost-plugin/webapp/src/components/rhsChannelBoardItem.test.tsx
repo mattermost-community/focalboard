@@ -24,6 +24,7 @@ describe('components/rhsChannelBoardItem', () => {
             },
         }
         const board = createBoard()
+        board.updateAt = 1657311058157
         board.title = 'Test board'
 
         const store = mockStateStore([], state)
@@ -46,6 +47,7 @@ describe('components/rhsChannelBoardItem', () => {
             },
         }
         const board = createBoard()
+        board.updateAt = 1657311058157
         board.title = 'Test board'
 
         const store = mockStateStore([], state)

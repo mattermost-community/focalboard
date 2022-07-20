@@ -97,10 +97,15 @@ type ChangeHandlers = {
     BoardMember: OnChangeHandler[]
 }
 
+type Subscriptions = {
+    Teams: Record<string, number>
+}
+
 class WSClient {
     ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
     onPluginReconnect: null|(() => void) = null
+    token = ''
     pluginId = ''
     pluginVersion = ''
     teamId = ''
@@ -121,6 +126,7 @@ class WSClient {
     private updatedData: UpdatedData = {Blocks: [], Categories: [], BoardCategories: [], Boards: [], BoardMembers: []}
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
+    private subscriptions: Subscriptions = {Teams: {}}
 
     private logged = false
 
@@ -154,6 +160,17 @@ class WSClient {
         Utils.log(`WSClient initialised for plugin id "${pluginId}"`)
     }
 
+    resetSubscriptions() {
+        this.subscriptions = {Teams: {}} as Subscriptions
+    }
+
+    // this function sends the necessary commands for the connection
+    // to subscribe to all registered subscriptions
+    subscribe() {
+        Utils.log('Sending commands for the registered subscriptions')
+        Object.keys(this.subscriptions.Teams).forEach(teamId => this.sendSubscribeToTeamCommand(teamId))
+    }
+
     sendCommand(command: WSCommand): void {
         if (this.client !== null) {
             const {action, ...data} = command
@@ -162,6 +179,30 @@ class WSClient {
         }
 
         this.ws?.send(JSON.stringify(command))
+    }
+
+    sendAuthenticationCommand(token: string): void {
+        const command = { action: ACTION_AUTH, token }
+
+        this.sendCommand(command)
+    }
+
+    sendSubscribeToTeamCommand(teamId: string): void {
+        const command: WSCommand = {
+            action: ACTION_SUBSCRIBE_TEAM,
+            teamId,
+        }
+
+        this.sendCommand(command)
+    }
+
+    sendUnsubscribeToTeamCommand(teamId: string): void {
+        const command: WSCommand = {
+            action: ACTION_UNSUBSCRIBE_TEAM,
+            teamId,
+        }
+
+        this.sendCommand(command)
     }
 
     addOnChange(handler: OnChangeHandler, type: ChangeHandlerType): void {
@@ -275,6 +316,10 @@ class WSClient {
             const onConnect = () => {
                 Utils.log('WSClient in plugin mode, reusing Mattermost WS connection')
 
+                // if there are any subscriptions set by the
+                // components, send their subscribe messages
+                this.subscribe()
+
                 for (const handler of this.onStateChange) {
                     handler(this, 'open')
                 }
@@ -341,6 +386,16 @@ class WSClient {
         ws.onopen = () => {
             Utils.log('WSClient webSocket opened.')
             this.state = 'open'
+
+            // if has a token defined when connecting, authenticate
+            if (this.token) {
+                this.sendAuthenticationCommand(this.token)
+            }
+
+            // if there are any subscriptions set by the components,
+            // send their subscribe messages
+            this.subscribe()
+
             for (const handler of this.onStateChange) {
                 handler(this, 'open')
             }
@@ -363,6 +418,8 @@ class WSClient {
                 }
                 this.state = 'close'
                 setTimeout(() => {
+                    // ToDo: assert that this actually runs the onopen
+                    // contents (auth + this.subscribe())
                     this.open()
                     for (const handler of this.onReconnect) {
                         handler(this)
@@ -498,22 +555,55 @@ class WSClient {
         }
     }
 
-    authenticate(teamId: string, token: string): void {
-        if (!this.hasConn()) {
-            Utils.assertFailure('WSClient.addBlocks: ws is not open')
-            return
-        }
-
+    authenticate(token: string): void {
         if (!token) {
+            Utils.assertFailure('WSClient trying to authenticate without a token')
             return
         }
-        const command = {
-            action: ACTION_AUTH,
-            token,
-            teamId,
+
+        if (this.hasConn()) {
+            this.sendAuthenticationCommand(token)
         }
 
-        this.sendCommand(command)
+        this.token = token
+    }
+
+    subscribeToTeam(teamId: string): void {
+        if (!this.subscriptions.Teams[teamId]) {
+            Utils.log(`First component subscribing to team ${teamId}`)
+            // only send command if the WS connection has already been
+            // stablished. If not, the connect or reconnect functions
+            // will do
+            if (this.hasConn()) {
+                this.sendSubscribeToTeamCommand(teamId)
+            }
+
+            this.teamId = teamId
+            this.subscriptions.Teams[teamId] = 1
+            return
+        }
+
+        this.subscriptions.Teams[teamId] += 1
+    }
+
+    unsubscribeToTeam(teamId: string): void {
+        if (!this.subscriptions.Teams[teamId]) {
+            Utils.logError('Component trying to unsubscribe to a team when no subscriptions are registered. Doing nothing')
+            return
+        }
+
+        this.subscriptions.Teams[teamId] -= 1
+        if (this.subscriptions.Teams[teamId] === 0) {
+            Utils.log(`Last subscription to team ${teamId} being removed`)
+            if (this.hasConn()) {
+                this.sendUnsubscribeToTeamCommand(teamId)
+            }
+
+            if (teamId == this.teamId) {
+                this.teamId = ''
+            }
+            delete this.subscriptions.Teams[teamId]
+        }
     }
 
     subscribeToBlocks(teamId: string, blockIds: string[], readToken = ''): void {
@@ -527,34 +617,6 @@ class WSClient {
             blockIds,
             teamId,
             readToken,
-        }
-
-        this.sendCommand(command)
-    }
-
-    unsubscribeToTeam(teamId: string): void {
-        if (!this.hasConn()) {
-            Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
-            return
-        }
-
-        const command: WSCommand = {
-            action: ACTION_UNSUBSCRIBE_TEAM,
-            teamId,
-        }
-
-        this.sendCommand(command)
-    }
-
-    subscribeToTeam(teamId: string): void {
-        if (!this.hasConn()) {
-            Utils.assertFailure('WSClient.subscribeToTeam: ws is not open')
-            return
-        }
-
-        const command: WSCommand = {
-            action: ACTION_SUBSCRIBE_TEAM,
-            teamId,
         }
 
         this.sendCommand(command)
@@ -608,21 +670,6 @@ class WSClient {
             this.flushUpdateNotifications()
         }, this.notificationDelay)
     }
-
-    // private queueUpdateBoardNotification(board: Board) {
-    //     this.updatedBoards = this.updatedBoards.filter((o) => o.id !== board.id) // Remove existing queued update
-    //     // ToDo: hydrate required?
-    //     // this.updatedBoards.push(OctoUtils.hydrateBoard(board))
-    //     this.updatedBoards.push(board)
-    //     if (this.updateTimeout) {
-    //         clearTimeout(this.updateTimeout)
-    //         this.updateTimeout = undefined
-    //     }
-    //
-    //     this.updateTimeout = setTimeout(() => {
-    //         this.flushUpdateNotifications()
-    //     }, this.notificationDelay)
-    // }
 
     private logUpdateNotification() {
         for (const block of this.updatedData.Blocks) {

@@ -142,14 +142,12 @@ const SidebarCategory = (props: Props) => {
             <div
                 className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
             >
-                <IconButton
-                    icon={collapsed ? <ChevronRight/> : <ChevronDown/>}
-                    onClick={() => setCollapsed(!collapsed)}
-                />
                 <div
                     className='octo-sidebar-title category-title'
                     title={props.categoryBoards.name}
+                    onClick={() => setCollapsed(!collapsed)}
                 >
+                    {collapsed ? <ChevronRight/> : <ChevronDown/>}
                     {props.categoryBoards.name}
                 </div>
                 <MenuWrapper

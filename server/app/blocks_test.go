@@ -179,7 +179,6 @@ func TestUndeleteBlock(t *testing.T) {
 			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
 		).Return([]model.Block{block}, nil)
 		th.Store.EXPECT().UndeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
-		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
 		_, err := th.App.UndeleteBlock("block-id", "user-id-1")
 		require.Error(t, err, "error")
 	})
@@ -343,8 +342,6 @@ func TestInsertBlocks(t *testing.T) {
 		}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
-		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
 
 		// setting up mocks for limits
 		fakeLicense := &mmModel.License{

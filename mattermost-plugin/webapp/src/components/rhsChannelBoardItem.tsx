@@ -68,7 +68,7 @@ const RHSChannelBoardItem = (props: Props) => {
                     </Menu>
                 </MenuWrapper>
             </div>
-            <div>{board.description}</div>
+            <div className='description'>{board.description}</div>
             <div className='date'>
                 <FormattedMessage
                     id='rhs-boards.last-update-at'
