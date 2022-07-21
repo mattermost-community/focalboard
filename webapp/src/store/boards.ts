@@ -28,15 +28,9 @@ export const fetchBoardMembers = createAsyncThunk(
     async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
         const members = await client.getBoardMembers(teamId, boardId)
         const users = [] as IUser[]
-        const userArr = [] as string[]
+        const userIDs = members.map((member) => member.userId)
 
-        /* eslint-disable no-await-in-loop */
-        for (const member of members) {
-            userArr.push(member.userId)
-        }
-        /* eslint-enable no-await-in-loop */
-
-        const usersData = await client.getUserByTeamIdAndIDs(teamId, userArr)
+        const usersData = await client.getUsersByTeamIDAndIDs(teamId, userIDs)
         users.push(...usersData)
 
         thunkAPI.dispatch(setBoardUsers(users))

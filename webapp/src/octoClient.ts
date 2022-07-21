@@ -187,8 +187,8 @@ class OctoClient {
         return user
     }
 
-    async getUserByTeamIdAndIDs(teamId: string, userIds: string[]): Promise<IUser[] | []> {
-        const path = `/api/v2/users/${teamId}`
+    async getUsersByTeamIDAndIDs(teamId: string, userIds: string[]): Promise<IUser[] | []> {
+        const path = `/api/v2/teams/${teamId}`
         const body = JSON.stringify(userIds)
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
