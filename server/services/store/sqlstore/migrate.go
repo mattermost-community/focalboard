@@ -217,36 +217,36 @@ func (s *SQLStore) Migrate() error {
 		}()
 	}
 
-	if err := s.migrateSchemaVersionTable(src.Migrations()); err != nil {
-		return err
+	if mErr := s.migrateSchemaVersionTable(src.Migrations()); mErr != nil {
+		return mErr
 	}
 
-	if err := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); err != nil {
-		return err
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
+		return mErr
 	}
 
-	if err := s.runUniqueIDsMigration(); err != nil {
-		return fmt.Errorf("error running unique IDs migration: %w", err)
+	if mErr := s.runUniqueIDsMigration(); mErr != nil {
+		return fmt.Errorf("error running unique IDs migration: %w", mErr)
 	}
 
-	if err := s.ensureMigrationsAppliedUpToVersion(engine, driver, teamLessBoardsMigrationRequiredVersion); err != nil {
-		return err
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, teamLessBoardsMigrationRequiredVersion); mErr != nil {
+		return mErr
 	}
 
-	if err := s.migrateTeamLessBoards(); err != nil {
-		return err
+	if mErr := s.migrateTeamLessBoards(); mErr != nil {
+		return mErr
 	}
 
-	if err := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); err != nil {
-		return err
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
+		return mErr
 	}
 
-	if err := s.runCategoryUUIDIDMigration(); err != nil {
-		return fmt.Errorf("error running categoryID migration: %w", err)
+	if mErr := s.runCategoryUUIDIDMigration(); mErr != nil {
+		return fmt.Errorf("error running categoryID migration: %w", mErr)
 	}
 
-	if err := s.deleteOldSchemaMigrationTable(); err != nil {
-		return err
+	if mErr := s.deleteOldSchemaMigrationTable(); mErr != nil {
+		return mErr
 	}
 
 	appliedMigrations, err := driver.AppliedMigrations()
