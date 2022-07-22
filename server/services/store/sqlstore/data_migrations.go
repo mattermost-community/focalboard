@@ -320,7 +320,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 		return err
 	}
 
-	s.logger.Info("Migrating teamless boards to a team", mlog.Int("count", len(boards)))
+	s.logger.Debug("Migrating teamless boards to a team", mlog.Int("count", len(boards)))
 
 	// cache for best suitable team for a DM. Since a DM can
 	// contain multiple boards, caching this avoids
