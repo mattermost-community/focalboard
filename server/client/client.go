@@ -319,7 +319,7 @@ func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.Board
 }
 
 func (c *Client) CreateCategory(category model.Category) (*model.Category, *Response) {
-	r, err := c.DoAPIPost(c.GetTeamRoute(category.TeamID), toJSON(category))
+	r, err := c.DoAPIPost(c.GetTeamRoute(category.TeamID)+"/categories", toJSON(category))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
