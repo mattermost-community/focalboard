@@ -195,11 +195,15 @@ func (s *SQLStore) Migrate() error {
 		opts = opts[:0] // sqlite driver does not support locking, it doesn't need to anyway.
 	}
 
+	s.logger.Debug("Creating migration engine")
 	engine, err := morph.New(context.Background(), driver, src, opts...)
 	if err != nil {
 		return err
 	}
-	defer engine.Close()
+	defer func() {
+		s.logger.Debug("Closing migration engine")
+		engine.Close()
+	}()
 
 	var mutex *cluster.Mutex
 	if s.isPlugin {
