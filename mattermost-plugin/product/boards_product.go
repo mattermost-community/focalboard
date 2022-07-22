@@ -70,7 +70,7 @@ type boardsProduct struct {
 }
 
 //nolint:gocyclo
-func newBoardsProduct(mmServer *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
+func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
 	boards := &boardsProduct{}
 
 	for key, service := range services {
