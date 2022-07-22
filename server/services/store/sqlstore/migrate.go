@@ -184,7 +184,7 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	opts := []morph.EngineOption{
-		morph.WithLock("mm-lock-key"),
+		morph.WithLock("boards-lock-key"),
 	}
 
 	if s.dbType == model.SqliteDBType {
