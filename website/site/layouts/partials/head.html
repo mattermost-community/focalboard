@@ -1,10 +1,37 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title> {{ .Title }}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1"> {{ with .Site.Params.author }}
-<meta name="author" content="{{ . }}">{{ end }} {{ with .Site.Params.description }}
-<meta name="description" content="{{ . }}">{{ end }} {{ with .Site.LanguageCode }}
-<meta http-equiv="content-language" content="{{ . }}" />{{ end }}
+
+{{ if in .Title "Focalboard" }}
+<title>{{ .Title }}</title>
+{{ else }}
+<title>{{ .Title }} | Focalboard</title>
+{{ end }}
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{{ with .Site.Params.author }}
+<meta name="author" content="{{ . }}">
+{{ end }}
+
+{{ with .Site.Params.description }}
+<meta name="description" content="{{ . }}">
+<meta property="og:description" content="{{ . }}">
+{{ end }}
+
+{{ with .Site.LanguageCode }}
+<meta http-equiv="content-language" content="{{ . }}" />
+<meta property="og:locale" content="{{ replace . "-" "_" }}" />
+{{ end }}
+
+<meta property="og:site_name" content="{{ .Site.Title }}">
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:image" content="{{ .Site.BaseURL }}img/hero.jpg">
+<meta property="og:image:url" content="{{ .Site.BaseURL }}img/hero.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1306">
+<meta property="og:image:alt" content="Screenshot showcasing the UI of Focalboard, focused on a project status board.">
+<meta property="og:type" content="website">
 
 <!-- canonical link tag -->
 {{ if .Params.canonicalUrl }}

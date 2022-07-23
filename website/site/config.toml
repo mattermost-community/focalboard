@@ -15,7 +15,7 @@ pygmentsStyle = "manni"
 [params]
   # Meta
   author = ""
-  description = ""
+  description = "Focalboard is an open source alternative to tools like Asana, Trello, and Notion. Available as a stand-alone application or integrated into the Mattermost platform, Focalboard helps developers stay aligned to complete tasks, reach milestones, and achieve their goals."
   email = ""
   ghrepo = "https://github.com/mattermost/focalboard/"
 
