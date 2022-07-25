@@ -39,8 +39,6 @@
   "Filter.is-not-empty": "ليس فارغًا",
   "FilterComponent.add-filter": "+ إضافة فلتر",
   "FilterComponent.delete": "حذف",
-  "GalleryCard.delete": "حذف",
-  "KanbanCard.copyLink": "نسخ الرابط",
   "OnboardingTour.AddComments.Title": "إضافة تعليقات",
   "OnboardingTour.AddDescription.Title": "اضافة وصف",
   "OnboardingTour.AddProperties.Title": "إضافة خواص",
