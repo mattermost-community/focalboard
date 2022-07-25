@@ -25,9 +25,9 @@ jobs:
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
-          ref: "${{ env.GITHUB_HEAD_REF }}"
+          ref: ${{ env.GITHUB_HEAD_REF }}
       - uses: actions/checkout@v3
-        if: ${{ env.GITHUB_REF_NAME != '' }}
+        if: ${{ env.GITHUB_HEAD_REF == '' }}
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
