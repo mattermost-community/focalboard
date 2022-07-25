@@ -108,7 +108,6 @@ server-lint: templates-archive ## Run linters on server code.
 		exit 1; \
 	fi;
 	
-	cd server; golangci-lint run ./...
 	cd mattermost-plugin; golangci-lint run ./...
 
 modd-precheck:
