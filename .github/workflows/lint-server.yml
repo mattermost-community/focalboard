@@ -7,6 +7,9 @@ on:
     branches: [ main, release-** ]
   workflow_dispatch:
 
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+
 jobs:
   golangci:
     name: plugin
@@ -21,17 +24,10 @@ jobs:
       - name: dump env
         run : export
       - uses: actions/checkout@v3
-        if: ${{ env.GITHUB_HEAD_REF != '' }}
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
-          ref: ${{ env.GITHUB_HEAD_REF }}
-      - uses: actions/checkout@v3
-        if: ${{ env.GITHUB_HEAD_REF == '' }}
-        with:
-          repository: "mattermost/mattermost-server"
-          path: "mattermost-server"
-          ref: "${{ env.GITHUB_REF_NAME }}"
+          ref: ${{ env.BRANCH_NAME }}
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
       - name: lint
