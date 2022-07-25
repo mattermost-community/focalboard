@@ -8,8 +8,8 @@ on:
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
-
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ 
 jobs:
   golangci:
     name: plugin
@@ -21,8 +21,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: "focalboard"
-      - name: dump env
-        run : export
       - id: "mattermostServer"
         uses: actions/checkout@v3
         continue-on-error: true
@@ -35,7 +33,7 @@ jobs:
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
-          ref : "master"
+          ref : "userCtx"
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
       - name: lint
