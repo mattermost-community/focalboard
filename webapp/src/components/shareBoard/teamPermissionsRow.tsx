@@ -72,32 +72,11 @@ const TeamPermissionsRow = (): JSX.Element => {
                         </button>
                         <Menu position='left'>
                             <Menu.Text
-                                id='Admin'
-                                check={board.minimumRole === 'admin'}
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'admin' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen, 'admin')}
-                            />
-                            <Menu.Text
                                 id='Editor'
                                 check={board.minimumRole === '' || board.minimumRole === 'editor' }
                                 icon={board.type === BoardTypeOpen && board.minimumRole === 'editor' ? <CheckIcon/> : null}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                                 onClick={() => updateBoardType(board, BoardTypeOpen, 'editor')}
-                            />
-                            <Menu.Text
-                                id='Commenter'
-                                check={board.minimumRole === 'commenter'}
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'commenter' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen, 'commenter')}
-                            />
-                            <Menu.Text
-                                id='Viewer'
-                                check={board.minimumRole === 'viewer'}
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
                             />
                             <Menu.Text
                                 id='None'
