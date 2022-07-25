@@ -37,4 +37,6 @@ jobs:
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
       - name: lint
-        run: make server-lint
+        run: |
+          cd focalboard
+          make server-lint
