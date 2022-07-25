@@ -40,7 +40,7 @@ prebuild: ## Run prebuild actions (install dependencies etc.).
 ci: webapp-ci server-test ## Simulate CI, locally.
 
 setup-go-work: ## Sets up a go.work file
-	go run ./mattermost-plugin/build/gowork/main.go
+	go run ./mattermost-plugin/build/gowork/main.go -f
 
 templates-archive: setup-go-work ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
@@ -107,6 +107,7 @@ server-lint: templates-archive ## Run linters on server code.
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
 	fi;
+	cd server; golangci-lint run ./...
 	cd mattermost-plugin; golangci-lint run ./...
 
 modd-precheck:
