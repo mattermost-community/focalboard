@@ -107,7 +107,6 @@ server-lint: templates-archive ## Run linters on server code.
 		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
 		exit 1; \
 	fi;
-	
 	cd mattermost-plugin; golangci-lint run ./...
 
 modd-precheck:
