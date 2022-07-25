@@ -23,7 +23,6 @@ jobs:
           path: "focalboard"
           ref: "userCtx"
       - uses: actions/checkout@v3
-        if: steps.mattermostServer.outcome == 'failure'
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
