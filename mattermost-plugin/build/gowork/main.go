@@ -62,7 +62,7 @@ func isCI() bool {
 	vars := map[string]bool{
 		// var name: must_be_true  (false means being defined is enough)
 		"CIRCLECI":       true,
-		"GITHUB_ACTIONS": true,
+		"GITHUB_ACTIONS": false,
 		"GITLAB_CI":      false,
 		"TRAVIS":         true,
 	}
