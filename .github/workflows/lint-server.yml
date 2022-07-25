@@ -19,17 +19,17 @@ jobs:
         with:
           path: "focalboard"
       - uses: actions/checkout@v3
-        if: ${{ GITHUB_HEAD_REF != "" }}
+        if: ${{ env.GITHUB_HEAD_REF != "" }}
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
-          ref: "${{ GITHUB_HEAD_REF }}"
+          ref: "${{ env.GITHUB_HEAD_REF }}"
       - uses: actions/checkout@v3
-        if: ${{ GITHUB_REF_NAME != "" }}
+        if: ${{ env.GITHUB_REF_NAME != "" }}
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
-          ref: "${{ GITHUB_REF_NAME }}"
+          ref: "${{ env.GITHUB_REF_NAME }}"
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
       - name: lint
