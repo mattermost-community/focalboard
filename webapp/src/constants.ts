@@ -29,11 +29,13 @@ class Constants {
 
     static readonly minColumnWidth = 100
     static readonly defaultTitleColumnWidth = 280
+    static readonly tableHeaderId = '__header'
+    static readonly tableCalculationId = '__calculation'
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '0.16.0'
-    static readonly versionDisplayString = 'Apr 2022'
+    static readonly versionString = '7.3.0'
+    static readonly versionDisplayString = 'Sep 2022'
 
     static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
     static readonly imports = [

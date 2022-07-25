@@ -63,7 +63,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -84,7 +84,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -107,7 +107,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -123,6 +123,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 />
               </div>
             </div>
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -136,7 +137,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -211,7 +212,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -232,7 +233,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -255,7 +256,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -271,6 +272,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 />
               </div>
             </div>
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -284,7 +286,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -397,7 +399,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -418,7 +420,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -441,7 +443,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -457,6 +459,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 />
               </div>
             </div>
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -470,7 +473,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -549,7 +552,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -570,7 +573,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -593,7 +596,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -609,6 +612,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 />
               </div>
             </div>
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -622,7 +626,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -867,7 +871,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -888,7 +892,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-content-copy content-copy"
@@ -911,7 +915,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <i
                     class="CompassIcon icon-link-variant LinkIcon"
@@ -927,6 +931,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 />
               </div>
             </div>
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -940,7 +945,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

@@ -56,7 +56,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                         class="version"
                         title="v1.0.0"
                       >
-                        Apr 2022
+                        v1.0.0
                       </div>
                     </div>
                   </div>
@@ -117,17 +117,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
           <div
             class="octo-sidebar-item category ' expanded active"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-            </button>
             <div
               class="octo-sidebar-title category-title"
               title="Category 1"
             >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
               Category 1
             </div>
             <div
@@ -208,17 +204,13 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
           <div
             class="octo-sidebar-item category ' expanded "
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-            </button>
             <div
               class="octo-sidebar-title category-title"
               title="Boards"
             >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
               Boards
             </div>
             <div
@@ -284,7 +276,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -368,7 +360,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-globe CompassIcon"
+                    class="CompassIcon icon-lock-outline LockOutlineIcon"
                   />
                   <span>
                     Share
@@ -384,7 +376,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled View"
                 spellcheck="true"
                 title="view title"
@@ -464,13 +456,18 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </span>
               </button>
             </div>
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
             <div
               class="ModalWrapper"
             >
@@ -576,7 +573,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable undefined"
+                  class="Editable "
                   placeholder="New Select"
                   spellcheck="true"
                   title="value 2"
@@ -817,7 +814,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -898,7 +895,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled View"
                 readonly=""
                 spellcheck="true"
@@ -924,13 +921,18 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
             <div
               class="octo-spacer"
             />
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -977,7 +979,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable readonly undefined"
+                  class="Editable readonly "
                   placeholder="New Select"
                   readonly=""
                   spellcheck="true"
@@ -1179,7 +1181,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                         class="version"
                         title="v1.0.0"
                       >
-                        Apr 2022
+                        v1.0.0
                       </div>
                     </div>
                   </div>
@@ -1240,17 +1242,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
           <div
             class="octo-sidebar-item category ' expanded active"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-            </button>
             <div
               class="octo-sidebar-title category-title"
               title="Category 1"
             >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
               Category 1
             </div>
             <div
@@ -1331,17 +1329,13 @@ exports[`src/components/workspace should match snapshot 1`] = `
           <div
             class="octo-sidebar-item category ' expanded "
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-            </button>
             <div
               class="octo-sidebar-title category-title"
               title="Boards"
             >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
               Boards
             </div>
             <div
@@ -1407,7 +1401,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -1491,7 +1485,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-globe CompassIcon"
+                    class="CompassIcon icon-lock-outline LockOutlineIcon"
                   />
                   <span>
                     Share
@@ -1507,7 +1501,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled View"
                 spellcheck="true"
                 title="view title"
@@ -1587,13 +1581,18 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </span>
               </button>
             </div>
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
             <div
               class="ModalWrapper"
             >
@@ -1699,7 +1698,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable undefined"
+                  class="Editable "
                   placeholder="New Select"
                   spellcheck="true"
                   title="value 2"
@@ -1940,7 +1939,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -2021,7 +2020,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled View"
                 readonly=""
                 spellcheck="true"
@@ -2047,13 +2046,18 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
             <div
               class="octo-spacer"
             />
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -2100,7 +2104,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable readonly undefined"
+                  class="Editable readonly "
                   placeholder="New Select"
                   readonly=""
                   spellcheck="true"
@@ -2375,7 +2379,7 @@ exports[`src/components/workspace show copy link tooltip 1`] = `
         <div
           class="tutorial-tour-tip__body"
         >
-          You can share your cards with teammates by copying the link and pasting it in a channel, Direct Message, or Group Message.
+          You can share your cards with teammates by copying the link and pasting it in a channel, direct message, or group message.
         </div>
         <div
           class="tutorial-tour-tip__footer"

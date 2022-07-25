@@ -1,14 +1,17 @@
 package app
 
 import (
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin/plugintest/mock"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore/mocks"
@@ -18,6 +21,8 @@ const (
 	testFileName = "temp-file-name"
 	testBoardID  = "test-board-id"
 )
+
+var errDummy = errors.New("hello")
 
 type TestError struct{}
 
@@ -186,6 +191,7 @@ func TestSaveFile(t *testing.T) {
 		fileName := "temp-file-name.txt"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, string(os.PathSeparator))
@@ -209,6 +215,7 @@ func TestSaveFile(t *testing.T) {
 		fileName := "temp-file-name.jpeg"
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
+		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, string(os.PathSeparator))
@@ -250,5 +257,50 @@ func TestSaveFile(t *testing.T) {
 		actual, err := th.App.SaveFile(mockedReadCloseSeek, "1", "test-board-id", fileName)
 		assert.Equal(t, "", actual)
 		assert.Equal(t, "unable to store the file in the files storage: Mocked File backend error", err.Error())
+	})
+}
+
+func TestGetFileInfo(t *testing.T) {
+	th, _ := SetupTestHelper(t)
+
+	t.Run("should return file info", func(t *testing.T) {
+		fileInfo := &mmModel.FileInfo{
+			Id:       "file_info_id",
+			Archived: false,
+		}
+
+		th.Store.EXPECT().GetFileInfo("filename").Return(fileInfo, nil).Times(2)
+
+		fetchedFileInfo, err := th.App.GetFileInfo("Afilename")
+		assert.NoError(t, err)
+		assert.Equal(t, "file_info_id", fetchedFileInfo.Id)
+		assert.False(t, fetchedFileInfo.Archived)
+
+		fetchedFileInfo, err = th.App.GetFileInfo("Afilename.txt")
+		assert.NoError(t, err)
+		assert.Equal(t, "file_info_id", fetchedFileInfo.Id)
+		assert.False(t, fetchedFileInfo.Archived)
+	})
+
+	t.Run("should return archived file info", func(t *testing.T) {
+		fileInfo := &mmModel.FileInfo{
+			Id:       "file_info_id",
+			Archived: true,
+		}
+
+		th.Store.EXPECT().GetFileInfo("filename").Return(fileInfo, nil)
+
+		fetchedFileInfo, err := th.App.GetFileInfo("Afilename")
+		assert.NoError(t, err)
+		assert.Equal(t, "file_info_id", fetchedFileInfo.Id)
+		assert.True(t, fetchedFileInfo.Archived)
+	})
+
+	t.Run("should return archived file infoerror", func(t *testing.T) {
+		th.Store.EXPECT().GetFileInfo("filename").Return(nil, errDummy)
+
+		fetchedFileInfo, err := th.App.GetFileInfo("Afilename")
+		assert.Error(t, err)
+		assert.Nil(t, fetchedFileInfo)
 	})
 }

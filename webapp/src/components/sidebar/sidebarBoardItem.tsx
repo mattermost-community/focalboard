@@ -75,7 +75,9 @@ const SidebarBoardItem = (props: Props) => {
                 icon={category.id === props.categoryBoards.id ? <Check/> : <Folder/>}
                 onClick={async (toCategoryID) => {
                     const fromCategoryID = props.categoryBoards.id
-                    await mutator.moveBoardToCategory(teamID, boardID, toCategoryID, fromCategoryID)
+                    if (fromCategoryID !== toCategoryID) {
+                        await mutator.moveBoardToCategory(teamID, boardID, toCategoryID, fromCategoryID)
+                    }
                 }}
             />
         ))
@@ -112,7 +114,7 @@ const SidebarBoardItem = (props: Props) => {
                 onClick={() => props.showBoard(board.id)}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon}
+                    {board.icon || <BoardIcon/>}
                 </div>
                 <div
                     className='octo-sidebar-title'
@@ -143,7 +145,7 @@ const SidebarBoardItem = (props: Props) => {
                             <Menu.Text
                                 key={`deleteBlock-${board.id}`}
                                 id='deleteBlock'
-                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete Board'})}
+                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                                 icon={<DeleteIcon/>}
                                 onClick={() => {
                                     props.onDeleteRequest(board)

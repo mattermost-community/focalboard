@@ -1,4 +1,6 @@
 @import 'typography';
+@import 'modifiers';
+@import 'z-index';
 
 html {
     height: 100%;
@@ -38,6 +40,10 @@ html {
         user-select: none;
     }
 
+    .TeamIcon {
+        box-sizing: content-box;
+    }
+
     input,
     textarea,
     select,
@@ -55,7 +61,7 @@ html {
 
     a {
         text-decoration: none;
-        color: var(--link-color-rgb);
+        color: rgb(var(--link-color-rgb));
     }
 
     hr {
@@ -204,8 +210,8 @@ html {
         width: 100%;
 
         &:hover {
+            @include z-index(block-hover);
             position: relative;
-            z-index: 1;
         }
 
         > * {

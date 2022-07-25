@@ -1,8 +1,11 @@
+@import '../../styles/z-index';
+
 .Kanban {
     overflow: auto;
     flex: 1;
 
     .octo-board-header {
+        @include z-index(kanban-board-header);
         display: flex;
         flex-direction: row;
         width: max-content;
@@ -11,7 +14,6 @@
         color: #909090;
         position: sticky;
         top: 0;
-        z-index: 1;
         background: rgb(var(--center-channel-bg-rgb));
     }
 
@@ -19,7 +21,6 @@
         display: flex;
         flex-shrink: 0;
         align-items: center;
-
         width: 260px;
         margin-right: 15px;
         vertical-align: middle;
@@ -44,8 +45,7 @@
 
         .Label {
             max-width: 165px;
-            margin-right: 5px;
-            margin-bottom: 0;
+            margin: 0 8px 0 0;
 
             .Editable {
                 background: transparent;
@@ -94,5 +94,13 @@
         .Label {
             margin: 5px;
         }
+    }
+
+    .hidden-card {
+        display: block;
+    }
+
+    .kanban-hidden-cards {
+        margin-left: 4px;
     }
 }

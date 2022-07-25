@@ -12,6 +12,8 @@ import {GlobalState} from 'mattermost-redux/types/store'
 import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
+import {UserSettings} from '../../../webapp/src/userSettings'
+
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = '/plugins/focalboard'
@@ -21,6 +23,9 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'
 import {setTeam} from '../../../webapp/src/store/teams'
+import WithWebSockets from '../../../webapp/src/components/withWebSockets'
+import {setChannel} from '../../../webapp/src/store/channels'
+import {initialLoad} from '../../../webapp/src/store/initialLoad'
 import {Utils} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
@@ -34,12 +39,18 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
+import RHSChannelBoards from './components/rhsChannelBoards'
+import RHSChannelBoardsHeader from './components/rhsChannelBoardsHeader'
+import BoardSelector from './components/boardSelector'
 import wsClient, {
     MMWebSocketClient,
     ACTION_UPDATE_BLOCK,
     ACTION_UPDATE_CLIENT_CONFIG,
     ACTION_UPDATE_SUBSCRIPTION,
-    ACTION_UPDATE_CATEGORY, ACTION_UPDATE_BOARD_CATEGORY, ACTION_UPDATE_BOARD,
+    ACTION_UPDATE_CARD_LIMIT_TIMESTAMP,
+    ACTION_UPDATE_CATEGORY,
+    ACTION_UPDATE_BOARD_CATEGORY,
+    ACTION_UPDATE_BOARD,
 } from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -49,6 +60,7 @@ import ErrorBoundary from './error_boundary'
 import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
+import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -87,12 +99,12 @@ function customHistory() {
             }
 
             const pathName = event.data.message?.pathName
-            if (!pathName || !pathName.startsWith(windowAny.frontendBaseURL)) {
+            if (!pathName || !pathName.startsWith('/boards')) {
                 return
             }
 
             Utils.log(`Navigating Boards to ${pathName}`)
-            history.replace(pathName.replace(windowAny.frontendBaseURL, ''))
+            history.replace(pathName.replace('/boards', ''))
         })
     }
     return {
@@ -118,8 +130,6 @@ function customHistory() {
 let browserHistory: History<unknown>
 
 const MainApp = (props: Props) => {
-    wsClient.initPlugin(manifest.id, manifest.version, props.webSocketClient)
-
     useEffect(() => {
         document.body.classList.add('focalboard-body')
         document.body.classList.add('app__body')
@@ -140,10 +150,12 @@ const MainApp = (props: Props) => {
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
-                <div id='focalboard-app'>
-                    <App history={browserHistory}/>
-                </div>
-                <div id='focalboard-root-portal'/>
+                <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                    <div id='focalboard-app'>
+                        <App history={browserHistory}/>
+                    </div>
+                    <div id='focalboard-root-portal'/>
+                </WithWebSockets>
             </ReduxProvider>
         </ErrorBoundary>
     )
@@ -159,6 +171,8 @@ const HeaderComponent = () => {
 
 export default class Plugin {
     channelHeaderButtonId?: string
+    rhsId?: string
+    boardSelectorId?: string
     registry?: PluginRegistry
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
@@ -171,16 +185,54 @@ export default class Plugin {
 
         this.registry = registry
 
+        UserSettings.nameFormat = mmStore.getState().entities.preferences?.myPreferences['display_settings--name_format']?.value || null
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
+
+        // register websocket handlers
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
+        this.registry?.registerPostTypeComponent('custom_cloud_upgrade_nudge', CloudUpgradeNudge)
+        this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
+            let preferences
+            try {
+                preferences = JSON.parse(e.data.preferences)
+            } catch {
+                preferences = []
+            }
+            if (preferences) {
+                for (const preference of preferences) {
+                    if (preference.category === 'theme' && theme !== preference.value) {
+                        setMattermostTheme(JSON.parse(preference.value))
+                        theme = preference.value
+                    }
+                    if(preference.category === 'display_settings' && preference.name === 'name_format'){
+                        UserSettings.nameFormat = preference.value
+                    }
+                }
+            }
+        })
+
         let lastViewedChannel = mmStore.getState().entities.channels.currentChannelId
         let prevTeamID: string
+
+        const currentChannel = mmStore.getState().entities.channels.currentChannelId
+        const currentChannelObj = mmStore.getState().entities.channels.channels[currentChannel]
+        store.dispatch(setChannel(currentChannelObj))
+
         mmStore.subscribe(() => {
             const currentUserId = mmStore.getState().entities.users.currentUserId
             const currentChannel = mmStore.getState().entities.channels.currentChannelId
             if (lastViewedChannel !== currentChannel && currentChannel) {
                 localStorage.setItem('focalboardLastViewedChannel:' + currentUserId, currentChannel)
                 lastViewedChannel = currentChannel
+                const currentChannelObj = mmStore.getState().entities.channels.channels[lastViewedChannel]
+                store.dispatch(setChannel(currentChannelObj))
             }
 
             // Watch for change in active team.
@@ -188,24 +240,37 @@ export default class Plugin {
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
-                    console.log("REDIRECTING HERE")
                     browserHistory.push(`/team/${currentTeamID}`)
-                    wsClient.subscribeToTeam(currentTeamID)
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
+                octoClient.teamId = currentTeamID
+                store.dispatch(initialLoad())
             }
         })
 
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
-            const goToFocalboard = () => {
-                const currentTeam = mmStore.getState().entities.teams.currentTeamId
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelHeader, {teamID: currentTeam})
-                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
-            }
 
-            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, goToFocalboard, 'Boards', 'Boards')
+            const {rhsId, toggleRHSPlugin} = this.registry.registerRightHandSidebarComponent(
+                (props: {webSocketClient: MMWebSocketClient}) => (
+                    <ReduxProvider store={store}>
+                        <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                            <RHSChannelBoards/>
+                        </WithWebSockets>
+                    </ReduxProvider>
+                ),
+                <ErrorBoundary>
+                    <ReduxProvider store={store}>
+                        <RHSChannelBoardsHeader/>
+                    </ReduxProvider>
+                </ErrorBoundary>
+                ,
+            )
+            this.rhsId = rhsId
+
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => mmStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+
             this.registry.registerProduct(
                 '/boards',
                 'product-boards',
@@ -229,11 +294,30 @@ export default class Plugin {
 
             if (this.registry.registerAppBarComponent) {
                 const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, goToFocalboard, 'Open Boards')
+                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Boards')
             }
 
-            this.registry.registerPostWillRenderEmbedComponent((embed) => embed.type === 'boards', BoardsUnfurl, false)
+            this.registry.registerPostWillRenderEmbedComponent(
+                (embed) => embed.type === 'boards',
+                (props: {embed: {data: string}, webSocketClient: MMWebSocketClient}) => (
+                    <ReduxProvider store={store}>
+                        <BoardsUnfurl
+                            embed={props.embed}
+                            webSocketClient={props.webSocketClient}
+                        />
+                    </ReduxProvider>
+                ),
+                false
+            )
         }
+
+        this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
+            <ReduxProvider store={store}>
+                <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                    <BoardSelector/>
+                </WithWebSockets>
+            </ReduxProvider>
+        ))
 
         const config = await octoClient.getClientConfig()
         if (config?.telemetry) {
@@ -270,29 +354,6 @@ export default class Plugin {
             }
         }
 
-        // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
-        this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
-        this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
-            let preferences
-            try {
-                preferences = JSON.parse(e.data.preferences)
-            } catch {
-                preferences = []
-            }
-            if (preferences) {
-                for (const preference of preferences) {
-                    if (preference.category === 'theme' && theme !== preference.value) {
-                        setMattermostTheme(JSON.parse(preference.value))
-                        theme = preference.value
-                    }
-                }
-            }
-        })
         windowAny.setTeamInSidebar = (teamID: string) => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -308,6 +369,12 @@ export default class Plugin {
     uninitialize(): void {
         if (this.channelHeaderButtonId) {
             this.registry?.unregisterComponent(this.channelHeaderButtonId)
+        }
+        if (this.rhsId) {
+            this.registry?.unregisterComponent(this.rhsId)
+        }
+        if (this.boardSelectorId) {
+            this.registry?.unregisterComponent(this.boardSelectorId)
         }
 
         // unregister websocket handlers

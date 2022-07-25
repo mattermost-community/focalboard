@@ -73,13 +73,25 @@ type DeleteBoardsAndBlocks struct {
 	Blocks []string `json:"blocks"`
 }
 
+func NewDeleteBoardsAndBlocksFromBabs(babs *BoardsAndBlocks) *DeleteBoardsAndBlocks {
+	boardIDs := make([]string, 0, len(babs.Boards))
+	blockIDs := make([]string, 0, len(babs.Boards))
+
+	for _, board := range babs.Boards {
+		boardIDs = append(boardIDs, board.ID)
+	}
+	for _, block := range babs.Blocks {
+		blockIDs = append(blockIDs, block.ID)
+	}
+	return &DeleteBoardsAndBlocks{
+		Boards: boardIDs,
+		Blocks: blockIDs,
+	}
+}
+
 func (dbab *DeleteBoardsAndBlocks) IsValid() error {
 	if len(dbab.Boards) == 0 {
 		return ErrNoBoardsInBoardsAndBlocks
-	}
-
-	if len(dbab.Blocks) == 0 {
-		return ErrNoBlocksInBoardsAndBlocks
 	}
 
 	return nil
@@ -115,10 +127,6 @@ func (dbab *PatchBoardsAndBlocks) IsValid() error {
 		return ErrBoardIDsAndPatchesMissmatchInBoardsAndBlocks
 	}
 
-	if len(dbab.BlockIDs) == 0 {
-		return ErrNoBlocksInBoardsAndBlocks
-	}
-
 	if len(dbab.BlockIDs) != len(dbab.BlockPatches) {
 		return ErrBlockIDsAndPatchesMissmatchInBoardsAndBlocks
 	}
@@ -126,7 +134,7 @@ func (dbab *PatchBoardsAndBlocks) IsValid() error {
 	return nil
 }
 
-func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger *mlog.Logger) (*BoardsAndBlocks, error) {
+func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger mlog.LoggerIFace) (*BoardsAndBlocks, error) {
 	if err := bab.IsValid(); err != nil {
 		return nil, err
 	}

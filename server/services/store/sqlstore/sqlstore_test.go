@@ -20,4 +20,7 @@ func TestSQLStore(t *testing.T) {
 	t.Run("BoardsAndBlocksStore", func(t *testing.T) { storetests.StoreTestBoardsAndBlocksStore(t, SetupTests) })
 	t.Run("SubscriptionStore", func(t *testing.T) { storetests.StoreTestSubscriptionsStore(t, SetupTests) })
 	t.Run("NotificationHintStore", func(t *testing.T) { storetests.StoreTestNotificationHintsStore(t, SetupTests) })
+	t.Run("DataRetention", func(t *testing.T) { storetests.StoreTestDataRetention(t, SetupTests) })
+	t.Run("CloudStore", func(t *testing.T) { storetests.StoreTestCloudStore(t, SetupTests) })
+	t.Run("StoreTestFileStore", func(t *testing.T) { storetests.StoreTestFileStore(t, SetupTests) })
 }

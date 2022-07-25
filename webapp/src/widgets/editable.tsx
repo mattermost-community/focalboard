@@ -29,11 +29,11 @@ export type ElementType = HTMLInputElement | HTMLTextAreaElement
 export type ElementProps = {
     className: string,
     placeholder?: string,
-    onChange: (e: React.ChangeEvent<ElementType>) => void,
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) => void,
     value?: string,
     title?: string,
     onBlur: () => void,
-    onKeyDown: (e: React.KeyboardEvent<ElementType>) => void,
+    onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement|HTMLInputElement>) => void,
     readOnly?: boolean,
     spellCheck?: boolean,
     onFocus?: () => void,
@@ -87,7 +87,7 @@ export function useEditable(
         error = !props.validator(value || '')
     }
     return {
-        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + className,
+        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + (className? className : ''),
         placeholder: placeholderText,
         onChange: (e: React.ChangeEvent<ElementType>) => {
             onChange(e.target.value)
@@ -95,7 +95,7 @@ export function useEditable(
         value,
         title: value,
         onBlur: () => save('onBlur'),
-        onKeyDown: (e: React.KeyboardEvent<ElementType>): void => {
+        onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement|HTMLInputElement>): void => {
             if (e.keyCode === 27 && !(e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey) { // ESC
                 e.preventDefault()
                 if (props.saveOnEsc) {

@@ -24,7 +24,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
@@ -87,6 +87,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               />
             </button>
           </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
         </div>
         <div
           class="new-template"
@@ -214,6 +228,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
+        </div>
+        <div
           class="new-template"
         >
           <span
@@ -274,7 +302,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
@@ -337,6 +365,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               />
             </button>
           </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
         </div>
         <div
           class="new-template"
@@ -409,7 +451,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
@@ -472,6 +514,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
               />
             </button>
           </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
         </div>
         <div
           class="new-template"

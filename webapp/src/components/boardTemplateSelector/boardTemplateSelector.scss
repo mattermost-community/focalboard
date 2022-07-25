@@ -1,7 +1,9 @@
+@import '../../styles/z-index';
+
 .BoardTemplateSelector {
+    @include z-index(board-template-selector);
     position: absolute;
     background-color: rgb(var(--center-channel-bg-rgb));
-    z-index: 1000;
     top: 0;
     left: 0;
     width: 100%;

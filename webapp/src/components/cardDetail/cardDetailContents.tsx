@@ -6,7 +6,9 @@ import {useIntl, IntlShape} from 'react-intl'
 import {IContentBlockWithCords, ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
 import {Card} from '../../blocks/card'
 import {createTextBlock} from '../../blocks/textBlock'
+import {Block} from '../../blocks/block'
 import mutator from '../../mutator'
+import octoClient from '../../octoClient'
 import {useSortableWithGrip} from '../../hooks/sortable'
 
 import ContentBlock from '../contentBlock'
@@ -25,19 +27,26 @@ type Props = {
     readonly: boolean
 }
 
-function addTextBlock(card: Card, intl: IntlShape, text: string): void {
+async function addTextBlock(card: Card, intl: IntlShape, text: string): Promise<Block> {
     const block = createTextBlock()
     block.parentId = card.id
     block.boardId = card.boardId
     block.title = text
 
-    mutator.performAsUndoGroup(async () => {
-        const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
-        const insertedBlock = await mutator.insertBlock(block.boardId, block, description)
+    const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
+
+    const afterRedo = async (newBlock: Block) => {
         const contentOrder = card.fields.contentOrder.slice()
-        contentOrder.push(insertedBlock.id)
-        await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
-    })
+        contentOrder.push(newBlock.id)
+        await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+    }
+
+    const beforeUndo = async () => {
+        const contentOrder = card.fields.contentOrder.slice()
+        await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+    }
+
+    return mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
 }
 
 function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
@@ -68,7 +77,7 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
     const newContentOrder = dragAndDropRearrange({contentOrder, srcBlockId, srcBlockX, srcBlockY, dstBlockId, dstBlockX, dstBlockY, moveTo})
 
     mutator.performAsUndoGroup(async () => {
-        const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'move card content'})
+        const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'Move card content'})
         await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, newContentOrder, description)
     })
 }

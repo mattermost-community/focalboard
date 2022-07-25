@@ -49,10 +49,10 @@ type diffGenerator struct {
 	board *model.Board
 	card  *model.Block
 
-	store        Store
+	store        AppAPI
 	hint         *model.NotificationHint
 	lastNotifyAt int64
-	logger       *mlog.Logger
+	logger       mlog.LoggerIFace
 }
 
 func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {

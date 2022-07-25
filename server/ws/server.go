@@ -51,14 +51,8 @@ type Server struct {
 	auth             *auth.Auth
 	singleUserToken  string
 	isMattermostAuth bool
-	logger           *mlog.Logger
+	logger           mlog.LoggerIFace
 	store            Store
-}
-
-// UpdateClientConfig is sent on block updates.
-type UpdateClientConfig struct {
-	Action       string             `json:"action"`
-	ClientConfig model.ClientConfig `json:"clientconfig"`
 }
 
 type websocketSession struct {
@@ -74,7 +68,7 @@ func (wss *websocketSession) isAuthenticated() bool {
 }
 
 // NewServer creates a new Server.
-func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger *mlog.Logger, store Store) *Server {
+func NewServer(auth *auth.Auth, singleUserToken string, isMattermostAuth bool, logger mlog.LoggerIFace, store Store) *Server {
 	return &Server{
 		listeners:        make(map[*websocketSession]bool),
 		listenersByTeam:  make(map[string][]*websocketSession),
@@ -752,5 +746,9 @@ func (ws *Server) BroadcastMemberDelete(teamID, boardID, userID string) {
 }
 
 func (ws *Server) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
+	// not implemented for standalone server.
+}
+
+func (ws *Server) BroadcastCardLimitTimestampChange(cardLimitTimestamp int64) {
 	// not implemented for standalone server.
 }

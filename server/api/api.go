@@ -27,12 +27,15 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	UploadFormFileKey      = "file"
+	True                   = "true"
 )
 
 const (
 	ErrorNoTeamCode    = 1000
 	ErrorNoTeamMessage = "No team"
 )
+
+var errAPINotSupportedInStandaloneMode = errors.New("API not supported in standalone mode")
 
 type PermissionError struct {
 	msg string
@@ -51,12 +54,20 @@ type API struct {
 	permissions     permissions.PermissionsService
 	singleUserToken string
 	MattermostAuth  bool
-	logger          *mlog.Logger
+	logger          mlog.LoggerIFace
 	audit           *audit.Audit
+	isPlugin        bool
 }
 
-func NewAPI(app *app.App, singleUserToken string, authService string, permissions permissions.PermissionsService,
-	logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(
+	app *app.App,
+	singleUserToken string,
+	authService string,
+	permissions permissions.PermissionsService,
+	logger mlog.LoggerIFace,
+	audit *audit.Audit,
+	isPlugin bool,
+) *API {
 	return &API{
 		app:             app,
 		singleUserToken: singleUserToken,
@@ -64,6 +75,7 @@ func NewAPI(app *app.App, singleUserToken string, authService string, permission
 		permissions:     permissions,
 		logger:          logger,
 		audit:           audit,
+		isPlugin:        isPlugin,
 	}
 }
 
@@ -72,11 +84,22 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.Use(a.panicHandler)
 	apiv2.Use(a.requireCSRFToken)
 
+	// personal-server specific routes. These are not needed in plugin mode.
+	if !a.isPlugin {
+		apiv2.HandleFunc("/login", a.handleLogin).Methods("POST")
+		apiv2.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
+		apiv2.HandleFunc("/register", a.handleRegister).Methods("POST")
+		apiv2.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
+	}
+
 	// Board APIs
+	apiv2.HandleFunc("/teams/{teamID}/channels", a.sessionRequired(a.handleSearchMyChannels)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/channels/{channelID}", a.sessionRequired(a.handleGetChannel)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv2.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/search", a.sessionRequired(a.handleSearchAllBoards)).Methods("GET")
 	apiv2.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
 	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
@@ -106,7 +129,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// Team APIs
 	apiv2.HandleFunc("/teams", a.sessionRequired(a.handleGetTeams)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}", a.sessionRequired(a.handleGetTeam)).Methods("GET")
-	apiv2.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
 	apiv2.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
@@ -124,9 +146,6 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/boards-and-blocks", a.sessionRequired(a.handleDeleteBoardsAndBlocks)).Methods("DELETE")
 
 	// Auth APIs
-	apiv2.HandleFunc("/login", a.handleLogin).Methods("POST")
-	apiv2.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
-	apiv2.HandleFunc("/register", a.handleRegister).Methods("POST")
 	apiv2.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
 
 	// Category APIs
@@ -141,17 +160,24 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	// Get Files API
 	apiv2.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
 
-	// Subscriptions
+	// Subscription APIs
 	apiv2.HandleFunc("/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
 	apiv2.HandleFunc("/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
 	apiv2.HandleFunc("/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
 
-	// onboarding tour endpoints
+	// Onboarding tour endpoints APIs
 	apiv2.HandleFunc("/teams/{teamID}/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
 
-	// archives
+	// Archive APIs
 	apiv2.HandleFunc("/boards/{boardID}/archive/export", a.sessionRequired(a.handleArchiveExportBoard)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+
+	// limits
+	apiv2.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
+
+	// System APIs
+	r.HandleFunc("/hello", a.handleHello).Methods("GET")
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
@@ -371,6 +397,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 		mlog.Int("block_count", len(blocks)),
 	)
+
+	var bErr error
+	blocks, bErr = a.app.ApplyCloudLimits(blocks)
+	if bErr != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
+		return
+	}
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
@@ -778,6 +811,11 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	//   description: Board ID
 	//   required: true
 	//   type: string
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk data inserting)
+	//   required: false
+	//   type: bool
 	// - name: Body
 	//   in: body
 	//   description: array of blocks to insert or update
@@ -802,6 +840,9 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	// in phase 1 we use "manage_board_cards", but we would have to
 	// check on specific actions for phase 2
@@ -855,6 +896,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("disable_notify", disableNotify)
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
@@ -870,13 +912,21 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, true)
+	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, !disableNotify)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if errors.Is(err, app.ErrViewsLimitReached) {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		} else {
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		}
+
 		return
 	}
 
-	a.logger.Debug("POST Blocks", mlog.Int("block_count", len(blocks)))
+	a.logger.Debug("POST Blocks",
+		mlog.Int("block_count", len(blocks)),
+		mlog.Bool("disable_notify", disableNotify),
+	)
 
 	json, err := json.Marshal(newBlocks)
 	if err != nil {
@@ -1042,12 +1092,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	if userID == model.SingleUser {
+		ws, _ := a.app.GetRootTeam()
 		now := utils.GetMillis()
 		user = &model.User{
 			ID:       model.SingleUser,
 			Username: model.SingleUser,
 			Email:    model.SingleUser,
-			CreateAt: now,
+			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
 		}
 	} else {
@@ -1063,7 +1114,6 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
 	jsonBytesResponse(w, http.StatusOK, userData)
 
 	auditRec.AddMeta("userID", user.ID)
@@ -1404,6 +1454,10 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("blockID", blockID)
 
 	err = a.app.PatchBlock(blockID, patch, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1485,6 +1539,10 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = a.app.PatchBlocks(teamID, patches, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -1545,7 +1603,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if sharing == nil {
-		jsonStringResponse(w, http.StatusOK, "{}")
+		jsonStringResponse(w, http.StatusOK, "")
 		return
 	}
 
@@ -1826,7 +1884,7 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 // File upload
 
 func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET "api/v2/files/teams/{teamID}/{boardID}/{filename} getFile
+	// swagger:operation GET /files/teams/{teamID}/{boardID}/{filename} getFile
 	//
 	// Returns the contents of an uploaded file
 	//
@@ -1908,6 +1966,31 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", contentType)
+
+	fileInfo, err := a.app.GetFileInfo(filename)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	if fileInfo != nil && fileInfo.Archived {
+		fileMetadata := map[string]interface{}{
+			"archived":  true,
+			"name":      fileInfo.Name,
+			"size":      fileInfo.Size,
+			"extension": fileInfo.Extension,
+		}
+
+		data, jsonErr := json.Marshal(fileMetadata)
+		if jsonErr != nil {
+			a.logger.Error("failed to marshal archived file metadata", mlog.String("filename", filename), mlog.Err(jsonErr))
+			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", jsonErr)
+			return
+		}
+
+		jsonBytesResponse(w, http.StatusBadRequest, data)
+		return
+	}
 
 	fileReader, err := a.app.GetFileReader(board.TeamID, boardID, filename)
 	if err != nil {
@@ -2099,6 +2182,168 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("userCount", len(users))
+	auditRec.Success()
+}
+
+func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/channels searchMyChannels
+	//
+	// Returns the user available channels
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: search
+	//   in: query
+	//   description: string to filter channels list
+	//   required: false
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Channel"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
+	query := r.URL.Query()
+	searchQuery := query.Get("search")
+
+	teamID := mux.Vars(r)["teamID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchMyChannels", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+
+	channels, err := a.app.SearchUserChannels(teamID, userID, searchQuery)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetUserChannels",
+		mlog.String("teamID", teamID),
+		mlog.Int("channelsCount", len(channels)),
+	)
+
+	data, err := json.Marshal(channels)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("channelsCount", len(channels))
+	auditRec.Success()
+}
+
+func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/channels/{channelID} getChannel
+	//
+	// Returns the requested channel
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: channelID
+	//   in: path
+	//   description: Channel ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Channel"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
+	teamID := mux.Vars(r)["teamID"]
+	channelID := mux.Vars(r)["channelID"]
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	if !a.permissions.HasPermissionToChannel(userID, channelID, model.PermissionReadChannel) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to channel"})
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getChannel", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+	auditRec.AddMeta("channelID", teamID)
+
+	channel, err := a.app.GetChannel(teamID, channelID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetChannel",
+		mlog.String("teamID", teamID),
+		mlog.String("channelID", channelID),
+	)
+
+	if channel.TeamId != teamID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	data, err := json.Marshal(channel)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
 	auditRec.Success()
 }
 
@@ -2755,9 +3000,15 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if patch.Type != nil {
+	if patch.Type != nil || patch.MinimumRole != nil {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+			return
+		}
+	}
+	if patch.ChannelID != nil {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board access"})
 			return
 		}
 	}
@@ -2905,6 +3156,11 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
 	if board.IsTemplate && board.Type == model.BoardTypeOpen {
 		if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
@@ -2925,7 +3181,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == "true")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3028,7 +3284,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 	)
 
-	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == "true")
+	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3124,7 +3380,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /teams/{teamID}/boards/search searchBoards
 	//
-	// Returns the boards that match with a search term
+	// Returns the boards that match with a search term in the team
 	//
 	// ---
 	// produces:
@@ -3173,7 +3429,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, userID, teamID)
+	boards, err := a.app.SearchBoardsForUserInTeam(teamID, term, userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3181,6 +3437,69 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("SearchBoards",
 		mlog.String("teamID", teamID),
+		mlog.Int("boardsCount", len(boards)),
+	)
+
+	data, err := json.Marshal(boards)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("boardsCount", len(boards))
+	auditRec.Success()
+}
+
+func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /boards/search searchBoards
+	//
+	// Returns the boards that match with a search term
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: q
+	//   in: query
+	//   description: The search term. Must have at least one character
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Board"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	term := r.URL.Query().Get("q")
+	userID := getUserID(r)
+
+	if len(term) == 0 {
+		jsonStringResponse(w, http.StatusOK, "[]")
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchAllBoards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	// retrieve boards list
+	boards, err := a.app.SearchBoardsForUser(term, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("SearchAllBoards",
 		mlog.Int("boardsCount", len(boards)),
 	)
 
@@ -3420,12 +3739,13 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// currently all memberships are created as editors by default
-	// TODO: Support different public roles
 	newBoardMember := &model.BoardMember{
-		UserID:       userID,
-		BoardID:      boardID,
-		SchemeEditor: true,
+		UserID:          userID,
+		BoardID:         boardID,
+		SchemeAdmin:     board.MinimumRole == model.BoardRoleAdmin,
+		SchemeEditor:    board.MinimumRole == model.BoardRoleNone || board.MinimumRole == model.BoardRoleEditor,
+		SchemeCommenter: board.MinimumRole == model.BoardRoleCommenter,
+		SchemeViewer:    board.MinimumRole == model.BoardRoleViewer,
 	}
 
 	auditRec := a.makeAuditRecord(r, "joinBoard", audit.Fail)
@@ -3913,7 +4233,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		if patch.Type != nil {
+		if patch.Type != nil || patch.MinimumRole != nil {
 			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
 				return
@@ -3967,6 +4287,10 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 	auditRec.AddMeta("blocksCount", len(pbab.BlockIDs))
 
 	bab, err := a.app.PatchBoardsAndBlocks(pbab, userID)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -4106,6 +4430,86 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 	auditRec.Success()
 }
 
+func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /limits cloudLimits
+	//
+	// Fetches the cloud limits of the server.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//         "$ref": "#/definitions/BoardsCloudLimits"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardsCloudLimits, err := a.app.GetBoardsCloudLimits()
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(boardsCloudLimits)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+}
+
+func (a *API) handleHello(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /hello hello
+	//
+	// Responds with `Hello` if the web service is running.
+	//
+	// ---
+	// produces:
+	// - text/plain
+	// responses:
+	//   '200':
+	//     description: success
+	stringResponse(w, "Hello")
+}
+
+func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /api/v2/teams/{teamID}/notifyadminupgrade handleNotifyAdminUpgrade
+	//
+	// Notifies admins for upgrade request.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errAPINotSupportedInStandaloneMode)
+		return
+	}
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	if err := a.app.NotifyPortalAdminsUpgradeRequest(teamID); err != nil {
+		jsonStringResponse(w, http.StatusOK, "{}")
+	}
+}
+
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
@@ -4134,13 +4538,18 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 	_, _ = w.Write(data)
 }
 
-func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam
+func stringResponse(w http.ResponseWriter, message string) {
+	w.Header().Set("Content-Type", "text/plain")
+	_, _ = fmt.Fprint(w, message)
+}
+
+func jsonStringResponse(w http.ResponseWriter, code int, message string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
 }
 
-func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:unparam
+func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)

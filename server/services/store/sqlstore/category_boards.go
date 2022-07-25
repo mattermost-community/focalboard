@@ -2,17 +2,12 @@ package sqlstore
 
 import (
 	"database/sql"
-	"errors"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-)
-
-var (
-	errDuplicateCategoryEntries = errors.New("duplicate entries found for user-board-category mapping")
 )
 
 func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string) ([]model.CategoryBoards, error) {
@@ -58,25 +53,18 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 }
 
 func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID, boardID string) error {
-	if categoryID == "0" {
-		return s.deleteUserCategoryBoard(db, userID, boardID)
-	}
-
-	rowsAffected, err := s.updateUserCategoryBoard(db, userID, boardID, categoryID)
-	if err != nil {
+	if err := s.deleteUserCategoryBoard(db, userID, boardID); err != nil {
 		return err
 	}
 
-	if rowsAffected > 1 {
-		return errDuplicateCategoryEntries
+	if categoryID == "0" {
+		// category ID "0" means user wants to move board out of
+		// the custom category. Deleting the user-board-category
+		// mapping achieves this.
+		return nil
 	}
 
-	if rowsAffected == 0 {
-		// user-block mapping didn't already exist. So we'll create a new entry
-		return s.addUserCategoryBoard(db, userID, categoryID, boardID)
-	}
-
-	return nil
+	return s.addUserCategoryBoard(db, userID, categoryID, boardID)
 }
 
 /*
@@ -101,31 +89,6 @@ func (s *SQLStore) userCategoryBoardExists(db sq.BaseRunner, userID, teamID, cat
 	return rows.Next(), nil
 }
 */
-
-func (s *SQLStore) updateUserCategoryBoard(db sq.BaseRunner, userID, boardID, categoryID string) (int64, error) {
-	result, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("category_id", categoryID).
-		Set("delete_at", 0).
-		Where(sq.Eq{
-			"board_id": boardID,
-			"user_id":  userID,
-		}).
-		Exec()
-
-	if err != nil {
-		s.logger.Error("updateUserCategoryBoard error", mlog.Err(err))
-		return 0, err
-	}
-
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		s.logger.Error("updateUserCategoryBoard affected row count error", mlog.Err(err))
-		return 0, err
-	}
-
-	return rowsAffected, nil
-}
 
 func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID, categoryID, boardID string) error {
 	_, err := s.getQueryBuilder(db).

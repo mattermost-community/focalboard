@@ -4,26 +4,25 @@
 package mmpermissions
 
 import (
-	"database/sql"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/permissions"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type APIInterface interface {
 	HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool
-	LogError(string, ...interface{})
+	HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool
 }
 
 type Service struct {
-	store permissions.Store
-	api   APIInterface
+	store  permissions.Store
+	api    APIInterface
+	logger mlog.LoggerIFace
 }
 
-func New(store permissions.Store, api APIInterface) *Service {
+func New(store permissions.Store, api APIInterface, logger mlog.LoggerIFace) *Service {
 	return &Service{
 		store: store,
 		api:   api,
@@ -37,13 +36,20 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 	return s.api.HasPermissionToTeam(userID, teamID, permission)
 }
 
+func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {
+	if userID == "" || channelID == "" || permission == nil {
+		return false
+	}
+	return s.api.HasPermissionToChannel(userID, channelID, permission)
+}
+
 func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool {
 	if userID == "" || boardID == "" || permission == nil {
 		return false
 	}
 
 	board, err := s.store.GetBoard(boardID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		var boards []*model.Board
 		boards, err = s.store.GetBoardHistory(boardID, model.QueryBoardHistoryOptions{Limit: 1, Descending: true})
 		if err != nil {
@@ -54,10 +60,10 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		}
 		board = boards[0]
 	} else if err != nil {
-		s.api.LogError("error getting board",
-			"boardID", boardID,
-			"userID", userID,
-			"error", err,
+		s.logger.Error("error getting board",
+			mlog.String("boardID", boardID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return false
 	}
@@ -69,16 +75,27 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 	}
 
 	member, err := s.store.GetMemberForBoard(boardID, userID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return false
 	}
 	if err != nil {
-		s.api.LogError("error getting member for board",
-			"boardID", boardID,
-			"userID", userID,
-			"error", err,
+		s.logger.Error("error getting member for board",
+			mlog.String("boardID", boardID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return false
+	}
+
+	switch member.MinimumRole {
+	case "admin":
+		member.SchemeAdmin = true
+	case "editor":
+		member.SchemeEditor = true
+	case "commenter":
+		member.SchemeCommenter = true
+	case "viewer":
+		member.SchemeViewer = true
 	}
 
 	switch permission {

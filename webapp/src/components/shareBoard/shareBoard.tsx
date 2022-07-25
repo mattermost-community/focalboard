@@ -10,17 +10,22 @@ import {CSSObject} from '@emotion/serialize'
 
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard, getCurrentBoardMembers} from '../../store/boards'
+import {Channel, ChannelTypeOpen, ChannelTypePrivate} from '../../store/channels'
 import {getMe, getBoardUsersList} from '../../store/users'
+
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
 
 import {Utils, IDType} from '../../utils'
 import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
 
 import {ISharing} from '../../blocks/sharing'
-import {BoardMember} from '../../blocks/board'
+import {BoardMember, createBoard} from '../../blocks/board'
 
 import client from '../../octoClient'
 import Dialog from '../dialog'
+import ConfirmationDialog from '../confirmationDialogBox'
 import {IUser} from '../../user'
 import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
@@ -33,12 +38,15 @@ import {getSelectBaseStyle} from '../../theme'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchIcon from '../../widgets/icons/search'
+import PrivateIcon from '../../widgets/icons/lockOutline'
+import PublicIcon from '../../widgets/icons/globe'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import {useHasPermissions} from '../../hooks/permissions'
 
 import TeamPermissionsRow from './teamPermissionsRow'
+import ChannelPermissionsRow from './channelPermissionsRow'
 import UserPermissionsRow from './userPermissionsRow'
 
 import './shareBoard.scss'
@@ -92,8 +100,10 @@ function isLastAdmin(members: BoardMember[]) {
 export default function ShareBoardDialog(props: Props): JSX.Element {
     const [wasCopiedPublic, setWasCopiedPublic] = useState(false)
     const [wasCopiedInternal, setWasCopiedInternal] = useState(false)
+    const [showLinkChannelConfirmation, setShowLinkChannelConfirmation] = useState<Channel|null>(null)
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
-    const [selectedUser, setSelectedUser] = useState<IUser|null>(null)
+    const [selectedUser, setSelectedUser] = useState<IUser|Channel|null>(null)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -133,6 +143,17 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoard, {board: boardId, shareBoardEnabled: isOn})
         await client.setSharing(boardId, newSharing)
         await loadData()
+    }
+
+    const onLinkBoard = async (channel: Channel, confirmed?: boolean) => {
+        if (channel.type === ChannelTypeOpen && !confirmed) {
+            setShowLinkChannelConfirmation(channel)
+            return
+        }
+        setShowLinkChannelConfirmation(null)
+        const newBoard = createBoard(board)
+        newBoard.channelId = channel.id  // This is a channel ID hardcoded here as an example
+        mutator.updateBoard(newBoard, board, 'linked channel')
     }
 
     const onRegenerateToken = async () => {
@@ -264,6 +285,41 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         </span>
     )
 
+    const formatOptionLabel = (userOrChannel: IUser | Channel) => {
+        if ((userOrChannel as IUser).username) {
+            const user = userOrChannel as IUser
+            return(
+                <div className='user-item'>
+                    {Utils.isFocalboardPlugin() &&
+                        <img
+                            src={Utils.getProfilePicture(user.id)}
+                            className='user-item__img'
+                        />
+                    }
+                    <div className='ml-3'>
+                        <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
+                        <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                    </div>
+                </div>
+            )
+        }
+
+        if (!Utils.isFocalboardPlugin()) {
+            return null
+        }
+
+        const channel = userOrChannel as Channel
+        return(
+            <div className='user-item'>
+                {channel.type === ChannelTypePrivate && <PrivateIcon/>}
+                {channel.type === ChannelTypeOpen && <PublicIcon/>}
+                <div className='ml-3'>
+                    <strong>{channel.display_name}</strong>
+                </div>
+            </div>
+        )
+    }
+
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
     return (
@@ -272,6 +328,16 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             className='ShareBoardDialog'
             toolbar={toolbar}
         >
+            {showLinkChannelConfirmation &&
+                <ConfirmationDialog
+                    dialogBox={{
+                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel', defaultMessage: 'You\'re adding a public channel'}),
+                        subText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-subtext', defaultMessage: 'Anyone who joins that public channel will now get “Editor” access to the board, are you sure you want to proceed?'}),
+                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-button', defaultMessage: 'Yes, add public channel'}),
+                        onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
+                        onClose: () => setShowLinkChannelConfirmation(null),
+                    }}
+                />}
             <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                 <div className='share-input__container'>
                     <div className='share-input'>
@@ -281,16 +347,31 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            loadOptions={(inputValue: string) => client.searchTeamUsers(inputValue)}
+                            loadOptions={async (inputValue: string) => {
+                                const users = await client.searchTeamUsers(inputValue)
+                                const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
+                                const result = []
+                                if (users) {
+                                    result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
+                                }
+                                if (channels) {
+                                    result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                }
+                                return result
+                            }}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
                             defaultOptions={true}
+                            formatOptionLabel={formatOptionLabel}
                             getOptionValue={(u) => u.id}
-                            getOptionLabel={(u) => u.username}
+                            getOptionLabel={(u: IUser|Channel) => (u as IUser).username || (u as Channel).display_name}
                             isMulti={false}
+                            placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people'})}
                             onChange={(newValue) => {
-                                if (newValue) {
+                                if (newValue && (newValue as IUser).username) {
                                     mutator.createBoardMember(boardId, newValue.id)
                                     setSelectedUser(null)
+                                } else if (newValue) {
+                                    onLinkBoard(newValue as Channel)
                                 }
                             }}
                         />
@@ -299,9 +380,13 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             </BoardPermissionGate>
             <div className='user-items'>
                 <TeamPermissionsRow/>
+                <ChannelPermissionsRow/>
 
                 {boardUsers.map((user) => {
                     if (!members[user.id]) {
+                        return null
+                    }
+                    if (members[user.id].synthetic) {
                         return null
                     }
                     return (
@@ -309,6 +394,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             key={user.id}
                             user={user}
                             member={members[user.id]}
+                            teammateNameDisplay={me?.props?.teammateNameDisplay || clientConfig.teammateNameDisplay}
                             onDeleteBoardMember={onDeleteBoardMember}
                             onUpdateBoardMember={onUpdateBoardMember}
                             isMe={user.id === me?.id}
@@ -348,7 +434,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         <div className='d-flex justify-content-between'>
                             <div className='d-flex flex-column'>
                                 <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.PublishTitle', defaultMessage: 'Publish to the web'})}</div>
-                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a “read only” link with everyone on the web'})}</div>
+                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.PublishDescription', defaultMessage: 'Publish and share a read-only link with everyone on the web.'})}</div>
                             </div>
                             <div>
                                 <Switch
@@ -425,7 +511,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         <div className='d-flex justify-content-between'>
                             <div className='d-flex flex-column'>
                                 <div className='text-heading2'>{intl.formatMessage({id: 'ShareBoard.ShareInternal', defaultMessage: 'Share internally'})}</div>
-                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.ShareInternalDescription', defaultMessage: 'Users who have permissions will be able to use this link'})}</div>
+                                <div className='text-light'>{intl.formatMessage({id: 'ShareBoard.ShareInternalDescription', defaultMessage: 'Users who have permissions will be able to use this link.'})}</div>
                             </div>
                         </div>
                     </div>

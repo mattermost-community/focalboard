@@ -64,7 +64,7 @@ const BoardTemplateSelector = (props: Props) => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardTemplate, {board: template.id})
         mutator.deleteBoard(
             template,
-            intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete template'}),
+            intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'}),
             async () => {},
             async () => {
                 showBoard(template.id)
@@ -85,6 +85,7 @@ const BoardTemplateSelector = (props: Props) => {
 
         const patch: UserConfigPatch = {
             updatedFields: {
+                [UserPropPrefix + 'onboardingTourStarted']: '1',
                 [UserPropPrefix + 'onboardingTourStep']: BaseTourSteps.OPEN_A_CARD.toString(),
                 [UserPropPrefix + 'tourCategory']: TOUR_BASE,
             },
@@ -97,6 +98,10 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     const handleUseTemplate = async () => {
+        if (activeTemplate.teamId === '0') {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId: activeTemplate.properties.trackingTemplateId as string})
+        }
+
         await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
@@ -131,7 +136,7 @@ const BoardTemplateSelector = (props: Props) => {
                     {title || (
                         <FormattedMessage
                             id='BoardTemplateSelector.title'
-                            defaultMessage='Create a Board'
+                            defaultMessage='Create a board'
                         />
                     )}
                 </h1>

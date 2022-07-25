@@ -30,7 +30,7 @@ describe('Create and delete board / card', () => {
         // Create empty board
         cy.contains('Create empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
-        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled Board')
+        cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
 
         // Change Title
         cy.get('.Editable.title').
@@ -72,12 +72,12 @@ describe('Create and delete board / card', () => {
         cy.log('**Create card**')
         cy.get('.ViewHeader').contains('New').click()
         cy.get('.CardDetail').should('exist')
-        
+
         //Check title has focus when card is created
         cy.log('**Check title has focus when card is created**')
         cy.get('.CardDetail .EditableArea.title').
             should('have.focus')
-        
+
         // Change card title
         cy.log('**Change card title**')
         // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -178,7 +178,7 @@ describe('Create and delete board / card', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.get('.Kanban').
             trigger('dragover', {clientX: 400, clientY: Cypress.config().viewportHeight / 2}).
-            wait(3500).
+            wait(4500).
             trigger('dragend')
 
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)

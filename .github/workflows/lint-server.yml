@@ -5,20 +5,18 @@ on:
     branches: [ main, release-** ]
   pull_request:
     branches: [ main, release-** ]
+  workflow_dispatch:
 
 jobs:
   golangci:
-    name: server
+    name: plugin
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.16
-      - uses: actions/checkout@v2
-      - run: make templates-archive
-      - name: server-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: v1.41
-          working-directory: server
-          skip-go-installation: true
+          go-version: 1.18.1
+      - uses: actions/checkout@v3
+      - name: set up golangci-lint
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
+      - name: lint
+        run: make server-lint

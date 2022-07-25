@@ -11,7 +11,6 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions"
-	"github.com/mattermost/focalboard/server/ws"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -30,20 +29,18 @@ type MentionListener interface {
 }
 
 type BackendParams struct {
-	Store       Store
+	AppAPI      AppAPI
 	Permissions permissions.PermissionsService
 	Delivery    MentionDelivery
-	WSAdapter   ws.Adapter
-	Logger      *mlog.Logger
+	Logger      mlog.LoggerIFace
 }
 
 // Backend provides the notification backend for @mentions.
 type Backend struct {
-	store       Store
+	appAPI      AppAPI
 	permissions permissions.PermissionsService
 	delivery    MentionDelivery
-	wsAdapter   ws.Adapter
-	logger      *mlog.Logger
+	logger      mlog.LoggerIFace
 
 	mux       sync.RWMutex
 	listeners []MentionListener
@@ -51,10 +48,9 @@ type Backend struct {
 
 func New(params BackendParams) *Backend {
 	return &Backend{
-		store:       params.Store,
+		appAPI:      params.AppAPI,
 		permissions: params.Permissions,
 		delivery:    params.Delivery,
-		wsAdapter:   params.WSAdapter,
 		logger:      params.Logger,
 	}
 }
@@ -130,7 +126,11 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 		userID, err := b.deliverMentionNotification(username, extract, evt)
 		if err != nil {
-			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+			if errors.Is(err, ErrMentionPermission) {
+				b.logger.Debug("Cannot deliver notification", mlog.String("user", username), mlog.Err(err))
+			} else {
+				merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+			}
 		}
 
 		if userID == "" {
@@ -150,7 +150,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	return merr.ErrorOrNil()
 }
 
-func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger *mlog.Logger) {
+func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger mlog.LoggerIFace) {
 	// don't let panicky listeners stop notifications
 	defer func() {
 		if r := recover(); r != nil {
@@ -163,7 +163,7 @@ func safeCallListener(listener MentionListener, userID string, evt notify.BlockC
 func (b *Backend) deliverMentionNotification(username string, extract string, evt notify.BlockChangeEvent) (string, error) {
 	mentionedUser, err := b.delivery.UserByUsername(username)
 	if err != nil {
-		if b.delivery.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			// not really an error; could just be someone typed "@sometext"
 			return "", nil
 		} else {
@@ -185,15 +185,15 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 				return "", fmt.Errorf("%s cannot mention non-team member %s : %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
 			}
 			// add mentioned user to board (if not already a member)
-			member, err := b.store.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
-			if member == nil || b.store.IsErrNotFound(err) {
+			member, err := b.appAPI.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
+			if member == nil || model.IsErrNotFound(err) {
 				// currently all memberships are created as editors by default
 				newBoardMember := &model.BoardMember{
 					UserID:       mentionedUser.Id,
 					BoardID:      evt.Board.ID,
 					SchemeEditor: true,
 				}
-				if member, err = b.store.SaveMember(newBoardMember); err != nil {
+				if _, err = b.appAPI.AddMemberToBoard(newBoardMember); err != nil {
 					return "", fmt.Errorf("cannot add mentioned user %s to board %s: %w", mentionedUser.Id, evt.Board.ID, err)
 				}
 				b.logger.Debug("auto-added mentioned user to board",
@@ -201,7 +201,6 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 					mlog.String("board_id", evt.Board.ID),
 					mlog.String("board_type", string(evt.Board.Type)),
 				)
-				b.wsAdapter.BroadcastMemberChange(evt.TeamID, evt.Board.ID, member)
 			} else {
 				b.logger.Debug("skipping auto-add mentioned user to board; already a member",
 					mlog.String("user_id", mentionedUser.Id),

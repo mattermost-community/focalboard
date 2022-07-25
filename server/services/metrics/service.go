@@ -15,7 +15,7 @@ type Service struct {
 }
 
 // NewMetricsServer factory method to create a new prometheus server.
-func NewMetricsServer(address string, metricsService *Metrics, logger *mlog.Logger) *Service {
+func NewMetricsServer(address string, metricsService *Metrics, logger mlog.LoggerIFace) *Service {
 	return &Service{
 		&http.Server{
 			Addr: address,

@@ -33,9 +33,8 @@ import (
 	"github.com/mattermost/focalboard/server/ws"
 	"github.com/oklog/run"
 
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 const (
@@ -54,7 +53,7 @@ type Server struct {
 	store                  store.Store
 	filesBackend           filestore.FileBackend
 	telemetry              *telemetry.Service
-	logger                 *mlog.Logger
+	logger                 mlog.LoggerIFace
 	cleanUpSessionsTask    *scheduler.ScheduledTask
 	metricsServer          *metrics.Service
 	metricsService         *metrics.Metrics
@@ -138,11 +137,12 @@ func New(params Params) (*Server, error) {
 		Notifications:    notificationService,
 		Logger:           params.Logger,
 		Permissions:      params.PermissionsService,
+		ServicesAPI:      params.ServicesAPI,
 		SkipTemplateInit: utils.IsRunningUnitTests(),
 	}
 	app := app.New(params.Cfg, wsAdapter, appServices)
 
-	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService)
+	focalboardAPI := api.NewAPI(app, params.SingleUserToken, params.Cfg.AuthMode, params.PermissionsService, params.Logger, auditService, params.IsPlugin)
 
 	// Local router for admin APIs
 	localRouter := mux.NewRouter()
@@ -207,7 +207,7 @@ func New(params Params) (*Server, error) {
 	return &server, nil
 }
 
-func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, error) {
+func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.LoggerIFace) (store.Store, error) {
 	sqlDB, err := sql.Open(config.DBType, config.DBConfigString)
 	if err != nil {
 		logger.Error("connectDatabase failed", mlog.Err(err))
@@ -227,6 +227,7 @@ func NewStore(config *config.Configuration, logger *mlog.Logger) (store.Store, e
 		Logger:           logger,
 		DB:               sqlDB,
 		IsPlugin:         false,
+		IsSingleUser:     isSingleUser,
 	}
 
 	var db store.Store
@@ -349,7 +350,7 @@ func (s *Server) Config() *config.Configuration {
 	return s.config
 }
 
-func (s *Server) Logger() *mlog.Logger {
+func (s *Server) Logger() mlog.LoggerIFace {
 	return s.logger
 }
 
@@ -417,7 +418,7 @@ type telemetryOptions struct {
 	cfg         *config.Configuration
 	telemetryID string
 	serverID    string
-	logger      *mlog.Logger
+	logger      mlog.LoggerIFace
 	singleUser  bool
 }
 
@@ -493,7 +494,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 	return telemetryService
 }
 
-func initNotificationService(backends []notify.Backend, logger *mlog.Logger) (*notify.Service, error) {
+func initNotificationService(backends []notify.Backend, logger mlog.LoggerIFace) (*notify.Service, error) {
 	loggerBackend := notifylogger.New(logger, mlog.LvlDebug)
 
 	backends = append(backends, loggerBackend)

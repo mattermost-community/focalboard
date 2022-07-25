@@ -20,6 +20,7 @@ type Board = {
     createdBy: string
     modifiedBy: string
     type: BoardTypes
+    minimumRole: string
 
     title: string
     description: string
@@ -37,6 +38,7 @@ type Board = {
 
 type BoardPatch = {
     type?: BoardTypes
+    minimumRole?: string
     title?: string
     description?: string
     icon?: string
@@ -57,6 +59,7 @@ type BoardMember = {
     schemeEditor: boolean
     schemeCommenter: boolean
     schemeViewer: boolean
+    synthetic: boolean
 }
 
 type BoardsAndBlocks = {
@@ -119,7 +122,8 @@ function createBoard(board?: Board): Board {
         channelId: board?.channelId || '',
         createdBy: board?.createdBy || '',
         modifiedBy: board?.modifiedBy || '',
-        type: board?.type || 'P',
+        type: board?.type || BoardTypePrivate,
+        minimumRole: board?.minimumRole || '',
         title: board?.title || '',
         description: board?.description || '',
         icon: board?.icon || '',

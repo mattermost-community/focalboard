@@ -1,6 +1,6 @@
 {
 	"name": "focalboard",
-	"version": "0.16.0",
+	"version": "7.3.0",
 	"private": true,
 	"description": "",
 	"scripts": {
@@ -12,9 +12,10 @@
 		"check": "eslint --ext .tsx,.ts . --quiet --cache && stylelint **/*.scss",
 		"fix": "eslint --ext .tsx,.ts . --quiet --fix --cache && stylelint --fix **/*.scss",
 		"fix:scss": "prettier --write './src/**/*.scss'",
-		"i18n-extract": "formatjs extract ../mattermost-plugin/webapp/src/*/*/*.ts? src/*.ts? src/*/*.ts? src/*/*/*.ts? src/*/*/*/*.ts? --out-file i18n/tmp.json; formatjs compile i18n/tmp.json --out-file i18n/en.json; rm i18n/tmp.json",
+		"i18n-extract": "formatjs extract '../mattermost-plugin/webapp/src/**/*.{ts,tsx}' 'src/**/*.{ts,tsx}' --ignore '**/*.d.ts' '../**/*.d.ts' --out-file i18n/tmp.json && formatjs compile i18n/tmp.json --out-file i18n/en.json && rm i18n/tmp.json",
 		"runserver-test": "cd cypress && \"../../bin/focalboard-server\"",
 		"cypress:ci": "start-server-and-test runserver-test http://localhost:8088 cypress:run",
+		"cypress:debug": "start-server-and-test runserver-test http://localhost:8088 cypress:open",
 		"cypress:run": "cypress run",
 		"cypress:run:chrome": "cypress run --browser chrome",
 		"cypress:run:firefox": "cypress run --browser firefox",
@@ -125,7 +126,7 @@
 		"eslint-plugin-header": "3.1.1",
 		"eslint-plugin-import": "2.25.4",
 		"eslint-plugin-jquery": "1.5.1",
-		"eslint-plugin-mattermost": "github:mattermost/eslint-plugin-mattermost#070ce792d105482ffb2b27cfc0b7e78b3d20acee",
+		"eslint-plugin-mattermost": "github:mattermost/eslint-plugin-mattermost#46ad99355644a719bf32082f472048f526605181",
 		"eslint-plugin-no-only-tests": "2.6.0",
 		"eslint-plugin-react": "7.29.4",
 		"fetch-mock-jest": "^1.5.1",

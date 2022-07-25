@@ -1,5 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`src/components/kanban/kanbanHiddenColumnItem limited card check 1`] = `
+<div>
+  <div
+    class="octo-board-hidden-item"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <span
+        class="Label propColorDefault "
+      >
+        propOption
+      </span>
+    </div>
+    <button
+      class="Button"
+      title="hidden-card-count"
+      type="button"
+    >
+      <span>
+        2
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
 exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnItem and click menuwrapper 1`] = `
 <div>
   <div
@@ -31,7 +60,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="ShowIcon Icon"
@@ -66,7 +95,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"
@@ -128,7 +157,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <svg
                     class="ShowIcon Icon"
@@ -163,7 +192,7 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
               role="button"
             >
               <div
-                class=""
+                class="d-flex"
               >
                 <div
                   class="noicon"

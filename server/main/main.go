@@ -141,7 +141,7 @@ func main() {
 		config.Port = *pPort
 	}
 
-	db, err := server.NewStore(config, logger)
+	db, err := server.NewStore(config, singleUser, logger)
 	if err != nil {
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
@@ -232,7 +232,8 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		config.DBConfigString = dbConfigString
 	}
 
-	db, err := server.NewStore(config, logger)
+	singleUser := len(singleUserToken) > 0
+	db, err := server.NewStore(config, singleUser, logger)
 	if err != nil {
 		logger.Fatal("server.NewStore ERROR", mlog.Err(err))
 	}
@@ -262,11 +263,16 @@ func stopServer() {
 		return
 	}
 
+	logger := pServer.Logger()
+
 	err := pServer.Shutdown()
 	if err != nil {
-		pServer.Logger().Error("server.Shutdown ERROR", mlog.Err(err))
+		logger.Error("server.Shutdown ERROR", mlog.Err(err))
 	}
-	_ = pServer.Logger().Shutdown()
+
+	if l, ok := logger.(*mlog.Logger); ok {
+		_ = l.Shutdown()
+	}
 	pServer = nil
 }
 

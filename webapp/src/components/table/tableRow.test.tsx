@@ -13,6 +13,7 @@ import 'isomorphic-fetch'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
+import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableRow from './tableRow'
 
 describe('components/table/TableRow', () => {
@@ -43,10 +44,20 @@ describe('components/table/TableRow', () => {
 
     const mockStore = configureStore([])
 
-    test('should match snapshot', async () => {
+    const Wrapper: React.FC = ({children}) => {
         const store = mockStore(state)
-        const component = wrapDNDIntl(
-            <ReduxProvider store={store}>
+        return wrapDNDIntl(
+            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+                <ReduxProvider store={store}>
+                    {children}
+                </ReduxProvider>
+            </ColumnResizeProvider>
+        )
+    }
+
+    test('should match snapshot', async () => {
+        const {container} = render(
+            <Wrapper>
                 <TableRow
                     board={board}
                     columnWidths={view.fields.columnWidths}
@@ -60,23 +71,17 @@ describe('components/table/TableRow', () => {
                     isSelected={false}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
-            </ReduxProvider>,
+            </Wrapper>
         )
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, read-only', async () => {
-        const store = mockStore(state)
-        const component = wrapDNDIntl(
-            <ReduxProvider store={store}>
+        const {container} = render(
+            <Wrapper>
                 <TableRow
                     board={board}
                     card={card}
@@ -90,23 +95,17 @@ describe('components/table/TableRow', () => {
                     isSelected={false}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={true}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
-            </ReduxProvider>,
+            </Wrapper>
         )
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, isSelected', async () => {
-        const store = mockStore(state)
-        const component = wrapDNDIntl(
-            <ReduxProvider store={store}>
+        const {container} = render(
+            <Wrapper>
                 <TableRow
                     board={board}
                     card={card}
@@ -120,23 +119,17 @@ describe('components/table/TableRow', () => {
                     isSelected={true}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
-            </ReduxProvider>,
+            </Wrapper>
         )
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, collapsed tree', async () => {
-        const store = mockStore(state)
-        const component = wrapDNDIntl(
-            <ReduxProvider store={store}>
+        const {container} = render(
+            <Wrapper>
                 <TableRow
                     board={board}
                     card={card}
@@ -150,24 +143,17 @@ describe('components/table/TableRow', () => {
                     isSelected={false}
                     focusOnMount={false}
                     showCard={jest.fn()}
-
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
-            </ReduxProvider>,
+            </Wrapper>
         )
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, display properties', async () => {
-        const store = mockStore(state)
-
-        const component = wrapDNDIntl(
-            <ReduxProvider store={store}>
+        const {container} = render(
+            <Wrapper>
                 <TableRow
                     board={board}
                     card={card}
@@ -182,21 +168,16 @@ describe('components/table/TableRow', () => {
                     focusOnMount={false}
                     showCard={jest.fn()}
                     readonly={false}
-                    offset={0}
-                    resizingColumn={''}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
-            </ReduxProvider>,
+            </Wrapper>
         )
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 
     test('should match snapshot, resizing column', async () => {
-        const store = mockStore(state)
-        const component = wrapDNDIntl(
-            <ReduxProvider store={store}>
+        const {container} = render(
+            <Wrapper>
                 <TableRow
                     board={board}
                     card={card}
@@ -211,14 +192,10 @@ describe('components/table/TableRow', () => {
                     focusOnMount={false}
                     showCard={jest.fn()}
                     readonly={false}
-                    offset={0}
-                    resizingColumn={'property1'}
-                    columnRefs={new Map()}
                     onDrop={jest.fn()}
                 />
-            </ReduxProvider>,
+            </Wrapper>
         )
-        const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
 })

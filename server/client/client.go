@@ -287,6 +287,16 @@ func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Blo
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) InsertBlocksDisableNotify(boardID string, blocks []model.Block) ([]model.Block, *Response) {
+	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+"?disable_notify=true", toJSON(blocks))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BlocksFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
 	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID), "")
 	if err != nil {
@@ -408,6 +418,14 @@ func (c *Client) GetMe() (*model.User, *Response) {
 		return nil, BuildErrorResponse(r, err)
 	}
 	return me, BuildResponse(r)
+}
+
+func (c *Client) GetUserID() string {
+	me, _ := c.GetMe()
+	if me == nil {
+		return ""
+	}
+	return me.ID
 }
 
 func (c *Client) GetUserRoute(id string) string {
@@ -721,4 +739,20 @@ func (c *Client) ImportArchive(teamID string, data io.Reader) *Response {
 	defer closeBody(r)
 
 	return BuildResponse(r)
+}
+
+func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
+	r, err := c.DoAPIGet("/limits", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var limits *model.BoardsCloudLimits
+	err = json.NewDecoder(r.Body).Decode(&limits)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return limits, BuildResponse(r)
 }

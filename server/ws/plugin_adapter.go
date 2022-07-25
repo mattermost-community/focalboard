@@ -13,7 +13,6 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -30,15 +29,16 @@ type PluginAdapterInterface interface {
 	BroadcastBlockChange(teamID string, block model.Block)
 	BroadcastBlockDelete(teamID, blockID, parentID string)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
+	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	HandleClusterEvent(ev mmModel.PluginClusterEvent)
 }
 
 type PluginAdapter struct {
-	api            plugin.API
+	api            servicesAPI
 	auth           auth.AuthInterface
 	staleThreshold time.Duration
 	store          Store
-	logger         *mlog.Logger
+	logger         mlog.LoggerIFace
 
 	listenersMU       sync.RWMutex
 	listeners         map[string]*PluginAdapterClient
@@ -49,7 +49,14 @@ type PluginAdapter struct {
 	listenersByBlock map[string][]*PluginAdapterClient
 }
 
-func NewPluginAdapter(api plugin.API, auth auth.AuthInterface, store Store, logger *mlog.Logger) *PluginAdapter {
+// servicesAPI is the interface required by the PluginAdapter to interact with
+// the mattermost-server.
+type servicesAPI interface {
+	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mmModel.WebsocketBroadcast)
+	PublishPluginClusterEvent(ev mmModel.PluginClusterEvent, opts mmModel.PluginClusterEventSendOptions) error
+}
+
+func NewPluginAdapter(api servicesAPI, auth auth.AuthInterface, store Store, logger mlog.LoggerIFace) *PluginAdapter {
 	return &PluginAdapter{
 		api:               api,
 		auth:              auth,
@@ -194,8 +201,11 @@ func (pa *PluginAdapter) getUserIDsForTeam(teamID string) []string {
 
 	userIDs := []string{}
 	for userID := range userMap {
-		userIDs = append(userIDs, userID)
+		if pa.auth.DoesUserHaveTeamAccess(userID, teamID) {
+			userIDs = append(userIDs, userID)
+		}
 	}
+
 	return userIDs
 }
 
@@ -223,7 +233,7 @@ func (pa *PluginAdapter) getUserIDsForTeamAndBoard(teamID, boardID string, ensur
 	userIDs := []string{}
 	for _, member := range members {
 		for userID := range userMap {
-			if userID == member.UserID {
+			if userID == member.UserID && pa.auth.DoesUserHaveTeamAccess(userID, teamID) {
 				userIDs = append(userIDs, userID)
 			}
 		}
@@ -378,29 +388,14 @@ func (pa *PluginAdapter) WebSocketMessageHasBeenPosted(webConnID, userID string,
 	}
 }
 
-func (pa *PluginAdapter) sendMessageToAllSkipCluster(payload map[string]interface{}) {
+// sendMessageToAll will send a websocket message to all clients on all nodes.
+func (pa *PluginAdapter) sendMessageToAll(event string, payload map[string]interface{}) {
 	// Empty &mmModel.WebsocketBroadcast will send to all users
-	pa.api.PublishWebSocketEvent(websocketActionUpdateConfig, payload, &mmModel.WebsocketBroadcast{})
-}
-
-func (pa *PluginAdapter) sendMessageToAll(payload map[string]interface{}) {
-	go func() {
-		clusterMessage := &ClusterMessage{Payload: payload}
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
-	}()
-
-	pa.sendMessageToAllSkipCluster(payload)
+	pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{})
 }
 
 func (pa *PluginAdapter) BroadcastConfigChange(pluginConfig model.ClientConfig) {
-	pa.sendMessageToAll(utils.StructToMap(pluginConfig))
-}
-
-// sendTeamMessageSkipCluster sends a message to all the users
-// with a websocket client subscribed to a given team.
-func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payload map[string]interface{}) {
-	userIDs := pa.getUserIDsForTeam(teamID)
-	pa.sendUserMessageSkipCluster(event, payload, userIDs...)
+	pa.sendMessageToAll(websocketActionUpdateConfig, utils.StructToMap(pluginConfig))
 }
 
 // sendUserMessageSkipCluster sends the message to specific users.
@@ -408,6 +403,13 @@ func (pa *PluginAdapter) sendUserMessageSkipCluster(event string, payload map[st
 	for _, userID := range userIDs {
 		pa.api.PublishWebSocketEvent(event, payload, &mmModel.WebsocketBroadcast{UserId: userID})
 	}
+}
+
+// sendTeamMessageSkipCluster sends a message to all the users
+// with a websocket client subscribed to a given team.
+func (pa *PluginAdapter) sendTeamMessageSkipCluster(event, teamID string, payload map[string]interface{}) {
+	userIDs := pa.getUserIDsForTeam(teamID)
+	pa.sendUserMessageSkipCluster(event, payload, userIDs...)
 }
 
 // sendTeamMessage sends and propagates a message that is aimed
@@ -597,4 +599,17 @@ func (pa *PluginAdapter) BroadcastSubscriptionChange(teamID string, subscription
 	}
 
 	pa.sendTeamMessage(websocketActionUpdateSubscription, teamID, utils.StructToMap(message))
+}
+
+func (pa *PluginAdapter) BroadcastCardLimitTimestampChange(cardLimitTimestamp int64) {
+	pa.logger.Debug("BroadcastCardLimitTimestampChange",
+		mlog.Int64("cardLimitTimestamp", cardLimitTimestamp),
+	)
+
+	message := UpdateCardLimitTimestamp{
+		Action:    websocketActionUpdateCardLimitTimestamp,
+		Timestamp: cardLimitTimestamp,
+	}
+
+	pa.sendMessageToAll(websocketActionUpdateCardLimitTimestamp, utils.StructToMap(message))
 }

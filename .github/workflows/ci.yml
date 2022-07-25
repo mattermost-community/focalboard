@@ -22,12 +22,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: "Test server: ${{matrix['db']}}"
       run: make server-test-${{matrix['db']}}
@@ -37,21 +37,20 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: npm ci
-      run: cd webapp; npm ci
-
-    - name: ESLint
-      run: cd webapp; npm run check
+      run: |
+        cd webapp && npm ci && cd -
+        cd mattermost-plugin/webapp && npm ci
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: Setup Node
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 16.1.0
 
@@ -67,11 +66,8 @@ jobs:
         name: focalboard-server-linux-amd64.tar.gz
         path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
-    - name: "Test webapp: Jest"
-      run: cd webapp; npm run test
-
-    - name: "Test webapp: Cypress"
-      run: "cd webapp; npm run cypress:ci"
+    - name: Lint & test webapp
+      run: make webapp-ci
 
   ci-windows-server:
     runs-on: windows-2022
@@ -83,12 +79,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: make server-test-mini-${{matrix['db']}}
@@ -103,12 +99,12 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Go
-      uses: actions/setup-go@v2
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.16
+        go-version: 1.18.1
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: make server-test-mini-${{matrix['db']}}

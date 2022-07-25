@@ -1,6 +1,10 @@
+@import '../../styles/z-index';
+
 .CardDetail {
     .title {
         width: 100%;
+        font-size: 32px;
+        line-height: 40px;
     }
 
     .add-buttons {
@@ -46,7 +50,7 @@
             white-space: nowrap;
         }
 
-        &:not(.readonly) {
+        &:not(.octo-propertyvalue--readonly) {
             min-width: 180px;
             transition: background 100ms ease-out 0s;
             cursor: pointer;
@@ -66,11 +70,12 @@
     .ValueSelector {
         padding: 4px 0;
         background-color: rgba(var(--center-channel-color-rgb), 0.08);
+        width: auto;
     }
 
     .ValueSelector__menu {
+        @include z-index(card-value-selector-menu);
         max-width: 100%;
-        z-index: 10;
 
         .value-menu-option {
             justify-content: space-between;
@@ -168,5 +173,56 @@
                 color: rgba(var(--center-channel-color-rgb), 0.6);
             }
         }
+    }
+
+    &.content.is-limited {
+        flex: 1;
+    }
+
+    &__limited-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 14px;
+        position: relative;
+
+        > :not(.CardDetail__limited-bg) {
+            position: relative;
+        }
+    }
+
+    &__limited-bg {
+        filter: blur(12px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+
+        > svg {
+            width: 100%;
+            height: auto;
+
+            > rect {
+                fill: rgba(var(--center-channel-color-rgb));
+            }
+        }
+    }
+
+    &__limited-title {
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    &__limited-link {
+        color: var(--link-color);
+    }
+
+    &__limited-button {
+        margin-top: 24px;
     }
 }

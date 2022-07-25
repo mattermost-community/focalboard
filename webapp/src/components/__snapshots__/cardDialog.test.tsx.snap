@@ -6,6 +6,9 @@ exports[`components/cardDialog already following card 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -24,27 +27,31 @@ exports[`components/cardDialog already following card 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <button
-              type="button"
-            >
-              <span>
-                Following
-              </span>
-            </button>
-          </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class="toolbar--right"
           >
-            <button
-              type="button"
+            <div>
+              <button
+                type="button"
+              >
+                <span>
+                  Following
+                </span>
+              </button>
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -186,11 +193,14 @@ exports[`components/cardDialog already following card 1`] = `
 </div>
 `;
 
-exports[`components/cardDialog return a cardDialog readonly 1`] = `
+exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] = `
 <div>
   <div
     class="Dialog dialog-back cardDialog"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >
@@ -210,14 +220,242 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
+          <div
+            class="toolbar--right"
+          />
+        </div>
+        <div
+          class="CardDetail content is-limited"
+        >
+          <div
+            class="IconSelector"
+          >
+            <div
+              class="octo-icon size-l readonly"
+            >
+              <span>
+                i
+              </span>
+            </div>
+          </div>
+          <div
+            class="EditableAreaWrap"
+          >
+            <textarea
+              class="EditableArea Editable readonly title"
+              height="0"
+              placeholder="Untitled"
+              readonly=""
+              rows="1"
+              spellcheck="true"
+              title="title"
+            >
+              title
+            </textarea>
+            <div
+              class="EditableAreaContainer"
+            >
+              <textarea
+                aria-hidden="true"
+                class="EditableAreaReference Editable readonly title"
+                dir="auto"
+                disabled=""
+                rows="1"
+              >
+                title
+              </textarea>
+            </div>
+          </div>
+          <div
+            class="CardDetail__limited-wrapper"
+          >
+            <span
+              class="CardDetail__limited-bg"
+            >
+              <svg
+                fill="none"
+                height="521"
+                viewBox="0 0 468 521"
+                width="468"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="156"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="296"
+                  x="172"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="156"
+                  y="48"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="296"
+                  x="172"
+                  y="48"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="156"
+                  y="96"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="296"
+                  x="172"
+                  y="96"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="156"
+                  y="144"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="296"
+                  x="172"
+                  y="144"
+                />
+                <rect
+                  fill="#3D3C40"
+                  fill-opacity="0.16"
+                  height="1"
+                  width="468"
+                  y="192"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="468"
+                  y="209"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="32"
+                  rx="4"
+                  width="468"
+                  y="257"
+                />
+                <rect
+                  fill="#3D3C40"
+                  fill-opacity="0.16"
+                  height="1"
+                  width="468"
+                  y="305"
+                />
+                <rect
+                  fill="#3F4350"
+                  fill-opacity="0.08"
+                  height="199"
+                  rx="4"
+                  width="468"
+                  y="322"
+                />
+              </svg>
+            </span>
+            <p
+              class="CardDetail__limited-title"
+            >
+              This card is hidden
+            </p>
+            <p
+              class="CardDetail__limited-body"
+            >
+              Upgrade to our Professional or Enterprise plan to view archived cards, have unlimited views per boards, unlimited cards and more.
+              <br />
+              <a
+                class="CardDetail__limited-link"
+                role="button"
+              >
+                Learn more about our plans.
+              </a>
+            </p>
             <button
               type="button"
             >
               <span>
-                Follow
+                Upgrade
               </span>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/cardDialog return a cardDialog readonly 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back cardDialog"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <button
+                type="button"
+              >
+                <span>
+                  Follow
+                </span>
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -297,6 +535,9 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -315,132 +556,136 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <button
-              type="button"
-            >
-              <span>
-                Follow
-              </span>
-            </button>
-          </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class="toolbar--right"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+            <div>
+              <button
+                type="button"
+              >
+                <span>
+                  Follow
+                </span>
+              </button>
+            </div>
             <div
-              class="Menu noselect left "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
               <div
-                class="menu-contents"
+                class="Menu noselect left "
               >
                 <div
-                  class="menu-options"
-                >
-                  <div>
-                    <div
-                      aria-label="Delete"
-                      class="MenuOption TextOption menu-option"
-                      role="button"
-                    >
-                      <div
-                        class=""
-                      >
-                        <i
-                          class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                        />
-                      </div>
-                      <div
-                        class="menu-name"
-                      >
-                        Delete
-                      </div>
-                      <div
-                        class="noicon"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      aria-label="Copy link"
-                      class="MenuOption TextOption menu-option"
-                      role="button"
-                    >
-                      <div
-                        class=""
-                      >
-                        <i
-                          class="CompassIcon icon-link-variant LinkIcon"
-                        />
-                      </div>
-                      <div
-                        class="menu-name"
-                      >
-                        Copy link
-                      </div>
-                      <div
-                        class="noicon"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div
-                      aria-label="New template from card"
-                      class="MenuOption TextOption menu-option"
-                      role="button"
-                    >
-                      <div
-                        class=""
-                      >
-                        <i
-                          class="CompassIcon icon-plus undefined"
-                        />
-                      </div>
-                      <div
-                        class="menu-name"
-                      >
-                        New template from card
-                      </div>
-                      <div
-                        class="noicon"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="menu-spacer hideOnWidescreen"
-                />
-                <div
-                  class="menu-options hideOnWidescreen"
+                  class="menu-contents"
                 >
                   <div
-                    aria-label="Cancel"
-                    class="MenuOption TextOption menu-option menu-cancel"
-                    role="button"
+                    class="menu-options"
+                  >
+                    <div>
+                      <div
+                        aria-label="Delete"
+                        class="MenuOption TextOption menu-option"
+                        role="button"
+                      >
+                        <div
+                          class="d-flex"
+                        >
+                          <i
+                            class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                          />
+                        </div>
+                        <div
+                          class="menu-name"
+                        >
+                          Delete
+                        </div>
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        aria-label="Copy link"
+                        class="MenuOption TextOption menu-option"
+                        role="button"
+                      >
+                        <div
+                          class="d-flex"
+                        >
+                          <i
+                            class="CompassIcon icon-link-variant LinkIcon"
+                          />
+                        </div>
+                        <div
+                          class="menu-name"
+                        >
+                          Copy link
+                        </div>
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        aria-label="New template from card"
+                        class="MenuOption TextOption menu-option"
+                        role="button"
+                      >
+                        <div
+                          class="d-flex"
+                        >
+                          <i
+                            class="CompassIcon icon-plus undefined"
+                          />
+                        </div>
+                        <div
+                          class="menu-name"
+                        >
+                          New template from card
+                        </div>
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="menu-spacer hideOnWidescreen"
+                  />
+                  <div
+                    class="menu-options hideOnWidescreen"
                   >
                     <div
-                      class=""
+                      aria-label="Cancel"
+                      class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
                     >
+                      <div
+                        class="d-flex"
+                      >
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                      <div
+                        class="menu-name"
+                      >
+                        Cancel
+                      </div>
                       <div
                         class="noicon"
                       />
                     </div>
-                    <div
-                      class="menu-name"
-                    >
-                      Cancel
-                    </div>
-                    <div
-                      class="noicon"
-                    />
                   </div>
                 </div>
               </div>
@@ -592,6 +837,9 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -610,27 +858,31 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <button
-              type="button"
-            >
-              <span>
-                Follow
-              </span>
-            </button>
-          </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class="toolbar--right"
           >
-            <button
-              type="button"
+            <div>
+              <button
+                type="button"
+              >
+                <span>
+                  Follow
+                </span>
+              </button>
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -778,6 +1030,9 @@ exports[`components/cardDialog should match snapshot 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -796,27 +1051,31 @@ exports[`components/cardDialog should match snapshot 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <button
-              type="button"
-            >
-              <span>
-                Follow
-              </span>
-            </button>
-          </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class="toolbar--right"
           >
-            <button
-              type="button"
+            <div>
+              <button
+                type="button"
+              >
+                <span>
+                  Follow
+                </span>
+              </button>
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -964,6 +1223,9 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
     class="Dialog dialog-back cardDialog"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -982,27 +1244,31 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
-          <div>
-            <button
-              type="button"
-            >
-              <span>
-                Follow
-              </span>
-            </button>
-          </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class="toolbar--right"
           >
-            <button
-              type="button"
+            <div>
+              <button
+                type="button"
+              >
+                <span>
+                  Follow
+                </span>
+              </button>
+            </div>
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div

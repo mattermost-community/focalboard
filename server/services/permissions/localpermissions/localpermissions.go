@@ -4,9 +4,6 @@
 package localpermissions
 
 import (
-	"database/sql"
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/permissions"
 
@@ -16,10 +13,10 @@ import (
 
 type Service struct {
 	store  permissions.Store
-	logger *mlog.Logger
+	logger mlog.LoggerIFace
 }
 
-func New(store permissions.Store, logger *mlog.Logger) *Service {
+func New(store permissions.Store, logger mlog.LoggerIFace) *Service {
 	return &Service{
 		store:  store,
 		logger: logger,
@@ -33,13 +30,20 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 	return true
 }
 
+func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {
+	if userID == "" || channelID == "" || permission == nil {
+		return false
+	}
+	return true
+}
+
 func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool {
 	if userID == "" || boardID == "" || permission == nil {
 		return false
 	}
 
 	member, err := s.store.GetMemberForBoard(boardID, userID)
-	if errors.Is(err, sql.ErrNoRows) {
+	if model.IsErrNotFound(err) {
 		return false
 	}
 	if err != nil {
@@ -49,6 +53,17 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 			mlog.Err(err),
 		)
 		return false
+	}
+
+	switch member.MinimumRole {
+	case "admin":
+		member.SchemeAdmin = true
+	case "editor":
+		member.SchemeEditor = true
+	case "commenter":
+		member.SchemeCommenter = true
+	case "viewer":
+		member.SchemeViewer = true
 	}
 
 	switch permission {

@@ -1,3 +1,5 @@
+@import '../styles/z-index';
+
 .CenterPanel {
     flex: 1 1 auto;
     display: flex;
@@ -19,15 +21,15 @@
     overflow: hidden;
 
     > * {
-
-        padding: 0 80px;
+        padding: 0 32px;
 
         @media screen and (max-width: 768px) {
             padding: 0 40px;
         }
 
         &:first-child {
-            padding-top: 24px;
+            padding-top: 8px;
+
             @media screen and (max-width: 768px) {
                 padding: 0 8px;
             }
@@ -39,29 +41,36 @@
     }
 
     > .top-head {
+        @include z-index(center-panel);
         position: sticky;
         top: 0;
         left: 0;
         background: rgb(var(--center-channel-bg-rgb));
-        z-index: 100;
 
         > .mid-head {
+            margin-top: 24px;
             flex: 0 0 auto;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
+            align-items: center;
         }
 
         .ViewTitle {
             flex: 1;
-            padding-right: 16px;
+            padding: 0 16px 0 0;
+            position: relative;
+            min-height: 40px;
+            justify-content: center;
+            display: flex;
+            flex-direction: column;
         }
     }
 
 
     > div:nth-child(2) {
         padding: 0 0 0 1px;
-        margin-left: 80px;
+        margin-left: 32px;
 
         @media (max-width: 768px) {
             margin-left: 0;
@@ -73,5 +82,12 @@
     .shareButtonWrapper {
         position: relative;
         flex: 0 0 auto;
+    }
+
+    .NotificationBox {
+        .AlertIcon {
+            color: #ffbc1f;
+            font-size: 24px;
+        }
     }
 }

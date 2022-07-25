@@ -11,7 +11,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/permissions"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/wiggin77/merror"
 
@@ -33,10 +32,10 @@ var (
 // blocks.
 type notifier struct {
 	serverRoot  string
-	store       Store
+	store       AppAPI
 	permissions permissions.PermissionsService
 	delivery    SubscriptionDelivery
-	logger      *mlog.Logger
+	logger      mlog.LoggerIFace
 
 	hints chan *model.NotificationHint
 
@@ -47,7 +46,7 @@ type notifier struct {
 func newNotifier(params BackendParams) *notifier {
 	return &notifier{
 		serverRoot:  params.ServerRoot,
-		store:       params.Store,
+		store:       params.AppAPI,
 		permissions: params.Permissions,
 		delivery:    params.Delivery,
 		logger:      params.Logger,
@@ -83,7 +82,7 @@ func (n *notifier) loop() {
 	for {
 		hint, err := n.store.GetNextNotificationHint(false)
 		switch {
-		case n.store.IsErrNotFound(err):
+		case model.IsErrNotFound(err):
 			// no hints in table; wait up to an hour or when `onNotifyHint` is called again
 			nextNotify = time.Now().Add(time.Hour * 1)
 			n.logger.Debug("notify loop - no hints in queue", mlog.Time("next_check", nextNotify))
@@ -132,7 +131,7 @@ func (n *notifier) notify() {
 
 	hint, err = n.store.GetNextNotificationHint(true)
 	if err != nil {
-		if store.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			// Expected when multiple nodes in a cluster try to process the same hint at the same time.
 			// This simply means the other node won. Returning here will simply try fetching another hint.
 			return
@@ -205,6 +204,9 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 		MakeCardLink: func(block *model.Block, board *model.Board, card *model.Block) string {
 			return fmt.Sprintf("[%s](%s)", block.Title, utils.MakeCardLink(n.serverRoot, board.TeamID, board.ID, card.ID))
 		},
+		MakeBoardLink: func(board *model.Board) string {
+			return fmt.Sprintf("[%s](%s)", board.Title, utils.MakeBoardLink(n.serverRoot, board.TeamID, board.ID))
+		},
 		Logger: n.logger,
 	}
 
@@ -244,7 +246,7 @@ func (n *notifier) notifySubscribers(hint *model.NotificationHint) error {
 				mlog.String("subscriber_type", string(sub.SubscriberType)),
 			)
 
-			if err = n.delivery.SubscriptionDeliverSlackAttachments(sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
+			if err = n.delivery.SubscriptionDeliverSlackAttachments(board.TeamID, sub.SubscriberID, sub.SubscriberType, attachments); err != nil {
 				merr.Append(fmt.Errorf("cannot deliver notification to subscriber %s [%s]: %w",
 					sub.SubscriberID, sub.SubscriberType, err))
 			}

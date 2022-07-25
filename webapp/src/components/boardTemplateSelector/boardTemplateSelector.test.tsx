@@ -18,6 +18,10 @@ import {Team} from '../../store/teams'
 import {IUser} from '../../user'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
+import client from '../../octoClient'
+
+import TelemetryClient from "../../telemetry/telemetryClient"
+
 import BoardTemplateSelector from './boardTemplateSelector'
 
 jest.mock('react-router-dom', () => {
@@ -33,14 +37,19 @@ jest.mock('react-router-dom', () => {
 jest.mock('../../octoClient', () => {
     return {
         getAllBlocks: jest.fn(() => Promise.resolve([])),
+        patchUserConfig: jest.fn(() => Promise.resolve({})),
     }
 })
 jest.mock('../../utils')
 jest.mock('../../mutator')
 
+jest.mock('../../telemetry/telemetryClient')
+const mockedTelemetry = mocked(TelemetryClient, true)
+
 describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     const mockedUtils = mocked(Utils, true)
     const mockedMutator = mocked(Mutator, true)
+    const mockedOctoClient = mocked(client, true)
     const team1: Team = {
         id: 'team-1',
         title: 'Team 1',
@@ -49,13 +58,17 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         modifiedBy: 'user-1',
     }
     const me: IUser = {
-        id: 'user-id-1', 
-        username: 'username_1', 
-        email: '', 
-        props: {}, 
-        create_at: 0, 
-        update_at: 0, 
-        is_bot: false
+        id: 'user-id-1',
+        username: 'username_1',
+        email: '',
+        nickname: '',
+        firstname: '', 
+        lastname: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        roles: 'system_user',
     }
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
@@ -96,6 +109,19 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         ],
                         dateDisplayPropertyId: 'id-5',
                     },
+                    {
+                        id: '2',
+                        teamId: '0',
+                        title: 'Welcome to Boards!',
+                        icon: '❄️',
+                        cardProperties: [
+                            {id: 'id-5'},
+                        ],
+                        dateDisplayPropertyId: 'id-5',
+                        properties: {
+                            trackingTemplateId: 'template_id_2',
+                        },
+                    },
                 ],
                 membersInBoards: {
                     ['1']: {userId: me.id, schemeAdmin: true},
@@ -120,6 +146,9 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                     dateDisplayPropertyId: 'global-id-5',
                     isTemplate: true,
                     templateVersion: 2,
+                    properties: {
+                        trackingTemplateId: 'template_id_global',
+                    },
                 }],
             },
         }
@@ -293,6 +322,38 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             })
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), 'global-1', team1.id))
+            await waitFor(() => expect(mockedTelemetry.trackEvent).toBeCalledWith('boards', 'createBoardViaTemplate', {boardTemplateId: 'template_id_global'}))
+        })
+        test('should start product tour on choosing welcome template', async () => {
+            render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <BoardTemplateSelector onClose={jest.fn()}/>
+                </ReduxProvider>
+                ,
+            ), {wrapper: MemoryRouter})
+            const divBoardToSelect = screen.getByText('Welcome to Boards!').parentElement
+            expect(divBoardToSelect).not.toBeNull()
+
+            act(() => {
+                userEvent.click(divBoardToSelect!)
+            })
+
+            const useTemplateButton = screen.getByText('Use this template').parentElement
+            expect(useTemplateButton).not.toBeNull()
+            act(() => {
+                userEvent.click(useTemplateButton!)
+            })
+
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledTimes(1))
+            await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), '2', team1.id))
+            await waitFor(() => expect(mockedTelemetry.trackEvent).toBeCalledWith('boards', 'createBoardViaTemplate', {boardTemplateId: 'template_id_2'}))
+            expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id-1', {
+                updatedFields: {
+                    'focalboard_onboardingTourStarted': '1',
+                    'focalboard_onboardingTourStep': '0',
+                    'focalboard_tourCategory': 'onboarding',
+                },
+            })
         })
     })
 })

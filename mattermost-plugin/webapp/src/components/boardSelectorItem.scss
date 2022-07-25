@@ -1,0 +1,38 @@
+.BoardSelectorItem {
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+    padding: 10px 0;
+    margin: 0 35px;
+
+    .icon {
+        align-items: flex-start;
+        margin-right: 10px;
+    }
+
+    .resultLine {
+        flex-grow: 1;
+        width: 80%;
+        align-self: center;
+    }
+
+    .resultTitle {
+        overflow: hidden;
+        max-width: 60%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .resultDescription {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        opacity: 0.7;
+    }
+
+    .linkUnlinkButton {
+        display: flex;
+        align-self: center;
+        align-items: center;
+    }
+}

@@ -1,7 +1,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -106,7 +105,7 @@ func testGetBoard(t *testing.T, store store.Store) {
 
 	t.Run("nonexisting board", func(t *testing.T) {
 		rBoard, err := store.GetBoard("nonexistent-id")
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
 }
@@ -237,7 +236,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 		require.Error(t, err)
 
 		rBoard, err := store.GetBoard(board.ID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
 
@@ -479,7 +478,7 @@ func testDeleteBoard(t *testing.T, store store.Store) {
 		require.NoError(t, store.DeleteBoard(boardID, userID))
 
 		r2Board, err := store.GetBoard(boardID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, r2Board)
 	})
 }
@@ -569,7 +568,7 @@ func testGetMemberForBoard(t *testing.T, store store.Store) {
 
 	t.Run("should return a no rows error for nonexisting membership", func(t *testing.T) {
 		bm, err := store.GetMemberForBoard(boardID, userID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, bm)
 	})
 
@@ -674,7 +673,7 @@ func testDeleteMember(t *testing.T, store store.Store) {
 		require.NoError(t, store.DeleteMember(boardID, userID))
 
 		rbm, err := store.GetMemberForBoard(boardID, userID)
-		require.ErrorIs(t, err, sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rbm)
 
 		memberHistory, err = store.GetBoardMemberHistory(boardID, userID, 0)
@@ -689,7 +688,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 	userID := "user-id-1"
 
 	t.Run("should return empty if user is not a member of any board and there are no public boards on the team", func(t *testing.T) {
-		boards, err := store.SearchBoardsForUser("", userID, teamID1)
+		boards, err := store.SearchBoardsForUser("", userID)
 		require.NoError(t, err)
 		require.Empty(t, boards)
 	})
@@ -785,7 +784,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID, tc.TeamID)
+			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID)
 			require.NoError(t, err)
 
 			boardIDs := []string{}
@@ -804,9 +803,23 @@ func testUndeleteBoard(t *testing.T, store store.Store) {
 		boardID := utils.NewID(utils.IDTypeBoard)
 
 		board := &model.Board{
-			ID:     boardID,
-			TeamID: testTeamID,
-			Type:   model.BoardTypeOpen,
+			ID:              boardID,
+			TeamID:          testTeamID,
+			Type:            model.BoardTypeOpen,
+			Title:           "Dunder Mifflin Scranton",
+			MinimumRole:     model.BoardRoleCommenter,
+			Description:     "Bears, beets, Battlestar Gallectica",
+			Icon:            "🐻",
+			ShowDescription: true,
+			IsTemplate:      false,
+			Properties: map[string]interface{}{
+				"prop_1": "value_1",
+			},
+			CardProperties: []map[string]interface{}{
+				{
+					"prop_1": "value_1",
+				},
+			},
 		}
 
 		newBoard, err := store.InsertBoard(board, userID)
@@ -829,6 +842,20 @@ func testUndeleteBoard(t *testing.T, store store.Store) {
 		board, err = store.GetBoard(boardID)
 		require.NoError(t, err)
 		require.NotNil(t, board)
+
+		// verifying the data after un-delete
+		require.Equal(t, "Dunder Mifflin Scranton", board.Title)
+		require.Equal(t, "user-id", board.CreatedBy)
+		require.Equal(t, "user-id", board.ModifiedBy)
+		require.Equal(t, model.BoardRoleCommenter, board.MinimumRole)
+		require.Equal(t, "Bears, beets, Battlestar Gallectica", board.Description)
+		require.Equal(t, "🐻", board.Icon)
+		require.True(t, board.ShowDescription)
+		require.False(t, board.IsTemplate)
+		require.Equal(t, board.Properties["prop_1"].(string), "value_1")
+		require.Equal(t, 1, len(board.CardProperties))
+		require.Equal(t, board.CardProperties[0]["prop_1"], "value_1")
+		require.Equal(t, board.CardProperties[0]["prop_1"], "value_1")
 	})
 
 	t.Run("existing id multiple times", func(t *testing.T) {

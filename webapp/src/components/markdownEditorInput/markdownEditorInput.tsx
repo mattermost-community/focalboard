@@ -3,10 +3,7 @@
 import Editor from '@draft-js-plugins/editor'
 import createEmojiPlugin from '@draft-js-plugins/emoji'
 import '@draft-js-plugins/emoji/lib/plugin.css'
-import createMentionPlugin, {
-    defaultSuggestionsFilter,
-    MentionData,
-} from '@draft-js-plugins/mention'
+import createMentionPlugin from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
 import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
 import React, {
@@ -15,6 +12,8 @@ import React, {
     useState,
 } from 'react'
 
+import {debounce} from "lodash"
+
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 import {getBoardUsersList} from '../../store/users'
@@ -22,9 +21,24 @@ import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin
 
 import './markdownEditorInput.scss'
 
+import {BoardTypeOpen} from '../../blocks/board'
+import {getCurrentBoard} from '../../store/boards'
+import octoClient from '../../octoClient'
+
+import {Utils} from '../../utils'
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
+
 import Entry from './entryComponent/entryComponent'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
+
+type MentionUser = {
+    name: string
+    avatar: string
+    is_bot: boolean
+    displayName: string
+}
 
 type Props = {
     onChange?: (text: string) => void
@@ -38,8 +52,39 @@ type Props = {
 const MarkdownEditorInput = (props: Props): ReactElement => {
     const {onChange, onFocus, onBlur, initialText, id} = props
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
-    const mentions: MentionData[] = useMemo(() => boardUsers.map((user) => ({name: user.username, avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`, is_bot: user.is_bot})), [boardUsers])
+    const board = useAppSelector(getCurrentBoard)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
+
+    const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
+
+    const loadSuggestions = async (term: string) => {
+        let users: Array<IUser>
+
+        if (board && board.type === BoardTypeOpen) {
+            users = await octoClient.searchTeamUsers(term)
+        } else {
+            users = boardUsers
+        }
+
+        const mentions = users.map(
+            (user) => ({
+                name: user.username,
+                avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
+                is_bot: user.is_bot,
+                displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
+            ))
+        setSuggestions(mentions)
+    }
+
+    const debouncedLoadSuggestion = useMemo(() => debounce(loadSuggestions, 200), [])
+
+    useEffect(() => {
+        // Get the ball rolling. Searching for empty string
+        // returns first 10 users in alphabetical order.
+        loadSuggestions('')
+    }, [])
+
 
     const generateEditorState = (text?: string) => {
         const state = EditorState.createWithContent(ContentState.createFromText(text || ''))
@@ -50,7 +95,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
     const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false)
-    const [suggestions, setSuggestions] = useState(mentions)
 
     const {MentionSuggestions, plugins, EmojiSuggestions} = useMemo(() => {
         const mentionPlugin = createMentionPlugin({mentionPrefix: '@'})
@@ -139,8 +183,8 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [])
 
     const onSearchChange = useCallback(({value}: { value: string }) => {
-        setSuggestions(defaultSuggestionsFilter(value, mentions))
-    }, [mentions])
+        debouncedLoadSuggestion(value)
+    }, [suggestions])
 
     const className = 'MarkdownEditorInput'
 

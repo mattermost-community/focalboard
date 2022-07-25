@@ -22,12 +22,11 @@ type TestHelper struct {
 	App          *App
 	Store        *mockstore.MockStore
 	FilesBackend *mocks.FileBackend
-	logger       *mlog.Logger
+	logger       mlog.LoggerIFace
 }
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 	cfg := config.Configuration{}
 	store := mockstore.NewMockStore(ctrl)
 	filesBackend := &mocks.FileBackend{}

@@ -1,18 +1,20 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
+import {createSlice, PayloadAction, createSelector, createAsyncThunk} from '@reduxjs/toolkit'
 
 import {Card} from '../blocks/card'
 import {IUser} from '../user'
 import {Board} from '../blocks/board'
+import {Block} from '../blocks/block'
 import {BoardView} from '../blocks/boardView'
 import {CommentBlock} from '../blocks/commentBlock'
 import {Utils} from '../utils'
 import {Constants} from '../constants'
 import {CardFilter} from '../cardFilter'
+import {default as client} from '../octoClient'
 
-import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
+import {loadBoardData, initialReadOnlyLoad, initialLoad} from './initialLoad'
 import {getCurrentBoard} from './boards'
 import {getBoardUsers} from './users'
 import {getLastCommentByCard} from './comments'
@@ -23,28 +25,76 @@ import {RootState} from './index'
 
 type CardsState = {
     current: string
+    limitTimestamp: number
     cards: {[key: string]: Card}
     templates: {[key: string]: Card}
+    cardHiddenWarning: boolean
+}
+
+export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}>(
+    'refreshCards',
+    async (cardLimitTimestamp: number, thunkAPI) => {
+        const {cards} = thunkAPI.getState().cards
+        const blocksPromises = []
+
+        for (const card of Object.values(cards)) {
+            if (card.limited && card.updateAt >= cardLimitTimestamp) {
+                blocksPromises.push(client.getBlocksWithBlockID(card.id, card.boardId).then((blocks) => blocks.find((b) => b?.type === 'card')))
+            }
+        }
+        const blocks = await Promise.all(blocksPromises)
+
+        return blocks.filter((b: Block|undefined): boolean => Boolean(b)) as Block[]
+    },
+)
+
+const limitCard = (isBoardTemplate: boolean, limitTimestamp:number, card: Card): Card => {
+    if (isBoardTemplate) {
+        return card
+    }
+    if (card.updateAt >= limitTimestamp) {
+        return card
+    }
+    return {
+        ...card,
+        fields: {
+            icon: card.fields.icon,
+            properties: {},
+            contentOrder: [],
+        },
+        limited: true,
+    }
 }
 
 const cardsSlice = createSlice({
     name: 'cards',
     initialState: {
         current: '',
+        limitTimestamp: 0,
         cards: {},
         templates: {},
+        cardHiddenWarning: false,
     } as CardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
+        setLimitTimestamp: (state, action: PayloadAction<{timestamp: number, templates: {[key: string]: Board}}>) => {
+            state.limitTimestamp = action.payload.timestamp
+            for (const card of Object.values(state.cards)) {
+                state.cards[card.id] = limitCard(Boolean(action.payload.templates[card.id]), state.limitTimestamp, card)
+            }
+        },
         addCard: (state, action: PayloadAction<Card>) => {
             state.cards[action.payload.id] = action.payload
         },
-        addTemplate: (state, action: PayloadAction<Card>) => {
+        showCardHiddenWarning: (state, action: PayloadAction<boolean>) => {
+            state.cardHiddenWarning = action.payload
+        },
+        addTemplate: (state: CardsState, action: PayloadAction<Card>) => {
             state.templates[action.payload.id] = action.payload
         },
-        updateCards: (state, action: PayloadAction<Card[]>) => {
+        updateCards: (state: CardsState, action: PayloadAction<Card[]>) => {
             for (const card of action.payload) {
                 if (card.deleteAt !== 0) {
                     delete state.cards[card.id]
@@ -58,6 +108,11 @@ const cardsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(refreshCards.fulfilled, (state, action) => {
+            for (const block of action.payload) {
+                state.cards[block.id] = block as Card
+            }
+        })
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
             state.cards = {}
             state.templates = {}
@@ -68,6 +123,9 @@ const cardsSlice = createSlice({
                     state.cards[block.id] = block as Card
                 }
             }
+        })
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            state.limitTimestamp = action.payload.limits?.card_limit_timestamp || 0
         })
         builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.cards = {}
@@ -83,7 +141,7 @@ const cardsSlice = createSlice({
     },
 })
 
-export const {updateCards, addCard, addTemplate, setCurrent} = cardsSlice.actions
+export const {updateCards, addCard, addTemplate, setCurrent, setLimitTimestamp, showCardHiddenWarning} = cardsSlice.actions
 export const {reducer} = cardsSlice
 
 export const getCards = (state: RootState): {[key: string]: Card} => state.cards.cards
@@ -106,7 +164,7 @@ export const getSortedTemplates = createSelector(
 
 export function getCard(cardId: string): (state: RootState) => Card|undefined {
     return (state: RootState): Card|undefined => {
-        return state.cards.cards[cardId] || state.cards.templates[cardId]
+        return getCards(state)[cardId] || getTemplates(state)[cardId]
     }
 }
 
@@ -271,7 +329,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
         for (const [propertyId, propertyValue] of Object.entries(card.fields.properties)) {
             // TODO: Refactor to a shared function that returns the display value of a property
             const propertyTemplate = board.cardProperties.find((o) => o.id === propertyId)
-            if (propertyTemplate) {
+            if (propertyTemplate && propertyValue) {
                 if (propertyTemplate.type === 'select') {
                     // Look up the value of the select option
                     const option = propertyTemplate.options.find((o) => o.id === propertyValue)
@@ -294,7 +352,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
     })
 }
 
-export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
+export const getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit = createSelector(
     getCurrentBoardCards,
     getLastCommentByCard,
     getCurrentBoard,
@@ -305,7 +363,7 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
         if (!view || !board || !users || !cards) {
             return []
         }
-        let result = cards
+        let result = cards.filter((c) => !c.limited)
         if (view.fields.filter) {
             result = CardFilter.applyFilterGroup(view.fields.filter, board.cardProperties, result)
         }
@@ -318,8 +376,21 @@ export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
     },
 )
 
+export const getCurrentViewCardsSortedFilteredAndGrouped = createSelector(
+    getCurrentViewCardsSortedFilteredAndGroupedWithoutLimit,
+    (cards) => cards.filter((c) => !c.limited),
+)
+
+export const getCurrentBoardHiddenCardsCount = createSelector(
+    getCurrentBoardCards,
+    (cards) => Object.values(cards).filter((c) => c.limited).length,
+)
+
 export const getCurrentCard = createSelector(
     (state: RootState) => state.cards.current,
-    (state: RootState) => state.cards.cards,
+    getCards,
     (current, cards) => cards[current],
 )
+
+export const getCardLimitTimestamp = (state: RootState): number => state.cards.limitTimestamp
+export const getCardHiddenWarning = (state: RootState): boolean => state.cards.cardHiddenWarning

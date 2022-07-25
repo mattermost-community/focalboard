@@ -21,6 +21,7 @@ import CreatedAt from './properties/createdAt/createdAt'
 import CreatedBy from './properties/createdBy/createdBy'
 import DateRange from './properties/dateRange/dateRange'
 import SelectProperty from './properties/select/select'
+import {propertyValueClassName} from './propertyValueUtils'
 
 type Props = {
     board: Board
@@ -109,7 +110,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         })
     }, [board, props.board.id, card, propertyTemplate.id])
 
-    const onChangeInSelect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [])
+    const onChangeInSelect = useCallback((newValue) => mutator.changePropertyValue(props.board.id, card, propertyTemplate.id, newValue), [props.board.id, card, propertyTemplate])
     const onChangeColorInSelect = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
     const onDeleteOptionInSelect = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
 
@@ -176,12 +177,13 @@ const PropertyValueElement = (props:Props): JSX.Element => {
             />
         )
     } else if (propertyTemplate.type === 'date') {
+        const className = propertyValueClassName({readonly: readOnly})
         if (readOnly) {
-            return <div className='octo-propertyvalue'>{displayValue}</div>
+            return <div className={className}>{displayValue}</div>
         }
         return (
             <DateRange
-                className='octo-propertyvalue'
+                className={className}
                 value={value.toString()}
                 showEmptyPlaceholder={showEmptyPlaceholder}
                 onChange={onChangeDateRange}
@@ -237,7 +239,7 @@ const PropertyValueElement = (props:Props): JSX.Element => {
         if (!readOnly) {
             return (
                 <Editable
-                    className='octo-propertyvalue'
+                    className={propertyValueClassName()}
                     placeholderText={emptyDisplayValue}
                     value={value.toString()}
                     autoExpand={true}
@@ -249,9 +251,9 @@ const PropertyValueElement = (props:Props): JSX.Element => {
                 />
             )
         }
-        return <div className='octo-propertyvalue octo-propertyvalue--readonly'>{displayValue}</div>
+        return <div className={propertyValueClassName({readonly: true})}>{displayValue}</div>
     }
-    return <div className='octo-propertyvalue'>{finalDisplayValue}</div>
+    return <div className={propertyValueClassName()}>{finalDisplayValue}</div>
 }
 
 export default PropertyValueElement

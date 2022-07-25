@@ -69,11 +69,6 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testDuplicateBlock(t, store)
 	})
-	t.Run("RunDataRetention", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testRunDataRetention(t, store)
-	})
 	t.Run("GetBlockMetadata", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -800,58 +795,26 @@ func testGetBlock(t *testing.T, store store.Store) {
 	})
 }
 
-func testRunDataRetention(t *testing.T, store store.Store) {
-	validBoard := model.Board{
-		ID:         "board-id-test",
-		IsTemplate: false,
-		ModifiedBy: "user-id-1",
-		TeamID:     "team-id",
-	}
-	board, err := store.InsertBoard(&validBoard, "user-id-1")
-	require.NoError(t, err)
-
-	validBlock := model.Block{
-		ID:         "id-test",
-		BoardID:    board.ID,
-		ModifiedBy: "user-id-1",
-	}
-
-	validBlock2 := model.Block{
-		ID:         "id-test2",
-		BoardID:    board.ID,
-		ModifiedBy: "user-id-1",
-	}
-
-	newBlocks := []model.Block{validBlock, validBlock2}
-
-	err = store.InsertBlocks(newBlocks, "user-id-1")
-	require.NoError(t, err)
-
-	blocks, err := store.GetBlocksWithBoardID(board.ID)
-	require.NoError(t, err)
-	require.Len(t, blocks, len(newBlocks))
-	initialCount := len(blocks)
-
-	t.Run("test no deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(-time.Hour*1)), 10)
-		require.NoError(t, err)
-		require.Equal(t, int64(0), deletions)
-	})
-
-	t.Run("test all deletions", func(t *testing.T) {
-		deletions, err := store.RunDataRetention(utils.GetMillisForTime(time.Now().Add(time.Hour*1)), 10)
-		require.NoError(t, err)
-		require.True(t, deletions > int64(initialCount))
-
-		// expect all blocks to be deleted.
-		blocks, errBlocks := store.GetBlocksWithBoardID(board.ID)
-		require.NoError(t, errBlocks)
-		require.Equal(t, 0, len(blocks))
-	})
-}
-
 func testDuplicateBlock(t *testing.T, store store.Store) {
-	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
+	blocksToInsert := subtreeSampleBlocks
+	blocksToInsert = append(blocksToInsert,
+		model.Block{
+			ID:         "grandchild1a",
+			BoardID:    testBoardID,
+			ParentID:   "child1",
+			ModifiedBy: testUserID,
+			Type:       model.TypeComment,
+		},
+		model.Block{
+			ID:         "grandchild2a",
+			BoardID:    testBoardID,
+			ParentID:   "child2",
+			ModifiedBy: testUserID,
+			Type:       model.TypeComment,
+		},
+	)
+
+	InsertBlocks(t, store, blocksToInsert, "user-id-1")
 	time.Sleep(1 * time.Millisecond)
 	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
 

@@ -1,5 +1,87 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`src/components/gallery/Gallery limited card count check 1`] = `
+<div>
+  <div
+    class="Gallery"
+  >
+    <div
+      class="GalleryCard selected"
+      draggable="true"
+      style="opacity: 1;"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="gallery-item"
+      />
+    </div>
+    <div
+      class="GalleryCard"
+      draggable="true"
+      style="opacity: 1;"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="gallery-item"
+      />
+    </div>
+    <div
+      class="octo-gallery-new"
+    >
+      + New
+    </div>
+    <div
+      class="gallery-hidden-cards"
+    >
+      <div
+        class="HiddenCardCount"
+      >
+        <div
+          class="hidden-card-title"
+        >
+          Cards hidden
+        </div>
+        <button
+          class="Button"
+          title="hidden-card-count"
+          type="button"
+        >
+          <span>
+            2
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
 <div>
   <div
@@ -140,7 +222,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
@@ -161,7 +243,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-content-copy content-copy"
@@ -184,7 +266,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-link-variant LinkIcon"
@@ -200,6 +282,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   />
                 </div>
               </div>
+              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
@@ -213,7 +296,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"
@@ -315,7 +398,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   role="button"
                 >
                   <div
-                    class=""
+                    class="d-flex"
                   >
                     <i
                       class="CompassIcon icon-link-variant LinkIcon"
@@ -331,6 +414,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   />
                 </div>
               </div>
+              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
@@ -344,7 +428,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                 role="button"
               >
                 <div
-                  class=""
+                  class="d-flex"
                 >
                   <div
                     class="noicon"

@@ -11,6 +11,7 @@ import {mocked} from 'jest-mock'
 
 import {IUser} from '../../user'
 import {ISharing} from '../../blocks/sharing'
+import {Channel} from '../../store/channels'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 import client from '../../octoClient'
@@ -96,7 +97,19 @@ card3.id = 'card3'
 card3.title = 'card-3'
 card3.boardId = fakeBoard.id
 
-const me: IUser = {id: 'user-id-1', username: 'username_1', email: '', props: {}, create_at: 0, update_at: 0, is_bot: false}
+const me: IUser = {
+    id: 'user-id-1',
+    username: 'username_1',
+    email: '',
+    nickname: '',
+    firstname: '',
+    lastname: '',
+    props: {},
+    create_at: 0,
+    update_at: 0,
+    is_bot: false,
+    roles: 'system_user',
+}
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
@@ -147,6 +160,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                 telemetry: true,
                 telemetryid: 'telemetry',
                 enablePublicSharedBoards: true,
+                teammateNameDisplay: 'username',
                 featureFlags: {},
             },
         },
@@ -228,7 +242,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
+        const copyLinkElement = screen.getByTitle('Copy internal link')
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -259,7 +273,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const copyLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
+        const copyLinkElement = screen.getByTitle('Copy internal link')
         expect(copyLinkElement).toBeDefined()
 
         await act(async () => {
@@ -269,7 +283,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedUtils.copyTextToClipboard).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
 
-        const copiedLinkElement = screen.getByRole('button', {name: 'Copy internal link'})
+        const copiedLinkElement = screen.getByText('Copied!')
         expect(copiedLinkElement).toBeDefined()
         expect(copiedLinkElement.textContent).toContain('Copied!')
     })
@@ -458,6 +472,107 @@ describe('src/components/shareBoard/shareBoard', () => {
             {wrapper: MemoryRouter})
             container = result.container
         })
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return shareBoard and click Select', async () => {
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
+
+        const users:IUser[] = [
+            {id: 'userid1', username: 'username_1'} as IUser,
+            {id: 'userid2', username: 'username_2'} as IUser,
+            {id: 'userid3', username: 'username_3'} as IUser,
+            {id: 'userid4', username: 'username_4'} as IUser,
+        ]
+        const channels:Channel[] = [
+            {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
+            {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
+            {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
+            {id: 'channel4', type: 'O', display_name: 'Channel 4'} as Channel,
+        ]
+
+        mockedOctoClient.searchTeamUsers.mockResolvedValue(users)
+        mockedOctoClient.searchUserChannels.mockResolvedValue(channels)
+
+        let container
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={false}
+                        />
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+        const selectElement = screen.getByText('Search for people')
+        expect(selectElement).toBeDefined()
+
+        await act(async () => {
+            userEvent.click(selectElement!)
+        })
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return shareBoard and click Select, non-plugin mode', async () => {
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        const users:IUser[] = [
+            {id: 'userid1', username: 'username_1'} as IUser,
+            {id: 'userid2', username: 'username_2'} as IUser,
+            {id: 'userid3', username: 'username_3'} as IUser,
+            {id: 'userid4', username: 'username_4'} as IUser,
+        ]
+        const channels:Channel[] = [
+            {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
+            {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
+            {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
+            {id: 'channel4', type: 'O', display_name: 'Channel 4'} as Channel,
+        ]
+
+        mockedOctoClient.searchTeamUsers.mockResolvedValue(users)
+        mockedOctoClient.searchUserChannels.mockResolvedValue(channels)
+
+        let container
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={false}
+                        />
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+        const selectElement = screen.getByText('Search for people')
+        expect(selectElement).toBeDefined()
+
+        await act(async () => {
+            userEvent.click(selectElement!)
+        })
+
         expect(container).toMatchSnapshot()
     })
 })

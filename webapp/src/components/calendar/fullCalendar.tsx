@@ -22,6 +22,11 @@ import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
+import MenuWrapper from '../../widgets/menuWrapper'
+import IconButton from '../../widgets/buttons/iconButton'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
+import OptionsIcon from '../../widgets/icons/options'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 const oneDay = 60 * 60 * 24 * 1000
 
@@ -121,17 +126,33 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
+        const card = cards.find((o) => o.id === event.id) || cards[0]
         return (
             <div
                 className='EventContent'
                 onClick={() => props.showCard(event.id)}
             >
+                {!props.readonly &&
+                <MenuWrapper
+                    className='optionsMenu'
+                    stopPropagationOnToggle={true}
+                >
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <CardActionsMenu
+                        cardId={card.id}
+                        onClickDelete={() => mutator.deleteBlock(card, 'delete card')}
+                        onClickDuplicate={() => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                            mutator.duplicateCard(card.id, board.id)
+                        }}
+                    />
+                </MenuWrapper>}
                 <div className='octo-icontitle'>
                     { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
                     <div
                         className='fc-event-title'
                         key='__title'
-                    >{event.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                    >{event.title || intl.formatMessage({id: 'CalendarCard.untitled', defaultMessage: 'Untitled'})}</div>
                 </div>
                 {visiblePropertyTemplates.map((template) => (
                     <Tooltip
@@ -141,14 +162,14 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         <PropertyValueElement
                             board={board}
                             readOnly={true}
-                            card={cards.find((o) => o.id === event.id) || cards[0]}
+                            card={card}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />
                     </Tooltip>
                 ))}
                 {visibleBadges &&
-                <CardBadges card={cards.find((o) => o.id === event.id) || cards[0]}/> }
+                <CardBadges card={card}/> }
             </div>
         )
     }
@@ -223,6 +244,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             className='CalendarContainer'
         >
             <FullCalendar
+                key={activeView.id}
                 dayCellContent={dayCellContent}
                 dayMaxEventRows={5}
                 initialDate={initialDate}

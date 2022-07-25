@@ -1,19 +1,30 @@
+
+@import '../../styles/z-index';
+
 .ShareBoardDialog {
     .dialog {
         width: 600px;
         max-width: 90%;
         height: auto;
         position: relative;
+        overflow: unset;
+    }
+
+    .confirmation-dialog-box {
+        .dialog {
+            position: fixed;
+            width: 500px;
+        }
     }
 
     .toolbar {
         padding: 0;
 
         button {
+            @include z-index(share-board-element);
             position: absolute;
             right: 16px;
             top: 16px;
-            z-index: 5;
         }
     }
 
@@ -139,15 +150,15 @@
 
     .share-input {
         height: 48px;
-        padding: 0 12px;
+        padding: 0 16px;
         display: flex;
         align-items: center;
         position: relative;
         width: 100%;
 
         i {
+            @include z-index(share-board-element);
             color: rgba(var(--center-channel-color-rgb), 0.64);
-            z-index: 5;
             position: relative;
             font-size: 18px;
         }
@@ -160,7 +171,8 @@
             height: 100%;
             border-radius: 4px;
             border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
-            padding-left: 40px;
+            padding-left: 35px;
+            font-size: 16px;
 
             &:focus {
                 border: 2px solid var(--button-bg);
@@ -174,12 +186,15 @@
         max-height: 282px;
         overflow: auto;
         border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+        .user-item {
+            justify-content: space-between;
+        }
     }
 
     .user-item {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         height: 56px;
         padding: 0 16px;
 

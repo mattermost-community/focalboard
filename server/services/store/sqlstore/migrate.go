@@ -8,9 +8,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mattermost/focalboard/server/utils"
-
-	"strconv"
 	"text/template"
 
 	"github.com/mattermost/morph/models"
@@ -37,10 +34,9 @@ import (
 var assets embed.FS
 
 const (
-	uniqueIDsMigrationRequiredVersion      = 14
-	teamsAndBoardsMigrationRequiredVersion = 17
-
-	teamLessBoardsMigrationKey = "TeamLessBoardsMigrationComplete"
+	uniqueIDsMigrationRequiredVersion        = 14
+	teamLessBoardsMigrationRequiredVersion   = 18
+	categoriesUUIDIDMigrationRequiredVersion = 20
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
@@ -61,6 +57,16 @@ func appendMultipleStatementsFlag(connectionString string) (string, error) {
 	return config.FormatDSN(), nil
 }
 
+// resetReadTimeout removes the timeout contraint from the MySQL dsn.
+func resetReadTimeout(dataSource string) (string, error) {
+	config, err := mysqldriver.ParseDSN(dataSource)
+	if err != nil {
+		return "", err
+	}
+	config.ReadTimeout = 0
+	return config.FormatDSN(), nil
+}
+
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
@@ -68,7 +74,12 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
 	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
+		connectionString, err = resetReadTimeout(connectionString)
+		if err != nil {
+			return nil, err
+		}
+
+		connectionString, err = appendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
@@ -104,12 +115,16 @@ func (s *SQLStore) Migrate() error {
 
 	var db *sql.DB
 	if s.dbType != model.SqliteDBType {
+		s.logger.Debug("Getting migrations connection")
 		db, err = s.getMigrationConnection()
 		if err != nil {
 			return err
 		}
 
-		defer db.Close()
+		defer func() {
+			s.logger.Debug("Closing migrations connection")
+			db.Close()
+		}()
 	}
 
 	if s.dbType == model.PostgresDBType {
@@ -136,11 +151,12 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	params := map[string]interface{}{
-		"prefix":   s.tablePrefix,
-		"postgres": s.dbType == model.PostgresDBType,
-		"sqlite":   s.dbType == model.SqliteDBType,
-		"mysql":    s.dbType == model.MysqlDBType,
-		"plugin":   s.isPlugin,
+		"prefix":     s.tablePrefix,
+		"postgres":   s.dbType == model.PostgresDBType,
+		"sqlite":     s.dbType == model.SqliteDBType,
+		"mysql":      s.dbType == model.MysqlDBType,
+		"plugin":     s.isPlugin,
+		"singleUser": s.isSingleUser,
 	}
 
 	migrationAssets := &embedded.AssetSource{
@@ -172,18 +188,22 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	opts := []morph.EngineOption{
-		morph.WithLock("mm-lock-key"),
+		morph.WithLock("boards-lock-key"),
 	}
 
 	if s.dbType == model.SqliteDBType {
 		opts = opts[:0] // sqlite driver does not support locking, it doesn't need to anyway.
 	}
 
+	s.logger.Debug("Creating migration engine")
 	engine, err := morph.New(context.Background(), driver, src, opts...)
 	if err != nil {
 		return err
 	}
-	defer engine.Close()
+	defer func() {
+		s.logger.Debug("Closing migration engine")
+		engine.Close()
+	}()
 
 	var mutex *cluster.Mutex
 	if s.isPlugin {
@@ -192,66 +212,54 @@ func (s *SQLStore) Migrate() error {
 		if mutexErr != nil {
 			return fmt.Errorf("error creating database mutex: %w", mutexErr)
 		}
-	}
 
-	if s.isPlugin {
-		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
+		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
 		mutex.Lock()
-	}
-
-	if err := s.migrateSchemaVersionTable(src.Migrations()); err != nil {
-		return err
-	}
-
-	if err := ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); err != nil {
-		return err
-	}
-
-	if err := s.runUniqueIDsMigration(); err != nil {
-		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+		defer func() {
+			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
 			mutex.Unlock()
-		}
-		return fmt.Errorf("error running unique IDs migration: %w", err)
+		}()
 	}
 
-	if err := ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); err != nil {
+	if mErr := s.migrateSchemaVersionTable(src.Migrations()); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.runUniqueIDsMigration(); mErr != nil {
+		return fmt.Errorf("error running unique IDs migration: %w", mErr)
+	}
+
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, teamLessBoardsMigrationRequiredVersion); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.migrateTeamLessBoards(); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.runCategoryUUIDIDMigration(); mErr != nil {
+		return fmt.Errorf("error running categoryID migration: %w", mErr)
+	}
+
+	if mErr := s.deleteOldSchemaMigrationTable(); mErr != nil {
+		return mErr
+	}
+
+	appliedMigrations, err := driver.AppliedMigrations()
+	if err != nil {
 		return err
 	}
 
-	if err := s.runCategoryUUIDIDMigration(); err != nil {
-		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
-			mutex.Unlock()
-		}
-		return fmt.Errorf("error running categoryID migration: %w", err)
-	}
-
-	if err := s.deleteOldSchemaMigrationTable(); err != nil {
-		if s.isPlugin {
-			mutex.Unlock()
-		}
-		return err
-	}
-
-	if err := ensureMigrationsAppliedUpToVersion(engine, driver, teamsAndBoardsMigrationRequiredVersion); err != nil {
-		if s.isPlugin {
-			mutex.Unlock()
-		}
-		return err
-	}
-
-	if err := s.migrateTeamLessBoards(); err != nil {
-		if s.isPlugin {
-			mutex.Unlock()
-		}
-		return err
-	}
-
-	if s.isPlugin {
-		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
-		mutex.Unlock()
-	}
+	s.logger.Debug("== Applying all remaining migrations ====================",
+		mlog.Int("current_version", len(appliedMigrations)))
 
 	return engine.ApplyAll()
 }
@@ -396,6 +404,7 @@ func (s *SQLStore) createTempSchemaTable() error {
 
 	return nil
 }
+
 func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
 	query := s.getQueryBuilder(s.db).
 		Insert(s.tablePrefix+tempSchemaMigrationTableName).
@@ -467,209 +476,27 @@ func (s *SQLStore) deleteOldSchemaMigrationTable() error {
 	return nil
 }
 
-// We no longer support boards existing in DMs and private
-// group messages. This function migrates all boards
-// belonging to a DM to the best possible team.
-func (s *SQLStore) migrateTeamLessBoards() error {
-	if !s.isPlugin {
-		return nil
-	}
-
-	setting, err := s.GetSystemSetting(teamLessBoardsMigrationKey)
-	if err != nil {
-		return fmt.Errorf("cannot get teamless boards migration state: %w", err)
-	}
-
-	// If the migration is already completed, do not run it again.
-	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
-		return nil
-	}
-
-	boards, err := s.getDMBoards(s.db)
-	if err != nil {
-		return err
-	}
-
-	s.logger.Info("Migrating teamless boards to a team", mlog.Int("count", len(boards)))
-
-	// cache for best suitable team for a DM. Since a DM can
-	// contain multiple boards, caching this avoids
-	// duplicate queries for the same DM.
-	channelToTeamCache := map[string]string{}
-
-	tx, err := s.db.BeginTx(context.Background(), nil)
-	if err != nil {
-		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
-		return err
-	}
-
-	for i := range boards {
-		// check the cache first
-		teamID, ok := channelToTeamCache[boards[i].ChannelID]
-
-		// query DB if entry not found in cache
-		if !ok {
-			teamID, err = s.getBestTeamForBoard(s.db, boards[i])
-			if err != nil {
-				// don't let one board's error spoil
-				// the mood for others
-				continue
-			}
-		}
-
-		channelToTeamCache[boards[i].ChannelID] = teamID
-		boards[i].TeamID = teamID
-
-		query := s.getQueryBuilder(tx).
-			Update(s.tablePrefix+"boards").
-			Set("team_id", teamID).
-			Set("type", model.BoardTypePrivate).
-			Where(sq.Eq{"id": boards[i].ID})
-
-		if _, err := query.Exec(); err != nil {
-			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
-			return err
-		}
-	}
-
-	if err := s.setSystemSetting(tx, teamLessBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "migrateTeamLessBoards"))
-		}
-		return fmt.Errorf("cannot mark migration as completed: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		s.logger.Error("failed to commit migrateTeamLessBoards transaction", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) getDMBoards(tx sq.BaseRunner) ([]*model.Board, error) {
-	conditions := sq.And{
-		sq.Eq{"team_id": ""},
-		sq.Or{
-			sq.Eq{"type": "D"},
-			sq.Eq{"type": "G"},
-		},
-	}
-
-	boards, err := s.getBoardsByCondition(tx, conditions)
-	if err != nil && errors.Is(err, sql.ErrNoRows) {
-		return []*model.Board{}, nil
-	}
-
-	return boards, err
-}
-
-// The destination is selected as the first team where all members
-// of the DM are a part of. If no such team exists,
-// we use the first team to which DM creator belongs to.
-func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (string, error) {
-	userTeams, err := s.getBoardUserTeams(tx, board)
-	if err != nil {
-		return "", err
-	}
-
-	teams := [][]interface{}{}
-	for _, userTeam := range userTeams {
-		userTeamInterfaces := make([]interface{}, len(userTeam))
-		for i := range userTeam {
-			userTeamInterfaces[i] = userTeam[i]
-		}
-		teams = append(teams, userTeamInterfaces)
-	}
-
-	commonTeams := utils.Intersection(teams...)
-	var teamID string
-	if len(commonTeams) > 0 {
-		teamID = commonTeams[0].(string)
-	} else {
-		// no common teams found. Let's try finding the best suitable team
-		if board.Type == "D" {
-			// get DM's creator and pick one of their team
-			channel, appErr := (*s.pluginAPI).GetChannel(board.ChannelID)
-			if appErr != nil {
-				s.logger.Error("failed to fetch DM channel for board", mlog.String("board_id", board.ID), mlog.String("channel_id", board.ChannelID), mlog.Err(appErr))
-				return "", appErr
-			}
-
-			if _, ok := userTeams[channel.CreatorId]; !ok {
-				err := fmt.Errorf("%w board_id: %s, channel_id: %s, creator_id: %s", errChannelCreatorNotInTeam, board.ID, board.ChannelID, channel.CreatorId)
-				s.logger.Error(err.Error())
-				return "", err
-			}
-
-			teamID = userTeams[channel.CreatorId][0]
-		} else if board.Type == "G" {
-			// pick the team that has the most users as members
-			teamFrequency := map[string]int{}
-			highestFrequencyTeam := ""
-			highestFrequencyTeamFrequency := -1
-
-			for _, teams := range userTeams {
-				for _, teamID := range teams {
-					teamFrequency[teamID]++
-
-					if teamFrequency[teamID] > highestFrequencyTeamFrequency {
-						highestFrequencyTeamFrequency = teamFrequency[teamID]
-						highestFrequencyTeam = teamID
-					}
-				}
-			}
-
-			teamID = highestFrequencyTeam
-		}
-	}
-
-	return teamID, nil
-}
-
-func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[string][]string, error) {
-	query := s.getQueryBuilder(tx).
-		Select("teammembers.userid", "teammembers.teamid").
-		From("channelmembers").
-		Join("teammembers ON channelmembers.userid = teammembers.userid").
-		Where(sq.Eq{"channelid": board.ChannelID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error("failed to fetch user teams for board", mlog.String("boardID", board.ID), mlog.String("channelID", board.ChannelID), mlog.Err(err))
-		return nil, err
-	}
-
-	defer rows.Close()
-
-	userTeams := map[string][]string{}
-
-	for rows.Next() {
-		var userID, teamID string
-		err := rows.Scan(&userID, &teamID)
-		if err != nil {
-			s.logger.Error("getBoardUserTeams failed to scan SQL query result", mlog.String("boardID", board.ID), mlog.String("channelID", board.ChannelID), mlog.Err(err))
-			return nil, err
-		}
-
-		userTeams[userID] = append(userTeams[userID], teamID)
-	}
-
-	return userTeams, nil
-}
-
-func ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
+func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
 	applied, err := driver.AppliedMigrations()
 	if err != nil {
 		return err
 	}
 	currentVersion := len(applied)
 
+	s.logger.Debug("== Ensuring migrations applied up to version ====================",
+		mlog.Int("version", version),
+		mlog.Int("current_version", currentVersion))
+
 	// if the target version is below or equal to the current one, do
 	// not migrate either because is not needed (both are equal) or
 	// because it would downgrade the database (is below)
 	if version <= currentVersion {
+		s.logger.Debug("-- There is no need of applying any migration --------------------")
 		return nil
+	}
+
+	for _, migration := range applied {
+		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
 	}
 
 	if _, err = engine.Apply(version - currentVersion); err != nil {

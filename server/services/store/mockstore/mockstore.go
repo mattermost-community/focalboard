@@ -399,6 +399,21 @@ func (mr *MockStoreMockRecorder) GetBlockHistoryDescendants(arg0, arg1 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockHistoryDescendants", reflect.TypeOf((*MockStore)(nil).GetBlockHistoryDescendants), arg0, arg1)
 }
 
+// GetBlocksByIDs mocks base method.
+func (m *MockStore) GetBlocksByIDs(arg0 []string) ([]model.Block, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBlocksByIDs", arg0)
+	ret0, _ := ret[0].([]model.Block)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBlocksByIDs indicates an expected call of GetBlocksByIDs.
+func (mr *MockStoreMockRecorder) GetBlocksByIDs(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlocksByIDs", reflect.TypeOf((*MockStore)(nil).GetBlocksByIDs), arg0)
+}
+
 // GetBlocksForBoard mocks base method.
 func (m *MockStore) GetBlocksForBoard(arg0 string) ([]model.Block, error) {
 	m.ctrl.T.Helper()
@@ -566,6 +581,36 @@ func (mr *MockStoreMockRecorder) GetBoardsForUserAndTeam(arg0, arg1 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardsForUserAndTeam", reflect.TypeOf((*MockStore)(nil).GetBoardsForUserAndTeam), arg0, arg1)
 }
 
+// GetBoardsInTeamByIds mocks base method.
+func (m *MockStore) GetBoardsInTeamByIds(arg0 []string, arg1 string) ([]*model.Board, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBoardsInTeamByIds", arg0, arg1)
+	ret0, _ := ret[0].([]*model.Board)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBoardsInTeamByIds indicates an expected call of GetBoardsInTeamByIds.
+func (mr *MockStoreMockRecorder) GetBoardsInTeamByIds(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardsInTeamByIds", reflect.TypeOf((*MockStore)(nil).GetBoardsInTeamByIds), arg0, arg1)
+}
+
+// GetCardLimitTimestamp mocks base method.
+func (m *MockStore) GetCardLimitTimestamp() (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCardLimitTimestamp")
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCardLimitTimestamp indicates an expected call of GetCardLimitTimestamp.
+func (mr *MockStoreMockRecorder) GetCardLimitTimestamp() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCardLimitTimestamp", reflect.TypeOf((*MockStore)(nil).GetCardLimitTimestamp))
+}
+
 // GetCategory mocks base method.
 func (m *MockStore) GetCategory(arg0 string) (*model.Category, error) {
 	m.ctrl.T.Helper()
@@ -579,6 +624,51 @@ func (m *MockStore) GetCategory(arg0 string) (*model.Category, error) {
 func (mr *MockStoreMockRecorder) GetCategory(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCategory", reflect.TypeOf((*MockStore)(nil).GetCategory), arg0)
+}
+
+// GetChannel mocks base method.
+func (m *MockStore) GetChannel(arg0, arg1 string) (*model0.Channel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetChannel", arg0, arg1)
+	ret0, _ := ret[0].(*model0.Channel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetChannel indicates an expected call of GetChannel.
+func (mr *MockStoreMockRecorder) GetChannel(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChannel", reflect.TypeOf((*MockStore)(nil).GetChannel), arg0, arg1)
+}
+
+// GetCloudLimits mocks base method.
+func (m *MockStore) GetCloudLimits() (*model0.ProductLimits, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCloudLimits")
+	ret0, _ := ret[0].(*model0.ProductLimits)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCloudLimits indicates an expected call of GetCloudLimits.
+func (mr *MockStoreMockRecorder) GetCloudLimits() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCloudLimits", reflect.TypeOf((*MockStore)(nil).GetCloudLimits))
+}
+
+// GetFileInfo mocks base method.
+func (m *MockStore) GetFileInfo(arg0 string) (*model0.FileInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFileInfo", arg0)
+	ret0, _ := ret[0].(*model0.FileInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFileInfo indicates an expected call of GetFileInfo.
+func (mr *MockStoreMockRecorder) GetFileInfo(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFileInfo", reflect.TypeOf((*MockStore)(nil).GetFileInfo), arg0)
 }
 
 // GetLicense mocks base method.
@@ -880,6 +970,21 @@ func (mr *MockStoreMockRecorder) GetTemplateBoards(arg0, arg1 interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTemplateBoards", reflect.TypeOf((*MockStore)(nil).GetTemplateBoards), arg0, arg1)
 }
 
+// GetUsedCardsCount mocks base method.
+func (m *MockStore) GetUsedCardsCount() (int, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUsedCardsCount")
+	ret0, _ := ret[0].(int)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUsedCardsCount indicates an expected call of GetUsedCardsCount.
+func (mr *MockStoreMockRecorder) GetUsedCardsCount() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsedCardsCount", reflect.TypeOf((*MockStore)(nil).GetUsedCardsCount))
+}
+
 // GetUserByEmail mocks base method.
 func (m *MockStore) GetUserByEmail(arg0 string) (*model.User, error) {
 	m.ctrl.T.Helper()
@@ -1014,20 +1119,6 @@ func (mr *MockStoreMockRecorder) InsertBoardWithAdmin(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InsertBoardWithAdmin", reflect.TypeOf((*MockStore)(nil).InsertBoardWithAdmin), arg0, arg1)
 }
 
-// IsErrNotFound mocks base method.
-func (m *MockStore) IsErrNotFound(arg0 error) bool {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsErrNotFound", arg0)
-	ret0, _ := ret[0].(bool)
-	return ret0
-}
-
-// IsErrNotFound indicates an expected call of IsErrNotFound.
-func (mr *MockStoreMockRecorder) IsErrNotFound(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsErrNotFound", reflect.TypeOf((*MockStore)(nil).IsErrNotFound), arg0)
-}
-
 // PatchBlock mocks base method.
 func (m *MockStore) PatchBlock(arg0 string, arg1 *model.BlockPatch, arg2 string) error {
 	m.ctrl.T.Helper()
@@ -1143,6 +1234,20 @@ func (mr *MockStoreMockRecorder) RunDataRetention(arg0, arg1 interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunDataRetention", reflect.TypeOf((*MockStore)(nil).RunDataRetention), arg0, arg1)
 }
 
+// SaveFileInfo mocks base method.
+func (m *MockStore) SaveFileInfo(arg0 *model0.FileInfo) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SaveFileInfo", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SaveFileInfo indicates an expected call of SaveFileInfo.
+func (mr *MockStoreMockRecorder) SaveFileInfo(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveFileInfo", reflect.TypeOf((*MockStore)(nil).SaveFileInfo), arg0)
+}
+
 // SaveMember mocks base method.
 func (m *MockStore) SaveMember(arg0 *model.BoardMember) (*model.BoardMember, error) {
 	m.ctrl.T.Helper()
@@ -1159,18 +1264,48 @@ func (mr *MockStoreMockRecorder) SaveMember(arg0 interface{}) *gomock.Call {
 }
 
 // SearchBoardsForUser mocks base method.
-func (m *MockStore) SearchBoardsForUser(arg0, arg1, arg2 string) ([]*model.Board, error) {
+func (m *MockStore) SearchBoardsForUser(arg0, arg1 string) ([]*model.Board, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchBoardsForUser", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "SearchBoardsForUser", arg0, arg1)
 	ret0, _ := ret[0].([]*model.Board)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchBoardsForUser indicates an expected call of SearchBoardsForUser.
-func (mr *MockStoreMockRecorder) SearchBoardsForUser(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) SearchBoardsForUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUser", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUser), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUser", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUser), arg0, arg1)
+}
+
+// SearchBoardsForUserInTeam mocks base method.
+func (m *MockStore) SearchBoardsForUserInTeam(arg0, arg1, arg2 string) ([]*model.Board, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchBoardsForUserInTeam", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*model.Board)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchBoardsForUserInTeam indicates an expected call of SearchBoardsForUserInTeam.
+func (mr *MockStoreMockRecorder) SearchBoardsForUserInTeam(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchBoardsForUserInTeam", reflect.TypeOf((*MockStore)(nil).SearchBoardsForUserInTeam), arg0, arg1, arg2)
+}
+
+// SearchUserChannels mocks base method.
+func (m *MockStore) SearchUserChannels(arg0, arg1, arg2 string) ([]*model0.Channel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchUserChannels", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*model0.Channel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchUserChannels indicates an expected call of SearchUserChannels.
+func (mr *MockStoreMockRecorder) SearchUserChannels(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUserChannels", reflect.TypeOf((*MockStore)(nil).SearchUserChannels), arg0, arg1, arg2)
 }
 
 // SearchUsersByTeam mocks base method.
@@ -1186,6 +1321,20 @@ func (m *MockStore) SearchUsersByTeam(arg0, arg1 string) ([]*model.User, error) 
 func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1)
+}
+
+// SendMessage mocks base method.
+func (m *MockStore) SendMessage(arg0, arg1 string, arg2 []string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendMessage", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendMessage indicates an expected call of SendMessage.
+func (mr *MockStoreMockRecorder) SendMessage(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockStore)(nil).SendMessage), arg0, arg1, arg2)
 }
 
 // SetSystemSetting mocks base method.
@@ -1242,6 +1391,21 @@ func (m *MockStore) UndeleteBoard(arg0, arg1 string) error {
 func (mr *MockStoreMockRecorder) UndeleteBoard(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UndeleteBoard", reflect.TypeOf((*MockStore)(nil).UndeleteBoard), arg0, arg1)
+}
+
+// UpdateCardLimitTimestamp mocks base method.
+func (m *MockStore) UpdateCardLimitTimestamp(arg0 int) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCardLimitTimestamp", arg0)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateCardLimitTimestamp indicates an expected call of UpdateCardLimitTimestamp.
+func (mr *MockStoreMockRecorder) UpdateCardLimitTimestamp(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCardLimitTimestamp", reflect.TypeOf((*MockStore)(nil).UpdateCardLimitTimestamp), arg0)
 }
 
 // UpdateCategory mocks base method.

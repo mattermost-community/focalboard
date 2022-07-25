@@ -15,7 +15,7 @@
     }
 
     &.error {
-        border: 1px solid var(--error-text-rgb);
+        border: 1px solid rgb(var(--error-text-rgb));
         border-radius: var(--default-rad);
     }
 

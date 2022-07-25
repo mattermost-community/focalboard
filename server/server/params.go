@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions"
@@ -16,12 +17,13 @@ type Params struct {
 	Cfg                *config.Configuration
 	SingleUserToken    string
 	DBStore            store.Store
-	Logger             *mlog.Logger
+	Logger             mlog.LoggerIFace
 	ServerID           string
 	WSAdapter          ws.Adapter
 	NotifyBackends     []notify.Backend
 	PermissionsService permissions.PermissionsService
-	SkipTemplateInit   bool
+	ServicesAPI        model.ServicesAPI
+	IsPlugin           bool
 }
 
 func (p Params) CheckValid() error {

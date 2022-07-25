@@ -40,6 +40,16 @@ const (
 	userAdmin        string = "admin"
 )
 
+var (
+	userAnonID         = userAnon
+	userNoTeamMemberID = userNoTeamMember
+	userTeamMemberID   = userTeamMember
+	userViewerID       = userViewer
+	userCommenterID    = userCommenter
+	userEditorID       = userEditor
+	userAdminID        = userAdmin
+)
+
 type LicenseType int
 
 const (
@@ -57,7 +67,6 @@ type TestHelper struct {
 
 type FakePermissionPluginAPI struct{}
 
-func (*FakePermissionPluginAPI) LogError(str string, params ...interface{}) {}
 func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
 	if userID == userNoTeamMember {
 		return false
@@ -66,6 +75,10 @@ func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string
 		return false
 	}
 	return true
+}
+
+func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool {
+	return channelID == "valid-channel-id"
 }
 
 func getTestConfig() (*config.Configuration, error) {
@@ -125,7 +138,8 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	innerStore, err := server.NewStore(cfg, logger)
+	singleUser := len(singleUserToken) > 0
+	innerStore, err := server.NewStore(cfg, singleUser, logger)
 	if err != nil {
 		panic(err)
 	}
@@ -161,7 +175,7 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 	return srv
 }
 
-func newTestServerPluginMode() *server.Server {
+func NewTestServerPluginMode() *server.Server {
 	cfg, err := getTestConfig()
 	if err != nil {
 		panic(err)
@@ -173,14 +187,14 @@ func newTestServerPluginMode() *server.Server {
 	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
 		panic(err)
 	}
-	innerStore, err := server.NewStore(cfg, logger)
+	innerStore, err := server.NewStore(cfg, false, logger)
 	if err != nil {
 		panic(err)
 	}
 
 	db := NewPluginTestStore(innerStore)
 
-	permissionsService := mmpermissions.New(db, &FakePermissionPluginAPI{})
+	permissionsService := mmpermissions.New(db, &FakePermissionPluginAPI{}, logger)
 
 	params := server.Params{
 		Cfg:                cfg,
@@ -193,6 +207,43 @@ func newTestServerPluginMode() *server.Server {
 	if err != nil {
 		panic(err)
 	}
+
+	return srv
+}
+
+func newTestServerLocalMode() *server.Server {
+	cfg, err := getTestConfig()
+	if err != nil {
+		panic(err)
+	}
+	cfg.EnablePublicSharedBoards = true
+
+	logger, _ := mlog.NewLogger()
+	if err = logger.Configure("", cfg.LoggingCfgJSON, nil); err != nil {
+		panic(err)
+	}
+
+	db, err := server.NewStore(cfg, false, logger)
+	if err != nil {
+		panic(err)
+	}
+
+	permissionsService := localpermissions.New(db, logger)
+
+	params := server.Params{
+		Cfg:                cfg,
+		DBStore:            db,
+		Logger:             logger,
+		PermissionsService: permissionsService,
+	}
+
+	srv, err := server.New(params)
+	if err != nil {
+		panic(err)
+	}
+
+	// Reduce password has strength for unit tests to dramatically speed up account creation and login
+	auth.PasswordHashStrength = 4
 
 	return srv
 }
@@ -212,7 +263,14 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
 	th := &TestHelper{T: t}
-	th.Server = newTestServerPluginMode()
+	th.Server = NewTestServerPluginMode()
+	th.Start()
+	return th
+}
+
+func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
+	th := &TestHelper{T: t}
+	th.Server = newTestServerLocalMode()
 	th.Start()
 	return th
 }
@@ -286,7 +344,11 @@ func (th *TestHelper) InitBasic() *TestHelper {
 var ErrRegisterFail = errors.New("register failed")
 
 func (th *TestHelper) TearDown() {
-	defer func() { _ = th.Server.Logger().Shutdown() }()
+	logger := th.Server.Logger()
+
+	if l, ok := logger.(*mlog.Logger); ok {
+		defer func() { _ = l.Shutdown() }()
+	}
 
 	err := th.Server.Shutdown()
 	if err != nil {
@@ -296,7 +358,7 @@ func (th *TestHelper) TearDown() {
 	os.RemoveAll(th.Server.Config().FilesPath)
 
 	if err := os.Remove(th.Server.Config().DBConfigString); err == nil {
-		th.Server.Logger().Debug("Removed test database", mlog.String("file", th.Server.Config().DBConfigString))
+		logger.Debug("Removed test database", mlog.String("file", th.Server.Config().DBConfigString))
 	}
 }
 
