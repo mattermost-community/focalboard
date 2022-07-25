@@ -23,8 +23,11 @@ import Button from '../../../../webapp/src/widgets/buttons/button'
 import {getCurrentLinkToChannel, setLinkToChannel} from '../../../../webapp/src/store/boards'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../../webapp/src/telemetry/telemetryClient'
 import {WSClient} from '../../../../webapp/src/wsclient'
+import {SuiteWindow} from '../../../../webapp/src/types/index'
 
 import BoardSelectorItem from './boardSelectorItem'
+
+const windowAny = (window as SuiteWindow)
 
 import './boardSelector.scss'
 
@@ -107,27 +110,8 @@ const BoardSelector = () => {
     }
 
     const newLinkedBoard = async (): Promise<void> => {
-        const board = {...createBoard(), teamId, channelId: currentChannel}
-
-        const view = createBoardView()
-        view.fields.viewType = 'board'
-        view.parentId = board.id
-        view.boardId = board.id
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
-
-        await mutator.createBoardsAndBlocks(
-            {boards: [board], blocks: [view]},
-            'add linked board',
-            async (bab: BoardsAndBlocks): Promise<void> => {
-                const windowAny: any = window
-                const newBoard = bab.boards[0]
-                // TODO: Maybe create a new event for create linked board
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
-                windowAny.WebappUtils.browserHistory.push(`/boards/team/${teamId}/${newBoard.id}`)
-                dispatch(setLinkToChannel(''))
-            },
-            async () => {return},
-        )
+        window.open(`${windowAny.frontendBaseURL}/team/${teamId}/new/${currentChannel}`, '_blank', 'noopener')
+        dispatch(setLinkToChannel(''))
     }
 
     return (

@@ -34,6 +34,7 @@ type Props = {
     title?: React.ReactNode
     description?: React.ReactNode
     onClose?: () => void
+    channelId?: string
 }
 
 const BoardTemplateSelector = (props: Props) => {
@@ -102,7 +103,9 @@ const BoardTemplateSelector = (props: Props) => {
             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId: activeTemplate.properties.trackingTemplateId as string})
         }
 
-        await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
+        const boardsAndBlocks = await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
+        const board = boardsAndBlocks.boards[0]
+        await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
         }
@@ -193,7 +196,11 @@ const BoardTemplateSelector = (props: Props) => {
                             filled={false}
                             emphasis={'secondary'}
                             size={'medium'}
-                            onClick={() => mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
+                            onClick={async () => {
+                                const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                                const board = boardsAndBlocks.boards[0]
+                                await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
+                            }}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'
