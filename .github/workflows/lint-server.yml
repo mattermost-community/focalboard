@@ -21,6 +21,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: "focalboard"
+          ref: ${{ env.BRANCH_NAME }}
       - id: "mattermostServer"
         uses: actions/checkout@v3
         continue-on-error: true
