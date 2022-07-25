@@ -21,14 +21,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           path: "focalboard"
-          ref: ${{ env.BRANCH_NAME }}
-      - id: "mattermostServer"
-        uses: actions/checkout@v3
-        continue-on-error: true
-        with:
-          repository: "mattermost/mattermost-server"
-          path: "mattermost-server"
-          ref: ${{ env.BRANCH_NAME }}
+          ref: "userCtx"
       - uses: actions/checkout@v3
         if: steps.mattermostServer.outcome == 'failure'
         with:
