@@ -25,7 +25,7 @@ jobs:
       - name: prepare branches for multi-product
         run: |
           cd mattermost-server
-          BRANCH_NAME="${GITHUB_HEAD_REF:-N/A}"
+          BRANCH_NAME="userCtx"
           if [[ "${BRANCH_NAME}" == "N/A" ]]; then
             BRANCH_NAME="${GITHUB_REF_NAME}"
           fi
