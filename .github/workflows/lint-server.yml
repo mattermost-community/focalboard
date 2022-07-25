@@ -35,7 +35,7 @@ jobs:
         with:
           repository: "mattermost/mattermost-server"
           path: "mattermost-server"
-          ref: ${{ env.BRANCH_NAME }}
+          ref : "master"
       - name: set up golangci-lint
         run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
       - name: lint
