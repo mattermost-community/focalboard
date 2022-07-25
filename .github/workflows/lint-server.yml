@@ -23,7 +23,7 @@ jobs:
           path: "focalboard"
       - name: dump env
         run : export
-      - id: "mattermost-server"
+      - id: "mattermostServer"
         uses: actions/checkout@v3
         continue-on-error: true
         with:
