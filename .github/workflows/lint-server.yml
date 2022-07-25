@@ -19,7 +19,7 @@ jobs:
         with:
           path: "focalboard"
       - name: dump env
-        run : echo "$GITHUB_CONTEXT"
+        run : export
       - uses: actions/checkout@v3
         if: ${{ env.GITHUB_HEAD_REF != '' }}
         with:
