@@ -91,7 +91,7 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
 
 const PropertyMenu = (props: Props) => {
     const intl = useIntl()
-    const [propertyName, setPropertyName] = useState(props.propertyName)
+    let currentPropertyName = props.propertyName
 
     const deleteText = intl.formatMessage({
         id: 'PropertyMenu.Delete',
@@ -104,9 +104,9 @@ const PropertyMenu = (props: Props) => {
                 initialValue={props.propertyName}
                 onConfirmValue={(n) => {
                     props.onTypeAndNameChanged(props.propertyType, n)
-                    setPropertyName(n)
+                    currentPropertyName = n
                 }}
-                onValueChanged={(n) => setPropertyName(n)}
+                onValueChanged={(n) => currentPropertyName = n}
             />
             <Menu.SubMenu
                 id='type'
@@ -114,7 +114,7 @@ const PropertyMenu = (props: Props) => {
             >
                 <PropertyTypes
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, propertyName || '')}
+                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, currentPropertyName || '')}
                 />
             </Menu.SubMenu>
             <Menu.Text
