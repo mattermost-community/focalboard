@@ -3,13 +3,11 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
-
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/mattermost/mattermost-server/v6/plugin"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -25,12 +23,22 @@ var systemsBot = &mmModel.Bot{
 	DisplayName: "System",
 }
 
-type NotSupportedError struct {
-	msg string
-}
-
-func (pe NotSupportedError) Error() string {
-	return pe.msg
+// servicesAPI is the interface required my the MattermostAuthLayer to interact with
+// the mattermost-server. You can use plugin-api or product-api adapter implementations.
+type servicesAPI interface {
+	GetDirectChannel(userID1, userID2 string) (*mmModel.Channel, error)
+	GetChannelByID(channelID string) (*mmModel.Channel, error)
+	GetChannelMember(channelID string, userID string) (*mmModel.ChannelMember, error)
+	GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mmModel.ChannelList, error)
+	GetUserByID(userID string) (*mmModel.User, error)
+	UpdateUser(user *mmModel.User) (*mmModel.User, error)
+	GetUserByEmail(email string) (*mmModel.User, error)
+	GetUserByUsername(username string) (*mmModel.User, error)
+	GetLicense() *mmModel.License
+	GetFileInfo(fileID string) (*mmModel.FileInfo, error)
+	GetCloudLimits() (*mmModel.ProductLimits, error)
+	EnsureBot(bot *mmModel.Bot) (string, error)
+	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
 }
 
 // Store represents the abstraction of the data storage.
@@ -38,30 +46,20 @@ type MattermostAuthLayer struct {
 	store.Store
 	dbType      string
 	mmDB        *sql.DB
-	logger      *mlog.Logger
-	pluginAPI   plugin.API
+	logger      mlog.LoggerIFace
+	servicesAPI servicesAPI
 	tablePrefix string
-	client      *pluginapi.Client
 }
 
 // New creates a new SQL implementation of the store.
-func New(
-	dbType string,
-	db *sql.DB,
-	store store.Store,
-	logger *mlog.Logger,
-	pluginAPI plugin.API,
-	tablePrefix string,
-	client *pluginapi.Client,
-) (*MattermostAuthLayer, error) {
+func New(dbType string, db *sql.DB, store store.Store, logger mlog.LoggerIFace, api servicesAPI, tablePrefix string) (*MattermostAuthLayer, error) {
 	layer := &MattermostAuthLayer{
 		Store:       store,
 		dbType:      dbType,
 		mmDB:        db,
 		logger:      logger,
-		pluginAPI:   pluginAPI,
+		servicesAPI: api,
 		tablePrefix: tablePrefix,
-		client:      client,
 	}
 
 	return layer, nil
@@ -90,7 +88,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 }
 
 func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUser(userID)
+	mmuser, err := s.servicesAPI.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +97,7 @@ func (s *MattermostAuthLayer) GetUserByID(userID string) (*model.User, error) {
 }
 
 func (s *MattermostAuthLayer) GetUserByEmail(email string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUserByEmail(email)
+	mmuser, err := s.servicesAPI.GetUserByEmail(email)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +106,7 @@ func (s *MattermostAuthLayer) GetUserByEmail(email string) (*model.User, error) 
 }
 
 func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, error) {
-	mmuser, err := s.pluginAPI.GetUserByUsername(username)
+	mmuser, err := s.servicesAPI.GetUserByUsername(username)
 	if err != nil {
 		return nil, err
 	}
@@ -117,23 +115,23 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 }
 
 func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
-	return NotSupportedError{"no user creation allowed from focalboard, create it using mattermost"}
+	return store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUser(user *model.User) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	user, err := s.pluginAPI.GetUser(userID)
+	user, err := s.servicesAPI.GetUserByID(userID)
 	if err != nil {
 		s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
 		return err
@@ -151,7 +149,7 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 
 	user.Props = props
 
-	if _, err := s.pluginAPI.UpdateUser(user); err != nil {
+	if _, err := s.servicesAPI.UpdateUser(user); err != nil {
 		s.logger.Error("failed to update user", mlog.String("userID", userID), mlog.Err(err))
 		return err
 	}
@@ -178,27 +176,27 @@ func (s *MattermostAuthLayer) GetActiveUserCount(updatedSecondsAgo int64) (int, 
 }
 
 func (s *MattermostAuthLayer) GetSession(token string, expireTime int64) (*model.Session, error) {
-	return nil, NotSupportedError{"sessions not used when using mattermost"}
+	return nil, store.NewNotSupportedError("sessions not used when using mattermost")
 }
 
 func (s *MattermostAuthLayer) CreateSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) RefreshSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateSession(session *model.Session) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) DeleteSession(sessionID string) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) CleanUpSessions(expireTime int64) error {
-	return NotSupportedError{"no update allowed from focalboard, update it using mattermost"}
+	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) GetTeam(id string) (*model.Team, error) {
@@ -274,7 +272,7 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
 		Join("TeamMembers as tm ON tm.UserID = u.ID").
@@ -299,7 +297,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 
 func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
 		Join("TeamMembers as tm ON tm.UserID = u.id").
@@ -340,6 +338,10 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 		err := rows.Scan(
 			&user.ID,
 			&user.Username,
+			&user.Email,
+			&user.Nickname,
+			&user.FirstName,
+			&user.LastName,
 			&propsBytes,
 			&user.CreateAt,
 			&user.UpdateAt,
@@ -370,7 +372,7 @@ func (s *MattermostAuthLayer) CloseRows(rows *sql.Rows) {
 func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, error) {
 	// we emulate a private workspace by creating
 	// a DM channel from the user to themselves.
-	channel, err := s.pluginAPI.GetDirectChannel(userID, userID)
+	channel, err := s.servicesAPI.GetDirectChannel(userID, userID)
 	if err != nil {
 		s.logger.Error("error fetching private workspace", mlog.String("userID", userID), mlog.Err(err))
 		return "", err
@@ -393,6 +395,9 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		Username:    mmUser.Username,
 		Email:       mmUser.Email,
 		Password:    mmUser.Password,
+		Nickname:    mmUser.Nickname,
+		FirstName:   mmUser.FirstName,
+		LastName:    mmUser.LastName,
 		MfaSecret:   mmUser.MfaSecret,
 		AuthService: mmUser.AuthService,
 		AuthData:    authData,
@@ -407,17 +412,23 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 }
 
 func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) {
-	fileInfo, appErr := s.pluginAPI.GetFileInfo(id)
-	if appErr != nil {
+	fileInfo, err := s.servicesAPI.GetFileInfo(id)
+	if err != nil {
 		// Not finding fileinfo is fine because we don't have data for
 		// any existing files already uploaded in Boards before this code
 		// was deployed.
-		if appErr.StatusCode == http.StatusNotFound {
-			return nil, nil
+		var appErr *mmModel.AppError
+		if errors.As(err, &appErr) {
+			if appErr.StatusCode == http.StatusNotFound {
+				return nil, nil
+			}
 		}
 
-		s.logger.Error("error fetching fileinfo", mlog.String("id", id), mlog.Err(appErr))
-		return nil, appErr
+		s.logger.Error("error fetching fileinfo",
+			mlog.String("id", id),
+			mlog.Err(err),
+		)
+		return nil, err
 	}
 
 	return fileInfo, nil
@@ -485,7 +496,7 @@ func (s *MattermostAuthLayer) SaveFileInfo(fileInfo *mmModel.FileInfo) error {
 }
 
 func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
-	return s.pluginAPI.GetLicense()
+	return s.servicesAPI.GetLicense()
 }
 
 func boardFields(prefix string) []string {
@@ -622,11 +633,189 @@ func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, er
 }
 
 func (s *MattermostAuthLayer) GetCloudLimits() (*mmModel.ProductLimits, error) {
-	return s.pluginAPI.GetCloudLimits()
+	return s.servicesAPI.GetCloudLimits()
+}
+
+func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) ([]*model.BoardMember, error) {
+	boardMembers := []*model.BoardMember{}
+
+	for rows.Next() {
+		var boardMember model.BoardMember
+
+		err := rows.Scan(
+			&boardMember.UserID,
+			&boardMember.BoardID,
+		)
+		if err != nil {
+			return nil, err
+		}
+		boardMember.Roles = "editor"
+		boardMember.SchemeEditor = true
+		boardMember.Synthetic = true
+
+		boardMembers = append(boardMembers, &boardMember)
+	}
+
+	return boardMembers, nil
+}
+
+func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
+	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	if model.IsErrNotFound(err) {
+		b, err := s.Store.GetBoard(boardID)
+		if err != nil {
+			return nil, err
+		}
+		if b.ChannelID != "" {
+			_, err := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
+			if err != nil {
+				return nil, err
+			}
+			return &model.BoardMember{
+				BoardID:         boardID,
+				UserID:          userID,
+				Roles:           "editor",
+				SchemeAdmin:     false,
+				SchemeEditor:    true,
+				SchemeCommenter: false,
+				SchemeViewer:    false,
+				Synthetic:       true,
+			}, nil
+		}
+	}
+	return bm, nil
+}
+
+func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
+	explicitMembers, err := s.Store.GetMembersForUser(userID)
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	query := s.getQueryBuilder().
+		Select("CM.userID, B.Id").
+		From(s.tablePrefix + "boards AS B").
+		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Where(sq.Eq{"CM.userID": userID})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	members := []*model.BoardMember{}
+	existingMembers := map[string]bool{}
+	for _, m := range explicitMembers {
+		members = append(members, m)
+		existingMembers[m.BoardID] = true
+	}
+	for _, m := range implicitMembers {
+		if !existingMembers[m.BoardID] {
+			members = append(members, m)
+		}
+	}
+
+	return members, nil
+}
+
+func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
+	explicitMembers, err := s.Store.GetMembersForBoard(boardID)
+	if err != nil {
+		s.logger.Error(`getMembersForBoard ERROR`, mlog.Err(err))
+		return nil, err
+	}
+
+	query := s.getQueryBuilder().
+		Select("CM.userID, B.Id").
+		From(s.tablePrefix + "boards AS B").
+		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Where(sq.Eq{"B.id": boardID}).
+		Where(sq.NotEq{"B.channel_id": ""})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`getMembersForBoard ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+	members := []*model.BoardMember{}
+	existingMembers := map[string]bool{}
+	for _, m := range explicitMembers {
+		members = append(members, m)
+		existingMembers[m.UserID] = true
+	}
+	for _, m := range implicitMembers {
+		if !existingMembers[m.UserID] {
+			members = append(members, m)
+		}
+	}
+
+	return members, nil
+}
+
+func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
+	members, err := s.GetMembersForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	boardIDs := []string{}
+	for _, m := range members {
+		boardIDs = append(boardIDs, m.BoardID)
+	}
+
+	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	return boards, nil
+}
+
+func (s *MattermostAuthLayer) SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error) {
+	channels, err := s.servicesAPI.GetChannelsForTeamForUser(teamID, userID, false)
+	if err != nil {
+		return nil, err
+	}
+
+	result := []*mmModel.Channel{}
+	count := 0
+	for _, channel := range channels {
+		if channel.Type != mmModel.ChannelTypeDirect &&
+			channel.Type != mmModel.ChannelTypeGroup &&
+			(strings.Contains(channel.Name, query) || strings.Contains(channel.DisplayName, query)) {
+			result = append(result, channel)
+			count++
+			if count >= 10 {
+				break
+			}
+		}
+	}
+	return result, nil
+}
+
+func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Channel, error) {
+	channel, err := s.servicesAPI.GetChannelByID(channelID)
+	if err != nil {
+		return nil, err
+	}
+	return channel, nil
 }
 
 func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
-	botID, err := s.client.Bot.EnsureBot(systemsBot)
+	botID, err := s.servicesAPI.EnsureBot(systemsBot)
 	if err != nil {
 		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
 		return "", err
@@ -642,7 +831,7 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 	}
 
 	for _, receipt := range receipts {
-		channel, err := s.pluginAPI.GetDirectChannel(botID, receipt)
+		channel, err := s.servicesAPI.GetDirectChannel(botID, receipt)
 		if err != nil {
 			s.logger.Error(
 				"failed to get DM channel between system bot and user for receipt",
@@ -660,7 +849,7 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 			Type:      postType,
 		}
 
-		if _, err := s.pluginAPI.CreatePost(post); err != nil {
+		if _, err := s.servicesAPI.CreatePost(post); err != nil {
 			s.logger.Error(
 				"failed to send message to receipt from SendMessage",
 				mlog.String("receipt", receipt),

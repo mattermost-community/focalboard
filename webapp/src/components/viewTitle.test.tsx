@@ -53,6 +53,9 @@ describe('components/viewTitle', () => {
                 [board.id]: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
+        clientConfig: {
+            value: {},
+        },
     }
     const store = mockStateStore([], state)
 

@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .CalendarContainer {
     margin-right: 80px;
     margin-bottom: 10px;
@@ -10,6 +12,10 @@
 
         &:hover {
             background-color: unset;
+
+            .optionsMenu {
+                display: block;
+            }
         }
     }
 
@@ -17,6 +23,20 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .optionsMenu {
+        @include z-index(calendar-options-menu);
+        background-color: rgb(var(--center-channel-bg-rgb));
+        border-radius: var(--default-rad);
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        .IconButton {
+            background-color: rgba(var(--center-channel-color-rgb), 0.13);
+        }
     }
 
     .octo-tooltip {
@@ -180,7 +200,6 @@
         background-color: rgb(var(--center-channel-bg-rgb));
         box-shadow: var(--elevation-1);
         margin: 0 8px 10px;
-        overflow: hidden;
         padding: 4px 6px;
 
         &:hover::before {

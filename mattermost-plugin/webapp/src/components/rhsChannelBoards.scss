@@ -1,0 +1,63 @@
+.RHSChannelBoards {
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &.empty {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        padding: 60px;
+    }
+
+    .rhs-boards-header {
+        display: flex;
+        align-items: center;
+        min-height: 40px;
+    }
+
+    >h2 {
+        text-align: center;
+        word-wrap: anywhere;
+    }
+
+    .empty-paragraph {
+        text-align: justify;
+        text-align-last: center;
+    }
+
+    .boards-screenshots {
+        margin: 24px 0;
+    }
+
+    .linked-boards {
+        flex-grow: 1;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .rhs-boards-list {
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .Button {
+        width: auto;
+        align-self: center;
+        max-width: 100%;
+
+        span {
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+}

@@ -32,6 +32,11 @@ describe('components/properties/user', () => {
                 },
             },
         },
+        clientConfig: {
+            value: {
+                teammateNameDisplay: 'username',
+            },
+        },
     }
 
     test('not readonly not existing user', async () => {
@@ -110,8 +115,7 @@ describe('components/properties/user', () => {
                 <UserProperty
                     value={'user-id-1'}
                     readonly={false}
-                    onChange={() => {
-                    }}
+                    onChange={() => {}}
                 />
             </ReduxProvider>,
         )

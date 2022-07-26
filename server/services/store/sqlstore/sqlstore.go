@@ -4,11 +4,10 @@ import (
 	"database/sql"
 	"net/url"
 
-	"github.com/mattermost/mattermost-server/v6/plugin"
-
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/mattermost-plugin-api/cluster"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -23,9 +22,9 @@ type SQLStore struct {
 	connectionString string
 	isPlugin         bool
 	isSingleUser     bool
-	logger           *mlog.Logger
+	logger           mlog.LoggerIFace
 	NewMutexFn       MutexFactory
-	pluginAPI        *plugin.API
+	servicesAPI      servicesAPI
 	isBinaryParam    bool
 }
 
@@ -50,7 +49,7 @@ func New(params Params) (*SQLStore, error) {
 		isPlugin:         params.IsPlugin,
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
-		pluginAPI:        params.PluginAPI,
+		servicesAPI:      params.ServicesAPI,
 	}
 
 	var err error
@@ -125,4 +124,12 @@ func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {
 
 func (s *SQLStore) getCloudLimits(db sq.BaseRunner) (*mmModel.ProductLimits, error) {
 	return nil, nil
+}
+
+func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query string) ([]*mmModel.Channel, error) {
+	return nil, store.NewNotSupportedError("search user channels not supported on standalone mode")
+}
+
+func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmModel.Channel, error) {
+	return nil, store.NewNotSupportedError("get channel not supported on standalone mode")
 }
