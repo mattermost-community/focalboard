@@ -79,7 +79,7 @@ exports[`components/blockIconSelector return menu on click 1`] = `
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="pick"
               >
                 <svg

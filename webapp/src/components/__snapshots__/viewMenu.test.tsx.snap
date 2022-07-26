@@ -150,7 +150,7 @@ Object {
               </div>
               <div>
                 <div
-                  class="MenuOption SubMenuOption menu-option"
+                  class="MenuOption SubMenuOption menu-option "
                   id="__addView"
                 >
                   <i
@@ -352,7 +352,7 @@ Object {
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="__addView"
               >
                 <i

@@ -28,7 +28,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left menu-option-active"
+                class="MenuOption SubMenuOption menu-option open-left menu-option-active "
                 id="import"
               >
                 <svg
@@ -218,7 +218,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left"
+                class="MenuOption SubMenuOption menu-option open-left "
                 id="lang"
               >
                 <svg
@@ -350,7 +350,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left"
+                class="MenuOption SubMenuOption menu-option open-left "
                 id="import"
               >
                 <svg
@@ -374,7 +374,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left menu-option-active"
+                class="MenuOption SubMenuOption menu-option open-left menu-option-active "
                 id="lang"
               >
                 <svg
@@ -931,7 +931,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left"
+                class="MenuOption SubMenuOption menu-option open-left "
                 id="import"
               >
                 <svg
@@ -955,7 +955,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option open-left"
+                class="MenuOption SubMenuOption menu-option open-left "
                 id="lang"
               >
                 <svg

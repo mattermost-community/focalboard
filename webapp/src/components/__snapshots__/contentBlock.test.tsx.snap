@@ -98,7 +98,7 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                 </div>
                 <div>
                   <div
-                    class="MenuOption SubMenuOption menu-option"
+                    class="MenuOption SubMenuOption menu-option "
                     id="insertAbove"
                   >
                     <i

@@ -26,7 +26,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option menu-option-active"
+                class="MenuOption SubMenuOption menu-option menu-option-active "
                 id="import"
               >
                 <div
@@ -239,7 +239,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="lang"
               >
                 <div
@@ -263,7 +263,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="theme"
               >
                 <div
@@ -370,7 +370,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="import"
               >
                 <div
@@ -417,7 +417,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option menu-option-active"
+                class="MenuOption SubMenuOption menu-option menu-option-active "
                 id="lang"
               >
                 <div
@@ -844,7 +844,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="theme"
               >
                 <div
@@ -971,7 +971,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="import"
               >
                 <div
@@ -1018,7 +1018,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="lang"
               >
                 <div
@@ -1042,7 +1042,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="theme"
               >
                 <div
@@ -1149,7 +1149,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
           >
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="import"
               >
                 <div
@@ -1196,7 +1196,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option"
+                class="MenuOption SubMenuOption menu-option "
                 id="lang"
               >
                 <div
@@ -1220,7 +1220,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
             </div>
             <div>
               <div
-                class="MenuOption SubMenuOption menu-option menu-option-active"
+                class="MenuOption SubMenuOption menu-option menu-option-active "
                 id="theme"
               >
                 <div

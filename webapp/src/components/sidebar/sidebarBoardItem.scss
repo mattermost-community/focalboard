@@ -163,6 +163,13 @@
         right: calc(100% - 480px + 50px);
         left: calc(240px - 50px);
     }
+
+    .boardMoveToCategorySubmenu {
+        .menu-options {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+    }
 }
 
 .team-sidebar + .product-wrapper {
