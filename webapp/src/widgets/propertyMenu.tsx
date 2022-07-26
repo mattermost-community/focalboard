@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
 import {PropertyType} from '../blocks/board'
@@ -114,7 +114,7 @@ const PropertyMenu = (props: Props) => {
             >
                 <PropertyTypes
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
-                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, currentPropertyName || '')}
+                    onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, currentPropertyName)}
                 />
             </Menu.SubMenu>
             <Menu.Text
