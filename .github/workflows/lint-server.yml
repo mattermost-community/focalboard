@@ -26,6 +26,7 @@ jobs:
         continue-on-error: true
         with:
           repository: "mattermost/mattermost-server"
+          fetch-depth: "20" 
           path: "mattermost-server"
           ref: ${{ env.BRANCH_NAME }}
       - uses: actions/checkout@v3
