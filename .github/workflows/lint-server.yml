@@ -33,6 +33,7 @@ jobs:
         if: steps.mattermostServer.outcome == 'failure'
         with:
           repository: "mattermost/mattermost-server"
+          fetch-depth: "20" 
           path: "mattermost-server"
           ref : "master"
       - name: set up golangci-lint
