@@ -17,7 +17,6 @@ import {getMe} from '../../store/users'
 import {Utils} from '../../utils'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
 import { Constants } from '../../constants'
-import { Utils } from '../../utils'
 
 type Props = {
     onClose: () => void
