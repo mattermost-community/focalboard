@@ -71,7 +71,7 @@ const SidebarCategory = (props: Props) => {
         if (boardId !== match.params.boardId && viewId !== match.params.viewId) {
             params.cardId = undefined
         }
-        const newPath = generatePath(match.path, params)
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         history.push(newPath)
         props.hideSidebar()
     }, [match, history])

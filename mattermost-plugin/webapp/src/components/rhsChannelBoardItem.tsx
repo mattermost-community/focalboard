@@ -13,8 +13,11 @@ import OptionsIcon from '../../../../webapp/src/widgets/icons/options'
 import DeleteIcon from '../../../../webapp/src/widgets/icons/delete'
 import Menu from '../../../../webapp/src/widgets/menu'
 import MenuWrapper from '../../../../webapp/src/widgets/menuWrapper'
+import {SuiteWindow} from '../../../../webapp/src/types/index'
 
 import './rhsChannelBoardItem.scss'
+
+const windowAny = (window as SuiteWindow)
 
 type Props = {
     board: Board
@@ -30,8 +33,7 @@ const RHSChannelBoardItem = (props: Props) => {
     }
 
     const handleBoardClicked = (boardID: string) => {
-        const windowAny: any = window
-        windowAny.WebappUtils.browserHistory.push(`/boards/team/${team.id}/${boardID}`)
+        window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
     }
 
     const onUnlinkBoard = async (board: Board) => {
