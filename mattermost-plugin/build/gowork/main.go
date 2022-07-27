@@ -47,11 +47,11 @@ func makeGoWork(ci bool) string {
 	b.WriteString("go 1.18\n\n")
 	b.WriteString("use ./mattermost-plugin\n")
 	b.WriteString("use ./server\n")
+	b.WriteString("use ../mattermost-server\n")
 
 	if ci {
 		b.WriteString("use ./linux\n")
 	} else {
-		b.WriteString("use ../mattermost-server\n")
 		b.WriteString("use ../enterprise\n")
 	}
 
