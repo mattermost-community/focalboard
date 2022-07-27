@@ -17,7 +17,7 @@ const (
 	// we group the inserts on batches of 1000 because PostgreSQL
 	// supports a limit of around 64K values (not rows) on an insert
 	// query, so we want to stay safely below.
-	CategoryInsertBatch          = 1000
+	CategoryInsertBatch = 1000
 
 	TemplatesToTeamsMigrationKey = "TemplatesToTeamsMigrationComplete"
 	UniqueIDsMigrationKey        = "UniqueIDsMigrationComplete"
@@ -197,7 +197,7 @@ func (s *SQLStore) createCategories(db sq.BaseRunner) error {
 
 	initQuery := func() sq.InsertBuilder {
 		return s.getQueryBuilder(db).
-			Insert(s.tablePrefix + "categories").
+			Insert(s.tablePrefix+"categories").
 			Columns(
 				"id",
 				"name",
@@ -246,13 +246,13 @@ func (s *SQLStore) createCategories(db sq.BaseRunner) error {
 		)
 
 		counter++
-		if counter % CategoryInsertBatch == 0 {
+		if counter%CategoryInsertBatch == 0 {
 			queryList = append(queryList, query)
 			query = initQuery()
 		}
 	}
 
-	if counter % CategoryInsertBatch != 0 {
+	if counter%CategoryInsertBatch != 0 {
 		queryList = append(queryList, query)
 	}
 
@@ -280,7 +280,7 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 
 	initQuery := func() sq.InsertBuilder {
 		return s.getQueryBuilder(db).
-			Insert(s.tablePrefix + "category_boards").
+			Insert(s.tablePrefix+"category_boards").
 			Columns(
 				"id",
 				"user_id",
@@ -325,13 +325,13 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 		)
 
 		counter++
-		if counter % CategoryInsertBatch == 0 {
+		if counter%CategoryInsertBatch == 0 {
 			queryList = append(queryList, query)
 			query = initQuery()
 		}
 	}
 
-	if counter % CategoryInsertBatch != 0 {
+	if counter%CategoryInsertBatch != 0 {
 		queryList = append(queryList, query)
 	}
 
