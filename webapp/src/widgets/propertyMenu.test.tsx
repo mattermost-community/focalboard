@@ -83,6 +83,27 @@ describe('widgets/PropertyMenu', () => {
         setTimeout(() => expect(callback).toHaveBeenCalledWith('select', 'test-property'), 2000)
     })
 
+    test('handles name and type change event', () => {
+        const callback = jest.fn()
+        const component = wrapIntl(
+            <PropertyMenu
+                propertyId={'id'}
+                propertyName={'test-property'}
+                propertyType={'text'}
+                onTypeAndNameChanged={callback}
+                onDelete={callback}
+            />,
+        )
+        const {getByDisplayValue, getByText} = render(component)
+        const input = getByDisplayValue(/test-property/i)
+        fireEvent.change(input, {target: {value: 'changed name'}})
+
+        const menuOpen = getByText(/Type: Text/i)
+        fireEvent.click(menuOpen)
+        fireEvent.click(getByText('Select'))
+        setTimeout(() => expect(callback).toHaveBeenCalledWith('select', 'changed name'), 2000)
+    })
+
     test('should match snapshot', () => {
         const callback = jest.fn()
         const component = wrapIntl(
