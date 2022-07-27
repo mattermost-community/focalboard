@@ -82,7 +82,11 @@ func TestAddMemberToBoard(t *testing.T) {
 			TeamID: "team_id_1",
 		}, nil)
 
-		th.Store.EXPECT().GetMemberForBoard(boardID, userID).Return(boardMember, nil)
+		th.Store.EXPECT().GetMemberForBoard(boardID, userID).Return(&model.BoardMember{
+			UserID:    userID,
+			BoardID:   boardID,
+			Synthetic: true,
+		}, nil)
 
 		th.Store.EXPECT().SaveMember(mock.MatchedBy(func(i interface{}) bool {
 			p := i.(*model.BoardMember)
