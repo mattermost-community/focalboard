@@ -27,6 +27,7 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	UploadFormFileKey      = "file"
+	True                   = "true"
 )
 
 const (
@@ -810,6 +811,11 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	//   description: Board ID
 	//   required: true
 	//   type: string
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk data inserting)
+	//   required: false
+	//   type: bool
 	// - name: Body
 	//   in: body
 	//   description: array of blocks to insert or update
@@ -834,6 +840,9 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	// in phase 1 we use "manage_board_cards", but we would have to
 	// check on specific actions for phase 2
@@ -887,6 +896,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("disable_notify", disableNotify)
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
@@ -902,7 +912,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, true)
+	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, !disableNotify)
 	if err != nil {
 		if errors.Is(err, app.ErrViewsLimitReached) {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
@@ -913,7 +923,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("POST Blocks", mlog.Int("block_count", len(blocks)))
+	a.logger.Debug("POST Blocks",
+		mlog.Int("block_count", len(blocks)),
+		mlog.Bool("disable_notify", disableNotify),
+	)
 
 	json, err := json.Marshal(newBlocks)
 	if err != nil {
@@ -3168,7 +3181,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == "true")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3271,7 +3284,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 	)
 
-	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == "true")
+	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
