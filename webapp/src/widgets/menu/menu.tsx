@@ -11,6 +11,7 @@ import LabelOption from './labelOption'
 
 import './menu.scss'
 import textInputOption from './textInputOption'
+import MenuUtil from "./menuUtil"
 
 type Props = {
     children: React.ReactNode
@@ -19,7 +20,6 @@ type Props = {
     parentRef?: React.RefObject<any>
 }
 
-const MENU_MARGIN = 40
 
 export default class Menu extends React.PureComponent<Props> {
     static Color = ColorOption
@@ -46,23 +46,9 @@ export default class Menu extends React.PureComponent<Props> {
     public render(): JSX.Element {
         const {position, fixed, children} = this.props
 
-        const style: CSSProperties = {}
+        let style: CSSProperties = {}
         if (position === 'auto' && this.props.parentRef) {
-            const boundingRect = this.props.parentRef.current?.getBoundingClientRect()
-            const y = typeof boundingRect?.y === 'undefined' ? boundingRect?.top : boundingRect.y
-
-            const windowHeight = window.innerHeight
-
-            const totalSpace = windowHeight - MENU_MARGIN
-            const spaceOnTop = y || 0
-            const spaceOnBottom = totalSpace - spaceOnTop
-            const openUp = spaceOnTop > spaceOnBottom
-
-            if (openUp) {
-                style.bottom = spaceOnBottom + MENU_MARGIN
-            } else {
-                style.top = spaceOnTop + 30
-            }
+            style = MenuUtil.openUp(this.props.parentRef).style
         }
 
         return (

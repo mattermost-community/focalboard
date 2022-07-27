@@ -4,13 +4,14 @@ import React, {useEffect, useState, useContext, CSSProperties, useRef} from 'rea
 
 import SubmenuTriangleIcon from '../icons/submenuTriangle'
 
+import MenuUtil from './menuUtil'
+
 import Menu from '.'
+
 
 import './subMenuOption.scss'
 
 export const HoveringContext = React.createContext(false)
-
-const MENU_MARGIN = 40
 
 type SubMenuOptionProps = {
     id: string
@@ -40,17 +41,8 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
     useEffect(() => {
         const newStyle: CSSProperties = {}
         if (props.position === 'auto' && ref.current) {
-            const boundingRect = ref.current?.getBoundingClientRect()
-            const y = typeof boundingRect?.y === 'undefined' ? boundingRect?.top : boundingRect.y
-
-            const windowHeight = window.innerHeight
-
-            const totalSpace = windowHeight - MENU_MARGIN
-            const spaceOnTop = y || 0
-            const spaceOnBottom = totalSpace - spaceOnTop
-            const openUp = spaceOnTop > spaceOnBottom
-
-            if (openUp) {
+            const openUp = MenuUtil.openUp(ref)
+            if (openUp.openUp) {
                 newStyle.bottom = 0
             } else {
                 newStyle.top = 0
