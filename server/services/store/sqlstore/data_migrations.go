@@ -16,7 +16,7 @@ import (
 const (
 	// we group the inserts on batches of 1000 because PostgreSQL
 	// supports a limit of around 64K values (not rows) on an insert
-	// query, so we want to stay safely below
+	// query, so we want to stay safely below.
 	CategoryInsertBatch          = 1000
 
 	TemplatesToTeamsMigrationKey = "TemplatesToTeamsMigrationComplete"
@@ -130,7 +130,7 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 // runCategoryUUIDIDMigration takes care of deriving the categories
 // from the boards and its memberships. The name references UUID
 // because of the preexisting purpose of this migration, and has been
-// preserved for compatibility with already migrated instances
+// preserved for compatibility with already migrated instances.
 func (s *SQLStore) runCategoryUUIDIDMigration() error {
 	setting, err := s.GetSystemSetting(CategoryUUIDIDMigrationKey)
 	if err != nil {
@@ -339,69 +339,6 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 		if _, err := q.Exec(); err != nil {
 			return fmt.Errorf("cannot create category boards values: %w", err)
 		}
-	}
-
-	return nil
-}
-
-func (s *SQLStore) getIDs(db sq.BaseRunner, table string) ([]string, error) {
-	rows, err := s.getQueryBuilder(db).
-		Select("id").
-		From(s.tablePrefix + table).
-		Query()
-
-	if err != nil {
-		s.logger.Error("getIDs error", mlog.String("table", table), mlog.Err(err))
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	var categoryIDs []string
-	for rows.Next() {
-		var id string
-		err := rows.Scan(&id)
-		if err != nil {
-			s.logger.Error("getIDs scan row error", mlog.String("table", table), mlog.Err(err))
-			return nil, err
-		}
-
-		categoryIDs = append(categoryIDs, id)
-	}
-
-	return categoryIDs, nil
-}
-
-func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
-	// fetch all category IDs
-	oldCategoryIDs, err := s.getIDs(db, "category_boards")
-	if err != nil {
-		return err
-	}
-
-	// map old category ID to new ID
-	categoryIDs := map[string]string{}
-	for _, oldID := range oldCategoryIDs {
-		newID := utils.NewID(utils.IDTypeNone)
-		categoryIDs[oldID] = newID
-	}
-
-	idCase := sq.Case("id")
-
-	// update for each category ID.
-	// Update the new ID in category table,
-	// and update corresponding rows in category boards table.
-	for oldID, newID := range categoryIDs {
-		idCase = idCase.When(fmt.Sprintf("'%s'", oldID), fmt.Sprintf("'%s'", newID))
-	}
-
-	_, err = s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("id", idCase).
-		Exec()
-
-	if err != nil {
-		s.logger.Error("updateCategoryBlocksID update category error", mlog.Err(err))
-		return err
 	}
 
 	return nil
