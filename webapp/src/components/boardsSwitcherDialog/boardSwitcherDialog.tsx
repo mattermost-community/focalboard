@@ -14,6 +14,7 @@ import LockOutline from '../../widgets/icons/lockOutline'
 import {useAppSelector} from '../../store/hooks'
 import {getAllTeams, getCurrentTeam, Team} from '../../store/teams'
 import {getMe} from '../../store/users'
+import {Utils} from '../../utils'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
 
 type Props = {
@@ -42,7 +43,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         if (!me) {
             return
         }
-        const newPath = generatePath(match.path, {...match.params, teamId, boardId, viewId: undefined})
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), {...match.params, teamId, boardId, viewId: undefined})
         history.push(newPath)
         props.onClose()
     }

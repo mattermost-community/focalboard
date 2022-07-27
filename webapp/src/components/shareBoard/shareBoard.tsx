@@ -348,14 +348,19 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             className={'userSearchInput'}
                             cacheOptions={true}
                             loadOptions={async (inputValue: string) => {
-                                const users = await client.searchTeamUsers(inputValue)
-                                const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
                                 const result = []
-                                if (users) {
-                                    result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
-                                }
-                                if (channels) {
-                                    result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                if (Utils.isFocalboardPlugin()) {
+                                    const users = await client.searchTeamUsers(inputValue)
+                                    if (users) {
+                                        result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
+                                    }
+                                    const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
+                                    if (channels) {
+                                        result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                    }
+                                } else {
+                                    const users = await client.searchTeamUsers(inputValue) || []
+                                    result.push(...users)
                                 }
                                 return result
                             }}
