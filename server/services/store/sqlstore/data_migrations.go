@@ -199,8 +199,8 @@ func (s *SQLStore) getIDs(db sq.BaseRunner, table string) ([]string, error) {
 		s.logger.Error("getIDs error", mlog.String("table", table), mlog.Err(err))
 		return nil, err
 	}
-
 	defer s.CloseRows(rows)
+
 	var categoryIDs []string
 	for rows.Next() {
 		var id string
@@ -218,37 +218,26 @@ func (s *SQLStore) getIDs(db sq.BaseRunner, table string) ([]string, error) {
 
 func (s *SQLStore) updateCategoryID(db sq.BaseRunner, oldID, newID string) error {
 	// update in category table
-	rows, err := s.getQueryBuilder(db).
+	_, err := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"categories").
 		Set("id", newID).
 		Where(sq.Eq{"id": oldID}).
-		Query()
+		Exec()
 
 	if err != nil {
 		s.logger.Error("updateCategoryID update category error", mlog.Err(err))
 		return err
 	}
 
-	if err = rows.Close(); err != nil {
-		s.logger.Error("updateCategoryID error closing rows after updating categories table IDs", mlog.Err(err))
-		return err
-	}
-
 	// update category boards table
-
-	rows, err = s.getQueryBuilder(db).
+	_, err = s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_boards").
 		Set("category_id", newID).
 		Where(sq.Eq{"category_id": oldID}).
-		Query()
+		Exec()
 
 	if err != nil {
 		s.logger.Error("updateCategoryID update category boards error", mlog.Err(err))
-		return err
-	}
-
-	if err := rows.Close(); err != nil {
-		s.logger.Error("updateCategoryID error closing rows after updating category boards table IDs", mlog.Err(err))
 		return err
 	}
 
@@ -282,17 +271,16 @@ func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
 
 func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string) error {
 	// update in category table
-	rows, err := s.getQueryBuilder(db).
+	_, err := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_boards").
 		Set("id", newID).
 		Where(sq.Eq{"id": oldID}).
-		Query()
+		Exec()
 
 	if err != nil {
 		s.logger.Error("updateCategoryBlocksID update category error", mlog.Err(err))
 		return err
 	}
-	rows.Close()
 
 	return nil
 }
