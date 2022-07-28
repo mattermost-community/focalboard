@@ -284,8 +284,9 @@ export default class Plugin {
 
             const goToFocalboardTemplate = () => {
                 const currentTeam = mmStore.getState().entities.teams.currentTeamId
+                const currentChannel = mmStore.getState().entities.channels.currentChannelId
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelIntro, {teamID: currentTeam})
-                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}`, '_blank', 'noopener')
+                window.open(`${windowAny.frontendBaseURL}/team/${currentTeam}/new/${currentChannel}`, '_blank', 'noopener')
             }
 
             if (registry.registerChannelIntroButtonAction) {

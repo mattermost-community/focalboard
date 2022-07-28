@@ -75,6 +75,7 @@ func createDelivery(servicesAPI model.ServicesAPI, serverRoot string) (*pluginde
 		Username:    botUsername,
 		DisplayName: botDisplayname,
 		Description: botDescription,
+		OwnerId:     model.SystemUserID,
 	}
 	botID, err := servicesAPI.EnsureBot(bot)
 	if err != nil {
