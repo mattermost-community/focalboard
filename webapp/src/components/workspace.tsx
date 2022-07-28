@@ -4,7 +4,6 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
 import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
@@ -33,7 +32,6 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
-    const team = useAppSelector(getCurrentTeam)
     const isLoading = useAppSelector(isLoadingBoard)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, channelId?: string}>()
     const board = useAppSelector(getCurrentBoard)
