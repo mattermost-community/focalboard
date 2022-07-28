@@ -147,7 +147,7 @@ const BoardTemplateSelector = (props: Props) => {
                     {description || (
                         <FormattedMessage
                             id='BoardTemplateSelector.description'
-                            defaultMessage='Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.'
+                            defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
                         />
                     )}
                 </p>
