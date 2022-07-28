@@ -58,6 +58,7 @@ import './boardPage.scss'
 
 type Props = {
     readonly?: boolean
+    new?: boolean
 }
 
 const BoardPage = (props: Props): JSX.Element => {
@@ -202,7 +203,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
     return (
         <div className='BoardPage'>
-            <TeamToBoardAndViewRedirect/>
+            {!props.new && <TeamToBoardAndViewRedirect/>}
             <BackwardCompatibilityQueryParamsRedirect/>
             <SetWindowTitleAndIcon/>
             <UndoRedoHotKeys/>
