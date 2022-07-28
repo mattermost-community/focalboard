@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package main
+package boards
 
 import (
 	"io/ioutil"
@@ -9,40 +9,13 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func TestServeHTTP(t *testing.T) {
-	th, tearDown := SetupTestHelper(t)
-	defer tearDown()
-
-	assert := assert.New(t)
-	plugin := Plugin{
-		server: th.Server,
-	}
-	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/hello", nil)
-
-	plugin.ServeHTTP(nil, w, r)
-
-	result := w.Result()
-	assert.NotNil(result)
-	defer result.Body.Close()
-	bodyBytes, err := ioutil.ReadAll(result.Body)
-	assert.Nil(err)
-	bodyString := string(bodyBytes)
-
-	assert.Equal("Hello", bodyString)
-}
-
 func TestSetConfiguration(t *testing.T) {
-	th, tearDown := SetupTestHelper(t)
-	defer tearDown()
-
-	plugin := Plugin{
-		server: th.Server,
-	}
 	boolTrue := true
 	stringRef := ""
 
@@ -89,7 +62,7 @@ func TestSetConfiguration(t *testing.T) {
 		mmConfig := baseConfig
 		mmConfig.LogSettings = *logSettings
 
-		config := plugin.createBoardsConfig(*mmConfig, "", "testId")
+		config := createBoardsConfig(*mmConfig, "", "testId")
 		assert.Equal(t, true, config.Telemetry)
 		assert.Equal(t, "testId", config.TelemetryID)
 	})
@@ -97,9 +70,9 @@ func TestSetConfiguration(t *testing.T) {
 	t.Run("test enable shared boards", func(t *testing.T) {
 		mmConfig := baseConfig
 		mmConfig.PluginSettings.Plugins = make(map[string]map[string]interface{})
-		mmConfig.PluginSettings.Plugins[pluginName] = make(map[string]interface{})
-		mmConfig.PluginSettings.Plugins[pluginName][sharedBoardsName] = true
-		config := plugin.createBoardsConfig(*mmConfig, "", "")
+		mmConfig.PluginSettings.Plugins[PluginName] = make(map[string]interface{})
+		mmConfig.PluginSettings.Plugins[PluginName][SharedBoardsName] = true
+		config := createBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, true, config.EnablePublicSharedBoards)
 	})
 
@@ -113,11 +86,36 @@ func TestSetConfiguration(t *testing.T) {
 		mmConfig := baseConfig
 		mmConfig.FeatureFlags = featureFlags
 
-		config := plugin.createBoardsConfig(*mmConfig, "", "")
+		config := createBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
 		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
 
 		assert.Equal(t, "true", config.FeatureFlags["hello_world"])
 		assert.Equal(t, "true", config.FeatureFlags["myTest"])
 	})
+}
+
+func TestServeHTTP(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	b := &BoardsApp{
+		server: th.Server,
+		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
+	}
+
+	assert := assert.New(t)
+	w := httptest.NewRecorder()
+	r := httptest.NewRequest(http.MethodGet, "/hello", nil)
+
+	b.ServeHTTP(nil, w, r)
+
+	result := w.Result()
+	assert.NotNil(result)
+	defer result.Body.Close()
+	bodyBytes, err := ioutil.ReadAll(result.Body)
+	assert.Nil(err)
+	bodyString := string(bodyBytes)
+
+	assert.Equal("Hello", bodyString)
 }

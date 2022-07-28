@@ -32,9 +32,7 @@ var mockSession = &model.Session{
 
 func setupTestHelper(t *testing.T) *TestHelper {
 	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
 	ctrlPermissions := gomock.NewController(t)
-	defer ctrlPermissions.Finish()
 	cfg := config.Configuration{}
 	mockStore := mockstore.NewMockStore(ctrl)
 	mockPermissions := mockpermissions.NewMockStore(ctrlPermissions)

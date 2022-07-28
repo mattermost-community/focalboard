@@ -526,7 +526,7 @@ func TestSearchBoards(t *testing.T) {
 		require.NoError(t, err)
 
 		board5 := &model.Board{
-			Title:  "public board where user1 is admin, but in other team",
+			Title:  "private board where user1 is admin, but in other team",
 			Type:   model.BoardTypePrivate,
 			TeamID: "other-team-id",
 		}
@@ -543,25 +543,25 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "should return all boards where user1 is member or that are public",
 				Client:      th.Client,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID},
 			},
 			{
 				Name:        "matching a full word",
 				Client:      th.Client,
 				Term:        "admin",
-				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID},
 			},
 			{
 				Name:        "matching part of the word",
 				Client:      th.Client,
 				Term:        "ubli",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
 			},
 			{
 				Name:        "case insensitive",
 				Client:      th.Client,
 				Term:        "UBLI",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
 			},
 			{
 				Name:        "user2 can only see the public boards, as he's not a member of any",
@@ -584,50 +584,6 @@ func TestSearchBoards(t *testing.T) {
 				require.ElementsMatch(t, tc.ExpectedIDs, boardIDs)
 			})
 		}
-	})
-
-	t.Run("should only return boards in the teams that the user belongs to", func(t *testing.T) {
-		th := SetupTestHelperPluginMode(t)
-		defer th.TearDown()
-		clients := setupClients(th)
-
-		b1, err := th.Server.App().CreateBoard(
-			&model.Board{Title: "public board", Type: model.BoardTypeOpen, TeamID: "test-team"},
-			userAdmin,
-			true,
-		)
-		require.NoError(t, err)
-
-		_, err = th.Server.App().CreateBoard(
-			&model.Board{Title: "private board", Type: model.BoardTypePrivate, TeamID: "test-team"},
-			userAdmin,
-			false,
-		)
-		require.NoError(t, err)
-
-		_, err = th.Server.App().CreateBoard(
-			&model.Board{Title: "public board in empty team", Type: model.BoardTypeOpen, TeamID: "empty-team"},
-			userAdmin,
-			true,
-		)
-		require.NoError(t, err)
-
-		_, err = th.Server.App().CreateBoard(
-			&model.Board{Title: "private board in empty team", Type: model.BoardTypePrivate, TeamID: "empty-team"},
-			userAdmin,
-			true,
-		)
-		require.NoError(t, err)
-
-		boards, resp := clients.Viewer.SearchBoardsForTeam(testTeamID, "board")
-		th.CheckOK(resp)
-
-		boardIDs := []string{}
-		for _, board := range boards {
-			boardIDs = append(boardIDs, board.ID)
-		}
-
-		require.ElementsMatch(t, []string{b1.ID}, boardIDs)
 	})
 }
 

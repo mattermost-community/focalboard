@@ -29,7 +29,9 @@ exports[`components/rhsChannelBoardItem render board 1`] = `
         </button>
       </div>
     </div>
-    <div />
+    <div
+      class="description"
+    />
     <div
       class="date"
     >
@@ -131,7 +133,9 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
         </div>
       </div>
     </div>
-    <div />
+    <div
+      class="description"
+    />
     <div
       class="date"
     >
