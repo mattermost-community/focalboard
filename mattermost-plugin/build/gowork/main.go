@@ -42,17 +42,25 @@ func main() {
 }
 
 func makeGoWork(ci bool) string {
+	repos := []string{
+		"mattermost-server",
+		"enterprise",
+	}
+
 	var b strings.Builder
 
 	b.WriteString("go 1.18\n\n")
 	b.WriteString("use ./mattermost-plugin\n")
 	b.WriteString("use ./server\n")
 
+	for repoIdx := range repos {
+		if isEnvVarTrue(fmt.Sprintf("USE_LOCAL_%s_REPO", strings.ToUpper(repos[repoIdx])), true) {
+			b.WriteString(fmt.Sprintf("use ../%s\n", repos[repoIdx]))
+		}
+	}
+
 	if ci {
 		b.WriteString("use ./linux\n")
-	} else {
-		b.WriteString("use ../mattermost-server\n")
-		b.WriteString("use ../enterprise\n")
 	}
 
 	return b.String()

@@ -9,6 +9,7 @@ on:
 
 env:
  BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ USE_LOCAL_MATTERMOST-SERVER_REPO: true
  
 jobs:
   golangci:
