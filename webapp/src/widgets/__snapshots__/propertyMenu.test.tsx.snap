@@ -22,7 +22,7 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
         </div>
         <div>
           <div
-            class="MenuOption SubMenuOption menu-option menu-option-active "
+            class="MenuOption SubMenuOption menu-option menu-option-active"
             id="type"
           >
             <div
