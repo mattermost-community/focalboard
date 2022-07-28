@@ -20,6 +20,7 @@ import PrivateIcon from '../../widgets/icons/lockOutline'
 import PublicIcon from '../../widgets/icons/globe'
 import DeleteIcon from '../../widgets/icons/delete'
 import CompassIcon from '../../widgets/icons/compassIcon'
+import ConfirmationDialogBox from "../confirmationDialogBox"
 
 const ChannelPermissionsRow = (): JSX.Element => {
     const intl = useIntl()
@@ -28,14 +29,10 @@ const ChannelPermissionsRow = (): JSX.Element => {
     const [showUnlinkChannelConfirmation, setShowUnlinkChannelConfirmation] = useState<boolean>(false)
 
     const onUnlinkBoard = async (confirmed?: boolean) => {
-        if (!confirmed) {
-            setShowUnlinkChannelConfirmation(true)
-            return
-        }
-        setShowUnlinkChannelConfirmation(false)
         const newBoard = createBoard(board)
         newBoard.channelId = ''
         mutator.updateBoard(newBoard, board, 'unlinked channel')
+        setShowUnlinkChannelConfirmation(false)
     }
 
     useEffect(() => {
@@ -50,18 +47,32 @@ const ChannelPermissionsRow = (): JSX.Element => {
         return <></>
     }
 
+    const confirmationDialog = (
+        <ConfirmationDialogBox
+            dialogBox={{
+                heading: intl.formatMessage({
+                    id: 'shareBoard.confirm-unlink.title',
+                    defaultMessage: 'Unlink channel from board',
+                }),
+                subText: intl.formatMessage({
+                    id: 'shareBoard.confirm-unlink.body',
+                    defaultMessage: 'When you unlink a channel from a board, all members of the channel (existing and new) will loose access to it unless they are given permission separately. {lineBreak} Are you sure you want to unlink it?',
+                }, {
+                    lineBreak: <p/>
+                }),
+                confirmButtonText: intl.formatMessage({
+                    id: 'shareBoard.confirm-unlink.confirmBtnText',
+                    defaultMessage: 'Yes, unlink',
+                }),
+                onConfirm: onUnlinkBoard,
+                onClose: () => setShowUnlinkChannelConfirmation(false),
+            }}
+        />
+    )
+
     return (
-        <div className='user-item'>
-            {showUnlinkChannelConfirmation &&
-                <ConfirmationDialog
-                    dialogBox={{
-                        heading: intl.formatMessage({id: 'shareBoard.confirm-unlink-channel', defaultMessage: 'Unlink Channel from Board'}),
-                        subText: intl.formatMessage({id: 'shareBoard.confirm-unlink-channel-subtext', defaultMessage: 'When you unlink a channel from a board, all members of the channel (existing and new) will lose access to it unless they are given permissions separately.\n\nAre you sure you want to unlink it?'}),
-                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-unlink-channel-button', defaultMessage: 'Yes, Unlink'}),
-                        onConfirm: () => onUnlinkBoard(true),
-                        onClose: () => setShowUnlinkChannelConfirmation(false),
-                    }}
-                />}
+        <div className='user-item channel-item'>
+            {showUnlinkChannelConfirmation && confirmationDialog}
             <div className='user-item__content'>
                 <span className='user-item__img'>
                     {linkedChannel.type === 'P' && <PrivateIcon/>}
@@ -86,7 +97,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
                             id='Unlink'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Unlink'})}
-                            onClick={() => onUnlinkBoard()}
+                            onClick={() => setShowUnlinkChannelConfirmation(true)}
                         />
                     </Menu>
                 </MenuWrapper>

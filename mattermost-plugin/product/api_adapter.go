@@ -34,7 +34,7 @@ type serviceAPIAdapter struct {
 func newServiceAPIAdapter(api *boardsProduct) *serviceAPIAdapter {
 	return &serviceAPIAdapter{
 		api: api,
-		ctx: &request.Context{},
+		ctx: request.EmptyContext(api.logger),
 	}
 }
 
@@ -94,7 +94,7 @@ func (a *serviceAPIAdapter) GetUserByEmail(email string) (*mm_model.User, error)
 }
 
 func (a *serviceAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, error) {
-	user, appErr := a.api.userService.UpdateUser(user, true)
+	user, appErr := a.api.userService.UpdateUser(a.ctx, user, true)
 	return user, normalizeAppErr(appErr)
 }
 
