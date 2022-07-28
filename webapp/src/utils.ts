@@ -757,6 +757,13 @@ class Utils {
         return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey && !e.altKey)
     }
 
+    static getBoardPagePath(currentPath: string) {
+        if (currentPath == "/team/:teamId/new/:channelId") {
+            return "/team/:teamId/:boardId?/:viewId?/:cardId?"
+        }
+        return currentPath
+    }
+
     static showBoard(
         boardId: string,
         match: routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>,
@@ -769,7 +776,7 @@ class Utils {
             params.viewId = undefined
             params.cardId = undefined
         }
-        const newPath = generatePath(match.path, params)
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         history.push(newPath)
     }
 
