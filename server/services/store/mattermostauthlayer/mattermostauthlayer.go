@@ -3,6 +3,7 @@ package mattermostauthlayer
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
 
