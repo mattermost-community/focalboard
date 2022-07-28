@@ -8,6 +8,11 @@
         min-height: 28px;
     }
 
+    .description {
+        max-height: 80px;
+        overflow: auto;
+    }
+
     > .add-buttons {
         flex-direction: row;
         color: rgba(var(--center-channel-color-rgb), 0.4);
