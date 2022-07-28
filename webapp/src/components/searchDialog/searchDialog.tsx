@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {ReactNode, useMemo, useState} from 'react'
+import React, {ReactNode, useEffect, useMemo, useState} from 'react'
 
 import './searchDialog.scss'
 import {FormattedMessage} from 'react-intl'
@@ -10,6 +10,7 @@ import {debounce} from 'lodash'
 import Dialog from '../dialog'
 import {Utils} from '../../utils'
 import Search from '../../widgets/icons/search'
+import { Constants } from '../../constants'
 
 type Props = {
     onClose: () => void
@@ -17,9 +18,11 @@ type Props = {
     subTitle?: string | ReactNode
     searchHandler: (query: string) => Promise<Array<ReactNode>>
     initialData?: Array<ReactNode>
+    selected: number
+    setSelected: (n: number) => void
 }
 
-export const EmptySearch = () => (
+export const EmptySearch = (): JSX.Element => (
     <div className='noResults introScreen'>
         <div className='iconWrapper'>
             <Search/>
@@ -33,7 +36,7 @@ export const EmptySearch = () => (
     </div>
 )
 
-export const EmptyResults = (props: {query: string}) => (
+export const EmptyResults = (props: {query: string}): JSX.Element => (
     <div className='noResults'>
         <div className='iconWrapper'>
             <Search/>
@@ -57,12 +60,14 @@ export const EmptyResults = (props: {query: string}) => (
 )
 
 const SearchDialog = (props: Props): JSX.Element => {
+    const {selected, setSelected} = props
     const [results, setResults] = useState<Array<ReactNode>>(props.initialData || [])
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
 
     const searchHandler = async (query: string): Promise<void> => {
         setIsSearching(true)
+        setSelected(-1)
         setSearchQuery(query)
         const searchResults = await props.searchHandler(query)
         setResults(searchResults)
@@ -72,6 +77,29 @@ const SearchDialog = (props: Props): JSX.Element => {
     const debouncedSearchHandler = useMemo(() => debounce(searchHandler, 200), [])
 
     const emptyResult = results.length === 0 && !isSearching && searchQuery
+
+    const handleUpDownKeyPress = (e: KeyboardEvent) => {
+        if (Utils.isKeyPressed(e, Constants.keyCodes.DOWN)) {
+            e.preventDefault()
+            if (results.length > 0)
+                setSelected(((selected + 1) < results.length) ? (selected + 1) : selected)
+        }
+
+        if (Utils.isKeyPressed(e, Constants.keyCodes.UP)) {
+            e.preventDefault()
+            if (results.length > 0)
+                setSelected(((selected - 1) > -1) ? (selected - 1) : selected)
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleUpDownKeyPress)
+
+        // cleanup function
+        return () => {
+            document.removeEventListener('keydown', handleUpDownKeyPress)
+        }
+    }, [results, selected])
 
     return (
         <Dialog
@@ -101,6 +129,7 @@ const SearchDialog = (props: Props): JSX.Element => {
                             <div
                                 key={Utils.uuid()}
                                 className='searchResult'
+                                tabIndex={-1}
                             >
                                 {result}
                             </div>
