@@ -14,6 +14,7 @@ import {Channel} from '../../store/channels'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
+import ConfirmationDialog from '../confirmationDialogBox'
 
 import PrivateIcon from '../../widgets/icons/lockOutline'
 import PublicIcon from '../../widgets/icons/globe'
@@ -24,8 +25,14 @@ const ChannelPermissionsRow = (): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const [linkedChannel, setLinkedChannel] = useState<Channel|null>(null)
+    const [showUnlinkChannelConfirmation, setShowUnlinkChannelConfirmation] = useState<boolean>(false)
 
-    const onUnlinkBoard = async () => {
+    const onUnlinkBoard = async (confirmed?: boolean) => {
+        if (!confirmed) {
+            setShowUnlinkChannelConfirmation(true)
+            return
+        }
+        setShowUnlinkChannelConfirmation(false)
         const newBoard = createBoard(board)
         newBoard.channelId = ''
         mutator.updateBoard(newBoard, board, 'unlinked channel')
@@ -45,6 +52,16 @@ const ChannelPermissionsRow = (): JSX.Element => {
 
     return (
         <div className='user-item'>
+            {showUnlinkChannelConfirmation &&
+                <ConfirmationDialog
+                    dialogBox={{
+                        heading: intl.formatMessage({id: 'shareBoard.confirm-unlink-channel', defaultMessage: 'Unlink Channel from Board'}),
+                        subText: intl.formatMessage({id: 'shareBoard.confirm-unlink-channel-subtext', defaultMessage: 'When you unlink a channel from a board, all members of the channel (existing and new) will lose access to it unless they are given permissions separately.\n\nAre you sure you want to unlink it?'}),
+                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-unlink-channel-button', defaultMessage: 'Yes, Unlink'}),
+                        onConfirm: () => onUnlinkBoard(true),
+                        onClose: () => setShowUnlinkChannelConfirmation(false),
+                    }}
+                />}
             <div className='user-item__content'>
                 <span className='user-item__img'>
                     {linkedChannel.type === 'P' && <PrivateIcon/>}
@@ -69,7 +86,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
                             id='Unlink'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Unlink'})}
-                            onClick={onUnlinkBoard}
+                            onClick={() => onUnlinkBoard()}
                         />
                     </Menu>
                 </MenuWrapper>
