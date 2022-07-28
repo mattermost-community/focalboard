@@ -51,7 +51,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
             dialogBox={{
                 heading: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.title',
-                    defaultMessage: 'Unlink Channel from Board',
+                    defaultMessage: 'Unlink channel from board',
                 }),
                 subText: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.body',
@@ -61,7 +61,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
                 }),
                 confirmButtonText: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.confirmBtnText',
-                    defaultMessage: 'Yes, Unlink',
+                    defaultMessage: 'Yes, unlink',
                 }),
                 onConfirm: onUnlinkBoard,
                 onClose: () => setShowUnlinkChannelConfirmation(false),
