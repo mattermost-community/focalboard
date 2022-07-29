@@ -36,6 +36,7 @@ $z-index: (
     table-header:               1,
     value-selector-delete:      1,
     dialog-backdrop:           -1,
+    unset:                   unset
 );
 
 @function z-index($key) {
