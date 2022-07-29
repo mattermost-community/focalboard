@@ -75,6 +75,19 @@ const viewsSlice = createSlice({
         updateView: (state, action: PayloadAction<BoardView>) => {
             state.views[action.payload.id] = action.payload
         },
+        swapCardOrder: (state, action: PayloadAction<Array<string>>) => {
+            console.log(`swapCardOrder`)
+            const currentView = state.views[state.current]
+
+            const srcCardId = action.payload[0]
+            const destCardId = action.payload[1]
+
+            const srcCardIndex = currentView.fields.cardOrder.indexOf(srcCardId)
+            const destCardIndex = currentView.fields.cardOrder.indexOf(destCardId)
+
+            currentView.fields.cardOrder[srcCardIndex] = destCardId
+            currentView.fields.cardOrder[destCardIndex] = srcCardId
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
@@ -96,7 +109,7 @@ const viewsSlice = createSlice({
     },
 })
 
-export const {updateViews, setCurrent, updateView} = viewsSlice.actions
+export const {updateViews, setCurrent, updateView, swapCardOrder} = viewsSlice.actions
 export const {reducer} = viewsSlice
 
 export const getViews = (state: RootState): {[key: string]: BoardView} => state.views.views

@@ -33,6 +33,7 @@ type Props = {
     onClick?: (e: React.MouseEvent, card: Card) => void
     readonly: boolean
     onDrop: (srcCard: Card, dstCard: Card) => void
+    onHover: (srcCard: Card, dstCard: Card) => void
     showCard: (cardId?: string) => void
     isManualSort: boolean
 }
@@ -40,7 +41,7 @@ type Props = {
 const KanbanCard = (props: Props) => {
     const {card, board} = props
     const intl = useIntl()
-    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
+    const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop, props.onHover)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
@@ -93,9 +94,9 @@ const KanbanCard = (props: Props) => {
         <>
             <div
                 ref={props.readonly ? () => null : cardRef}
-                className={`${className} ${showOnboarding && OnboardingCardClassName}`}
+                className={`${className} ${showOnboarding && OnboardingCardClassName} ${isDragging ? 'isDragging' : ''}`}
                 draggable={!props.readonly}
-                style={{opacity: isDragging ? 0.5 : 1}}
+                style={{opacity: isDragging ? 0 : 1}}
                 onClick={handleOnClick}
             >
                 {!props.readonly &&

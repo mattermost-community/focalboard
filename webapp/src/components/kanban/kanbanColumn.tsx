@@ -24,10 +24,10 @@ const KanbanColumn = (props: Props) => {
         },
     }), [props.onDrop])
 
-    let className = 'octo-board-column'
-    if (isOver) {
-        className += ' dragover'
-    }
+    const className = 'octo-board-column'
+    // if (isOver) {
+    //     className += ' dragover'
+    // }
     return (
         <div
             ref={drop}

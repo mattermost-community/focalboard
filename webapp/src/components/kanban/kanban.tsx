@@ -6,6 +6,8 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
 
+import {hover} from "@testing-library/user-event/dist/hover"
+
 import {Position} from '../cardDetail/cardDetailContents'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
@@ -27,6 +29,8 @@ import KanbanColumnHeader from './kanbanColumnHeader'
 import KanbanHiddenColumnItem from './kanbanHiddenColumnItem'
 
 import './kanban.scss'
+import {useAppDispatch} from "../../store/hooks"
+import {swapCardOrder} from "../../store/views"
 
 type Props = {
     board: Board
@@ -99,7 +103,10 @@ const Kanban = (props: Props) => {
         return cardOrder
     }, [activeView, visibleGroups])
 
+    const dispatch = useAppDispatch()
+
     const onDropToColumn = useCallback(async (option: IPropertyOption, card?: Card, dstOption?: IPropertyOption) => {
+        console.log('onDropToColumn called')
         const {selectedCardIds} = props
         const optionId = option ? option.id : undefined
 
@@ -153,7 +160,7 @@ const Kanban = (props: Props) => {
         }
     }, [cards, visibleGroups, activeView.id, activeView.fields.cardOrder, groupByProperty, props.selectedCardIds])
 
-    const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card) => {
+    const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card, commit= true) => {
         if (srcCard.id === dstCard.id) {
             return
         }
@@ -181,19 +188,23 @@ const Kanban = (props: Props) => {
         }
         cardOrder.splice(destIndex, 0, ...draggedCardIds)
 
-        await mutator.performAsUndoGroup(async () => {
-            // Update properties of dragged cards
-            const awaits = []
-            for (const draggedCard of draggedCards) {
-                Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
-                const oldOptionId = draggedCard.fields.properties[groupByProperty!.id]
-                if (optionId !== oldOptionId) {
-                    awaits.push(mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty!.id, optionId, description))
+        if (commit) {
+            await mutator.performAsUndoGroup(async () => {
+                // Update properties of dragged cards
+                const awaits = []
+                for (const draggedCard of draggedCards) {
+                    Utils.log(`draggedCard: ${draggedCard.title}, column: ${optionId}`)
+                    const oldOptionId = draggedCard.fields.properties[groupByProperty!.id]
+                    if (optionId !== oldOptionId) {
+                        awaits.push(mutator.changePropertyValue(props.board.id, draggedCard, groupByProperty!.id, optionId, description))
+                    }
                 }
-            }
-            await Promise.all(awaits)
-            await mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
-        })
+                await Promise.all(awaits)
+                await mutator.changeViewCardOrder(props.board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
+            })
+        } else {
+            dispatch(swapCardOrder([srcCard.id, dstCard.id]))
+        }
     }, [cards.map((o) => o.id).join(','), activeView.id, activeView.fields.cardOrder, groupByProperty, props.selectedCardIds])
 
     const [showCalculationsMenu, setShowCalculationsMenu] = useState<Map<string, boolean>>(new Map<string, boolean>())
@@ -201,6 +212,21 @@ const Kanban = (props: Props) => {
         const newShowOptions = new Map<string, boolean>(showCalculationsMenu)
         newShowOptions.set(templateId, show)
         setShowCalculationsMenu(newShowOptions)
+    }
+
+    const [hoverCardPair, setHoverCardPair] = useState<Array<Card>>([{id: ''} as Card, {id: ''} as Card])
+
+    const cardOnHoverHandler = (srcCard: Card, dstCard: Card) => {
+        if (srcCard.id === hoverCardPair[0].id && dstCard.id === hoverCardPair[1].id) {
+            return
+        }
+
+        if (srcCard.id === dstCard.id || srcCard.id === '' || dstCard.id === '') {
+            return
+        }
+
+        console.log(`hovering ${srcCard.title} on ${dstCard.title}`)
+        onDropToCard(srcCard, dstCard, false)
     }
 
     return (
@@ -283,7 +309,15 @@ const Kanban = (props: Props) => {
                                 readonly={props.readonly}
                                 isSelected={props.selectedCardIds.includes(card.id)}
                                 onClick={props.onCardClicked}
-                                onDrop={onDropToCard}
+                                onDrop={(srcCard: Card, dstCard: Card) => onDropToCard(srcCard, dstCard, true)}
+                                onHover={(srcCard: Card, dstCard: Card) => {
+                                    if (srcCard.id === hoverCardPair[0].id && dstCard.id === hoverCardPair[1].id) {
+                                        return
+                                    }
+
+                                    setHoverCardPair([srcCard, dstCard])
+                                    cardOnHoverHandler(srcCard, dstCard)
+                                }}
                                 showCard={props.showCard}
                                 isManualSort={isManualSort}
                             />
@@ -332,4 +366,4 @@ const Kanban = (props: Props) => {
     )
 }
 
-export default injectIntl(Kanban)
+export default injectIntl(React.memo(Kanban))

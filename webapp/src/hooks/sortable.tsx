@@ -10,7 +10,13 @@ interface ISortableWithGripItem {
     cords: {x: number, y?: number, z?: number}
 }
 
-function useSortableBase<T>(itemType: string, item: T, enabled: boolean, handler: (src: T, st: T) => void): [boolean, boolean, DragElementWrapper<DragSourceOptions>, DragElementWrapper<DragSourceOptions>, DragElementWrapper<DragPreviewOptions>] {
+function useSortableBase<T>(
+    itemType: string,
+    item: T,
+    enabled: boolean,
+    dropHandler: (src: T, st: T) => void,
+    hoverHandler?: (src: T, st: T) => void,
+): [boolean, boolean, DragElementWrapper<DragSourceOptions>, DragElementWrapper<DragSourceOptions>, DragElementWrapper<DragPreviewOptions>] {
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: itemType,
         item,
@@ -19,23 +25,27 @@ function useSortableBase<T>(itemType: string, item: T, enabled: boolean, handler
         }),
         canDrag: () => enabled,
     }), [itemType, item, enabled])
+
     const [{isOver}, drop] = useDrop(() => ({
         accept: itemType,
         collect: (monitor) => ({
             isOver: monitor.isOver(),
         }),
         drop: (dragItem: T) => {
-            handler(dragItem, item)
+            dropHandler(dragItem, item)
         },
         canDrop: () => enabled,
-    }), [item, handler, enabled])
+        hover: (dragItem: T) => {
+            hoverHandler && hoverHandler(dragItem, item)
+        }
+    }), [item, dropHandler, enabled])
 
     return [isDragging, isOver, drag, drop, preview]
 }
 
-export function useSortable<T>(itemType: string, item: T, enabled: boolean, handler: (src: T, st: T) => void): [boolean, boolean, React.RefObject<HTMLDivElement>] {
+export function useSortable<T>(itemType: string, item: T, enabled: boolean, dropHandler: (src: T, st: T) => void, hoverHandler: (src: T, st: T) => void): [boolean, boolean, React.RefObject<HTMLDivElement>] {
     const ref = useRef<HTMLDivElement>(null)
-    const [isDragging, isOver, drag, drop] = useSortableBase(itemType, item, enabled, handler)
+    const [isDragging, isOver, drag, drop] = useSortableBase(itemType, item, enabled, dropHandler, hoverHandler)
     drop(drag(ref))
     return [isDragging, isOver, ref]
 }
