@@ -301,8 +301,6 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
-		Where(sq.Eq{"u.deleteAt": 0}).
-		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"u.id": userIDs})
 
 	rows, err := query.Query()
