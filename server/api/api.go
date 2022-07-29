@@ -132,9 +132,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/users", a.sessionRequired(a.handleGetTeamUsers)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/archive/export", a.sessionRequired(a.handleArchiveExportTeam)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
-	apiv2.HandleFunc("/teams/{teamID}", a.sessionRequired(a.handleGetUsersByTeamIDAndIds)).Methods("POST")
 
 	// User APIs
+	apiv2.HandleFunc("/users", a.sessionRequired(a.handleGetUsersList)).Methods("POST")
 	apiv2.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv2.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
@@ -1064,8 +1064,8 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleGetUsersByTeamIDAndIds(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /users/{userID} getUser
+func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /users getUser
 	//
 	// Returns a user[]
 	//
@@ -1090,37 +1090,34 @@ func (a *API) handleGetUsersByTeamIDAndIds(w http.ResponseWriter, r *http.Reques
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	vars := mux.Vars(r)
-	teamID := vars["teamID"]
-
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	var requestData []string
-	if err = json.Unmarshal(requestBody, &requestData); err != nil {
+	var userIDs []string
+	if err = json.Unmarshal(requestBody, &userIDs); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	auditRec := a.makeAuditRecord(r, "getUserByTeamIdAndIds", audit.Fail)
+	auditRec := a.makeAuditRecord(r, "getUsersList", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
 
-	users, err := a.app.GetUsersByTeamIDAndIds(teamID, requestData)
+	users, err := a.app.GetUsersList(userIDs)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
 
-	userData, err := json.Marshal(users)
+	usersList, err := json.Marshal(users)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
 
-	jsonStringResponse(w, http.StatusOK, string(userData))
+	jsonStringResponse(w, http.StatusOK, string(usersList))
 	auditRec.Success()
 }
 

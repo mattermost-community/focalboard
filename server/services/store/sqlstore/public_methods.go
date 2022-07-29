@@ -499,10 +499,6 @@ func (s *SQLStore) GetUserByID(userID string) (*model.User, error) {
 
 }
 
-func (s *SQLStore) GetUsersByTeamIDAndIDs(teamID string, userIDs []string) ([]*model.User, error) {
-	return s.getUsersByTeamIDAndIDs(s.db, teamID, userIDs)
-}
-
 func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 	return s.getUserByUsername(s.db, username)
 
@@ -515,6 +511,11 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return s.getUsersByTeam(s.db, teamID)
+
+}
+
+func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs)
 
 }
 
