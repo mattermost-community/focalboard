@@ -187,6 +187,23 @@ class OctoClient {
         return user
     }
 
+    async getUsersList(userIds: string[]): Promise<IUser[] | []> {
+        const path = `/api/v2/users`
+        const body = JSON.stringify(userIds)
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+            body,
+        })
+
+        if(response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as IUser[]
+
+    }
+
     async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
         const path = `/api/v2/users/${encodeURIComponent(userID)}/config`
         const body = JSON.stringify(patch)
