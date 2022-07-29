@@ -26,7 +26,6 @@
   "Filter.not-includes": "δεν περιέχει",
   "FilterComponent.add-filter": "+ Προσθήκη φίλτρου",
   "FilterComponent.delete": "Διαγραφή",
-  "KanbanCard.delete": "Διαγραφή",
   "KanbanCard.untitled": "Χωρίς τίτλο",
   "Mutator.new-card-from-template": "νέα κάρτα από πρότυπο",
   "Mutator.new-template-from-card": "νέο πρότυπο από την κάρτα",
