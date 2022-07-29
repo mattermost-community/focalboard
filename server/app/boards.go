@@ -326,7 +326,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
-	if existingMembership != nil {
+	if existingMembership != nil && !existingMembership.Synthetic {
 		return existingMembership, nil
 	}
 
