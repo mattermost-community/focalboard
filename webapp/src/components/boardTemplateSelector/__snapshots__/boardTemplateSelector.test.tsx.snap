@@ -29,7 +29,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <p
         class="description"
       >
-        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
       </p>
     </div>
     <div
@@ -307,7 +307,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <p
         class="description"
       >
-        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
       </p>
     </div>
     <div
@@ -456,7 +456,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
       <p
         class="description"
       >
-        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
       </p>
     </div>
     <div

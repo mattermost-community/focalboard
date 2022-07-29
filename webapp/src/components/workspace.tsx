@@ -4,7 +4,6 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
 import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
@@ -33,9 +32,8 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
-    const team = useAppSelector(getCurrentTeam)
     const isLoading = useAppSelector(isLoadingBoard)
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, channelId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -51,7 +49,7 @@ function CenterContent(props: Props) {
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
-        let newPath = generatePath(match.path, params)
+        let newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         if (props.readonly) {
             newPath += `?r=${Utils.getReadToken()}`
         }
@@ -115,20 +113,16 @@ function CenterContent(props: Props) {
             title={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a Board in {teamName}'
-                    values={{teamName: team?.title}}
+                    defaultMessage='Create a board'
                 />
             }
             description={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-description'
-                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{teamName}" will have access to boards created here.'
-                    values={{
-                        teamName: <b>{team?.title}</b>,
-                        lineBreak: <br/>,
-                    }}
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
                 />
             }
+            channelId={match.params.channelId}
         />
     )
 }
