@@ -133,6 +133,12 @@ const boardsSlice = createSlice({
                 if (board.deleteAt !== 0) {
                     delete state.boards[board.id]
                     delete state.templates[board.id]
+
+                    console.log('<<<',board.id, JSON.parse(JSON.stringify(state)))
+                    if (board.id === state.current) {
+                        console.log('+++')
+                        state.current = state.boards[0].id
+                    }
                 } else if (board.isTemplate) {
                     state.templates[board.id] = board
                 } else {

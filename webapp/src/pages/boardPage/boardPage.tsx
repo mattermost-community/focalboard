@@ -71,6 +71,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
+    console.log('---',activeBoardId,activeViewId,me)
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -149,6 +150,12 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+        }
+    })
+
+    useEffect(() => {
+        return () => {
+            console.log('bye')
         }
     })
 

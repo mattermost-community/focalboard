@@ -47,6 +47,8 @@ function CenterContent(props: Props) {
     const history = useHistory()
     const dispatch = useAppDispatch()
 
+    console.log('>>>', board, activeView, match)
+
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
         let newPath = generatePath(Utils.getBoardPagePath(match.path), params)
