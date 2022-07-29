@@ -35,7 +35,7 @@ type notifier struct {
 	store       AppAPI
 	permissions permissions.PermissionsService
 	delivery    SubscriptionDelivery
-	logger      *mlog.Logger
+	logger      mlog.LoggerIFace
 
 	hints chan *model.NotificationHint
 

@@ -32,6 +32,7 @@ jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
+mockedUtils.generateClassName = jest.requireActual('../utils').Utils.generateClassName
 describe('components/centerPanel', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
@@ -133,6 +134,11 @@ describe('components/centerPanel', () => {
             commentsByCard: {
                 [card1.id]: [comment1],
                 [card2.id]: [comment2],
+            },
+        },
+        imits: {
+            limits: {
+                views: 0,
             },
         },
     }

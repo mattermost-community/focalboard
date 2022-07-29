@@ -54,7 +54,7 @@ export const initialReadOnlyLoad = createAsyncThunk(
         if (!board) {
             throw new Error(ErrorId.InvalidReadOnlyBoard)
         }
-        
+
         return {board, blocks}
     },
 )
@@ -65,6 +65,16 @@ export const loadBoardData = createAsyncThunk(
         const blocks = await client.getAllBlocks(boardID)
         return {
             blocks,
+        }
+    },
+)
+
+export const loadBoards = createAsyncThunk(
+    'loadBoards',
+    async () => {
+        const boards = await client.getBoards()
+        return {
+            boards,
         }
     },
 )

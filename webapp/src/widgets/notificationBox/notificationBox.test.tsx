@@ -5,9 +5,10 @@ import React from 'react'
 import {render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
-import {wrapIntl} from '../testUtils'
+import {wrapIntl} from '../../testUtils'
 
-import NotificationBox from './notification-box'
+import NotificationBox from "./notificationBox"
+
 
 describe('widgets/NotificationBox', () => {
     beforeEach(() => {

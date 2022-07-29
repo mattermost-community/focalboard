@@ -6,6 +6,8 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 var errTestStore = errors.New("plugin test store error")
@@ -195,4 +197,63 @@ func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) (
 		}
 	}
 	return users, nil
+}
+
+func (s *PluginTestStore) SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error) {
+	return []*mmModel.Channel{
+		{
+			TeamId:      teamID,
+			Id:          "valid-channel-id",
+			DisplayName: "Valid Channel",
+			Name:        "valid-channel",
+		},
+		{
+			TeamId:      teamID,
+			Id:          "valid-channel-id-2",
+			DisplayName: "Valid Channel 2",
+			Name:        "valid-channel-2",
+		},
+	}, nil
+}
+
+func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, error) {
+	if channel == "valid-channel-id" {
+		return &mmModel.Channel{
+			TeamId:      teamID,
+			Id:          "valid-channel-id",
+			DisplayName: "Valid Channel",
+			Name:        "valid-channel",
+		}, nil
+	} else if channel == "valid-channel-id-2" {
+		return &mmModel.Channel{
+			TeamId:      teamID,
+			Id:          "valid-channel-id-2",
+			DisplayName: "Valid Channel 2",
+			Name:        "valid-channel-2",
+		}, nil
+	}
+	return nil, errTestStore
+}
+
+func (s *PluginTestStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
+	boards, err := s.Store.SearchBoardsForUser(term, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	teams, err := s.GetTeamsForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	resultBoards := []*model.Board{}
+	for _, board := range boards {
+		for _, team := range teams {
+			if team.ID == board.TeamID {
+				resultBoards = append(resultBoards, board)
+				break
+			}
+		}
+	}
+	return resultBoards, nil
 }
