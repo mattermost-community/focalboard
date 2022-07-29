@@ -253,11 +253,13 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 events={myEventsList}
                 editable={isEditable()}
                 eventResizableFromStart={isEditable()}
+                // this is the reverse of the default ordering (https://fullcalendar.io/docs/eventOrder)
+                // which gets reversed in CSS so the stacking contexts play nicely w/ "..." menus
+                eventOrder='-start,duration,-allDay,-title'
                 headerToolbar={toolbar}
                 buttonText={buttonText}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
-
                 selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}

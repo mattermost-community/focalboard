@@ -5,6 +5,13 @@
     margin-bottom: 10px;
     overflow: auto;
 
+    // reverse the order, which is already reversed when rendered by Full Calendar
+    // this is a pseudo-hack to allow the CSS stacking contexts to play nicely
+    .fc-daygrid-day-events {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
     .fc-daygrid-event,
     .fc-daygrid-day-number {
         text-decoration: none;
