@@ -34,6 +34,7 @@ type Props = {
     title?: React.ReactNode
     description?: React.ReactNode
     onClose?: () => void
+    channelId?: string
 }
 
 const BoardTemplateSelector = (props: Props) => {
@@ -99,10 +100,12 @@ const BoardTemplateSelector = (props: Props) => {
 
     const handleUseTemplate = async () => {
         if (activeTemplate.teamId === '0') {
-            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId: activeTemplate.properties.trackingTemplateId as string})
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardViaTemplate, {boardTemplateId: activeTemplate.properties.trackingTemplateId as string, channelID: props.channelId})
         }
 
-        await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
+        const boardsAndBlocks = await mutator.addBoardFromTemplate(currentTeam?.id || Constants.globalTeamId, intl, showBoard, () => showBoard(currentBoardId), activeTemplate.id, currentTeam?.id)
+        const board = boardsAndBlocks.boards[0]
+        await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
         if (activeTemplate.title === OnboardingBoardTitle) {
             resetTour()
         }
@@ -144,7 +147,7 @@ const BoardTemplateSelector = (props: Props) => {
                     {description || (
                         <FormattedMessage
                             id='BoardTemplateSelector.description'
-                            defaultMessage='Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.'
+                            defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
                         />
                     )}
                 </p>
@@ -193,7 +196,11 @@ const BoardTemplateSelector = (props: Props) => {
                             filled={false}
                             emphasis={'secondary'}
                             size={'medium'}
-                            onClick={() => mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
+                            onClick={async () => {
+                                const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                                const board = boardsAndBlocks.boards[0]
+                                await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
+                            }}
                         >
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'
