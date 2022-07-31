@@ -6,6 +6,9 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
 
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentView} from '../../store/views'
+
 import {Position} from '../cardDetail/cardDetailContents'
 
 import {Board, IPropertyOption, IPropertyTemplate, BoardGroup} from '../../blocks/board'
@@ -40,6 +43,7 @@ type Props = {
     readonly: boolean
     onCardClicked: (e: React.MouseEvent, card: Card) => void
     addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
+    addCardFromTemplate: (cardTemplateId: string, groupByOptionId?: string) => void
     showCard: (cardId?: string) => void
     hiddenCardsCount: number
     showHiddenCardCountNotification: (show: boolean) => void
@@ -50,6 +54,7 @@ const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
 const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
+    const currentView = useAppSelector(getCurrentView)
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
 
     if (!groupByProperty) {
@@ -292,7 +297,11 @@ const Kanban = (props: Props) => {
                             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                                 <Button
                                     onClick={() => {
-                                        props.addCard(group.option.id, true)
+                                        if(currentView.fields.defaultTemplateId) {
+                                            props.addCardFromTemplate(currentView.fields.defaultTemplateId, group.option.id)
+                                        } else {
+                                            props.addCard(group.option.id, true)
+                                        }
                                     }}
                                 >
                                     <FormattedMessage
