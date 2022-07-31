@@ -18,7 +18,7 @@
     transition: background 100ms ease-out 0s;
 
     &:hover {
-        background-color: rgba(var(--center-channel-color-rgb), 0.1);
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
 
         .optionsMenu {
             display: block;
@@ -30,12 +30,26 @@
     }
 
     .optionsMenu {
+        background: rgb(var(--center-channel-bg-rgb), 1);
         display: none;
         position: absolute;
-        right: 0;
+        right: 12px;
 
         &.show {
             display: block;
+        }
+
+        .IconButton {
+            border-radius: 3px;
+            padding: 0;
+            box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
+                rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
+            height: 24px;
+            width: 24px;
+
+            &:hover {
+                background: rgb(var(--center-channel-color-rgb), 0.1);
+            }
         }
     }
 
@@ -80,16 +94,5 @@
             -webkit-line-clamp: 5;
             -webkit-box-orient: vertical; // stylelint-disable-line
         }
-    }
-
-    .optionsMenu .IconButton {
-        border-radius: 3px;
-        margin-right: 12px;
-        padding: 0;
-        background: rgb(var(--center-channel-color-rgb), 0.1);
-        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
-            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
-        height: 24px;
-        width: 24px;
     }
 }
