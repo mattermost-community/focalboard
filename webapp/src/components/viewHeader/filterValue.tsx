@@ -1,12 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {cloneDeep} from 'lodash'
 
-import {IPropertyTemplate} from '../../blocks/board'
+import {IPropertyOption, IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'
 import {createFilterGroup} from '../../blocks/filterGroup'
 import {BoardView} from '../../blocks/boardView'
+import {useAppSelector} from '../../store/hooks'
+import {getBoardUsersList} from '../../store/users'
 import mutator from '../../mutator'
+import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
@@ -26,10 +30,18 @@ const filterValue = (props: Props): JSX.Element|null => {
         return null
     }
 
+    let options = cloneDeep(template.options)
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
+    if (template !== undefined && template.type === 'person') {
+        options = boardUsers.map((boardUser: IUser) => {
+            return { id: boardUser.id, value: boardUser.username, color: 'propColorDefault' } as IPropertyOption
+        })
+    }
+
     let displayValue: string
     if (filter.values.length > 0) {
         displayValue = filter.values.map((id) => {
-            const option = template.options.find((o) => o.id === id)
+            const option = options.find((o) => o.id === id)
             return option?.value || '(Unknown)'
         }).join(', ')
     } else {
@@ -40,7 +52,7 @@ const filterValue = (props: Props): JSX.Element|null => {
         <MenuWrapper className='filterValue'>
             <Button>{displayValue}</Button>
             <Menu>
-                {template.options.map((o) => (
+                {options.map((o) => (
                     <Menu.Switch
                         key={o.id}
                         id={o.id}

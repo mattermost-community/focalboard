@@ -40,7 +40,7 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    {board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect').map((o: IPropertyTemplate) => (
+                    {board.cardProperties.filter((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect' || o.type === 'person').map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
                             id={o.id}

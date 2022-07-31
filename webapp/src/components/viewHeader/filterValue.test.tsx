@@ -31,6 +31,9 @@ const state = {
             id: 'user-id-1',
             username: 'username_1',
         },
+        boardUsers: [
+            {username: 'username_1'},
+        ],
     },
 }
 const store = mockStateStore([], state)
