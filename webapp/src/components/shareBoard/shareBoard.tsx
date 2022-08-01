@@ -329,7 +329,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Yes, link here'})
     } else {
         confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.\n\nThis board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.\n\nAre you sure you want to link it?'})
-        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Yes, Unlink and link here'})
+        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Yes, unlink and link here'})
     }
 
     return (
@@ -341,7 +341,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
                     dialogBox={{
-                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link Board to Channel'}),
+                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
                         subText: confirmSubtext,
                         confirmButtonText: confirmButtonText,
                         onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
