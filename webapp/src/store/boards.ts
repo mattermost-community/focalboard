@@ -66,7 +66,6 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             /* eslint-enable no-await-in-loop */
 
             thunkAPI.dispatch(updateBoards(boardsToUpdate))
-            thunkAPI.dispatch(updateMembers(members))
         }
 
         // ensure the users for the new memberships get loaded
