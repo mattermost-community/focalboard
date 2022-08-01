@@ -249,6 +249,17 @@ export default class Plugin {
             }
         })
 
+        let fbPrevTeamID = store.getState().teams.currentId
+        store.subscribe(() => {
+            const currentTeamID = store.getState().teams.currentId
+            if (currentTeamID && currentTeamID !== fbPrevTeamID) {
+                if (fbPrevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
+                }
+                fbPrevTeamID = currentTeamID
+                selectTeam(currentTeamID)
+            }
+        })
+
         if (this.registry.registerProduct) {
             windowAny.frontendBaseURL = subpath + '/boards'
 
