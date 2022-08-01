@@ -160,8 +160,8 @@
 
     .Menu.noselect.left {
         position: fixed;
-        right: calc(100% - 480px + 50px);
-        left: calc(240px - 50px);
+        right: auto;
+        left: auto;
     }
 
     .boardMoveToCategorySubmenu {
