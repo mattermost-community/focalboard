@@ -134,6 +134,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// User APIs
+	apiv2.HandleFunc("/users", a.sessionRequired(a.handleGetUsersList)).Methods("POST")
 	apiv2.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv2.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
@@ -1060,6 +1061,63 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, userData)
+	auditRec.Success()
+}
+
+func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /users getUser
+	//
+	// Returns a user[]
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/User"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var userIDs []string
+	if err = json.Unmarshal(requestBody, &userIDs); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getUsersList", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+
+	users, err := a.app.GetUsersList(userIDs)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	usersList, err := json.Marshal(users)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(usersList))
 	auditRec.Success()
 }
 

@@ -160,8 +160,21 @@
 
     .Menu.noselect.left {
         position: fixed;
-        right: calc(100% - 480px + 50px);
-        left: calc(240px - 50px);
+        right: auto;
+        left: auto;
+    }
+
+    .boardMoveToCategorySubmenu {
+        .menu-options {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        @media only screen and (max-height: 768px) {
+            .menu-options {
+                max-height: min(350px, 50vh);
+            }
+        }
     }
 }
 

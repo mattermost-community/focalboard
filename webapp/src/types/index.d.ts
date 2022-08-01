@@ -21,4 +21,5 @@ export type SuiteWindow = Window & {
     baseURL?: string
     frontendBaseURL?: string
     isFocalboardPlugin?: boolean
+    WebappUtils?: any
 }

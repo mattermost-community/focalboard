@@ -59,6 +59,7 @@ import './boardPage.scss'
 
 type Props = {
     readonly?: boolean
+    new?: boolean
 }
 
 const BoardPage = (props: Props): JSX.Element => {
@@ -162,7 +163,7 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         }
-    })
+    }, [me?.id])
 
     const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
         // and fetch its data
@@ -215,7 +216,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
     return (
         <div className='BoardPage'>
-            <TeamToBoardAndViewRedirect/>
+            {!props.new && <TeamToBoardAndViewRedirect/>}
             <BackwardCompatibilityQueryParamsRedirect/>
             <SetWindowTitleAndIcon/>
             <UndoRedoHotKeys/>

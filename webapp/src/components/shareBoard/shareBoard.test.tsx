@@ -77,21 +77,27 @@ board.cardProperties = [
         ],
     },
 ]
+board.channelId = 'channel_1'
+
 const activeView = TestBlockFactory.createBoardView(board)
 activeView.id = 'view1'
 activeView.fields.hiddenOptionIds = []
 activeView.fields.visiblePropertyIds = ['property1']
 activeView.fields.visibleOptionIds = ['value1']
+
 const fakeBoard = {id: board.id}
 activeView.boardId = fakeBoard.id
+
 const card1 = TestBlockFactory.createCard(board)
 card1.id = 'card1'
 card1.title = 'card-1'
 card1.boardId = fakeBoard.id
+
 const card2 = TestBlockFactory.createCard(board)
 card2.id = 'card2'
 card2.title = 'card-2'
 card2.boardId = fakeBoard.id
+
 const card3 = TestBlockFactory.createCard(board)
 card3.id = 'card3'
 card3.title = 'card-3'
@@ -187,6 +193,8 @@ describe('src/components/shareBoard/shareBoard', () => {
             viewId,
             workspaceId,
         }
+
+        mockedOctoClient.getChannel.mockResolvedValue({type: 'P', display_name: 'Dunder Mifflin Party Planing Committee'} as Channel)
     })
 
     afterEach(() => {
@@ -335,6 +343,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedOctoClient.setSharing).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
     })
+
     test('return shareBoard, and click switch', async () => {
         const sharing:ISharing = {
             id: boardId,
@@ -374,6 +383,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedOctoClient.getSharing).toBeCalledTimes(2)
         expect(container).toMatchSnapshot()
     })
+
     test('return shareBoardComponent and click Switch without sharing', async () => {
         const sharing:ISharing = {
             id: '',
@@ -425,6 +435,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedUtils.createGuid).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
     })
+
     test('should match snapshot with sharing and without workspaceId and subpath', async () => {
         w.baseURL = '/test-subpath/plugins/boards'
         const sharing:ISharing = {
@@ -574,5 +585,49 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
+    })
+
+    test('confirm unlinking linked channel', async () => {
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+
+        let container: Element | DocumentFragment | null = null
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+
+        const channelMenuBtn = container!.querySelector('.user-item.channel-item .MenuWrapper')
+        expect(channelMenuBtn).not.toBeNull()
+        userEvent.click(channelMenuBtn as Element)
+
+        const unlinkOption = screen.getByText('Unlink')
+        expect(unlinkOption).not.toBeNull()
+        userEvent.click(unlinkOption)
+
+        const unlinkConfirmationBtn = screen.getByText('Yes, unlink')
+        expect(unlinkConfirmationBtn).not.toBeNull()
+        userEvent.click(unlinkConfirmationBtn)
+
+        expect(mockedOctoClient.patchBoard).toBeCalled()
+
+        const closeButton = screen.getByRole('button', {name: 'Close dialog'})
+        expect(closeButton).toBeDefined()
     })
 })

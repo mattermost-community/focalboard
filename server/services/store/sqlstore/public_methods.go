@@ -514,6 +514,11 @@ func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs)
+
+}
+
 func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.insertBlock(s.db, block, userID)

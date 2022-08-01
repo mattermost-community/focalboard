@@ -26,6 +26,11 @@
         flex-direction: column;
         padding: 8px 0;
         min-width: 240px;
+        max-width: 320px;
+    }
+
+    .view-list {
+        overflow: hidden;
     }
 
     .menu-options {
@@ -75,12 +80,19 @@
                 margin-left: 16px;
             }
 
+            .noicon {
+                &:empty {
+                    display: none;
+                }
+            }
+
             > *:first-child {
                 margin-left: 0;
             }
 
             > .menu-name {
-                display: flex;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 flex-grow: 1;
                 white-space: nowrap;
             }
@@ -93,6 +105,7 @@
                 opacity: 0.56;
                 width: 18px;
                 height: 18px;
+                flex: 0 0 18px;
             }
 
             .IconButton .Icon {

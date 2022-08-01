@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from "react-router-dom"
 
@@ -106,12 +106,15 @@ const SidebarBoardItem = (props: Props) => {
 
     }, [board.id])
 
+    const boardItemRef = useRef<HTMLDivElement>(null)
+
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     return (
         <>
             <div
                 className={`SidebarBoardItem subitem ${props.isActive ? 'active' : ''}`}
                 onClick={() => props.showBoard(board.id)}
+                ref={boardItemRef}
             >
                 <div className='octo-sidebar-icon'>
                     {board.icon || <BoardIcon/>}
@@ -136,7 +139,8 @@ const SidebarBoardItem = (props: Props) => {
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu
                         fixed={true}
-                        position='left'
+                        position='auto'
+                        parentRef={boardItemRef}
                     >
                         <BoardPermissionGate
                             boardId={board.id}
@@ -155,9 +159,10 @@ const SidebarBoardItem = (props: Props) => {
                         <Menu.SubMenu
                             key={`moveBlock-${board.id}`}
                             id='moveBlock'
+                            className='boardMoveToCategorySubmenu'
                             name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
                             icon={<CreateNewFolder/>}
-                            position='bottom'
+                            position='auto'
                         >
                             {generateMoveToCategoryOptions(board.id)}
                         </Menu.SubMenu>
