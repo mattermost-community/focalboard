@@ -14,7 +14,6 @@ import {Channel} from '../../store/channels'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
-import ConfirmationDialog from '../confirmationDialogBox'
 
 import PrivateIcon from '../../widgets/icons/lockOutline'
 import PublicIcon from '../../widgets/icons/globe'
@@ -28,7 +27,7 @@ const ChannelPermissionsRow = (): JSX.Element => {
     const [linkedChannel, setLinkedChannel] = useState<Channel|null>(null)
     const [showUnlinkChannelConfirmation, setShowUnlinkChannelConfirmation] = useState<boolean>(false)
 
-    const onUnlinkBoard = async (confirmed?: boolean) => {
+    const onUnlinkBoard = async () => {
         const newBoard = createBoard(board)
         newBoard.channelId = ''
         mutator.updateBoard(newBoard, board, 'unlinked channel')
