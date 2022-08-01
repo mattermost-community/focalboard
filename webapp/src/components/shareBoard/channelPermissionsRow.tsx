@@ -58,13 +58,11 @@ const ChannelPermissionsRow = (): JSX.Element => {
                 }),
                 subText: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.body',
-                    defaultMessage: 'When you unlink a channel from a board, all members of the channel (existing and new) will loose access to it unless they are given permission separately. {lineBreak} Are you sure you want to unlink it?',
-                }, {
-                    lineBreak: <p/>
+                    defaultMessage: 'When you unlink a channel from a board, all members of the channel (existing and new) will loose access to it unless they are given permission separately.',
                 }),
                 confirmButtonText: intl.formatMessage({
                     id: 'shareBoard.confirm-unlink.confirmBtnText',
-                    defaultMessage: 'Yes, unlink',
+                    defaultMessage: 'Unlink channel',
                 }),
                 onConfirm: onUnlinkBoard,
                 onClose: () => setShowUnlinkChannelConfirmation(false),

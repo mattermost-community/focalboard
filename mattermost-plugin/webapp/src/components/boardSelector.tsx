@@ -130,9 +130,10 @@ const BoardSelector = () => {
                             heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link board to channel'}),
                             subText: intl.formatMessage({
                                 id: 'boardSelector.confirm-link-board-subtext',
-                                defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board. Are you sure you want to link it?'
+                                defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. You can unlink a board from a channel at any time.'
                             }, {boardName: showLinkBoardConfirmation.title}),
-                            confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
+                            primary: true,
+                            confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Link board'}),
                             onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
                             onClose: () => setShowLinkBoardConfirmation(null),
                         }}
@@ -150,7 +151,7 @@ const BoardSelector = () => {
                                 onClick={() => newLinkedBoard()}
                                 emphasis='secondary'
                             >
-                                <FormattedMessage 
+                                <FormattedMessage
                                     id='boardSelector.create-a-board'
                                     defaultMessage='Create a board'
                                 />

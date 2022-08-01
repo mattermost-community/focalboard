@@ -331,9 +331,10 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
                     dialogBox={{
+                        primary: true,
                         heading: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel', defaultMessage: 'You\'re adding a public channel'}),
                         subText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-subtext', defaultMessage: 'Anyone who joins that public channel will now get “Editor” access to the board, are you sure you want to proceed?'}),
-                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-button', defaultMessage: 'Yes, add public channel'}),
+                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-button', defaultMessage: 'Yes, Link Channel'}),
                         onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
                         onClose: () => setShowLinkChannelConfirmation(null),
                     }}
