@@ -1060,6 +1060,21 @@ func (mr *MockStoreMockRecorder) GetUsersByTeam(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersByTeam", reflect.TypeOf((*MockStore)(nil).GetUsersByTeam), arg0)
 }
 
+// GetUsersList mocks base method.
+func (m *MockStore) GetUsersList(arg0 []string) ([]*model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUsersList", arg0)
+	ret0, _ := ret[0].([]*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUsersList indicates an expected call of GetUsersList.
+func (mr *MockStoreMockRecorder) GetUsersList(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersList", reflect.TypeOf((*MockStore)(nil).GetUsersList), arg0)
+}
+
 // InsertBlock mocks base method.
 func (m *MockStore) InsertBlock(arg0 *model.Block, arg1 string) error {
 	m.ctrl.T.Helper()
