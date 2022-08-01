@@ -153,9 +153,21 @@
         }
     }
 
-    .octo-sidebar-icon > .Icon {
-        width: 19px;
-        vertical-align: top;
+    .octo-sidebar-icon {
+        .CompassIcon {
+            font-size: 18px;
+            margin: 0 -2px 0 -1px;
+
+            &::before {
+                margin: 0;
+            }
+        }
+
+        > .Icon {
+            width: 16px;
+            vertical-align: top;
+            margin-left: -2px;
+        }
     }
 
     .Menu.noselect.left {
