@@ -43,13 +43,13 @@
 
     .sub-text {
         text-align: center;
-        white-space: pre-line;
     }
 }
 
 .action-buttons {
-    display: grid;
-    grid-gap: 10px;
+    display: flex;
+    grid-gap: 12px;
+    gap: 12px;
     grid-template-columns: repeat(2, 1fr);
     margin-top: 32px;
 }
