@@ -31,6 +31,10 @@ import {getCurrentTeam} from '../../store/teams'
 
 import {Constants} from "../../constants"
 
+import {getMe} from "../../store/users"
+
+import {Board} from "../../blocks/board"
+
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
@@ -53,9 +57,16 @@ const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
-    const boards = useAppSelector(getMySortedBoards)
+    const allBoards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
+    const me = useAppSelector(getMe)
+    const filterVisibleBoards = (rawBoards: Array<Board>): Array<Board> => {
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || []
+        return rawBoards.filter((board) => hiddenBoardIDs.indexOf(board.id) < 0)
+    }
+
+    const boards = filterVisibleBoards(allBoards)
     const sidebarCategories = addMissingItems(partialCategories, boards)
 
     useEffect(() => {

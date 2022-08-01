@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser} from '../user'
+import {IUser, parseUserProps} from '../user'
 
 import {Utils} from '../utils'
 
@@ -47,6 +47,9 @@ const usersSlice = createSlice({
     reducers: {
         setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
+            if (state.me) {
+                state.me.props = parseUserProps(state.me.props)
+            }
             state.loggedIn = Boolean(state.me)
         },
         setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
@@ -74,13 +77,16 @@ const usersSlice = createSlice({
         },
         patchProps: (state, action: PayloadAction<Record<string, string>>) => {
             if (state.me) {
-                state.me.props = action.payload
+                state.me.props = parseUserProps(action.payload)
             }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
             state.me = action.payload || null
+            if (state.me) {
+                state.me.props = parseUserProps(state.me.props)
+            }
             state.loggedIn = Boolean(state.me)
         })
         builder.addCase(fetchMe.rejected, (state) => {

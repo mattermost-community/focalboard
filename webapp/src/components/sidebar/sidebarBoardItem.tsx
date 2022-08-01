@@ -17,7 +17,7 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 import './sidebarBoardItem.scss'
 import {CategoryBoards} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
@@ -32,6 +32,10 @@ import DuplicateIcon from "../../widgets/icons/duplicate"
 import {Utils} from "../../utils"
 
 import AddIcon from "../../widgets/icons/add"
+import CloseIcon from "../../widgets/icons/close"
+import {UserConfigPatch} from "../../user"
+import {getMe, patchProps} from "../../store/users"
+import octoClient from "../../octoClient"
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -62,9 +66,11 @@ const SidebarBoardItem = (props: Props) => {
     const boardViews = useAppSelector(getCurrentBoardViews)
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
+    const me = useAppSelector(getMe)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
+    const dispatch = useAppDispatch()
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -105,6 +111,30 @@ const SidebarBoardItem = (props: Props) => {
         Utils.showBoard(boardId, match, history)
 
     }, [board.id])
+
+    const handleHideBoard = async() => {
+        if (!me ) {
+            return
+        }
+
+        const hiddenBoards = [...(me.props.hiddenBoardIDs || [])]
+
+        // check for already hidden board. Skip if so
+        if (hiddenBoards.indexOf(board.id) > -1) {
+            return
+        }
+
+        hiddenBoards.push(board.id)
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                'hiddenBoardIDs': JSON.stringify(hiddenBoards),
+            }
+        }
+        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        if (patchedProps) {
+            return dispatch(patchProps(patchedProps))
+        }
+    }
 
     const boardItemRef = useRef<HTMLDivElement>(null)
 
@@ -177,6 +207,12 @@ const SidebarBoardItem = (props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
                             icon={<AddIcon/>}
                             onClick={() => handleDuplicateBoard(true)}
+                        />
+                        <Menu.Text
+                            id='hideBoard'
+                            name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
+                            icon={<CloseIcon/>}
+                            onClick={() => handleHideBoard()}
                         />
                     </Menu>
                 </MenuWrapper>
