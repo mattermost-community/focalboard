@@ -146,7 +146,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     const onLinkBoard = async (channel: Channel, confirmed?: boolean) => {
-        if (channel.type === ChannelTypeOpen && !confirmed) {
+        if (!confirmed) {
             setShowLinkChannelConfirmation(channel)
             return
         }
@@ -322,6 +322,16 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
 
+    let confirmSubtext
+    let confirmButtonText
+    if (board.channelId == '') {
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.\n\nAre you sure you want to link it?'})
+        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Yes, link here'})
+    } else {
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.\n\nThis board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.\n\nAre you sure you want to link it?'})
+        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Yes, unlink and link here'})
+    }
+
     return (
         <Dialog
             onClose={props.onClose}
@@ -331,9 +341,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
                     dialogBox={{
-                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel', defaultMessage: 'You\'re adding a public channel'}),
-                        subText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-subtext', defaultMessage: 'Anyone who joins that public channel will now get “Editor” access to the board, are you sure you want to proceed?'}),
-                        confirmButtonText: intl.formatMessage({id: 'shareBoard.confirm-link-public-channel-button', defaultMessage: 'Yes, add public channel'}),
+                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
+                        subText: confirmSubtext,
+                        confirmButtonText: confirmButtonText,
                         onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
                         onClose: () => setShowLinkChannelConfirmation(null),
                     }}
