@@ -3,7 +3,7 @@ name: Production-Release
 on: workflow_dispatch
 
 env:
- EXCLUDE_MATTERMOST-SERVER: true
+ EXCLUDE_SERVER: true
  EXCLUDE_ENTERPRISE: true
 
 jobs:

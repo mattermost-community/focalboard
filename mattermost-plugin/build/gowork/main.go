@@ -42,9 +42,9 @@ func main() {
 }
 
 func makeGoWork(ci bool) string {
-	repos := []string{
-		"mattermost-server",
-		"enterprise",
+	repos := map[string]string{
+		"mattermost-server": "EXCLUDE_SERVER",
+		"enterprise":        "EXCLUDE_ENTERPRISE",
 	}
 
 	var b strings.Builder
@@ -53,16 +53,15 @@ func makeGoWork(ci bool) string {
 	b.WriteString("use ./mattermost-plugin\n")
 	b.WriteString("use ./server\n")
 
-	for repoIdx := range repos {
-		if !isEnvVarTrue(fmt.Sprintf("EXCLUDE_%s", strings.ToUpper(repos[repoIdx])), true) {
-			b.WriteString(fmt.Sprintf("use ../%s\n", repos[repoIdx]))
+	for repo, envVarName := range repos {
+		if !isEnvVarTrue(envVarName, true) {
+			b.WriteString(fmt.Sprintf("use ../%s\n", repo))
 		}
 	}
 
 	if ci {
 		b.WriteString("use ./linux\n")
 	}
-	fmt.Println(b.String())
 	return b.String()
 }
 

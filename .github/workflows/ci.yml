@@ -55,7 +55,7 @@ jobs:
   ci-ubuntu-webapp:
     runs-on: ubuntu-18.04
     env:
-      EXCLUDE_MATTERMOST-SERVER: true
+      EXCLUDE_SERVER: true
       EXCLUDE_ENTERPRISE: true
     steps:
     - name: Checkout
@@ -76,7 +76,7 @@ jobs:
         node-version: 16.1.0
 
     - name: Build Linux server
-      run: make server-linux-package
+      run: make server-linux-package ; cat go.work
 
     - name: Copy server binary for Cypress
       run: cp bin/linux/focalboard-server bin/
