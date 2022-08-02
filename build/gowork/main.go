@@ -39,6 +39,7 @@ func main() {
 	}
 
 	fmt.Fprintln(os.Stdout, "go.work written successfully.")
+	fmt.Fprintln(os.Stdout, content)
 }
 
 func makeGoWork(ci bool) string {
