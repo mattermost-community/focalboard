@@ -13,6 +13,13 @@ function encodeText(text: string): string {
 
 export type {PropertyTypeEnum} from '../blocks/board'
 
+export type FilterValueType = 'none'|'options'|'boolean'|'text'
+
+export type FilterCondition = {
+    id: string
+    label: string
+}
+
 export type PropertyProps = {
     property: PropertyType,
     card: Card,
@@ -27,6 +34,7 @@ export abstract class PropertyType {
     isDate = false
     canGroup = false
     canFilter = false
+    filterValueType: FilterValueType = "none"
     isReadOnly = false
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,

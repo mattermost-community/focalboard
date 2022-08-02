@@ -31,6 +31,7 @@ const FilterEntry = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const template = board.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
+    const propertyType = propsRegistry.get(template?.type || 'unknown')
     const propertyName = template ? template.name : '(unknown)'
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
@@ -64,26 +65,80 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{OctoUtils.filterConditionDisplayString(filter.condition, intl)}</Button>
                 <Menu>
-                    <Menu.Text
-                        id='includes'
-                        name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
-                        onClick={(id) => props.conditionClicked(id, filter)}
-                    />
-                    <Menu.Text
-                        id='notIncludes'
-                        name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
-                        onClick={(id) => props.conditionClicked(id, filter)}
-                    />
-                    <Menu.Text
-                        id='isEmpty'
-                        name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
-                        onClick={(id) => props.conditionClicked(id, filter)}
-                    />
-                    <Menu.Text
-                        id='isNotEmpty'
-                        name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
-                        onClick={(id) => props.conditionClicked(id, filter)}
-                    />
+                    {propertyType.filterValueType === 'options' &&
+                        <>
+                            <Menu.Text
+                                id='includes'
+                                name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='notIncludes'
+                                name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isEmpty'
+                                name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isNotEmpty'
+                                name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.filterValueType === 'boolean' &&
+                        <>
+                            <Menu.Text
+                                id='isSet'
+                                name={intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isNotSet'
+                                name={intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.filterValueType === 'text' &&
+                        <>
+                            <Menu.Text
+                                id='is'
+                                name={intl.formatMessage({id: 'Filter.contains', defaultMessage: 'is'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='contains'
+                                name={intl.formatMessage({id: 'Filter.contains', defaultMessage: 'contains'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='notContains'
+                                name={intl.formatMessage({id: 'Filter.not-contains', defaultMessage: 'doesn\'t contain'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='startsWith'
+                                name={intl.formatMessage({id: 'Filter.starts-with', defaultMessage: 'starts with'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='notStartsWith'
+                                name={intl.formatMessage({id: 'Filter.not-starts-with', defaultMessage: 'doesn\'t start with'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='endsWith'
+                                name={intl.formatMessage({id: 'Filter.ends-with', defaultMessage: 'ends with'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='notEndsWith'
+                                name={intl.formatMessage({id: 'Filter.not-ends-with', defaultMessage: 'doesn\'t end with'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
                 </Menu>
             </MenuWrapper>
             {template &&
@@ -91,6 +146,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                     filter={filter}
                     template={template}
                     view={view}
+                    propertyType={propertyType}
                 />}
             <div className='octo-spacer'/>
             <Button

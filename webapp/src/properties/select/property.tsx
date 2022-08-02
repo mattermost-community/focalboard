@@ -3,7 +3,7 @@ import {IntlShape} from 'react-intl'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {PropertyType, PropertyTypeEnum, FilterValueType} from '../types'
 
 import Select from './select'
 
@@ -13,6 +13,7 @@ export default class SelectProperty extends PropertyType {
     type = 'select' as PropertyTypeEnum
     canGroup = true
     canFilter = true
+    filterValueType = 'options' as FilterValueType
 
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Select', defaultMessage: 'Select'})
 

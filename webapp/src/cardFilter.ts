@@ -64,6 +64,58 @@ class CardFilter {
         case 'isNotEmpty': {
             return (value || '').length > 0
         }
+        case 'isSet': {
+            return Boolean(value)
+        }
+        case 'isNotSet': {
+            return !value
+        }
+        case 'is': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return filter.values[0] === value
+        }
+        case 'contains': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value || '').indexOf(filter.values[0]) !== -1
+        }
+        case 'notContains': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value || '').indexOf(filter.values[0]) === -1
+        }
+        case 'startsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value || '').indexOf(filter.values[0]) === 0
+        }
+        case 'notStartsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value || '').indexOf(filter.values[0]) !== 0
+        }
+        case 'endsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            const reversedValue = (value as string || '').split("").reverse().join("");
+            const reversedFilterValue = filter.values[0].split("").reverse().join("");
+            return reversedValue.indexOf(reversedFilterValue) === 0
+        }
+        case 'notEndsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            const reversedValue = (value as string || '').split("").reverse().join("");
+            const reversedFilterValue = filter.values[0].split("").reverse().join("");
+            return reversedValue.indexOf(reversedFilterValue) !== 0
+        }
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
         }

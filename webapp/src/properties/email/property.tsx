@@ -1,6 +1,6 @@
 import {IntlShape} from 'react-intl'
 
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {PropertyType, PropertyTypeEnum, FilterValueType} from '../types'
 
 import Email from './email'
 
@@ -9,4 +9,6 @@ export default class EmailProperty extends PropertyType {
     name = 'Email'
     type = 'email' as PropertyTypeEnum
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.Email', defaultMessage: 'Email'})
+    canFilter = true
+    filterValueType = 'text' as FilterValueType
 }

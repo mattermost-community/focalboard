@@ -4,7 +4,7 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {PropertyType, PropertyTypeEnum, FilterValueType} from '../types'
 
 import MultiSelect from './multiselect'
 
@@ -13,6 +13,7 @@ export default class MultiSelectProperty extends PropertyType {
     name = 'MultiSelect'
     type = 'multiSelect' as PropertyTypeEnum
     canFilter = true
+    filterValueType = 'options' as FilterValueType
     displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
     displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
         if (propertyValue?.length) {
