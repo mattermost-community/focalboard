@@ -54,7 +54,7 @@ func makeGoWork(ci bool) string {
 	b.WriteString("use ./server\n")
 
 	for repoIdx := range repos {
-		if isEnvVarTrue(fmt.Sprintf("USE_LOCAL_%s_REPO", strings.ToUpper(repos[repoIdx])), true) {
+		if !isEnvVarTrue(fmt.Sprintf("EXCLUDE_%s", strings.ToUpper(repos[repoIdx])), true) {
 			b.WriteString(fmt.Sprintf("use ../%s\n", repos[repoIdx]))
 		}
 	}
