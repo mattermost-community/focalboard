@@ -34,7 +34,7 @@ func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.
 
 func licenseAndGuestCheck(a *App, userID string) (bool, error) {
 	licenseError := errors.New("invalid license/authorization to use insights API")
-	guestError := errors.New("Guests aren't authorized to use insights API")
+	guestError := errors.New("guests aren't authorized to use insights API")
 	lic := a.store.GetLicense()
 	if lic == nil {
 		a.logger.Debug("Deployment doesn't have a license")

@@ -2212,7 +2212,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /teams/{teamID}/boards/insights getUserBoardsInsights
+	// swagger:operation GET /users/me/boards/insights getUserBoardsInsights
 	//
 	// Returns user boards insights
 	//

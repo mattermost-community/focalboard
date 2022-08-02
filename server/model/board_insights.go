@@ -53,7 +53,7 @@ func BoardInsightsFromJSON(data io.Reader) []BoardInsight {
 func GetTopBoardInsightsListWithPagination(boards []*BoardInsight, limit int) *BoardInsightsList {
 	// Add pagination support
 	var hasNext bool
-	if (limit != 0) && (len(boards) == limit+1) {
+	if limit != 0 && len(boards) == limit+1 {
 		hasNext = true
 		boards = boards[:len(boards)-1]
 	}
