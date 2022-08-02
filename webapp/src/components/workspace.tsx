@@ -25,7 +25,9 @@ import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
+
 import './workspace.scss'
+import {getMe} from "../store/users"
 
 type Props = {
     readonly: boolean
@@ -46,6 +48,12 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const me = useAppSelector(getMe)
+
+    const isBoardHidden = () => {
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return hiddenBoardIDs[board.id]
+    }
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
@@ -76,7 +84,7 @@ function CenterContent(props: Props) {
         }
     }, [cardLimitTimestamp, match.params.boardId, templates])
 
-    if (board && activeView) {
+    if (board && !isBoardHidden() && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.cardProperties.find((o) => o.type === 'select')
@@ -104,12 +112,13 @@ function CenterContent(props: Props) {
         )
     }
 
-    if (board || isLoading) {
+    if ((board && !isBoardHidden()) || isLoading) {
         return null
     }
 
     return (
         <BoardTemplateSelector
+            className='BAR'
             title={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-title'
@@ -153,7 +162,7 @@ const Workspace = (props: Props) => {
             }
             <div className='mainFrame'>
                 {boardTemplateSelectorOpen &&
-                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
+                    <BoardTemplateSelector className='FOO' onClose={closeBoardTemplateSelector}/>}
                 {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage

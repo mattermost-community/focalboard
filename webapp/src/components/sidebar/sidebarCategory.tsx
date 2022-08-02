@@ -139,6 +139,17 @@ const SidebarCategory = (props: Props) => {
         )
     }, [showBoard, deleteBoard, props.boards])
 
+    const isBoardVisible = (boardID: string): boolean => {
+        // hide if board doesn't belong to current category
+        if (!blocks.includes(boardID)) {
+            return false
+        }
+
+        // hide if board was hidden by the user
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return !hiddenBoardIDs[boardID]
+    }
+
     return (
         <div className='SidebarCategory' ref={menuWrapperRef}>
             <div
@@ -197,7 +208,7 @@ const SidebarCategory = (props: Props) => {
                     />
                 </div>}
             {!collapsed && props.boards.map((board: Board) => {
-                if (!blocks.includes(board.id)) {
+                if (!isBoardVisible(board.id)) {
                     return null
                 }
                 return (
