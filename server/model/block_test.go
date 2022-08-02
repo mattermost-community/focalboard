@@ -268,7 +268,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		boardID2 := utils.NewID(utils.IDTypeBlock)
 		parentID2 := utils.NewID(utils.IDTypeBlock)
 		block2 := Block{
-			ID: 	  blockID2,
+			ID:       blockID2,
 			BoardID:  boardID2,
 			ParentID: parentID2,
 			Fields: map[string]interface{}{
@@ -288,10 +288,10 @@ func TestGenerateBlockIDs(t *testing.T) {
 		require.Equal(t, boardID2, blocks[1].BoardID)
 		require.Equal(t, parentID2, blocks[1].ParentID)
 
-		block2DefaultTemplateId, ok := block2.Fields["defaultTemplateId"].(string)
+		block2DefaultTemplateID, ok := block2.Fields["defaultTemplateId"].(string)
 		require.True(t, ok)
-		require.NotEqual(t, blockID1, block2DefaultTemplateId)
-		require.Equal(t, blocks[0].ID, block2DefaultTemplateId)
+		require.NotEqual(t, blockID1, block2DefaultTemplateID)
+		require.Equal(t, blocks[0].ID, block2DefaultTemplateID)
 	})
 }
 
