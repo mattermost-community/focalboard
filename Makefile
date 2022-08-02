@@ -39,6 +39,9 @@ prebuild: ## Run prebuild actions (install dependencies etc.).
 
 ci: webapp-ci server-test ## Simulate CI, locally.
 
+setup-go-work: export USE_LOCAL_PLUGIN_REPO ?= true
+setup-go-work: export USE_LOCAL_MATTERMOST-SERVER_REPO ?= true
+setup-go-work: export USE_LOCAL_ENTERPRISE_REPO ?= false
 setup-go-work: ## Sets up a go.work file
 	go run ./build/gowork/main.go
 

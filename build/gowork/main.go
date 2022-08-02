@@ -50,7 +50,11 @@ func makeGoWork(ci bool) string {
 	var b strings.Builder
 
 	b.WriteString("go 1.18\n\n")
-	b.WriteString("use ./mattermost-plugin\n")
+
+	if isEnvVarTrue("USE_LOCAL_PLUGIN_REPO", true) {
+		b.WriteString("use ./mattermost-plugin\n")
+	}
+
 	b.WriteString("use ./server\n")
 
 	for repoIdx := range repos {
@@ -68,7 +72,7 @@ func makeGoWork(ci bool) string {
 
 func isCI() bool {
 	vars := map[string]bool{
-		// var name: must_be_true  (false means being defined is enough)
+		// var name: must_be_true (false means being defined is enough)
 		"CIRCLECI":       true,
 		"GITHUB_ACTIONS": true,
 		"GITLAB_CI":      false,

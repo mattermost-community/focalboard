@@ -13,6 +13,9 @@ FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be405403818
 WORKDIR /go/src/focalboard
 ADD . /go/src/focalboard
 
+ARG USE_LOCAL_PLUGIN_REPO=false
+ARG USE_LOCAL_MATTERMOST-SERVER_REPO=false
+ARG USE_LOCAL_ENTERPRISE_REPO=false
 RUN  make server-linux
 RUN mkdir /data
 
