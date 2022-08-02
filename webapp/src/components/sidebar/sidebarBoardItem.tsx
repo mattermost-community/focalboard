@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from "react-router-dom"
 
@@ -21,6 +21,7 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
 import GalleryIcon from '../../widgets/icons/gallery'
@@ -106,15 +107,18 @@ const SidebarBoardItem = (props: Props) => {
 
     }, [board.id])
 
+    const boardItemRef = useRef<HTMLDivElement>(null)
+
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     return (
         <>
             <div
                 className={`SidebarBoardItem subitem ${props.isActive ? 'active' : ''}`}
                 onClick={() => props.showBoard(board.id)}
+                ref={boardItemRef}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon || <BoardIcon/>}
+                    {board.icon || <CompassIcon icon='product-boards'/>}
                 </div>
                 <div
                     className='octo-sidebar-title'
@@ -136,7 +140,8 @@ const SidebarBoardItem = (props: Props) => {
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu
                         fixed={true}
-                        position='left'
+                        position='auto'
+                        parentRef={boardItemRef}
                     >
                         <BoardPermissionGate
                             boardId={board.id}
@@ -155,9 +160,10 @@ const SidebarBoardItem = (props: Props) => {
                         <Menu.SubMenu
                             key={`moveBlock-${board.id}`}
                             id='moveBlock'
+                            className='boardMoveToCategorySubmenu'
                             name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
                             icon={<CreateNewFolder/>}
-                            position='bottom'
+                            position='auto'
                         >
                             {generateMoveToCategoryOptions(board.id)}
                         </Menu.SubMenu>

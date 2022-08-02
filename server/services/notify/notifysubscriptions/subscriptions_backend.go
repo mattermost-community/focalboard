@@ -24,7 +24,7 @@ type BackendParams struct {
 	AppAPI                 AppAPI
 	Permissions            permissions.PermissionsService
 	Delivery               SubscriptionDelivery
-	Logger                 *mlog.Logger
+	Logger                 mlog.LoggerIFace
 	NotifyFreqCardSeconds  int
 	NotifyFreqBoardSeconds int
 }
@@ -35,7 +35,7 @@ type Backend struct {
 	permissions            permissions.PermissionsService
 	delivery               SubscriptionDelivery
 	notifier               *notifier
-	logger                 *mlog.Logger
+	logger                 mlog.LoggerIFace
 	notifyFreqCardSeconds  int
 	notifyFreqBoardSeconds int
 }

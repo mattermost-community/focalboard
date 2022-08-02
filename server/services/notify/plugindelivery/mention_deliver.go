@@ -31,5 +31,10 @@ func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract s
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged, boardLink, evt.Board.Title),
 	}
-	return mentionedUser.Id, pd.api.CreatePost(post)
+
+	if _, err := pd.api.CreatePost(post); err != nil {
+		return "", err
+	}
+
+	return mentionedUser.Id, nil
 }

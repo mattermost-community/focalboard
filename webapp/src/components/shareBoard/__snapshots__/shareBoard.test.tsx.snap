@@ -1,5 +1,255 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="toolbar--right"
+          >
+            <div>
+              <span
+                class="text-heading5"
+              >
+                Share Board
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-12-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-12-placeholder"
+                  >
+                    Search for people
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-12-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-12-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="tabs-container"
+        >
+          <button
+            class="tab-item tab-item--active"
+          >
+            Share
+          </button>
+          <button
+            class="tab-item false"
+          >
+            Publish
+          </button>
+        </div>
+        <div
+          class="tabs-content"
+        >
+          <div>
+            <div
+              class="d-flex justify-content-between"
+            >
+              <div
+                class="d-flex flex-column"
+              >
+                <div
+                  class="text-heading2"
+                >
+                  Share internally
+                </div>
+                <div
+                  class="text-light"
+                >
+                  Users who have permissions will be able to use this link.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex justify-content-between tabs-inputs"
+          >
+            <div
+              class="d-flex input-container"
+            >
+              <a
+                class="shareUrl"
+                href="http://localhost/1/1"
+                rel="noreferrer"
+                target="_blank"
+              >
+                http://localhost/1/1
+              </a>
+            </div>
+            <button
+              title="Copy internal link"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-content-copy CompassIcon"
+              />
+              <span>
+                Copy link
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 1`] = `
 <div>
   <div
@@ -790,6 +1040,44 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </div>
             </div>
           </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="tabs-content"
@@ -1220,6 +1508,44 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </div>
             </div>
           </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
         <div
           class="tabs-content"
@@ -1411,6 +1737,44 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                   class="user-item__button"
                 >
                   None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
                   <i
                     class="CompassIcon icon-chevron-down CompassIcon"
                   />
@@ -1841,6 +2205,44 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                   class="user-item__button"
                 >
                   None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
                   <i
                     class="CompassIcon icon-chevron-down CompassIcon"
                   />

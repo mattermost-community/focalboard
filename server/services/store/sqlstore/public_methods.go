@@ -514,6 +514,11 @@ func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs)
+
+}
+
 func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.insertBlock(s.db, block, userID)
@@ -738,6 +743,11 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
 	return s.searchBoardsForUser(s.db, term, userID)
+
+}
+
+func (s *SQLStore) SearchBoardsForUserInTeam(teamID string, term string, userID string) ([]*model.Board, error) {
+	return s.searchBoardsForUserInTeam(s.db, teamID, term, userID)
 
 }
 

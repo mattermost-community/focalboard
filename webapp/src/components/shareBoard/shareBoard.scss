@@ -7,12 +7,21 @@
         max-width: 90%;
         height: auto;
         position: relative;
+        overflow: unset;
     }
 
     .confirmation-dialog-box {
         .dialog {
             position: fixed;
             width: 500px;
+        }
+
+        .action-buttons {
+            .Button {
+                height: unset;
+                min-height: 40px;
+                padding: 5px 20px;
+            }
         }
     }
 

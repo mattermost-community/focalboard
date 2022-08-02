@@ -55,6 +55,7 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
+	GetUsersList(userIDs []string) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
@@ -101,6 +102,7 @@ type Store interface {
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	SearchBoardsForUser(term, userID string) ([]*model.Board, error)
+	SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
 	CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, []*model.BoardMember, error)

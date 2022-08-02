@@ -34,6 +34,7 @@ describe('components/boardSelector', () => {
         teams: {
             allTeams: [team],
             current: team,
+            currentId: team.id,
         },
         language: {
             value: 'en',

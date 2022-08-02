@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
@@ -59,6 +59,8 @@ const SidebarCategory = (props: Props) => {
     const team = useAppSelector(getCurrentTeam)
     const teamID = team?.id || ''
 
+    const menuWrapperRef = useRef<HTMLDivElement>(null)
+
     const showBoard = useCallback((boardId) => {
         Utils.showBoard(boardId, match, history)
         props.hideSidebar()
@@ -71,7 +73,7 @@ const SidebarCategory = (props: Props) => {
         if (boardId !== match.params.boardId && viewId !== match.params.viewId) {
             params.cardId = undefined
         }
-        const newPath = generatePath(match.path, params)
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         history.push(newPath)
         props.hideSidebar()
     }, [match, history])
@@ -138,7 +140,7 @@ const SidebarCategory = (props: Props) => {
     }, [showBoard, deleteBoard, props.boards])
 
     return (
-        <div className='SidebarCategory'>
+        <div className='SidebarCategory' ref={menuWrapperRef}>
             <div
                 className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
             >
@@ -156,7 +158,10 @@ const SidebarCategory = (props: Props) => {
                     onToggle={(open) => setCategoryMenuOpen(open)}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
+                    <Menu
+                        position='auto'
+                        parentRef={menuWrapperRef}
+                    >
                         <Menu.Text
                             id='createNewCategory'
                             name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}

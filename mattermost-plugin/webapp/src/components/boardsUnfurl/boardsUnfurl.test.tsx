@@ -10,6 +10,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {mocked} from 'jest-mock'
 
+import {Utils} from '../../../../../webapp/src/utils'
 import {createCard} from '../../../../../webapp/src/blocks/card'
 import {createBoard} from '../../../../../webapp/src/blocks/board'
 import octoClient from '../../../../../webapp/src/octoClient'
@@ -18,29 +19,39 @@ import {wrapIntl} from '../../../../../webapp/src/testUtils'
 import BoardsUnfurl from './boardsUnfurl'
 
 jest.mock('../../../../../webapp/src/octoClient')
+jest.mock('../../../../../webapp/src/utils')
 const mockedOctoClient = mocked(octoClient, true)
+const mockedUtils = mocked(Utils, true)
+mockedUtils.createGuid = jest.requireActual('../../../../../webapp/src/utils').Utils.createGuid
+mockedUtils.blockTypeToIDType = jest.requireActual('../../../../../webapp/src/utils').Utils.blockTypeToIDType
+mockedUtils.displayDateTime = jest.requireActual('../../../../../webapp/src/utils').Utils.displayDateTime
 
 describe('components/boardsUnfurl/BoardsUnfurl', () => {
+    const team = {
+        id: 'team-id',
+        name: 'team',
+        display_name: 'Team name',
+    }
+
     beforeEach(() => {
+        // This is done to the websocket not to try to connect directly
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         jest.clearAllMocks()
     })
 
     it('renders normally', async () => {
         const mockStore = configureStore([])
         const store = mockStore({
-            entities: {
-                users: {
-                    currentUserId: 'id_1',
-                    profiles: {
-                        id_1: {
-                            locale: 'en',
-                        },
-                    },
-                },
+            language: {
+                value: 'en',
+            },
+            teams: {
+                allTeams: [team],
+                current: team,
             },
         })
 
-        const cards = [{...createCard(), title: 'test card'}]
+        const cards = [{...createCard(), title: 'test card', updateAt: 12345}]
         const board = {...createBoard(), title: 'test board'}
 
         mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards)
@@ -50,7 +61,7 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
             <ReduxProvider store={store}>
                 {wrapIntl(
                     <BoardsUnfurl
-                        embed={{data: '{"workspaceID": "foo", "cardID": "bar", "boardID": "baz", "readToken": "abc", "originalPath": "/test"}'}}
+                        embed={{data: JSON.stringify({workspaceID: "foo", cardID: cards[0].id, boardID: board.id, readToken: "abc", originalPath: "/test"})}}
                     />,
                 )}
             </ReduxProvider>
@@ -62,6 +73,8 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
             const result = render(component)
             container = result.container
         })
+        expect(mockedOctoClient.getBoard).toBeCalledWith(board.id)
+        expect(mockedOctoClient.getBlocksWithBlockID).toBeCalledWith(cards[0].id, board.id, "abc")
 
         expect(container).toMatchSnapshot()
     })
@@ -69,19 +82,16 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
     it('renders when limited', async () => {
         const mockStore = configureStore([])
         const store = mockStore({
-            entities: {
-                users: {
-                    currentUserId: 'id_1',
-                    profiles: {
-                        id_1: {
-                            locale: 'en',
-                        },
-                    },
-                },
+            language: {
+                value: 'en',
+            },
+            teams: {
+                allTeams: [team],
+                current: team,
             },
         })
 
-        const cards = [{...createCard(), title: 'test card', limited: true}]
+        const cards = [{...createCard(), title: 'test card', limited: true, updateAt: 12345}]
         const board = {...createBoard(), title: 'test board'}
 
         mockedOctoClient.getBlocksWithBlockID.mockResolvedValueOnce(cards)
@@ -91,7 +101,7 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
             <ReduxProvider store={store}>
                 {wrapIntl(
                     <BoardsUnfurl
-                        embed={{data: '{"workspaceID": "foo", "cardID": "bar", "boardID": "baz", "readToken": "abc", "originalPath": "/test"}'}}
+                        embed={{data: JSON.stringify({workspaceID: "foo", cardID: cards[0].id, boardID: board.id, readToken: "abc", originalPath: "/test"})}}
                     />,
                 )}
             </ReduxProvider>
