@@ -54,16 +54,30 @@ jobs:
 
   ci-ubuntu-webapp:
     runs-on: ubuntu-18.04
-    env:
-      EXCLUDE_SERVER: true
-      EXCLUDE_ENTERPRISE: true
     steps:
     - name: Checkout
       uses: actions/checkout@v3
+      with:
+        path: "focalboard"
+    - id: "mattermostServer"
+      uses: actions/checkout@v3
+      continue-on-error: true
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref: ${{ env.BRANCH_NAME }}
+    - uses: actions/checkout@v3
+      if: steps.mattermostServer.outcome == 'failure'
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref : "master"
     - name: npm ci
       run: |
-        cd webapp && npm ci && cd -
-        cd mattermost-plugin/webapp && npm ci
+        cd focalboard/webapp && npm ci && cd -
+        cd focalboard/mattermost-plugin/webapp && npm ci
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -76,19 +90,19 @@ jobs:
         node-version: 16.1.0
 
     - name: Build Linux server
-      run: make server-linux-package ; cat go.work
+      run: cd focalboard; make server-linux-package
 
     - name: Copy server binary for Cypress
-      run: cp bin/linux/focalboard-server bin/
+      run: cp focalboard/bin/linux/focalboard-server focalboard/bin/
 
     - name: Upload server package
       uses: actions/upload-artifact@v1
       with:
         name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: Lint & test webapp
-      run: make webapp-ci
+      run: cd focalboard; make webapp-ci
 
   ci-windows-server:
     runs-on: windows-2022
