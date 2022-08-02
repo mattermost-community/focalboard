@@ -21,7 +21,7 @@ export const fetchMe = createAsyncThunk(
     async () => client.getMe(),
 )
 
-export const versionProperty = 'version72MessageCanceled'
+export const versionProperty = 'focalboard_version72MessageCanceled'
 
 type UsersStatus = {
     me: IUser|null
