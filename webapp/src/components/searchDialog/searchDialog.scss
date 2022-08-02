@@ -58,12 +58,13 @@
                 padding: 0 24px;
                 cursor: pointer;
                 overflow: hidden;
-
+              
                 &.freesize {
                     height: unset;
                 }
 
-                &:hover {
+                &:hover,
+                &:focus {
                     background: rgba(var(--center-channel-color-rgb), 0.08);
                 }
             }

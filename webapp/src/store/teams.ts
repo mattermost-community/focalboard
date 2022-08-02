@@ -35,6 +35,7 @@ export const refreshCurrentTeam = createAsyncThunk(
 )
 
 type TeamState = {
+    currentId: string
     current: Team | null
     allTeams: Array<Team>
 }
@@ -43,11 +44,13 @@ const teamSlice = createSlice({
     name: 'teams',
     initialState: {
         current: null,
+        currentId: '',
         allTeams: [],
     } as TeamState,
     reducers: {
         setTeam: (state, action: PayloadAction<string>) => {
             const teamID = action.payload
+            state.currentId = teamID
             const team = state.allTeams.find((t) => t.id === teamID)
             if (!team) {
                 Utils.log(`Unable to find team in store. TeamID: ${teamID}`)
@@ -80,6 +83,7 @@ const teamSlice = createSlice({
 export const {setTeam} = teamSlice.actions
 export const {reducer} = teamSlice
 
+export const getCurrentTeamId = (state: RootState): string => state.teams.currentId
 export const getCurrentTeam = (state: RootState): Team|null => state.teams.current
 export const getFirstTeam = (state: RootState): Team|null => state.teams.allTeams[0]
 export const getAllTeams = (state: RootState): Array<Team> => state.teams.allTeams

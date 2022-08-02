@@ -45,8 +45,8 @@ var (
 )
 
 func Test_userByUsername(t *testing.T) {
-	pluginAPI := newPlugAPIMock(mockUsers)
-	delivery := New("bot_id", "server_root", pluginAPI)
+	servicesAPI := newServicesAPIMock(mockUsers)
+	delivery := New("bot_id", "server_root", servicesAPI)
 
 	tests := []struct {
 		name    string
@@ -79,17 +79,17 @@ func Test_userByUsername(t *testing.T) {
 	}
 }
 
-type pluginAPIMock struct {
+type servicesAPIMock struct {
 	users map[string]*mm_model.User
 }
 
-func newPlugAPIMock(users map[string]*mm_model.User) pluginAPIMock {
-	return pluginAPIMock{
+func newServicesAPIMock(users map[string]*mm_model.User) servicesAPIMock {
+	return servicesAPIMock{
 		users: users,
 	}
 }
 
-func (m pluginAPIMock) GetUserByUsername(name string) (*mm_model.User, error) {
+func (m servicesAPIMock) GetUserByUsername(name string) (*mm_model.User, error) {
 	user, ok := m.users[name]
 	if !ok {
 		return nil, model.NewErrNotFound(name)
@@ -97,15 +97,15 @@ func (m pluginAPIMock) GetUserByUsername(name string) (*mm_model.User, error) {
 	return user, nil
 }
 
-func (m pluginAPIMock) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
+func (m servicesAPIMock) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
 	return nil, nil
 }
 
-func (m pluginAPIMock) CreatePost(post *mm_model.Post) error {
-	return nil
+func (m servicesAPIMock) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
+	return post, nil
 }
 
-func (m pluginAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
+func (m servicesAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
 	for _, user := range m.users {
 		if user.Id == userID {
 			return user, nil
@@ -114,7 +114,7 @@ func (m pluginAPIMock) GetUserByID(userID string) (*mm_model.User, error) {
 	return nil, model.NewErrNotFound(userID)
 }
 
-func (m pluginAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+func (m servicesAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.TeamMember, error) {
 	user, err := m.GetUserByID(userID)
 	if err != nil {
 		return nil, err
@@ -131,15 +131,15 @@ func (m pluginAPIMock) GetTeamMember(teamID string, userID string) (*mm_model.Te
 	return member, nil
 }
 
-func (m pluginAPIMock) GetChannelByID(channelID string) (*mm_model.Channel, error) {
+func (m servicesAPIMock) GetChannelByID(channelID string) (*mm_model.Channel, error) {
 	return nil, model.NewErrNotFound(channelID)
 }
 
-func (m pluginAPIMock) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
+func (m servicesAPIMock) GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error) {
 	return nil, model.NewErrNotFound(userID)
 }
 
-func (m pluginAPIMock) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
+func (m servicesAPIMock) CreateMember(teamID string, userID string) (*mm_model.TeamMember, error) {
 	member := &mm_model.TeamMember{
 		UserId: userID,
 		TeamId: teamID,

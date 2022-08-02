@@ -36,7 +36,7 @@ type DiffConvOpts struct {
 	Language      string
 	MakeCardLink  func(block *model.Block, board *model.Board, card *model.Block) string
 	MakeBoardLink func(board *model.Board) string
-	Logger        *mlog.Logger
+	Logger        mlog.LoggerIFace
 }
 
 // getTemplate returns a new or cached named template based on the language specified.

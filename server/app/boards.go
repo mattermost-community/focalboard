@@ -326,7 +326,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
-	if existingMembership != nil {
+	if existingMembership != nil && !existingMembership.Synthetic {
 		return existingMembership, nil
 	}
 
@@ -442,6 +442,10 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 
 func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
 	return a.store.SearchBoardsForUser(term, userID)
+}
+
+func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUserInTeam(teamID, term, userID)
 }
 
 func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {

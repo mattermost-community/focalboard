@@ -154,9 +154,12 @@
         }
     }
 
-    .Menu.noselect.left {
+    .Menu.noselect:not(.SubMenu) {
         position: fixed;
-        right: calc(100% - 480px + 50px);
-        left: calc(240px - 50px);
+
+        > .left {
+            right: calc(100% - 480px - 64px + 50px);
+            left: calc(64px + 240px - 50px);
+        }
     }
 }

@@ -240,7 +240,6 @@ func TestSaveFile(t *testing.T) {
 		mockedFileBackend := &mocks.FileBackend{}
 		th.App.filesBackend = mockedFileBackend
 		mockedError := &TestError{}
-		th.Store.EXPECT().SaveFileInfo(gomock.Any()).Return(nil)
 
 		writeFileFunc := func(reader io.Reader, path string) int64 {
 			paths := strings.Split(path, string(os.PathSeparator))
