@@ -54,27 +54,14 @@ jobs:
 
   ci-ubuntu-webapp:
     runs-on: ubuntu-18.04
-
+    env:
+      EXCLUDE_MATTERMOST-SERVER: true
+      EXCLUDE_ENTERPRISE: true
     steps:
     - name: Checkout
       uses: actions/checkout@v3
       with:
         path: "focalboard"
-    - id: "mattermostServer"
-      uses: actions/checkout@v3
-      continue-on-error: true
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
-        path: "mattermost-server"
-        ref: ${{ env.BRANCH_NAME }}
-    - uses: actions/checkout@v3
-      if: steps.mattermostServer.outcome == 'failure'
-      with:
-        repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
-        path: "mattermost-server"
-        ref : "master"
     - name: npm ci
       run: |
         cd focalboard/webapp && npm ci && cd -
