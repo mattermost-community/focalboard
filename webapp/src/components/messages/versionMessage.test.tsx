@@ -10,22 +10,16 @@ import userEvent from '@testing-library/user-event'
 
 import configureStore from 'redux-mock-store'
 
-import {Utils} from '../../utils'
-
 import {IUser} from '../../user'
 
 import {wrapIntl} from '../../testUtils'
 
 import client from '../../octoClient'
 
-import {UserSettings} from '../../userSettings'
-
-import {getMe, patchProps, getVersionMessageCanceled, versionProperty} from '../../store/users'
+import {versionProperty} from '../../store/users'
 
 import VersionMessage from './versionMessage'
 
-
-jest.mock('../../utils')
 jest.mock('../../octoClient')
 const mockedOctoClient = mocked(client, true)
 
@@ -34,7 +28,6 @@ describe('components/messages/VersionMessage', () => {
         jest.clearAllMocks()
     })
 
-    // const mockedUtils = mocked(Utils, true)
     const mockStore = configureStore([])
 
     if (versionProperty){
@@ -65,14 +58,11 @@ describe('components/messages/VersionMessage', () => {
                     <VersionMessage/>
                 </ReduxProvider>,
             )
-    
             const {container} = render(component)
-            // expect(container).toMatchSnapshot()
             expect(container.firstChild).toBeNull()
-            // const buttonElement = screen.getByRole('button', {name: 'Close dialog'})
-            // expect(buttonElement).toBeDefined()
         })
-        test('plugin mode, close message', () => {
+
+        test('property set, no message', () => {
             const me: IUser = {
                 id: 'user-id-1',
                 username: 'username_1',
@@ -104,8 +94,8 @@ describe('components/messages/VersionMessage', () => {
             const {container} = render(component)
             expect(container.firstChild).toBeNull()
         })
-    
-        test('plugin mode, show message, close message', () => {
+   
+        test('show message, click close', () => {
             const me: IUser = {
                 id: 'user-id-1',
                 username: 'username_1',
@@ -132,9 +122,6 @@ describe('components/messages/VersionMessage', () => {
                 </ReduxProvider>,
             )
     
-            // const {container} = render(component)
-            // expect(container).toMatchSnapshot()
-    
             render(component)
             const buttonElement = screen.getByRole('button', {name: 'Close dialog'})
             userEvent.click(buttonElement)
@@ -144,25 +131,10 @@ describe('components/messages/VersionMessage', () => {
                 },
             })
         })
-    
-        test('not plugin mode, single user, close message', () => {
-            const me: IUser = {
-                id: 'single-user',
-                username: 'single-user',
-                email: 'single-user',
-                nickname: '',
-                firstname: '', 
-                lastname: '',
-                props: {},
-                create_at: 0,
-                update_at: Date.now() - (1000 * 60 * 60 * 24), //24 hours,
-                is_bot: false,
-                roles: 'system_user',
-            }
+
+        test('no me, no message', () => {
             const state = {
-                users: {
-                    me,
-                },
+                users: {},
             }
             const store = mockStore(state)
             const component = wrapIntl(
@@ -202,7 +174,6 @@ describe('components/messages/VersionMessage', () => {
                     <VersionMessage/>
                 </ReduxProvider>,
             )
-    
             const {container} = render(component)
             expect(container.firstChild).toBeNull()
         })

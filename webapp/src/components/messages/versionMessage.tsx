@@ -58,7 +58,7 @@ const VersionMessage = React.memo(() => {
                 />
                 <FormattedMessage
                     id='VersionMessage.help'
-                    defaultMessage='Check out what’s new in this version.'
+                    defaultMessage="Check out what's new in this version."
                 />
 
                 <Button
