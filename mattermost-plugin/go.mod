@@ -2,6 +2,8 @@ module github.com/mattermost/focalboard/mattermost-plugin
 
 go 1.18
 
+replace github.com/mattermost/focalboard/server => ../server
+
 require (
 	github.com/golang/mock v1.6.0
 	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
