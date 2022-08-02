@@ -457,6 +457,21 @@ func (mr *MockAPIMockRecorder) EnablePlugin(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnablePlugin", reflect.TypeOf((*MockAPI)(nil).EnablePlugin), arg0)
 }
 
+// EnsureBotUser mocks base method.
+func (m *MockAPI) EnsureBotUser(arg0 *model.Bot) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EnsureBotUser", arg0)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// EnsureBotUser indicates an expected call of EnsureBotUser.
+func (mr *MockAPIMockRecorder) EnsureBotUser(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnsureBotUser", reflect.TypeOf((*MockAPI)(nil).EnsureBotUser), arg0)
+}
+
 // ExecuteSlashCommand mocks base method.
 func (m *MockAPI) ExecuteSlashCommand(arg0 *model.CommandArgs) (*model.CommandResponse, error) {
 	m.ctrl.T.Helper()
