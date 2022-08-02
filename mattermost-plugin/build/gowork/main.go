@@ -62,7 +62,7 @@ func makeGoWork(ci bool) string {
 	if ci {
 		b.WriteString("use ./linux\n")
 	}
-
+	fmt.Println(b.String())
 	return b.String()
 }
 

@@ -60,12 +60,10 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-      with:
-        path: "focalboard"
     - name: npm ci
       run: |
-        cd focalboard/webapp && npm ci && cd -
-        cd focalboard/mattermost-plugin/webapp && npm ci
+        cd webapp && npm ci && cd -
+        cd mattermost-plugin/webapp && npm ci
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -78,19 +76,19 @@ jobs:
         node-version: 16.1.0
 
     - name: Build Linux server
-      run: cd focalboard; make server-linux-package
+      run: make server-linux-package
 
     - name: Copy server binary for Cypress
-      run: cp focalboard/bin/linux/focalboard-server focalboard/bin/
+      run: cp bin/linux/focalboard-server bin/
 
     - name: Upload server package
       uses: actions/upload-artifact@v1
       with:
         name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: Lint & test webapp
-      run: cd focalboard; make webapp-ci
+      run: make webapp-ci
 
   ci-windows-server:
     runs-on: windows-2022
