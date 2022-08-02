@@ -20,7 +20,7 @@ import './filterValue.scss'
 type Props = {
     view: BoardView
     filter: FilterClause
-    template: IPropertyTemplate
+    template?: IPropertyTemplate
     propertyType: PropertyType
 }
 
@@ -67,7 +67,7 @@ const filterValue = (props: Props): JSX.Element|null => {
     let displayValue: string
     if (filter.values.length > 0) {
         displayValue = filter.values.map((id) => {
-            const option = template.options.find((o) => o.id === id)
+            const option = template?.options.find((o) => o.id === id)
             return option?.value || '(Unknown)'
         }).join(', ')
     } else {
@@ -78,7 +78,7 @@ const filterValue = (props: Props): JSX.Element|null => {
         <MenuWrapper className='filterValue'>
             <Button>{displayValue}</Button>
             <Menu>
-                {template.options.map((o) => (
+                {template?.options.map((o) => (
                     <Menu.Switch
                         key={o.id}
                         id={o.id}

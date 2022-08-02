@@ -31,8 +31,12 @@ const FilterEntry = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const template = board.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
-    const propertyType = propsRegistry.get(template?.type || 'unknown')
-    const propertyName = template ? template.name : '(unknown)'
+    let propertyType = propsRegistry.get(template?.type || 'unknown')
+    let propertyName = template ? template.name : '(unknown)'
+    if (filter.propertyId === 'title') {
+        propertyType = propsRegistry.get('text')
+        propertyName = 'Title'
+    }
     const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
     return (
         <div
@@ -42,6 +46,23 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
+                    <Menu.Text
+                        key={'title'}
+                        id={'title'}
+                        name={'Title'}
+                        onClick={(optionId: string) => {
+                            const filterIndex = view.fields.filter.filters.indexOf(filter)
+                            Utils.assert(filterIndex >= 0, "Can't find filter")
+                            const filterGroup = createFilterGroup(view.fields.filter)
+                            const newFilter = filterGroup.filters[filterIndex] as FilterClause
+                            Utils.assert(newFilter, `No filter at index ${filterIndex}`)
+                            if (newFilter.propertyId !== optionId) {
+                                newFilter.propertyId = optionId
+                                newFilter.values = []
+                                mutator.changeViewFilter(props.board.id, view.id, view.fields.filter, filterGroup)
+                            }
+                        }}
+                    />
                     {board.cardProperties.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).canFilter).map((o: IPropertyTemplate) => (
                         <Menu.Text
                             key={o.id}
@@ -141,13 +162,12 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                 </Menu>
             </MenuWrapper>
-            {template &&
-                <FilterValue
-                    filter={filter}
-                    template={template}
-                    view={view}
-                    propertyType={propertyType}
-                />}
+            <FilterValue
+                filter={filter}
+                template={template}
+                view={view}
+                propertyType={propertyType}
+            />
             <div className='octo-spacer'/>
             <Button
                 onClick={() => {

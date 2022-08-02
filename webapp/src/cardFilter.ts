@@ -44,7 +44,10 @@ class CardFilter {
     }
 
     static isClauseMet(filter: FilterClause, templates: readonly IPropertyTemplate[], card: Card): boolean {
-        const value = card.fields.properties[filter.propertyId]
+        let value = card.fields.properties[filter.propertyId]
+        if (filter.propertyId === 'title') {
+            value = card.title
+        }
         switch (filter.condition) {
         case 'includes': {
             if (filter.values?.length < 1) {
