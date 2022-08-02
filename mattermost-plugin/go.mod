@@ -6,7 +6,9 @@ replace github.com/mattermost/focalboard/server => ../server
 
 require (
 	github.com/golang/mock v1.6.0
+	github.com/mattermost/focalboard/server v0.0.0-20220801175256-14e62426daab
 	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220801105831-8444c4595976
 	github.com/stretchr/testify v1.7.2
 )
 
@@ -95,11 +97,9 @@ require (
 	github.com/levigross/exp-html v0.0.0-20120902181939-8df60c69a8f5 // indirect
 	github.com/lib/pq v1.10.6 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
-	github.com/mattermost/focalboard/server v0.0.0-20220801175256-14e62426daab // indirect
 	github.com/mattermost/go-i18n v1.11.1-0.20211013152124-5c415071e404 // indirect
 	github.com/mattermost/ldap v0.0.0-20201202150706-ee0e6284187d // indirect
 	github.com/mattermost/logr/v2 v2.0.15 // indirect
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220801105831-8444c4595976 // indirect
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8 // indirect
 	github.com/mattermost/rsc v0.0.0-20160330161541-bbaefb05eaa0 // indirect
 	github.com/mattermost/squirrel v0.2.0 // indirect
