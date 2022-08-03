@@ -73,13 +73,6 @@ const BoardPage = (props: Props): JSX.Element => {
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
 
-    // used for websocket event callback functions
-    // to not get stuck with initial value of `me`, which is null.
-    const meRef = useRef<IUser | null>(null)
-    useEffect(() => {
-        meRef.current = me
-    }, [me])
-
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
     if (Utils.isFocalboardLegacy() && !props.readonly) {
@@ -135,12 +128,13 @@ const BoardPage = (props: Props): JSX.Element => {
         const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
             dispatch(updateMembersEnsuringBoardsAndUsers(members))
 
-            if (meRef.current !== null) {
-                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === meRef.current!.id)
+            if (me) {
+                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === me.id)
                 dispatch(addMyBoardMemberships(myBoardMemberships))
             }
         }
 
+        console.log('useWEbsocket adding onChange handler')
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
@@ -158,6 +152,7 @@ const BoardPage = (props: Props): JSX.Element => {
         })
 
         return () => {
+            console.log('useWebsocket cleanup')
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
