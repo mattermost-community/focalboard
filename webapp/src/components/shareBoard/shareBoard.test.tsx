@@ -250,7 +250,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByTitle('Copy internal link')
+        const copyLinkElement = screen.getByTitle('Copy link')
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -281,7 +281,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const copyLinkElement = screen.getByTitle('Copy internal link')
+        const copyLinkElement = screen.getByTitle('Copy link')
         expect(copyLinkElement).toBeDefined()
 
         act(() => {

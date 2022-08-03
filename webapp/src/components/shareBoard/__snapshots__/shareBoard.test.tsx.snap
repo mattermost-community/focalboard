@@ -232,7 +232,7 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i

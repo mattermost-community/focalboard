@@ -35,7 +35,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
             type="button"
           >
             <span>
-              (unknown)
+              Status
             </span>
           </button>
           <div
@@ -47,6 +47,29 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
               <div
                 class="menu-options"
               >
+                <div>
+                  <div
+                    aria-label="Title"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      class="menu-name"
+                    >
+                      Title
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
                 <div>
                   <div
                     aria-label="Status"
@@ -182,6 +205,20 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
           >
             <span>
               includes
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper filterValue"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Status
             </span>
           </button>
         </div>
@@ -246,7 +283,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
             type="button"
           >
             <span>
-              (unknown)
+              Status
             </span>
           </button>
           <div
@@ -258,6 +295,29 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
               <div
                 class="menu-options"
               >
+                <div>
+                  <div
+                    aria-label="Title"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      class="menu-name"
+                    >
+                      Title
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
                 <div>
                   <div
                     aria-label="Status"
@@ -397,6 +457,20 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
           </button>
         </div>
         <div
+          aria-label="menuwrapper"
+          class="MenuWrapper filterValue"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Status
+            </span>
+          </button>
+        </div>
+        <div
           class="octo-spacer"
         />
         <button
@@ -457,7 +531,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
             type="button"
           >
             <span>
-              (unknown)
+              Status
             </span>
           </button>
         </div>
@@ -505,8 +579,6 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       class="noicon"
                     />
                   </div>
-                </div>
-                <div>
                   <div
                     aria-label="doesn't include"
                     class="MenuOption TextOption menu-option"
@@ -528,8 +600,6 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       class="noicon"
                     />
                   </div>
-                </div>
-                <div>
                   <div
                     aria-label="is empty"
                     class="MenuOption TextOption menu-option"
@@ -551,8 +621,6 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       class="noicon"
                     />
                   </div>
-                </div>
-                <div>
                   <div
                     aria-label="is not empty"
                     class="MenuOption TextOption menu-option"
@@ -575,6 +643,8 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                     />
                   </div>
                 </div>
+                <div />
+                <div />
               </div>
               <div
                 class="menu-spacer hideOnWidescreen"
@@ -606,6 +676,20 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
               </div>
             </div>
           </div>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper filterValue"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Status
+            </span>
+          </button>
         </div>
         <div
           class="octo-spacer"
@@ -680,6 +764,29 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
               <div
                 class="menu-options"
               >
+                <div>
+                  <div
+                    aria-label="Title"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      class="menu-name"
+                    >
+                      Title
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
                 <div>
                   <div
                     aria-label="Status"

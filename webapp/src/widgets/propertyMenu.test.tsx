@@ -90,7 +90,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
