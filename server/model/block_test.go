@@ -253,6 +253,46 @@ func TestGenerateBlockIDs(t *testing.T) {
 		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]interface{})[0])
 		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]interface{})[1])
 	})
+
+	t.Run("Should update Id of default template view", func(t *testing.T) {
+		blockID1 := utils.NewID(utils.IDTypeBlock)
+		boardID1 := utils.NewID(utils.IDTypeBlock)
+		parentID1 := utils.NewID(utils.IDTypeBlock)
+		block1 := Block{
+			ID:       blockID1,
+			BoardID:  boardID1,
+			ParentID: parentID1,
+		}
+
+		blockID2 := utils.NewID(utils.IDTypeBlock)
+		boardID2 := utils.NewID(utils.IDTypeBlock)
+		parentID2 := utils.NewID(utils.IDTypeBlock)
+		block2 := Block{
+			ID:       blockID2,
+			BoardID:  boardID2,
+			ParentID: parentID2,
+			Fields: map[string]interface{}{
+				"defaultTemplateId": blockID1,
+			},
+		}
+
+		blocks := []Block{block1, block2}
+
+		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
+
+		require.NotEqual(t, blockID1, blocks[0].ID)
+		require.Equal(t, boardID1, blocks[0].BoardID)
+		require.Equal(t, parentID1, blocks[0].ParentID)
+
+		require.NotEqual(t, blockID2, blocks[1].ID)
+		require.Equal(t, boardID2, blocks[1].BoardID)
+		require.Equal(t, parentID2, blocks[1].ParentID)
+
+		block2DefaultTemplateID, ok := block2.Fields["defaultTemplateId"].(string)
+		require.True(t, ok)
+		require.NotEqual(t, blockID1, block2DefaultTemplateID)
+		require.Equal(t, blocks[0].ID, block2DefaultTemplateID)
+	})
 }
 
 func TestStampModificationMetadata(t *testing.T) {
