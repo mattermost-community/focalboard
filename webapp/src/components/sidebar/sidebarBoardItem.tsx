@@ -37,7 +37,7 @@ import CloseIcon from "../../widgets/icons/close"
 import {UserConfigPatch} from "../../user"
 import {getMe, patchProps} from "../../store/users"
 import octoClient from "../../octoClient"
-import {getBoards, getCurrentBoardId, getMySortedBoards} from "../../store/boards"
+import {getCurrentBoardId, getMySortedBoards} from "../../store/boards"
 import {UserSettings} from "../../userSettings"
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {

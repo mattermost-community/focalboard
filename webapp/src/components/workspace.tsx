@@ -21,13 +21,14 @@ import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 
+import {getMe} from "../store/users"
+
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
 
 import './workspace.scss'
-import {getMe} from "../store/users"
 
 type Props = {
     readonly: boolean
