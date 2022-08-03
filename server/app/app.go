@@ -1,6 +1,7 @@
 package app
 
 import (
+	"io"
 	"sync"
 	"time"
 
@@ -14,8 +15,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
-
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/filestore"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -26,21 +26,32 @@ const (
 	blockChangeNotifierShutdownTimeout = time.Second * 10
 )
 
-type pluginAPI interface {
-	GetUsers(options *mmModel.UserGetOptions) ([]*mmModel.User, *mmModel.AppError)
+type servicesAPI interface {
+	GetUsersFromProfiles(options *mm_model.UserGetOptions) ([]*mm_model.User, error)
+}
+
+type ReadCloseSeeker = filestore.ReadCloseSeeker
+
+type fileBackend interface {
+	Reader(path string) (ReadCloseSeeker, error)
+	FileExists(path string) (bool, error)
+	CopyFile(oldPath, newPath string) error
+	MoveFile(oldPath, newPath string) error
+	WriteFile(fr io.Reader, path string) (int64, error)
+	RemoveFile(path string) error
 }
 
 type Services struct {
 	Auth             *auth.Auth
 	Store            store.Store
-	FilesBackend     filestore.FileBackend
+	FilesBackend     fileBackend
 	Webhook          *webhook.Client
 	Metrics          *metrics.Metrics
 	Notifications    *notify.Service
-	Logger           *mlog.Logger
+	Logger           mlog.LoggerIFace
 	Permissions      permissions.PermissionsService
 	SkipTemplateInit bool
-	PluginAPI        pluginAPI
+	ServicesAPI      servicesAPI
 }
 
 type App struct {
@@ -48,13 +59,13 @@ type App struct {
 	store               store.Store
 	auth                *auth.Auth
 	wsAdapter           ws.Adapter
-	filesBackend        filestore.FileBackend
+	filesBackend        fileBackend
 	webhook             *webhook.Client
 	metrics             *metrics.Metrics
 	notifications       *notify.Service
-	logger              *mlog.Logger
+	logger              mlog.LoggerIFace
 	blockChangeNotifier *utils.CallbackQueue
-	pluginAPI           pluginAPI
+	servicesAPI         servicesAPI
 
 	cardLimitMux sync.RWMutex
 	cardLimit    int
@@ -80,7 +91,7 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		notifications:       services.Notifications,
 		logger:              services.Logger,
 		blockChangeNotifier: utils.NewCallbackQueue("blockChangeNotifier", blockChangeNotifierQueueSize, blockChangeNotifierPoolSize, services.Logger),
-		pluginAPI:           services.PluginAPI,
+		servicesAPI:         services.ServicesAPI,
 	}
 	app.initialize(services.SkipTemplateInit)
 	return app

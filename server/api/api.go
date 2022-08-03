@@ -27,6 +27,7 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	UploadFormFileKey      = "file"
+	True                   = "true"
 )
 
 const (
@@ -53,7 +54,7 @@ type API struct {
 	permissions     permissions.PermissionsService
 	singleUserToken string
 	MattermostAuth  bool
-	logger          *mlog.Logger
+	logger          mlog.LoggerIFace
 	audit           *audit.Audit
 	isPlugin        bool
 }
@@ -63,7 +64,7 @@ func NewAPI(
 	singleUserToken string,
 	authService string,
 	permissions permissions.PermissionsService,
-	logger *mlog.Logger,
+	logger mlog.LoggerIFace,
 	audit *audit.Audit,
 	isPlugin bool,
 ) *API {
@@ -98,6 +99,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv2.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
+	apiv2.HandleFunc("/boards/search", a.sessionRequired(a.handleSearchAllBoards)).Methods("GET")
 	apiv2.HandleFunc("/boards/{boardID}", a.attachSession(a.handleGetBoard, false)).Methods("GET")
 	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handlePatchBoard)).Methods("PATCH")
 	apiv2.HandleFunc("/boards/{boardID}", a.sessionRequired(a.handleDeleteBoard)).Methods("DELETE")
@@ -132,6 +134,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 
 	// User APIs
+	apiv2.HandleFunc("/users", a.sessionRequired(a.handleGetUsersList)).Methods("POST")
 	apiv2.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
 	apiv2.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
 	apiv2.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
@@ -809,6 +812,11 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	//   description: Board ID
 	//   required: true
 	//   type: string
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk data inserting)
+	//   required: false
+	//   type: bool
 	// - name: Body
 	//   in: body
 	//   description: array of blocks to insert or update
@@ -833,6 +841,9 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	// in phase 1 we use "manage_board_cards", but we would have to
 	// check on specific actions for phase 2
@@ -886,6 +897,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("disable_notify", disableNotify)
 
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
@@ -901,7 +913,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, true)
+	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, !disableNotify)
 	if err != nil {
 		if errors.Is(err, app.ErrViewsLimitReached) {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
@@ -912,7 +924,10 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.logger.Debug("POST Blocks", mlog.Int("block_count", len(blocks)))
+	a.logger.Debug("POST Blocks",
+		mlog.Int("block_count", len(blocks)),
+		mlog.Bool("disable_notify", disableNotify),
+	)
 
 	json, err := json.Marshal(newBlocks)
 	if err != nil {
@@ -1049,6 +1064,63 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
+func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /users getUser
+	//
+	// Returns a user[]
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: userID
+	//   in: path
+	//   description: User ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/User"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	requestBody, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	var userIDs []string
+	if err = json.Unmarshal(requestBody, &userIDs); err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getUsersList", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+
+	users, err := a.app.GetUsersList(userIDs)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		return
+	}
+
+	usersList, err := json.Marshal(users)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, string(usersList))
+	auditRec.Success()
+}
+
 func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /users/me getMe
 	//
@@ -1100,7 +1172,6 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
-
 	jsonBytesResponse(w, http.StatusOK, userData)
 
 	auditRec.AddMeta("userID", user.ID)
@@ -3168,7 +3239,7 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 		mlog.String("boardID", boardID),
 	)
 
-	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == "true")
+	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3271,7 +3342,7 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 		mlog.String("blockID", blockID),
 	)
 
-	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == "true")
+	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == True)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
 		return
@@ -3367,7 +3438,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /teams/{teamID}/boards/search searchBoards
 	//
-	// Returns the boards that match with a search term
+	// Returns the boards that match with a search term in the team
 	//
 	// ---
 	// produces:
@@ -3416,7 +3487,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", teamID)
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, userID)
+	boards, err := a.app.SearchBoardsForUserInTeam(teamID, term, userID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -3424,6 +3495,69 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("SearchBoards",
 		mlog.String("teamID", teamID),
+		mlog.Int("boardsCount", len(boards)),
+	)
+
+	data, err := json.Marshal(boards)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("boardsCount", len(boards))
+	auditRec.Success()
+}
+
+func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /boards/search searchBoards
+	//
+	// Returns the boards that match with a search term
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: q
+	//   in: query
+	//   description: The search term. Must have at least one character
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Board"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	term := r.URL.Query().Get("q")
+	userID := getUserID(r)
+
+	if len(term) == 0 {
+		jsonStringResponse(w, http.StatusOK, "[]")
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchAllBoards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	// retrieve boards list
+	boards, err := a.app.SearchBoardsForUser(term, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("SearchAllBoards",
 		mlog.Int("boardsCount", len(boards)),
 	)
 

@@ -30,6 +30,11 @@ exports[`components/boardsUnfurl/BoardsUnfurl renders normally 1`] = `
       </div>
     </div>
     <div
+      class="body"
+    >
+      <div />
+    </div>
+    <div
       class="footer"
     >
       <div
@@ -46,8 +51,7 @@ exports[`components/boardsUnfurl/BoardsUnfurl renders normally 1`] = `
         <span
           class="post-preview__time"
         >
-          Updated 
-          
+          Updated January 01, 1970, 12:00 AM
         </span>
       </div>
     </div>

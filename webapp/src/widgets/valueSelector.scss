@@ -1,3 +1,5 @@
+@import '../styles/z-index';
+
 .ValueSelector {
     width: 100%;
     border-radius: var(--default-rad);
@@ -21,10 +23,10 @@
         max-width: 100%;
 
         .IconButton.delete-value {
+            @include z-index(value-selector-delete);
             width: 16px;
             min-width: 16px;
             height: 16px;
-            z-index: 1;
 
             i {
                 font-size: 16px;

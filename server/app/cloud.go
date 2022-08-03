@@ -79,10 +79,19 @@ func (a *App) SetCloudLimits(limits *mmModel.ProductLimits) error {
 	}
 
 	if oldCardLimit != cardLimit {
+		a.logger.Info(
+			"setting new cloud limits",
+			mlog.Int("oldCardLimit", oldCardLimit),
+			mlog.Int("cardLimit", cardLimit),
+		)
 		a.SetCardLimit(cardLimit)
 		return a.doUpdateCardLimitTimestamp()
 	}
 
+	a.logger.Info(
+		"setting new cloud limits, equivalent to the existing ones",
+		mlog.Int("cardLimit", cardLimit),
+	)
 	return nil
 }
 
@@ -258,7 +267,7 @@ func (eb *errBoardNotFoundInTemplateMap) Error() string {
 }
 
 func (a *App) NotifyPortalAdminsUpgradeRequest(teamID string) error {
-	if a.pluginAPI == nil {
+	if a.servicesAPI == nil {
 		return ErrNilPluginAPI
 	}
 
@@ -286,7 +295,7 @@ func (a *App) NotifyPortalAdminsUpgradeRequest(teamID string) error {
 
 	for ; true; page++ {
 		getUsersOptions.Page = page
-		systemAdmins, appErr := a.pluginAPI.GetUsers(getUsersOptions)
+		systemAdmins, appErr := a.servicesAPI.GetUsersFromProfiles(getUsersOptions)
 		if appErr != nil {
 			a.logger.Error("failed to fetch system admins", mlog.Int("page_size", getUsersOptions.PerPage), mlog.Int("page", page), mlog.Err(appErr))
 			return appErr

@@ -13,7 +13,8 @@ FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be405403818
 WORKDIR /go/src/focalboard
 ADD . /go/src/focalboard
 
-RUN  make server-linux
+
+RUN  EXCLUDE_PLUGIN=true EXCLUDE_SERVER=true EXCLUDE_ENTERPRISE=true make server-linux
 RUN mkdir /data
 
 ## Final image

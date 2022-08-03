@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .Table {
     margin-top: 16px;
     padding-bottom: 0 !important;
@@ -192,9 +194,9 @@
     }
 
     .octo-table-header {
+        @include z-index(table-header);
         position: sticky;
         top: -2px;
-        z-index: 1;
         background: rgb(var(--center-channel-bg-rgb));
         width: fit-content;
 
