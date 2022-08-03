@@ -395,7 +395,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             </BoardPermissionGate>
             <div className='user-items'>
                 <TeamPermissionsRow/>
-                <ChannelPermissionsRow/>
+                <ChannelPermissionsRow teammateNameDisplay={me?.props?.teammateNameDisplay || clientConfig.teammateNameDisplay}/>
 
                 {boardUsers.map((user) => {
                     if (!members[user.id]) {
