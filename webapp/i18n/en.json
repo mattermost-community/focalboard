@@ -203,7 +203,7 @@
   "ShareBoard.copiedLink": "Copied!",
   "ShareBoard.copyLink": "Copy link",
   "ShareBoard.regenerate": "Regenerate token",
-  "ShareBoard.searchPlaceholder": "Search for people",
+  "ShareBoard.searchPlaceholder": "Search for people and channels",
   "ShareBoard.teamPermissionsText": "Everyone at {teamName} Team",
   "ShareBoard.tokenRegenrated": "Token regenerated",
   "ShareBoard.userPermissionsRemoveMemberText": "Remove member",
