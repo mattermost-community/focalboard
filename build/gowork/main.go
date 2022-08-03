@@ -39,23 +39,24 @@ func main() {
 	}
 
 	fmt.Fprintln(os.Stdout, "go.work written successfully.")
+	fmt.Fprintln(os.Stdout, content)
 }
 
 func makeGoWork(ci bool) string {
 	repos := map[string]string{
-		"mattermost-server": "EXCLUDE_SERVER",
-		"enterprise":        "EXCLUDE_ENTERPRISE",
+		"../mattermost-server": "EXCLUDE_SERVER",
+		"../enterprise":        "EXCLUDE_ENTERPRISE",
+		"./mattermost-plugin":  "EXCLUDE_PLUGIN",
 	}
 
 	var b strings.Builder
 
 	b.WriteString("go 1.18\n\n")
-	b.WriteString("use ./mattermost-plugin\n")
 	b.WriteString("use ./server\n")
 
 	for repo, envVarName := range repos {
 		if !isEnvVarTrue(envVarName, true) {
-			b.WriteString(fmt.Sprintf("use ../%s\n", repo))
+			b.WriteString(fmt.Sprintf("use %s\n", repo))
 		}
 	}
 
