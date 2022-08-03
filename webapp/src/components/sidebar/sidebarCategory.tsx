@@ -78,7 +78,19 @@ const SidebarCategory = (props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
+    const isBoardVisible = (boardID: string): boolean => {
+        // hide if board doesn't belong to current category
+        if (!blocks.includes(boardID)) {
+            return false
+        }
+
+        // hide if board was hidden by the user
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return !hiddenBoardIDs[boardID]
+    }
+
     const blocks = props.categoryBoards.boardIDs || []
+    const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
 
     const handleCreateNewCategory = () => {
         setShowCreateCategoryModal(true)
@@ -139,17 +151,6 @@ const SidebarCategory = (props: Props) => {
         )
     }, [showBoard, deleteBoard, props.boards])
 
-    const isBoardVisible = (boardID: string): boolean => {
-        // hide if board doesn't belong to current category
-        if (!blocks.includes(boardID)) {
-            return false
-        }
-
-        // hide if board was hidden by the user
-        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
-        return !hiddenBoardIDs[boardID]
-    }
-
     return (
         <div className='SidebarCategory' ref={menuWrapperRef}>
             <div
@@ -200,7 +201,7 @@ const SidebarCategory = (props: Props) => {
                     </Menu>
                 </MenuWrapper>
             </div>
-            {!collapsed && blocks.length === 0 &&
+            {!collapsed && visibleBlocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-boards-in-category'
