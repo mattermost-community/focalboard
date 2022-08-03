@@ -6,6 +6,11 @@
     overflow: auto;
 
     .fc-daygrid-event,
+    .fc-event-main {
+        @include z-index(unset);
+    }
+
+    .fc-daygrid-event,
     .fc-daygrid-day-number {
         text-decoration: none;
         color: var(--link-color-rgb);
