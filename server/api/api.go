@@ -4587,7 +4587,7 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 		)
 	}
 
-	w.Header().Set("Content-Type", "application/json")
+	setResponseHeader(w, "Content-Type", "application/json")
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {
 		data = []byte("{}")
@@ -4597,18 +4597,26 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 }
 
 func stringResponse(w http.ResponseWriter, message string) {
-	w.Header().Set("Content-Type", "text/plain")
+	setResponseHeader(w, "Content-Type", "text/plain")
 	_, _ = fmt.Fprint(w, message)
 }
 
 func jsonStringResponse(w http.ResponseWriter, code int, message string) {
-	w.Header().Set("Content-Type", "application/json")
+	setResponseHeader(w, "Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
 }
 
 func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
-	w.Header().Set("Content-Type", "application/json")
+	setResponseHeader(w, "Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
+}
+
+func setResponseHeader(w http.ResponseWriter, key string, value string) {
+	header := w.Header()
+	if header == nil {
+		return
+	}
+	header.Set(key, value)
 }
