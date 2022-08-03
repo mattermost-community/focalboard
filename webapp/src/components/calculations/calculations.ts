@@ -270,7 +270,6 @@ function getTimestampsFromPropertyValue(value: number | string | string[]): numb
         return [value]
     }
     if (typeof value === 'string') {
-        // TODO: Move this as part of the DateProperty itself
         let property: DateProperty
         try {
             property = JSON.parse(value)
