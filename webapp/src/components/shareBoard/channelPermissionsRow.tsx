@@ -10,6 +10,7 @@ import Menu from '../../widgets/menu'
 import {createBoard} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
+import {getBoardUsers} from '../../store/users'
 import {Channel} from '../../store/channels'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
@@ -24,9 +25,14 @@ import ConfirmationDialogBox from "../confirmationDialogBox"
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
-const ChannelPermissionsRow = (): JSX.Element => {
+type Props = {
+    teammateNameDisplay: string,
+}
+
+const ChannelPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
+    const users = useAppSelector(getBoardUsers)
     const [linkedChannel, setLinkedChannel] = useState<Channel|null>(null)
     const [showUnlinkChannelConfirmation, setShowUnlinkChannelConfirmation] = useState<boolean>(false)
 
@@ -72,6 +78,17 @@ const ChannelPermissionsRow = (): JSX.Element => {
         />
     )
 
+    const getDMName = () => {
+        const userIds = linkedChannel.name.split("__")
+        if (userIds.length !== 2) {
+            Utils.logError('Invalid DM channel name, unable to get user ids')
+        }
+        let result = Utils.getUserDisplayName(users[userIds[0]], props.teammateNameDisplay)
+        result += ", "
+        result += Utils.getUserDisplayName(users[userIds[1]], props.teammateNameDisplay)
+        return result
+    }
+
     return (
         <div className='user-item channel-item'>
             {showUnlinkChannelConfirmation && confirmationDialog}
@@ -79,8 +96,17 @@ const ChannelPermissionsRow = (): JSX.Element => {
                 <span className='user-item__img'>
                     {linkedChannel.type === 'P' && <PrivateIcon/>}
                     {linkedChannel.type === 'O' && <PublicIcon/>}
+                    {linkedChannel.type === 'D' && <PrivateIcon/>}
+                    {linkedChannel.type === 'G' && <PrivateIcon/>}
                 </span>
-                <div className='ml-3'><strong>{linkedChannel.display_name}</strong></div>
+                {linkedChannel.type === 'D' && (
+                    <div className='ml-3'>
+                        <strong>
+                            {getDMName()}
+                        </strong>
+                    </div>
+                )}
+                {linkedChannel.type !== 'D' && <div className='ml-3'><strong>{linkedChannel.display_name}</strong></div>}
             </div>
             <div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
