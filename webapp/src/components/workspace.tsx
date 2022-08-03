@@ -118,7 +118,6 @@ function CenterContent(props: Props) {
 
     return (
         <BoardTemplateSelector
-            className='BAR'
             title={
                 <FormattedMessage
                     id='BoardTemplateSelector.plugin.no-content-title'
@@ -162,7 +161,7 @@ const Workspace = (props: Props) => {
             }
             <div className='mainFrame'>
                 {boardTemplateSelectorOpen &&
-                    <BoardTemplateSelector className='FOO' onClose={closeBoardTemplateSelector}/>}
+                    <BoardTemplateSelector onClose={closeBoardTemplateSelector}/>}
                 {(board?.isTemplate) &&
                 <div className='banner'>
                     <FormattedMessage

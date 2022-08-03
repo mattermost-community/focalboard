@@ -35,7 +35,6 @@ type Props = {
     description?: React.ReactNode
     onClose?: () => void
     channelId?: string
-    className?: string
 }
 
 const BoardTemplateSelector = (props: Props) => {
@@ -125,7 +124,7 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     return (
-        <div className={`BoardTemplateSelector + ${props.className}`}>
+        <div className='BoardTemplateSelector'>
             <div className='toolbar'>
                 {onClose &&
                     <IconButton
