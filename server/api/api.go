@@ -20,6 +20,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/utils"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -2389,8 +2390,10 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if channel.TeamId != teamID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
-		return
+		if channel.Type != mmModel.ChannelTypeDirect && channel.Type != mmModel.ChannelTypeGroup {
+			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+			return
+		}
 	}
 
 	data, err := json.Marshal(channel)
