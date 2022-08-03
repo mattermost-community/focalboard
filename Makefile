@@ -39,6 +39,7 @@ prebuild: ## Run prebuild actions (install dependencies etc.).
 
 ci: webapp-ci server-test ## Simulate CI, locally.
 
+setup-go-work: export EXCLUDE_ENTERPRISE ?= true
 setup-go-work: ## Sets up a go.work file
 	go run ./build/gowork/main.go
 
