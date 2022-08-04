@@ -700,7 +700,8 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				Synthetic:       true,
 			}, nil
 		}
-	} else if err != nil {
+	}
+	if err != nil {
 		return nil, err
 	}
 	return bm, nil
