@@ -23,7 +23,7 @@
     }
 
     &.sidebar-view-item {
-        padding-left: 32px;
+        padding-left: 42px;
         color: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
     }
@@ -138,7 +138,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: flex;
+        display: block;
         align-items: baseline;
 
         .octo-icon {
