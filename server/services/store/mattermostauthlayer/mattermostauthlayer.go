@@ -568,6 +568,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
+		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"tm.userID": userID}).
 		Where(sq.Eq{"tm.deleteAt": 0}).
@@ -575,7 +576,10 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.And{
 				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
+				sq.Or{
+					sq.Eq{"bm.user_id": userID},
+					sq.Eq{"cm.userId": userID},
+				},
 			},
 		})
 
