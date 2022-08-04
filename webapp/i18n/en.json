@@ -150,6 +150,7 @@
   "GroupBy.hideEmptyGroups": "Hide {count} empty groups",
   "GroupBy.showHiddenGroups": "Show {count} hidden groups",
   "GroupBy.ungroup": "Ungroup",
+  "HideBoard.MenuOption": "Hide board",
   "KanbanCard.untitled": "Untitled",
   "Mutator.new-board-from-template": "new board from template",
   "Mutator.new-card-from-template": "new card from template",
