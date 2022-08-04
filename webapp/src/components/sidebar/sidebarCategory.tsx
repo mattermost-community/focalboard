@@ -208,6 +208,23 @@ const SidebarCategory = (props: Props) => {
                         defaultMessage='No boards inside'
                     />
                 </div>}
+            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
+                if (!isBoardVisible(board.id)) {
+                    return null
+                }
+                return (
+                    <SidebarBoardItem
+                        key={board.id}
+                        board={board}
+                        categoryBoards={props.categoryBoards}
+                        allCategories={props.allCategories}
+                        isActive={board.id === props.activeBoardID}
+                        showBoard={showBoard}
+                        showView={showView}
+                        onDeleteRequest={setDeleteBoard}
+                    />
+                )
+            })}
             {!collapsed && props.boards.map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
