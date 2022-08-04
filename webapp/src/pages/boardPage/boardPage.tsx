@@ -11,7 +11,7 @@ import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
 import {useWebsockets} from '../../hooks/websockets'
-import {IUser} from '../../user'
+import {IUser, UserConfigPatch} from '../../user'
 import {Block} from '../../blocks/block'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
@@ -37,7 +37,7 @@ import {
     fetchUserBlockSubscriptions,
     getMe,
     followBlock,
-    unfollowBlock,
+    unfollowBlock, patchProps,
 } from '../../store/users'
 import {setGlobalError} from '../../store/globalError'
 import {UserSettings} from '../../userSettings'
@@ -200,6 +200,41 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }
     }, [teamId, match.params.boardId, viewId, me?.id])
+
+    const handleUnhideBoard = async (boardID: string) => {
+        console.log(`handleUnhideBoard called`)
+        if (!me) {
+            return
+        }
+
+        const hiddenBoards = {...(me.props.hiddenBoardIDs || {})}
+        // const index = hiddenBoards.indexOf(boardID)
+        // hiddenBoards.splice(index, 1)
+        delete hiddenBoards[boardID]
+        const hiddenBoardsArray = Object.keys(hiddenBoards)
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                'hiddenBoardIDs': JSON.stringify(hiddenBoardsArray),
+            }
+        }
+        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        if (!patchedProps) {
+            return
+        }
+
+        await dispatch(patchProps(patchedProps))
+    }
+
+    useEffect(() => {
+        if (!teamId || !match.params.boardId) {
+            return
+        }
+
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        if (hiddenBoardIDs[match.params.boardId]) {
+            handleUnhideBoard(match.params.boardId)
+        }
+    }, [me?.id, teamId, match.params.boardId])
 
     if (props.readonly) {
         useEffect(() => {
