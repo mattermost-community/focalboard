@@ -3549,6 +3549,11 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
 	teamID := mux.Vars(r)["teamID"]
 	term := r.URL.Query().Get("q")
 	userID := getUserID(r)
