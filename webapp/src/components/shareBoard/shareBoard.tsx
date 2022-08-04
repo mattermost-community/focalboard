@@ -325,11 +325,11 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     let confirmSubtext
     let confirmButtonText
     if (board.channelId == '') {
-        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.\n\nAre you sure you want to link it?'})
-        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Yes, link here'})
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.'})
+        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Link channel'})
     } else {
-        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.\n\nThis board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.\n\nAre you sure you want to link it?'})
-        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Yes, unlink and link here'})
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
+        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
     }
 
     return (
@@ -344,6 +344,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
                         subText: confirmSubtext,
                         confirmButtonText: confirmButtonText,
+                        destructive: board.channelId != '',
                         onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
                         onClose: () => setShowLinkChannelConfirmation(null),
                     }}
@@ -380,7 +381,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u: IUser|Channel) => (u as IUser).username || (u as Channel).display_name}
                             isMulti={false}
-                            placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people'})}
+                            placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})}
                             onChange={(newValue) => {
                                 if (newValue && (newValue as IUser).username) {
                                     mutator.createBoardMember(boardId, newValue.id)

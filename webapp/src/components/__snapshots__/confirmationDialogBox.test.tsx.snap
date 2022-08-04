@@ -59,7 +59,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               </span>
             </button>
             <button
-              class="Button filled danger size--medium"
+              class="Button filled size--medium"
               title="test-btn-text"
               type="submit"
             >
@@ -134,7 +134,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               </span>
             </button>
             <button
-              class="Button filled danger size--medium"
+              class="Button filled size--medium"
               title="test-btn-text"
               type="submit"
             >
