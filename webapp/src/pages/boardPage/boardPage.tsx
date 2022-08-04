@@ -24,6 +24,7 @@ import {
     getCurrentBoardId,
     setCurrent as setCurrentBoard,
     fetchBoardMembers,
+    addMyBoardMemberships,
 } from '../../store/boards'
 import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
@@ -126,8 +127,14 @@ const BoardPage = (props: Props): JSX.Element => {
 
         const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
             dispatch(updateMembersEnsuringBoardsAndUsers(members))
+
+            if (me) {
+                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === me.id)
+                dispatch(addMyBoardMemberships(myBoardMemberships))
+            }
         }
 
+        console.log('useWEbsocket adding onChange handler')
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
@@ -145,6 +152,7 @@ const BoardPage = (props: Props): JSX.Element => {
         })
 
         return () => {
+            console.log('useWebsocket cleanup')
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
