@@ -18,7 +18,7 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './versionMessage.scss'
-const helpURL = 'https://mattermost.com/version72help'
+const helpURL = 'https://docs.mattermost.com/welcome/whats-new-in-v72.html'
 
 const VersionMessage = React.memo(() => {
     const intl = useIntl()
