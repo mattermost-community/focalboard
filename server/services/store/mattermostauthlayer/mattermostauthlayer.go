@@ -684,21 +684,21 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
-		b, err := s.Store.GetBoard(boardID)
-		if err != nil {
-			return nil, err
+		b, boardErr := s.Store.GetBoard(boardID)
+		if boardErr != nil {
+			return nil, boardErr
 		}
 		if b.ChannelID != "" {
-			_, err := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
-			if err != nil {
+			_, memberErr := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
+			if memberErr != nil {
 				var appErr *mmModel.AppError
-				if errors.As(err, &appErr) && appErr.StatusCode == http.StatusNotFound {
+				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					// Plugin API returns error if channel member doesn't exist.
 					// We're fine if it doesn't exist, so its not an error for us.
 					return nil, nil
 				}
 
-				return nil, err
+				return nil, memberErr
 			}
 
 			return &model.BoardMember{
@@ -712,6 +712,8 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				Synthetic:       true,
 			}, nil
 		}
+	} else {
+		return nil, err
 	}
 	return bm, nil
 }
