@@ -682,6 +682,7 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 }
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
+	var err error
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
 		b, err := s.Store.GetBoard(boardID)
