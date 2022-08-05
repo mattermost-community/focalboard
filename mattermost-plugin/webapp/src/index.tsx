@@ -323,7 +323,7 @@ export default class Plugin {
                     const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
 
                     return data
-                });
+                })
             }
         }
 
