@@ -50,7 +50,7 @@ const BoardSelector = () => {
         if (query.trim().length === 0 || !teamId) {
             return
         }
-        const items = await octoClient.search(teamId, query)
+        const items = await octoClient.searchLinkableBoards(teamId, query)
 
         setResults(items)
         setIsSearching(false)

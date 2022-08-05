@@ -98,6 +98,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.HandleFunc("/teams/{teamID}/channels/{channelID}", a.sessionRequired(a.handleGetChannel)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards", a.sessionRequired(a.handleGetBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/boards/search", a.sessionRequired(a.handleSearchBoards)).Methods("GET")
+	apiv2.HandleFunc("/teams/{teamID}/boards/search/linkable", a.sessionRequired(a.handleSearchLinkableBoards)).Methods("GET")
 	apiv2.HandleFunc("/teams/{teamID}/templates", a.sessionRequired(a.handleGetTemplates)).Methods("GET")
 	apiv2.HandleFunc("/boards", a.sessionRequired(a.handleCreateBoard)).Methods("POST")
 	apiv2.HandleFunc("/boards/search", a.sessionRequired(a.handleSearchAllBoards)).Methods("GET")
@@ -3511,6 +3512,95 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 
 	auditRec.AddMeta("boardsCount", len(boards))
+	auditRec.Success()
+}
+
+func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /teams/{teamID}/boards/search/linkable searchLinkableBoards
+	//
+	// Returns the boards that match with a search term in the team and the
+	// user has permission to manage members
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: q
+	//   in: query
+	//   description: The search term. Must have at least one character
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Board"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
+	teamID := mux.Vars(r)["teamID"]
+	term := r.URL.Query().Get("q")
+	userID := getUserID(r)
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		return
+	}
+
+	if len(term) == 0 {
+		jsonStringResponse(w, http.StatusOK, "[]")
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "searchLinkableBoards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("teamID", teamID)
+
+	// retrieve boards list
+	boards, err := a.app.SearchBoardsForUserInTeam(teamID, term, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	linkableBoards := []*model.Board{}
+	for _, board := range boards {
+		if a.permissions.HasPermissionToBoard(userID, board.ID, model.PermissionManageBoardRoles) {
+			linkableBoards = append(linkableBoards, board)
+		}
+	}
+
+	a.logger.Debug("SearchLinkableBoards",
+		mlog.String("teamID", teamID),
+		mlog.Int("boardsCount", len(linkableBoards)),
+	)
+
+	data, err := json.Marshal(linkableBoards)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.AddMeta("boardsCount", len(linkableBoards))
 	auditRec.Success()
 }
 
