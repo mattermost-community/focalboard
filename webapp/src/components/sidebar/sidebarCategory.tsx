@@ -142,14 +142,18 @@ const SidebarCategory = (props: Props) => {
     }, [showBoard, deleteBoard, props.boards])
 
     const toggleCollapse = async () => {
-        console.log(`Before: ${collapsed}`)
-        setCollapsed(!collapsed)
-        console.log(`After ${collapsed}`)
-        const updatedCategory: Category = {
-            ...props.categoryBoards,
-            collapsed,
+        const newVal = !collapsed
+        await setCollapsed(newVal)
+
+        // The default 'Boards' category isn't stored in database,
+        // so avoid making the API call for it
+        if (props.categoryBoards.id !== '') {
+            const updatedCategory: Category = {
+                ...props.categoryBoards,
+                collapsed: newVal,
+            }
+            await mutator.updateCategory(updatedCategory)
         }
-        await mutator.updateCategory(updatedCategory)
     }
 
     return (
