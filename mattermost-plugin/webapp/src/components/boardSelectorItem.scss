@@ -5,9 +5,20 @@
     padding: 10px 0;
     margin: 0 35px;
 
+    .BoardSelectorItem-info {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+
     .icon {
+        width: 18px;
         align-items: flex-start;
         margin-right: 10px;
+
+        i {
+            font-size: 20px;
+        }
 
         &:empty {
             display: none;

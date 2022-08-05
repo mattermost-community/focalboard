@@ -6,6 +6,7 @@ import {useIntl, FormattedMessage} from 'react-intl'
 
 import {Board} from '../../../../webapp/src/blocks/board'
 import Button from '../../../../webapp/src/widgets/buttons/button'
+import CompassIcon from '../../../../webapp/src/widgets/icons/compassIcon'
 
 import './boardSelectorItem.scss'
 
@@ -23,10 +24,12 @@ const BoardSelectorItem = (props: Props) => {
     const resultTitle = item.title || untitledBoardTitle
     return (
         <div className='BoardSelectorItem'>
-            <span className='icon'>{item.icon}</span>
-            <div className='resultLine'>
-                <div className='resultTitle'>{resultTitle}</div>
-                <div className='resultDescription'>{item.description}</div>
+            <div className='BoardSelectorItem-info'>
+                <span className='icon'>{item.icon || <CompassIcon icon='product-boards'/>}</span>
+                <div className='resultLine'>
+                    <div className='resultTitle'>{resultTitle}</div>
+                    <div className='resultDescription'>{item.description}</div>
+                </div>
             </div>
             <div className='linkUnlinkButton'>
                 {item.channelId === currentChannel &&
@@ -44,7 +47,7 @@ const BoardSelectorItem = (props: Props) => {
                         onClick={() => props.linkBoard(item)}
                         emphasis='primary'
                     >
-                        <FormattedMessage 
+                        <FormattedMessage
                             id='boardSelector.link'
                             defaultMessage='Link'
                         />
