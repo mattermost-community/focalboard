@@ -40,12 +40,21 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
         }
     }
 
+    const handleEscKeyPress = (e: KeyboardEvent) => {
+        if (Utils.isKeyPressed(e, Constants.keyCodes.ESC)) {
+            e.preventDefault()
+            setShowSwitcher(false)
+        }
+    }
+
     useEffect(() => {
         document.addEventListener('keydown', handleQuickSwitchKeyPress)
+        document.addEventListener('keydown', handleEscKeyPress)
 
         // cleanup function
         return () => {
             document.removeEventListener('keydown', handleQuickSwitchKeyPress)
+            document.removeEventListener('keydown', handleEscKeyPress)
         }
     }, [])
 

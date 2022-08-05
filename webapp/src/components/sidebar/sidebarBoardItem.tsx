@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
-import {useHistory, useRouteMatch} from "react-router-dom"
+import {generatePath, useHistory, useRouteMatch} from "react-router-dom"
 
 import {Board} from '../../blocks/board'
 import {BoardView, IViewType} from '../../blocks/boardView'
@@ -17,10 +17,11 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 import './sidebarBoardItem.scss'
 import {CategoryBoards} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
-import {useAppSelector} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
 import GalleryIcon from '../../widgets/icons/gallery'
@@ -32,6 +33,12 @@ import DuplicateIcon from "../../widgets/icons/duplicate"
 import {Utils} from "../../utils"
 
 import AddIcon from "../../widgets/icons/add"
+import CloseIcon from "../../widgets/icons/close"
+import {UserConfigPatch} from "../../user"
+import {getMe, patchProps} from "../../store/users"
+import octoClient from "../../octoClient"
+import {getCurrentBoardId, getMySortedBoards} from "../../store/boards"
+import {UserSettings} from "../../userSettings"
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -62,9 +69,13 @@ const SidebarBoardItem = (props: Props) => {
     const boardViews = useAppSelector(getCurrentBoardViews)
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
+    const me = useAppSelector(getMe)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
+    const dispatch = useAppDispatch()
+    const myAllBoards = useAppSelector(getMySortedBoards)
+    const currentBoardID = useAppSelector(getCurrentBoardId)
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -106,15 +117,79 @@ const SidebarBoardItem = (props: Props) => {
 
     }, [board.id])
 
+    const showTemplatePicker = () => {
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {teamId: match.params.teamId}
+        const newPath = generatePath('/team/:teamId?', params)
+        history.push(newPath)
+    }
+
+    const handleHideBoard = async() => {
+        console.log('handleHideBoard')
+        if (!me ) {
+            return
+        }
+
+        // creating new array from me.props.hiddenBoardIDs as
+        // me.props.hiddenBoardIDs belongs to Redux state and
+        // so is immutable.
+        const hiddenBoards = {...(me.props.hiddenBoardIDs || {})}
+
+        // check for already hidden board. Skip if so
+        // if (hiddenBoards.indexOf(board.id) > -1) {
+        //     return
+        // }
+
+        hiddenBoards[board.id] = true
+        const hiddenBoardsArray = Object.keys(hiddenBoards)
+        const patch: UserConfigPatch = {
+            updatedFields: {
+                'hiddenBoardIDs': JSON.stringify(hiddenBoardsArray),
+            }
+        }
+        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        if (!patchedProps) {
+            return
+        }
+
+        await dispatch(patchProps(patchedProps))
+
+        // If we're hiding the board we're currently on,
+        // we need to switch to a different board once its hidden.
+        if (currentBoardID === props.board.id) {
+            // There's no special logic on what the next board needs to be.
+            // To keep things simple, we just switch to the first unhidden board
+
+            // Empty board ID navigates to template picker, which is
+            // fine if there are no more visible boards to switch to.
+            const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
+
+            if (visibleBoards.length === 0) {
+                UserSettings.setLastBoardID(match.params.teamId!, null)
+                showTemplatePicker()
+            } else {
+                let nextBoardID = ''
+                if (visibleBoards.length > 0) {
+                    nextBoardID = visibleBoards[0].id
+                }
+                props.showBoard(nextBoardID)
+            }
+        }
+    }
+
+    const boardItemRef = useRef<HTMLDivElement>(null)
+
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     return (
         <>
             <div
                 className={`SidebarBoardItem subitem ${props.isActive ? 'active' : ''}`}
                 onClick={() => props.showBoard(board.id)}
+                ref={boardItemRef}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon || <BoardIcon/>}
+                    {board.icon || <CompassIcon icon='product-boards'/>}
                 </div>
                 <div
                     className='octo-sidebar-title'
@@ -136,7 +211,8 @@ const SidebarBoardItem = (props: Props) => {
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu
                         fixed={true}
-                        position='left'
+                        position='auto'
+                        parentRef={boardItemRef}
                     >
                         <BoardPermissionGate
                             boardId={board.id}
@@ -155,9 +231,10 @@ const SidebarBoardItem = (props: Props) => {
                         <Menu.SubMenu
                             key={`moveBlock-${board.id}`}
                             id='moveBlock'
+                            className='boardMoveToCategorySubmenu'
                             name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
                             icon={<CreateNewFolder/>}
-                            position='bottom'
+                            position='auto'
                         >
                             {generateMoveToCategoryOptions(board.id)}
                         </Menu.SubMenu>
@@ -172,6 +249,12 @@ const SidebarBoardItem = (props: Props) => {
                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
                             icon={<AddIcon/>}
                             onClick={() => handleDuplicateBoard(true)}
+                        />
+                        <Menu.Text
+                            id='hideBoard'
+                            name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
+                            icon={<CloseIcon/>}
+                            onClick={() => handleHideBoard()}
                         />
                     </Menu>
                 </MenuWrapper>

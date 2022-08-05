@@ -104,6 +104,7 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 readonly={false}
                 onCardClicked={() => null}
                 addCard={() => Promise.resolve()}
+                addCardFromTemplate={() => Promise.resolve()}
                 showCard={() => null}
                 hiddenCardsCount={0}
                 showHiddenCardCountNotification={() => null}

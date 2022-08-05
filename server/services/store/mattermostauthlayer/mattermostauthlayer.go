@@ -275,11 +275,33 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.ID").
-		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
+		Join("TeamMembers as tm ON tm.UserID = u.id").
+		LeftJoin("Bots b ON ( b.UserID = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID})
+
+	rows, err := query.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	users, err := s.usersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
+	query := s.getQueryBuilder().
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		From("Users as u").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Eq{"u.id": userIDs})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -662,21 +684,21 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
-		b, err := s.Store.GetBoard(boardID)
-		if err != nil {
-			return nil, err
+		b, boardErr := s.Store.GetBoard(boardID)
+		if boardErr != nil {
+			return nil, boardErr
 		}
 		if b.ChannelID != "" {
-			_, err := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
-			if err != nil {
+			_, memberErr := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
+			if memberErr != nil {
 				var appErr *mmModel.AppError
-				if errors.As(err, &appErr) && appErr.StatusCode == http.StatusNotFound {
+				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					// Plugin API returns error if channel member doesn't exist.
 					// We're fine if it doesn't exist, so its not an error for us.
-					return nil, nil
+					return nil, model.NewErrNotFound(userID)
 				}
 
-				return nil, err
+				return nil, memberErr
 			}
 
 			return &model.BoardMember{
@@ -690,6 +712,9 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				Synthetic:       true,
 			}, nil
 		}
+	}
+	if err != nil {
+		return nil, err
 	}
 	return bm, nil
 }

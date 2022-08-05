@@ -28,16 +28,10 @@ export const fetchBoardMembers = createAsyncThunk(
     async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
         const members = await client.getBoardMembers(teamId, boardId)
         const users = [] as IUser[]
+        const userIDs = members.map((member) => member.userId)
 
-        /* eslint-disable no-await-in-loop */
-        for (const member of members) {
-            // TODO #2968 we should fetch this in bulk
-            const user = await client.getUser(member.userId)
-            if (user) {
-                users.push(user)
-            }
-        }
-        /* eslint-enable no-await-in-loop */
+        const usersData = await client.getUsersList(userIDs)
+        users.push(...usersData)
 
         thunkAPI.dispatch(setBoardUsers(users))
         return members
@@ -141,6 +135,9 @@ const boardsSlice = createSlice({
             }
         },
         updateMembers: updateMembersHandler,
+        addMyBoardMemberships: (state, action: PayloadAction<BoardMember[]>) => {
+            action.payload.forEach((boardMember) => state.myBoardMemberships[boardMember.boardId] = boardMember)
+        }
     },
 
     extraReducers: (builder) => {
@@ -202,7 +199,7 @@ const boardsSlice = createSlice({
     },
 })
 
-export const {updateBoards, setCurrent, setLinkToChannel, updateMembers} = boardsSlice.actions
+export const {updateBoards, setCurrent, setLinkToChannel, updateMembers, addMyBoardMemberships} = boardsSlice.actions
 export const {reducer} = boardsSlice
 
 export const getBoards = (state: RootState): {[key: string]: Board} => state.boards?.boards || {}
