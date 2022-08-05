@@ -172,6 +172,7 @@ class TestBlockFactory {
             deleteAt: 0,
             userID: '',
             teamID: '',
+            collapsed: false,
         }
     }
 
@@ -187,8 +188,8 @@ class TestBlockFactory {
             id: 'user-id-1',
             username: 'Dwight Schrute',
             email: 'dwight.schrute@dundermifflin.com',
-            nickname: '', 
-            firstname: '', 
+            nickname: '',
+            firstname: '',
             lastname: '',
             props: {},
             create_at: Date.now(),

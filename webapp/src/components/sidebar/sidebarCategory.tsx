@@ -32,8 +32,6 @@ import {getCurrentTeam} from '../../store/teams'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 
-import octoClient from "../../octoClient"
-
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'
 
