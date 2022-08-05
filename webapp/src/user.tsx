@@ -27,6 +27,20 @@ interface UserConfigPatch {
     deletedFields?: string[]
 }
 
+function parseUserProps(props: Record<string, any>): Record<string, any> {
+    const processedProps = props
+    const hiddenBoardIDs = props.hiddenBoardIDs ? JSON.parse(props.hiddenBoardIDs) : []
+    processedProps.hiddenBoardIDs = {}
+    hiddenBoardIDs.forEach((boardID: string) => processedProps.hiddenBoardIDs[boardID] = true)
+    return processedProps
+}
+
 const UserPropPrefix = 'focalboard_'
 
-export {IUser, UserWorkspace, UserConfigPatch, UserPropPrefix}
+export {
+    IUser,
+    UserWorkspace,
+    UserConfigPatch,
+    UserPropPrefix,
+    parseUserProps,
+}

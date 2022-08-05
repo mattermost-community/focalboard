@@ -8,6 +8,10 @@
     .icon {
         align-items: flex-start;
         margin-right: 10px;
+
+        &:empty {
+            display: none;
+        }
     }
 
     .resultLine {
@@ -34,5 +38,6 @@
         display: flex;
         align-self: center;
         align-items: center;
+        padding-left: 16px;
     }
 }
