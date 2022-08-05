@@ -112,6 +112,19 @@ const BoardSelector = () => {
         dispatch(setLinkToChannel(''))
     }
 
+    let confirmationSubText
+    if (showLinkBoardConfirmation?.channelId !== '') {
+        confirmationSubText = intl.formatMessage({
+            id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
+            defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board.\n\nAdditionally, this board is linked to another channel, and will be unlinked from the other channel when you link it here.\n\nAre you sure you want to link it?'
+        }, {boardName: showLinkBoardConfirmation?.title})
+    } else {
+        confirmationSubText = intl.formatMessage({
+            id: 'boardSelector.confirm-link-board-subtext',
+            defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board.\n\nAre you sure you want to link it?'
+        }, {boardName: showLinkBoardConfirmation?.title})
+    }
+
     return (
         <div className='focalboard-body'>
             <Dialog
@@ -128,10 +141,7 @@ const BoardSelector = () => {
                     <ConfirmationDialog
                         dialogBox={{
                             heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link board to channel'}),
-                            subText: intl.formatMessage({
-                                id: 'boardSelector.confirm-link-board-subtext',
-                                defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board. Are you sure you want to link it?'
-                            }, {boardName: showLinkBoardConfirmation.title}),
+                            subText: confirmationSubText,
                             confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
                             onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
                             onClose: () => setShowLinkBoardConfirmation(null),

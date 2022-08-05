@@ -6,4 +6,12 @@
         display: flex;
         flex-direction: row;
     }
+
+    .Button {
+        overflow: hidden;
+        max-width: 220px;
+        text-overflow: ellipsis;
+        white-space: normal;
+        display: block;
+    }
 }

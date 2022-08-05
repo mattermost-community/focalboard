@@ -150,7 +150,7 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         }
-    })
+    }, [me?.id])
 
     const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
         // and fetch its data

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	apierrors "github.com/mattermost/mattermost-plugin-api/errors"
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 // ErrBlocksFromDifferentBoards is an error type that can be returned
@@ -32,7 +32,7 @@ func (nf *ErrNotFound) Error() string {
 // IsErrNotFound returns true if `err` is or wraps one of:
 // - model.ErrNotFound
 // - sql.ErrNoRows
-// - mattermost-plugin-api/errors/ErrNotFound.
+// - mattermost-plugin-api/ErrNotFound.
 func IsErrNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -50,7 +50,7 @@ func IsErrNotFound(err error) bool {
 	}
 
 	// check if this is a plugin API error
-	return errors.Is(err, apierrors.ErrNotFound)
+	return errors.Is(err, pluginapi.ErrNotFound)
 }
 
 // ErrNotAllFound is an error type that can be returned by store APIs

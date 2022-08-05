@@ -21,6 +21,7 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
 import GalleryIcon from '../../widgets/icons/gallery'
@@ -117,7 +118,7 @@ const SidebarBoardItem = (props: Props) => {
                 ref={boardItemRef}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon || <BoardIcon/>}
+                    {board.icon || <CompassIcon icon='product-boards'/>}
                 </div>
                 <div
                     className='octo-sidebar-title'

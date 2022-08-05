@@ -64,6 +64,18 @@ func (a *App) GetUser(id string) (*model.User, error) {
 	return user, nil
 }
 
+func (a *App) GetUsersList(userIDs []string) ([]*model.User, error) {
+	if len(userIDs) == 0 {
+		return nil, errors.New("No User IDs")
+	}
+
+	users, err := a.store.GetUsersList(userIDs)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to find users")
+	}
+	return users, nil
+}
+
 // Login create a new user session if the authentication data is valid.
 func (a *App) Login(username, email, password, mfaToken string) (string, error) {
 	var user *model.User

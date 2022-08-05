@@ -275,11 +275,33 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.ID").
-		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
+		Join("TeamMembers as tm ON tm.UserID = u.id").
+		LeftJoin("Bots b ON ( b.UserID = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID})
+
+	rows, err := query.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	users, err := s.usersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
+	query := s.getQueryBuilder().
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		From("Users as u").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Eq{"u.id": userIDs})
 
 	rows, err := query.Query()
 	if err != nil {

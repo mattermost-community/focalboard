@@ -55,6 +55,7 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
+	GetUsersList(userIDs []string) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
