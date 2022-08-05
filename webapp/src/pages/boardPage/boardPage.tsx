@@ -7,6 +7,7 @@ import {useRouteMatch} from 'react-router-dom'
 
 import Workspace from '../../components/workspace'
 import CloudMessage from '../../components/messages/cloudMessage'
+import VersionMessage from '../../components/messages/versionMessage'
 import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
@@ -252,6 +253,7 @@ const BoardPage = (props: Props): JSX.Element => {
             <UndoRedoHotKeys/>
             <WebsocketConnection/>
             <CloudMessage/>
+            <VersionMessage/>
 
             {!mobileWarningClosed &&
                 <div className='mobileWarning'>
