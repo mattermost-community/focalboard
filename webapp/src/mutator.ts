@@ -975,6 +975,7 @@ class Mutator {
         fromTemplate = false,
         description = 'duplicate card',
         asTemplate = false,
+        propertyOverrides?: Record<string, string>,
         afterRedo?: (newCardId: string) => Promise<void>,
         beforeUndo?: () => Promise<void>,
     ): Promise<[Block[], string]> {
@@ -1004,6 +1005,7 @@ class Mutator {
                 const patch = {
                     updatedFields: {
                         icon: newRootBlock.fields.icon,
+                        properties: {...newRootBlock.fields.properties, ...propertyOverrides}
                     },
                     title: newRootBlock.title,
                 }

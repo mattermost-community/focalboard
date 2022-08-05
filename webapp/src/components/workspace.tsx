@@ -21,10 +21,13 @@ import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 
+import {getMe} from "../store/users"
+
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
+
 import './workspace.scss'
 
 type Props = {
@@ -46,6 +49,12 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const me = useAppSelector(getMe)
+
+    const isBoardHidden = () => {
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return hiddenBoardIDs[board.id]
+    }
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
@@ -76,7 +85,7 @@ function CenterContent(props: Props) {
         }
     }, [cardLimitTimestamp, match.params.boardId, templates])
 
-    if (board && activeView) {
+    if (board && !isBoardHidden() && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
             property = board?.cardProperties.find((o) => o.type === 'select')
@@ -104,7 +113,7 @@ function CenterContent(props: Props) {
         )
     }
 
-    if (board || isLoading) {
+    if ((board && !isBoardHidden()) || isLoading) {
         return null
     }
 

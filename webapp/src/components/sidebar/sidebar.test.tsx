@@ -50,7 +50,10 @@ describe('components/sidebarSidebar', () => {
                 views: [],
             },
             users: {
-                me: {},
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
             },
             sidebar: {
                 categoryAttributes: [
@@ -103,7 +106,10 @@ describe('components/sidebarSidebar', () => {
                 views: [],
             },
             users: {
-                me: {},
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
             },
             sidebar: {
                 categoryAttributes: [
@@ -131,6 +137,61 @@ describe('components/sidebarSidebar', () => {
         expect(showSidebar).toBeDefined()
 
         customGlobal.innerWidth = 1024
+    })
+
+    test('dont show hidden boards', () => {
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {
+                        hiddenBoardIDs: {
+                            [board.id]: true,
+                        }
+                    },
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
+        })
+
+        const history = createMemoryHistory()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container, getAllByText} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const sidebarBoards = container.getElementsByClassName('SidebarBoardItem')
+        // The only board in redux store is hidden, so there should
+        // be no boards visible in sidebar
+        expect(sidebarBoards.length).toBe(0)
+
+        const noBoardsText = getAllByText('No boards inside')
+        expect(noBoardsText.length).toBe(2) // one for custom category, one for default category
     })
 
     // TODO: Fix this later

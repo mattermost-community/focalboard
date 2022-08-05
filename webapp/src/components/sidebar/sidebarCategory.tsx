@@ -78,7 +78,19 @@ const SidebarCategory = (props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
+    const isBoardVisible = (boardID: string): boolean => {
+        // hide if board doesn't belong to current category
+        if (!blocks.includes(boardID)) {
+            return false
+        }
+
+        // hide if board was hidden by the user
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return !hiddenBoardIDs[boardID]
+    }
+
     const blocks = props.categoryBoards.boardIDs || []
+    const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
 
     const handleCreateNewCategory = () => {
         setShowCreateCategoryModal(true)
@@ -189,15 +201,32 @@ const SidebarCategory = (props: Props) => {
                     </Menu>
                 </MenuWrapper>
             </div>
-            {!collapsed && blocks.length === 0 &&
+            {!collapsed && visibleBlocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-boards-in-category'
                         defaultMessage='No boards inside'
                     />
                 </div>}
+            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
+                if (!isBoardVisible(board.id)) {
+                    return null
+                }
+                return (
+                    <SidebarBoardItem
+                        key={board.id}
+                        board={board}
+                        categoryBoards={props.categoryBoards}
+                        allCategories={props.allCategories}
+                        isActive={board.id === props.activeBoardID}
+                        showBoard={showBoard}
+                        showView={showView}
+                        onDeleteRequest={setDeleteBoard}
+                    />
+                )
+            })}
             {!collapsed && props.boards.map((board: Board) => {
-                if (!blocks.includes(board.id)) {
+                if (!isBoardVisible(board.id)) {
                     return null
                 }
                 return (

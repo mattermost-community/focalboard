@@ -39,8 +39,9 @@ prebuild: ## Run prebuild actions (install dependencies etc.).
 
 ci: webapp-ci server-test ## Simulate CI, locally.
 
+setup-go-work: export EXCLUDE_ENTERPRISE ?= true
 setup-go-work: ## Sets up a go.work file
-	go run ./mattermost-plugin/build/gowork/main.go
+	go run ./build/gowork/main.go
 
 templates-archive: setup-go-work ## Build templates archive file
 	cd server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
