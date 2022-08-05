@@ -26,18 +26,21 @@ exports[`components/cardDetail/comment return comment 1`] = `
         </div>
       </div>
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
-        <button
-          class="IconButton"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
         <div
           class="Menu noselect left "
         >
@@ -140,18 +143,21 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
         </div>
       </div>
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
-        <button
-          class="IconButton"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
         <div
           class="Menu noselect left "
         >

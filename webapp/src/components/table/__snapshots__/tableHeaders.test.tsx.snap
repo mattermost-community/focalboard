@@ -11,15 +11,18 @@ exports[`components/table/TableHeaders should match snapshot 1`] = `
       style="overflow: unset; opacity: 1; width: 100px;"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
-        <span
-          class="Label empty "
+        <div
+          aria-label="menuwrapper"
+          role="button"
         >
-          Name
-        </span>
+          <span
+            class="Label empty "
+          >
+            Name
+          </span>
+        </div>
       </div>
       <div
         class="octo-spacer"

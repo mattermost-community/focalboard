@@ -70,16 +70,19 @@ exports[`components/viewTitle hide description 1`] = `
         class="IconSelector"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
           <div
-            class="octo-icon size-m"
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              i
-            </span>
+            <div
+              class="octo-icon size-m"
+            >
+              <span>
+                i
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -121,16 +124,19 @@ exports[`components/viewTitle should match snapshot 1`] = `
         class="IconSelector"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
           <div
-            class="octo-icon size-m"
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              i
-            </span>
+            <div
+              class="octo-icon size-m"
+            >
+              <span>
+                i
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -325,16 +331,19 @@ exports[`components/viewTitle show description 1`] = `
         class="IconSelector"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
           <div
-            class="octo-icon size-m"
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              i
-            </span>
+            <div
+              class="octo-icon size-m"
+            >
+              <span>
+                i
+              </span>
+            </div>
           </div>
         </div>
       </div>

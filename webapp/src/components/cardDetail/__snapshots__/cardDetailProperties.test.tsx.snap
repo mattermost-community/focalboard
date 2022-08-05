@@ -9,21 +9,24 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
       class="octo-propertyrow"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="octo-propertyname"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            class="octo-propertyname"
           >
-            <span>
-              Owner
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Owner
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <div
@@ -46,21 +49,24 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
       class="octo-propertyrow"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="octo-propertyname"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            class="octo-propertyname"
           >
-            <span>
-              MockStatus
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                MockStatus
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <input
@@ -76,18 +82,21 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
       class="octo-propertyname add-property"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
-        <button
-          class="Button"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          role="button"
         >
-          <span>
-            + Add a property
-          </span>
-        </button>
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              + Add a property
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -103,21 +112,24 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       class="octo-propertyrow"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="octo-propertyname"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            class="octo-propertyname"
           >
-            <span>
-              Owner
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Owner
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <div
@@ -140,21 +152,24 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       class="octo-propertyrow"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="octo-propertyname"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            class="octo-propertyname"
           >
-            <span>
-              MockStatus
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                MockStatus
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <input
@@ -170,18 +185,21 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       class="octo-propertyname add-property"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
-        <button
-          class="Button"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          role="button"
         >
-          <span>
-            + Add a property
-          </span>
-        </button>
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              + Add a property
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -197,21 +215,24 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
       class="octo-propertyrow"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="octo-propertyname"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            class="octo-propertyname"
           >
-            <span>
-              Owner
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Owner
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <div
@@ -234,21 +255,24 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
       class="octo-propertyrow"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="octo-propertyname"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            class="octo-propertyname"
           >
-            <span>
-              MockStatus
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                MockStatus
+              </span>
+            </button>
+          </div>
         </div>
       </div>
       <input
@@ -264,18 +288,21 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
       class="octo-propertyname add-property"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
-        <button
-          class="Button"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          role="button"
         >
-          <span>
-            + Add a property
-          </span>
-        </button>
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              + Add a property
+            </span>
+          </button>
+        </div>
         <div
           class="Menu noselect bottom "
         >

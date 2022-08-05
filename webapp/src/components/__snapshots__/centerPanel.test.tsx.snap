@@ -57,16 +57,19 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -174,18 +177,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -193,37 +199,43 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -238,18 +250,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -267,18 +282,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -290,16 +308,19 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -320,15 +341,18 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -384,18 +408,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -454,18 +481,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -485,20 +515,23 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -563,20 +596,23 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -680,18 +716,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -840,16 +879,19 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -957,18 +999,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -976,37 +1021,43 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -1021,18 +1072,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -1050,18 +1104,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -1073,16 +1130,19 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1124,18 +1184,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -1179,18 +1242,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -1234,18 +1300,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -1294,18 +1363,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             style="opacity: 1;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu "
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="octo-icontitle"
@@ -1328,18 +1400,21 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             style="opacity: 1;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu "
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="octo-icontitle"
@@ -1440,16 +1515,19 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1557,18 +1635,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1576,37 +1657,43 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -1621,18 +1708,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -1650,18 +1740,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -1673,16 +1766,19 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1703,15 +1799,18 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -1767,18 +1866,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -1837,18 +1939,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -1868,20 +1973,23 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -1946,20 +2054,23 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -2063,18 +2174,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -2271,18 +2385,21 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2318,15 +2435,18 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper disabled"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -2437,20 +2557,23 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -2516,20 +2639,23 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -2723,16 +2849,19 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2840,18 +2969,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2859,37 +2991,43 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -2904,18 +3042,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -2933,18 +3074,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -2956,16 +3100,19 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -2986,15 +3133,18 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -3050,18 +3200,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -3120,18 +3273,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -3151,20 +3307,23 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -3229,20 +3388,23 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -3346,18 +3508,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -3456,16 +3621,19 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3573,18 +3741,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -3592,37 +3763,43 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -3637,18 +3814,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -3666,18 +3846,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -3689,16 +3872,19 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -3719,15 +3905,18 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -3783,18 +3972,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -3853,18 +4045,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -3884,20 +4079,23 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -3962,20 +4160,23 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -4079,18 +4280,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -4189,16 +4393,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4306,18 +4513,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -4325,37 +4535,43 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -4370,18 +4586,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -4399,18 +4618,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -4422,16 +4644,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -4452,15 +4677,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -4516,18 +4744,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -4586,18 +4817,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -4617,20 +4851,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -4695,20 +4932,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -4812,18 +5052,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -4922,16 +5165,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5039,18 +5285,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -5058,37 +5307,43 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -5103,18 +5358,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -5132,18 +5390,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -5155,16 +5416,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -5185,15 +5449,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -5249,18 +5516,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -5319,18 +5589,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -5350,20 +5623,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -5428,20 +5704,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -5545,18 +5824,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -5655,16 +5937,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -5772,18 +6057,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -5791,37 +6079,43 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -5836,18 +6130,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -5865,18 +6162,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -5888,16 +6188,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -5918,15 +6221,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -5982,18 +6288,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -6052,18 +6361,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -6083,20 +6395,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -6161,20 +6476,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -6278,18 +6596,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -6388,16 +6709,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -6505,18 +6829,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -6524,37 +6851,43 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -6569,18 +6902,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -6598,18 +6934,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -6621,16 +6960,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -6651,15 +6993,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -6715,18 +7060,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -6785,18 +7133,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -6816,20 +7167,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -6894,20 +7248,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -7011,18 +7368,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -7121,16 +7481,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -7238,18 +7601,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -7257,37 +7623,43 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -7302,18 +7674,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -7331,18 +7706,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -7354,16 +7732,19 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -7384,15 +7765,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -7448,18 +7832,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -7518,18 +7905,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -7549,20 +7939,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -7627,20 +8020,23 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -7744,18 +8140,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -7854,16 +8253,19 @@ exports[`components/centerPanel return centerPanel and select one card and click
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -7971,18 +8373,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -7990,37 +8395,43 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -8035,18 +8446,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -8064,18 +8478,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -8087,16 +8504,19 @@ exports[`components/centerPanel return centerPanel and select one card and click
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -8117,15 +8537,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -8181,18 +8604,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -8251,18 +8677,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -8282,20 +8711,23 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -8360,20 +8792,23 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -8477,18 +8912,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -8587,16 +9025,19 @@ exports[`components/centerPanel return centerPanel and select one card and click
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -8704,18 +9145,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -8723,37 +9167,43 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -8768,18 +9218,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -8797,18 +9250,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -8820,16 +9276,19 @@ exports[`components/centerPanel return centerPanel and select one card and click
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -8850,15 +9309,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -8914,18 +9376,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -8984,18 +9449,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -9015,20 +9483,23 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -9093,20 +9564,23 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -9210,18 +9684,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -9320,16 +9797,19 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -9437,18 +9917,21 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -9456,18 +9939,21 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -9482,18 +9968,21 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -9511,18 +10000,21 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -9534,16 +10026,19 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -9558,18 +10053,21 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
         style="opacity: 1;"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper optionsMenu"
-          role="button"
         >
-          <button
-            class="IconButton"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="gallery-item"
@@ -9642,16 +10140,19 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -9759,18 +10260,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -9778,37 +10282,43 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -9823,18 +10333,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -9852,18 +10365,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -9875,16 +10391,19 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -9926,18 +10445,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -9981,18 +10503,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -10036,18 +10561,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -10096,18 +10624,21 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             style="opacity: 1;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu "
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="octo-icontitle"
@@ -10208,16 +10739,19 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -10278,18 +10812,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -10297,37 +10834,43 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -10342,18 +10885,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -10371,18 +10917,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -10394,16 +10943,19 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -10445,18 +10997,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -10500,18 +11055,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -10555,18 +11113,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="octo-spacer"
           />
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <button
             class="IconButton"
@@ -10615,18 +11176,21 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             style="opacity: 1;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu "
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="octo-icontitle"
@@ -10727,16 +11291,19 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               class="IconSelector"
             >
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
                 <div
-                  class="octo-icon size-m"
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <span>
-                    i
-                  </span>
+                  <div
+                    class="octo-icon size-m"
+                  >
+                    <span>
+                      i
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -10844,18 +11411,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           />
           <div>
             <div
-              aria-label="View menu"
               class="MenuWrapper"
-              role="button"
             >
-              <button
-                class="IconButton"
-                type="button"
+              <div
+                aria-label="View menu"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down DropdownIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -10863,37 +11433,43 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="Properties menu"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="Properties menu"
+            role="button"
           >
-            <span>
-              Properties
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Properties
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Group by: 
-              <span
-                id="groupByLabel"
-              >
-                name
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                Group by: 
+                <span
+                  id="groupByLabel"
+                >
+                  name
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
         </div>
         <div
           class="ModalWrapper"
@@ -10908,18 +11484,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           </button>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button active"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              Sort
-            </span>
-          </button>
+            <button
+              class="Button active"
+              type="button"
+            >
+              <span>
+                Sort
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="board-search-field"
@@ -10937,18 +11516,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="ModalWrapper"
         >
           <div
-            aria-label="View header menu"
             class="MenuWrapper"
-            role="button"
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="View header menu"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -10960,16 +11542,19 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             New
           </div>
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
             <div
-              class="button-dropdown"
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
+              <div
+                class="button-dropdown"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -10990,15 +11575,18 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
-              aria-label="menuwrapper"
               class="MenuWrapper"
-              role="button"
             >
-              <span
-                class="Label empty "
+              <div
+                aria-label="menuwrapper"
+                role="button"
               >
-                Name
-              </span>
+                <span
+                  class="Label empty "
+                >
+                  Name
+                </span>
+              </div>
             </div>
             <div
               class="octo-spacer"
@@ -11054,18 +11642,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -11124,18 +11715,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"
@@ -11155,20 +11749,23 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 class="action-cell octo-table-cell-btn"
               >
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper optionsMenu"
-                  role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <button
                   class="IconButton"
@@ -11272,18 +11869,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </button>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
+                  <button
+                    class="IconButton"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
               </div>
               <button
                 class="IconButton"

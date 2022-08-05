@@ -22,16 +22,19 @@ exports[`components/sidebar/GlobalHeader header menu should match snapshot 1`] =
       class="GlobalHeaderSettingsMenu"
     >
       <div
-        aria-label="menuwrapper"
         class="MenuWrapper"
-        role="button"
       >
         <div
-          class="GlobalHeaderComponent__button menu-entry"
+          aria-label="menuwrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-settings-outline SettingsIcon"
-          />
+          <div
+            class="GlobalHeaderComponent__button menu-entry"
+          >
+            <i
+              class="CompassIcon icon-settings-outline SettingsIcon"
+            />
+          </div>
         </div>
       </div>
     </div>

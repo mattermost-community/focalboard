@@ -47,17 +47,20 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <button
           type="button"
@@ -99,17 +102,20 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <button
           type="button"
@@ -149,17 +155,20 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -182,17 +191,20 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -226,17 +238,20 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -268,15 +283,18 @@ exports[`src/component/kanban/kanban return kanban and change title on KanbanCol
           class="octo-board-hidden-item"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <span
-              class="Label propColorDefault "
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              Q3
-            </span>
+              <span
+                class="Label propColorDefault "
+              >
+                Q3
+              </span>
+            </div>
           </div>
           <button
             type="button"
@@ -494,17 +512,20 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <button
           type="button"
@@ -546,17 +567,20 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <button
           type="button"
@@ -596,17 +620,20 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -629,17 +656,20 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -673,17 +703,20 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -715,15 +748,18 @@ exports[`src/component/kanban/kanban return kanban and click on KanbanCalculatio
           class="octo-board-hidden-item"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <span
-              class="Label propColorDefault "
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              Q3
-            </span>
+              <span
+                class="Label propColorDefault "
+              >
+                Q3
+              </span>
+            </div>
           </div>
           <button
             type="button"
@@ -780,17 +816,20 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <button
           type="button"
@@ -832,17 +871,20 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="octo-spacer"
         />
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
+            <button
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
         </div>
         <button
           type="button"
@@ -882,17 +924,20 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -915,17 +960,20 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -959,17 +1007,20 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -1001,15 +1052,18 @@ exports[`src/component/kanban/kanban should match snapshot 1`] = `
           class="octo-board-hidden-item"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <span
-              class="Label propColorDefault "
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              Q3
-            </span>
+              <span
+                class="Label propColorDefault "
+              >
+                Q3
+              </span>
+            </div>
           </div>
           <button
             type="button"
@@ -1119,17 +1173,20 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -1152,17 +1209,20 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -1189,17 +1249,20 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           style="opacity: 1;"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper optionsMenu "
-            role="button"
           >
-            <button
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="octo-icontitle"
@@ -1224,15 +1287,18 @@ exports[`src/component/kanban/kanban should match snapshot without permissions 1
           class="octo-board-hidden-item"
         >
           <div
-            aria-label="menuwrapper"
             class="MenuWrapper"
-            role="button"
           >
-            <span
-              class="Label propColorDefault "
+            <div
+              aria-label="menuwrapper"
+              role="button"
             >
-              Q3
-            </span>
+              <span
+                class="Label propColorDefault "
+              >
+                Q3
+              </span>
+            </div>
           </div>
           <button
             type="button"

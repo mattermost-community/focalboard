@@ -3,18 +3,21 @@
 exports[`components/viewHeader/filterValue return filterValue 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper filterValue"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Status
-      </span>
-    </button>
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Status
+        </span>
+      </button>
+    </div>
     <div
       class="Menu noselect bottom "
     >
@@ -85,18 +88,84 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
 exports[`components/viewHeader/filterValue return filterValue and click Status 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper filterValue"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Status
-      </span>
-    </button>
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Status
+        </span>
+      </button>
+    </div>
+    <div
+      class="Menu noselect bottom "
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div>
+            <div
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="d-flex"
+            >
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -104,18 +173,84 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
 exports[`components/viewHeader/filterValue return filterValue and click Status with Status not in filter 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper filterValue"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        (Unknown)
-      </span>
-    </button>
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          (Unknown)
+        </span>
+      </button>
+    </div>
+    <div
+      class="Menu noselect bottom "
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div>
+            <div
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="d-flex"
+            >
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {render, screen, within} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import {createIntl} from 'react-intl'
@@ -96,7 +96,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
         expect(buttonMenuWrapper).not.toBeNull()
         userEvent.click(buttonMenuWrapper)
         expect(container).toMatchSnapshot()
-        const buttonShow = within(buttonMenuWrapper).getByRole('button', {name: 'Show'})
+        const buttonShow = screen.getByRole('button', {name: 'Show'})
         userEvent.click(buttonShow)
         expect(mockedMutator.unhideViewColumn).toBeCalledWith(activeView.boardId, activeView, option.id)
     })

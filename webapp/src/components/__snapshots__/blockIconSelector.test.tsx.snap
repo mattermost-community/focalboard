@@ -6,16 +6,19 @@ exports[`components/blockIconSelector return an icon correctly 1`] = `
     class="IconSelector"
   >
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="octo-icon size-l"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <span>
-          👍
-        </span>
+        <div
+          class="octo-icon size-l"
+        >
+          <span>
+            👍
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -28,16 +31,19 @@ exports[`components/blockIconSelector return menu on click 1`] = `
     class="IconSelector"
   >
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="octo-icon size-l"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <span>
-          👍
-        </span>
+        <div
+          class="octo-icon size-l"
+        >
+          <span>
+            👍
+          </span>
+        </div>
       </div>
       <div
         class="Menu noselect bottom "

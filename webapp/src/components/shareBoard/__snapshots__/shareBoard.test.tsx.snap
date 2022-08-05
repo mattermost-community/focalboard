@@ -125,18 +125,21 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -163,18 +166,21 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  Editor
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    Editor
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -372,18 +378,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -581,18 +590,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -790,18 +802,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1025,18 +1040,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1063,18 +1081,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  Editor
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    Editor
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1493,18 +1514,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1531,18 +1555,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  Editor
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    Editor
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1729,18 +1756,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1767,18 +1797,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  Editor
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    Editor
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2197,18 +2230,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2235,18 +2271,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  Editor
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    Editor
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2430,18 +2469,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2662,18 +2704,21 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -2894,18 +2939,21 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -3103,18 +3151,21 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -3312,18 +3363,21 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -3521,18 +3575,21 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             </div>
             <div>
               <div
-                aria-label="menuwrapper"
                 class="MenuWrapper"
-                role="button"
               >
-                <button
-                  class="user-item__button"
+                <div
+                  aria-label="menuwrapper"
+                  role="button"
                 >
-                  None
-                  <i
-                    class="CompassIcon icon-chevron-down CompassIcon"
-                  />
-                </button>
+                  <button
+                    class="user-item__button"
+                  >
+                    None
+                    <i
+                      class="CompassIcon icon-chevron-down CompassIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>

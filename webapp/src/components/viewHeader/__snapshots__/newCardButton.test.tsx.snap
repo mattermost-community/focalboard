@@ -11,16 +11,19 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
       New
     </div>
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="button-dropdown"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-chevron-down DropdownIcon"
-        />
+        <div
+          class="button-dropdown"
+        >
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
+        </div>
       </div>
       <div
         class="Menu noselect left "
@@ -62,18 +65,21 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                   Empty card
                 </div>
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper"
-                  role="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      class="IconButton"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -147,16 +153,19 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
       New
     </div>
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="button-dropdown"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-chevron-down DropdownIcon"
-        />
+        <div
+          class="button-dropdown"
+        >
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
+        </div>
       </div>
       <div
         class="Menu noselect left "
@@ -198,18 +207,21 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                   Empty card
                 </div>
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper"
-                  role="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      class="IconButton"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -283,16 +295,19 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
       New
     </div>
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="button-dropdown"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-chevron-down DropdownIcon"
-        />
+        <div
+          class="button-dropdown"
+        >
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
+        </div>
       </div>
       <div
         class="Menu noselect left "
@@ -334,18 +349,21 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                   Empty card
                 </div>
                 <div
-                  aria-label="menuwrapper"
                   class="MenuWrapper"
-                  role="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
+                  <div
+                    aria-label="menuwrapper"
+                    role="button"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      class="IconButton"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

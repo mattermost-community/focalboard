@@ -468,7 +468,7 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper > div')
             expect(elementMenuWrapper).not.toBeNull()
             userEvent.click(elementMenuWrapper!)
             const buttonNewTemplate = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'New template'})
@@ -494,7 +494,7 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper > div')
             expect(elementMenuWrapper).not.toBeNull()
             userEvent.click(elementMenuWrapper!)
             const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
@@ -521,7 +521,7 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper > div')
             expect(elementMenuWrapper).not.toBeNull()
             userEvent.click(elementMenuWrapper!)
             const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
@@ -529,7 +529,7 @@ describe('components/centerPanel', () => {
             const elementMenuWrapperCard1 = within(elementCard1).getByRole('button', {name: 'menuwrapper'})
             expect(elementMenuWrapperCard1).not.toBeNull()
             userEvent.click(elementMenuWrapperCard1)
-            const elementEditMenuTemplate = within(elementMenuWrapperCard1).getByRole('button', {name: 'Edit'})
+            const elementEditMenuTemplate = screen.getByRole('button', {name: 'Edit'})
             expect(elementMenuWrapperCard1).not.toBeNull()
             userEvent.click(elementEditMenuTemplate)
             expect(container).toMatchSnapshot()

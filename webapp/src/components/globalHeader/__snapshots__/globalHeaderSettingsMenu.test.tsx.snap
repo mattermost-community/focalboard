@@ -6,16 +6,19 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
     class="GlobalHeaderSettingsMenu"
   >
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="GlobalHeaderComponent__button menu-entry"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-settings-outline SettingsIcon"
-        />
+        <div
+          class="GlobalHeaderComponent__button menu-entry"
+        >
+          <i
+            class="CompassIcon icon-settings-outline SettingsIcon"
+          />
+        </div>
       </div>
       <div
         class="Menu noselect left "
@@ -328,16 +331,19 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
     class="GlobalHeaderSettingsMenu"
   >
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="GlobalHeaderComponent__button menu-entry"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-settings-outline SettingsIcon"
-        />
+        <div
+          class="GlobalHeaderComponent__button menu-entry"
+        >
+          <i
+            class="CompassIcon icon-settings-outline SettingsIcon"
+          />
+        </div>
       </div>
       <div
         class="Menu noselect left "
@@ -887,16 +893,19 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu closed should
     class="GlobalHeaderSettingsMenu"
   >
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="GlobalHeaderComponent__button menu-entry"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-settings-outline SettingsIcon"
-        />
+        <div
+          class="GlobalHeaderComponent__button menu-entry"
+        >
+          <i
+            class="CompassIcon icon-settings-outline SettingsIcon"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -909,16 +918,19 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
     class="GlobalHeaderSettingsMenu"
   >
     <div
-      aria-label="menuwrapper"
       class="MenuWrapper"
-      role="button"
     >
       <div
-        class="GlobalHeaderComponent__button menu-entry"
+        aria-label="menuwrapper"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-settings-outline SettingsIcon"
-        />
+        <div
+          class="GlobalHeaderComponent__button menu-entry"
+        >
+          <i
+            class="CompassIcon icon-settings-outline SettingsIcon"
+          />
+        </div>
       </div>
       <div
         class="Menu noselect left "

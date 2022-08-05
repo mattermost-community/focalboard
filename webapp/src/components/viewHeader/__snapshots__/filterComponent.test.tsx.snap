@@ -26,18 +26,21 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
         class="FilterEntry"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              (unknown)
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                (unknown)
+              </span>
+            </button>
+          </div>
           <div
             class="Menu noselect bottom "
           >
@@ -172,18 +175,21 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
           </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              includes
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                includes
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -237,18 +243,21 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
         class="FilterEntry"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              (unknown)
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                (unknown)
+              </span>
+            </button>
+          </div>
           <div
             class="Menu noselect bottom "
           >
@@ -383,18 +392,21 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
           </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              includes
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                includes
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"
@@ -448,32 +460,38 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
         class="FilterEntry"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              (unknown)
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                (unknown)
+              </span>
+            </button>
+          </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              includes
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                includes
+              </span>
+            </button>
+          </div>
           <div
             class="Menu noselect bottom "
           >
@@ -659,18 +677,21 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
         class="FilterEntry"
       >
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              (unknown)
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                (unknown)
+              </span>
+            </button>
+          </div>
           <div
             class="Menu noselect bottom "
           >
@@ -805,18 +826,21 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
           </div>
         </div>
         <div
-          aria-label="menuwrapper"
           class="MenuWrapper"
-          role="button"
         >
-          <button
-            class="Button"
-            type="button"
+          <div
+            aria-label="menuwrapper"
+            role="button"
           >
-            <span>
-              includes
-            </span>
-          </button>
+            <button
+              class="Button"
+              type="button"
+            >
+              <span>
+                includes
+              </span>
+            </button>
+          </div>
         </div>
         <div
           class="octo-spacer"

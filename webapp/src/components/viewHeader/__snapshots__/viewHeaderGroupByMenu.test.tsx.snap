@@ -3,23 +3,26 @@
 exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render only HideEmptyGroupsButton when hiddenGroups is empty 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Group by: 
-        <span
-          id="groupByLabel"
-        >
-          Status
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
+          </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
     <div
       class="Menu noselect bottom "
     >
@@ -218,23 +221,26 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
 exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render only ShowHiddenGroupsButton when there are no emptyGroups 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Group by: 
-        <span
-          id="groupByLabel"
-        >
-          Status
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
+          </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
     <div
       class="Menu noselect bottom "
     >
@@ -433,23 +439,26 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
 exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Group by: 
-        <span
-          id="groupByLabel"
-        >
-          Status
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
+          </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
     <div
       class="Menu noselect bottom "
     >
@@ -596,23 +605,26 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
 exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and groupBy Status 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Group by: 
-        <span
-          id="groupByLabel"
-        >
-          Status
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
+          </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
   </div>
 </div>
 `;
@@ -620,23 +632,26 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu and gro
 exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEmptyGroups and ungroup in viewType table 1`] = `
 <div>
   <div
-    aria-label="menuwrapper"
     class="MenuWrapper"
-    role="button"
   >
-    <button
-      class="Button"
-      type="button"
+    <div
+      aria-label="menuwrapper"
+      role="button"
     >
-      <span>
-        Group by: 
-        <span
-          id="groupByLabel"
-        >
-          Status
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
+          </span>
         </span>
-      </span>
-    </button>
+      </button>
+    </div>
     <div
       class="Menu noselect bottom "
     >
