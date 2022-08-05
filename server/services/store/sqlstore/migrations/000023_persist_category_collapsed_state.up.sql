@@ -25,3 +25,5 @@
 {{if .sqlite}}
     ALTER TABLE {{.prefix}}categories ADD collapsed boolean default false;
 {{end}}
+
+UPDATE {{.prefix}}categories SET collapsed = true;
