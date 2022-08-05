@@ -22,6 +22,7 @@ function ColorOption(props: ColorOptionProps): JSX.Element {
             onClick={(e: React.MouseEvent): void => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
                 props.onClick(props.id)
+                e.stopPropagation()
             }}
         >
             {icon ?? <div className='noicon'/>}

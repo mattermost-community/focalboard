@@ -24,6 +24,7 @@ function SwitchOption(props: SwitchOptionProps): JSX.Element {
                 if (!suppressItemClicked)
                     e.target.dispatchEvent(new Event('menuItemClicked'))
                 props.onClick(props.id)
+                e.stopPropagation()
             }}
         >
             {icon ?? <div className='noicon'/>}
