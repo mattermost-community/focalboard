@@ -116,12 +116,12 @@ const BoardSelector = () => {
     if (showLinkBoardConfirmation?.channelId !== '') {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
-            defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board.\n\nAdditionally, this board is linked to another channel, and will be unlinked from the other channel when you link it here.\n\nAre you sure you want to link it?'
-        }, {boardName: showLinkBoardConfirmation?.title})
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
+        }, {boardName: showLinkBoardConfirmation?.title, lineBreak: <p/>})
     } else {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext',
-            defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board.\n\nAre you sure you want to link it?'
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. You can unlink a board from a channel at any time.'
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
@@ -143,6 +143,7 @@ const BoardSelector = () => {
                             heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link board to channel'}),
                             subText: confirmationSubText,
                             confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
+                            destructive: showLinkBoardConfirmation?.channelId !== '',
                             onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
                             onClose: () => setShowLinkBoardConfirmation(null),
                         }}
@@ -160,7 +161,7 @@ const BoardSelector = () => {
                                 onClick={() => newLinkedBoard()}
                                 emphasis='secondary'
                             >
-                                <FormattedMessage 
+                                <FormattedMessage
                                     id='boardSelector.create-a-board'
                                     defaultMessage='Create a board'
                                 />
