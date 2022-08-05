@@ -30,6 +30,8 @@ import {getCurrentTeam} from '../../store/teams'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 
+import octoClient from "../../octoClient"
+
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'
 
@@ -43,7 +45,7 @@ type Props = {
 }
 
 const SidebarCategory = (props: Props) => {
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
     const intl = useIntl()
     const history = useHistory()
 
@@ -139,6 +141,17 @@ const SidebarCategory = (props: Props) => {
         )
     }, [showBoard, deleteBoard, props.boards])
 
+    const toggleCollapse = async () => {
+        console.log(`Before: ${collapsed}`)
+        setCollapsed(!collapsed)
+        console.log(`After ${collapsed}`)
+        const updatedCategory: Category = {
+            ...props.categoryBoards,
+            collapsed,
+        }
+        await mutator.updateCategory(updatedCategory)
+    }
+
     return (
         <div className='SidebarCategory' ref={menuWrapperRef}>
             <div
@@ -147,7 +160,7 @@ const SidebarCategory = (props: Props) => {
                 <div
                     className='octo-sidebar-title category-title'
                     title={props.categoryBoards.name}
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={toggleCollapse}
                 >
                     {collapsed ? <ChevronRight/> : <ChevronDown/>}
                     {props.categoryBoards.name}

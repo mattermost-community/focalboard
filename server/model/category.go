@@ -36,6 +36,10 @@ type Category struct {
 	// The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
+
+	// Category's state in client side
+	// required: true
+	Collapsed bool `json:"collapsed"`
 }
 
 func (c *Category) Hydrate() {
