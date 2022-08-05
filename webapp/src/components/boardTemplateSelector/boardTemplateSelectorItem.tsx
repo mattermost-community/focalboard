@@ -4,6 +4,7 @@ import React, {useCallback, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board} from '../../blocks/board'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
 import EditIcon from '../../widgets/icons/edit'
@@ -39,17 +40,17 @@ const BoardTemplateSelectorItem = (props: Props) => {
             className={isActive ? 'BoardTemplateSelectorItem active' : 'BoardTemplateSelectorItem'}
             onClick={onClickHandler}
         >
-            <span className='template-icon'>{template.icon}</span>
+            <span className='template-icon'>{template.icon || <CompassIcon icon='product-boards'/>}</span>
             <span className='template-name'>{template.title}</span>
 
             {/* don't show template menu options for default templates */}
             {template.teamId !== Constants.globalTeamId &&
                 <div className='actions'>
-                    <BoardPermissionGate 
+                    <BoardPermissionGate
                         boardId={template.id}
                         teamId={template.teamId}
                         permissions={[Permission.DeleteBoard]}
-                    >            
+                    >
                         <IconButton
                             icon={<DeleteIcon/>}
                             title={intl.formatMessage({id: 'BoardTemplateSelector.delete-template', defaultMessage: 'Delete'})}
@@ -59,11 +60,11 @@ const BoardTemplateSelectorItem = (props: Props) => {
                             }}
                         />
                     </BoardPermissionGate>
-                    <BoardPermissionGate 
+                    <BoardPermissionGate
                         boardId={template.id}
                         teamId={template.teamId}
                         permissions={[Permission.ManageBoardCards, Permission.ManageBoardProperties]}
-                    >            
+                    >
                         <IconButton
                             icon={<EditIcon/>}
                             title={intl.formatMessage({id: 'BoardTemplateSelector.edit-template', defaultMessage: 'Edit'})}
