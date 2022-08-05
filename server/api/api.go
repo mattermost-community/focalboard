@@ -2244,10 +2244,17 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
 		return
 	}
+	if page < 0 {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+	}
+
 	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
 		return
+	}
+	if perPage < 0 {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
 	}
 
 	userTimezone, aErr := a.app.GetUserTimezone(userID)
@@ -2342,10 +2349,18 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
 		return
 	}
+
+	if page < 0 {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+	}
 	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
 		return
+	}
+
+	if perPage < 0 {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
 	}
 	userTimezone, aErr := a.app.GetUserTimezone(userID)
 	if aErr != nil {

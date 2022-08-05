@@ -8,9 +8,12 @@ import (
 
 func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
 	// check if server is properly licensed, and user is not a guest
-	licenseAndGuestCheckFlag, err := licenseAndGuestCheck(a, userID)
-	if !licenseAndGuestCheckFlag {
+	userPermitted, err := insightPermissionGate(a, userID)
+	if err != nil {
 		return nil, err
+	}
+	if !userPermitted {
+		return nil, errors.New("User isn't authorized to access insights.")
 	}
 	boardIDs, err := getUserBoards(userID, teamID, a)
 	if err != nil {
@@ -21,9 +24,12 @@ func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.
 
 func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
 	// check if server is properly licensed, and user is not a guest
-	licenseAndGuestCheckFlag, err := licenseAndGuestCheck(a, userID)
-	if !licenseAndGuestCheckFlag {
+	userPermitted, err := insightPermissionGate(a, userID)
+	if err != nil {
 		return nil, err
+	}
+	if !userPermitted {
+		return nil, errors.New("User isn't authorized to access insights.")
 	}
 	boardIDs, err := getUserBoards(userID, teamID, a)
 	if err != nil {
@@ -32,7 +38,7 @@ func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.
 	return a.store.GetUserBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
 }
 
-func licenseAndGuestCheck(a *App, userID string) (bool, error) {
+func insightPermissionGate(a *App, userID string) (bool, error) {
 	licenseError := errors.New("invalid license/authorization to use insights API")
 	guestError := errors.New("guests aren't authorized to use insights API")
 	lic := a.store.GetLicense()
