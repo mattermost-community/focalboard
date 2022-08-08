@@ -306,7 +306,7 @@
   "Workspace.editing-board-template": "You're editing a board template.",
   "boardSelector.confirm-link-board": "Link board to channel",
   "boardSelector.confirm-link-board-button": "Link board",
-  "boardSelector.confirm-link-board-subtext-with-other-channel": "When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.",
+  "boardSelector.confirm-link-board-subtext-with-other-channel": "When you link \"{boardName}\" to the channel, all members of the channel (existing and new) will be able to edit it.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.",
   "boardSelector.create-a-board": "Create a board",
   "boardSelector.link": "Link",
   "boardSelector.search-for-boards": "Search for boards",
