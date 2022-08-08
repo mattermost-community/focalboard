@@ -31,6 +31,8 @@ Personal server settings are stored in `config.json` and are read when the serve
 
 By default, personal server exposes admin APIs on a local Unix socket at `/var/tmp/focalboard_local.socket`. This is configurable using the `enableLocalMode` and `localModeSocketLocation` settings in `config.json`.
 
+Note that if you're using a version of Mattermost up to v7.1, you need to use v1 of the API. From v7.2 onwards, you need to use v2 of the API.
+
 To reset a user's password, you can use the following `reset-password.sh` script:
 
 ```
