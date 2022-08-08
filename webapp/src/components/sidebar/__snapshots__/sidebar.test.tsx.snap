@@ -609,7 +609,7 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
                   >
                     <div
                       class="version"
-                      title="v7.3.0"
+                      title="v7.2.0"
                     >
                       v7.3.0
                     </div>
