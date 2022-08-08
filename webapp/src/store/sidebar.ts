@@ -15,6 +15,7 @@ interface Category {
     createAt: number
     updateAt: number
     deleteAt: number
+    collapsed: boolean
 }
 
 interface CategoryBoards extends Category {
@@ -69,7 +70,7 @@ const sidebarSlice = createSlice({
                     }
                 }
             })
-            
+
             // sort categories alphabetically
             state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
         },
