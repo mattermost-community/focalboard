@@ -886,3 +886,12 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 
 	return nil
 }
+
+func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
+	user, err := s.pluginAPI.GetUser(userID)
+	if err != nil {
+		return "", err
+	}
+	timezone := user.Timezone
+	return mmModel.GetPreferredTimezone(timezone), nil
+}
