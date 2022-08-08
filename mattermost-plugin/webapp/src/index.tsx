@@ -251,10 +251,14 @@ export default class Plugin {
 
         let fbPrevTeamID = store.getState().teams.currentId
         store.subscribe(() => {
-            const currentTeamID = store.getState().teams.currentId
-            if (currentTeamID && currentTeamID !== fbPrevTeamID) {
+            const currentTeamID: string = store.getState().teams.currentId
+            const currentUserId = mmStore.getState().entities.users.currentUserId
+            if (currentTeamID !== fbPrevTeamID) {
                 fbPrevTeamID = currentTeamID
-                selectTeam(currentTeamID)
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                mmStore.dispatch(selectTeam(currentTeamID))
+                localStorage.setItem(`user_prev_team:${currentUserId}`, currentTeamID)
             }
         })
 
@@ -379,11 +383,6 @@ export default class Plugin {
             }
         }
 
-        windowAny.setTeamInSidebar = (teamID: string) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            mmStore.dispatch(selectTeam(teamID))
-        }
         windowAny.getCurrentTeamId = (): string => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
