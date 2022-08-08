@@ -250,6 +250,15 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		if addMember {
 			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
+		if newBoard.ChannelID != "" {
+			members, err := a.GetMembersForBoard(board.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, member := range members {
+				a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, member.BoardID, member)
+			}
+		}
 		return nil
 	})
 
@@ -257,6 +266,14 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 }
 
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
+	var oldMembers []*model.BoardMember
+	if patch.ChannelID != nil && *patch.ChannelID == "" {
+		var err error
+		oldMembers, err = a.GetMembersForBoard(boardID)
+		if err != nil {
+			a.logger.Error("Unable to get the board members", mlog.Err(err))
+		}
+	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
@@ -264,6 +281,36 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
+		if patch.ChannelID != nil && *patch.ChannelID != "" {
+			members, err := a.GetMembersForBoard(updatedBoard.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, member := range members {
+				a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
+			}
+		} else if patch.ChannelID != nil && *patch.ChannelID == "" {
+			members, err := a.GetMembersForBoard(updatedBoard.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, oldMember := range oldMembers {
+				if oldMember.Synthetic {
+					synteticOnly := true
+					for _, member := range members {
+						if member.UserID == oldMember.UserID {
+							a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
+							synteticOnly = false
+							break
+						}
+					}
+
+					if synteticOnly {
+						a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, oldMember.UserID)
+					}
+				}
+			}
+		}
 		return nil
 	})
 
@@ -433,7 +480,11 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
+		if synteticMember, _ := a.store.GetMemberForBoard(boardID, userID); synteticMember != nil {
+			a.wsAdapter.BroadcastMemberChange(board.TeamID, boardID, synteticMember)
+		} else {
+			a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
+		}
 		return nil
 	})
 
