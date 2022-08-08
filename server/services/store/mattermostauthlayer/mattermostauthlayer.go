@@ -888,7 +888,7 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 }
 
 func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
-	user, err := s.servicesAPI.GetUserByID(userID)
+	user, err := s.pluginAPI.GetUser(userID)
 	if err != nil {
 		return "", err
 	}
