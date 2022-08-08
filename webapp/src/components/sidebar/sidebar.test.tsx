@@ -194,6 +194,57 @@ describe('components/sidebarSidebar', () => {
         expect(noBoardsText.length).toBe(2) // one for custom category, one for default category
     })
 
+    test('some categories hidden', () => {
+        const collapsedCategory = TestBlockFactory.createCategoryBoards()
+        collapsedCategory.name = 'Category 2'
+        collapsedCategory.collapsed = true
+
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                    collapsedCategory,
+                ],
+            },
+        })
+
+        const history = createMemoryHistory()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const sidebarCollapsedCategory = container.querySelectorAll('.octo-sidebar-item.category.collapsed')
+        expect(sidebarCollapsedCategory.length).toBe(1)
+    })
+
     // TODO: Fix this later
     // test('global templates', () => {
     //     const store = mockStore({
