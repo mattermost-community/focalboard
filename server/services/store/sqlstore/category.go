@@ -12,7 +12,7 @@ import (
 
 func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at").
+		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed").
 		From(s.tablePrefix + "categories").
 		Where(sq.Eq{"id": id})
 
@@ -46,6 +46,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			"create_at",
 			"update_at",
 			"delete_at",
+			"collapsed",
 		).
 		Values(
 			category.ID,
@@ -55,6 +56,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			category.CreateAt,
 			category.UpdateAt,
 			category.DeleteAt,
+			category.Collapsed,
 		)
 
 	_, err := query.Exec()
@@ -70,6 +72,7 @@ func (s *SQLStore) updateCategory(db sq.BaseRunner, category model.Category) err
 		Update(s.tablePrefix+"categories").
 		Set("name", category.Name).
 		Set("update_at", category.UpdateAt).
+		Set("collapsed", category.Collapsed).
 		Where(sq.Eq{"id": category.ID})
 
 	_, err := query.Exec()
@@ -106,7 +109,7 @@ func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID s
 
 func (s *SQLStore) getUserCategories(db sq.BaseRunner, userID, teamID string) ([]model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at").
+		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed").
 		From(s.tablePrefix + "categories").
 		Where(sq.Eq{
 			"user_id":   userID,
@@ -136,6 +139,7 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 			&category.CreateAt,
 			&category.UpdateAt,
 			&category.DeleteAt,
+			&category.Collapsed,
 		)
 
 		if err != nil {
