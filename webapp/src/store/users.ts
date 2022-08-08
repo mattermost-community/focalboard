@@ -21,6 +21,8 @@ export const fetchMe = createAsyncThunk(
     async () => client.getMe(),
 )
 
+export const versionProperty = 'focalboard_version72MessageCanceled'
+
 type UsersStatus = {
     me: IUser|null
     boardUsers: {[key: string]: IUser}
@@ -164,6 +166,19 @@ export const getCloudMessageCanceled = createSelector(
             return UserSettings.hideCloudMessage
         }
         return Boolean(me.props?.focalboard_cloudMessageCanceled)
+    },
+)
+
+export const getVersionMessageCanceled = createSelector(
+    getMe,
+    (me): boolean => {
+        if (versionProperty && me){
+            if (me.id === 'single-user') {
+                return true
+            }
+            return Boolean(me.props[versionProperty])    
+        }
+        return true
     },
 )
 
