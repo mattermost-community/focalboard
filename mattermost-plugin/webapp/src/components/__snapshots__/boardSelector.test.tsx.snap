@@ -181,20 +181,28 @@ exports[`components/boardSelector renders with some results 1`] = `
               <div
                 class="BoardSelectorItem"
               >
-                <span
-                  class="icon"
-                />
                 <div
-                  class="resultLine"
+                  class="BoardSelectorItem-info"
                 >
-                  <div
-                    class="resultTitle"
+                  <span
+                    class="icon"
                   >
-                    Untitled board
-                  </div>
+                    <i
+                      class="CompassIcon icon-product-boards undefined"
+                    />
+                  </span>
                   <div
-                    class="resultDescription"
-                  />
+                    class="resultLine"
+                  >
+                    <div
+                      class="resultTitle"
+                    >
+                      Untitled board
+                    </div>
+                    <div
+                      class="resultDescription"
+                    />
+                  </div>
                 </div>
                 <div
                   class="linkUnlinkButton"
@@ -212,20 +220,28 @@ exports[`components/boardSelector renders with some results 1`] = `
               <div
                 class="BoardSelectorItem"
               >
-                <span
-                  class="icon"
-                />
                 <div
-                  class="resultLine"
+                  class="BoardSelectorItem-info"
                 >
-                  <div
-                    class="resultTitle"
+                  <span
+                    class="icon"
                   >
-                    Untitled board
-                  </div>
+                    <i
+                      class="CompassIcon icon-product-boards undefined"
+                    />
+                  </span>
                   <div
-                    class="resultDescription"
-                  />
+                    class="resultLine"
+                  >
+                    <div
+                      class="resultTitle"
+                    >
+                      Untitled board
+                    </div>
+                    <div
+                      class="resultDescription"
+                    />
+                  </div>
                 </div>
                 <div
                   class="linkUnlinkButton"
@@ -243,20 +259,28 @@ exports[`components/boardSelector renders with some results 1`] = `
               <div
                 class="BoardSelectorItem"
               >
-                <span
-                  class="icon"
-                />
                 <div
-                  class="resultLine"
+                  class="BoardSelectorItem-info"
                 >
-                  <div
-                    class="resultTitle"
+                  <span
+                    class="icon"
                   >
-                    Untitled board
-                  </div>
+                    <i
+                      class="CompassIcon icon-product-boards undefined"
+                    />
+                  </span>
                   <div
-                    class="resultDescription"
-                  />
+                    class="resultLine"
+                  >
+                    <div
+                      class="resultTitle"
+                    >
+                      Untitled board
+                    </div>
+                    <div
+                      class="resultDescription"
+                    />
+                  </div>
                 </div>
                 <div
                   class="linkUnlinkButton"
