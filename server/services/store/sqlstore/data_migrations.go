@@ -520,8 +520,8 @@ func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[
 		Join("Teams t ON tm.TeamId = t.Id").
 		Where(sq.Eq{
 			"cm.ChannelId": board.ChannelID,
-			"t.DeleteAt": 0,
-			"tm.DeleteAt": 0,
+			"t.DeleteAt":   0,
+			"tm.DeleteAt":  0,
 		})
 
 	rows, err := query.Query()
