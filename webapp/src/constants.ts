@@ -194,6 +194,8 @@ class Constants {
     }
 
     static readonly globalTeamId = '0'
+
+    static readonly myInsights = 'MY'
 }
 
 export {Constants, Permission}
