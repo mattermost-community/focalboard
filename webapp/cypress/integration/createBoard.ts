@@ -128,7 +128,6 @@ describe('Create and delete board / card', () => {
         cy.get('.ViewHeader').
             contains('Sort').
             parent().
-            parent().
             contains('Name').
             click()
 

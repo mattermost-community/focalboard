@@ -17,18 +17,15 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -43,30 +40,27 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -81,30 +75,27 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -119,18 +110,15 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Date Created
-              </span>
-            </div>
+              Date Created
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -152,23 +140,20 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -281,23 +266,20 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -495,18 +477,15 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -521,30 +500,27 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -559,30 +535,27 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -597,18 +570,15 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Created By
-              </span>
-            </div>
+              Created By
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -630,23 +600,20 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -763,23 +730,20 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -981,18 +945,15 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1007,30 +968,27 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1045,30 +1003,27 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1083,18 +1038,15 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Date Updated
-              </span>
-            </div>
+              Date Updated
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1116,23 +1068,20 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -1245,23 +1194,20 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -1459,18 +1405,15 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1485,30 +1428,27 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1523,30 +1463,27 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1561,18 +1498,15 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Last Modified By
-              </span>
-            </div>
+              Last Modified By
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1594,23 +1528,20 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -1727,23 +1658,20 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -1945,18 +1873,15 @@ exports[`components/table/Table limited card in table view 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -1968,30 +1893,27 @@ exports[`components/table/Table limited card in table view 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2003,30 +1925,27 @@ exports[`components/table/Table limited card in table view 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2045,23 +1964,20 @@ exports[`components/table/Table limited card in table view 1`] = `
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -2165,23 +2081,20 @@ exports[`components/table/Table limited card in table view 1`] = `
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -2368,18 +2281,15 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2394,30 +2304,27 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2432,30 +2339,27 @@ exports[`components/table/Table should match snapshot 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2477,23 +2381,20 @@ exports[`components/table/Table should match snapshot 1`] = `
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -2667,18 +2568,15 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2693,30 +2591,27 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2731,30 +2626,27 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2810,21 +2702,18 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
               </span>
             </button>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -2910,18 +2799,15 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2933,30 +2819,27 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -2968,30 +2851,27 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -3010,23 +2890,20 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"
@@ -3195,18 +3072,15 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
-              >
-                Name
-              </span>
-            </div>
+              Name
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -3218,30 +3092,27 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 1
-                <svg
-                  class="SortDownIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,60 50,80 70,60"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -3253,30 +3124,27 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper disabled"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <span
+              class="Label empty "
             >
-              <span
-                class="Label empty "
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                Property 2
-                <svg
-                  class="SortUpIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polyline
-                    points="50,20 50,80"
-                  />
-                  <polyline
-                    points="30,40 50,20 70,40"
-                  />
-                </svg>
-              </span>
-            </div>
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
           </div>
           <div
             class="octo-spacer"
@@ -3295,23 +3163,20 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             class="action-cell octo-table-cell-btn"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
               >
-                <button
-                  aria-label="MenuBtn"
-                  class="IconButton"
-                  title="MenuBtn"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <button
               class="IconButton"

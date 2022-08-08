@@ -35,21 +35,18 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       class="octo-spacer"
     />
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect bottom "
       >
@@ -363,21 +360,18 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
       class="octo-spacer"
     />
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"
@@ -426,21 +420,18 @@ exports[`src/components/kanban/kanbanColumnHeader should match snapshot 1`] = `
       class="octo-spacer"
     />
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"

@@ -6,17 +6,14 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
-        aria-label="menuwrapper"
-        role="button"
+        class="menu-entry"
       >
-        <div
-          class="menu-entry"
-        >
-          Settings
-        </div>
+        Settings
       </div>
       <div
         class="Menu noselect top "
@@ -353,17 +350,14 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
-        aria-label="menuwrapper"
-        role="button"
+        class="menu-entry"
       >
-        <div
-          class="menu-entry"
-        >
-          Settings
-        </div>
+        Settings
       </div>
       <div
         class="Menu noselect top "
@@ -937,17 +931,14 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu closed should matc
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
-        aria-label="menuwrapper"
-        role="button"
+        class="menu-entry"
       >
-        <div
-          class="menu-entry"
-        >
-          Settings
-        </div>
+        Settings
       </div>
     </div>
   </div>
@@ -960,17 +951,14 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
-        aria-label="menuwrapper"
-        role="button"
+        class="menu-entry"
       >
-        <div
-          class="menu-entry"
-        >
-          Settings
-        </div>
+        Settings
       </div>
       <div
         class="Menu noselect top "
@@ -1141,17 +1129,14 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
     class="SidebarSettingsMenu"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
       <div
-        aria-label="menuwrapper"
-        role="button"
+        class="menu-entry"
       >
-        <div
-          class="menu-entry"
-        >
-          Settings
-        </div>
+        Settings
       </div>
       <div
         class="Menu noselect top "

@@ -93,21 +93,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -160,21 +157,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  class="IconButton"
+                  type="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
               </div>
               <div
                 class="dnd-handle"
@@ -218,21 +212,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  class="IconButton"
+                  type="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
               </div>
               <div
                 class="dnd-handle"
@@ -291,21 +282,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -354,21 +342,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -430,21 +415,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -493,21 +475,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot after dr
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -569,21 +548,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -645,21 +621,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
             class="octo-block-margin"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="dnd-handle"
@@ -712,21 +685,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  class="IconButton"
+                  type="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
               </div>
               <div
                 class="dnd-handle"
@@ -770,21 +740,18 @@ exports[`components/cardDetail/cardDetailContents should match snapshot with con
               class="octo-block-margin"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  class="IconButton"
+                  type="button"
                 >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
               </div>
               <div
                 class="dnd-handle"

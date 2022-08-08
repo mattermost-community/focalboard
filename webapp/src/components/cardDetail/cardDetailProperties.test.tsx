@@ -230,7 +230,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
     })
 
     function openDeleteConfirmationDialog(container:HTMLElement) {
-        const propertyLabel = container.querySelector('.MenuWrapper > div')
+        const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)
 
@@ -243,7 +243,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
     }
 
     function onPropertyRenameNoConfirmationDialog(container:HTMLElement) {
-        const propertyLabel = container.querySelector('.MenuWrapper > div')
+        const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)
 

@@ -6,18 +6,15 @@ exports[`src/components/kanban/kanbanHiddenColumnItem limited card check 1`] = `
     class="octo-board-hidden-item"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <span
+        class="Label propColorDefault "
       >
-        <span
-          class="Label propColorDefault "
-        >
-          propOption
-        </span>
-      </div>
+        propOption
+      </span>
     </div>
     <button
       class="Button"
@@ -38,18 +35,15 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
     class="octo-board-hidden-item"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <span
+        class="Label propColorDefault "
       >
-        <span
-          class="Label propColorDefault "
-        >
-          propOption
-        </span>
-      </div>
+        propOption
+      </span>
       <div
         class="Menu noselect bottom "
       >
@@ -138,18 +132,15 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
     class="octo-board-hidden-item"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <span
+        class="Label propColorDefault "
       >
-        <span
-          class="Label propColorDefault "
-        >
-          propOption
-        </span>
-      </div>
+        propOption
+      </span>
       <div
         class="Menu noselect bottom "
       >
@@ -238,18 +229,15 @@ exports[`src/components/kanban/kanbanHiddenColumnItem should match snapshot 1`] 
     class="octo-board-hidden-item"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <span
+        class="Label propColorDefault "
       >
-        <span
-          class="Label propColorDefault "
-        >
-          propOption
-        </span>
-      </div>
+        propOption
+      </span>
     </div>
     <button
       class="Button"
@@ -269,18 +257,15 @@ exports[`src/components/kanban/kanbanHiddenColumnItem should match snapshot read
     class="octo-board-hidden-item"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper disabled"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <span
+        class="Label propColorDefault "
       >
-        <span
-          class="Label propColorDefault "
-        >
-          propOption
-        </span>
-      </div>
+        propOption
+      </span>
     </div>
     <button
       class="Button"

@@ -55,20 +55,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           />
           <div>
             <div
+              aria-label="View menu"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="View menu"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -76,41 +73,35 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="octo-spacer"
         />
         <div
+          aria-label="Properties menu"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="Properties menu"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <span>
-                Properties
-              </span>
-            </button>
-          </div>
+            <span>
+              Properties
+            </span>
+          </button>
         </div>
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <span>
-                Group by: 
-                <span
-                  id="groupByLabel"
-                >
-                  name
-                </span>
+            <span>
+              Group by: 
+              <span
+                id="groupByLabel"
+              >
+                name
               </span>
-            </button>
-          </div>
+            </span>
+          </button>
         </div>
         <div
           class="ModalWrapper"
@@ -124,20 +115,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           </button>
         </div>
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <span>
-                Sort
-              </span>
-            </button>
-          </div>
+            <span>
+              Sort
+            </span>
+          </button>
         </div>
         <div
           class="board-search-field"
@@ -156,20 +144,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="ModalWrapper"
         >
           <div
+            aria-label="View header menu"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="View header menu"
-              role="button"
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -181,19 +166,16 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             New
           </div>
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
             <div
-              aria-label="menuwrapper"
-              role="button"
+              class="button-dropdown"
             >
-              <div
-                class="button-dropdown"
-              >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </div>
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
             </div>
           </div>
         </div>
@@ -234,20 +216,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="octo-spacer"
           />
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
           </div>
           <button
             type="button"
@@ -289,20 +268,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="octo-spacer"
           />
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
           </div>
           <button
             type="button"
@@ -344,20 +320,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="octo-spacer"
           />
           <div
+            aria-label="menuwrapper"
             class="MenuWrapper"
+            role="button"
           >
-            <div
-              aria-label="menuwrapper"
-              role="button"
+            <button
+              type="button"
             >
-              <button
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
           </div>
           <button
             type="button"
@@ -392,20 +365,17 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             style="opacity: 1;"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper optionsMenu "
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
             <div
               class="octo-icontitle"

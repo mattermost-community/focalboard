@@ -11,23 +11,20 @@ exports[`components/table/TableRows should match snapshot, fire events 1`] = `
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"

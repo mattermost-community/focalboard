@@ -96,21 +96,18 @@ exports[`should match snapshot with Group 1`] = `
       </span>
     </button>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"
@@ -170,21 +167,18 @@ exports[`should match snapshot, add new 1`] = `
       </span>
     </button>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"
@@ -244,21 +238,18 @@ exports[`should match snapshot, edit title 1`] = `
       </span>
     </button>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"
@@ -318,21 +309,18 @@ exports[`should match snapshot, hide group 1`] = `
       </span>
     </button>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"
@@ -388,21 +376,18 @@ exports[`should match snapshot, no groups 1`] = `
       </span>
     </button>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <button
       class="IconButton"

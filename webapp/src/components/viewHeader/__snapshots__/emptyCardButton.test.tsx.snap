@@ -31,21 +31,18 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton 1`] = `
       Empty card
     </div>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
   </div>
 </div>
@@ -82,21 +79,18 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
       Empty card
     </div>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -202,21 +196,18 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and addCar
       Empty card
     </div>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
   </div>
 </div>

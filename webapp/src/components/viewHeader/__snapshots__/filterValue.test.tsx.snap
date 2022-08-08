@@ -3,21 +3,18 @@
 exports[`components/viewHeader/filterValue return filterValue 1`] = `
 <div>
   <div
+    aria-label="menuwrapper"
     class="MenuWrapper filterValue"
+    role="button"
   >
-    <div
-      aria-label="menuwrapper"
-      role="button"
+    <button
+      class="Button"
+      type="button"
     >
-      <button
-        class="Button"
-        type="button"
-      >
-        <span>
-          Status
-        </span>
-      </button>
-    </div>
+      <span>
+        Status
+      </span>
+    </button>
     <div
       class="Menu noselect bottom "
     >
@@ -88,21 +85,18 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
 exports[`components/viewHeader/filterValue return filterValue and click Status 1`] = `
 <div>
   <div
+    aria-label="menuwrapper"
     class="MenuWrapper filterValue"
+    role="button"
   >
-    <div
-      aria-label="menuwrapper"
-      role="button"
+    <button
+      class="Button"
+      type="button"
     >
-      <button
-        class="Button"
-        type="button"
-      >
-        <span>
-          Status
-        </span>
-      </button>
-    </div>
+      <span>
+        Status
+      </span>
+    </button>
     <div
       class="Menu noselect bottom "
     >
@@ -173,21 +167,18 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
 exports[`components/viewHeader/filterValue return filterValue and click Status with Status not in filter 1`] = `
 <div>
   <div
+    aria-label="menuwrapper"
     class="MenuWrapper filterValue"
+    role="button"
   >
-    <div
-      aria-label="menuwrapper"
-      role="button"
+    <button
+      class="Button"
+      type="button"
     >
-      <button
-        class="Button"
-        type="button"
-      >
-        <span>
-          (Unknown)
-        </span>
-      </button>
-    </div>
+      <span>
+        (Unknown)
+      </span>
+    </button>
     <div
       class="Menu noselect bottom "
     >

@@ -6,21 +6,18 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
     class="ModalWrapper"
   >
     <div
+      aria-label="View header menu"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="View header menu"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -118,21 +115,18 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
     class="ModalWrapper"
   >
     <div
+      aria-label="View header menu"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="View header menu"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -230,21 +224,18 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
     class="ModalWrapper"
   >
     <div
+      aria-label="View header menu"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="View header menu"
-        role="button"
+      <button
+        class="IconButton"
+        type="button"
       >
-        <button
-          class="IconButton"
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >

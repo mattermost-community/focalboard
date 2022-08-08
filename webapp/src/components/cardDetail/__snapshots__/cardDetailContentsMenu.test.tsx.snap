@@ -6,21 +6,18 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
     class="CardDetailContentsMenu content add-content"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="Button"
+        type="button"
       >
-        <button
-          class="Button"
-          type="button"
-        >
-          <span>
-            Add content
-          </span>
-        </button>
-      </div>
+        <span>
+          Add content
+        </span>
+      </button>
       <div
         class="Menu noselect top "
       >
@@ -188,21 +185,18 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
     class="CardDetailContentsMenu content add-content"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="Button"
+        type="button"
       >
-        <button
-          class="Button"
-          type="button"
-        >
-          <span>
-            Add content
-          </span>
-        </button>
-      </div>
+        <span>
+          Add content
+        </span>
+      </button>
       <div
         class="Menu noselect top "
       >
@@ -370,21 +364,18 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
     class="CardDetailContentsMenu content add-content"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="Button"
+        type="button"
       >
-        <button
-          class="Button"
-          type="button"
-        >
-          <span>
-            Add content
-          </span>
-        </button>
-      </div>
+        <span>
+          Add content
+        </span>
+      </button>
       <div
         class="Menu noselect top "
       >

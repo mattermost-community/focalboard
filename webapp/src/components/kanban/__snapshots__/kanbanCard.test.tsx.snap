@@ -8,20 +8,17 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu "
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -165,20 +162,17 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu "
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -322,20 +316,17 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu "
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -479,20 +470,17 @@ exports[`src/components/kanban/kanbanCard should match snapshot 1`] = `
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu "
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <div
       class="octo-icontitle"

@@ -613,7 +613,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const channelMenuBtn = container!.querySelector('.user-item.channel-item .MenuWrapper > div')
+        const channelMenuBtn = container!.querySelector('.user-item.channel-item .MenuWrapper')
         expect(channelMenuBtn).not.toBeNull()
         userEvent.click(channelMenuBtn as Element)
 

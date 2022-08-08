@@ -468,7 +468,7 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper > div')
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
             expect(elementMenuWrapper).not.toBeNull()
             userEvent.click(elementMenuWrapper!)
             const buttonNewTemplate = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'New template'})
@@ -494,7 +494,7 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper > div')
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
             expect(elementMenuWrapper).not.toBeNull()
             userEvent.click(elementMenuWrapper!)
             const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
@@ -521,7 +521,7 @@ describe('components/centerPanel', () => {
                     />
                 </ReduxProvider>,
             ))
-            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper > div')
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
             expect(elementMenuWrapper).not.toBeNull()
             userEvent.click(elementMenuWrapper!)
             const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})

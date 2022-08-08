@@ -11,21 +11,18 @@ exports[`src/components/gallery/Gallery limited card count check 1`] = `
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -37,21 +34,18 @@ exports[`src/components/gallery/Gallery limited card count check 1`] = `
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -99,21 +93,18 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -132,21 +123,18 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -206,21 +194,18 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
         <div
           class="Menu noselect left "
         >
@@ -347,21 +332,18 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="gallery-item"
@@ -387,21 +369,18 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
         <div
           class="Menu noselect left "
         >
@@ -485,21 +464,18 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
       style="opacity: 1;"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="gallery-item"

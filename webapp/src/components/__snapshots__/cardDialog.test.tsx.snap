@@ -40,20 +40,17 @@ exports[`components/cardDialog already following card 1`] = `
               </button>
             </div>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -64,19 +61,16 @@ exports[`components/cardDialog already following card 1`] = `
             class="IconSelector"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
               <div
-                aria-label="menuwrapper"
-                role="button"
+                class="octo-icon size-l"
               >
-                <div
-                  class="octo-icon size-l"
-                >
-                  <span>
-                    i
-                  </span>
-                </div>
+                <span>
+                  i
+                </span>
               </div>
             </div>
           </div>
@@ -114,20 +108,17 @@ exports[`components/cardDialog already following card 1`] = `
               class="octo-propertyname add-property"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  type="button"
                 >
-                  <button
-                    type="button"
-                  >
-                    <span>
-                      + Add a property
-                    </span>
-                  </button>
-                </div>
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -272,20 +263,17 @@ exports[`components/cardDialog already following card 1`] = `
             class="CardDetailContentsMenu content add-content"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <span>
-                    Add content
-                  </span>
-                </button>
-              </div>
+                <span>
+                  Add content
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -671,20 +659,17 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
               </button>
             </div>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
               <div
                 class="Menu noselect left "
               >
@@ -804,19 +789,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             class="IconSelector"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
               <div
-                aria-label="menuwrapper"
-                role="button"
+                class="octo-icon size-l"
               >
-                <div
-                  class="octo-icon size-l"
-                >
-                  <span>
-                    i
-                  </span>
-                </div>
+                <span>
+                  i
+                </span>
               </div>
             </div>
           </div>
@@ -854,20 +836,17 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
               class="octo-propertyname add-property"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  type="button"
                 >
-                  <button
-                    type="button"
-                  >
-                    <span>
-                      + Add a property
-                    </span>
-                  </button>
-                </div>
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -1012,20 +991,17 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             class="CardDetailContentsMenu content add-content"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <span>
-                    Add content
-                  </span>
-                </button>
-              </div>
+                <span>
+                  Add content
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -1075,20 +1051,17 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
               </button>
             </div>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -1099,19 +1072,16 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
             class="IconSelector"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
               <div
-                aria-label="menuwrapper"
-                role="button"
+                class="octo-icon size-l"
               >
-                <div
-                  class="octo-icon size-l"
-                >
-                  <span>
-                    i
-                  </span>
-                </div>
+                <span>
+                  i
+                </span>
               </div>
             </div>
           </div>
@@ -1149,20 +1119,17 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
               class="octo-propertyname add-property"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  type="button"
                 >
-                  <button
-                    type="button"
-                  >
-                    <span>
-                      + Add a property
-                    </span>
-                  </button>
-                </div>
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -1307,20 +1274,17 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
             class="CardDetailContentsMenu content add-content"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <span>
-                    Add content
-                  </span>
-                </button>
-              </div>
+                <span>
+                  Add content
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -1370,20 +1334,17 @@ exports[`components/cardDialog should match snapshot 1`] = `
               </button>
             </div>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -1394,19 +1355,16 @@ exports[`components/cardDialog should match snapshot 1`] = `
             class="IconSelector"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
               <div
-                aria-label="menuwrapper"
-                role="button"
+                class="octo-icon size-l"
               >
-                <div
-                  class="octo-icon size-l"
-                >
-                  <span>
-                    i
-                  </span>
-                </div>
+                <span>
+                  i
+                </span>
               </div>
             </div>
           </div>
@@ -1444,20 +1402,17 @@ exports[`components/cardDialog should match snapshot 1`] = `
               class="octo-propertyname add-property"
             >
               <div
+                aria-label="menuwrapper"
                 class="MenuWrapper"
+                role="button"
               >
-                <div
-                  aria-label="menuwrapper"
-                  role="button"
+                <button
+                  type="button"
                 >
-                  <button
-                    type="button"
-                  >
-                    <span>
-                      + Add a property
-                    </span>
-                  </button>
-                </div>
+                  <span>
+                    + Add a property
+                  </span>
+                </button>
               </div>
             </div>
           </div>
@@ -1602,20 +1557,17 @@ exports[`components/cardDialog should match snapshot 1`] = `
             class="CardDetailContentsMenu content add-content"
           >
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <span>
-                    Add content
-                  </span>
-                </button>
-              </div>
+                <span>
+                  Add content
+                </span>
+              </button>
             </div>
           </div>
         </div>
@@ -1665,20 +1617,17 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
               </button>
             </div>
             <div
+              aria-label="menuwrapper"
               class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-label="menuwrapper"
-                role="button"
+              <button
+                type="button"
               >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>

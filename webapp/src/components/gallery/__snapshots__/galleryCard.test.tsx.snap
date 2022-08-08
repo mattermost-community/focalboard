@@ -36,20 +36,17 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -188,20 +185,17 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -378,20 +372,17 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -534,20 +525,17 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >
@@ -692,20 +680,17 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <div
       class="gallery-item"
@@ -736,20 +721,17 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <div
       class="gallery-item"
@@ -780,20 +762,17 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <div
       class="gallery-item"
@@ -824,20 +803,17 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
     </div>
     <div
       class="gallery-item"
@@ -868,20 +844,17 @@ exports[`src/components/gallery/GalleryCard without block content should match s
     style="opacity: 1;"
   >
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper optionsMenu"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        type="button"
       >
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
-      </div>
+        <i
+          class="CompassIcon icon-dots-horizontal OptionsIcon"
+        />
+      </button>
       <div
         class="Menu noselect left "
       >

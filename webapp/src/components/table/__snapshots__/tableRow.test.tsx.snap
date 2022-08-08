@@ -11,23 +11,20 @@ exports[`components/table/TableRow should match snapshot 1`] = `
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"
@@ -97,23 +94,20 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"
@@ -183,23 +177,20 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"
@@ -307,23 +298,20 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"
@@ -393,23 +381,20 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"
@@ -480,23 +465,20 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
       class="action-cell octo-table-cell-btn"
     >
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper optionsMenu"
+        role="button"
       >
-        <div
-          aria-label="menuwrapper"
-          role="button"
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
         >
-          <button
-            aria-label="MenuBtn"
-            class="IconButton"
-            title="MenuBtn"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <button
         class="IconButton"

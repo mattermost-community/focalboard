@@ -17,21 +17,18 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       />
       <div>
         <div
+          aria-label="View menu"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="View menu"
-            role="button"
+          <button
+            class="IconButton"
+            type="button"
           >
-            <button
-              class="IconButton"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -39,43 +36,37 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="octo-spacer"
     />
     <div
+      aria-label="Properties menu"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="Properties menu"
-        role="button"
+      <button
+        class="Button"
+        type="button"
       >
-        <button
-          class="Button"
-          type="button"
-        >
-          <span>
-            Properties
-          </span>
-        </button>
-      </div>
+        <span>
+          Properties
+        </span>
+      </button>
     </div>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="Button"
+        type="button"
       >
-        <button
-          class="Button"
-          type="button"
-        >
-          <span>
-            Group by: 
-            <span
-              id="groupByLabel"
-            >
-              Status
-            </span>
+        <span>
+          Group by: 
+          <span
+            id="groupByLabel"
+          >
+            Status
           </span>
-        </button>
-      </div>
+        </span>
+      </button>
     </div>
     <div
       class="ModalWrapper"
@@ -90,21 +81,18 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       </button>
     </div>
     <div
+      aria-label="menuwrapper"
       class="MenuWrapper"
+      role="button"
     >
-      <div
-        aria-label="menuwrapper"
-        role="button"
+      <button
+        class="Button active"
+        type="button"
       >
-        <button
-          class="Button active"
-          type="button"
-        >
-          <span>
-            Sort
-          </span>
-        </button>
-      </div>
+        <span>
+          Sort
+        </span>
+      </button>
     </div>
     <div
       class="board-search-field"
@@ -122,21 +110,18 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="ModalWrapper"
     >
       <div
+        aria-label="View header menu"
         class="MenuWrapper"
+        role="button"
       >
-        <div
-          aria-label="View header menu"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -148,19 +133,16 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         New
       </div>
       <div
+        aria-label="menuwrapper"
         class="MenuWrapper"
+        role="button"
       >
         <div
-          aria-label="menuwrapper"
-          role="button"
+          class="button-dropdown"
         >
-          <div
-            class="button-dropdown"
-          >
-            <i
-              class="CompassIcon icon-chevron-down DropdownIcon"
-            />
-          </div>
+          <i
+            class="CompassIcon icon-chevron-down DropdownIcon"
+          />
         </div>
       </div>
     </div>
@@ -186,21 +168,18 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       />
       <div>
         <div
+          aria-label="View menu"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="View menu"
-            role="button"
+          <button
+            class="IconButton"
+            type="button"
           >
-            <button
-              class="IconButton"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -241,21 +220,18 @@ exports[`components/viewHeader/viewHeader return viewHeader without permissions 
       />
       <div>
         <div
+          aria-label="View menu"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="View menu"
-            role="button"
+          <button
+            class="IconButton"
+            type="button"
           >
-            <button
-              class="IconButton"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
         </div>
       </div>
     </div>
@@ -278,21 +254,18 @@ exports[`components/viewHeader/viewHeader return viewHeader without permissions 
       class="ModalWrapper"
     >
       <div
+        aria-label="View header menu"
         class="MenuWrapper"
+        role="button"
       >
-        <div
-          aria-label="View header menu"
-          role="button"
+        <button
+          class="IconButton"
+          type="button"
         >
-          <button
-            class="IconButton"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-dots-horizontal OptionsIcon"
-            />
-          </button>
-        </div>
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
     </div>
   </div>

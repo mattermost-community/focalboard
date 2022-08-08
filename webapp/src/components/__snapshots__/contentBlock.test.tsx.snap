@@ -12,20 +12,17 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
         class="octo-block-margin"
       >
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
           <div
             class="Menu noselect bottom "
           >
@@ -221,20 +218,17 @@ exports[`components/contentBlock should match snapshot with commentBlock 1`] = `
         class="octo-block-margin"
       >
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
         </div>
         <div
           class="dnd-handle"
@@ -302,20 +296,17 @@ exports[`components/contentBlock should match snapshot with dividerBlock 1`] = `
         class="octo-block-margin"
       >
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
         </div>
         <div
           class="dnd-handle"
@@ -363,20 +354,17 @@ exports[`components/contentBlock should match snapshot with imageBlock 1`] = `
         class="octo-block-margin"
       >
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
         </div>
         <div
           class="dnd-handle"
@@ -426,20 +414,17 @@ exports[`components/contentBlock should match snapshot with textBlock 1`] = `
         class="octo-block-margin"
       >
         <div
+          aria-label="menuwrapper"
           class="MenuWrapper"
+          role="button"
         >
-          <div
-            aria-label="menuwrapper"
-            role="button"
+          <button
+            type="button"
           >
-            <button
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
-          </div>
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
         </div>
         <div
           class="dnd-handle"

@@ -93,16 +93,13 @@ const MenuWrapper = (props: Props) => {
 
     return (
         <div
+            role='button'
+            aria-label={props.label || 'menuwrapper'}
             className={className}
+            onClick={toggle}
             ref={node}
         >
-            <div
-                role='button'
-                aria-label={props.label || 'menuwrapper'}
-                onClick={toggle}
-            >
-                {children ? Object.values(children)[0] : null}
-            </div>
+            {children ? Object.values(children)[0] : null}
             {children && !props.disabled && open ? Object.values(children)[1] : null}
         </div>
     )
