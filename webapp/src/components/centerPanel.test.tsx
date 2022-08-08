@@ -529,7 +529,7 @@ describe('components/centerPanel', () => {
             const elementMenuWrapperCard1 = within(elementCard1).getByRole('button', {name: 'menuwrapper'})
             expect(elementMenuWrapperCard1).not.toBeNull()
             userEvent.click(elementMenuWrapperCard1)
-            const elementEditMenuTemplate = screen.getByRole('button', {name: 'Edit'})
+            const elementEditMenuTemplate = within(elementMenuWrapperCard1).getByRole('button', {name: 'Edit'})
             expect(elementMenuWrapperCard1).not.toBeNull()
             userEvent.click(elementEditMenuTemplate)
             expect(container).toMatchSnapshot()

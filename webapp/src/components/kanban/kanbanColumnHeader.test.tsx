@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
-import {fireEvent, render, screen} from '@testing-library/react'
+import {fireEvent, render, screen, within} from '@testing-library/react'
 import {createIntl} from 'react-intl'
 import userEvent from '@testing-library/user-event'
 import {mocked} from 'jest-mock'
@@ -178,7 +178,7 @@ describe('src/components/kanban/kanbanColumnHeader', () => {
         const buttonMenuWrapper = screen.getByRole('button', {name: 'menuwrapper'})
         expect(buttonMenuWrapper).toBeDefined()
         userEvent.click(buttonMenuWrapper)
-        const buttonHide = screen.getByRole('button', {name: 'Hide'})
+        const buttonHide = within(buttonMenuWrapper).getByRole('button', {name: 'Hide'})
         expect(buttonHide).toBeDefined()
         userEvent.click(buttonHide)
         expect(mockedMutator.hideViewColumn).toBeCalledTimes(1)
@@ -207,7 +207,7 @@ describe('src/components/kanban/kanbanColumnHeader', () => {
         const buttonMenuWrapper = screen.getByRole('button', {name: 'menuwrapper'})
         expect(buttonMenuWrapper).toBeDefined()
         userEvent.click(buttonMenuWrapper)
-        const buttonDelete = screen.getByRole('button', {name: 'Delete'})
+        const buttonDelete = within(buttonMenuWrapper).getByRole('button', {name: 'Delete'})
         expect(buttonDelete).toBeDefined()
         userEvent.click(buttonDelete)
         expect(mockedMutator.deletePropertyOption).toBeCalledTimes(1)
@@ -236,7 +236,7 @@ describe('src/components/kanban/kanbanColumnHeader', () => {
         const buttonMenuWrapper = screen.getByRole('button', {name: 'menuwrapper'})
         expect(buttonMenuWrapper).toBeDefined()
         userEvent.click(buttonMenuWrapper)
-        const buttonBlueColor = screen.getByRole('button', {name: 'Select Blue Color'})
+        const buttonBlueColor = within(buttonMenuWrapper).getByRole('button', {name: 'Select Blue Color'})
         expect(buttonBlueColor).toBeDefined()
         userEvent.click(buttonBlueColor)
         expect(mockedMutator.changePropertyOptionColor).toBeCalledTimes(1)
