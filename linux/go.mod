@@ -4,6 +4,8 @@ go 1.18
 
 replace github.com/mattermost/focalboard/server => ../server
 
+replace github.com/mattermost/mattermost-server/v6 => github.com/mattermost/mattermost-server/v6 v6.0.0-20220613202234-182ae1234a49
+
 require (
 	github.com/google/uuid v1.3.0
 	github.com/mattermost/focalboard/server v0.0.0-00010101000000-000000000000
@@ -26,9 +28,9 @@ require (
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
-	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/graph-gophers/graphql-go v1.4.0 // indirect
 	github.com/hashicorp/go-hclog v1.2.0 // indirect
 	github.com/hashicorp/go-plugin v1.4.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
