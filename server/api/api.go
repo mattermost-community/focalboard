@@ -2226,6 +2226,11 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 	userID := getUserID(r)
@@ -2333,6 +2338,12 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+
+	if !a.MattermostAuth {
+		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		return
+	}
+
 	userID := getUserID(r)
 	query := r.URL.Query()
 	teamID := query.Get("team_id")
