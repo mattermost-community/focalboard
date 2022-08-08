@@ -37,6 +37,7 @@ import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
+import {Constants} from '../../../webapp/src/constants'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSChannelBoards from './components/rhsChannelBoards'
@@ -323,7 +324,7 @@ export default class Plugin {
             // Insights handler
             if (this.registry?.registerInsightsHandler) {
                 this.registry?.registerInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
-                    if (insightType === 'MY') {
+                    if (insightType === Constants.myInsights) {
                         const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
 
                         return data
