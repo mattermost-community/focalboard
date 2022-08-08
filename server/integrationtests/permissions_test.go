@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/require"
@@ -2341,7 +2340,7 @@ func TestPermissionsGetUser(t *testing.T) {
 }
 
 func TestPermissionsUserChangePassword(t *testing.T) {
-	postBody := toJSON(t, api.ChangePasswordRequest{
+	postBody := toJSON(t, model.ChangePasswordRequest{
 		OldPassword: password,
 		NewPassword: "newpa$$word123",
 	})
@@ -2549,7 +2548,7 @@ func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 
 func TestPermissionsLogin(t *testing.T) {
 	loginReq := func(username, password string) string {
-		return toJSON(t, api.LoginRequest{
+		return toJSON(t, model.LoginRequest{
 			Type:     "normal",
 			Username: username,
 			Password: password,
@@ -2628,7 +2627,7 @@ func TestPermissionsRegister(t *testing.T) {
 		require.NotNil(th.T, team)
 		require.NotNil(th.T, team.SignupToken)
 
-		postData := toJSON(t, api.RegisterRequest{
+		postData := toJSON(t, model.RegisterRequest{
 			Username: "newuser",
 			Email:    "newuser@test.com",
 			Password: password,

@@ -7,7 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
@@ -363,7 +362,7 @@ func (th *TestHelper) TearDown() {
 }
 
 func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, password, token string) {
-	req := &api.RegisterRequest{
+	req := &model.RegisterRequest{
 		Username: username,
 		Email:    email,
 		Password: password,
@@ -378,7 +377,7 @@ func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, p
 }
 
 func (th *TestHelper) Login(client *client.Client, username, password string) {
-	req := &api.LoginRequest{
+	req := &model.LoginRequest{
 		Type:     "normal",
 		Username: username,
 		Password: password,
