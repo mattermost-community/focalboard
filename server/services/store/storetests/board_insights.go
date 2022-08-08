@@ -1,6 +1,7 @@
 package storetests
 
 import (
+	"strconv"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -69,19 +70,18 @@ func getBoardsInsightsTest(t *testing.T, store store.Store) {
 
 	boardsUser1, _ := store.GetBoardsForUserAndTeam(testUserID, testTeamID)
 	boardsUser2, _ := store.GetBoardsForUserAndTeam(testInsightsUserID1, testTeamID)
-	// t.Run("team insights", func(t *testing.T) {
-	// 	boardIDs := []string{boardsUser1[0].ID, boardsUser1[1].ID, boardsUser1[2].ID}
-	// 	topTeamBoards, err := store.GetTeamBoardsInsights(testTeamID, testUserID,
-	// 		0, 0, 10, boardIDs)
-	// 	require.NoError(t, err)
-	// 	require.Len(t, topTeamBoards.Items, 3)
-	// 	// validate board insight content
-	// 	require.Equal(t, topTeamBoards.Items[0].ActivityCount, strconv.Itoa(8))
-	// 	require.Equal(t, topTeamBoards.Items[0].Icon, "💬")
-	// 	require.Equal(t, topTeamBoards.Items[1].ActivityCount, strconv.Itoa(5))
-	// 	require.Equal(t, topTeamBoards.Items[2].ActivityCount, strconv.Itoa(4))
-
-	// })
+	t.Run("team insights", func(t *testing.T) {
+		boardIDs := []string{boardsUser1[0].ID, boardsUser1[1].ID, boardsUser1[2].ID}
+		topTeamBoards, err := store.GetTeamBoardsInsights(testTeamID, testUserID,
+			0, 0, 10, boardIDs)
+		require.NoError(t, err)
+		require.Len(t, topTeamBoards.Items, 3)
+		// validate board insight content
+		require.Equal(t, topTeamBoards.Items[0].ActivityCount, strconv.Itoa(8))
+		require.Equal(t, topTeamBoards.Items[0].Icon, "💬")
+		require.Equal(t, topTeamBoards.Items[1].ActivityCount, strconv.Itoa(5))
+		require.Equal(t, topTeamBoards.Items[2].ActivityCount, strconv.Itoa(4))
+	})
 
 	t.Run("user insights", func(t *testing.T) {
 		boardIDs := []string{boardsUser1[0].ID, boardsUser1[1].ID, boardsUser1[2].ID}
