@@ -30,6 +30,7 @@ import {
 import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {setTeam} from '../../store/teams'
 import {updateViews} from '../../store/views'
 import {updateCards} from '../../store/cards'
 import {updateComments} from '../../store/comments'
@@ -95,10 +96,7 @@ const BoardPage = (props: Props): JSX.Element => {
     useEffect(() => {
         UserSettings.lastTeamId = teamId
         octoClient.teamId = teamId
-        const windowAny = (window as any)
-        if (windowAny.setTeamInSidebar) {
-            windowAny.setTeamInSidebar(teamId)
-        }
+        dispatch(setTeam(teamId))
     }, [teamId])
 
     const loadAction: (boardId: string) => any = useMemo(() => {
