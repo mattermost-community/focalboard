@@ -16,6 +16,7 @@ import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
 
 import {BoardsCloudLimits} from './boardsCloudLimits'
+import {TopBoardResponse} from './insights'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -899,6 +900,27 @@ class OctoClient {
         const limits = (await this.getJson(response, {})) as BoardsCloudLimits
         Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
         return limits
+    }
+
+    // insights
+    async getMyTopBoards(timeRange: string, page: number, perPage: number, teamId: string): Promise<TopBoardResponse | undefined> {
+        const path = `/api/v2/users/me/boards/insights?time_range=${timeRange}&page=${page}&per_page=${perPage}&team_id=${teamId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as TopBoardResponse
+    }
+
+    async getTeamTopBoards(timeRange: string, page: number, perPage: number, teamId: string): Promise<TopBoardResponse | undefined> {
+        const path = `/api/v2/teams/${teamId}/boards/insights?time_range=${timeRange}&page=${page}&per_page=${perPage}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as TopBoardResponse
     }
 }
 

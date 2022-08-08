@@ -319,6 +319,21 @@ export default class Plugin {
                 ),
                 false
             )
+
+            // Insights handler
+            if (this.registry?.registerInsightsHandler) {
+                this.registry?.registerInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
+                    if (insightType === 'MY') {
+                        const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
+
+                        return data
+                    } 
+
+                    const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
+
+                    return data
+                })
+            }
         }
 
         this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
