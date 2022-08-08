@@ -140,7 +140,7 @@ const TableRow = (props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
         >
 
-            {props.readonly && (
+            {!props.readonly && (
                 <div className='action-cell octo-table-cell-btn'>
                     <MenuWrapper
                         className='optionsMenu'
