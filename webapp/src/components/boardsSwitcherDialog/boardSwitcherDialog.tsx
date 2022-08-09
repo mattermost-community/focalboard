@@ -79,8 +79,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
 
             let categoryTitle = DefaultCategory.name
             for(const category of partialCategories){
-                console.log("itemid" + item.id)
-                console.log(partialCategories)
                 if(category.boardIDs.find(id => id === item.id)){
                     categoryTitle = category.name
                     break
@@ -101,7 +99,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
                 >
                     {item.type === BoardTypeOpen && <Globe/>}
                     {item.type === BoardTypePrivate && <LockOutline/>}
-                    {/* <span className='resultTitle'>{resultTitle}</span> */}
                     <div className='resultTitle'>
                         <span>{resultTitle}</span>
                         <span className='ml-2 text-light'>{categoryTitle}</span>
