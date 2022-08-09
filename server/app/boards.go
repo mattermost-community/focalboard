@@ -6,7 +6,6 @@ package app
 import (
 	"errors"
 	"fmt"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/utils"
