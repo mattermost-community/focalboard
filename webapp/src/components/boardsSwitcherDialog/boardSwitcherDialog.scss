@@ -15,7 +15,7 @@
     }
 
     span {
-        display: inline-block;
+        // display: inline-block;
         height: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -23,7 +23,11 @@
     }
 
     .resultTitle {
-        max-width: 60%;
+        // max-width: 60%;
+        max-width: 75%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .teamTitle {
