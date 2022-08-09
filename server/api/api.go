@@ -91,12 +91,14 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerOnboardingRoutes(apiv2)
 	a.registerSearchRoutes(apiv2)
 	a.registerConfigRoutes(apiv2)
-	a.registerSystemRoutes(apiv2)
 	a.registerBoardsAndBlocksRoutes(apiv2)
 	a.registerChannelsRoutes(apiv2)
 	a.registerTemplatesRoutes(apiv2)
 	a.registerBoardsRoutes(apiv2)
 	a.registerBlocksRoutes(apiv2)
+
+	// System routes are outside the /api/v2 path
+	a.registerSystemRoutes(r)
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
