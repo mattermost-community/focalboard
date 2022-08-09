@@ -7,29 +7,49 @@ on:
     branches: [ main, release-** ]
   workflow_dispatch:
 
+env:
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ EXCLUDE_ENTERPRISE: true
+
 jobs:
 
   ubuntu:
     runs-on: ubuntu-18.04
-
+ 
     steps:
-    - name: Checkout
+    - uses: actions/checkout@v3
+      with:
+        path: "focalboard"
+    - id: "mattermostServer"
       uses: actions/checkout@v3
+      continue-on-error: true
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref: ${{ env.BRANCH_NAME }}
+    - uses: actions/checkout@v3
+      if: steps.mattermostServer.outcome == 'failure'
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref : "master"
 
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm ci
-      run: cd webapp; npm ci --no-optional
+      run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -51,7 +71,7 @@ jobs:
       run: sudo apt-get install libwebkit2gtk-4.0-dev
 
     - name: Build Linux server and app
-      run: make server-linux-package linux-app
+      run: cd focalboard/; make server-linux-package linux-app
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
@@ -59,13 +79,13 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: focalboard-server-linux-amd64.tar.gz
-        path: ${{ github.workspace }}/dist/focalboard-server-linux-amd64.tar.gz
+        path: ${{ github.workspace }}/focalboard/dist/focalboard-server-linux-amd64.tar.gz
 
     - name: Upload app package
       uses: actions/upload-artifact@v3
       with:
         name: focalboard-linux.tar.gz
-        path: ${{ github.workspace }}/linux/dist/focalboard-linux.tar.gz
+        path: ${{ github.workspace }}/focalboard/linux/dist/focalboard-linux.tar.gz
 
   macos:
     runs-on: macos-11
@@ -74,21 +94,37 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@v3
-
+      with:
+        path: "focalboard"
+    - id: "mattermostServer"
+      uses: actions/checkout@v3
+      continue-on-error: true
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref: ${{ env.BRANCH_NAME }}
+    - uses: actions/checkout@v3
+      if: steps.mattermostServer.outcome == 'failure'
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref : "master"
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm ci
-      run: cd webapp; npm ci --no-optional
+      run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -99,7 +135,7 @@ jobs:
       run: ls -n /Applications/ | grep Xcode*
 
     - name: Build macOS
-      run: make mac-app
+      run: cd focalboard; make mac-app
       env:
         DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
         BUILD_NUMBER: ${{ github.run_id }}
@@ -108,7 +144,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: focalboard-mac.zip
-        path: ${{ github.workspace }}/mac/dist/focalboard-mac.zip
+        path: ${{ github.workspace }}/focalboard/mac/dist/focalboard-mac.zip
 
   windows:
     runs-on: windows-2022
@@ -116,24 +152,40 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v3
-
+      with:
+        path: "focalboard"
+    - id: "mattermostServer"
+      uses: actions/checkout@v3
+      continue-on-error: true
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref: ${{ env.BRANCH_NAME }}
+    - uses: actions/checkout@v3
+      if: steps.mattermostServer.outcome == 'failure'
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref : "master"
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: Add msbuild to PATH
       uses: microsoft/setup-msbuild@v1.1
 
     - name: npm ci
-      run: cd webapp; npm ci --no-optional
+      run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -146,10 +198,10 @@ jobs:
         nuget-version: '5.x'
 
     - name: NuGet Restore
-      run: nuget restore win-wpf\Focalboard.sln
+      run: nuget restore focalboard\win-wpf\Focalboard.sln
 
     - name: Build Windows WPF app
-      run: make win-wpf-app
+      run: cd focalboard; make win-wpf-app
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
@@ -157,35 +209,51 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: focalboard.msix
-        path: ${{ github.workspace }}/win-wpf/focalboard.msix
+        path: ${{ github.workspace }}/focalboard/win-wpf/focalboard.msix
 
     - name: Upload app zip package
       uses: actions/upload-artifact@v3
       with:
         name: focalboard-win.zip
-        path: ${{ github.workspace }}/win-wpf/dist/focalboard-win.zip
+        path: ${{ github.workspace }}/focalboard/win-wpf/dist/focalboard-win.zip
 
   plugin:
     runs-on: ubuntu-18.04
 
     steps:
-    - name: Checkout
+    - uses: actions/checkout@v3
+      with:
+        path: "focalboard"
+    - id: "mattermostServer"
       uses: actions/checkout@v3
+      continue-on-error: true
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref: ${{ env.BRANCH_NAME }}
+    - uses: actions/checkout@v3
+      if: steps.mattermostServer.outcome == 'failure'
+      with:
+        repository: "mattermost/mattermost-server"
+        fetch-depth: "20" 
+        path: "mattermost-server"
+        ref : "master"
 
     - name: Replace token 1 server
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 1 webapp
-      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_dataplane_url,${{ secrets.RUDDER_DATAPLANE_URL }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: Replace token 2 server
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/server/services/telemetry/telemetry.go
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/server/services/telemetry/telemetry.go
 
     - name: Replace token 2 webapp
-      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/mattermost-plugin/webapp/src/index.tsx
+      run: sed -i -e "s,placeholder_rudder_key,${{ secrets.RUDDER_DEV_KEY }},g" ${{ github.workspace }}/focalboard/mattermost-plugin/webapp/src/index.tsx
 
     - name: npm ci
-      run: cd webapp; npm ci --no-optional
+      run: cd focalboard/webapp; npm ci --no-optional
 
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -198,21 +266,21 @@ jobs:
         node-version: 16.1.0
 
     - name: Build webapp
-      run: make webapp
+      run: cd focalboard; make webapp
 
     - name: npm ci plugin dependencies
-      run: cd mattermost-plugin/webapp; npm ci --no-optional
+      run: cd focalboard/mattermost-plugin/webapp; npm ci --no-optional
 
     - name: Build plugin
-      run: cd mattermost-plugin; make dist
+      run: cd focalboard/mattermost-plugin; make dist
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Rename plugin file
-      run: cd mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
+      run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
 
     - name: Upload plugin artifact
       uses: actions/upload-artifact@v3
       with:
         name: mattermost-plugin-focalboard.tar.gz
-        path: ${{ github.workspace }}/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz
+        path: ${{ github.workspace }}/focalboard/mattermost-plugin/dist/mattermost-plugin-focalboard.tar.gz

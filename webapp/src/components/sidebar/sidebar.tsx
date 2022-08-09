@@ -31,6 +31,8 @@ import {getCurrentTeam} from '../../store/teams'
 
 import {Constants} from "../../constants"
 
+import {getMe} from "../../store/users"
+
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
@@ -57,6 +59,8 @@ const Sidebar = (props: Props) => {
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const sidebarCategories = addMissingItems(partialCategories, boards)
+    const me = useAppSelector(getMe)
+
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
@@ -105,6 +109,10 @@ const Sidebar = (props: Props) => {
                 setHidden(false)
             }
         }
+    }
+
+    if (!me) {
+        return <div/>
     }
 
     if (isHidden) {

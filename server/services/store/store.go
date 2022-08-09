@@ -156,6 +156,11 @@ type Store interface {
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	SendMessage(message, postType string, receipts []string) error
+
+	// Insights
+	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetUserTimezone(userID string) (string, error)
 }
 
 type NotSupportedError struct {

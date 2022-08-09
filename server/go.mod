@@ -10,8 +10,8 @@ require (
 	github.com/gorilla/websocket v1.5.0
 	github.com/krolaw/zipstream v0.0.0-20180621105154-0a2661891f94
 	github.com/lib/pq v1.10.6
-	github.com/mattermost/mattermost-plugin-api v0.0.28-0.20220623051512-0afd85e854d4
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220711175838-7ee7523729e6
+	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220802151854-f07c31c5d933
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/oklog/run v1.1.0
@@ -28,10 +28,11 @@ require (
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/blang/semver v3.5.1+incompatible // indirect
+	github.com/blang/semver/v4 v4.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/dyatlov/go-opengraph v0.0.0-20210112100619-dae8665a5b09 // indirect
+	github.com/dyatlov/go-opengraph/opengraph v0.0.0-20220524092352-606d7b1e5f8a // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/francoispqt/gojay v1.2.13 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect

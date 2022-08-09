@@ -528,7 +528,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
-        const selectElement = screen.getByText('Search for people')
+        const selectElement = screen.getByText('Search for people and channels')
         expect(selectElement).toBeDefined()
 
         await act(async () => {
@@ -577,7 +577,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
-        const selectElement = screen.getByText('Search for people')
+        const selectElement = screen.getByText('Search for people and channels')
         expect(selectElement).toBeDefined()
 
         await act(async () => {
@@ -621,7 +621,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(unlinkOption).not.toBeNull()
         userEvent.click(unlinkOption)
 
-        const unlinkConfirmationBtn = screen.getByText('Yes, unlink')
+        const unlinkConfirmationBtn = screen.getByText('Unlink channel')
         expect(unlinkConfirmationBtn).not.toBeNull()
         userEvent.click(unlinkConfirmationBtn)
 

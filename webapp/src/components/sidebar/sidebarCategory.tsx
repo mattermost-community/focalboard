@@ -1,8 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, { useCallback, useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+
+import {debounce} from "lodash"
 
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
@@ -56,7 +58,7 @@ type Props = {
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
 
 const SidebarCategory = (props: Props) => {
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
     const intl = useIntl()
     const history = useHistory()
 
@@ -123,7 +125,19 @@ const SidebarCategory = (props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
+    const isBoardVisible = (boardID: string): boolean => {
+        // hide if board doesn't belong to current category
+        if (!blocks.includes(boardID)) {
+            return false
+        }
+
+        // hide if board was hidden by the user
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return !hiddenBoardIDs[boardID]
+    }
+
     const blocks = props.categoryBoards.boardIDs || []
+    const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
 
     const handleCreateNewCategory = () => {
         setShowCreateCategoryModal(true)
@@ -184,6 +198,27 @@ const SidebarCategory = (props: Props) => {
         )
     }, [showBoard, deleteBoard, props.boards])
 
+    const updateCategory = useCallback(async (value: boolean) => {
+        const updatedCategory: Category = {
+            ...props.categoryBoards,
+            collapsed: value,
+        }
+        await mutator.updateCategory(updatedCategory)
+    }, [props.categoryBoards])
+
+    const debouncedUpdateCategory = useMemo(() => debounce(updateCategory, 400), [updateCategory])
+
+    const toggleCollapse = async () => {
+        const newVal = !collapsed
+        await setCollapsed(newVal)
+
+        // The default 'Boards' category isn't stored in database,
+        // so avoid making the API call for it
+        if (props.categoryBoards.id !== '') {
+            debouncedUpdateCategory(newVal)
+        }
+    }
+
     return (
         <div className='SidebarCategory' ref={menuWrapperRef}>
             <div
@@ -192,7 +227,7 @@ const SidebarCategory = (props: Props) => {
                 <div
                     className='octo-sidebar-title category-title'
                     title={props.categoryBoards.name}
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={toggleCollapse}
                 >
                     {collapsed ? <ChevronRight/> : <ChevronDown/>}
                     {props.categoryBoards.name}
@@ -240,16 +275,32 @@ const SidebarCategory = (props: Props) => {
                     </MenuWrapper>
                 </div>
             </div>
-            {!collapsed && blocks.length === 0 &&
+            {!collapsed && visibleBlocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-boards-in-category'
                         defaultMessage='No boards inside'
                     />
                 </div>}
+            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, index) => {
+                if (!isBoardVisible(board.id)) {
+                    return null
+                }
+                return (
+                    <SidebarBoardItem
+                        key={board.id}
+                        board={board}
+                        categoryBoards={props.categoryBoards}
+                        allCategories={props.allCategories}
+                        isActive={board.id === props.activeBoardID}
+                        showBoard={showBoard}
+                        showView={showView}
+                        onDeleteRequest={setDeleteBoard}
+                    />
+                )
+            })}
             {!collapsed && props.boards.map((board: Board, index) => {
-                {/* {props.index === 0 && shouldViewManageBoardsTour && <ManageBoardsTourStep/>} */}
-                if (!blocks.includes(board.id)) {
+                if (!isBoardVisible(board.id)) {
                     return null
                 }
                 if(index === 0) {

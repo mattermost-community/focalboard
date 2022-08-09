@@ -135,6 +135,9 @@ const boardsSlice = createSlice({
             }
         },
         updateMembers: updateMembersHandler,
+        addMyBoardMemberships: (state, action: PayloadAction<BoardMember[]>) => {
+            action.payload.forEach((boardMember) => state.myBoardMemberships[boardMember.boardId] = boardMember)
+        }
     },
 
     extraReducers: (builder) => {
@@ -196,7 +199,7 @@ const boardsSlice = createSlice({
     },
 })
 
-export const {updateBoards, setCurrent, setLinkToChannel, updateMembers} = boardsSlice.actions
+export const {updateBoards, setCurrent, setLinkToChannel, updateMembers, addMyBoardMemberships} = boardsSlice.actions
 export const {reducer} = boardsSlice
 
 export const getBoards = (state: RootState): {[key: string]: Board} => state.boards?.boards || {}

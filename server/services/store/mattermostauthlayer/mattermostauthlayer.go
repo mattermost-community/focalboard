@@ -568,6 +568,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
+		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"tm.userID": userID}).
 		Where(sq.Eq{"tm.deleteAt": 0}).
@@ -575,7 +576,10 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.And{
 				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
+				sq.Or{
+					sq.Eq{"bm.user_id": userID},
+					sq.Eq{"cm.userId": userID},
+				},
 			},
 		})
 
@@ -684,21 +688,21 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
-		b, err := s.Store.GetBoard(boardID)
-		if err != nil {
-			return nil, err
+		b, boardErr := s.Store.GetBoard(boardID)
+		if boardErr != nil {
+			return nil, boardErr
 		}
 		if b.ChannelID != "" {
-			_, err := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
-			if err != nil {
+			_, memberErr := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
+			if memberErr != nil {
 				var appErr *mmModel.AppError
-				if errors.As(err, &appErr) && appErr.StatusCode == http.StatusNotFound {
+				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					// Plugin API returns error if channel member doesn't exist.
 					// We're fine if it doesn't exist, so its not an error for us.
-					return nil, nil
+					return nil, model.NewErrNotFound(userID)
 				}
 
-				return nil, err
+				return nil, memberErr
 			}
 
 			return &model.BoardMember{
@@ -712,6 +716,9 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				Synthetic:       true,
 			}, nil
 		}
+	}
+	if err != nil {
+		return nil, err
 	}
 	return bm, nil
 }
@@ -890,4 +897,13 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 	}
 
 	return nil
+}
+
+func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
+	user, err := s.servicesAPI.GetUserByID(userID)
+	if err != nil {
+		return "", err
+	}
+	timezone := user.Timezone
+	return mmModel.GetPreferredTimezone(timezone), nil
 }
