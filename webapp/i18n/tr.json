@@ -372,7 +372,6 @@
   "shareBoard.confirm-link-channel-button-with-other-channel": "Eski bağlantıyı kes ve bu kanala bağla",
   "shareBoard.confirm-link-channel-subtext": "Bir kanalı bir panoya bağladığınızda, kanalın tüm üyeleri (var olan ve yeni) panoyu düzenleyebilir.",
   "shareBoard.confirm-link-channel-subtext-with-other-channel": "Bir kanalı bir panoya bağladığınızda, kanalın tüm üyeleri (var olan ve yeni) panoyu düzenleyebilir.{lineBreak}Bu pano şu anda başka bir kanal ile bağlantılı. Bu kanala bağlamayı seçerseniz diğer kanal ile bağlantısı kesilecek.",
-  "shareBoard.confirm-link-public-channel-button": "Evet, herkese açık kanalı ekle",
   "shareBoard.confirm-unlink.body": "Bir kanalın bir pano ile bağlantısını kaldırdığınızda, kanalın tüm üyeleri (var olan ve yeni), kendilerine özel olarak izin verilmedikçe, panoya erişimi kaybeder.",
   "shareBoard.confirm-unlink.confirmBtnText": "Kanalın bağlantısını kaldır",
   "shareBoard.confirm-unlink.title": "Kanalın pano ile bağlantısı kaldır",
