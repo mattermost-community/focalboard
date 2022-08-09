@@ -54,8 +54,8 @@ describe('Card badges', () => {
 
         // Hide card badges
         cy.log('**Hide card badges**')
-        cy.findByRole('button', {name: 'Properties menu'}).click()
         cy.findByRole('button', {name: 'Comments and description'}).click()
+        cy.findByRole('button', {name: 'Properties menu'}).click()
         cy.findByTitle('This card has a description').should('not.exist')
         cy.findByTitle('Comments').should('not.exist')
         cy.findByTitle('Checkboxes').should('not.exist')

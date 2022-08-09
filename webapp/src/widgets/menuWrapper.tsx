@@ -68,15 +68,19 @@ const MenuWrapper = (props: Props) => {
     }, [props.onToggle, open, props.disabled])
 
     useEffect(() => {
-        document.addEventListener('menuItemClicked', close, true)
-        document.addEventListener('click', closeOnBlur, true)
-        document.addEventListener('keyup', keyboardClose, true)
-        return () => {
-            document.removeEventListener('menuItemClicked', close, true)
-            document.removeEventListener('click', closeOnBlur, true)
-            document.removeEventListener('keyup', keyboardClose, true)
+        if (open) {
+            document.addEventListener('menuItemClicked', close, true)
+            document.addEventListener('click', closeOnBlur, true)
+            document.addEventListener('keyup', keyboardClose, true)
         }
-    }, [close, closeOnBlur, keyboardClose])
+        return () => {
+            if (open) {
+                document.removeEventListener('menuItemClicked', close, true)
+                document.removeEventListener('click', closeOnBlur, true)
+                document.removeEventListener('keyup', keyboardClose, true)
+            }
+        }
+    }, [open, close, closeOnBlur, keyboardClose])
 
     const {children} = props
     let className = 'MenuWrapper'

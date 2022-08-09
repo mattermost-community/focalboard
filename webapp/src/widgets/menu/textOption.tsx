@@ -25,6 +25,7 @@ function TextOption(props:TextOptionProps): JSX.Element {
             onClick={(e: React.MouseEvent) => {
                 e.target.dispatchEvent(new Event('menuItemClicked'))
                 props.onClick(props.id)
+                e.stopPropagation()
             }}
         >
             <div className={`${check ? 'd-flex menu-option__check' : 'd-flex'}`}>{icon ?? <div className='noicon'/>}</div>
