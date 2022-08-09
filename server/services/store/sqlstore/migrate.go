@@ -237,7 +237,7 @@ func (s *SQLStore) Migrate() error {
 		return mErr
 	}
 
-	if mErr := s.migrateTeamLessBoards(); mErr != nil {
+	if mErr := s.runTeamLessBoardsMigration(); mErr != nil {
 		return mErr
 	}
 
