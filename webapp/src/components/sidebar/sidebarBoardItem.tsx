@@ -269,37 +269,21 @@ const SidebarBoardItem = (props: Props) => {
                                 icon={<DuplicateIcon/>}
                                 onClick={() => handleDuplicateBoard(board.isTemplate)}
                             />
-                        </BoardPermissionGate>
-                        <Menu.SubMenu
-                            key={`moveBlock-${board.id}`}
-                            id='moveBlock'
-                            className='boardMoveToCategorySubmenu'
-                            name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
-                            icon={<CreateNewFolder/>}
-                            position='auto'
-                        >
-                            {generateMoveToCategoryOptions(board.id)}
-                        </Menu.SubMenu>
-                        <Menu.Text
-                            id='duplicateBoard'
-                            name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                            icon={<DuplicateIcon/>}
-                            onClick={() => handleDuplicateBoard(board.isTemplate)}
-                        />
-                        <Menu.Text
-                            id='templateFromBoard'
-                            name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                            icon={<AddIcon/>}
-                            onClick={() => handleDuplicateBoard(true)}
-                        />
-                        <Menu.Text
-                            id='hideBoard'
-                            name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
-                            icon={<CloseIcon/>}
-                            onClick={() => handleHideBoard()}
-                        />
-                    </Menu>
-                </MenuWrapper>
+                            <Menu.Text
+                                id='templateFromBoard'
+                                name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
+                                icon={<AddIcon/>}
+                                onClick={() => handleDuplicateBoard(true)}
+                            />
+                            <Menu.Text
+                                id='hideBoard'
+                                name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
+                                icon={<CloseIcon/>}
+                                onClick={() => handleHideBoard()}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                </div>
             </div>
             {props.isActive && boardViews.map((view: BoardView) => (
                 <div

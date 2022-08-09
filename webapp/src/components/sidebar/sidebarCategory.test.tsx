@@ -115,6 +115,7 @@ describe('components/sidebarCategory', () => {
                         categoryBoards={categoryBoards1}
                         boards={boards}
                         allCategories={allCategoryBoards}
+                        index={0}
                     />
                 </Router>
             </ReduxProvider>,
@@ -140,6 +141,7 @@ describe('components/sidebarCategory', () => {
                         categoryBoards={categoryBoards1}
                         boards={boards}
                         allCategories={allCategoryBoards}
+                        index={0}
                     />
                 </Router>
             </ReduxProvider>,
