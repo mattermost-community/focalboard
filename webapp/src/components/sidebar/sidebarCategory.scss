@@ -162,4 +162,9 @@
             left: calc(64px + 240px - 50px);
         }
     }
+
+    .manageCategoriesTourStep {
+        background: rgba(var(--sidebar-text-rgb), 0.08);
+    }
+
 }
