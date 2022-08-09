@@ -13,6 +13,7 @@ type ConfirmationDialogBoxProps = {
     heading: string
     subText?: string | ReactNode
     confirmButtonText?: string
+    destructive?: boolean
     onConfirm: () => void
     onClose: () => void
 }
@@ -53,7 +54,7 @@ export const ConfirmationDialogBox = (props: Props) => {
                         title={props.dialogBox.confirmButtonText || 'Confirm'}
                         size='medium'
                         submit={true}
-                        danger={true}
+                        danger={props.dialogBox.destructive ? true : false}
                         onClick={handleOnConfirm}
                         filled={true}
                     >

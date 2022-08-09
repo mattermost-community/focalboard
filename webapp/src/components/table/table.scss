@@ -2,9 +2,8 @@
 
 .Table {
     margin-top: 16px;
-    padding-bottom: 0 !important;
     margin-left: 20px !important;
-    padding-left: 0 !important;
+    padding: 0 32px 0 0 !important;
     overflow: auto;
     position: relative;
     flex: 1;
@@ -48,22 +47,21 @@
             padding: 2px 8px;
             border-radius: 3px;
             line-height: 20px;
-            margin-right: 5px;
+            margin: 0 4px 0 0;
             color: rgba(var(--center-channel-color-rgb), 1);
             white-space: nowrap;
             text-transform: none;
-            font-weight: normal;
-            font-size: 16px;
+            font-weight: 600;
+            font-size: 14px;
             width: 100%;
 
             input {
                 background: transparent;
                 width: 100%;
                 text-transform: none;
-                font-weight: normal;
-                font-size: 16px;
-                //     line-height: 20px;
-                color: rgba(var(--center-channel-color-rgb), 1);
+                font-size: inherit;
+                color: inherit;
+                padding: 0;
             }
         }
 
@@ -108,6 +106,7 @@
 
         .octo-icontitle {
             flex: 1 1 auto;
+            font-weight: 600;
 
             .octo-icon {
                 min-width: 20px;
@@ -215,6 +214,13 @@
 
         .octo-table-cell {
             align-items: center;
+
+            button,
+            .octo-propertyvalue {
+                font-size: inherit;
+                font-weight: normal;
+            }
+
         }
     }
 

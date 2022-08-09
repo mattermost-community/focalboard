@@ -68,6 +68,7 @@ const CardDialog = (props: Props): JSX.Element => {
             card.fields.isTemplate,
             intl.formatMessage({id: 'Mutator.new-template-from-card', defaultMessage: 'new template from card'}),
             true,
+            {},
             async (newCardId) => {
                 props.showCard(newCardId)
             },

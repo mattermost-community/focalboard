@@ -15,6 +15,14 @@
             position: fixed;
             width: 500px;
         }
+
+        .action-buttons {
+            .Button {
+                height: unset;
+                min-height: 40px;
+                padding: 5px 20px;
+            }
+        }
     }
 
     .toolbar {

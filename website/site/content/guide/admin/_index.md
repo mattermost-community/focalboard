@@ -25,6 +25,7 @@ Personal server settings are stored in `config.json` and are read when the serve
 | localOnly | Only allow connections from localhost        | `false`
 | enableLocalMode | Enable admin APIs on local Unix port   | `true`
 | localModeSocketLocation | Location of local Unix port    | `/var/tmp/focalboard_local.socket`
+| enablePublicSharedBoards | Enable publishing boards for public access | `false`
 
 ## Resetting passwords
 

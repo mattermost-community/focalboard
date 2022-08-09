@@ -52,6 +52,21 @@ func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
 				}
 			}
 		}
+
+		if _, ok := block.Fields["defaultTemplateId"]; ok {
+			defaultTemplateID, typeOk := block.Fields["defaultTemplateId"].(string)
+			if !typeOk {
+				logger.Warn(
+					"type assertion failed for default template ID when saving reference block IDs",
+					mlog.String("blockID", block.ID),
+					mlog.String("actionType", fmt.Sprintf("%T", block.Fields["defaultTemplateId"])),
+					mlog.String("expectedType", "string"),
+					mlog.String("defaultTemplateId", fmt.Sprintf("%v", block.Fields["defaultTemplateId"])),
+				)
+				continue
+			}
+			referenceIDs[defaultTemplateID] = true
+		}
 	}
 
 	newIDs := map[string]string{}
@@ -91,6 +106,21 @@ func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
 
 		if _, ok := blockMod.Fields["cardOrder"]; ok {
 			fixFieldIDs(&blockMod, "cardOrder", getExistingOrOldID, logger)
+		}
+
+		if _, ok := blockMod.Fields["defaultTemplateId"]; ok {
+			defaultTemplateID, typeOk := blockMod.Fields["defaultTemplateId"].(string)
+			if !typeOk {
+				logger.Warn(
+					"type assertion failed for default template ID when saving reference block IDs",
+					mlog.String("blockID", blockMod.ID),
+					mlog.String("actionType", fmt.Sprintf("%T", blockMod.Fields["defaultTemplateId"])),
+					mlog.String("expectedType", "string"),
+					mlog.String("defaultTemplateId", fmt.Sprintf("%v", blockMod.Fields["defaultTemplateId"])),
+				)
+			} else {
+				blockMod.Fields["defaultTemplateId"] = getExistingOrOldID(defaultTemplateID)
+			}
 		}
 
 		newBlocks[i] = blockMod

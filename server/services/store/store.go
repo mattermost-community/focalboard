@@ -55,6 +55,7 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
+	GetUsersList(userIDs []string) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
@@ -155,6 +156,11 @@ type Store interface {
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	SendMessage(message, postType string, receipts []string) error
+
+	// Insights
+	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetUserTimezone(userID string) (string, error)
 }
 
 type NotSupportedError struct {

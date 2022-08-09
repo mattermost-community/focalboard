@@ -347,7 +347,7 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 // We no longer support boards existing in DMs and private
 // group messages. This function migrates all boards
 // belonging to a DM to the best possible team.
-func (s *SQLStore) migrateTeamLessBoards() error {
+func (s *SQLStore) runTeamLessBoardsMigration() error {
 	if !s.isPlugin {
 		return nil
 	}
@@ -376,7 +376,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 
 	tx, err := s.db.BeginTx(context.Background(), nil)
 	if err != nil {
-		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
+		s.logger.Error("error starting transaction in runTeamLessBoardsMigration", mlog.Err(err))
 		return err
 	}
 
@@ -417,7 +417,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.logger.Error("failed to commit migrateTeamLessBoards transaction", mlog.Err(err))
+		s.logger.Error("failed to commit runTeamLessBoardsMigration transaction", mlog.Err(err))
 		return err
 	}
 
@@ -514,10 +514,15 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 
 func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[string][]string, error) {
 	query := s.getQueryBuilder(tx).
-		Select("TeamMembers.UserId", "TeamMembers.TeamId").
-		From("ChannelMembers").
-		Join("TeamMembers ON ChannelMembers.UserId = TeamMembers.UserId").
-		Where(sq.Eq{"ChannelId": board.ChannelID})
+		Select("tm.UserId", "tm.TeamId").
+		From("ChannelMembers cm").
+		Join("TeamMembers tm ON cm.UserId = tm.UserId").
+		Join("Teams t ON tm.TeamId = t.Id").
+		Where(sq.Eq{
+			"cm.ChannelId": board.ChannelID,
+			"t.DeleteAt":   0,
+			"tm.DeleteAt":  0,
+		})
 
 	rows, err := query.Query()
 	if err != nil {

@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser} from '../user'
+import {IUser, parseUserProps} from '../user'
 
 import {Utils} from '../utils'
 
@@ -20,6 +20,8 @@ export const fetchMe = createAsyncThunk(
     'users/fetchMe',
     async () => client.getMe(),
 )
+
+export const versionProperty = 'focalboard_version72MessageCanceled'
 
 type UsersStatus = {
     me: IUser|null
@@ -47,6 +49,9 @@ const usersSlice = createSlice({
     reducers: {
         setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
+            if (state.me) {
+                state.me.props = parseUserProps(state.me.props)
+            }
             state.loggedIn = Boolean(state.me)
         },
         setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
@@ -74,13 +79,16 @@ const usersSlice = createSlice({
         },
         patchProps: (state, action: PayloadAction<Record<string, string>>) => {
             if (state.me) {
-                state.me.props = action.payload
+                state.me.props = parseUserProps(action.payload)
             }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
             state.me = action.payload || null
+            if (state.me) {
+                state.me.props = parseUserProps(state.me.props)
+            }
             state.loggedIn = Boolean(state.me)
         })
         builder.addCase(fetchMe.rejected, (state) => {
@@ -158,6 +166,19 @@ export const getCloudMessageCanceled = createSelector(
             return UserSettings.hideCloudMessage
         }
         return Boolean(me.props?.focalboard_cloudMessageCanceled)
+    },
+)
+
+export const getVersionMessageCanceled = createSelector(
+    getMe,
+    (me): boolean => {
+        if (versionProperty && me){
+            if (me.id === 'single-user') {
+                return true
+            }
+            return Boolean(me.props[versionProperty])    
+        }
+        return true
     },
 )
 

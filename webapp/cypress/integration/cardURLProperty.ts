@@ -99,7 +99,7 @@ describe('Card URL Property', () => {
         cy.log(`**Add ${type} view**`)
         // Intercept and wait for getUser request because it is the last one in the effects for BoardPage
         // After this last request the BoardPage component will not have additional rerenders
-        cy.intercept('GET', '/api/v2/users/u*').as('getUser')
+        cy.intercept('POST', '/api/v2/users').as('getUser')
         cy.findByRole('button', {name: 'View menu'}).click()
         cy.findByText('Add view').realHover()
         cy.findByRole('button', {name: type}).click()
