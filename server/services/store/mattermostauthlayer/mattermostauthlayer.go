@@ -826,13 +826,14 @@ func (s *MattermostAuthLayer) SearchUserChannels(teamID, userID, query string) (
 	if err != nil {
 		return nil, err
 	}
+	lower_query := strings.ToLower(query)
 
 	result := []*mmModel.Channel{}
 	count := 0
 	for _, channel := range channels {
 		if channel.Type != mmModel.ChannelTypeDirect &&
 			channel.Type != mmModel.ChannelTypeGroup &&
-			(strings.Contains(channel.Name, query) || strings.Contains(channel.DisplayName, query)) {
+			(strings.Contains(strings.ToLower(channel.Name), lower_query) || strings.Contains(strings.ToLower(channel.DisplayName), lower_query)) {
 			result = append(result, channel)
 			count++
 			if count >= 10 {
