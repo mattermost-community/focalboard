@@ -45,7 +45,7 @@ const ManageCategoriesTourStep = (): JSX.Element | null => {
             classname='ManageCatergoies'
             telemetryTag='tourPoint4b'
             placement={right}
-            hideBackdrop={true}
+            hideBackdrop={false}
             showForce={true}
         />
     )

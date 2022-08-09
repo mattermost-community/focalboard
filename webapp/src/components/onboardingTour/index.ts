@@ -20,6 +20,7 @@ export const SidebarTourSteps: {[key: string]: number} = {
     SIDE_BAR: 0,
     MANAGE_CATEGORIES: 1,
     MANAGE_BOARDS: 2,
+    SEARCH_FOR_BOARDS: 3,
 }
 
 export const FINISHED = 999
