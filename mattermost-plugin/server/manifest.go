@@ -21,7 +21,7 @@ const manifestStr = `
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
   "icon_path": "assets/starter-template-icon.svg",
   "version": "7.3.0",
-  "min_server_version": "7.0.0",
+  "min_server_version": "7.2.0",
   "server": {
     "executables": {
       "darwin-amd64": "server/dist/plugin-darwin-amd64",

@@ -31,7 +31,7 @@ const FilterEntry = (props: Props): JSX.Element => {
 
     const template = board.cardProperties.find((o: IPropertyTemplate) => o.id === filter.propertyId)
     const propertyName = template ? template.name : '(unknown)'
-    const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
+    const key = `${filter.propertyId}-${filter.condition}}`
     return (
         <div
             className='FilterEntry'

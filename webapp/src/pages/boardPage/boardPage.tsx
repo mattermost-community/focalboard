@@ -7,6 +7,7 @@ import {useRouteMatch} from 'react-router-dom'
 
 import Workspace from '../../components/workspace'
 import CloudMessage from '../../components/messages/cloudMessage'
+import VersionMessage from '../../components/messages/versionMessage'
 import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
@@ -29,6 +30,7 @@ import {
 import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {setTeam} from '../../store/teams'
 import {updateViews} from '../../store/views'
 import {updateCards} from '../../store/cards'
 import {updateComments} from '../../store/comments'
@@ -94,10 +96,7 @@ const BoardPage = (props: Props): JSX.Element => {
     useEffect(() => {
         UserSettings.lastTeamId = teamId
         octoClient.teamId = teamId
-        const windowAny = (window as any)
-        if (windowAny.setTeamInSidebar) {
-            windowAny.setTeamInSidebar(teamId)
-        }
+        dispatch(setTeam(teamId))
     }, [teamId])
 
     const loadAction: (boardId: string) => any = useMemo(() => {
@@ -252,6 +251,7 @@ const BoardPage = (props: Props): JSX.Element => {
             <UndoRedoHotKeys/>
             <WebsocketConnection/>
             <CloudMessage/>
+            <VersionMessage/>
 
             {!mobileWarningClosed &&
                 <div className='mobileWarning'>
