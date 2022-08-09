@@ -11,7 +11,6 @@ func (a *API) registerLimitsRoutes(r *mux.Router) {
 	// limits
 	r.HandleFunc("/limits", a.sessionRequired(a.handleCloudLimits)).Methods("GET")
 	r.HandleFunc("/teams/{teamID}/notifyadminupgrade", a.sessionRequired(a.handleNotifyAdminUpgrade)).Methods(http.MethodPost)
-
 }
 
 func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
