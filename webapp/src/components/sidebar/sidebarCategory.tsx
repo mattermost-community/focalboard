@@ -282,7 +282,7 @@ const SidebarCategory = (props: Props) => {
                         defaultMessage='No boards inside'
                     />
                 </div>}
-            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, index) => {
+            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
                 }
