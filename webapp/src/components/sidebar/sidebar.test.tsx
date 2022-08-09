@@ -46,6 +46,13 @@ describe('components/sidebarSidebar', () => {
                     [board.id]: board,
                 },
             },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+
             views: {
                 views: [],
             },
@@ -98,6 +105,12 @@ describe('components/sidebarSidebar', () => {
                 myBoardMemberships: {
                     [board.id]: board,
                 }
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
             },
             views: {
                 views: [],
