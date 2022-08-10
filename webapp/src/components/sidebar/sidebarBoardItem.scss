@@ -188,6 +188,10 @@
             }
         }
     }
+
+    .manageBoardsTourStep {
+        background: rgba(var(--sidebar-text-rgb), 0.08);
+    }
 }
 
 .team-sidebar + .product-wrapper {
