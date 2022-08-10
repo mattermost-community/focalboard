@@ -140,26 +140,28 @@ const TableRow = (props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
         >
 
-            <div className='action-cell octo-table-cell-btn'>
-                <MenuWrapper
-                    className='optionsMenu'
-                    stopPropagationOnToggle={true}
-                >
-                    <IconButton
-                        title='MenuBtn'
-                        icon={<OptionsIcon/>}
-                    />
-                    <Menu>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
-                            onClick={handleDeleteButtonOnClick}
+            {!props.readonly && (
+                <div className='action-cell octo-table-cell-btn'>
+                    <MenuWrapper
+                        className='optionsMenu'
+                        stopPropagationOnToggle={true}
+                    >
+                        <IconButton
+                            title='MenuBtn'
+                            icon={<OptionsIcon/>}
                         />
-                    </Menu>
-                </MenuWrapper>
-                <IconButton icon={<GripIcon/>}/>
-            </div>
+                        <Menu>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
+                                onClick={handleDeleteButtonOnClick}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                    <IconButton icon={<GripIcon/>}/>
+                </div>
+            )}
 
             {/* Name / title */}
             <div
