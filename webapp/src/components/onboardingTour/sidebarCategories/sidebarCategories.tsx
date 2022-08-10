@@ -59,7 +59,6 @@ const SidebarCategoriesTourStep = (): JSX.Element | null => {
             const should = onboardingTourCategory === TOUR_BOARD &&
                            onboardingTourStep === FINISHED.toString()
 
-            console.log("Shoould: ", should, "isOnboardingBoard", isOnboardingBoard, "onBoardingTourCategory", onboardingTourCategory, "onboardingTourStep", SidebarTourSteps.SIDE_BAR)
             if (!should) {
                 return
             }

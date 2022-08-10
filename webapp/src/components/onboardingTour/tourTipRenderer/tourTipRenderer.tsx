@@ -43,7 +43,7 @@ const TourTipRenderer = (props: Props): JSX.Element | null => {
 
 
     if(props.showForce) {
-        isOnboardingBoard = props.showForce ? true: false
+        isOnboardingBoard = true
     }
 
     const showTour = !disableTour && isOnboardingBoard && onboardingTourStarted && onboardingTourCategory === props.category

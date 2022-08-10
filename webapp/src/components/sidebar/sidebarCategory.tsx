@@ -303,21 +303,6 @@ const SidebarCategory = (props: Props) => {
                 if (!isBoardVisible(board.id)) {
                     return null
                 }
-                if(index === 0) {
-                    return (
-                        <SidebarBoardItem
-                            key={board.id}
-                            board={board}
-                            categoryBoards={props.categoryBoards}
-                            allCategories={props.allCategories}
-                            isActive={board.id === props.activeBoardID}
-                            showBoard={showBoard}
-                            showView={showView}
-                            onDeleteRequest={setDeleteBoard}
-                            shouldViewManageBoardsTour={shouldViewManageBoardsTour}
-                        />
-                    )
-                }
                 return (
                     <SidebarBoardItem
                         key={board.id}
@@ -328,6 +313,7 @@ const SidebarCategory = (props: Props) => {
                         showBoard={showBoard}
                         showView={showView}
                         onDeleteRequest={setDeleteBoard}
+                        shouldViewManageBoardsTour={index === 0 ? shouldViewManageBoardsTour : undefined}
                     />
                 )
             })}
