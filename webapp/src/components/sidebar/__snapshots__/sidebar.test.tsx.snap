@@ -123,20 +123,27 @@ exports[`components/sidebarSidebar dont show hidden boards 1`] = `
               class="CompassIcon icon-chevron-down ChevronDownIcon"
             />
             Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -159,20 +166,27 @@ exports[`components/sidebarSidebar dont show hidden boards 1`] = `
               class="CompassIcon icon-chevron-down ChevronDownIcon"
             />
             Boards
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -390,20 +404,27 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
               class="CompassIcon icon-chevron-down ChevronDownIcon"
             />
             Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -421,18 +442,22 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
             board title
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper x"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -450,20 +475,27 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
               class="CompassIcon icon-chevron-down ChevronDownIcon"
             />
             Boards
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -681,20 +713,27 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
               class="CompassIcon icon-chevron-down ChevronDownIcon"
             />
             Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -712,18 +751,22 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
             board title
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper x"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -741,20 +784,27 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
               class="CompassIcon icon-chevron-right ChevronRightIcon"
             />
             Category 2
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -772,20 +822,27 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
               class="CompassIcon icon-chevron-down ChevronDownIcon"
             />
             Boards
+            <div
+              class="sidebarCategoriesTour"
+            />
           </div>
           <div
-            aria-label="menuwrapper"
-            class="MenuWrapper"
-            role="button"
+            class=""
           >
-            <button
-              class="IconButton"
-              type="button"
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-dots-horizontal OptionsIcon"
-              />
-            </button>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div

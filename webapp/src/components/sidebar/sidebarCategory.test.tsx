@@ -57,6 +57,12 @@ describe('components/sidebarCategory', () => {
                 [board.id]: board,
             },
         },
+        cards: {
+            cards: {
+                card_id_1: {title: 'Card'},
+            },
+            current: 'card_id_1',
+        },
         views: {
             current: view.id,
             views: {
@@ -82,6 +88,7 @@ describe('components/sidebarCategory', () => {
                         categoryBoards={categoryBoards1}
                         boards={boards}
                         allCategories={allCategoryBoards}
+                        index={0}
                     />
                 </Router>
             </ReduxProvider>,
@@ -108,6 +115,7 @@ describe('components/sidebarCategory', () => {
                         categoryBoards={categoryBoards1}
                         boards={boards}
                         allCategories={allCategoryBoards}
+                        index={0}
                     />
                 </Router>
             </ReduxProvider>,
@@ -133,6 +141,7 @@ describe('components/sidebarCategory', () => {
                         categoryBoards={categoryBoards1}
                         boards={boards}
                         allCategories={allCategoryBoards}
+                        index={0}
                     />
                 </Router>
             </ReduxProvider>,
