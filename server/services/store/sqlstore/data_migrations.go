@@ -572,8 +572,8 @@ func (s *SQLStore) runDeletedMembershipBoardsMigration() error {
 
 	if len(boards) == 0 {
 		s.logger.Debug("No boards with owner not anymore on their team found, marking runDeletedMembershipBoardsMigration as done")
-		if err := s.SetSystemSetting(DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
-			return fmt.Errorf("cannot mark migration as completed: %w", err)
+		if sErr := s.SetSystemSetting(DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); sErr != nil {
+			return fmt.Errorf("cannot mark migration as completed: %w", sErr)
 		}
 		return nil
 	}
