@@ -9,6 +9,7 @@ import (
 type ClusterMessage struct {
 	TeamID      string
 	BoardID     string
+	UserID      string
 	Payload     map[string]interface{}
 	EnsureUsers []string
 }
@@ -65,6 +66,11 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 			"id", ev.Id,
 			"payload", clusterMessage.Payload,
 		)
+		return
+	}
+
+	if clusterMessage.UserID != "" {
+		pa.sendUserMessageSkipCluster(action, clusterMessage.Payload, clusterMessage.UserID)
 		return
 	}
 
