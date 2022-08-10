@@ -190,6 +190,10 @@ exports[`component/BoardSwitcherDialog find one, default category 1`] = `
                   <span>
                     hello
                   </span>
+                </div>
+                <div
+                  class="categoryTitle"
+                >
                   <span
                     class="ml-2 text-light"
                   >
@@ -301,6 +305,10 @@ exports[`component/BoardSwitcherDialog find one, with custom category 1`] = `
                   <span>
                     hello
                   </span>
+                </div>
+                <div
+                  class="categoryTitle"
+                >
                   <span
                     class="ml-2 text-light"
                   >

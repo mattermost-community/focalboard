@@ -22,7 +22,7 @@
     }
 
     .resultTitle {
-        max-width: 75%;
+        max-width: 60%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -32,5 +32,27 @@
         right: auto;
         margin-left: auto;
         color: rgba(var(--center-channel-color-rgb), 0.56);
+        flex: 1;
+        text-align: right;
+    }
+
+
+    .categoryTitle,
+    .teamTitle {
+        max-width: 20%;
+        width: max-content;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .categoryTitle {
+        margin-left: auto;
+        flex: 2;
+        text-align: right;
+    }
+
+    .resultTitle {
+        flex: 6;
     }
 }

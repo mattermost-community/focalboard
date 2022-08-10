@@ -101,6 +101,8 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
                     {item.type === BoardTypePrivate && <LockOutline/>}
                     <div className='resultTitle'>
                         <span>{resultTitle}</span>
+                    </div>
+                    <div className='categoryTitle'>
                         <span className='ml-2 text-light'>{categoryTitle}</span>
                     </div>
                     <span className='teamTitle'>{teamTitle}</span>
