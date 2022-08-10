@@ -431,7 +431,7 @@ func (c *Client) GetRegisterRoute() string {
 	return "/register"
 }
 
-func (c *Client) Register(request *api.RegisterRequest) (bool, *Response) {
+func (c *Client) Register(request *model.RegisterRequest) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetRegisterRoute(), toJSON(&request))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
@@ -445,14 +445,14 @@ func (c *Client) GetLoginRoute() string {
 	return "/login"
 }
 
-func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response) {
+func (c *Client) Login(request *model.LoginRequest) (*model.LoginResponse, *Response) {
 	r, err := c.DoAPIPost(c.GetLoginRoute(), toJSON(&request))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	data, err := api.LoginResponseFromJSON(r.Body)
+	data, err := model.LoginResponseFromJSON(r.Body)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -512,7 +512,7 @@ func (c *Client) GetUserChangePasswordRoute(id string) string {
 	return fmt.Sprintf("/users/%s/changepassword", id)
 }
 
-func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) (bool, *Response) {
+func (c *Client) UserChangePassword(id string, data *model.ChangePasswordRequest) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetUserChangePasswordRoute(id), toJSON(&data))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)

@@ -3,8 +3,6 @@ package api
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -19,123 +17,16 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const (
-	MinimumPasswordLength = 8
-)
-
-type ParamError struct {
-	msg string
-}
-
-func (pe ParamError) Error() string {
-	return pe.msg
-}
-
-// LoginRequest is a login request
-// swagger:model
-type LoginRequest struct {
-	// Type of login, currently must be set to "normal"
-	// required: true
-	Type string `json:"type"`
-
-	// If specified, login using username
-	// required: false
-	Username string `json:"username"`
-
-	// If specified, login using email
-	// required: false
-	Email string `json:"email"`
-
-	// Password
-	// required: true
-	Password string `json:"password"`
-
-	// MFA token
-	// required: false
-	// swagger:ignore
-	MfaToken string `json:"mfa_token"`
-}
-
-// LoginResponse is a login response
-// swagger:model
-type LoginResponse struct {
-	// Session token
-	// required: true
-	Token string `json:"token"`
-}
-
-func LoginResponseFromJSON(data io.Reader) (*LoginResponse, error) {
-	var resp LoginResponse
-	if err := json.NewDecoder(data).Decode(&resp); err != nil {
-		return nil, err
+func (a *API) registerAuthRoutes(r *mux.Router) {
+	// personal-server specific routes. These are not needed in plugin mode.
+	if !a.isPlugin {
+		r.HandleFunc("/login", a.handleLogin).Methods("POST")
+		r.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
+		r.HandleFunc("/register", a.handleRegister).Methods("POST")
+		r.HandleFunc("/teams/{teamID}/regenerate_signup_token", a.sessionRequired(a.handlePostTeamRegenerateSignupToken)).Methods("POST")
 	}
-	return &resp, nil
-}
 
-// RegisterRequest is a user registration request
-// swagger:model
-type RegisterRequest struct {
-	// User name
-	// required: true
-	Username string `json:"username"`
-
-	// User's email
-	// required: true
-	Email string `json:"email"`
-
-	// Password
-	// required: true
-	Password string `json:"password"`
-
-	// Registration authorization token
-	// required: true
-	Token string `json:"token"`
-}
-
-func (rd *RegisterRequest) IsValid() error {
-	if strings.TrimSpace(rd.Username) == "" {
-		return ParamError{"username is required"}
-	}
-	if strings.TrimSpace(rd.Email) == "" {
-		return ParamError{"email is required"}
-	}
-	if !auth.IsEmailValid(rd.Email) {
-		return ParamError{"invalid email format"}
-	}
-	if rd.Password == "" {
-		return ParamError{"password is required"}
-	}
-	return isValidPassword(rd.Password)
-}
-
-// ChangePasswordRequest is a user password change request
-// swagger:model
-type ChangePasswordRequest struct {
-	// Old password
-	// required: true
-	OldPassword string `json:"oldPassword"`
-
-	// New password
-	// required: true
-	NewPassword string `json:"newPassword"`
-}
-
-// IsValid validates a password change request.
-func (rd *ChangePasswordRequest) IsValid() error {
-	if rd.OldPassword == "" {
-		return ParamError{"old password is required"}
-	}
-	if rd.NewPassword == "" {
-		return ParamError{"new password is required"}
-	}
-	return isValidPassword(rd.NewPassword)
-}
-
-func isValidPassword(password string) error {
-	if len(password) < MinimumPasswordLength {
-		return ParamError{fmt.Sprintf("password must be at least %d characters", MinimumPasswordLength)}
-	}
-	return nil
+	r.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
 }
 
 func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
@@ -187,7 +78,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var loginData LoginRequest
+	var loginData model.LoginRequest
 	err = json.Unmarshal(requestBody, &loginData)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -205,7 +96,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
 			return
 		}
-		json, err := json.Marshal(LoginResponse{Token: token})
+		json, err := json.Marshal(model.LoginResponse{Token: token})
 		if err != nil {
 			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 			return
@@ -315,7 +206,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var registerData RegisterRequest
+	var registerData model.RegisterRequest
 	err = json.Unmarshal(requestBody, &registerData)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -425,7 +316,7 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var requestData ChangePasswordRequest
+	var requestData model.ChangePasswordRequest
 	if err = json.Unmarshal(requestBody, &requestData); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
