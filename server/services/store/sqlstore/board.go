@@ -660,12 +660,12 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string) ([
 
 	if term != "" {
 		// break search query into space separated words
-		// and search for each word.
+		// and search for all words.
 		// This should later be upgraded to industrial-strength
 		// word tokenizer, that uses much more than space
 		// to break words.
 
-		conditions := sq.Or{}
+		conditions := sq.And{}
 
 		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
 			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
@@ -706,12 +706,12 @@ func (s *SQLStore) searchBoardsForUserInTeam(db sq.BaseRunner, teamID, term, use
 
 	if term != "" {
 		// break search query into space separated words
-		// and search for each word.
+		// and search for all words.
 		// This should later be upgraded to industrial-strength
 		// word tokenizer, that uses much more than space
 		// to break words.
 
-		conditions := sq.Or{}
+		conditions := sq.And{}
 
 		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
 			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
