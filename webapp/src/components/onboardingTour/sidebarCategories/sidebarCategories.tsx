@@ -9,7 +9,6 @@ import {FormattedMessage} from 'react-intl'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 import {TOUR_BOARD, TOUR_SIDEBAR, SidebarTourSteps, FINISHED} from '../index'
-import {OnboardingBoardTitle} from '../../cardDetail/cardDetail'
 import {useAppDispatch, useAppSelector} from '../../../store/hooks'
 import {
     getMe,
@@ -19,7 +18,6 @@ import {
 } from '../../../store/users'
 import {IUser, UserConfigPatch, UserPropPrefix} from '../../../user'
 import mutator from '../../../mutator'
-import {getCurrentBoard} from '../../../store/boards'
 import {Constants} from '../../../constants'
 
 import './sidebarCategories.scss'
@@ -43,10 +41,6 @@ const SidebarCategoriesTourStep = (): JSX.Element | null => {
 
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
-
-    const board = useAppSelector(getCurrentBoard)
-    const isOnboardingBoard = board ? board.title === OnboardingBoardTitle : false
-
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
 
