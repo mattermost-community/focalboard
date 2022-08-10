@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useRef, useState} from 'react'
+import React, { useCallback, useEffect, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from "react-router-dom"
 
@@ -26,6 +26,8 @@ import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
 import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
+
+import ManageBoardsTourStep from '../../components/onboardingTour/manageBoards/manageBoards'
 
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
@@ -58,7 +60,10 @@ type Props = {
     onDeleteRequest: (board: Board) => void
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
+    shouldViewManageBoardsTour?: boolean
 }
+
+export const ClassForManageBoardsTourStep = 'manageBoardsTourStep'
 
 const SidebarBoardItem = (props: Props) => {
     const intl = useIntl()
@@ -76,6 +81,24 @@ const SidebarBoardItem = (props: Props) => {
     const dispatch = useAppDispatch()
     const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
+
+    useEffect(() => {
+        if(props.shouldViewManageBoardsTour) {
+            setBoardsMenuOpen((menuState) => {
+                const newState = {...menuState}
+                newState[board.id] = true
+                return newState
+            })
+        }
+
+        return () => {
+            setBoardsMenuOpen((menuState) => {
+                const newState = {...menuState}
+                newState[board.id] = false
+                return newState
+            })
+        }
+    }, [props.shouldViewManageBoardsTour])
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -217,67 +240,70 @@ const SidebarBoardItem = (props: Props) => {
                 >
                     {title}
                 </div>
-                <MenuWrapper
-                    className={boardsMenuOpen[board.id] ? 'menuOpen' : 'x'}
-                    stopPropagationOnToggle={true}
-                    onToggle={(open) => {
-                        setBoardsMenuOpen((menuState) => {
-                            const newState = {...menuState}
-                            newState[board.id] = open
-                            return newState
-                        })
-                    }}
-                >
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu
-                        fixed={true}
-                        position='auto'
-                        parentRef={boardItemRef}
+                <div className={props.shouldViewManageBoardsTour ? `${ClassForManageBoardsTourStep}` : ''}>
+                    {props.shouldViewManageBoardsTour && <ManageBoardsTourStep/>}
+                    <MenuWrapper
+                        className={boardsMenuOpen[board.id] ? 'menuOpen' : 'x'}
+                        stopPropagationOnToggle={true}
+                        onToggle={(open) => {
+                            setBoardsMenuOpen((menuState) => {
+                                const newState = {...menuState}
+                                newState[board.id] = open
+                                return newState
+                            })
+                        }}
                     >
-                        <BoardPermissionGate
-                            boardId={board.id}
-                            permissions={[Permission.DeleteBoard]}
-                        >
-                            <Menu.Text
-                                key={`deleteBlock-${board.id}`}
-                                id='deleteBlock'
-                                name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                                icon={<DeleteIcon/>}
-                                onClick={() => {
-                                    props.onDeleteRequest(board)
-                                }}
-                            />
-                        </BoardPermissionGate>
-                        <Menu.SubMenu
-                            key={`moveBlock-${board.id}`}
-                            id='moveBlock'
-                            className='boardMoveToCategorySubmenu'
-                            name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
-                            icon={<CreateNewFolder/>}
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu
+                            fixed={true}
                             position='auto'
+                            parentRef={boardItemRef}
                         >
-                            {generateMoveToCategoryOptions(board.id)}
-                        </Menu.SubMenu>
-                        <Menu.Text
-                            id='duplicateBoard'
-                            name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                            icon={<DuplicateIcon/>}
-                            onClick={() => handleDuplicateBoard(board.isTemplate)}
-                        />
-                        <Menu.Text
-                            id='templateFromBoard'
-                            name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                            icon={<AddIcon/>}
-                            onClick={() => handleDuplicateBoard(true)}
-                        />
-                        <Menu.Text
-                            id='hideBoard'
-                            name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
-                            icon={<CloseIcon/>}
-                            onClick={() => handleHideBoard()}
-                        />
-                    </Menu>
-                </MenuWrapper>
+                            <BoardPermissionGate
+                                boardId={board.id}
+                                permissions={[Permission.DeleteBoard]}
+                            >
+                                <Menu.Text
+                                    key={`deleteBlock-${board.id}`}
+                                    id='deleteBlock'
+                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
+                                    icon={<DeleteIcon/>}
+                                    onClick={() => {
+                                        props.onDeleteRequest(board)
+                                    }}
+                                />
+                            </BoardPermissionGate>
+                            <Menu.SubMenu
+                                key={`moveBlock-${board.id}`}
+                                id='moveBlock'
+                                className='boardMoveToCategorySubmenu'
+                                name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
+                                icon={<CreateNewFolder/>}
+                                position='auto'
+                            >
+                                {generateMoveToCategoryOptions(board.id)}
+                            </Menu.SubMenu>
+                            <Menu.Text
+                                id='duplicateBoard'
+                                name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                                icon={<DuplicateIcon/>}
+                                onClick={() => handleDuplicateBoard(board.isTemplate)}
+                            />
+                            <Menu.Text
+                                id='templateFromBoard'
+                                name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
+                                icon={<AddIcon/>}
+                                onClick={() => handleDuplicateBoard(true)}
+                            />
+                            <Menu.Text
+                                id='hideBoard'
+                                name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
+                                icon={<CloseIcon/>}
+                                onClick={() => handleHideBoard()}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                </div>
             </div>
             {props.isActive && boardViews.map((view: BoardView) => (
                 <div

@@ -19,18 +19,22 @@ exports[`components/sidebarBoardItem renders default icon if no custom icon set 
       board title
     </div>
     <div
-      aria-label="menuwrapper"
-      class="MenuWrapper x"
-      role="button"
+      class=""
     >
-      <button
-        class="IconButton"
-        type="button"
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper x"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-dots-horizontal OptionsIcon"
-        />
-      </button>
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
     </div>
   </div>
   <div
@@ -82,18 +86,22 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
       board title
     </div>
     <div
-      aria-label="menuwrapper"
-      class="MenuWrapper x"
-      role="button"
+      class=""
     >
-      <button
-        class="IconButton"
-        type="button"
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper x"
+        role="button"
       >
-        <i
-          class="CompassIcon icon-dots-horizontal OptionsIcon"
-        />
-      </button>
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
     </div>
   </div>
   <div
