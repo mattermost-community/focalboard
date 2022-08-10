@@ -348,6 +348,38 @@ func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.Board
 	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) CreateCategory(category model.Category) (*model.Category, *Response) {
+	r, err := c.DoAPIPost(c.GetTeamRoute(category.TeamID)+"/categories", toJSON(category))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.CategoryFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return BuildResponse(r)
+}
+
+func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/categories", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var categoryBoards []model.CategoryBoards
+	_ = json.NewDecoder(r.Body).Decode(&categoryBoards)
+	return categoryBoards, BuildResponse(r)
+}
+
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPatch(c.GetBoardsAndBlocksRoute(), toJSON(pbab))
 	if err != nil {

@@ -1,6 +1,8 @@
 package model
 
 import (
+	"encoding/json"
+	"io"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -80,4 +82,10 @@ func newErrInvalidCategory(msg string) *ErrInvalidCategory {
 
 func (e *ErrInvalidCategory) Error() string {
 	return e.msg
+}
+
+func CategoryFromJSON(data io.Reader) *Category {
+	var category *Category
+	_ = json.NewDecoder(data).Decode(&category)
+	return category
 }

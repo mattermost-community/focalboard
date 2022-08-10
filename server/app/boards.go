@@ -145,6 +145,36 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	return timestamp, modifiedBy, nil
 }
 
+func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, userID, teamID string) error {
+	// find source board's category ID for the user
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	var destinationCategoryID string
+
+	for _, categoryBoard := range userCategoryBoards {
+		for _, boardID := range categoryBoard.BoardIDs {
+			if boardID == sourceBoardID {
+				// category found!
+				destinationCategoryID = categoryBoard.ID
+				break
+			}
+		}
+	}
+
+	// if source board is not mapped to a category for this user,
+	// then we have nothing more to do.
+	if destinationCategoryID == "" {
+		return nil
+	}
+
+	// now that we have source board's category,
+	// we send destination board to the same category
+	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, destinationBoardID)
+}
+
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	bab, members, err := a.store.DuplicateBoard(boardID, userID, toTeam, asTemplate)
 	if err != nil {
@@ -154,6 +184,12 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	// copy any file attachments from the duplicated blocks.
 	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
+	}
+
+	for _, board := range bab.Boards {
+		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID); categoryErr != nil {
+			return nil, nil, categoryErr
+		}
 	}
 
 	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.

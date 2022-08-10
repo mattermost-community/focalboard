@@ -15,7 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './sidebarBoardItem.scss'
-import {CategoryBoards} from '../../store/sidebar'
+import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
@@ -113,6 +113,26 @@ const SidebarBoardItem = (props: Props) => {
         }
 
         const boardId = blocksAndBoards.boards[0].id
+
+        // If the source board is in a custom category, set the new board in
+        // the same category. Even though the server does this as well on its side,
+        // we need to do this to avoid the duplicated board showing up in default "Boards" category first
+        // then jumping to the custom category.
+        // The jump would happen because when server clones a board from a custom category,
+        // two WS events are sent - first to indicate the new board belongs to the specific category,
+        // second, to indicate the new board is created. Depending on the order of execution of the two
+        // WS event handlers, if the handler for second events executes first, it will show the new board
+        // in default category in LHS, then when the handler for first events gets executed, it moves the board
+        // to the correct category.
+        // By not waiting for the board-category WS event and setting the right category for the board,
+        // we avoid the jumping behavior.
+        if (props.categoryBoards.id !== '') {
+            await dispatch(updateBoardCategories([{
+                boardID: boardId,
+                categoryID: props.categoryBoards.id,
+            }]))
+        }
+
         Utils.showBoard(boardId, match, history)
 
     }, [board.id])
