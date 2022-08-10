@@ -570,6 +570,14 @@ func (s *SQLStore) runDeletedMembershipBoardsMigration() error {
 		return err
 	}
 
+	if len(boards) == 0 {
+		s.logger.Debug("No boards with owner not anymore on their team found, marking runDeletedMembershipBoardsMigration as done")
+		if err := s.SetSystemSetting(DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
+			return fmt.Errorf("cannot mark migration as completed: %w", err)
+		}
+		return nil
+	}
+
 	s.logger.Debug("Migrating boards with owner not anymore on their team", mlog.Int("count", len(boards)))
 
 	tx, err := s.db.BeginTx(context.Background(), nil)
