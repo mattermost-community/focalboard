@@ -575,7 +575,7 @@ func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *m
 		Member: member,
 	}
 
-	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message))
+	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message), member.UserID)
 }
 
 func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {
