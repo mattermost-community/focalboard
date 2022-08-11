@@ -10,9 +10,17 @@ import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
 
 import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
 import {getCurrentTeamId} from '../../../../webapp/src/store/teams'
+import {IUser} from '../../../../webapp/src/user'
+import {getMe, fetchMe} from '../../../../webapp/src/store/users'
 import {loadBoards} from '../../../../webapp/src/store/initialLoad'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
-import {getMySortedBoards, setLinkToChannel, updateBoards, updateMembers} from '../../../../webapp/src/store/boards'
+import {
+    getMySortedBoards,
+    setLinkToChannel,
+    updateBoards,
+    updateMembersEnsuringBoardsAndUsers,
+    addMyBoardMemberships,
+} from '../../../../webapp/src/store/boards'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
@@ -29,11 +37,13 @@ const RHSChannelBoards = () => {
     const boards = useAppSelector(getMySortedBoards)
     const teamId = useAppSelector(getCurrentTeamId)
     const currentChannel = useAppSelector(getCurrentChannel)
+    const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
     const intl = useIntl()
 
     useEffect(() => {
         dispatch(loadBoards())
+        dispatch(fetchMe())
     }, [])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
@@ -41,7 +51,12 @@ const RHSChannelBoards = () => {
             dispatch(updateBoards(boards))
         }
         const onChangeMemberHandler = (_: WSClient, members: BoardMember[]): void => {
-            dispatch(updateMembers(members))
+            dispatch(updateMembersEnsuringBoardsAndUsers(members))
+
+            if (me) {
+                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === me.id)
+                dispatch(addMyBoardMemberships(myBoardMemberships))
+            }
         }
 
         wsClient.addOnChange(onChangeBoardHandler, 'board')
@@ -51,7 +66,7 @@ const RHSChannelBoards = () => {
             wsClient.removeOnChange(onChangeBoardHandler, 'board')
             wsClient.removeOnChange(onChangeMemberHandler, 'boardMembers')
         }
-    }, [])
+    }, [me])
 
     if (!boards) {
         return null
