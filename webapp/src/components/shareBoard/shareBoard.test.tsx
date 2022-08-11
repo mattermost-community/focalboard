@@ -224,6 +224,8 @@ describe('src/components/shareBoard/shareBoard', () => {
         })
 
         expect(container).toMatchSnapshot()
+        const shareButton = screen.getByRole('button', {name: 'Share'})
+        expect(shareButton).toBeDefined()
         const closeButton = screen.getByRole('button', {name: 'Close dialog'})
         expect(closeButton).toBeDefined()
     })
@@ -630,4 +632,92 @@ describe('src/components/shareBoard/shareBoard', () => {
         const closeButton = screen.getByRole('button', {name: 'Close dialog'})
         expect(closeButton).toBeDefined()
     })
+
+    test('should match snapshot, with template', async () => {
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+
+        board.isTemplate = true
+        const myStore = mockStateStore([thunk], state)
+
+        let container
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={myStore}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={true}
+                        />
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+        const closeButton = screen.getByRole('button', {name: 'Close dialog'})
+        expect(closeButton).toBeDefined()
+    })
+
+    test('return shareBoard template and click Select', async () => {
+        const sharing:ISharing = {
+            id: '',
+            enabled: false,
+            token: '',
+        }
+        mockedOctoClient.getSharing.mockResolvedValue(sharing)
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
+
+        const users:IUser[] = [
+            {id: 'userid1', username: 'username_1'} as IUser,
+            {id: 'userid2', username: 'username_2'} as IUser,
+            {id: 'userid3', username: 'username_3'} as IUser,
+            {id: 'userid4', username: 'username_4'} as IUser,
+        ]
+        const channels:Channel[] = [
+            {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
+            {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
+            {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
+            {id: 'channel4', type: 'O', display_name: 'Channel 4'} as Channel,
+        ]
+
+        mockedOctoClient.searchTeamUsers.mockResolvedValue(users)
+        mockedOctoClient.searchUserChannels.mockResolvedValue(channels)
+
+        board.isTemplate = true
+        const myStore = mockStateStore([thunk], state)
+
+        let container
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={myStore}>
+                        <ShareBoard
+                            onClose={jest.fn()}
+                            enableSharedBoards={false}
+                        />
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+        const selectElement = screen.getByText('Search for people and channels')
+        expect(selectElement).toBeDefined()
+
+        await act(async () => {
+            userEvent.click(selectElement!)
+        })
+
+        expect(mockedOctoClient.searchUserChannels).not.toBeCalled()
+        expect(container).toMatchSnapshot()
+    })
+
 })
