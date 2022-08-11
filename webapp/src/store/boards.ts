@@ -107,7 +107,11 @@ export const updateMembersHandler = (state: BoardsState, action: PayloadAction<B
 
     for (const member of action.payload) {
         if (state.myBoardMemberships[member.boardId] && state.myBoardMemberships[member.boardId].userId === member.userId) {
-            state.myBoardMemberships[member.boardId] = member
+            if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
+                delete state.myBoardMemberships[member.boardId]
+            } else {
+                state.myBoardMemberships[member.boardId] = member
+            }
         }
     }
 }
@@ -136,8 +140,14 @@ const boardsSlice = createSlice({
         },
         updateMembers: updateMembersHandler,
         addMyBoardMemberships: (state, action: PayloadAction<BoardMember[]>) => {
-            action.payload.forEach((boardMember) => state.myBoardMemberships[boardMember.boardId] = boardMember)
-        }
+            action.payload.forEach((member) => {
+                if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
+                    delete state.myBoardMemberships[member.boardId]
+                } else {
+                    state.myBoardMemberships[member.boardId] = member
+                }
+            })
+        },
     },
 
     extraReducers: (builder) => {
