@@ -44,9 +44,12 @@ func legacyBoardFields(prefix string) []string {
 
 	prefixedFields := make([]string, len(fields))
 	for i, field := range fields {
-		if strings.HasPrefix(field, "COALESCE(") {
+		switch {
+		case strings.HasPrefix(field, "COALESCE("):
 			prefixedFields[i] = strings.Replace(field, "COALESCE(", "COALESCE("+prefix, 1)
-		} else {
+		case field == "''":
+			prefixedFields[i] = field
+		default:
 			prefixedFields[i] = prefix + field
 		}
 	}
