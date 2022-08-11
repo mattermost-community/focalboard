@@ -241,7 +241,9 @@ export default class Plugin {
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
-                    browserHistory.push(`/team/${currentTeamID}`)
+                    // Don't re-push the URL if we're already on a URL for the current team
+                    if (!window.location.pathname.startsWith(`${(windowAny.frontendBaseURL || '')}/team/${currentTeamID}`))
+                        browserHistory.push(`/team/${currentTeamID}`)
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
