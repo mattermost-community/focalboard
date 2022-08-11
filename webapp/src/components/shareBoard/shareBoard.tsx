@@ -365,9 +365,11 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                     if (users) {
                                         result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
                                     }
-                                    const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
-                                    if (channels) {
-                                        result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                    if (!board.isTemplate) {
+                                        const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
+                                        if (channels) {
+                                            result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                        }    
                                     }
                                 } else {
                                     const users = await client.searchTeamUsers(inputValue) || []
