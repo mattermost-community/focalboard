@@ -241,6 +241,10 @@ func (s *SQLStore) Migrate() error {
 		return mErr
 	}
 
+	if mErr := s.runDeletedMembershipBoardsMigration(); mErr != nil {
+		return mErr
+	}
+
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
 		return mErr
 	}
