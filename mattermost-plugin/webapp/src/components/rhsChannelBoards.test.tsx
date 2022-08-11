@@ -37,6 +37,11 @@ describe('components/rhsChannelBoards', () => {
             current: team,
             currentId: team.id,
         },
+        users: {
+            me: {
+                id: 'user-id',
+            },
+        },
         language: {
             value: 'en',
         },
