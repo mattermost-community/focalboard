@@ -27,14 +27,26 @@ const SidebarCategoriesTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='SidebarTour.SidebarCategories.Title'
-            defaultMessage='Sidebar Categories'
+            defaultMessage='Sidebar categories'
         />
     )
     const screen = (
-        <FormattedMessage
-            id="SidebarTour.SidebarCategories.Body"
-            defaultMessage='All your boards are now accessible in the new sidebar and organized under categories. No more switching between workspaces to find your boards. One-time custom categories based on your prior workspaces may have automatically been created for you as part of your v7.2 upgrade, but can be removed or edited to your preference.'
-        />
+        <div>
+            <FormattedMessage
+                id="SidebarTour.SidebarCategories.Body"
+                defaultMessage='All your boards are now organized under your new sidebar. No more switching between workspaces. One-time custom categories based on your prior workspaces may have automatically been created for you as part of your v7.2 upgrade. These can be removed or edited to your preference. '
+            />
+            <a
+                href="https://docs.mattermost.com/welcome/whats-new-in-v72.html"
+                target='_blank'
+                rel='noopener noreferrer'
+            >
+                <FormattedMessage
+                    id="SidebarTour.SidebarCategories.Link"
+                    defaultMessage="Learn more"
+                />
+            </a>
+        </div>
     )
 
     const punchout = useMeasurePunchouts(['.SidebarCategory'], [])
