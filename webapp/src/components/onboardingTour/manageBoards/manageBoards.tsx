@@ -18,14 +18,14 @@ const ManageBoardsTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='SidebarTour.ManageBoards.Title'
-            defaultMessage='Manage Boards'
+            defaultMessage='Manage boards'
         />
     )
 
     const screen = (
         <FormattedMessage
-            id='SidebarTour.ManageBoard.title'
-            defaultMessage='Move boards to another category or hide the board from the sidebar'
+            id='SidebarTour.ManageBoards.Body'
+            defaultMessage='Move boards to another category or hide the board from the sidebar.'
         />
     )
 

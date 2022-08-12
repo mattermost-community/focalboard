@@ -20,7 +20,7 @@ const ManageCategoriesTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id="SidebarTour.ManageCategories.Title"
-            defaultMessage='Manage Categories'
+            defaultMessage='Manage categories'
         />
     )
 

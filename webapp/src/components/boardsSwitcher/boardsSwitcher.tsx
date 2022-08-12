@@ -23,6 +23,7 @@ import {Constants} from '../../constants'
 import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
 
 import IconButton from '../../widgets/buttons/iconButton'
+import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
     onBoardTemplateSelectorOpen?: () => void,
@@ -41,17 +42,6 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
     const shouldViewSearchForBoardsTour = noCardOpen &&
                                        onboardingTourCategory === TOUR_SIDEBAR &&
                                        onboardingTourStep === SidebarTourSteps.SEARCH_FOR_BOARDS.toString()
-
-    useEffect(() => {
-        if(shouldViewSearchForBoardsTour) {
-            setShowSwitcher(true)
-        }
-
-        return () => {
-            setShowSwitcher(false)
-        }
-    }, [shouldViewSearchForBoardsTour])
-
 
     // We need this keyboard handling (copied from Mattermost webapp) instead of
     // using react-hotkeys-hook as react-hotkeys-hook is unable to handle keyboard shortcuts that
@@ -101,7 +91,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                     </span>
                 </div>
             </div>
-
+            {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
                 Utils.isFocalboardPlugin() &&
                 <IconButton
@@ -115,7 +105,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
             {
                 showSwitcher &&
-                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)} shouldViewSearchForBoardsTour={shouldViewSearchForBoardsTour}/>
+                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)} />
             }
         </div>
     )
