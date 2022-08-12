@@ -12,7 +12,6 @@ import {Utils} from '../../utils'
 import Search from '../../widgets/icons/search'
 import { Constants } from '../../constants'
 
-import SearchForBoardsTourStep from '../onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
     onClose: () => void
@@ -22,7 +21,6 @@ type Props = {
     initialData?: Array<ReactNode>
     selected: number
     setSelected: (n: number) => void
-    shouldViewSearchForBoardsTour?: boolean
 }
 
 export const EmptySearch = (): JSX.Element => (
@@ -146,7 +144,6 @@ const SearchDialog = (props: Props): JSX.Element => {
                     {!emptyResult && !searchQuery && <EmptySearch/>}
                 </div>
             </div>
-            {props.shouldViewSearchForBoardsTour && <SearchForBoardsTourStep />}
         </Dialog>
     )
 }
