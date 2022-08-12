@@ -900,8 +900,6 @@ github.com/matttproud/golang_protobuf_extensions v1.0.1/go.mod h1:D8He9yQNgCq6Z5
 github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 h1:I0XW9+e1XWDxdcEniV4rQAIOPUGDq67JSCiRCgGCZLI=
 github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369/go.mod h1:BSXmuO+STAnVfrANrmjBb36TMTDstsz7MSK+HVaYKv4=
 github.com/maxbrunsfeld/counterfeiter/v6 v6.2.2/go.mod h1:eD9eIE7cdwcMi9rYluz88Jz2VyhSmden33/aXg4oVIY=
-github.com/mgdelacroix/foundation v0.0.0-20220812095604-a2938fffcee4 h1:FrdBGv4mdaOpmHjs6SrpLU8yMzf7Ix5hwFRpP+ViDZQ=
-github.com/mgdelacroix/foundation v0.0.0-20220812095604-a2938fffcee4/go.mod h1:ZwobEfNHde7sU2pGybCWEnSlQ2r+MGrHGOKLphHZ42g=
 github.com/mgdelacroix/foundation v0.0.0-20220812143423-0bfc18f73538 h1:6mFhRD89wtsxh7g8V6og9DR4y/UGlzzehc1c3O9tbMQ=
 github.com/mgdelacroix/foundation v0.0.0-20220812143423-0bfc18f73538/go.mod h1:ZwobEfNHde7sU2pGybCWEnSlQ2r+MGrHGOKLphHZ42g=
 github.com/microcosm-cc/bluemonday v1.0.1/go.mod h1:hsXNsILzKxV+sX77C5b8FSuKF00vh2OMYv+xgHpAMF4=
