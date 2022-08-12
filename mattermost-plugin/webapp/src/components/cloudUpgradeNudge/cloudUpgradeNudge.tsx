@@ -8,7 +8,7 @@ const PostTypeCloudUpgradeNudge = (props: {post: Post}): JSX.Element => {
     const ctaHandler = (e: React.MouseEvent) => {
         e.preventDefault()
         const windowAny = (window as any)
-        windowAny?.openPricingModal()('boards > click_view_upgrade_options_nudge')
+        windowAny?.openPricingModal()({trackingLocation: 'boards > click_view_upgrade_options_nudge'})
     }
 
     // custom post type doesn't support styling via CSS  stylesheet.
