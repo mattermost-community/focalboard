@@ -258,8 +258,17 @@ const CenterPanel = (props: Props) => {
         }
     }, [selectedCardIds])
 
-    const addCardFromTemplate = useCallback(async (cardTemplateId: string) => {
-        const {activeView, board} = props
+    const addCardFromTemplate = useCallback(async (cardTemplateId: string, groupByOptionId?: string) => {
+        const {activeView, board, groupByProperty} = props
+
+        const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
+        if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
+            if (groupByOptionId) {
+                propertiesThatMeetFilters[groupByProperty.id] = groupByOptionId
+            } else {
+                delete propertiesThatMeetFilters[groupByProperty.id]
+            }
+        }
 
         mutator.performAsUndoGroup(async () => {
             const [, newCardId] = await mutator.duplicateCard(
@@ -268,6 +277,7 @@ const CenterPanel = (props: Props) => {
                 true,
                 intl.formatMessage({id: 'Mutator.new-card-from-template', defaultMessage: 'new card from template'}),
                 false,
+                propertiesThatMeetFilters,
                 async (cardId) => {
                     dispatch(updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, cardId]}}))
                     TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: props.board.id, view: props.activeView.id, card: cardId, cardTemplateId})
@@ -421,6 +431,7 @@ const CenterPanel = (props: Props) => {
                 readonly={props.readonly}
                 onCardClicked={cardClicked}
                 addCard={addCard}
+                addCardFromTemplate={addCardFromTemplate}
                 showCard={showCard}
                 hiddenCardsCount={props.hiddenCardsCount}
                 showHiddenCardCountNotification={hiddenCardCountNotifyHandler}

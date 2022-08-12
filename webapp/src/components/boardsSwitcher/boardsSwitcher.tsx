@@ -6,11 +6,21 @@ import {useIntl} from 'react-intl'
 
 import Search from '../../widgets/icons/search'
 
+import {useAppSelector} from '../../store/hooks'
+
+import {
+    getOnboardingTourCategory,
+    getOnboardingTourStep,
+} from '../../store/users'
+
+import {getCurrentCard} from '../../store/cards'
+
 import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
 import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
+import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
 
 import IconButton from '../../widgets/buttons/iconButton'
 
@@ -22,6 +32,26 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const currentCard = useAppSelector(getCurrentCard)
+    const noCardOpen = !currentCard
+
+
+    const shouldViewSearchForBoardsTour = noCardOpen &&
+                                       onboardingTourCategory === TOUR_SIDEBAR &&
+                                       onboardingTourStep === SidebarTourSteps.SEARCH_FOR_BOARDS.toString()
+
+    useEffect(() => {
+        if(shouldViewSearchForBoardsTour) {
+            setShowSwitcher(true)
+        }
+
+        return () => {
+            setShowSwitcher(false)
+        }
+    }, [shouldViewSearchForBoardsTour])
+
 
     // We need this keyboard handling (copied from Mattermost webapp) instead of
     // using react-hotkeys-hook as react-hotkeys-hook is unable to handle keyboard shortcuts that
@@ -85,7 +115,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
             {
                 showSwitcher &&
-                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)}/>
+                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)} shouldViewSearchForBoardsTour={shouldViewSearchForBoardsTour}/>
             }
         </div>
     )

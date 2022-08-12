@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/go-git/go-git/v5 v5.1.0
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220705131644-b99bd0d04915
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220802151854-f07c31c5d933
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.7.2
 	sigs.k8s.io/yaml v1.2.0
@@ -14,7 +14,7 @@ require (
 	github.com/blang/semver v3.5.1+incompatible // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/dyatlov/go-opengraph v0.0.0-20210112100619-dae8665a5b09 // indirect
+	github.com/dyatlov/go-opengraph/opengraph v0.0.0-20220524092352-606d7b1e5f8a // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/francoispqt/gojay v1.2.13 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect

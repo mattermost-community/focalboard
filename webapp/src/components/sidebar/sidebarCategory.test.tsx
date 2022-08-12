@@ -48,6 +48,7 @@ describe('components/sidebarCategory', () => {
         users: {
             me: {
                 id: 'user_id_1',
+                props: {}
             },
         },
         boards: {
@@ -55,6 +56,12 @@ describe('components/sidebarCategory', () => {
             boards: {
                 [board.id]: board,
             },
+        },
+        cards: {
+            cards: {
+                card_id_1: {title: 'Card'},
+            },
+            current: 'card_id_1',
         },
         views: {
             current: view.id,
@@ -81,6 +88,7 @@ describe('components/sidebarCategory', () => {
                         categoryBoards={categoryBoards1}
                         boards={boards}
                         allCategories={allCategoryBoards}
+                        index={0}
                     />
                 </Router>
             </ReduxProvider>,
@@ -90,6 +98,57 @@ describe('components/sidebarCategory', () => {
 
         // testing collapsed state of category
         const subItems = container.querySelectorAll('.category')
+        expect(subItems).toBeDefined()
+        userEvent.click(subItems[0] as Element)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('sidebar collapsed without active board', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarCategory
+                        hideSidebar={() => {}}
+                        categoryBoards={categoryBoards1}
+                        boards={boards}
+                        allCategories={allCategoryBoards}
+                        index={0}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+
+        const subItems = container.querySelectorAll('.category-title')
+        expect(subItems).toBeDefined()
+        userEvent.click(subItems[0] as Element)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('sidebar collapsed with active board in it', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarCategory
+                        hideSidebar={() => {}}
+                        activeBoardID={board1.id}
+                        categoryBoards={categoryBoards1}
+                        boards={boards}
+                        allCategories={allCategoryBoards}
+                        index={0}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+
+        const subItems = container.querySelectorAll('.category-title')
         expect(subItems).toBeDefined()
         userEvent.click(subItems[0] as Element)
         expect(container).toMatchSnapshot()

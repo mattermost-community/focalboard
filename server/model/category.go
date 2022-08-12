@@ -1,6 +1,8 @@
 package model
 
 import (
+	"encoding/json"
+	"io"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -36,6 +38,10 @@ type Category struct {
 	// The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
+
+	// Category's state in client side
+	// required: true
+	Collapsed bool `json:"collapsed"`
 }
 
 func (c *Category) Hydrate() {
@@ -76,4 +82,10 @@ func newErrInvalidCategory(msg string) *ErrInvalidCategory {
 
 func (e *ErrInvalidCategory) Error() string {
 	return e.msg
+}
+
+func CategoryFromJSON(data io.Reader) *Category {
+	var category *Category
+	_ = json.NewDecoder(data).Decode(&category)
+	return category
 }

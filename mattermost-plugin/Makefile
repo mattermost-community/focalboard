@@ -61,7 +61,7 @@ apply:
 	./build/bin/manifest apply
 
 setup-go-work: ## Sets up a go.work file
-	cd ..; go run ./mattermost-plugin/build/gowork/main.go
+	cd ..; go run ./build/gowork/main.go
 
 ## Runs eslint and golangci-lint
 .PHONY: check-style

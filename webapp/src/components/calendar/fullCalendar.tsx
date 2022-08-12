@@ -257,7 +257,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 buttonText={buttonText}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
-
                 selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}

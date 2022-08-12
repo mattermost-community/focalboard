@@ -55,7 +55,7 @@ describe('components/boardSelector', () => {
     })
 
     it('renders with no results', async () => {
-        mockedOctoClient.search.mockResolvedValueOnce([])
+        mockedOctoClient.searchLinkableBoards.mockResolvedValueOnce([])
 
         const store = mockStateStore([], state)
         const {container} = render(wrapIntl(
@@ -74,7 +74,7 @@ describe('components/boardSelector', () => {
     })
 
     it('renders with some results', async () => {
-        mockedOctoClient.search.mockResolvedValueOnce([createBoard(), createBoard(), createBoard()])
+        mockedOctoClient.searchLinkableBoards.mockResolvedValueOnce([createBoard(), createBoard(), createBoard()])
 
         const store = mockStateStore([], state)
         const {container} = render(wrapIntl(

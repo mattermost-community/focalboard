@@ -50,6 +50,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		}
 
 		th.Store.EXPECT().PatchUserProps(userID, userPropPatch).Return(nil)
+		th.Store.EXPECT().GetUserCategoryBoards(userID, "0").Return([]model.CategoryBoards{}, nil)
 
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
 		assert.NoError(t, err)
@@ -86,6 +87,7 @@ func TestCreateWelcomeBoard(t *testing.T) {
 		}
 		newType := model.BoardTypePrivate
 		th.Store.EXPECT().PatchBoard("board_id_1", &model.BoardPatch{Type: &newType}, "user_id_1").Return(&privateWelcomeBoard, nil)
+		th.Store.EXPECT().GetUserCategoryBoards(userID, "0")
 
 		boardID, err := th.App.createWelcomeBoard(userID, teamID)
 		assert.Nil(t, err)

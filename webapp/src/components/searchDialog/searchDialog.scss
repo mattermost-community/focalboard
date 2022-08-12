@@ -39,14 +39,14 @@
 
         .head,
         .searchResults {
-            padding: 0 32px 32px;
+            padding: 0 32px 24px;
         }
 
         .searchResults {
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 0;
+            padding: 16px 0 0;
             margin-bottom: 18px;
             border-top: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
 
@@ -55,7 +55,7 @@
                 justify-content: flex-start;
                 align-items: center;
                 display: flex;
-                padding: 0 24px;
+                padding: 0 32px;
                 cursor: pointer;
                 overflow: hidden;
               
@@ -127,7 +127,7 @@
                 position: absolute;
                 left: 13px;
                 font-size: 18px;
-                top: 14px;
+                top: 12px;
                 width: 20px;
                 height: 20px;
                 opacity: 0.48;

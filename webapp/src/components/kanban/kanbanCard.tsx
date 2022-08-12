@@ -116,6 +116,7 @@ const KanbanCard = (props: Props) => {
                                 false,
                                 'duplicate card',
                                 false,
+                                {},
                                 async (newCardId) => {
                                     props.showCard(newCardId)
                                 },

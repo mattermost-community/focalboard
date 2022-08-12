@@ -49,6 +49,7 @@ export const TelemetryActions = {
     LimitCardCTAPerformed: 'limit_CardLimitCTAPerformed',
     LimitCardLimitReached: 'limit_cardLimitReached',
     LimitCardLimitLinkOpen: 'limit_cardLimitLinkOpen',
+    VersionMoreInfo: 'version_more_info',
 }
 
 interface IEventProps {

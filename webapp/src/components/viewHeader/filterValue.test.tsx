@@ -102,4 +102,25 @@ describe('components/viewHeader/filterValue', () => {
         expect(mockedMutator.changeViewFilter).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
     })
+    test('return filterValue and verify that menu is not closed after clicking on the item', () => {
+        filter.values = []
+        activeView.fields.filter.filters = [filter]
+        render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <FilterValue
+                        view={activeView}
+                        filter={filter}
+                        template={board.cardProperties[0]}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        const buttonElement = screen.getByRole('button', {name: '(empty)'})
+        userEvent.click(buttonElement)
+
+        const switchStatus = screen.getByRole('button', {name: 'Status'})
+        userEvent.click(switchStatus)
+        expect(switchStatus).toBeInTheDocument()
+    })
 })
