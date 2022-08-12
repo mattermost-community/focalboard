@@ -42,7 +42,11 @@ const TeamPermissionsRow = (): JSX.Element => {
     if (board.type === BoardTypeOpen && board.minimumRole === 'admin') {
         currentRoleName = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
     }else if (board.type === BoardTypeOpen && board.minimumRole === 'editor') {
-        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
+        if (board.isTemplate) {
+            currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
+        } else {
+            currentRoleName = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
+        }
     }else if (board.type === BoardTypeOpen && board.minimumRole === 'commenter') {
         currentRoleName = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
     }else if (board.type === BoardTypeOpen && board.minimumRole === 'viewer') {
@@ -71,12 +75,20 @@ const TeamPermissionsRow = (): JSX.Element => {
                             />
                         </button>
                         <Menu position='left'>
+                            {!board.isTemplate &&
+                                <Menu.Text
+                                    id='Editor'
+                                    check={board.minimumRole === '' || board.minimumRole === 'editor' }
+                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'editor' ? <CheckIcon/> : null}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
+                                    onClick={() => updateBoardType(board, BoardTypeOpen, 'editor')}
+                                />}
                             <Menu.Text
-                                id='Editor'
-                                check={board.minimumRole === '' || board.minimumRole === 'editor' }
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'editor' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen, 'editor')}
+                                id='Viewer'
+                                check={board.minimumRole === 'viewer'}
+                                icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : null}
+                                name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
+                                onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
                             />
                             <Menu.Text
                                 id='None'
