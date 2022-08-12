@@ -65,7 +65,7 @@ func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) 
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) runUniqueIDsMigration() error {
+func (s *SQLStore) RunUniqueIDsMigration() error {
 	setting, err := s.GetSystemSetting(UniqueIDsMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -128,11 +128,11 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 	return nil
 }
 
-// runCategoryUUIDIDMigration takes care of deriving the categories
+// RunCategoryUUIDIDMigration takes care of deriving the categories
 // from the boards and its memberships. The name references UUID
 // because of the preexisting purpose of this migration, and has been
 // preserved for compatibility with already migrated instances.
-func (s *SQLStore) runCategoryUUIDIDMigration() error {
+func (s *SQLStore) RunCategoryUUIDIDMigration() error {
 	setting, err := s.GetSystemSetting(CategoryUUIDIDMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -348,7 +348,7 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 // We no longer support boards existing in DMs and private
 // group messages. This function migrates all boards
 // belonging to a DM to the best possible team.
-func (s *SQLStore) runTeamLessBoardsMigration() error {
+func (s *SQLStore) RunTeamLessBoardsMigration() error {
 	if !s.isPlugin {
 		return nil
 	}
@@ -550,7 +550,7 @@ func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[
 	return userTeams, nil
 }
 
-func (s *SQLStore) runDeletedMembershipBoardsMigration() error {
+func (s *SQLStore) RunDeletedMembershipBoardsMigration() error {
 	if !s.isPlugin {
 		return nil
 	}
