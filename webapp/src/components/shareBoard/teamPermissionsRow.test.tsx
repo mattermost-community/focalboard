@@ -73,7 +73,7 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
     })
 
     test('should match snapshot', async () => {
-        let container
+        let container: Element | undefined
         mockedUtils.isFocalboardPlugin.mockReturnValue(false)
         const store = mockStateStore([thunk], state)
         await act(async () => {
@@ -95,7 +95,7 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
     })
 
     test('should match snapshot in plugin mode', async () => {
-        let container
+        let container: Element | undefined
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const store = mockStateStore([thunk], state)
         await act(async () => {
@@ -117,7 +117,7 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
     })
 
     test('should match snapshot in template', async () => {
-        let container
+        let container: Element | undefined
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const testState = {
             ...state,
