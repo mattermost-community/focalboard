@@ -85,6 +85,28 @@ function CenterContent(props: Props) {
         }
     }, [cardLimitTimestamp, match.params.boardId, templates])
 
+    const templateSelector = (
+        <BoardTemplateSelector
+            title={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-title'
+                    defaultMessage='Create a board'
+                />
+            }
+            description={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-description'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
+                />
+            }
+            channelId={match.params.channelId}
+        />
+    )
+
+    if (match.params.channelId) {
+        return templateSelector
+    }
+
     if (board && !isBoardHidden() && activeView) {
         let property = groupByProperty
         if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
@@ -117,23 +139,7 @@ function CenterContent(props: Props) {
         return null
     }
 
-    return (
-        <BoardTemplateSelector
-            title={
-                <FormattedMessage
-                    id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a board'
-                />
-            }
-            description={
-                <FormattedMessage
-                    id='BoardTemplateSelector.plugin.no-content-description'
-                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
-                />
-            }
-            channelId={match.params.channelId}
-        />
-    )
+    return templateSelector
 }
 
 const Workspace = (props: Props) => {
