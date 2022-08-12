@@ -119,7 +119,7 @@ const CardLimitNotification = (props: Props) => {
     }, [me?.id])
 
     const onClick = useCallback(() => {
-        (window as any).openPricingModal()()
+        (window as any).openPricingModal()('boards > card_limit_notification_upgrade_to_a_paid_plan_click')
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.LimitCardLimitLinkOpen, {})
     }, [])
 
