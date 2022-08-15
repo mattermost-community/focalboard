@@ -18,9 +18,7 @@ exports[`components/sidebarBoardItem renders default icon if no custom icon set 
     >
       board title
     </div>
-    <div
-      class=""
-    >
+    <div>
       <div
         aria-label="menuwrapper"
         class="MenuWrapper x"
@@ -85,9 +83,7 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
     >
       board title
     </div>
-    <div
-      class=""
-    >
+    <div>
       <div
         aria-label="menuwrapper"
         class="MenuWrapper x"
