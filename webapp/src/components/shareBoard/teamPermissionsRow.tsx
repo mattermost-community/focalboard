@@ -91,13 +91,15 @@ const TeamPermissionsRow = (): JSX.Element => {
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
                                     onClick={() => updateBoardType(board, BoardTypeOpen, 'commenter')}
                                 />}
-                            <Menu.Text
-                                id='Viewer'
-                                check={board.minimumRole === 'viewer'}
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
-                            />
+                            {board.isTemplate &&
+                                <Menu.Text
+                                    id='Viewer'
+                                    check={board.minimumRole === 'viewer'}
+                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : null}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
+                                    onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
+                                />
+                            }
                             <Menu.Text
                                 id='None'
                                 check={true}
