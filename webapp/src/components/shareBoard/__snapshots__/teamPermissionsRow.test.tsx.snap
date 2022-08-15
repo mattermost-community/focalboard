@@ -62,29 +62,7 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                   />
                 </div>
               </div>
-              <div>
-                <div
-                  aria-label="Viewer"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex"
-                  >
-                    <div
-                      class="noicon"
-                    />
-                  </div>
-                  <div
-                    class="menu-name"
-                  >
-                    Viewer
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
+              <div />
               <div>
                 <div
                   aria-label="None"
@@ -216,29 +194,7 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                   />
                 </div>
               </div>
-              <div>
-                <div
-                  aria-label="Viewer"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex"
-                  >
-                    <div
-                      class="noicon"
-                    />
-                  </div>
-                  <div
-                    class="menu-name"
-                  >
-                    Viewer
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
+              <div />
               <div>
                 <div
                   aria-label="None"
