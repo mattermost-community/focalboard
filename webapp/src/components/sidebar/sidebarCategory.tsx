@@ -90,23 +90,11 @@ const SidebarCategory = (props: Props) => {
                                             onboardingTourCategory === TOUR_SIDEBAR &&
                                             onboardingTourStep === SidebarTourSteps.MANAGE_CATEGORIES.toString()
 
-    const shouldViewManageBoardsTour = props.boards.length !== 0 &&
-                                       noCardOpen &&
-                                       onboardingTourCategory === TOUR_SIDEBAR &&
-                                       onboardingTourStep === SidebarTourSteps.MANAGE_BOARDS.toString()
-
     useEffect(() => {
         if(shouldViewManageCatergoriesTour && props.index === 0) {
             setCategoryMenuOpen(true)
         }
     }, [shouldViewManageCatergoriesTour])
-
-
-    useEffect(() => {
-        if(shouldViewManageBoardsTour && props.index === 0) {
-            setCategoryMenuOpen(false)
-        }
-    }, [shouldViewManageBoardsTour])
 
     const showBoard = useCallback((boardId) => {
         Utils.showBoard(boardId, match, history)
@@ -299,7 +287,7 @@ const SidebarCategory = (props: Props) => {
                     />
                 )
             })}
-            {!collapsed && props.boards.map((board: Board, index) => {
+            {!collapsed && props.boards.map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
                 }
@@ -313,7 +301,6 @@ const SidebarCategory = (props: Props) => {
                         showBoard={showBoard}
                         showView={showView}
                         onDeleteRequest={setDeleteBoard}
-                        shouldViewManageBoardsTour={index === 0 ? shouldViewManageBoardsTour : undefined}
                     />
                 )
             })}
