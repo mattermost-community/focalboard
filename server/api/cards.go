@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
+
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -31,7 +32,12 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	//   required: true
 	//   schema:
 	//     "$ref": "#/definitions/Card"
-	// security:
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk data inserting)
+	//   required: false
+	//   type: bool
+	//  security:
 	// - BearerAuth: []
 	// responses:
 	//   '200':
@@ -45,6 +51,9 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	boardID := mux.Vars(r)["boardID"]
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -73,7 +82,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 
 	// create card
-	card, err := a.app.CreateCard(newCard, userID)
+	card, err := a.app.CreateCard(newCard, boardID, userID, disableNotify)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

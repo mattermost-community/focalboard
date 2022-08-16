@@ -35,9 +35,9 @@ type Card struct {
 	// required: false
 	IsTemplate bool `json:"isTemplate"`
 
-	// A map of property ids to property option ids
+	// A map of property ids to property values (option ids, strings, array of option ids)
 	// required: false
-	Properties map[string]string `json:"properties"`
+	Properties map[string]any `json:"properties"`
 
 	// The creation time in milliseconds since the current epoch
 	// required: false
@@ -69,7 +69,7 @@ type CardPatch struct {
 
 	// A map of property ids to property option ids to be updated
 	// required: false
-	UpdatedProperties map[string]string `json:"updatedProperties"`
+	UpdatedProperties map[string]any `json:"updatedProperties"`
 
 	// A an array of property ids to delete
 	// required: false
@@ -114,52 +114,21 @@ func (p *CardPatch) Patch(card *Card) *Card {
 	}
 
 	if len(p.UpdatedProperties) != 0 || len(p.DeletedProperties) != 0 {
-		// first we accumulate all properties indexed by id, and maintain their order
-		keyOrder := []string{}
-		cardPropertyMap := map[string]map[string]interface{}{}
-		for _, prop := range card.Properties {
-			id, ok := prop["id"].(string)
-			if !ok {
-				// bad property, skipping
-				continue
-			}
-
-			cardPropertyMap[id] = prop
-			keyOrder = append(keyOrder, id)
+		if card.Properties == nil {
+			card.Properties = make(map[string]any)
 		}
 
 		// if there are properties marked for removal, we delete them
-		for _, propertyID := range p.DeletedCardProperties {
-			delete(cardPropertyMap, propertyID)
+		for _, propID := range p.DeletedProperties {
+			delete(card.Properties, propID)
 		}
 
 		// if there are properties marked for update, we replace the
 		// existing ones or add them
-		for _, newprop := range p.UpdatedCardProperties {
-			id, ok := newprop["id"].(string)
-			if !ok {
-				// bad new property, skipping
-				continue
-			}
-
-			_, exists := cardPropertyMap[id]
-			if !exists {
-				keyOrder = append(keyOrder, id)
-			}
-			cardPropertyMap[id] = newprop
+		for propID, propVal := range p.UpdatedProperties {
+			card.Properties[propID] = propVal
 		}
-
-		// and finally we flatten and save the updated properties
-		newCardProperties := []map[string]interface{}{}
-		for _, key := range keyOrder {
-			p, exists := cardPropertyMap[key]
-			if exists {
-				newCardProperties = append(newCardProperties, p)
-			}
-		}
-
-		board.CardProperties = newCardProperties
 	}
 
-	return board
+	return card
 }
