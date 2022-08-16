@@ -1,4 +1,4 @@
-// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+o1// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
 import React from 'react'
@@ -116,6 +116,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
