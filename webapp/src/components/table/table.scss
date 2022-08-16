@@ -28,7 +28,7 @@
 
             &:first-child {
                 padding-left: 0;
-                border: none;
+                border: 0;
 
                 &:hover {
                     background-color: transparent;
@@ -36,7 +36,7 @@
 
                 &:focus-within {
                     background: transparent;
-                    border: none;
+                    border: 0;
                 }
             }
 
