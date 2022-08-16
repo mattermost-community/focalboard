@@ -25,10 +25,27 @@ const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
-const filter: FilterClause = {
-    propertyId: '1',
+board.cardProperties[1].type = 'checkbox'
+board.cardProperties[2].type = 'text'
+const statusFilter: FilterClause = {
+    propertyId: board.cardProperties[0].id,
     condition: 'includes',
     values: ['Status'],
+}
+const booleanFilter: FilterClause = {
+    propertyId: board.cardProperties[1].id,
+    condition: 'isSet',
+    values: [],
+}
+const textFilter: FilterClause = {
+    propertyId: board.cardProperties[2].id,
+    condition: 'contains',
+    values: [],
+}
+const unknownFilter: FilterClause = {
+    propertyId: 'unknown',
+    condition: 'includes',
+    values: [],
 }
 const state = {
     users: {
@@ -45,7 +62,7 @@ describe('components/viewHeader/filterEntry', () => {
     beforeEach(() => {
         jest.clearAllMocks()
         board.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
-        activeView.fields.filter.filters = [filter]
+        activeView.fields.filter.filters = [statusFilter]
     })
     test('return filterEntry', () => {
         const {container} = render(
@@ -55,7 +72,7 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={statusFilter}
                     />
                 </ReduxProvider>,
             ),
@@ -65,7 +82,8 @@ describe('components/viewHeader/filterEntry', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('return filterEntry and click on status', () => {
+    test('return filterEntry for boolean field', () => {
+        activeView.fields.filter.filters = [booleanFilter]
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>
@@ -73,7 +91,47 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={booleanFilter}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+        const buttonElement = screen.getAllByRole('button', {name: 'menuwrapper'})[1]
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return filterEntry for text field', () => {
+        activeView.fields.filter.filters = [textFilter]
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <FilterEntry
+                        board={board}
+                        view={activeView}
+                        conditionClicked={mockedConditionClicked}
+                        filter={textFilter}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+        const buttonElement = screen.getAllByRole('button', {name: 'menuwrapper'})[1]
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return filterEntry and click on status', () => {
+        activeView.fields.filter.filters = [unknownFilter]
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <FilterEntry
+                        board={board}
+                        view={activeView}
+                        conditionClicked={mockedConditionClicked}
+                        filter={unknownFilter}
                     />
                 </ReduxProvider>,
             ),
@@ -93,7 +151,7 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={statusFilter}
                     />
                 </ReduxProvider>,
             ),
@@ -113,7 +171,7 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={statusFilter}
                     />
                 </ReduxProvider>,
             ),
@@ -133,7 +191,7 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={statusFilter}
                     />
                 </ReduxProvider>,
             ),
@@ -153,7 +211,7 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={statusFilter}
                     />
                 </ReduxProvider>,
             ),
@@ -173,7 +231,7 @@ describe('components/viewHeader/filterEntry', () => {
                         board={board}
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
-                        filter={filter}
+                        filter={statusFilter}
                     />
                 </ReduxProvider>,
             ),

@@ -10,6 +10,7 @@ import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
+import propsRegistry from '../../properties'
 
 import Modal from '../modal'
 
@@ -47,10 +48,10 @@ const FilterComponent = (props: Props): JSX.Element => {
         const filterGroup = createFilterGroup(activeView.fields.filter)
         const filter = createFilterClause()
 
-        // Pick the first select property that isn't already filtered on
+        // Pick the first filterable property that isn't already filtered on
         const selectProperty = board.cardProperties.
             filter((o: IPropertyTemplate) => !filters.find((f) => f.propertyId === o.id)).
-            find((o: IPropertyTemplate) => o.type === 'select' || o.type === 'multiSelect')
+            find((o: IPropertyTemplate) => propsRegistry.get(o.type).canFilter)
         if (selectProperty) {
             filter.propertyId = selectProperty.id
         }

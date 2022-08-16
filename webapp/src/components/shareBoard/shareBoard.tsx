@@ -547,7 +547,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         <Button
                             emphasis='secondary'
                             size='medium'
-                            title='Copy internal link'
+                            title={intl.formatMessage({id: 'ShareBoard.copyLink', defaultMessage: 'Copy link'})}
                             onClick={() => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareLinkInternalCopy, {board: boardId})
                                 Utils.copyTextToClipboard(boardUrl.toString())
