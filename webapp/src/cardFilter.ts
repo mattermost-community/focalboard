@@ -83,41 +83,37 @@ class CardFilter {
             if (filter.values.length === 0) {
                 return true
             }
-            return (value || '').indexOf(filter.values[0]) !== -1
+            return (value as string || '').includes(filter.values[0])
         }
         case 'notContains': {
             if (filter.values.length === 0) {
                 return true
             }
-            return (value || '').indexOf(filter.values[0]) === -1
+            return (value as string || '').includes(filter.values[0])
         }
         case 'startsWith': {
             if (filter.values.length === 0) {
                 return true
             }
-            return (value || '').indexOf(filter.values[0]) === 0
+            return (value as string || '').startsWith(filter.values[0])
         }
         case 'notStartsWith': {
             if (filter.values.length === 0) {
                 return true
             }
-            return (value || '').indexOf(filter.values[0]) !== 0
+            return !(value as string || '').startsWith(filter.values[0])
         }
         case 'endsWith': {
             if (filter.values.length === 0) {
                 return true
             }
-            const reversedValue = (value as string || '').split("").reverse().join("");
-            const reversedFilterValue = filter.values[0].split("").reverse().join("");
-            return reversedValue.indexOf(reversedFilterValue) === 0
+            return (value as string || '').endsWith(filter.values[0])
         }
         case 'notEndsWith': {
             if (filter.values.length === 0) {
                 return true
             }
-            const reversedValue = (value as string || '').split("").reverse().join("");
-            const reversedFilterValue = filter.values[0].split("").reverse().join("");
-            return reversedValue.indexOf(reversedFilterValue) !== 0
+            return !(value as string || '').endsWith(filter.values[0])
         }
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
