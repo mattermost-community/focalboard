@@ -56,6 +56,7 @@ type Props = {
 }
 
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
+const BOARDS = 'Boards'
 
 const SidebarCategory = (props: Props) => {
     const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
@@ -70,7 +71,7 @@ const SidebarCategory = (props: Props) => {
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const me = useAppSelector<IUser|null>(getMe)
-
+    const [manageBoardsTourFirstBoardID, setManageBoardsTourFirstBoardID] = useState('')
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
     const currentCard = useAppSelector(getCurrentCard)
@@ -107,6 +108,37 @@ const SidebarCategory = (props: Props) => {
             setCategoryMenuOpen(false)
         }
     }, [shouldViewManageBoardsTour])
+
+    // To get the first board from first category
+    useEffect(() => {
+        if(props.index === 0) {
+            if(props.allCategories.length !== 1 && props.categoryBoards.name !== BOARDS) {
+                const arr = [] as string[]
+                for(let i = 0; i < props.boards.length; i++) {
+                    for(let j = 0; j < props.categoryBoards.boardIDs.length; j++) {
+                        if(props.boards[i].id === props.categoryBoards.boardIDs[j]) {
+                            arr.push(props.boards[i].id)
+                        }
+                    }
+                }
+                setManageBoardsTourFirstBoardID(arr[0])
+            } else if(props.allCategories.length === 1 && props.categoryBoards.name === BOARDS) {
+                const arr = [] as string[]
+                for(let i = 0; i < props.boards.length; i++) {
+                    for(let j = 0; j < props.categoryBoards.boardIDs.length; j++) {
+                        if(props.boards[i].id === props.categoryBoards.boardIDs[j]) {
+                            arr.push(props.boards[i].id)
+                        }
+                    }
+                }
+                setManageBoardsTourFirstBoardID(arr[0])
+            }
+        }
+
+        return () => {
+            setManageBoardsTourFirstBoardID('')
+        }
+    }, [props.categoryBoards, props.boards])
 
     const showBoard = useCallback((boardId) => {
         Utils.showBoard(boardId, match, history)
@@ -276,12 +308,12 @@ const SidebarCategory = (props: Props) => {
                 </div>
             </div>
             {!collapsed && visibleBlocks.length === 0 &&
-                <div className='octo-sidebar-item subitem no-views'>
-                    <FormattedMessage
-                        id='Sidebar.no-boards-in-category'
-                        defaultMessage='No boards inside'
-                    />
-                </div>}
+             <div className='octo-sidebar-item subitem no-views'>
+                 <FormattedMessage
+                     id='Sidebar.no-boards-in-category'
+                     defaultMessage='No boards inside'
+                 />
+             </div>}
             {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
@@ -299,9 +331,24 @@ const SidebarCategory = (props: Props) => {
                     />
                 )
             })}
-            {!collapsed && props.boards.map((board: Board, index) => {
+            {!collapsed && props.boards.map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
+                }
+                if(manageBoardsTourFirstBoardID === board.id) {
+                    return (
+                        <SidebarBoardItem
+                            key={board.id}
+                            board={board}
+                            categoryBoards={props.categoryBoards}
+                            allCategories={props.allCategories}
+                            isActive={board.id === props.activeBoardID}
+                            showBoard={showBoard}
+                            showView={showView}
+                            onDeleteRequest={setDeleteBoard}
+                            shouldViewManageBoardsTour={shouldViewManageBoardsTour}
+                        />
+                    )
                 }
                 return (
                     <SidebarBoardItem
@@ -313,7 +360,6 @@ const SidebarCategory = (props: Props) => {
                         showBoard={showBoard}
                         showView={showView}
                         onDeleteRequest={setDeleteBoard}
-                        shouldViewManageBoardsTour={index === 0 ? shouldViewManageBoardsTour : undefined}
                     />
                 )
             })}
@@ -379,11 +425,11 @@ const SidebarCategory = (props: Props) => {
             }
 
             { deleteBoard &&
-                <DeleteBoardDialog
-                    boardTitle={deleteBoard.title}
-                    onClose={() => setDeleteBoard(null)}
-                    onDelete={onDeleteBoard}
-                />
+              <DeleteBoardDialog
+                  boardTitle={deleteBoard.title}
+                  onClose={() => setDeleteBoard(null)}
+                  onDelete={onDeleteBoard}
+              />
             }
 
             {
