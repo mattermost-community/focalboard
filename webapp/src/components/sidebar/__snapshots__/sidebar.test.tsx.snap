@@ -441,7 +441,9 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
           >
             board title
           </div>
-          <div>
+          <div
+            class=""
+          >
             <div
               aria-label="menuwrapper"
               class="MenuWrapper x"
@@ -748,7 +750,9 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
           >
             board title
           </div>
-          <div>
+          <div
+            class=""
+          >
             <div
               aria-label="menuwrapper"
               class="MenuWrapper x"

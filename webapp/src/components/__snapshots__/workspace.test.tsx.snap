@@ -161,7 +161,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             >
               board title
             </div>
-            <div>
+            <div
+              class=""
+            >
               <div
                 aria-label="menuwrapper"
                 class="MenuWrapper x"
@@ -1396,7 +1398,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
             >
               board title
             </div>
-            <div>
+            <div
+              class=""
+            >
               <div
                 aria-label="menuwrapper"
                 class="MenuWrapper x"
