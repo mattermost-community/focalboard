@@ -206,6 +206,36 @@ func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	return model.TeamFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) GetTeamBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
+	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v", timeRange, page, perPage)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var boardInsightsList *model.BoardInsightsList
+	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
+		return nil, BuildErrorResponse(r, jsonErr)
+	}
+	return boardInsightsList, BuildResponse(r)
+}
+
+func (c *Client) GetUserBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
+	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v&team_id=%v", timeRange, page, perPage, teamID)
+	r, err := c.DoAPIGet(c.GetMeRoute()+"/boards/insights"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var boardInsightsList *model.BoardInsightsList
+	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
+		return nil, BuildErrorResponse(r, jsonErr)
+	}
+	return boardInsightsList, BuildResponse(r)
+}
+
 func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
 	if err != nil {
@@ -318,6 +348,38 @@ func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.Board
 	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) CreateCategory(category model.Category) (*model.Category, *Response) {
+	r, err := c.DoAPIPost(c.GetTeamRoute(category.TeamID)+"/categories", toJSON(category))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.CategoryFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return BuildResponse(r)
+}
+
+func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/categories", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var categoryBoards []model.CategoryBoards
+	_ = json.NewDecoder(r.Body).Decode(&categoryBoards)
+	return categoryBoards, BuildResponse(r)
+}
+
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPatch(c.GetBoardsAndBlocksRoute(), toJSON(pbab))
 	if err != nil {
@@ -369,7 +431,7 @@ func (c *Client) GetRegisterRoute() string {
 	return "/register"
 }
 
-func (c *Client) Register(request *api.RegisterRequest) (bool, *Response) {
+func (c *Client) Register(request *model.RegisterRequest) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetRegisterRoute(), toJSON(&request))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
@@ -383,14 +445,14 @@ func (c *Client) GetLoginRoute() string {
 	return "/login"
 }
 
-func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response) {
+func (c *Client) Login(request *model.LoginRequest) (*model.LoginResponse, *Response) {
 	r, err := c.DoAPIPost(c.GetLoginRoute(), toJSON(&request))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	data, err := api.LoginResponseFromJSON(r.Body)
+	data, err := model.LoginResponseFromJSON(r.Body)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -450,7 +512,7 @@ func (c *Client) GetUserChangePasswordRoute(id string) string {
 	return fmt.Sprintf("/users/%s/changepassword", id)
 }
 
-func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) (bool, *Response) {
+func (c *Client) UserChangePassword(id string, data *model.ChangePasswordRequest) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetUserChangePasswordRoute(id), toJSON(&data))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)

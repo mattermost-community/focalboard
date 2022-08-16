@@ -25,9 +25,7 @@ const TeamToBoardAndViewRedirect = (): null => {
         let boardID = match.params.boardId
         if (!match.params.boardId) {
             // first preference is for last visited board
-            if (boards[UserSettings.lastBoardId[teamId]]) {
-                boardID = UserSettings.lastBoardId[teamId]
-            }
+            boardID = UserSettings.lastBoardId[teamId]
 
             // if last visited board is unavailable, use the first board in categories list
             if (!boardID && categories.length > 0) {

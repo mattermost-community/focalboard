@@ -37,7 +37,7 @@ const FilterEntry = (props: Props): JSX.Element => {
         propertyType = propsRegistry.get('text')
         propertyName = 'Title'
     }
-    const key = `${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`
+    const key = `${filter.propertyId}-${filter.condition}}`
     return (
         <div
             className='FilterEntry'

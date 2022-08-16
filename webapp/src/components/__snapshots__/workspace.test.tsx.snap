@@ -125,19 +125,26 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="CompassIcon icon-chevron-down ChevronDownIcon"
               />
               Category 1
+              <div
+                class="sidebarCategoriesTour"
+              />
             </div>
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class=""
             >
-              <button
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -154,18 +161,20 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             >
               board title
             </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper x"
-              role="button"
-            >
-              <button
-                type="button"
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper x"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -212,19 +221,26 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="CompassIcon icon-chevron-down ChevronDownIcon"
               />
               Boards
+              <div
+                class="sidebarCategoriesTour"
+              />
             </div>
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class=""
             >
-              <button
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -1344,19 +1360,26 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="CompassIcon icon-chevron-down ChevronDownIcon"
               />
               Category 1
+              <div
+                class="sidebarCategoriesTour"
+              />
             </div>
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class=""
             >
-              <button
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -1373,18 +1396,20 @@ exports[`src/components/workspace should match snapshot 1`] = `
             >
               board title
             </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper x"
-              role="button"
-            >
-              <button
-                type="button"
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper x"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
@@ -1431,19 +1456,26 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="CompassIcon icon-chevron-down ChevronDownIcon"
               />
               Boards
+              <div
+                class="sidebarCategoriesTour"
+              />
             </div>
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class=""
             >
-              <button
-                type="button"
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div

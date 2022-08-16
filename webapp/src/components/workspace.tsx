@@ -22,10 +22,13 @@ import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 import propsRegistry from '../properties'
 
+import {getMe} from "../store/users"
+
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
+
 import './workspace.scss'
 
 type Props = {
@@ -47,6 +50,12 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const me = useAppSelector(getMe)
+
+    const isBoardHidden = () => {
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return hiddenBoardIDs[board.id]
+    }
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
@@ -77,7 +86,29 @@ function CenterContent(props: Props) {
         }
     }, [cardLimitTimestamp, match.params.boardId, templates])
 
-    if (board && activeView) {
+    const templateSelector = (
+        <BoardTemplateSelector
+            title={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-title'
+                    defaultMessage='Create a board'
+                />
+            }
+            description={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-description'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
+                />
+            }
+            channelId={match.params.channelId}
+        />
+    )
+
+    if (match.params.channelId) {
+        return templateSelector
+    }
+
+    if (board && !isBoardHidden() && activeView) {
         let property = groupByProperty
         if ((!property || !propsRegistry.get(property.type).canGroup) && activeView.fields.viewType === 'board') {
             property = board?.cardProperties.find((o) => propsRegistry.get(o.type).canGroup)
@@ -105,27 +136,11 @@ function CenterContent(props: Props) {
         )
     }
 
-    if (board || isLoading) {
+    if ((board && !isBoardHidden()) || isLoading) {
         return null
     }
 
-    return (
-        <BoardTemplateSelector
-            title={
-                <FormattedMessage
-                    id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a board'
-                />
-            }
-            description={
-                <FormattedMessage
-                    id='BoardTemplateSelector.plugin.no-content-description'
-                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
-                />
-            }
-            channelId={match.params.channelId}
-        />
-    )
+    return templateSelector
 }
 
 const Workspace = (props: Props) => {

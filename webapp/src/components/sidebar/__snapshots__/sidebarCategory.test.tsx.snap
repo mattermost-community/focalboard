@@ -16,20 +16,27 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
           class="CompassIcon icon-chevron-down ChevronDownIcon"
         />
         Category 1
+        <div
+          class="sidebarCategoriesTour"
+        />
       </div>
       <div
-        aria-label="menuwrapper"
-        class="MenuWrapper"
-        role="button"
+        class=""
       >
-        <button
-          class="IconButton"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -46,19 +53,21 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
       >
         board title
       </div>
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper x"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper x"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -75,19 +84,21 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
       >
         board title
       </div>
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper x"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper x"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -110,20 +121,27 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
           class="CompassIcon icon-chevron-down ChevronDownIcon"
         />
         Category 1
+        <div
+          class="sidebarCategoriesTour"
+        />
       </div>
       <div
-        aria-label="menuwrapper"
-        class="MenuWrapper"
-        role="button"
+        class=""
       >
-        <button
-          class="IconButton"
-          type="button"
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -140,19 +158,21 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
       >
         board title
       </div>
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper x"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper x"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -169,19 +189,167 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
       >
         board title
       </div>
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper x"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper x"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/sidebarCategory sidebar collapsed with active board in it 1`] = `
+<div>
+  <div
+    class="SidebarCategory"
+  >
+    <div
+      class="octo-sidebar-item category ' collapsed "
+    >
+      <div
+        class="octo-sidebar-title category-title"
+        title="Category 1"
+      >
+        <i
+          class="CompassIcon icon-chevron-right ChevronRightIcon"
+        />
+        Category 1
+        <div
+          class="sidebarCategoriesTour"
+        />
+      </div>
+      <div
+        class=""
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="SidebarBoardItem subitem active"
+    >
+      <div
+        class="octo-sidebar-icon"
+      >
+        i
+      </div>
+      <div
+        class="octo-sidebar-title"
+        title="board title"
+      >
+        board title
+      </div>
+      <div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper x"
+          role="button"
+        >
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="SidebarBoardItem sidebar-view-item active"
+    >
+      <svg
+        class="BoardIcon Icon"
+        fill="currentColor"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g
+          opacity="0.8"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+            fill="currentColor"
+            fill-rule="evenodd"
           />
-        </button>
+        </g>
+      </svg>
+      <div
+        class="octo-sidebar-title"
+        title="view title"
+      >
+        view title
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/sidebarCategory sidebar collapsed without active board 1`] = `
+<div>
+  <div
+    class="SidebarCategory"
+  >
+    <div
+      class="octo-sidebar-item category ' collapsed "
+    >
+      <div
+        class="octo-sidebar-title category-title"
+        title="Category 1"
+      >
+        <i
+          class="CompassIcon icon-chevron-right ChevronRightIcon"
+        />
+        Category 1
+        <div
+          class="sidebarCategoriesTour"
+        />
+      </div>
+      <div
+        class=""
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
   </div>

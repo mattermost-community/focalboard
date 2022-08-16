@@ -73,7 +73,7 @@ const FilterComponent = (props: Props): JSX.Element => {
             >
                 {filters.map((filter) => (
                     <FilterEntry
-                        key={`${filter.propertyId}-${filter.condition}-${filter.values.join(',')}`}
+                        key={`${filter.propertyId}-${filter.condition}`}
                         board={board}
                         view={activeView}
                         conditionClicked={conditionClicked}

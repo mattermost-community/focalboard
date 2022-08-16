@@ -12,6 +12,7 @@ import {Utils} from '../../utils'
 import Search from '../../widgets/icons/search'
 import { Constants } from '../../constants'
 
+
 type Props = {
     onClose: () => void
     title: string
