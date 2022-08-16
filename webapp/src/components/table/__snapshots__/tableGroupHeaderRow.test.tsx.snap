@@ -251,18 +251,12 @@ exports[`should match snapshot, hide group 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton"
+        class="IconButton octo-table-cell__expand "
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down undefined"
+        />
       </button>
       <span
         class="Label propColorBrown "
