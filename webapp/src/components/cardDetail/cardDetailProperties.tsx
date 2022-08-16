@@ -3,14 +3,14 @@
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
+import PropertyMenu, {PropertyTypes} from '../../widgets/propertyMenu'
 
 import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
@@ -21,6 +21,8 @@ import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import propRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
 type Props = {
     board: Board
@@ -49,7 +51,7 @@ const CardDetailProperties = (props: Props) => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
     function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate:IPropertyTemplate) {
-        const oldType = propertyTemplate.type
+        const oldType = propRegistry.get(propertyTemplate.type)
 
         // do nothing if no change
         if (oldType === newType && propertyTemplate.name === newName) {
@@ -60,7 +62,7 @@ const CardDetailProperties = (props: Props) => {
 
         // if only the name has changed, set the property without warning
         if (affectsNumOfCards === '0' || oldType === newType) {
-            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
             return
         }
 
@@ -85,7 +87,7 @@ const CardDetailProperties = (props: Props) => {
             onConfirm: async () => {
                 setShowConfirmationDialog(false)
                 try {
-                    await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+                    await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
                 } catch (err:any) {
                     Utils.logError(`Error Changing Property And Name:${propertyTemplate.name}: ${err?.toString()}`)
                 }
@@ -141,7 +143,7 @@ const CardDetailProperties = (props: Props) => {
                                 <PropertyMenu
                                     propertyId={propertyTemplate.id}
                                     propertyName={propertyTemplate.name}
-                                    propertyType={propertyTemplate.type}
+                                    propertyType={propRegistry.get(propertyTemplate.type)}
                                     onTypeAndNameChanged={(newType: PropertyType, newName: string) => onPropertyChangeSetAndOpenConfirmationDialog(newType, newName, propertyTemplate)}
                                     onDelete={() => onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate)}
                                 />
@@ -179,8 +181,8 @@ const CardDetailProperties = (props: Props) => {
                                 onTypeSelected={async (type) => {
                                     const template: IPropertyTemplate = {
                                         id: Utils.createGuid(IDType.BlockID),
-                                        name: typeDisplayName(intl, type),
-                                        type,
+                                        name: type.displayName(intl),
+                                        type: type.type,
                                         options: [],
                                     }
                                     const templateId = await mutator.insertPropertyTemplate(board, activeView, -1, template)

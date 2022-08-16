@@ -21,14 +21,21 @@ import FilterComponenet from './filterComponent'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
-const filter: FilterClause = {
-    propertyId: '1',
-    condition: 'includes',
-    values: ['Status'],
-}
 
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
+
+const filter: FilterClause = {
+    propertyId: board.cardProperties[0].id,
+    condition: 'includes',
+    values: ['Status'],
+}
+const unknownFilter: FilterClause = {
+    propertyId: 'unknown',
+    condition: 'includes',
+    values: [],
+}
+
 const state = {
     users: {
         me: {
@@ -81,6 +88,7 @@ describe('components/viewHeader/filterComponent', () => {
     })
 
     test('return filterComponent and filter by status', () => {
+        activeView.fields.filter.filters = [unknownFilter]
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>

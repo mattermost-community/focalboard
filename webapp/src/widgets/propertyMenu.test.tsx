@@ -6,6 +6,7 @@ import {fireEvent, render} from '@testing-library/react'
 import '@testing-library/jest-dom'
 
 import {wrapIntl} from '../testUtils'
+import propsRegistry from '../properties'
 
 import PropertyMenu from './propertyMenu'
 
@@ -22,7 +23,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'email of a person'}
-                propertyType={'email'}
+                propertyType={propsRegistry.get('email')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -37,7 +38,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'email of a person'}
-                propertyType={'email'}
+                propertyType={propsRegistry.get('email')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -53,7 +54,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -62,7 +63,7 @@ describe('widgets/PropertyMenu', () => {
         const input = getByDisplayValue(/test-property/i)
         fireEvent.change(input, {target: {value: 'changed name'}})
         fireEvent.blur(input)
-        expect(callback).toHaveBeenCalledWith('text', 'changed name')
+        expect(callback).toHaveBeenCalledWith(propsRegistry.get('text'), 'changed name')
     })
 
     test('handles type change event', async () => {
@@ -71,7 +72,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -89,7 +90,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,
@@ -110,7 +111,7 @@ describe('widgets/PropertyMenu', () => {
             <PropertyMenu
                 propertyId={'id'}
                 propertyName={'test-property'}
-                propertyType={'text'}
+                propertyType={propsRegistry.get('text')}
                 onTypeAndNameChanged={callback}
                 onDelete={callback}
             />,

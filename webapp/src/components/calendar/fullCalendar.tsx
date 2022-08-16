@@ -14,7 +14,8 @@ import mutator from '../../mutator'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
-import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
+import {DateProperty} from '../../properties/date/date'
+import propsRegistry from '../../properties'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
 import {Constants, Permission} from '../../constants'
@@ -84,7 +85,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }
 
     const isEditable = useCallback(() : boolean => {
-        if (readonly || !dateDisplayProperty || (dateDisplayProperty.type === 'createdTime' || dateDisplayProperty.type === 'updatedTime')) {
+        if (readonly || !dateDisplayProperty || propsRegistry.get(dateDisplayProperty.type).isReadOnly) {
             return false
         }
         return true
@@ -92,23 +93,12 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const myEventsList = useMemo(() => (
         cards.flatMap((card): EventInput[] => {
+            const property = propsRegistry.get(dateDisplayProperty?.type || 'unknown')
             let dateFrom = new Date(card.createAt || 0)
             let dateTo = new Date(card.createAt || 0)
-            if (dateDisplayProperty && dateDisplayProperty?.type === 'updatedTime') {
-                dateFrom = new Date(card.updateAt || 0)
-                dateTo = new Date(card.updateAt || 0)
-            } else if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
-                const dateProperty = createDatePropertyFromString(card.fields.properties[dateDisplayProperty.id || ''] as string)
-                if (!dateProperty.from) {
-                    return []
-                }
-
-                // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
-                dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
-                dateFrom.setHours(0, 0, 0, 0)
-                const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
-                dateTo = new Date(dateToNumber + oneDay) // Add one day.
-                dateTo.setHours(0, 0, 0, 0)
+            if (property.isDate && property.getDateFrom && property.getDateTo) {
+                dateFrom = property.getDateFrom(card.fields.properties[dateDisplayProperty?.id || ''], card)
+                dateTo = property.getDateTo(card.fields.properties[dateDisplayProperty?.id || ''], card)
             }
             return [{
                 id: card.id,
