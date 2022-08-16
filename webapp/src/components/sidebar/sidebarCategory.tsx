@@ -91,17 +91,11 @@ const SidebarCategory = (props: Props) => {
                                             onboardingTourCategory === TOUR_SIDEBAR &&
                                             onboardingTourStep === SidebarTourSteps.MANAGE_CATEGORIES.toString()
 
-    const shouldViewManageBoardsTour = props.boards.length !== 0 &&
-                                       noCardOpen &&
-                                       onboardingTourCategory === TOUR_SIDEBAR &&
-                                       onboardingTourStep === SidebarTourSteps.MANAGE_BOARDS.toString()
-
     useEffect(() => {
         if(shouldViewManageCatergoriesTour && props.index === 0) {
             setCategoryMenuOpen(true)
         }
     }, [shouldViewManageCatergoriesTour])
-
 
     useEffect(() => {
         if(shouldViewManageBoardsTour && props.index === 0) {

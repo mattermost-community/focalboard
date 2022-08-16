@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, { useCallback, useEffect, useRef, useState} from 'react'
+import React, { useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from "react-router-dom"
 
@@ -26,8 +26,6 @@ import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
 import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
-
-import ManageBoardsTourStep from '../../components/onboardingTour/manageBoards/manageBoards'
 
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
@@ -60,10 +58,7 @@ type Props = {
     onDeleteRequest: (board: Board) => void
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
-    shouldViewManageBoardsTour?: boolean
 }
-
-export const ClassForManageBoardsTourStep = 'manageBoardsTourStep'
 
 const SidebarBoardItem = (props: Props) => {
     const intl = useIntl()
@@ -81,24 +76,6 @@ const SidebarBoardItem = (props: Props) => {
     const dispatch = useAppDispatch()
     const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
-
-    useEffect(() => {
-        if(props.shouldViewManageBoardsTour) {
-            setBoardsMenuOpen((menuState) => {
-                const newState = {...menuState}
-                newState[board.id] = true
-                return newState
-            })
-        }
-
-        return () => {
-            setBoardsMenuOpen((menuState) => {
-                const newState = {...menuState}
-                newState[board.id] = false
-                return newState
-            })
-        }
-    }, [props.shouldViewManageBoardsTour])
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -240,8 +217,7 @@ const SidebarBoardItem = (props: Props) => {
                 >
                     {title}
                 </div>
-                <div className={props.shouldViewManageBoardsTour ? `${ClassForManageBoardsTourStep}` : ''}>
-                    {props.shouldViewManageBoardsTour && <ManageBoardsTourStep/>}
+                <div>
                     <MenuWrapper
                         className={boardsMenuOpen[board.id] ? 'menuOpen' : 'x'}
                         stopPropagationOnToggle={true}

@@ -61,7 +61,6 @@ const Sidebar = (props: Props) => {
     const sidebarCategories = addMissingItems(partialCategories, boards)
     const me = useAppSelector(getMe)
 
-
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
             dispatch(updateCategories(categories))
