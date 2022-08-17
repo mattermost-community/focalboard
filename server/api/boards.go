@@ -249,20 +249,23 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		} else {
+			var isGuest bool
+			isGuest, err = a.userIsGuest(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				return
+			}
+			if isGuest {
+				if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+					a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+					return
+				}
+			}
+
 			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 				return
 			}
-		}
-		var isGuest bool
-		isGuest, err = a.userIsGuest(userID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-		if isGuest {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get public board information"})
-			return
 		}
 	}
 

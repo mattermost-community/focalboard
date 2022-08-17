@@ -100,7 +100,7 @@ server-linux-package-docker:
 	rm -rf package
 
 generate: ## Install and run code generators.
-	cd server; go get -modfile=go.tools.mod github.com/golang/mock/mockgen
+	cd server; go get github.com/golang/mock/mockgen
 	cd server; go generate ./...
 
 server-lint: templates-archive ## Run linters on server code.

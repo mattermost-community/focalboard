@@ -98,21 +98,25 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
 				return
 			}
+		} else {
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				return
+			}
 		}
-		var isGuest bool
-		isGuest, err := a.userIsGuest(userID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
+		if board.IsTemplate {
+			var isGuest bool
+			isGuest, err := a.userIsGuest(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				return
+			}
 
-		if isGuest {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get board templates"})
-			return
+			if isGuest {
+				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get board templates"})
+				return
+			}
 		}
-	} else if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
-		return
 	}
 
 	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)

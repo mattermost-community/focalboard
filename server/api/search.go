@@ -305,8 +305,14 @@ func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "searchAllBoards", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, userID)
+	boards, err := a.app.SearchBoardsForUser(term, userID, !isGuest)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

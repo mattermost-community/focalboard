@@ -530,7 +530,7 @@ func TestSearchBoards(t *testing.T) {
 			Type:   model.BoardTypePrivate,
 			TeamID: "other-team-id",
 		}
-		_, err = th.Server.App().CreateBoard(board5, user1.ID, true)
+		rBoard5, err := th.Server.App().CreateBoard(board5, user1.ID, true)
 		require.NoError(t, err)
 
 		testCases := []struct {
@@ -543,13 +543,13 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "should return all boards where user1 is member or that are public",
 				Client:      th.Client,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID, rBoard5.ID},
 			},
 			{
 				Name:        "matching a full word",
 				Client:      th.Client,
 				Term:        "admin",
-				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID, rBoard5.ID},
 			},
 			{
 				Name:        "matching part of the word",
