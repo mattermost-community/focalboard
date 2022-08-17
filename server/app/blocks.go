@@ -65,10 +65,6 @@ func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTe
 	return blocks, err
 }
 
-func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
-	return a.store.GetBlocksWithBoardID(boardID)
-}
-
 func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
 	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {

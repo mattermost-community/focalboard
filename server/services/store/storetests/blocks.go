@@ -753,14 +753,14 @@ func testGetBlocks(t *testing.T, store store.Store) {
 
 	t.Run("not existing board", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithBoardID("not-exists")
+		blocks, err = store.GetBlocksForBoard("not-exists")
 		require.NoError(t, err)
 		require.Len(t, blocks, 0)
 	})
 
 	t.Run("all blocks of the a board", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
-		blocks, err = store.GetBlocksWithBoardID(boardID)
+		blocks, err = store.GetBlocksForBoard(boardID)
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
 	})
