@@ -96,14 +96,15 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
-        const board  = TestBlockFactory.createBoard()
+
+        const board = TestBlockFactory.createBoard()
         board.id = '2'
         board.title = boardTitle
         board.teamId = 'team-id'
-        board.icon = '🚴🏻‍♂️'
+        board.icon =  '🚴🏻‍♂️'
         board.cardProperties = [groupProperty]
-
         const activeView = TestBlockFactory.createBoardView(board)
+        activeView.fields.defaultTemplateId = 'defaultTemplateId'
 
         const state = {
             searchText: {value: ''},
