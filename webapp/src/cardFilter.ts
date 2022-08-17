@@ -44,7 +44,10 @@ class CardFilter {
     }
 
     static isClauseMet(filter: FilterClause, templates: readonly IPropertyTemplate[], card: Card): boolean {
-        const value = card.fields.properties[filter.propertyId]
+        let value = card.fields.properties[filter.propertyId]
+        if (filter.propertyId === 'title') {
+            value = card.title
+        }
         switch (filter.condition) {
         case 'includes': {
             if (filter.values?.length < 1) {
@@ -63,6 +66,54 @@ class CardFilter {
         }
         case 'isNotEmpty': {
             return (value || '').length > 0
+        }
+        case 'isSet': {
+            return Boolean(value)
+        }
+        case 'isNotSet': {
+            return !value
+        }
+        case 'is': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return filter.values[0] === value
+        }
+        case 'contains': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').includes(filter.values[0])
+        }
+        case 'notContains': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').includes(filter.values[0])
+        }
+        case 'startsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').startsWith(filter.values[0])
+        }
+        case 'notStartsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return !(value as string || '').startsWith(filter.values[0])
+        }
+        case 'endsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').endsWith(filter.values[0])
+        }
+        case 'notEndsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return !(value as string || '').endsWith(filter.values[0])
         }
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)

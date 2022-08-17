@@ -11,7 +11,8 @@ import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import CheckIcon from '../../widgets/icons/check'
-import {typeDisplayName} from '../../widgets/propertyMenu'
+
+import propsRegistry from '../../properties'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -23,10 +24,10 @@ const ViewHeaderDisplayByMenu = (props: Props) => {
     const {properties, activeView, dateDisplayPropertyName} = props
     const intl = useIntl()
 
-    const createdDateName = typeDisplayName(intl, 'createdTime')
+    const createdDateName = propsRegistry.get('createdTime').displayName(intl)
 
     const getDateProperties = () : IPropertyTemplate[] => {
-        return properties?.filter((o: IPropertyTemplate) => o.type === 'date' || o.type === 'createdTime' || o.type === 'updatedTime')
+        return properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).isDate)
     }
 
     return (

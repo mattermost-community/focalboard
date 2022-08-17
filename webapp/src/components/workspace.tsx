@@ -20,6 +20,7 @@ import {getClientConfig, setClientConfig} from '../store/clientConfig'
 import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
+import propsRegistry from '../properties'
 
 import {getMe} from "../store/users"
 
@@ -109,13 +110,13 @@ function CenterContent(props: Props) {
 
     if (board && !isBoardHidden() && activeView) {
         let property = groupByProperty
-        if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
-            property = board?.cardProperties.find((o) => o.type === 'select')
+        if ((!property || !propsRegistry.get(property.type).canGroup) && activeView.fields.viewType === 'board') {
+            property = board?.cardProperties.find((o) => propsRegistry.get(o.type).canGroup)
         }
 
         let displayProperty = dateDisplayProperty
         if (!displayProperty && activeView.fields.viewType === 'calendar') {
-            displayProperty = board.cardProperties.find((o) => o.type === 'date')
+            displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
         }
 
         return (
