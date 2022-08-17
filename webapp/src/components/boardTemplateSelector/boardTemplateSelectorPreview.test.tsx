@@ -96,14 +96,12 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
-        const board = {
-            id: '2',
-            title: boardTitle,
-            teamId: 'team-id',
-            icon: '🚴🏻‍♂️',
-            cardProperties: [groupProperty],
-            dateDisplayPropertyId: 'id-6',
-        }
+        const board  = TestBlockFactory.createBoard()
+        board.id = '2'
+        board.title = boardTitle
+        board.teamId = 'team-id'
+        board.icon = '🚴🏻‍♂️'
+        board.cardProperties = [groupProperty]
 
         const activeView = TestBlockFactory.createBoardView(board)
 
