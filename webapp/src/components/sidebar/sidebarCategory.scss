@@ -1,4 +1,10 @@
 .SidebarCategory {
+    margin-top: 12px;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
     .octo-sidebar-item {
         display: flex;
         flex-direction: row;
