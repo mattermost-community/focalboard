@@ -70,7 +70,6 @@ const Kanban = (props: Props) => {
         }
     }, [currentView])
 
-
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
         return <div/>
