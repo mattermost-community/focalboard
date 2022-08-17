@@ -210,7 +210,7 @@ func (a *pluginAPIAdapter) GetDiagnosticID() string {
 }
 
 //
-// Router service
+// Router service.
 //
 func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 	// NOOP for plugin

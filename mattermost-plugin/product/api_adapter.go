@@ -208,7 +208,7 @@ func (a *serviceAPIAdapter) GetDiagnosticID() string {
 }
 
 //
-// Router service
+// Router service.
 //
 func (a *serviceAPIAdapter) RegisterRouter(sub *mux.Router) {
 	a.api.routerService.RegisterRouter(boardsProductName, sub)
