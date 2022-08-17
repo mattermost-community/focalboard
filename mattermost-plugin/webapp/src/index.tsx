@@ -14,9 +14,8 @@ import {selectTeam} from 'mattermost-redux/actions/teams'
 import {SuiteWindow} from '../../../webapp/src/types/index'
 import {UserSettings} from '../../../webapp/src/userSettings'
 
-
 const windowAny = (window as SuiteWindow)
-windowAny.baseURL = '/plugins/focalboard'
+windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
@@ -334,7 +333,7 @@ export default class Plugin {
                         const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
 
                         return data
-                    } 
+                    }
 
                     const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
 
@@ -408,11 +407,3 @@ export default class Plugin {
         this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
-
-declare global {
-    interface Window {
-        registerPlugin(id: string, plugin: Plugin): void
-    }
-}
-
-window.registerPlugin(manifest.id, new Plugin())
