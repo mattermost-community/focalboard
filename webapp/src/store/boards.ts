@@ -7,15 +7,16 @@ import {default as client} from '../octoClient'
 import {Board, BoardMember} from '../blocks/board'
 import {IUser} from '../user'
 
-import {initialLoad, initialReadOnlyLoad, loadBoardData} from './initialLoad'
+import {initialLoad, initialReadOnlyLoad, loadBoardData, loadBoards} from './initialLoad'
 
-import {addBoardUsers, setBoardUsers} from './users'
+import {addBoardUsers, removeBoardUsersById, setBoardUsers} from './users'
 
 import {RootState} from './index'
 
 type BoardsState = {
     current: string
     loadingBoard: boolean,
+    linkToChannel: string,
     boards: {[key: string]: Board}
     templates: {[key: string]: Board}
     membersInBoards: {[key: string]: {[key: string]: BoardMember}}
@@ -27,16 +28,10 @@ export const fetchBoardMembers = createAsyncThunk(
     async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
         const members = await client.getBoardMembers(teamId, boardId)
         const users = [] as IUser[]
+        const userIDs = members.map((member) => member.userId)
 
-        /* eslint-disable no-await-in-loop */
-        for (const member of members) {
-            // TODO #2968 we should fetch this in bulk
-            const user = await client.getUser(member.userId)
-            if (user) {
-                users.push(user)
-            }
-        }
-        /* eslint-enable no-await-in-loop */
+        const usersData = await client.getUsersList(userIDs)
+        users.push(...usersData)
 
         thunkAPI.dispatch(setBoardUsers(users))
         return members
@@ -81,7 +76,12 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             }
             const user = await client.getUser(m.userId)
             if (user) {
-                thunkAPI.dispatch(addBoardUsers([user]))
+                const deleted = !m.schemeAdmin && !m.schemeEditor && !m.schemeViewer && !m.schemeCommenter
+                if (deleted) {
+                    thunkAPI.dispatch(removeBoardUsersById([user.id]))
+                } else {
+                    thunkAPI.dispatch(addBoardUsers([user]))
+                }
             }
         })
 
@@ -89,7 +89,7 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
     },
 )
 
-export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMember[]>) => {
+export const updateMembersHandler = (state: BoardsState, action: PayloadAction<BoardMember[]>) => {
     if (action.payload.length === 0) {
         return
     }
@@ -107,17 +107,24 @@ export const updateMembers = (state: BoardsState, action: PayloadAction<BoardMem
 
     for (const member of action.payload) {
         if (state.myBoardMemberships[member.boardId] && state.myBoardMemberships[member.boardId].userId === member.userId) {
-            state.myBoardMemberships[member.boardId] = member
+            if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
+                delete state.myBoardMemberships[member.boardId]
+            } else {
+                state.myBoardMemberships[member.boardId] = member
+            }
         }
     }
 }
 
 const boardsSlice = createSlice({
     name: 'boards',
-    initialState: {loadingBoard: false, boards: {}, templates: {}, membersInBoards: {}, myBoardMemberships: {}} as BoardsState,
+    initialState: {loadingBoard: false, linkToChannel: '', boards: {}, templates: {}, membersInBoards: {}, myBoardMemberships: {}} as BoardsState,
     reducers: {
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
+        },
+        setLinkToChannel: (state, action: PayloadAction<string>) => {
+            state.linkToChannel = action.payload
         },
         updateBoards: (state, action: PayloadAction<Board[]>) => {
             for (const board of action.payload) {
@@ -131,7 +138,16 @@ const boardsSlice = createSlice({
                 }
             }
         },
-        updateMembers,
+        updateMembers: updateMembersHandler,
+        addMyBoardMemberships: (state, action: PayloadAction<BoardMember[]>) => {
+            action.payload.forEach((member) => {
+                if (!member.schemeAdmin && !member.schemeEditor && !member.schemeViewer && !member.schemeCommenter) {
+                    delete state.myBoardMemberships[member.boardId]
+                } else {
+                    state.myBoardMemberships[member.boardId] = member
+                }
+            })
+        },
     },
 
     extraReducers: (builder) => {
@@ -169,6 +185,12 @@ const boardsSlice = createSlice({
                 state.myBoardMemberships[boardMember.boardId] = boardMember
             })
         })
+        builder.addCase(loadBoards.fulfilled, (state, action) => {
+            state.boards = {}
+            action.payload.boards.forEach((board) => {
+                state.boards[board.id] = board
+            })
+        })
         builder.addCase(fetchBoardMembers.fulfilled, (state, action) => {
             if (action.payload.length === 0) {
                 return
@@ -183,18 +205,18 @@ const boardsSlice = createSlice({
             }, {})
             state.membersInBoards[boardId] = boardMembersMap
         })
-        builder.addCase(updateMembersEnsuringBoardsAndUsers.fulfilled, updateMembers)
+        builder.addCase(updateMembersEnsuringBoardsAndUsers.fulfilled, updateMembersHandler)
     },
 })
 
-export const {updateBoards, setCurrent} = boardsSlice.actions
+export const {updateBoards, setCurrent, setLinkToChannel, updateMembers, addMyBoardMemberships} = boardsSlice.actions
 export const {reducer} = boardsSlice
 
-export const getBoards = (state: RootState): {[key: string]: Board} => state.boards.boards
+export const getBoards = (state: RootState): {[key: string]: Board} => state.boards?.boards || {}
 
 export const getMySortedBoards = createSelector(
     getBoards,
-    (state: RootState): {[key: string]: BoardMember} => state.boards.myBoardMemberships,
+    (state: RootState): {[key: string]: BoardMember} => state.boards?.myBoardMemberships || {},
     (boards, myBoardMemberships: {[key: string]: BoardMember}) => {
         return Object.values(boards).filter((b) => myBoardMemberships[b.id])
             .sort((a, b) => a.title.localeCompare(b.title))
@@ -242,3 +264,5 @@ export function getMyBoardMembership(boardId: string): (state: RootState) => Boa
         return state.boards.myBoardMemberships[boardId] || null
     }
 }
+
+export const getCurrentLinkToChannel = (state: RootState): string => state.boards.linkToChannel

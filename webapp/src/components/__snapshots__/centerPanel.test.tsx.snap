@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/centerPanel return centerPanel and click on card to show card 1`] = `
+exports[`components/centerPanel Clicking on the Hidden card count should open a dailog 1`] = `
 <div>
   <div
     class="BoardComponent"
@@ -17,7 +17,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -39,6 +39,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -144,6 +145,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -177,6 +179,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -195,6 +198,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -208,6 +212,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -224,6 +229,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -237,6 +243,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -244,13 +251,18 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -260,6 +272,790 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="ButtonWithMenu"
+        >
+          <div
+            class="button-text"
+          >
+            New
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="button-dropdown"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Table"
+    >
+      <div
+        class="octo-table-body"
+      >
+        <div
+          class="octo-table-header TableHeaders"
+          id="mainBoardHeader"
+        >
+          <div
+            class="octo-table-cell header-cell"
+            style="overflow: unset; opacity: 1; width: 100px;"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <span
+                class="Label empty "
+              >
+                Name
+              </span>
+            </div>
+            <div
+              class="octo-spacer"
+            />
+            <div
+              class="HorizontalGrip"
+            />
+          </div>
+        </div>
+        <div
+          class="table-row-container"
+        >
+          <div
+            class="octo-table-group"
+          >
+            <div
+              class="octo-group-header-cell expanded"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="octo-table-cell"
+                style="width: 100px;"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="DisclosureTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="37,35 37,65 63,50"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="Label empty "
+                  title="Items with an empty name property will go here. This column cannot be removed."
+                >
+                  No name
+                </span>
+                
+              </div>
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  0
+                </span>
+              </button>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-group"
+          >
+            <div
+              class="octo-group-header-cell expanded"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="octo-table-cell"
+                style="width: 100px;"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="DisclosureTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="37,35 37,65 63,50"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="Label propColorOrange "
+                >
+                  <input
+                    class="Editable "
+                    placeholder="New Select"
+                    spellcheck="true"
+                    title="Q1"
+                    value="Q1"
+                  />
+                </span>
+              </div>
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  2
+                </span>
+              </button>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </button>
+            </div>
+            <div
+              class="TableRow octo-table-row"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="octo-table-cell title-cell"
+                id="mainBoardHeader"
+                style="width: 100px;"
+              >
+                <div
+                  class="octo-icontitle"
+                >
+                  <div
+                    class="octo-icon"
+                  >
+                    i
+                  </div>
+                  <input
+                    class="Editable "
+                    placeholder="Untitled"
+                    spellcheck="true"
+                    title="card1"
+                    value="card1"
+                  />
+                </div>
+                <div
+                  class="open-button"
+                >
+                  <button
+                    class="Button"
+                    type="button"
+                  >
+                    <span>
+                      Open
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="TableRow octo-table-row"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="octo-table-cell title-cell"
+                id="mainBoardHeader"
+                style="width: 100px;"
+              >
+                <div
+                  class="octo-icontitle"
+                >
+                  <div
+                    class="octo-icon"
+                  >
+                    i
+                  </div>
+                  <input
+                    class="Editable "
+                    placeholder="Untitled"
+                    spellcheck="true"
+                    title="card2"
+                    value="card2"
+                  />
+                </div>
+                <div
+                  class="open-button"
+                >
+                  <button
+                    class="Button"
+                    type="button"
+                  >
+                    <span>
+                      Open
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="octo-table-group"
+          >
+            <div
+              class="octo-group-header-cell expanded"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="octo-table-cell"
+                style="width: 100px;"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="DisclosureTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="37,35 37,65 63,50"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="Label propColorBlue "
+                >
+                  <input
+                    class="Editable "
+                    placeholder="New Select"
+                    spellcheck="true"
+                    title="Q2"
+                    value="Q2"
+                  />
+                </span>
+              </div>
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  0
+                </span>
+              </button>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="octo-table-footer"
+        />
+        <div
+          class="CalculationRow octo-table-row"
+        >
+          <div
+            class="Calculation count octo-table-cell   "
+            style="width: 100px;"
+            tabindex="0"
+          >
+            <span
+              class="calculationLabel"
+            >
+              Count
+            </span>
+            <span
+              class="calculationValue"
+            >
+              2
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="HiddenCardCount"
+      >
+        <div
+          class="hidden-card-title"
+        >
+          Cards hidden
+        </div>
+        <button
+          class="Button"
+          title="hidden-card-count"
+          type="button"
+        >
+          <span>
+            2
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="NotificationBox"
+    >
+      <div
+        class="NotificationBox__icon"
+      >
+        <i
+          class="CompassIcon icon-alert-outline AlertIcon"
+        />
+      </div>
+      <div
+        class="content"
+      >
+        <p
+          class="title"
+        >
+          2 cards hidden from board
+        </p>
+        Card limit reached, to view older cards, 
+        <a>
+          Upgrade to a paid plan
+        </a>
+      </div>
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-close CloseIcon"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/centerPanel return centerPanel and click on card to show card 1`] = `
+<div>
+  <div
+    class="BoardComponent"
+  >
+    <div
+      class="top-head"
+    >
+      <div
+        class="TopBar"
+      >
+        <a
+          class="link"
+          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Give feedback
+        </a>
+        <a
+          href="https://www.focalboard.com/guide/user?utm_source=webapp"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <i
+            class="CompassIcon icon-help-circle-outline HelpIcon"
+          />
+        </a>
+      </div>
+      <div
+        class="mid-head"
+      >
+        <div
+          class="ViewTitle"
+        >
+          <div
+            class="add-buttons add-visible"
+          >
+            <button
+              class="Button emphasis--default size--xsmall"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-eye-off-outline undefined"
+              />
+              <span>
+                hide description
+              </span>
+            </button>
+          </div>
+          <div
+            class="title"
+          >
+            <div
+              class="IconSelector"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <div
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
+                >
+                  <div
+                    class="DraftEditor-editorContainer"
+                  >
+                    <div
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    >
+                      <div
+                        data-contents="true"
+                      >
+                        <div
+                          class=""
+                          data-block="true"
+                          data-editor="123"
+                          data-offset-key="123-0-0"
+                        >
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                            data-offset-key="123-0-0"
+                          >
+                            <span
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              class="Button emphasis--primary size--medium"
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ViewHeader"
+      >
+        <div
+          class="viewSelector"
+        >
+          <input
+            class="Editable "
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div>
+            <div
+              aria-label="View menu"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="Properties menu"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Properties
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Group by: 
+              <span
+                id="groupByLabel"
+              >
+                name
+              </span>
+            </span>
+          </button>
+        </div>
+        <div
+          class="ModalWrapper"
+        >
+          <button
+            class="Button active"
+            type="button"
+          >
+            <span>
+              Filter
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button active"
+            type="button"
+          >
+            <span>
+              Sort
+            </span>
+          </button>
+        </div>
+        <div
+          class="board-search-field"
+        >
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
+        <div
+          class="ModalWrapper"
+        >
+          <div
+            aria-label="View header menu"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -315,6 +1111,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -332,6 +1129,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -340,6 +1138,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -367,6 +1166,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="2"
               type="button"
             >
@@ -384,6 +1184,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -392,6 +1193,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -419,6 +1221,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -436,6 +1239,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -444,6 +1248,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -455,6 +1260,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-header-cell narrow"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -471,6 +1277,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -492,6 +1299,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -525,6 +1333,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -548,6 +1357,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             </div>
           </div>
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -559,12 +1369,746 @@ exports[`components/centerPanel return centerPanel and click on card to show car
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
               + New
             </span>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/centerPanel return centerPanel and click on new card to edit template 1`] = `
+<div>
+  <div
+    class="BoardComponent"
+  >
+    <div
+      class="top-head"
+    >
+      <div
+        class="TopBar"
+      >
+        <a
+          class="link"
+          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          rel="noreferrer"
+          target="_blank"
+        >
+          Give feedback
+        </a>
+        <a
+          href="https://www.focalboard.com/guide/user?utm_source=webapp"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <i
+            class="CompassIcon icon-help-circle-outline HelpIcon"
+          />
+        </a>
+      </div>
+      <div
+        class="mid-head"
+      >
+        <div
+          class="ViewTitle"
+        >
+          <div
+            class="add-buttons add-visible"
+          >
+            <button
+              class="Button emphasis--default size--xsmall"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-eye-off-outline undefined"
+              />
+              <span>
+                hide description
+              </span>
+            </button>
+          </div>
+          <div
+            class="title"
+          >
+            <div
+              class="IconSelector"
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <div
+                  class="octo-icon size-m"
+                >
+                  <span>
+                    i
+                  </span>
+                </div>
+              </div>
+            </div>
+            <input
+              class="Editable title"
+              placeholder="Untitled board"
+              spellcheck="true"
+              title="board title"
+              value="board title"
+            />
+          </div>
+          <div
+            class="description"
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview"
+                data-testid="preview-element"
+              />
+              <div
+                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+              >
+                <div
+                  class="DraftEditor-root"
+                >
+                  <div
+                    class="DraftEditor-editorContainer"
+                  >
+                    <div
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    >
+                      <div
+                        data-contents="true"
+                      >
+                        <div
+                          class=""
+                          data-block="true"
+                          data-editor="123"
+                          data-offset-key="123-0-0"
+                        >
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                            data-offset-key="123-0-0"
+                          >
+                            <span
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-text="true"
+                              >
+                                description
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              class="Button emphasis--primary size--medium"
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="ViewHeader"
+      >
+        <div
+          class="viewSelector"
+        >
+          <input
+            class="Editable "
+            placeholder="Untitled View"
+            spellcheck="true"
+            title="view title"
+            value="view title"
+          />
+          <div>
+            <div
+              aria-label="View menu"
+              class="MenuWrapper"
+              role="button"
+            >
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="octo-spacer"
+        />
+        <div
+          aria-label="Properties menu"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Properties
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Group by: 
+              <span
+                id="groupByLabel"
+              >
+                name
+              </span>
+            </span>
+          </button>
+        </div>
+        <div
+          class="ModalWrapper"
+        >
+          <button
+            class="Button active"
+            type="button"
+          >
+            <span>
+              Filter
+            </span>
+          </button>
+        </div>
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="Button active"
+            type="button"
+          >
+            <span>
+              Sort
+            </span>
+          </button>
+        </div>
+        <div
+          class="board-search-field"
+        >
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
+        <div
+          class="ModalWrapper"
+        >
+          <div
+            aria-label="View header menu"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="ButtonWithMenu"
+        >
+          <div
+            class="button-text"
+          >
+            New
+          </div>
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="button-dropdown"
+            >
+              <i
+                class="CompassIcon icon-chevron-down DropdownIcon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Table"
+    >
+      <div
+        class="octo-table-body"
+      >
+        <div
+          class="octo-table-header TableHeaders"
+          id="mainBoardHeader"
+        >
+          <div
+            class="octo-table-cell header-cell"
+            style="overflow: unset; opacity: 1; width: 100px;"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <span
+                class="Label empty "
+              >
+                Name
+              </span>
+            </div>
+            <div
+              class="octo-spacer"
+            />
+            <div
+              class="HorizontalGrip"
+            />
+          </div>
+        </div>
+        <div
+          class="table-row-container"
+        >
+          <div
+            class="octo-table-group"
+          >
+            <div
+              class="octo-group-header-cell expanded"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="octo-table-cell"
+                style="width: 100px;"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="DisclosureTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="37,35 37,65 63,50"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="Label empty "
+                  title="Items with an empty name property will go here. This column cannot be removed."
+                >
+                  No name
+                </span>
+                
+              </div>
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  0
+                </span>
+              </button>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-group"
+          >
+            <div
+              class="octo-group-header-cell expanded"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="octo-table-cell"
+                style="width: 100px;"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="DisclosureTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="37,35 37,65 63,50"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="Label propColorOrange "
+                >
+                  <input
+                    class="Editable "
+                    placeholder="New Select"
+                    spellcheck="true"
+                    title="Q1"
+                    value="Q1"
+                  />
+                </span>
+              </div>
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  2
+                </span>
+              </button>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </button>
+            </div>
+            <div
+              class="TableRow octo-table-row"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="octo-table-cell title-cell"
+                id="mainBoardHeader"
+                style="width: 100px;"
+              >
+                <div
+                  class="octo-icontitle"
+                >
+                  <div
+                    class="octo-icon"
+                  >
+                    i
+                  </div>
+                  <input
+                    class="Editable "
+                    placeholder="Untitled"
+                    spellcheck="true"
+                    title="card1"
+                    value="card1"
+                  />
+                </div>
+                <div
+                  class="open-button"
+                >
+                  <button
+                    class="Button"
+                    type="button"
+                  >
+                    <span>
+                      Open
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              class="TableRow octo-table-row"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                class="octo-table-cell title-cell"
+                id="mainBoardHeader"
+                style="width: 100px;"
+              >
+                <div
+                  class="octo-icontitle"
+                >
+                  <div
+                    class="octo-icon"
+                  >
+                    i
+                  </div>
+                  <input
+                    class="Editable "
+                    placeholder="Untitled"
+                    spellcheck="true"
+                    title="card2"
+                    value="card2"
+                  />
+                </div>
+                <div
+                  class="open-button"
+                >
+                  <button
+                    class="Button"
+                    type="button"
+                  >
+                    <span>
+                      Open
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="octo-table-group"
+          >
+            <div
+              class="octo-group-header-cell expanded"
+              draggable="true"
+              style="opacity: 1;"
+            >
+              <div
+                class="octo-table-cell"
+                style="width: 100px;"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="DisclosureTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="37,35 37,65 63,50"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="Label propColorBlue "
+                >
+                  <input
+                    class="Editable "
+                    placeholder="New Select"
+                    spellcheck="true"
+                    title="Q2"
+                    value="Q2"
+                  />
+                </span>
+              </div>
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  0
+                </span>
+              </button>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+              <button
+                class="IconButton"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-plus AddIcon"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="octo-table-footer"
+        />
+        <div
+          class="CalculationRow octo-table-row"
+        >
+          <div
+            class="Calculation count octo-table-cell   "
+            style="width: 100px;"
+            tabindex="0"
+          >
+            <span
+              class="calculationLabel"
+            >
+              Count
+            </span>
+            <span
+              class="calculationValue"
+            >
+              2
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -589,7 +2133,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -700,6 +2244,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             class="ShareBoardLoginButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Login"
               type="button"
             >
@@ -731,6 +2276,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -743,13 +2289,18 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         <div
           class="octo-spacer"
         />
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
       </div>
     </div>
     <div
@@ -764,7 +2315,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -798,6 +2349,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -819,6 +2371,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -840,6 +2393,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -866,6 +2420,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -904,6 +2459,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -944,6 +2500,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -967,6 +2524,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton readonly"
                   type="button"
                 >
                   <svg
@@ -993,6 +2551,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1048,7 +2607,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -1070,6 +2629,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -1175,6 +2735,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -1208,6 +2769,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1226,6 +2788,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1239,6 +2802,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1255,6 +2819,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1268,6 +2833,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1275,13 +2841,18 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -1291,6 +2862,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1335,7 +2907,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -1353,7 +2925,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -1373,6 +2944,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1394,6 +2966,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1406,6 +2979,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -1414,6 +2988,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1435,6 +3010,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1460,6 +3036,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1472,6 +3049,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -1480,6 +3058,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1492,6 +3071,44 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -1517,6 +3134,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -1531,6 +3149,44 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -1556,6 +3212,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -1579,6 +3236,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -1604,6 +3262,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -1616,6 +3275,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -1624,6 +3284,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1679,7 +3340,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -1701,6 +3362,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -1806,6 +3468,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -1839,6 +3502,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -1857,6 +3521,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1870,6 +3535,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -1886,6 +3552,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1899,6 +3566,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -1906,13 +3574,18 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -1922,6 +3595,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -1966,7 +3640,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -1984,7 +3658,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -2004,6 +3677,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2025,6 +3699,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2037,6 +3712,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2045,6 +3721,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2066,6 +3743,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2091,6 +3769,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2103,6 +3782,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2111,6 +3791,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2123,6 +3804,44 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2148,6 +3867,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -2162,6 +3882,44 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2187,6 +3945,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -2210,6 +3969,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2235,6 +3995,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2247,6 +4008,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2255,6 +4017,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2310,7 +4073,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -2332,6 +4095,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -2437,6 +4201,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -2470,6 +4235,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2488,6 +4254,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -2501,6 +4268,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -2517,6 +4285,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -2530,6 +4299,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -2537,13 +4307,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -2553,6 +4328,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -2597,7 +4373,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -2615,7 +4391,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -2635,6 +4410,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2656,6 +4432,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2668,6 +4445,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2676,6 +4454,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2697,6 +4476,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2722,6 +4502,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2734,6 +4515,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2742,6 +4524,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2754,6 +4537,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2779,6 +4600,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -2793,6 +4615,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2818,6 +4678,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -2841,6 +4702,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -2866,6 +4728,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -2878,6 +4741,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -2886,6 +4750,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -2941,7 +4806,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -2963,6 +4828,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -3068,6 +4934,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -3101,6 +4968,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3119,6 +4987,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -3132,6 +5001,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -3148,6 +5018,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -3161,6 +5032,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -3168,13 +5040,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -3184,6 +5061,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -3228,7 +5106,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -3246,7 +5124,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -3266,6 +5143,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3287,6 +5165,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3299,6 +5178,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3307,6 +5187,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3328,6 +5209,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3353,6 +5235,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3365,6 +5248,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3373,6 +5257,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3385,6 +5270,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -3410,6 +5333,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -3424,6 +5348,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -3449,6 +5411,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -3472,6 +5435,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3497,6 +5461,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3509,6 +5474,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3517,6 +5483,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3572,7 +5539,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -3594,6 +5561,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -3699,6 +5667,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -3732,6 +5701,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3750,6 +5720,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -3763,6 +5734,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -3779,6 +5751,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -3792,6 +5765,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -3799,13 +5773,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -3815,6 +5794,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -3859,7 +5839,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -3877,7 +5857,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -3897,6 +5876,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3918,6 +5898,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3930,6 +5911,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -3938,6 +5920,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -3959,6 +5942,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -3984,6 +5968,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -3996,6 +5981,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4004,6 +5990,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4016,6 +6003,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -4041,6 +6066,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -4055,6 +6081,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -4080,6 +6144,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -4103,6 +6168,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4128,6 +6194,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4140,6 +6207,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4148,6 +6216,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4203,7 +6272,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -4225,6 +6294,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -4330,6 +6400,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -4363,6 +6434,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4381,6 +6453,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -4394,6 +6467,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -4410,6 +6484,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -4423,6 +6498,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -4430,13 +6506,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -4446,6 +6527,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -4490,7 +6572,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -4508,7 +6590,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -4528,6 +6609,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4549,6 +6631,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4561,6 +6644,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4569,6 +6653,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4590,6 +6675,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4615,6 +6701,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4627,6 +6714,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4635,6 +6723,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4647,6 +6736,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -4672,6 +6799,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -4686,6 +6814,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -4711,6 +6877,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -4734,6 +6901,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -4759,6 +6927,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -4771,6 +6940,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -4779,6 +6949,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -4834,7 +7005,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -4856,6 +7027,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -4961,6 +7133,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -4994,6 +7167,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5012,6 +7186,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -5025,6 +7200,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -5041,6 +7217,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -5054,6 +7231,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -5061,13 +7239,18 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -5077,6 +7260,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -5121,7 +7305,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -5139,7 +7323,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -5159,6 +7342,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5180,6 +7364,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5192,6 +7377,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5200,6 +7386,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5221,6 +7408,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5246,6 +7434,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5258,6 +7447,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5266,6 +7456,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5278,6 +7469,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -5303,6 +7532,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5317,6 +7547,44 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -5342,6 +7610,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5365,6 +7634,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5390,6 +7660,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5402,6 +7673,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5410,6 +7682,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5465,7 +7738,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -5487,6 +7760,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -5592,6 +7866,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -5625,6 +7900,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5643,6 +7919,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -5656,6 +7933,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -5672,6 +7950,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -5685,6 +7964,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -5692,13 +7972,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -5708,6 +7993,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -5752,7 +8038,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -5770,7 +8056,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -5790,6 +8075,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5811,6 +8097,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5823,6 +8110,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5831,6 +8119,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5852,6 +8141,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -5877,6 +8167,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -5889,6 +8180,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -5897,6 +8189,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -5909,6 +8202,44 @@ exports[`components/centerPanel return centerPanel and select one card and click
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -5934,6 +8265,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5948,6 +8280,44 @@ exports[`components/centerPanel return centerPanel and select one card and click
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -5973,6 +8343,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -5996,6 +8367,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6021,6 +8393,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6033,6 +8406,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6041,6 +8415,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6096,7 +8471,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -6118,6 +8493,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -6223,6 +8599,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -6256,6 +8633,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6274,6 +8652,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -6287,6 +8666,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -6303,6 +8683,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -6316,6 +8697,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -6323,13 +8705,18 @@ exports[`components/centerPanel return centerPanel and select one card and click
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -6339,6 +8726,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -6383,7 +8771,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -6401,7 +8789,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -6421,6 +8808,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6442,6 +8830,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6454,6 +8843,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6462,6 +8852,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6483,6 +8874,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6508,6 +8900,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6520,6 +8913,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6528,6 +8922,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6540,6 +8935,44 @@ exports[`components/centerPanel return centerPanel and select one card and click
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -6565,6 +8998,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -6579,6 +9013,44 @@ exports[`components/centerPanel return centerPanel and select one card and click
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -6604,6 +9076,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -6627,6 +9100,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -6652,6 +9126,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -6664,6 +9139,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -6672,6 +9148,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6727,7 +9204,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -6749,6 +9226,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -6854,6 +9332,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -6887,6 +9366,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -6905,6 +9385,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -6916,6 +9397,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -6929,6 +9411,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -6936,13 +9419,18 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -6952,6 +9440,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -6998,6 +9487,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7036,7 +9526,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -7058,6 +9548,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -7163,6 +9654,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -7196,6 +9688,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7214,6 +9707,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7227,6 +9721,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7243,6 +9738,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7256,6 +9752,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7263,13 +9760,18 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -7279,6 +9781,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7334,6 +9837,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -7351,6 +9855,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7359,6 +9864,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7386,6 +9892,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="1"
               type="button"
             >
@@ -7403,6 +9910,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7411,6 +9919,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7438,6 +9947,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -7455,6 +9965,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7463,6 +9974,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7474,6 +9986,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-header-cell narrow"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7490,6 +10003,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7511,6 +10025,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7534,6 +10049,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             </div>
           </div>
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7545,6 +10061,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7575,7 +10092,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -7597,6 +10114,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -7655,6 +10173,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -7688,6 +10207,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -7706,6 +10226,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7719,6 +10240,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7735,6 +10257,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7748,6 +10271,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -7755,13 +10279,18 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -7771,6 +10300,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7826,6 +10356,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -7843,6 +10374,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7851,6 +10383,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7878,6 +10411,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="1"
               type="button"
             >
@@ -7895,6 +10429,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7903,6 +10438,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7930,6 +10466,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             class="KanbanCalculation"
           >
             <button
+              class="Button"
               title="0"
               type="button"
             >
@@ -7947,6 +10484,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -7955,6 +10493,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </button>
           </div>
           <button
+            class="IconButton"
             type="button"
           >
             <i
@@ -7966,6 +10505,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-header-cell narrow"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -7982,6 +10522,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8003,6 +10544,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8026,6 +10568,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             </div>
           </div>
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8037,6 +10580,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
           class="octo-board-column"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8067,7 +10611,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           rel="noreferrer"
           target="_blank"
         >
-          Give Feedback
+          Give feedback
         </a>
         <a
           href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -8089,6 +10633,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             class="add-buttons add-visible"
           >
             <button
+              class="Button emphasis--default size--xsmall"
               type="button"
             >
               <i
@@ -8194,6 +10739,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             class="ShareBoardButton"
           >
             <button
+              class="Button emphasis--primary size--medium"
               title="Share board"
               type="button"
             >
@@ -8227,6 +10773,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               role="button"
             >
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8245,6 +10792,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8258,6 +10806,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           role="button"
         >
           <button
+            class="Button"
             type="button"
           >
             <span>
@@ -8274,6 +10823,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           class="ModalWrapper"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -8287,6 +10837,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
           role="button"
         >
           <button
+            class="Button active"
             type="button"
           >
             <span>
@@ -8294,13 +10845,18 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -8310,6 +10866,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             role="button"
           >
             <button
+              class="IconButton"
               type="button"
             >
               <i
@@ -8354,7 +10911,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         >
           <div
             class="octo-table-cell header-cell"
-            style="overflow: unset; width: 100px; opacity: 1;"
+            style="overflow: unset; opacity: 1; width: 100px;"
           >
             <div
               aria-label="menuwrapper"
@@ -8372,7 +10929,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             />
             <div
               class="HorizontalGrip"
-              draggable="true"
             />
           </div>
         </div>
@@ -8392,6 +10948,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8413,6 +10970,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8425,6 +10983,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8433,6 +10992,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8454,6 +11014,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8479,6 +11040,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8491,6 +11053,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8499,6 +11062,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i
@@ -8511,6 +11075,44 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              >
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu"
+                  role="button"
+                >
+                  <button
+                    aria-label="MenuBtn"
+                    class="IconButton"
+                    title="MenuBtn"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-dots-horizontal OptionsIcon"
+                    />
+                  </button>
+                </div>
+                <button
+                  class="IconButton"
+                  type="button"
+                >
+                  <svg
+                    class="GripIcon Icon"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 0h24v24H0V0z"
+                      fill="none"
+                    />
+                    <path
+                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    />
+                  </svg>
+                </button>
+              </div>
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -8536,6 +11138,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   class="open-button"
                 >
                   <button
+                    class="Button"
                     type="button"
                   >
                     <span>
@@ -8559,6 +11162,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <svg
@@ -8584,6 +11188,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </span>
               </div>
               <button
+                class="Button"
                 type="button"
               >
                 <span>
@@ -8596,6 +11201,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 role="button"
               >
                 <button
+                  class="IconButton"
                   type="button"
                 >
                   <i
@@ -8604,6 +11210,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 </button>
               </div>
               <button
+                class="IconButton"
                 type="button"
               >
                 <i

@@ -1,5 +1,6 @@
 @import 'typography';
 @import 'modifiers';
+@import 'z-index';
 
 html {
     height: 100%;
@@ -209,8 +210,8 @@ html {
         width: 100%;
 
         &:hover {
+            @include z-index(block-hover);
             position: relative;
-            z-index: 1;
         }
 
         > * {

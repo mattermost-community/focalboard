@@ -4,6 +4,7 @@ import React, {useState, useRef, useEffect} from 'react'
 
 type TextInputOptionProps = {
     initialValue: string,
+    onConfirmValue: (value: string) => void
     onValueChanged: (value: string) => void
 }
 
@@ -22,13 +23,16 @@ function TextInputOption(props: TextInputOptionProps): JSX.Element {
             type='text'
             className='PropertyMenu menu-textbox menu-option'
             onClick={(e) => e.stopPropagation()}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => {
+                setValue(e.target.value)
+                props.onValueChanged(value)
+            }}
             value={value}
             title={value}
-            onBlur={() => props.onValueChanged(value)}
+            onBlur={() => props.onConfirmValue(value)}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === 'Escape') {
-                    props.onValueChanged(value)
+                    props.onConfirmValue(value)
                     e.stopPropagation()
                     if (e.key === 'Enter') {
                         e.target.dispatchEvent(new Event('menuItemClicked'))

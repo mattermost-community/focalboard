@@ -21,6 +21,8 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
+import {useColumnResize} from "./tableColumnResizeContext"
+
 type Props = {
     board: Board
     activeView: BoardView
@@ -39,6 +41,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
 
     const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, !props.readonly, props.onDrop)
     const intl = useIntl()
+    const columnResize = useColumnResize()
 
     useEffect(() => {
         setGroupTitle(group.option.value)
@@ -51,10 +54,6 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
         className += ' expanded'
     }
 
-    const columnWidth = (templateId: string): number => {
-        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
-    }
-
     return (
         <div
             key={group.option.id + 'header'}
@@ -64,7 +63,8 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
         >
             <div
                 className='octo-table-cell'
-                style={{width: columnWidth(Constants.titleColumnId)}}
+                style={{width: columnResize.width(Constants.titleColumnId)}}
+                ref={(ref) => columnResize.updateRef(group.option.id, Constants.titleColumnId, ref)}
             >
                 <IconButton
                     icon={<DisclosureTriangle/>}

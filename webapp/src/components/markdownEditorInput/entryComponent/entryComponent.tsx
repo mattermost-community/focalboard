@@ -31,6 +31,9 @@ const Entry = (props: EntryComponentProps): ReactElement => {
                     {BotBadge && <BotBadge show={mention.is_bot}/>}
                     <GuestBadge show={mention.is_guest}/>
                 </div>
+                <div className={theme?.mentionSuggestionsEntryText}>
+                    {mention.displayName}
+                </div>
             </div>
         </div>
     )

@@ -20,6 +20,7 @@ type Board = {
     createdBy: string
     modifiedBy: string
     type: BoardTypes
+    minimumRole: string
 
     title: string
     description: string
@@ -37,6 +38,7 @@ type Board = {
 
 type BoardPatch = {
     type?: BoardTypes
+    minimumRole?: string
     title?: string
     description?: string
     icon?: string
@@ -57,6 +59,7 @@ type BoardMember = {
     schemeEditor: boolean
     schemeCommenter: boolean
     schemeViewer: boolean
+    synthetic: boolean
 }
 
 type BoardsAndBlocks = {
@@ -71,7 +74,7 @@ type BoardsAndBlocksPatch = {
     blockPatches: BlockPatch[],
 }
 
-type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
+type PropertyTypeEnum = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy' | 'unknown'
 
 interface IPropertyOption {
     id: string
@@ -83,7 +86,7 @@ interface IPropertyOption {
 interface IPropertyTemplate {
     id: string
     name: string
-    type: PropertyType
+    type: PropertyTypeEnum
     options: IPropertyOption[]
 }
 
@@ -120,6 +123,7 @@ function createBoard(board?: Board): Board {
         createdBy: board?.createdBy || '',
         modifiedBy: board?.modifiedBy || '',
         type: board?.type || BoardTypePrivate,
+        minimumRole: board?.minimumRole || '',
         title: board?.title || '',
         description: board?.description || '',
         icon: board?.icon || '',
@@ -306,7 +310,7 @@ export {
     BoardMember,
     BoardsAndBlocks,
     BoardsAndBlocksPatch,
-    PropertyType,
+    PropertyTypeEnum,
     IPropertyOption,
     IPropertyTemplate,
     BoardGroup,

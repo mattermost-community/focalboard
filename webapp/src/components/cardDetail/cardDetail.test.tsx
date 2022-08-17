@@ -109,6 +109,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -166,6 +167,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={true}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -256,6 +258,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -361,6 +364,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -470,6 +474,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[text]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -506,5 +511,62 @@ describe('components/cardDetail/CardDetail', () => {
                 },
             },
         )
+    })
+
+    test('should render hidden view if limited', async () => {
+        const limitedCard = {...card, limited: true}
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            cards: {
+                cards: {
+                    [limitedCard.id]: limitedCard,
+                },
+                current: limitedCard.id,
+            },
+        })
+
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CardDetail
+                        board={board}
+                        activeView={view}
+                        views={[view]}
+                        cards={[limitedCard]}
+                        card={limitedCard}
+                        comments={[comment1, comment2]}
+                        contents={[]}
+                        readonly={false}
+                        onClose={jest.fn()}
+                    />,
+                )}
+            </ReduxProvider>
+        )
+
+        let container: Element | DocumentFragment | null = null
+
+        await act(async () => {
+            const result = render(component)
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
     })
 })

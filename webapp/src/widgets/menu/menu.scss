@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .status-dropdown-menu {
     > .Menu {
         position: inherit;
@@ -5,12 +7,13 @@
 }
 
 .Menu {
+    @include z-index(menu);
     display: flex;
     flex-direction: column;
     position: absolute;
-    z-index: 15;
     background-color: rgb(var(--center-channel-bg-rgb));
     color: rgb(var(--center-channel-color-rgb));
+    border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
 
@@ -23,6 +26,11 @@
         flex-direction: column;
         padding: 8px 0;
         min-width: 240px;
+        max-width: 320px;
+    }
+
+    .view-list {
+        overflow: hidden;
     }
 
     .menu-options {
@@ -72,14 +80,22 @@
                 margin-left: 16px;
             }
 
+            .noicon {
+                &:empty {
+                    display: none;
+                }
+            }
+
             > *:first-child {
                 margin-left: 0;
             }
 
             > .menu-name {
-                display: flex;
+                overflow: hidden;
+                text-overflow: ellipsis;
                 flex-grow: 1;
                 white-space: nowrap;
+                text-align: left;
             }
 
             > .SubmenuTriangleIcon {
@@ -90,6 +106,7 @@
                 opacity: 0.56;
                 width: 18px;
                 height: 18px;
+                flex: 0 0 18px;
             }
 
             .IconButton .Icon {

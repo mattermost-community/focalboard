@@ -39,6 +39,18 @@ type UpdateSubscription struct {
 	Subscription *model.Subscription `json:"subscription"`
 }
 
+// UpdateClientConfig is sent on block updates.
+type UpdateClientConfig struct {
+	Action       string             `json:"action"`
+	ClientConfig model.ClientConfig `json:"clientconfig"`
+}
+
+// UpdateClientConfig is sent on block updates.
+type UpdateCardLimitTimestamp struct {
+	Action    string `json:"action"`
+	Timestamp int64  `json:"timestamp"`
+}
+
 // WebsocketCommand is an incoming command from the client.
 type WebsocketCommand struct {
 	Action    string   `json:"action"`

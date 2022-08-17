@@ -118,7 +118,6 @@ class TestBlockFactory {
         card.title = 'title'
         card.fields.icon = 'i'
         card.fields.properties.property1 = 'value1'
-
         return card
     }
 
@@ -173,6 +172,7 @@ class TestBlockFactory {
             deleteAt: 0,
             userID: '',
             teamID: '',
+            collapsed: false,
         }
     }
 
@@ -188,11 +188,15 @@ class TestBlockFactory {
             id: 'user-id-1',
             username: 'Dwight Schrute',
             email: 'dwight.schrute@dundermifflin.com',
+            nickname: '',
+            firstname: '',
+            lastname: '',
             props: {},
             create_at: Date.now(),
             update_at: Date.now(),
             is_bot: false,
             is_guest: false,
+            roles: 'system_user',
         }
     }
 }

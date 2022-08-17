@@ -61,6 +61,7 @@ module.exports = {
         ],
         alias: {
             moment: path.resolve(__dirname, '../../webapp/node_modules/moment/'),
+            'react-intl': path.resolve(__dirname, '../../webapp/node_modules/react-intl/'),
         },
         extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     },
@@ -126,6 +127,7 @@ module.exports = {
         'mm-react-router-dom': 'ReactRouterDom',
         'prop-types': 'PropTypes',
         'react-bootstrap': 'ReactBootstrap',
+
     },
     output: {
         devtoolNamespace: PLUGIN_ID,

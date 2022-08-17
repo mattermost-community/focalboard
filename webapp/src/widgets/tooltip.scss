@@ -1,3 +1,4 @@
+@import '../styles/z-index';
 
 // Tooltip arrow width
 $tooltip-arrow-width: 6px;
@@ -6,6 +7,7 @@ $tooltop-horizontal-offset: 2px;
 $tooltop-vertical-offset: 2px;
 
 %hover-tooltip-body {
+    @include z-index(hover-tooltip-body);
     position: absolute;
     content: attr(data-tooltip);
     padding: 2px 4px;
@@ -25,10 +27,10 @@ $tooltop-vertical-offset: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
-    z-index: 100;
 }
 
 %hover-tooltip-arrow {
+    @include z-index(hover-tooltip-arrow);
     content: '';
     position: absolute;
     width: 0;
@@ -36,7 +38,6 @@ $tooltop-vertical-offset: 2px;
     border-width: $tooltip-arrow-width;
     border-style: solid;
     border-color: #000 transparent transparent;
-    z-index: 99;
 }
 
 .octo-tooltip {

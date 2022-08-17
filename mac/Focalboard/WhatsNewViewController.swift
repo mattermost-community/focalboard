@@ -7,6 +7,7 @@ class WhatsNewViewController:
 	NSViewController {
 	@IBOutlet var textView: NSTextView!
 	@IBOutlet var rateButton: NSButton!
+	@IBOutlet var cloudButton: NSButton!
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -26,6 +27,10 @@ class WhatsNewViewController:
 		let url = URL(string: "macappstore://itunes.apple.com/app/id1556908618?action=write-review")!
 		NSWorkspace.shared.open(url)
 		view.window?.close()
+	}
+
+	@IBAction func cloudButtonClicked(_ sender: Any) {
+		Globals.openGetCloudServerUrl()
 	}
 
 	@IBAction func closeButtonClicked(_ sender: Any) {

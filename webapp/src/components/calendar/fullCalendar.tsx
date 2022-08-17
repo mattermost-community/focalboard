@@ -14,7 +14,8 @@ import mutator from '../../mutator'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
-import {DateProperty, createDatePropertyFromString} from '../properties/dateRange/dateRange'
+import {DateProperty} from '../../properties/date/date'
+import propsRegistry from '../../properties'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
 import {Constants, Permission} from '../../constants'
@@ -22,6 +23,11 @@ import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import CardBadges from '../cardBadges'
 
 import './fullcalendar.scss'
+import MenuWrapper from '../../widgets/menuWrapper'
+import IconButton from '../../widgets/buttons/iconButton'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
+import OptionsIcon from '../../widgets/icons/options'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 const oneDay = 60 * 60 * 24 * 1000
 
@@ -79,7 +85,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     }
 
     const isEditable = useCallback(() : boolean => {
-        if (readonly || !dateDisplayProperty || (dateDisplayProperty.type === 'createdTime' || dateDisplayProperty.type === 'updatedTime')) {
+        if (readonly || !dateDisplayProperty || propsRegistry.get(dateDisplayProperty.type).isReadOnly) {
             return false
         }
         return true
@@ -87,23 +93,12 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const myEventsList = useMemo(() => (
         cards.flatMap((card): EventInput[] => {
+            const property = propsRegistry.get(dateDisplayProperty?.type || 'unknown')
             let dateFrom = new Date(card.createAt || 0)
             let dateTo = new Date(card.createAt || 0)
-            if (dateDisplayProperty && dateDisplayProperty?.type === 'updatedTime') {
-                dateFrom = new Date(card.updateAt || 0)
-                dateTo = new Date(card.updateAt || 0)
-            } else if (dateDisplayProperty && dateDisplayProperty?.type !== 'createdTime') {
-                const dateProperty = createDatePropertyFromString(card.fields.properties[dateDisplayProperty.id || ''] as string)
-                if (!dateProperty.from) {
-                    return []
-                }
-
-                // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
-                dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
-                dateFrom.setHours(0, 0, 0, 0)
-                const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
-                dateTo = new Date(dateToNumber + oneDay) // Add one day.
-                dateTo.setHours(0, 0, 0, 0)
+            if (property.isDate && property.getDateFrom && property.getDateTo) {
+                dateFrom = property.getDateFrom(card.fields.properties[dateDisplayProperty?.id || ''], card)
+                dateTo = property.getDateTo(card.fields.properties[dateDisplayProperty?.id || ''], card)
             }
             return [{
                 id: card.id,
@@ -121,17 +116,33 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
+        const card = cards.find((o) => o.id === event.id) || cards[0]
         return (
             <div
                 className='EventContent'
                 onClick={() => props.showCard(event.id)}
             >
+                {!props.readonly &&
+                <MenuWrapper
+                    className='optionsMenu'
+                    stopPropagationOnToggle={true}
+                >
+                    <IconButton icon={<OptionsIcon/>}/>
+                    <CardActionsMenu
+                        cardId={card.id}
+                        onClickDelete={() => mutator.deleteBlock(card, 'delete card')}
+                        onClickDuplicate={() => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                            mutator.duplicateCard(card.id, board.id)
+                        }}
+                    />
+                </MenuWrapper>}
                 <div className='octo-icontitle'>
                     { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
                     <div
                         className='fc-event-title'
                         key='__title'
-                    >{event.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}</div>
+                    >{event.title || intl.formatMessage({id: 'CalendarCard.untitled', defaultMessage: 'Untitled'})}</div>
                 </div>
                 {visiblePropertyTemplates.map((template) => (
                     <Tooltip
@@ -141,14 +152,14 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         <PropertyValueElement
                             board={board}
                             readOnly={true}
-                            card={cards.find((o) => o.id === event.id) || cards[0]}
+                            card={card}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />
                     </Tooltip>
                 ))}
                 {visibleBadges &&
-                <CardBadges card={cards.find((o) => o.id === event.id) || cards[0]}/> }
+                <CardBadges card={card}/> }
             </div>
         )
     }
@@ -236,7 +247,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 buttonText={buttonText}
                 eventContent={renderEventContent}
                 eventChange={eventChange}
-
                 selectable={isSelectable}
                 selectMirror={true}
                 select={onNewEvent}

@@ -94,10 +94,6 @@ func (dbab *DeleteBoardsAndBlocks) IsValid() error {
 		return ErrNoBoardsInBoardsAndBlocks
 	}
 
-	if len(dbab.Blocks) == 0 {
-		return ErrNoBlocksInBoardsAndBlocks
-	}
-
 	return nil
 }
 
@@ -131,10 +127,6 @@ func (dbab *PatchBoardsAndBlocks) IsValid() error {
 		return ErrBoardIDsAndPatchesMissmatchInBoardsAndBlocks
 	}
 
-	if len(dbab.BlockIDs) == 0 {
-		return ErrNoBlocksInBoardsAndBlocks
-	}
-
 	if len(dbab.BlockIDs) != len(dbab.BlockPatches) {
 		return ErrBlockIDsAndPatchesMissmatchInBoardsAndBlocks
 	}
@@ -142,7 +134,7 @@ func (dbab *PatchBoardsAndBlocks) IsValid() error {
 	return nil
 }
 
-func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger *mlog.Logger) (*BoardsAndBlocks, error) {
+func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger mlog.LoggerIFace) (*BoardsAndBlocks, error) {
 	if err := bab.IsValid(); err != nil {
 		return nil, err
 	}

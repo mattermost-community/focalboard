@@ -110,6 +110,10 @@ const Sidebar = (props: Props) => {
         }
     }
 
+    if (!me) {
+        return <div/>
+    }
+
     if (isHidden) {
         return (
             <div className='Sidebar octo-sidebar hidden'>
@@ -183,7 +187,7 @@ const Sidebar = (props: Props) => {
 
             <div className='octo-sidebar-list'>
                 {
-                    sidebarCategories.map((category) => (
+                    sidebarCategories.map((category, index) => (
                         <SidebarCategory
                             hideSidebar={hideSidebar}
                             key={category.id}
@@ -191,6 +195,7 @@ const Sidebar = (props: Props) => {
                             categoryBoards={category}
                             boards={boards}
                             allCategories={sidebarCategories}
+                            index={index}
                         />
                     ))
                 }

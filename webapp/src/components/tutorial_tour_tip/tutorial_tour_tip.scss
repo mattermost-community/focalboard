@@ -1,4 +1,6 @@
 
+@import '../../styles/z-index';
+
 .tutorial-tour-tip {
     display: flex;
 
@@ -112,8 +114,8 @@
     }
 
     &__overlay {
+        @include z-index(tour-tip-overlay);
         position: fixed;
-        z-index: 999;
         top: 0;
         right: 0;
         bottom: 0;
@@ -339,8 +341,8 @@
 }
 
 .tip-backdrop {
+    @include z-index(tour-tip-backdrop);
     position: absolute;
-    z-index: 999;
     top: 0;
     left: 0;
     width: 100%;

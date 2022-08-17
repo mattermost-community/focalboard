@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/createCategory/CreateCategory base case should match snapshot 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back CreateCategoryModal"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <button
+            aria-label="Close dialog"
+            class="IconButton size--medium"
+            title="Close dialog"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-close CloseIcon"
+            />
+          </button>
+          <div
+            class="toolbar--right"
+          />
+        </div>
+        <div
+          class="CreateCategory"
+        >
+          <h3>
+            <span>
+              title
+            </span>
+          </h3>
+          <div
+            class="inputWrapper"
+          >
+            <input
+              class="categoryNameInput"
+              maxlength="100"
+              placeholder="Name your category"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="createCategoryActions"
+          >
+            <button
+              class="Button danger size--medium"
+              type="button"
+            >
+              <span>
+                Cancel
+              </span>
+            </button>
+            <button
+              class="Button size--medium"
+              disabled=""
+              type="button"
+            >
+              <span>
+                Create
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

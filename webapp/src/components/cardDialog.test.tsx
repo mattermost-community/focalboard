@@ -353,4 +353,39 @@ describe('components/cardDialog', () => {
         })
         expect(container).toMatchSnapshot()
     })
+
+    test('limited card shows hidden view (no toolbar)', async () => {
+        // simply doing {...state} gives a TypeScript error
+        // when you try updating it's values.
+        const newState = JSON.parse(JSON.stringify(state))
+        const limitedCard = {...card, limited: true}
+        newState.cards = {
+            cards: {
+                [limitedCard.id]: limitedCard,
+            },
+            current: limitedCard.id,
+        }
+
+        const newStore = mockStateStore([], newState)
+
+        let container
+        await act(async () => {
+            const result = render(wrapDNDIntl(
+                <ReduxProvider store={newStore}>
+                    <CardDialog
+                        board={board}
+                        activeView={boardView}
+                        views={[boardView]}
+                        cards={[limitedCard]}
+                        cardId={limitedCard.id}
+                        onClose={jest.fn()}
+                        showCard={jest.fn()}
+                        readonly={false}
+                    />
+                </ReduxProvider>,
+            ))
+            container = result.container
+        })
+        expect(container).toMatchSnapshot()
+    })
 })

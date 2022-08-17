@@ -8,7 +8,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func generateMarkdownDiff(oldText string, newText string, logger *mlog.Logger) string {
+func generateMarkdownDiff(oldText string, newText string, logger mlog.LoggerIFace) string {
 	oldTxtNorm := normalizeText(oldText)
 	newTxtNorm := normalizeText(newText)
 

@@ -29,11 +29,13 @@ class Constants {
 
     static readonly minColumnWidth = 100
     static readonly defaultTitleColumnWidth = 280
+    static readonly tableHeaderId = '__header'
+    static readonly tableCalculationId = '__calculation'
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '0.17.0'
-    static readonly versionDisplayString = 'Jun 2022'
+    static readonly versionString = '7.3.0'
+    static readonly versionDisplayString = 'Sep 2022'
 
     static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
     static readonly imports = [
@@ -159,6 +161,10 @@ class Constants {
 
     static readonly keyCodes: {[key: string]: [string, number]} = {
         COMPOSING: ['Composing', 229],
+        ESC: ['Esc', 27],
+        UP: ['Up', 38],
+        DOWN: ['Down', 40],
+        ENTER: ['Enter', 13],
         A: ['a', 65],
         B: ['b', 66],
         C: ['c', 67],
@@ -188,6 +194,8 @@ class Constants {
     }
 
     static readonly globalTeamId = '0'
+
+    static readonly myInsights = 'MY'
 }
 
 export {Constants, Permission}

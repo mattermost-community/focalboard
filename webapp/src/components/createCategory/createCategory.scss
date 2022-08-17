@@ -12,30 +12,31 @@
             padding: 2px 6px;
         }
 
-        h3 {
-            margin-top: 0;
-        }
-
-        input {
-            font-size: 16px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: 2px solid;
-            border-color: var(--sidebar-bg-rgb);
-        }
-
-        .footer {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-end;
-        }
-
         .CreateCategory {
             display: flex;
             flex-direction: column;
             padding: 0 40px 30px;
             gap: 12px;
             flex: 1;
+
+            .inputWrapper {
+                position: relative;
+
+                .CloseCircle {
+                    cursor: pointer;
+                    position: absolute;
+                    font-size: 18px;
+                    width: 16px;
+                    height: 16px;
+                    right: 16px;
+                    top: 6px;
+                    color: rgba(var(--center-channel-color-rgb), 0.64);
+                }
+            }
+
+            .categoryNameInput {
+                width: 100%;
+            }
 
             h3 {
                 margin-top: 0;
@@ -45,8 +46,11 @@
                 font-size: 16px;
                 padding: 6px 12px;
                 border-radius: 4px;
-                border: 2px solid;
-                border-color: var(--sidebar-bg-rgb);
+                border: 2px solid rgba(var(--center-channel-color-rgb), 0.16);
+
+                &:focus {
+                    border-color: var(--button-bg);
+                }
             }
 
             .footer {

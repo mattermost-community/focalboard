@@ -27,7 +27,7 @@ type Tracker map[string]interface{}
 
 type Service struct {
 	trackers                   map[string]TrackerFunc
-	logger                     *mlog.Logger
+	logger                     mlog.LoggerIFace
 	rudderClient               rudder.Client
 	telemetryID                string
 	timestampLastTelemetrySent time.Time
@@ -38,7 +38,7 @@ type RudderConfig struct {
 	DataplaneURL string
 }
 
-func New(telemetryID string, logger *mlog.Logger) *Service {
+func New(telemetryID string, logger mlog.LoggerIFace) *Service {
 	service := &Service{
 		logger:      logger,
 		telemetryID: telemetryID,

@@ -160,7 +160,7 @@
 				80D6DEB3252E13CB00AEED9E /* Sources */,
 				80D6DEB4252E13CB00AEED9E /* Frameworks */,
 				80D6DEB5252E13CB00AEED9E /* Resources */,
-				80D6DF1D25324A8100AEED9E /* ShellScript */,
+				80D6DF1D25324A8100AEED9E /* Run Script */,
 			);
 			buildRules = (
 			);
@@ -278,7 +278,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		80D6DF1D25324A8100AEED9E /* ShellScript */ = {
+		80D6DF1D25324A8100AEED9E /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -287,6 +287,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -480,7 +481,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = HFP57A3MYB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Focalboard/Info.plist;
@@ -488,6 +489,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.focalboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -504,7 +506,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 24;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = HFP57A3MYB;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = Focalboard/Info.plist;
@@ -512,6 +514,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MARKETING_VERSION = 7.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mattermost.focalboard;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

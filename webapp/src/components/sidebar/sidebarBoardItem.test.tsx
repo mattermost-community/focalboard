@@ -87,4 +87,28 @@ describe('components/sidebarBoardItem', () => {
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
+
+    test('renders default icon if no custom icon set', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+        const noIconBoard = { ...board, icon: '' }
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={noIconBoard}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
 })

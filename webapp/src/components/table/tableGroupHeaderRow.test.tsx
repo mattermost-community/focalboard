@@ -15,6 +15,7 @@ import {wrapDNDIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
+import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableGroupHeaderRowElement from './tableGroupHeaderRow'
 
 const board = TestBlockFactory.createBoard()
@@ -41,60 +42,71 @@ const boardTreeGroup = {
     cards: [],
 }
 
-test('should match snapshot, no groups', async () => {
-    const component = wrapDNDIntl(
-        <TableGroupHeaderRowElement
-            board={board}
-            activeView={view}
-            group={boardTreeNoGroup}
-            readonly={false}
-            hideGroup={jest.fn()}
-            addCard={jest.fn()}
-            propertyNameChanged={jest.fn()}
-            onDrop={jest.fn()}
-            groupByProperty={{
-                id: '',
-                name: 'Property 1',
-                type: 'text',
-                options: [{id: 'property1', value: 'Property 1', color: ''}],
-            }}
-        />,
+const Wrapper: React.FC = ({children}) => {
+    return wrapDNDIntl(
+        <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+            {children}
+        </ColumnResizeProvider>
     )
-    const {container} = render(component)
+}
+
+test('should match snapshot, no groups', async () => {
+    const {container} = render(
+        <Wrapper>
+            <TableGroupHeaderRowElement
+                board={board}
+                activeView={view}
+                group={boardTreeNoGroup}
+                readonly={false}
+                hideGroup={jest.fn()}
+                addCard={jest.fn()}
+                propertyNameChanged={jest.fn()}
+                onDrop={jest.fn()}
+                groupByProperty={{
+                    id: '',
+                    name: 'Property 1',
+                    type: 'text',
+                    options: [{id: 'property1', value: 'Property 1', color: ''}],
+                }}
+            />
+        </Wrapper>
+    )
     expect(container).toMatchSnapshot()
 })
 
 test('should match snapshot with Group', async () => {
-    const component = wrapDNDIntl(
-        <TableGroupHeaderRowElement
-            board={board}
-            activeView={view}
-            group={boardTreeGroup}
-            readonly={false}
-            hideGroup={jest.fn()}
-            addCard={jest.fn()}
-            propertyNameChanged={jest.fn()}
-            onDrop={jest.fn()}
-        />,
+    const {container} = render(
+        <Wrapper>
+            <TableGroupHeaderRowElement
+                board={board}
+                activeView={view}
+                group={boardTreeGroup}
+                readonly={false}
+                hideGroup={jest.fn()}
+                addCard={jest.fn()}
+                propertyNameChanged={jest.fn()}
+                onDrop={jest.fn()}
+            />
+        </Wrapper>
     )
-    const {container} = render(component)
     expect(container).toMatchSnapshot()
 })
 
 test('should match snapshot on read only', async () => {
-    const component = wrapDNDIntl(
-        <TableGroupHeaderRowElement
-            board={board}
-            activeView={view}
-            group={boardTreeGroup}
-            readonly={true}
-            hideGroup={jest.fn()}
-            addCard={jest.fn()}
-            propertyNameChanged={jest.fn()}
-            onDrop={jest.fn()}
-        />,
+    const {container} = render(
+        <Wrapper>
+            <TableGroupHeaderRowElement
+                board={board}
+                activeView={view}
+                group={boardTreeGroup}
+                readonly={true}
+                hideGroup={jest.fn()}
+                addCard={jest.fn()}
+                propertyNameChanged={jest.fn()}
+                onDrop={jest.fn()}
+            />
+        </Wrapper>
     )
-    const {container} = render(component)
     expect(container).toMatchSnapshot()
 })
 
@@ -104,20 +116,21 @@ test('should match snapshot, hide group', async () => {
     const collapsedOptionsView = TestBlockFactory.createBoardView(board)
     collapsedOptionsView.fields.collapsedOptionIds = [boardTreeGroup.option.id]
 
-    const component = wrapDNDIntl(
-        <TableGroupHeaderRowElement
-            board={board}
-            activeView={collapsedOptionsView}
-            group={boardTreeGroup}
-            readonly={false}
-            hideGroup={hideGroup}
-            addCard={jest.fn()}
-            propertyNameChanged={jest.fn()}
-            onDrop={jest.fn()}
-        />,
+    const {container} = render(
+        <Wrapper>
+            <TableGroupHeaderRowElement
+                board={board}
+                activeView={collapsedOptionsView}
+                group={boardTreeGroup}
+                readonly={false}
+                hideGroup={hideGroup}
+                addCard={jest.fn()}
+                propertyNameChanged={jest.fn()}
+                onDrop={jest.fn()}
+            />
+        </Wrapper>
     )
 
-    const {container} = render(component)
     const triangle = container.querySelector('svg.DisclosureTriangleIcon')
     expect(triangle).not.toBeNull()
 
@@ -131,20 +144,20 @@ test('should match snapshot, hide group', async () => {
 test('should match snapshot, add new', async () => {
     const addNew = jest.fn()
 
-    const component = wrapDNDIntl(
-        <TableGroupHeaderRowElement
-            board={board}
-            activeView={view}
-            group={boardTreeGroup}
-            readonly={false}
-            hideGroup={jest.fn()}
-            addCard={addNew}
-            propertyNameChanged={jest.fn()}
-            onDrop={jest.fn()}
-        />,
+    const {container} = render(
+        <Wrapper>
+            <TableGroupHeaderRowElement
+                board={board}
+                activeView={view}
+                group={boardTreeGroup}
+                readonly={false}
+                hideGroup={jest.fn()}
+                addCard={addNew}
+                propertyNameChanged={jest.fn()}
+                onDrop={jest.fn()}
+            />
+        </Wrapper>
     )
-
-    const {container} = render(component)
 
     const triangle = container.querySelector('i.AddIcon')
     expect(triangle).not.toBeNull()
@@ -157,20 +170,21 @@ test('should match snapshot, add new', async () => {
 })
 
 test('should match snapshot, edit title', async () => {
-    const component = wrapDNDIntl(
-        <TableGroupHeaderRowElement
-            board={board}
-            activeView={view}
-            group={boardTreeGroup}
-            readonly={false}
-            hideGroup={jest.fn()}
-            addCard={jest.fn()}
-            propertyNameChanged={jest.fn()}
-            onDrop={jest.fn()}
-        />,
+    const {container, getByTitle} = render(
+        <Wrapper>
+            <TableGroupHeaderRowElement
+                board={board}
+                activeView={view}
+                group={boardTreeGroup}
+                readonly={false}
+                hideGroup={jest.fn()}
+                addCard={jest.fn()}
+                propertyNameChanged={jest.fn()}
+                onDrop={jest.fn()}
+            />
+        </Wrapper>
     )
 
-    const {container, getByTitle} = render(component)
     const input = getByTitle(/value 1/)
     act(() => {
         userEvent.click(input)

@@ -32,6 +32,7 @@ jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
+mockedUtils.generateClassName = jest.requireActual('../utils').Utils.generateClassName
 describe('components/centerPanel', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
@@ -102,6 +103,14 @@ describe('components/centerPanel', () => {
                 [board.id]: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
+        limits: {
+            limits: {
+                cards: 0,
+                used_cards: 0,
+                card_limit_timestamp: 0,
+                views: 0,
+            },
+        },
         cards: {
             templates: [card1, card2],
             cards: [card1, card2],
@@ -122,6 +131,11 @@ describe('components/centerPanel', () => {
             commentsByCard: {
                 [card1.id]: [comment1],
                 [card2.id]: [comment2],
+            },
+        },
+        imits: {
+            limits: {
+                views: 0,
             },
         },
     }
@@ -146,6 +160,7 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -163,6 +178,7 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -181,6 +197,7 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -199,6 +216,7 @@ describe('components/centerPanel', () => {
                     showCard={jest.fn()}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -218,6 +236,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -248,6 +267,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -270,6 +290,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -298,6 +319,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -335,6 +357,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -362,6 +385,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -390,6 +414,7 @@ describe('components/centerPanel', () => {
                         showCard={mockedShowCard}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -414,6 +439,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -435,6 +461,7 @@ describe('components/centerPanel', () => {
                         showCard={jest.fn()}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -446,63 +473,191 @@ describe('components/centerPanel', () => {
             expect(mockedMutator.insertBlock).toBeCalledTimes(1)
         })
 
-        // TODO: Fix this
-        // test('click on new card to add card from template', () => {
-        //     activeView.fields.viewType = 'table'
-        //     activeView.fields.defaultTemplateId = '1'
-        //     const {container} = render(wrapDNDIntl(
-        //         <ReduxProvider store={store}>
-        //             <CenterPanel
-        //                 cards={[card1, card2]}
-        //                 views={[activeView]}
-        //                 board={board}
-        //                 activeView={activeView}
-        //                 readonly={false}
-        //                 showCard={jest.fn()}
-        //                 showShared={true}
-        //                 groupByProperty={groupProperty}
-        //                 shownCardId={card1.id}
-        //             />
-        //         </ReduxProvider>,
-        //     ))
-        //     const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
-        //     expect(elementMenuWrapper).not.toBeNull()
-        //     userEvent.click(elementMenuWrapper!)
-        //     const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
-        //     expect(elementCard1).not.toBeNull()
-        //     userEvent.click(elementCard1)
-        //     expect(mockedMutator.performAsUndoGroup).toBeCalledTimes(1)
-        // })
-        // test('click on new card to edit template', () => {
-        //     activeView.fields.viewType = 'table'
-        //     activeView.fields.defaultTemplateId = '1'
-        //     const {container} = render(wrapDNDIntl(
-        //         <ReduxProvider store={store}>
-        //             <CenterPanel
-        //                 cards={[card1, card2]}
-        //                 views={[activeView]}
-        //                 board={board}
-        //                 activeView={activeView}
-        //                 readonly={false}
-        //                 showCard={jest.fn()}
-        //                 showShared={true}
-        //                 groupByProperty={groupProperty}
-        //                 shownCardId={card1.id}
-        //             />
-        //         </ReduxProvider>,
-        //     ))
-        //     const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
-        //     expect(elementMenuWrapper).not.toBeNull()
-        //     userEvent.click(elementMenuWrapper!)
-        //     const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
-        //     expect(elementCard1).not.toBeNull()
-        //     const elementMenuWrapperCard1 = within(elementCard1).getByRole('button', {name: 'menuwrapper'})
-        //     expect(elementMenuWrapperCard1).not.toBeNull()
-        //     userEvent.click(elementMenuWrapperCard1)
-        //     const elementEditMenuTemplate = within(elementMenuWrapperCard1).getByRole('button', {name: 'Edit'})
-        //     expect(elementMenuWrapperCard1).not.toBeNull()
-        //     userEvent.click(elementEditMenuTemplate)
-        //     expect(container).toMatchSnapshot()
-        // })
+        test('click on new card to add card from template', () => {
+            activeView.fields.viewType = 'table'
+            activeView.fields.defaultTemplateId = '1'
+            const {container} = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <CenterPanel
+                        cards={[card1, card2]}
+                        views={[activeView]}
+                        board={board}
+                        activeView={activeView}
+                        readonly={false}
+                        showCard={jest.fn()}
+                        groupByProperty={groupProperty}
+                        shownCardId={card1.id}
+                        hiddenCardsCount={0}
+                    />
+                </ReduxProvider>,
+            ))
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
+            expect(elementMenuWrapper).not.toBeNull()
+            userEvent.click(elementMenuWrapper!)
+            const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
+            expect(elementCard1).not.toBeNull()
+            userEvent.click(elementCard1)
+            expect(mockedMutator.performAsUndoGroup).toBeCalledTimes(1)
+        })
+
+        test('click on new card to edit template', () => {
+            activeView.fields.viewType = 'table'
+            activeView.fields.defaultTemplateId = '1'
+            const {container} = render(wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <CenterPanel
+                        cards={[card1, card2]}
+                        views={[activeView]}
+                        board={board}
+                        activeView={activeView}
+                        readonly={false}
+                        showCard={jest.fn()}
+                        groupByProperty={groupProperty}
+                        shownCardId={card1.id}
+                        hiddenCardsCount={0}
+                    />
+                </ReduxProvider>,
+            ))
+            const elementMenuWrapper = container.querySelector('.ButtonWithMenu > div.MenuWrapper')
+            expect(elementMenuWrapper).not.toBeNull()
+            userEvent.click(elementMenuWrapper!)
+            const elementCard1 = within(elementMenuWrapper!.parentElement!).getByRole('button', {name: 'card1'})
+            expect(elementCard1).not.toBeNull()
+            const elementMenuWrapperCard1 = within(elementCard1).getByRole('button', {name: 'menuwrapper'})
+            expect(elementMenuWrapperCard1).not.toBeNull()
+            userEvent.click(elementMenuWrapperCard1)
+            const elementEditMenuTemplate = within(elementMenuWrapperCard1).getByRole('button', {name: 'Edit'})
+            expect(elementMenuWrapperCard1).not.toBeNull()
+            userEvent.click(elementEditMenuTemplate)
+            expect(container).toMatchSnapshot()
+        })
+    })
+})
+
+describe('components/centerPanel', () => {
+    const board = TestBlockFactory.createBoard()
+    board.id = '1'
+    const activeView = TestBlockFactory.createBoardView(board)
+    activeView.id = '1'
+    const card1 = TestBlockFactory.createCard(board)
+    card1.id = '1'
+    card1.title = 'card1'
+    card1.fields.properties = {id: 'property_value_id_1'}
+    card1.limited = true
+    const card2 = TestBlockFactory.createCard(board)
+    card2.id = '2'
+    card2.title = 'card2'
+    card2.fields.properties = {id: 'property_value_id_1'}
+    card2.limited = true
+    const comment1 = TestBlockFactory.createComment(card1)
+    comment1.id = '1'
+    const comment2 = TestBlockFactory.createComment(card2)
+    comment2.id = '2'
+    const groupProperty: IPropertyTemplate = {
+        id: 'id',
+        name: 'name',
+        type: 'text',
+        options: [
+            {
+                color: 'propColorOrange',
+                id: 'property_value_id_1',
+                value: 'Q1',
+            },
+            {
+                color: 'propColorBlue',
+                id: 'property_value_id_2',
+                value: 'Q2',
+            },
+        ],
+    }
+    const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
+        searchText: '',
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {
+                    focalboard_onboardingTourStarted: false,
+                },
+            },
+            workspaceUsers: [
+                {username: 'username_1'},
+            ],
+            boardUsers: [
+                {username: 'username_1'},
+            ],
+            blockSubscriptions: [],
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        cards: {
+            templates: [card1, card2],
+            cards: [card1, card2],
+            current: card1.id,
+        },
+        views: {
+            views: {
+                boardView: activeView,
+            },
+            current: 'boardView',
+        },
+        contents: {},
+        comments: {
+            comments: [comment1, comment2],
+        },
+        limits: {
+            limits: {
+                views: 0,
+            },
+        },
+    }
+    const store = mockStateStore([], state)
+    beforeAll(() => {
+        mockDOM()
+        console.error = jest.fn()
+    })
+    beforeEach(() => {
+        activeView.fields.viewType = 'board'
+        jest.clearAllMocks()
+    })
+
+    test('Clicking on the Hidden card count should open a dailog', () => {
+        activeView.fields.viewType = 'table'
+        activeView.fields.defaultTemplateId = '1'
+        const {container, getByTitle, getByText} = render(wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <CenterPanel
+                    cards={[card1, card2]}
+                    views={[activeView]}
+                    board={board}
+                    activeView={activeView}
+                    readonly={false}
+                    showCard={jest.fn()}
+                    groupByProperty={groupProperty}
+                    shownCardId={card1.id}
+                    hiddenCardsCount={2}
+                />
+            </ReduxProvider>,
+        ))
+        fireEvent.click(getByTitle('hidden-card-count'))
+        expect(getByText('2 cards hidden from board')).not.toBeNull()
+        expect(container).toMatchSnapshot()
     })
 })

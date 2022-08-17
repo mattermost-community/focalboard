@@ -4,9 +4,14 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 
-	apierrors "github.com/mattermost/mattermost-plugin-api/errors"
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
+
+// ErrBlocksFromDifferentBoards is an error type that can be returned
+// when a set of blocks belong to different boards.
+var ErrBlocksFromDifferentBoards = errors.New("blocks belong to different boards")
 
 // ErrNotFound is an error type that can be returned by store APIs when a query unexpectedly fetches no records.
 type ErrNotFound struct {
@@ -27,7 +32,7 @@ func (nf *ErrNotFound) Error() string {
 // IsErrNotFound returns true if `err` is or wraps one of:
 // - model.ErrNotFound
 // - sql.ErrNoRows
-// - mattermost-plugin-api/errors/ErrNotFound.
+// - mattermost-plugin-api/ErrNotFound.
 func IsErrNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -45,5 +50,32 @@ func IsErrNotFound(err error) bool {
 	}
 
 	// check if this is a plugin API error
-	return errors.Is(err, apierrors.ErrNotFound)
+	return errors.Is(err, pluginapi.ErrNotFound)
+}
+
+// ErrNotAllFound is an error type that can be returned by store APIs
+// when a query that should fetch a certain amount of records
+// unexpectedly fetches less.
+type ErrNotAllFound struct {
+	resources []string
+}
+
+func NewErrNotAllFound(resources []string) *ErrNotAllFound {
+	return &ErrNotAllFound{
+		resources: resources,
+	}
+}
+
+func (na *ErrNotAllFound) Error() string {
+	return fmt.Sprintf("not all instances in {%s} found", strings.Join(na.resources, ", "))
+}
+
+// IsErrNotAllFound returns true if `err` is or wraps a ErrNotAllFound.
+func IsErrNotAllFound(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	var na *ErrNotAllFound
+	return errors.As(err, &na)
 }

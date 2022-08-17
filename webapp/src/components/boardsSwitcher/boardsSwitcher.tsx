@@ -6,13 +6,24 @@ import {useIntl} from 'react-intl'
 
 import Search from '../../widgets/icons/search'
 
+import {useAppSelector} from '../../store/hooks'
+
+import {
+    getOnboardingTourCategory,
+    getOnboardingTourStep,
+} from '../../store/users'
+
+import {getCurrentCard} from '../../store/cards'
+
 import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
 import BoardSwitcherDialog from '../boardsSwitcherDialog/boardSwitcherDialog'
 import {Utils} from '../../utils'
 import {Constants} from '../../constants'
+import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
 
 import IconButton from '../../widgets/buttons/iconButton'
+import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
     onBoardTemplateSelectorOpen?: () => void,
@@ -23,6 +34,15 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const currentCard = useAppSelector(getCurrentCard)
+    const noCardOpen = !currentCard
+
+
+    const shouldViewSearchForBoardsTour = noCardOpen &&
+                                       onboardingTourCategory === TOUR_SIDEBAR &&
+                                       onboardingTourStep === SidebarTourSteps.SEARCH_FOR_BOARDS.toString()
 
     // We need this keyboard handling (copied from Mattermost webapp) instead of
     // using react-hotkeys-hook as react-hotkeys-hook is unable to handle keyboard shortcuts that
@@ -41,12 +61,21 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
         }
     }
 
+    const handleEscKeyPress = (e: KeyboardEvent) => {
+        if (Utils.isKeyPressed(e, Constants.keyCodes.ESC)) {
+            e.preventDefault()
+            setShowSwitcher(false)
+        }
+    }
+
     useEffect(() => {
         document.addEventListener('keydown', handleQuickSwitchKeyPress)
+        document.addEventListener('keydown', handleEscKeyPress)
 
         // cleanup function
         return () => {
             document.removeEventListener('keydown', handleQuickSwitchKeyPress)
+            document.removeEventListener('keydown', handleEscKeyPress)
         }
     }, [])
 
@@ -63,7 +92,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                     </span>
                 </div>
             </div>
-
+            {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
                 Utils.isFocalboardPlugin() && !props.userIsGuest &&
                 <IconButton
@@ -77,7 +106,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
             {
                 showSwitcher &&
-                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)}/>
+                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)} />
             }
         </div>
     )

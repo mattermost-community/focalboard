@@ -1,8 +1,10 @@
+@import '../styles/z-index';
+
 .TopBar {
+    @include z-index(top-bar);
     position: absolute;
     top: 8px;
     right: 32px;
-    z-index: 10;
 
     display: flex;
     flex-direction: row;

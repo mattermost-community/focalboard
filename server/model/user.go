@@ -26,6 +26,13 @@ type User struct {
 	// required: true
 	Email string `json:"-"`
 
+	// The user's nickname
+	Nickname string `json:"nickname"`
+	// The user's first name
+	FirstName string `json:"firstname"`
+	// The user's last name
+	LastName string `json:"lastname"`
+
 	// swagger:ignore
 	Password string `json:"-"`
 
@@ -61,6 +68,8 @@ type User struct {
 	// If the user is a guest or not
 	// required: true
 	IsGuest bool `json:"is_guest"`
+
+	Roles string `json:"roles"`
 }
 
 // UserPropPatch is a user property patch

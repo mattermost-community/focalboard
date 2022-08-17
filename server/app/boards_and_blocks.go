@@ -44,17 +44,39 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 		}
 	}
 
+	if len(newBab.Blocks) != 0 {
+		go func() {
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after creating boards and blocks",
+					mlog.Err(uErr),
+				)
+			}
+		}()
+	}
+
 	return newBab, nil
 }
 
 func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error) {
-	oldBlocksMap := map[string]*model.Block{}
-	for _, blockID := range pbab.BlockIDs {
-		block, err := a.store.GetBlock(blockID)
-		if err != nil {
-			return nil, err
+	oldBlocks, err := a.store.GetBlocksByIDs(pbab.BlockIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	if a.IsCloudLimited() {
+		containsLimitedBlocks, cErr := a.ContainsLimitedBlocks(oldBlocks)
+		if cErr != nil {
+			return nil, cErr
 		}
-		oldBlocksMap[blockID] = block
+		if containsLimitedBlocks {
+			return nil, ErrPatchUpdatesLimitedCards
+		}
+	}
+
+	oldBlocksMap := map[string]model.Block{}
+	for _, block := range oldBlocks {
+		oldBlocksMap[block.ID] = block
 	}
 
 	bab, err := a.store.PatchBoardsAndBlocks(pbab, userID)
@@ -76,7 +98,7 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 			a.metrics.IncrementBlocksPatched(1)
 			a.wsAdapter.BroadcastBlockChange(teamID, b)
 			a.webhook.NotifyUpdate(b)
-			a.notifyBlockChanged(notify.Update, &b, oldBlock, userID)
+			a.notifyBlockChanged(notify.Update, &b, &oldBlock, userID)
 		}
 
 		for _, board := range bab.Boards {
@@ -121,6 +143,17 @@ func (a *App) DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID st
 		}
 		return nil
 	})
+
+	if len(dbab.Blocks) != 0 {
+		go func() {
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after deleting boards and blocks",
+					mlog.Err(uErr),
+				)
+			}
+		}()
+	}
 
 	return nil
 }

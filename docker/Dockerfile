@@ -8,12 +8,13 @@ RUN npm install --no-optional && \
     npm run pack
 
 ### Go build
-FROM golang:1.16.5@sha256:3ba07778b0a48cef0820fe630220089b74ac9bd06a92ac1cf7b2f1abceffcdaa as gobuild
+FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be40540381838d75eebef AS gobuild
 
 WORKDIR /go/src/focalboard
 ADD . /go/src/focalboard
 
-RUN  make server-linux
+
+RUN  EXCLUDE_PLUGIN=true EXCLUDE_SERVER=true EXCLUDE_ENTERPRISE=true make server-linux
 RUN mkdir /data
 
 ## Final image
