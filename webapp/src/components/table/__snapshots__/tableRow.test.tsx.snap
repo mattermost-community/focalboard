@@ -15,7 +15,7 @@ exports[`components/table/TableRow should match snapshot 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-drag-vertical undefined"
+          class="CompassIcon icon-drag-vertical"
         />
       </button>
     </div>
@@ -88,7 +88,7 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-drag-vertical undefined"
+          class="CompassIcon icon-drag-vertical"
         />
       </button>
     </div>
@@ -161,7 +161,7 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
         type="button"
       >
         <i
-          class="CompassIcon icon-drag-vertical undefined"
+          class="CompassIcon icon-drag-vertical"
         />
       </button>
     </div>
@@ -272,7 +272,7 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-drag-vertical undefined"
+          class="CompassIcon icon-drag-vertical"
         />
       </button>
     </div>
@@ -391,7 +391,7 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
         type="button"
       >
         <i
-          class="CompassIcon icon-drag-vertical undefined"
+          class="CompassIcon icon-drag-vertical"
         />
       </button>
     </div>

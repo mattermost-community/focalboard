@@ -43,7 +43,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -358,7 +358,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -418,7 +418,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -477,7 +477,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -545,7 +545,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -618,7 +618,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -788,7 +788,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -1388,7 +1388,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -1703,7 +1703,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -1763,7 +1763,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -1822,7 +1822,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -1890,7 +1890,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -1963,7 +1963,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -2277,7 +2277,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -2315,7 +2315,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -2440,7 +2440,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -2539,7 +2539,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -2854,7 +2854,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -2914,7 +2914,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -2973,7 +2973,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -3041,7 +3041,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -3114,7 +3114,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -3234,7 +3234,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -3549,7 +3549,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -3609,7 +3609,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -3668,7 +3668,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -3736,7 +3736,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -3809,7 +3809,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -3929,7 +3929,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -4244,7 +4244,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -4304,7 +4304,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -4363,7 +4363,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -4431,7 +4431,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -4504,7 +4504,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -4624,7 +4624,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -4939,7 +4939,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -4999,7 +4999,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -5058,7 +5058,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -5126,7 +5126,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -5199,7 +5199,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -5319,7 +5319,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -5634,7 +5634,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -5694,7 +5694,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -5753,7 +5753,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -5821,7 +5821,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -5894,7 +5894,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -6014,7 +6014,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -6329,7 +6329,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -6389,7 +6389,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -6448,7 +6448,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -6516,7 +6516,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -6589,7 +6589,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -6709,7 +6709,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -7024,7 +7024,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -7084,7 +7084,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -7143,7 +7143,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -7211,7 +7211,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -7284,7 +7284,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -7404,7 +7404,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -7719,7 +7719,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -7779,7 +7779,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -7838,7 +7838,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -7906,7 +7906,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -7979,7 +7979,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -8099,7 +8099,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -8414,7 +8414,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -8474,7 +8474,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -8533,7 +8533,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -8601,7 +8601,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -8674,7 +8674,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -8794,7 +8794,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -9116,7 +9116,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -9682,7 +9682,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -10201,7 +10201,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -10516,7 +10516,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -10576,7 +10576,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span
@@ -10635,7 +10635,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-drag-vertical undefined"
+                    class="CompassIcon icon-drag-vertical"
                   />
                 </button>
               </div>
@@ -10708,7 +10708,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down undefined"
+                    class="CompassIcon icon-menu-down"
                   />
                 </button>
                 <span

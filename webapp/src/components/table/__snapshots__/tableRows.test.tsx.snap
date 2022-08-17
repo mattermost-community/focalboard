@@ -15,7 +15,7 @@ exports[`components/table/TableRows should match snapshot, fire events 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-drag-vertical undefined"
+          class="CompassIcon icon-drag-vertical"
         />
       </button>
     </div>

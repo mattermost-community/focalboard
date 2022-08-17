@@ -144,7 +144,7 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -260,7 +260,7 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -584,7 +584,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -704,7 +704,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -1032,7 +1032,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -1148,7 +1148,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -1472,7 +1472,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -1592,7 +1592,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -2229,7 +2229,7 @@ exports[`components/table/Table should match snapshot 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-drag-vertical undefined"
+                class="CompassIcon icon-drag-vertical"
               />
             </button>
           </div>
@@ -2510,7 +2510,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
                 type="button"
               >
                 <i
-                  class="CompassIcon icon-menu-down undefined"
+                  class="CompassIcon icon-menu-down"
                 />
               </button>
               <span
