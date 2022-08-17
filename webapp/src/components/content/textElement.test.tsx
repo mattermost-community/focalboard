@@ -15,6 +15,8 @@ import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
 
 import {Utils} from '../../utils'
 
+import {TestBlockFactory} from "../../test/testBlockFactory"
+
 import TextElement from './textElement'
 
 jest.mock('../../utils')
@@ -35,11 +37,15 @@ const defaultBlock: TextBlock = {
     createAt: 0,
     updateAt: 0,
     deleteAt: 0,
+    limited: false,
 }
 describe('components/content/TextElement', () => {
     beforeAll(() => {
         mockDOM()
     })
+
+    const board1 = TestBlockFactory.createBoard()
+    board1.id = 'board-id-1'
 
     const state = {
         users: {
@@ -50,6 +56,15 @@ describe('components/content/TextElement', () => {
                 4: {username: 'f'},
                 5: {username: 'g'},
             },
+        },
+        boards: {
+            current: 'board-id-1',
+            boards: {
+                [board1.id]: board1,
+            }
+        },
+        clientConfig: {
+            value: {},
         },
     }
     const store = mockStateStore([], state)

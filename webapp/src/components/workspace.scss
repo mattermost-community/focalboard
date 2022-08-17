@@ -1,3 +1,5 @@
+@import '../styles/z-index';
+
 .Workspace {
     flex: 1 1 auto;
     display: flex;
@@ -6,12 +8,12 @@
     position: relative;
 
     > .mainFrame {
+        @include z-index(workspace-main-frame);
         position: relative;
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        z-index: 9;
 
         > .banner {
             background-color: rgba(230, 220, 192, 0.9);

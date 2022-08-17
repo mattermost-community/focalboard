@@ -1,7 +1,6 @@
 package app
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
@@ -114,7 +113,6 @@ func TestRegisterUser(t *testing.T) {
 
 	for _, test := range testcases {
 		t.Run(test.title, func(t *testing.T) {
-			fmt.Println(test.email)
 			err := th.App.RegisterUser(test.userName, test.email, test.password)
 			if test.isError {
 				require.Error(t, err)

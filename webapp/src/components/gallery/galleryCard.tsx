@@ -1,37 +1,27 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useMemo} from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
+import {FormattedMessage} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
-import {IUser} from '../../user'
-import {getMe} from '../../store/users'
 import {getCardContents} from '../../store/contents'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
-import DeleteIcon from '../../widgets/icons/delete'
-import DuplicateIcon from '../../widgets/icons/duplicate'
-import LinkIcon from '../../widgets/icons/Link'
 import OptionsIcon from '../../widgets/icons/options'
-import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
-import {Permission} from '../../constants'
 import {CardDetailProvider} from '../cardDetail/cardDetailContext'
 import ContentElement from '../content/contentElement'
 import ImageElement from '../content/imageElement'
-import {sendFlashMessage} from '../flashMessages'
 import PropertyValueElement from '../propertyValueElement'
 import './galleryCard.scss'
 import CardBadges from '../cardBadges'
-
-import BoardPermissionGate from '../permissions/boardPermissionGate'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
 type Props = {
     board: Board
@@ -48,10 +38,8 @@ type Props = {
 
 const GalleryCard = (props: Props) => {
     const {card, board} = props
-    const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
-    const me = useAppSelector<IUser|null>(getMe)
 
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
 
@@ -84,42 +72,14 @@ const GalleryCard = (props: Props) => {
                     stopPropagationOnToggle={true}
                 >
                     <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name={intl.formatMessage({id: 'GalleryCard.delete', defaultMessage: 'Delete'})}
-                                onClick={() => mutator.deleteBlock(card, 'delete card')}
-                            />
-                            <Menu.Text
-                                icon={<DuplicateIcon/>}
-                                id='duplicate'
-                                name={intl.formatMessage({id: 'GalleryCard.duplicate', defaultMessage: 'Duplicate'})}
-                                onClick={() => {
-                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                                    mutator.duplicateCard(card.id, board.id)
-                                }}
-                            />
-                        </BoardPermissionGate>
-                        {me?.id !== 'single-user' &&
-                            <Menu.Text
-                                icon={<LinkIcon/>}
-                                id='copy'
-                                name={intl.formatMessage({id: 'GalleryCard.copyLink', defaultMessage: 'Copy link'})}
-                                onClick={() => {
-                                    let cardLink = window.location.href
-
-                                    if (!cardLink.includes(card.id)) {
-                                        cardLink += `/${card.id}`
-                                    }
-
-                                    Utils.copyTextToClipboard(cardLink)
-                                    sendFlashMessage({content: intl.formatMessage({id: 'GalleryCard.copiedLink', defaultMessage: 'Copied!'}), severity: 'high'})
-                                }}
-                            />
-                        }
-                    </Menu>
+                    <CardActionsMenu
+                        cardId={card!.id}
+                        onClickDelete={() => mutator.deleteBlock(card, 'delete card')}
+                        onClickDuplicate={() => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                            mutator.duplicateCard(card.id, board.id)
+                        }}
+                    />
                 </MenuWrapper>
             }
 

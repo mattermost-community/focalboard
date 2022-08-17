@@ -3,6 +3,8 @@
 
 import {Board} from '../../src/blocks/board'
 import {UserConfigPatch} from '../../src/user'
+import {versionProperty} from '../../src/store/users'
+
 
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
@@ -86,6 +88,7 @@ Cypress.Commands.add('apiSkipTour', (userID: string) => {
     const body: UserConfigPatch = {
         updatedFields: {
             focalboard_welcomePageViewed: '1',
+            [versionProperty]: 'true',
         },
     }
 
@@ -119,11 +122,11 @@ Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
     cy.log('**Create new empty board**')
     cy.uiCreateEmptyBoard()
 
-    cy.findByPlaceholderText('Untitled Board').should('exist')
+    cy.findByPlaceholderText('Untitled board').should('exist')
     cy.wait(10)
     if (title) {
         cy.log('**Rename board**')
-        cy.findByPlaceholderText('Untitled Board').type(`${title}{enter}`)
+        cy.findByPlaceholderText('Untitled board').type(`${title}{enter}`)
         cy.findByRole('textbox', {name: title}).should('exist')
     }
     cy.wait(500)

@@ -13,7 +13,6 @@ import {getMessages} from './i18n'
 import {FlashMessages} from './components/flashMessages'
 import NewVersionBanner from './components/newVersionBanner'
 import {Utils} from './utils'
-import wsClient from './wsclient'
 import {fetchMe, getMe} from './store/users'
 import {getLanguage, fetchLanguage} from './store/language'
 import {useAppSelector, useAppDispatch} from './store/hooks'
@@ -36,20 +35,6 @@ const App = (props: Props): JSX.Element => {
         dispatch(fetchMe())
         dispatch(fetchClientConfig())
     }, [])
-
-    // this is a temporary solution while we're using legacy routes
-    // for shared boards as a way to disable websockets, and should be
-    // removed when anonymous plugin routes are implemented. This
-    // check is used to detect if we're running inside the plugin but
-    // in a legacy route
-    if (!Utils.isFocalboardLegacy()) {
-        useEffect(() => {
-            wsClient.open()
-            return () => {
-                wsClient.close()
-            }
-        }, [])
-    }
 
     useEffect(() => {
         if (me) {

@@ -16,7 +16,7 @@ RUN npm install --no-optional
 RUN npm run pack
 
 # build backend and package
-FROM golang:1.16.5@sha256:3ba07778b0a48cef0820fe630220089b74ac9bd06a92ac1cf7b2f1abceffcdaa AS backend
+FROM golang:1.18.3@sha256:b203dc573d81da7b3176264bfa447bd7c10c9347689be40540381838d75eebef AS backend
 
 COPY . .
 COPY --from=frontend /webapp/pack webapp/pack
@@ -26,7 +26,7 @@ RUN make server-linux
 RUN make server-linux-package-docker
 
 # just hold the packages to output later
-FROM alpine:3.12@sha256:d9459083f962de6bd980ae6a05be2a4cf670df6a1d898157bceb420342bec280 AS dist
+FROM alpine:3.12@sha256:c75ac27b49326926b803b9ed43bf088bc220d22556de1bc5f72d742c91398f69 AS dist
 
 WORKDIR /dist
 

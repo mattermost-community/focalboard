@@ -183,19 +183,6 @@ func TestIsValidPatchBoardsAndBlocks(t *testing.T) {
 		require.ErrorIs(t, pbab.IsValid(), ErrBoardIDsAndPatchesMissmatchInBoardsAndBlocks)
 	})
 
-	t.Run("no block ids", func(t *testing.T) {
-		pbab := &PatchBoardsAndBlocks{
-			BoardIDs: []string{"board-id-1", "board-id-2"},
-			BoardPatches: []*BoardPatch{
-				{Title: &newTitle},
-				{Description: &newDescription},
-			},
-			BlockIDs: []string{},
-		}
-
-		require.ErrorIs(t, pbab.IsValid(), ErrNoBlocksInBoardsAndBlocks)
-	})
-
 	t.Run("missmatch block IDs and patches", func(t *testing.T) {
 		pbab := &PatchBoardsAndBlocks{
 			BoardIDs: []string{"board-id-1", "board-id-2"},

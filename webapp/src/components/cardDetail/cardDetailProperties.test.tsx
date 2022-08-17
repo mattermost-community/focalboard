@@ -11,11 +11,11 @@ import {createIntl} from 'react-intl'
 import configureStore from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {PropertyType} from '../../blocks/board'
 import {wrapIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import mutator from '../../mutator'
-import {propertyTypesList, typeDisplayName} from '../../widgets/propertyMenu'
+import propsRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
 import CardDetailProperties from './cardDetailProperties'
 
@@ -144,7 +144,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const deleteButton = screen.getByRole('button', {name: /delete/i})
         userEvent.click(deleteButton)
 
-        expect(screen.getByRole('heading', {name: 'Confirm Delete Property'})).toBeInTheDocument()
+        expect(screen.getByRole('heading', {name: 'Confirm delete property'})).toBeInTheDocument()
         expect(screen.getByRole('button', {name: /delete/i})).toBeInTheDocument()
     })
 
@@ -159,8 +159,8 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const selectProperty = screen.getByText(/select property type/i)
         expect(selectProperty).toBeInTheDocument()
 
-        propertyTypesList.forEach((type: PropertyType) => {
-            const typeButton = screen.getByRole('button', {name: typeDisplayName(intl, type)})
+        propsRegistry.list().forEach((type: PropertyType) => {
+            const typeButton = screen.getByRole('button', {name: type.displayName(intl)})
             expect(typeButton).toBeInTheDocument()
         })
     })
@@ -169,14 +169,8 @@ describe('components/cardDetail/CardDetailProperties', () => {
         const result = renderComponent()
 
         // rename to "Owner-Renamed"
-        onPropertyRenameOpenConfirmationDialog(result.container)
-
+        onPropertyRenameNoConfirmationDialog(result.container)
         const propertyTemplate = board.cardProperties[0]
-
-        const confirmButton = result.getByTitle('Change Property')
-        expect(confirmButton).toBeDefined()
-
-        userEvent.click(confirmButton!)
 
         // should be called once on confirming renaming the property
         expect(mockedMutator.changePropertyTypeAndName).toBeCalledTimes(1)
@@ -201,19 +195,6 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(template).toBeTruthy()
         expect(template!.name).toMatch(/number/i)
         expect(template!.type).toBe('number')
-    })
-
-    it('cancel button in TypeorNameChange dialog should do nothing', () => {
-        const result = renderComponent()
-        const container = result.container
-        onPropertyRenameOpenConfirmationDialog(container)
-
-        const cancelButton = result.getByTitle('Cancel')
-        expect(cancelButton).toBeDefined()
-
-        userEvent.click(cancelButton!)
-
-        expect(container).toMatchSnapshot()
     })
 
     it('confirmation on delete dialog should delete the property', () => {
@@ -261,7 +242,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmDialog).toBeDefined()
     }
 
-    function onPropertyRenameOpenConfirmationDialog(container:HTMLElement) {
+    function onPropertyRenameNoConfirmationDialog(container:HTMLElement) {
         const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)
@@ -271,8 +252,5 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(propertyNameInput).toBeDefined()
         userEvent.type(propertyNameInput!, 'Owner - Renamed{enter}')
         userEvent.click(propertyLabel!)
-
-        const confirmDialog = container.querySelector('.dialog.confirmation-dialog-box')
-        expect(confirmDialog).toBeDefined()
     }
 })

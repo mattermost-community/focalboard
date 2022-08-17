@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .GalleryCard {
     position: relative;
     border: 1px solid rgba(var(--center-channel-color-rgb), 0.09);
@@ -25,13 +27,13 @@
     }
 
     .optionsMenu {
+        @include z-index(gallery-options-menu);
         background-color: rgb(var(--center-channel-bg-rgb));
         border-radius: var(--default-rad);
         display: none;
         position: absolute;
         right: 10px;
         top: 10px;
-        z-index: 30;
 
         .IconButton {
             background-color: rgba(var(--center-channel-color-rgb), 0.13);

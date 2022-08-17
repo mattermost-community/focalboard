@@ -803,9 +803,23 @@ func testUndeleteBoard(t *testing.T, store store.Store) {
 		boardID := utils.NewID(utils.IDTypeBoard)
 
 		board := &model.Board{
-			ID:     boardID,
-			TeamID: testTeamID,
-			Type:   model.BoardTypeOpen,
+			ID:              boardID,
+			TeamID:          testTeamID,
+			Type:            model.BoardTypeOpen,
+			Title:           "Dunder Mifflin Scranton",
+			MinimumRole:     model.BoardRoleCommenter,
+			Description:     "Bears, beets, Battlestar Gallectica",
+			Icon:            "🐻",
+			ShowDescription: true,
+			IsTemplate:      false,
+			Properties: map[string]interface{}{
+				"prop_1": "value_1",
+			},
+			CardProperties: []map[string]interface{}{
+				{
+					"prop_1": "value_1",
+				},
+			},
 		}
 
 		newBoard, err := store.InsertBoard(board, userID)
@@ -828,6 +842,20 @@ func testUndeleteBoard(t *testing.T, store store.Store) {
 		board, err = store.GetBoard(boardID)
 		require.NoError(t, err)
 		require.NotNil(t, board)
+
+		// verifying the data after un-delete
+		require.Equal(t, "Dunder Mifflin Scranton", board.Title)
+		require.Equal(t, "user-id", board.CreatedBy)
+		require.Equal(t, "user-id", board.ModifiedBy)
+		require.Equal(t, model.BoardRoleCommenter, board.MinimumRole)
+		require.Equal(t, "Bears, beets, Battlestar Gallectica", board.Description)
+		require.Equal(t, "🐻", board.Icon)
+		require.True(t, board.ShowDescription)
+		require.False(t, board.IsTemplate)
+		require.Equal(t, board.Properties["prop_1"].(string), "value_1")
+		require.Equal(t, 1, len(board.CardProperties))
+		require.Equal(t, board.CardProperties[0]["prop_1"], "value_1")
+		require.Equal(t, board.CardProperties[0]["prop_1"], "value_1")
 	})
 
 	t.Run("existing id multiple times", func(t *testing.T) {

@@ -104,7 +104,10 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 readonly={false}
                 onCardClicked={() => null}
                 addCard={() => Promise.resolve()}
+                addCardFromTemplate={() => Promise.resolve()}
                 showCard={() => null}
+                hiddenCardsCount={0}
+                showHiddenCardCountNotification={() => null}
             />}
             {activeView?.fields.viewType === 'table' &&
             <Table
@@ -120,6 +123,8 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 onCardClicked={() => null}
                 addCard={() => Promise.resolve()}
                 showCard={() => null}
+                hiddenCardsCount={0}
+                showHiddenCardCountNotification={() => null}
             />}
             {activeView?.fields.viewType === 'gallery' &&
             <Gallery
@@ -130,6 +135,8 @@ const BoardTemplateSelectorPreview = (props: Props) => {
                 selectedCardIds={[]}
                 onCardClicked={() => null}
                 addCard={() => Promise.resolve()}
+                hiddenCardsCount={0}
+                showHiddenCardCountNotification={() => null}
             />}
             {activeView?.fields.viewType === 'calendar' &&
             <CalendarFullView

@@ -11,6 +11,7 @@ import (
 	permissionsMocks "github.com/mattermost/focalboard/server/services/permissions/mocks"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +35,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 		ctrl:        ctrl,
 		store:       mockStore,
 		api:         mockAPI,
-		permissions: New(mockStore, mockAPI),
+		permissions: New(mockStore, mockAPI, mlog.CreateConsoleTestLogger(true, mlog.LvlError)),
 	}
 }
 

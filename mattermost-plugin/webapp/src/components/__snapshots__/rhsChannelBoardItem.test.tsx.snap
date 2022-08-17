@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/rhsChannelBoardItem render board 1`] = `
+<div>
+  <div
+    class="RHSChannelBoardItem"
+  >
+    <div
+      class="board-info"
+    >
+      
+      <span
+        class="title"
+      >
+        Test board
+      </span>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="description"
+    />
+    <div
+      class="date"
+    >
+      Last update at: July 08, 8:10 PM
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
+<div>
+  <div
+    class="RHSChannelBoardItem"
+  >
+    <div
+      class="board-info"
+    >
+      
+      <span
+        class="title"
+      >
+        Test board
+      </span>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+        <div
+          class="Menu noselect left  fixed"
+        >
+          <div
+            class="menu-contents"
+          >
+            <div
+              class="menu-options"
+            >
+              <div>
+                <div
+                  aria-label="Unlink board"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-name"
+                  >
+                    Unlink board
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="menu-spacer hideOnWidescreen"
+            />
+            <div
+              class="menu-options hideOnWidescreen"
+            >
+              <div
+                aria-label="Cancel"
+                class="MenuOption TextOption menu-option menu-cancel"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="description"
+    />
+    <div
+      class="date"
+    >
+      Last update at: July 08, 8:10 PM
+    </div>
+  </div>
+</div>
+`;

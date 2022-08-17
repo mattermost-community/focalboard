@@ -6,7 +6,6 @@ import {IntlShape} from 'react-intl'
 import {useDrop} from 'react-dnd'
 
 import mutator from '../../mutator'
-import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import ShowIcon from '../../widgets/icons/show'
@@ -14,6 +13,8 @@ import Label from '../../widgets/label'
 import {Card} from '../../blocks/card'
 import {BoardGroup} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
+
+import Button from '../../widgets/buttons/button'
 
 type Props = {
     activeView: BoardView
@@ -25,6 +26,8 @@ type Props = {
 
 export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
     const {activeView, intl, group} = props
+    const hiddenCardGroupId = 'hidden-card-group-id'
+
     const [{isOver}, drop] = useDrop(() => ({
         accept: 'card',
         collect: (monitor) => ({
@@ -64,7 +67,8 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
                     />
                 </Menu>
             </MenuWrapper>
-            <Button>{`${group.cards.length}`}</Button>
+            {props.group.option.id !== hiddenCardGroupId && <Button>{`${group.cards.length}`}</Button>}
+            {props.group.option.id === hiddenCardGroupId && <Button title='hidden-card-count'>{`${group.cards.length}`}</Button>}
         </div>
     )
 }

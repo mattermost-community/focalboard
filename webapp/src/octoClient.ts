@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Block, BlockPatch} from './blocks/block'
+import {Block, BlockPatch, FileInfo} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
@@ -9,10 +9,14 @@ import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
 import {Category, CategoryBoards} from './store/sidebar'
+import {Channel} from './store/channels'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from "./constants"
+
+import {BoardsCloudLimits} from './boardsCloudLimits'
+import {TopBoardResponse} from './insights'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -141,7 +145,6 @@ class OctoClient {
         }
     }
 
-    // ToDo: document
     private teamPath(teamId?: string): string {
         let teamIdToUse = teamId
         if (!teamId) {
@@ -183,6 +186,23 @@ class OctoClient {
         }
         const user = (await this.getJson(response, {})) as IUser
         return user
+    }
+
+    async getUsersList(userIds: string[]): Promise<IUser[] | []> {
+        const path = `/api/v2/users`
+        const body = JSON.stringify(userIds)
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+            body,
+        })
+
+        if(response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as IUser[]
+
     }
 
     async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
@@ -556,18 +576,23 @@ class OctoClient {
         return undefined
     }
 
-    async getFileAsDataUrl(boardId: string, fileId: string): Promise<string> {
+    async getFileAsDataUrl(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
         if (readToken) {
             path += `?read_token=${readToken}`
         }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
-        if (response.status !== 200) {
-            return ''
+        let fileInfo: FileInfo = {}
+
+        if (response.status === 200) {
+            const blob = await response.blob()
+            fileInfo.url = URL.createObjectURL(blob)
+        } else if (response.status === 400) {
+            fileInfo = await this.getJson(response, {}) as FileInfo
         }
-        const blob = await response.blob()
-        return URL.createObjectURL(blob)
+
+        return fileInfo
     }
 
     async getTeam(): Promise<Team | null> {
@@ -612,14 +637,6 @@ class OctoClient {
         const path = this.teamPath(teamId) + '/templates'
         return this.getBoardsWithPath(path)
     }
-
-    // Boards
-    // ToDo: .
-    // - goal? make the interface show boards & blocks for boards
-    // - teams (maybe current team)? boards, members, user roles in the store, whatever that is
-    // - selectors for boards, current team, board members
-    // - ops to add/delete a board, add/delete board members, change roles? .
-    // - WS definition and implementation
 
     async getBoards(): Promise<Board[]> {
         const path = this.teamPath() + '/boards'
@@ -774,7 +791,35 @@ class OctoClient {
     }
 
     async search(teamID: string, query: string): Promise<Array<Board>> {
-        const url = `${this.teamPath()}/boards/search?q=${encodeURIComponent(query)}`
+        const url = `${this.teamPath(teamID)}/boards/search?q=${encodeURIComponent(query)}`
+        const response = await fetch(this.getBaseURL() + url, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Array<Board>
+    }
+
+    async searchLinkableBoards(teamID: string, query: string): Promise<Array<Board>> {
+        const url = `${this.teamPath(teamID)}/boards/search/linkable?q=${encodeURIComponent(query)}`
+        const response = await fetch(this.getBaseURL() + url, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Array<Board>
+    }
+
+    async searchAll(query: string): Promise<Array<Board>> {
+        const url = `/api/v2/boards/search?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
             headers: this.headers(),
@@ -797,6 +842,32 @@ class OctoClient {
         return (await this.getJson(response, [])) as Subscription[]
     }
 
+    async searchUserChannels(teamId: string, searchQuery: string): Promise<Channel[] | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels?search=${searchQuery}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as Channel[]
+    }
+
+    async getChannel(teamId: string, channelId: string): Promise<Channel | undefined> {
+        const path = `/api/v2/teams/${teamId}/channels/${channelId}`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as Channel
+    }
+
     // onboarding
     async prepareOnboarding(teamId: string): Promise<PrepareOnboardingResponse | undefined> {
         const path = `/api/v2/teams/${teamId}/onboard`
@@ -809,6 +880,47 @@ class OctoClient {
         }
 
         return (await this.getJson(response, {})) as PrepareOnboardingResponse
+    }
+
+    async notifyAdminUpgrade(): Promise<void> {
+        const path = `${this.teamPath()}/notifyadminupgrade`
+        await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'POST',
+        })
+    }
+
+    async getBoardsCloudLimits(): Promise<BoardsCloudLimits | undefined> {
+        const path = '/api/v2/limits'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        const limits = (await this.getJson(response, {})) as BoardsCloudLimits
+        Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
+        return limits
+    }
+
+    // insights
+    async getMyTopBoards(timeRange: string, page: number, perPage: number, teamId: string): Promise<TopBoardResponse | undefined> {
+        const path = `/api/v2/users/me/boards/insights?time_range=${timeRange}&page=${page}&per_page=${perPage}&team_id=${teamId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as TopBoardResponse
+    }
+
+    async getTeamTopBoards(timeRange: string, page: number, perPage: number, teamId: string): Promise<TopBoardResponse | undefined> {
+        const path = `/api/v2/teams/${teamId}/boards/insights?time_range=${timeRange}&page=${page}&per_page=${perPage}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as TopBoardResponse
     }
 }
 

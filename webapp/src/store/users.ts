@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser} from '../user'
+import {IUser, parseUserProps} from '../user'
 
 import {Utils} from '../utils'
 
@@ -12,6 +12,7 @@ import {Subscription} from '../wsclient'
 
 // TODO: change this whene the initial load is complete
 // import {initialLoad} from './initialLoad'
+import {UserSettings} from '../userSettings'
 
 import {RootState} from './index'
 
@@ -19,6 +20,8 @@ export const fetchMe = createAsyncThunk(
     'users/fetchMe',
     async () => client.getMe(),
 )
+
+export const versionProperty = 'focalboard_version72MessageCanceled'
 
 type UsersStatus = {
     me: IUser|null
@@ -46,6 +49,9 @@ const usersSlice = createSlice({
     reducers: {
         setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
+            if (state.me) {
+                state.me.props = parseUserProps(state.me.props)
+            }
             state.loggedIn = Boolean(state.me)
         },
         setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
@@ -59,6 +65,11 @@ const usersSlice = createSlice({
                 state.boardUsers[user.id] = user
             })
         },
+        removeBoardUsersById: (state, action: PayloadAction<string[]>) => {
+            action.payload.forEach((userId: string) => {
+                delete state.boardUsers[userId]
+            })
+        },
         followBlock: (state, action: PayloadAction<Subscription>) => {
             state.blockSubscriptions.push(action.payload)
         },
@@ -68,13 +79,16 @@ const usersSlice = createSlice({
         },
         patchProps: (state, action: PayloadAction<Record<string, string>>) => {
             if (state.me) {
-                state.me.props = action.payload
+                state.me.props = parseUserProps(action.payload)
             }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
             state.me = action.payload || null
+            if (state.me) {
+                state.me.props = parseUserProps(state.me.props)
+            }
             state.loggedIn = Boolean(state.me)
         })
         builder.addCase(fetchMe.rejected, (state) => {
@@ -96,7 +110,7 @@ const usersSlice = createSlice({
     },
 })
 
-export const {setMe, setBoardUsers, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
+export const {setMe, setBoardUsers, removeBoardUsersById, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
@@ -140,4 +154,58 @@ export const getOnboardingTourStep = createSelector(
 export const getOnboardingTourCategory = createSelector(
     getMe,
     (me): string => (me ? me.props?.focalboard_tourCategory : ''),
+)
+
+export const getCloudMessageCanceled = createSelector(
+    getMe,
+    (me): boolean => {
+        if (!me) {
+            return false
+        }
+        if (me.id === 'single-user') {
+            return UserSettings.hideCloudMessage
+        }
+        return Boolean(me.props?.focalboard_cloudMessageCanceled)
+    },
+)
+
+export const getVersionMessageCanceled = createSelector(
+    getMe,
+    (me): boolean => {
+        if (versionProperty && me){
+            if (me.id === 'single-user') {
+                return true
+            }
+            return Boolean(me.props[versionProperty])    
+        }
+        return true
+    },
+)
+
+export const getCardLimitSnoozeUntil = createSelector(
+    getMe,
+    (me): number => {
+        if (!me) {
+            return 0
+        }
+        try {
+            return parseInt(me.props?.focalboard_cardLimitSnoozeUntil, 10) || 0
+        } catch (_) {
+            return 0
+        }
+    },
+)
+
+export const getCardHiddenWarningSnoozeUntil = createSelector(
+    getMe,
+    (me): number => {
+        if (!me) {
+            return 0
+        }
+        try {
+            return parseInt(me.props?.focalboard_cardHiddenWarningSnoozeUntil, 10) || 0
+        } catch (_) {
+            return 0
+        }
+    },
 )

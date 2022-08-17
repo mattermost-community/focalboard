@@ -8,7 +8,7 @@ import (
 )
 
 // makeAuditRecord creates an audit record pre-populated with data from the request.
-func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus string) *audit.Record { //nolint:unparam
+func (a *API) makeAuditRecord(r *http.Request, event string, initialStatus string) *audit.Record {
 	ctx := r.Context()
 	var sessionID string
 	var userID string

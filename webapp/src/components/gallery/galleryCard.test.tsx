@@ -32,7 +32,7 @@ describe('src/components/gallery/GalleryCard', () => {
     const mockedMutator = mocked(mutator, true)
     const mockedUtils = mocked(Utils, true)
     const mockedOcto = mocked(octoClient, true)
-    mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
+    mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 
     const board = TestBlockFactory.createBoard()
     board.id = 'boardId'

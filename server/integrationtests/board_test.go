@@ -526,7 +526,7 @@ func TestSearchBoards(t *testing.T) {
 		require.NoError(t, err)
 
 		board5 := &model.Board{
-			Title:  "public board where user1 is admin, but in other team",
+			Title:  "private board where user1 is admin, but in other team",
 			Type:   model.BoardTypePrivate,
 			TeamID: "other-team-id",
 		}
@@ -543,25 +543,25 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "should return all boards where user1 is member or that are public",
 				Client:      th.Client,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID},
 			},
 			{
 				Name:        "matching a full word",
 				Client:      th.Client,
 				Term:        "admin",
-				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID},
 			},
 			{
 				Name:        "matching part of the word",
 				Client:      th.Client,
 				Term:        "ubli",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
 			},
 			{
 				Name:        "case insensitive",
 				Client:      th.Client,
 				Term:        "UBLI",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, board5.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID},
 			},
 			{
 				Name:        "user2 can only see the public boards, as he's not a member of any",
@@ -1936,6 +1936,108 @@ func TestDuplicateBoard(t *testing.T) {
 		require.Equal(t, duplicateBoard.ID, members[0].BoardID)
 		require.True(t, members[0].SchemeAdmin)
 	})
+
+	t.Run("create and duplicate public board from a custom category", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+		teamID := testTeamID
+
+		category := model.Category{
+			Name:   "My Category",
+			UserID: me.ID,
+			TeamID: teamID,
+		}
+		createdCategory, resp := th.Client.CreateCategory(category)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, createdCategory)
+		require.Equal(t, "My Category", createdCategory.Name)
+		require.Equal(t, me.ID, createdCategory.UserID)
+		require.Equal(t, teamID, createdCategory.TeamID)
+
+		title := "Public board"
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		// move board to custom category
+		resp = th.Client.UpdateCategoryBoard(teamID, createdCategory.ID, board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+
+		newBlocks := []model.Block{
+			{
+				ID:       utils.NewID(utils.IDTypeBlock),
+				BoardID:  board.ID,
+				CreateAt: 1,
+				UpdateAt: 1,
+				Title:    "View 1",
+				Type:     model.TypeView,
+			},
+		}
+
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		require.NoError(t, resp.Error)
+		require.Len(t, newBlocks, 1)
+
+		newUserMember := &model.BoardMember{
+			UserID:       th.GetUser2().ID,
+			BoardID:      board.ID,
+			SchemeEditor: true,
+		}
+		th.Client.AddMemberToBoard(newUserMember)
+
+		members, err := th.Server.App().GetMembersForBoard(board.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 2)
+
+		// Duplicate the board
+		rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
+		th.CheckOK(resp)
+		require.NotNil(t, rBoardsAndBlock)
+		require.Equal(t, len(rBoardsAndBlock.Boards), 1)
+		require.Equal(t, len(rBoardsAndBlock.Blocks), 1)
+
+		duplicateBoard := rBoardsAndBlock.Boards[0]
+		require.Equal(t, duplicateBoard.Type, model.BoardTypePrivate, "Duplicated board should be private")
+		require.Equal(t, "Public board copy", duplicateBoard.Title)
+
+		members, err = th.Server.App().GetMembersForBoard(duplicateBoard.ID)
+		require.NoError(t, err)
+		require.Len(t, members, 1, "Duplicated board should only have one member")
+		require.Equal(t, me.ID, members[0].UserID)
+		require.Equal(t, duplicateBoard.ID, members[0].BoardID)
+		require.True(t, members[0].SchemeAdmin)
+
+		// verify duplicated board is in the same custom category
+		userCategoryBoards, resp := th.Client.GetUserCategoryBoards(teamID)
+		th.CheckOK(resp)
+		require.NotNil(t, rBoardsAndBlock)
+
+		var duplicateBoardCategoryID string
+		for _, categoryBoard := range userCategoryBoards {
+			for _, boardID := range categoryBoard.BoardIDs {
+				if boardID == duplicateBoard.ID {
+					duplicateBoardCategoryID = categoryBoard.Category.ID
+				}
+			}
+		}
+		require.Equal(t, createdCategory.ID, duplicateBoardCategoryID)
+	})
 }
 
 func TestJoinBoard(t *testing.T) {
@@ -1945,7 +2047,83 @@ func TestJoinBoard(t *testing.T) {
 
 		me := th.GetUser1()
 
-		title := "Public board"
+		title := "Test Public board"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:  title,
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+		require.Equal(t, model.BoardRoleNone, board.MinimumRole)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, member)
+		require.Equal(t, board.ID, member.BoardID)
+		require.Equal(t, th.GetUser2().ID, member.UserID)
+
+		s, _ := json.MarshalIndent(member, "", "\t")
+		t.Log(string(s))
+	})
+
+	t.Run("create and join public board should match the minimumRole in the membership", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board for commenters"
+		teamID := testTeamID
+		newBoard := &model.Board{
+			Title:       title,
+			Type:        model.BoardTypeOpen,
+			TeamID:      teamID,
+			MinimumRole: model.BoardRoleCommenter,
+		}
+		board, resp := th.Client.CreateBoard(newBoard)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, board)
+		require.NotNil(t, board.ID)
+		require.Equal(t, title, board.Title)
+		require.Equal(t, model.BoardTypeOpen, board.Type)
+		require.Equal(t, teamID, board.TeamID)
+		require.Equal(t, me.ID, board.CreatedBy)
+		require.Equal(t, me.ID, board.ModifiedBy)
+
+		member, resp := th.Client2.JoinBoard(board.ID)
+		th.CheckOK(resp)
+		require.NoError(t, resp.Error)
+		require.NotNil(t, member)
+		require.Equal(t, board.ID, member.BoardID)
+		require.Equal(t, th.GetUser2().ID, member.UserID)
+		require.False(t, member.SchemeAdmin, "new member should not be admin")
+		require.False(t, member.SchemeEditor, "new member should not be editor")
+		require.True(t, member.SchemeCommenter, "new member should be commenter")
+		require.False(t, member.SchemeViewer, "new member should not be viewer")
+
+		s, _ := json.MarshalIndent(member, "", "\t")
+		t.Log(string(s))
+	})
+
+	t.Run("create and join public board should match editor role in the membership when MinimumRole is empty", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		me := th.GetUser1()
+
+		title := "Public board for editors"
 		teamID := testTeamID
 		newBoard := &model.Board{
 			Title:  title,
@@ -1969,6 +2147,10 @@ func TestJoinBoard(t *testing.T) {
 		require.NotNil(t, member)
 		require.Equal(t, board.ID, member.BoardID)
 		require.Equal(t, th.GetUser2().ID, member.UserID)
+		require.False(t, member.SchemeAdmin, "new member should not be admin")
+		require.True(t, member.SchemeEditor, "new member should be editor")
+		require.False(t, member.SchemeCommenter, "new member should not be commenter")
+		require.False(t, member.SchemeViewer, "new member should not be viewer")
 
 		s, _ := json.MarshalIndent(member, "", "\t")
 		t.Log(string(s))

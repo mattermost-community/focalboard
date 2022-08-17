@@ -796,7 +796,25 @@ func testGetBlock(t *testing.T, store store.Store) {
 }
 
 func testDuplicateBlock(t *testing.T, store store.Store) {
-	InsertBlocks(t, store, subtreeSampleBlocks, "user-id-1")
+	blocksToInsert := subtreeSampleBlocks
+	blocksToInsert = append(blocksToInsert,
+		model.Block{
+			ID:         "grandchild1a",
+			BoardID:    testBoardID,
+			ParentID:   "child1",
+			ModifiedBy: testUserID,
+			Type:       model.TypeComment,
+		},
+		model.Block{
+			ID:         "grandchild2a",
+			BoardID:    testBoardID,
+			ParentID:   "child2",
+			ModifiedBy: testUserID,
+			Type:       model.TypeComment,
+		},
+	)
+
+	InsertBlocks(t, store, blocksToInsert, "user-id-1")
 	time.Sleep(1 * time.Millisecond)
 	defer DeleteBlocks(t, store, subtreeSampleBlocks, "test")
 

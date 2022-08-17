@@ -9,13 +9,11 @@ import '@testing-library/jest-dom'
 
 import 'isomorphic-fetch'
 
-import {DndProvider} from 'react-dnd'
-import {HTML5Backend} from 'react-dnd-html5-backend'
-
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {FetchMock} from '../../test/fetchMock'
 import {wrapDNDIntl} from '../../testUtils'
 
+import {ColumnResizeProvider} from './tableColumnResizeContext'
 import TableRows from './tableRows'
 
 global.fetch = FetchMock.fn
@@ -61,23 +59,24 @@ describe('components/table/TableRows', () => {
         const store = mockStore(state)
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
-                <TableRows
-                    board={board}
-                    activeView={view}
-                    columnRefs={new Map()}
-                    cards={[card]}
-                    selectedCardIds={[]}
-                    readonly={false}
-                    cardIdToFocusOnRender=''
-                    showCard={callback}
-                    addCard={addCard}
-                    onCardClicked={jest.fn()}
-                    onDrop={jest.fn()}
-                />
+                <ColumnResizeProvider columnWidths={{}} onResizeColumn={() => {}}>
+                    <TableRows
+                        board={board}
+                        activeView={view}
+                        cards={[card]}
+                        selectedCardIds={[]}
+                        readonly={false}
+                        cardIdToFocusOnRender=''
+                        showCard={callback}
+                        addCard={addCard}
+                        onCardClicked={jest.fn()}
+                        onDrop={jest.fn()}
+                    />
+                </ColumnResizeProvider>
             </ReduxProvider>,
         )
 
-        const {container, getByText} = render(<DndProvider backend={HTML5Backend}>{component}</DndProvider>)
+        const {container, getByText} = render(component)
 
         const open = getByText(/Open/i)
         fireEvent.click(open)

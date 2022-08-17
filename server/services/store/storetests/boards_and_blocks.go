@@ -583,6 +583,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 		},
 		Blocks: []model.Block{
 			{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
+			{ID: "block-id-1a", BoardID: "board-id-1", Type: model.TypeComment},
 			{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
 		},
 	}
@@ -591,7 +592,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 	require.Nil(t, err)
 	require.NotNil(t, bab)
 	require.Len(t, bab.Boards, 3)
-	require.Len(t, bab.Blocks, 2)
+	require.Len(t, bab.Blocks, 3)
 
 	t.Run("duplicate existing board as no template", func(t *testing.T) {
 		bab, members, err := store.DuplicateBoard("board-id-1", userID, teamID, false)

@@ -6,6 +6,9 @@ exports[`components/dialog should match snapshot 1`] = `
     class="Dialog dialog-back undefined"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -43,6 +46,9 @@ exports[`components/dialog should return dialog and click on cancel button 1`] =
   <div
     class="Dialog dialog-back undefined"
   >
+    <div
+      class="backdrop"
+    />
     <div
       class="wrapper"
     >

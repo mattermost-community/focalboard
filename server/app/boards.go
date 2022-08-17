@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package app
 
 import (
@@ -142,6 +145,36 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	return timestamp, modifiedBy, nil
 }
 
+func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, userID, teamID string) error {
+	// find source board's category ID for the user
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	var destinationCategoryID string
+
+	for _, categoryBoard := range userCategoryBoards {
+		for _, boardID := range categoryBoard.BoardIDs {
+			if boardID == sourceBoardID {
+				// category found!
+				destinationCategoryID = categoryBoard.ID
+				break
+			}
+		}
+	}
+
+	// if source board is not mapped to a category for this user,
+	// then we have nothing more to do.
+	if destinationCategoryID == "" {
+		return nil
+	}
+
+	// now that we have source board's category,
+	// we send destination board to the same category
+	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, destinationBoardID)
+}
+
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	bab, members, err := a.store.DuplicateBoard(boardID, userID, toTeam, asTemplate)
 	if err != nil {
@@ -151,6 +184,12 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	// copy any file attachments from the duplicated blocks.
 	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
+	}
+
+	for _, board := range bab.Boards {
+		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID); categoryErr != nil {
+			return nil, nil, categoryErr
+		}
 	}
 
 	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.
@@ -199,6 +238,18 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		}
 		return nil
 	})
+
+	if len(bab.Blocks) != 0 {
+		go func() {
+			if uErr := a.UpdateCardLimitTimestamp(); uErr != nil {
+				a.logger.Error(
+					"UpdateCardLimitTimestamp failed after duplicating a board",
+					mlog.Err(uErr),
+				)
+			}
+		}()
+	}
+
 	return bab, members, err
 }
 
@@ -232,7 +283,15 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(newBoard.TeamID, newBoard)
 
-		if addMember {
+		if newBoard.ChannelID != "" {
+			members, err := a.GetMembersForBoard(board.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, member := range members {
+				a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, member.BoardID, member)
+			}
+		} else if addMember {
 			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
 		return nil
@@ -242,6 +301,14 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 }
 
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
+	var oldMembers []*model.BoardMember
+	if patch.ChannelID != nil && *patch.ChannelID == "" {
+		var err error
+		oldMembers, err = a.GetMembersForBoard(boardID)
+		if err != nil {
+			a.logger.Error("Unable to get the board members", mlog.Err(err))
+		}
+	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
@@ -249,6 +316,23 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
+		if patch.ChannelID != nil && *patch.ChannelID != "" {
+			members, err := a.GetMembersForBoard(updatedBoard.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, member := range members {
+				if member.Synthetic {
+					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
+				}
+			}
+		} else if patch.ChannelID != nil && *patch.ChannelID == "" {
+			for _, oldMember := range oldMembers {
+				if oldMember.Synthetic {
+					a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, oldMember.UserID)
+				}
+			}
+		}
 		return nil
 	})
 
@@ -272,6 +356,15 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 		a.wsAdapter.BroadcastBoardDelete(board.TeamID, boardID)
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after deleting a board",
+				mlog.Err(err),
+			)
+		}
+	}()
 
 	return nil
 }
@@ -302,7 +395,7 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
-	if existingMembership != nil {
+	if existingMembership != nil && !existingMembership.Synthetic {
 		return existingMembership, nil
 	}
 
@@ -409,7 +502,11 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
+		if synteticMember, _ := a.store.GetMemberForBoard(boardID, userID); synteticMember != nil {
+			a.wsAdapter.BroadcastMemberChange(board.TeamID, boardID, synteticMember)
+		} else {
+			a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
+		}
 		return nil
 	})
 
@@ -418,6 +515,10 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 
 func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
 	return a.store.SearchBoardsForUser(term, userID)
+}
+
+func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUserInTeam(teamID, term, userID)
 }
 
 func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
@@ -450,6 +551,15 @@ func (a *App) UndeleteBoard(boardID string, modifiedBy string) error {
 		a.wsAdapter.BroadcastBoardChange(board.TeamID, board)
 		return nil
 	})
+
+	go func() {
+		if err := a.UpdateCardLimitTimestamp(); err != nil {
+			a.logger.Error(
+				"UpdateCardLimitTimestamp failed after undeleting a board",
+				mlog.Err(err),
+			)
+		}
+	}()
 
 	return nil
 }

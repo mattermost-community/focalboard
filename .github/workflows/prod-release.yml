@@ -2,6 +2,10 @@ name: Production-Release
 
 on: workflow_dispatch
 
+env:
+ EXCLUDE_SERVER: true
+ EXCLUDE_ENTERPRISE: true
+
 jobs:
 
   ubuntu:

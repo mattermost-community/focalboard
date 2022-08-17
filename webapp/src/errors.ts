@@ -68,7 +68,7 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
     case ErrorId.NotLoggedIn: {
         errDef.title = intl.formatMessage({id: 'error.not-logged-in', defaultMessage: 'Your session may have expired or you\'re not logged in. Log in again to access Boards.'})
         errDef.button1Enabled = true
-        errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Login'})
+        errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Log in'})
         errDef.button1Redirect = '/login'
         errDef.button1Redirect = (params: URLSearchParams): string => {
             const r = params.get('r')
@@ -83,7 +83,7 @@ function errorDefFromId(id: ErrorId | null): ErrorDef {
     case ErrorId.InvalidReadOnlyBoard: {
         errDef.title = intl.formatMessage({id: 'error.invalid-read-only-board', defaultMessage: 'You don\’t have access to this board. Log in to access Boards.'})
         errDef.button1Enabled = true
-        errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Login'})
+        errDef.button1Text = intl.formatMessage({id: 'error.go-login', defaultMessage: 'Log in'})
         errDef.button1Redirect = (): string => {
             return window.location.origin
         }

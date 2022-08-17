@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/table/Table extended should match snapshot with CreatedBy 1`] = `
+exports[`components/table/Table extended should match snapshot with CreatedAt 1`] = `
 <div>
   <div
     class="Table"
@@ -14,7 +14,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -32,13 +32,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -68,13 +67,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -104,13 +102,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -128,7 +125,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -141,6 +137,44 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -217,7 +251,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="CreatedAt octo-propertyvalue readonly"
+              class="CreatedTime octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 15, 2021, 4:22 PM
             </div>
@@ -229,6 +263,44 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -305,7 +377,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="CreatedAt octo-propertyvalue readonly"
+              class="CreatedTime octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 15, 2021, 4:22 PM
             </div>
@@ -388,7 +460,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
 </div>
 `;
 
-exports[`components/table/Table extended should match snapshot with CreatedBy 2`] = `
+exports[`components/table/Table extended should match snapshot with CreatedBy 1`] = `
 <div>
   <div
     class="Table"
@@ -402,7 +474,7 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -420,13 +492,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -456,13 +527,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -492,13 +562,12 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -516,7 +585,6 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -529,6 +597,44 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -605,10 +711,10 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="Person octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
-                class="UserProperty-item"
+                class="Person-item"
               >
                 username_1
               </div>
@@ -621,6 +727,44 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -697,10 +841,10 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 2`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="Person octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
-                class="UserProperty-item"
+                class="Person-item"
               >
                 username_2
               </div>
@@ -798,7 +942,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -816,13 +960,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -852,13 +995,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -888,13 +1030,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -912,7 +1053,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -925,6 +1065,44 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -1001,7 +1179,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedAt octo-propertyvalue readonly"
+              class="UpdatedTime octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 20, 2021, 12:22 PM
             </div>
@@ -1013,6 +1191,44 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -1089,7 +1305,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
             style="width: 100px;"
           >
             <div
-              class="LastModifiedAt octo-propertyvalue readonly"
+              class="UpdatedTime octo-propertyvalue octo-propertyvalue--readonly"
             >
               June 22, 2021, 11:23 AM
             </div>
@@ -1186,7 +1402,7 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1204,13 +1420,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1240,13 +1455,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1276,13 +1490,12 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1300,7 +1513,6 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -1313,6 +1525,44 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -1389,10 +1639,10 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="Person octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
-                class="UserProperty-item"
+                class="Person-item"
               >
                 username_4
               </div>
@@ -1405,6 +1655,44 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -1481,10 +1769,10 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
             style="width: 100px;"
           >
             <div
-              class="UserProperty octo-propertyvalue readonly"
+              class="Person octo-propertyvalue octo-propertyvalue--readonly"
             >
               <div
-                class="UserProperty-item"
+                class="Person-item"
               >
                 username_3
               </div>
@@ -1568,6 +1856,338 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
 </div>
 `;
 
+exports[`components/table/Table limited card in table view 1`] = `
+<div>
+  <div
+    class="Table"
+  >
+    <div
+      class="octo-table-body"
+    >
+      <div
+        class="octo-table-header TableHeaders"
+        id="mainBoardHeader"
+      >
+        <div
+          class="octo-table-cell header-cell"
+          style="overflow: unset; opacity: 1; width: 100px;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper disabled"
+            role="button"
+          >
+            <span
+              class="Label empty "
+            >
+              Name
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; opacity: 1; width: 100px;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper disabled"
+            role="button"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 1
+              <svg
+                class="SortDownIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,60 50,80 70,60"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+        <div
+          class="octo-table-cell header-cell"
+          draggable="true"
+          style="overflow: unset; opacity: 1; width: 100px;"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper disabled"
+            role="button"
+          >
+            <span
+              class="Label empty "
+            >
+              Property 2
+              <svg
+                class="SortUpIcon Icon"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <polyline
+                  points="50,20 50,80"
+                />
+                <polyline
+                  points="30,40 50,20 70,40"
+                />
+              </svg>
+            </span>
+          </div>
+          <div
+            class="octo-spacer"
+          />
+        </div>
+      </div>
+      <div
+        class="table-row-container"
+      >
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable readonly "
+                placeholder="Untitled"
+                readonly=""
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue octo-propertyvalue--readonly"
+              data-testid="select-non-editable"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue octo-propertyvalue--readonly"
+              data-testid="select-non-editable"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableRow octo-table-row"
+          draggable="true"
+          style="opacity: 1;"
+        >
+          <div
+            class="octo-table-cell title-cell"
+            id="mainBoardHeader"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-icontitle"
+            >
+              <div
+                class="octo-icon"
+              >
+                i
+              </div>
+              <input
+                class="Editable readonly "
+                placeholder="Untitled"
+                readonly=""
+                spellcheck="true"
+                title="title"
+                value="title"
+              />
+            </div>
+            <div
+              class="open-button"
+            >
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  Open
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue octo-propertyvalue--readonly"
+              data-testid="select-non-editable"
+              tabindex="0"
+            >
+              <span
+                class="Label propColorBrown "
+              >
+                <span
+                  class="Label-text"
+                >
+                  value 1
+                </span>
+              </span>
+            </div>
+          </div>
+          <div
+            class="octo-table-cell"
+            style="width: 100px;"
+          >
+            <div
+              class="octo-propertyvalue octo-propertyvalue--readonly"
+              data-testid="select-non-editable"
+              tabindex="0"
+            >
+              <span
+                class="Label empty "
+              >
+                <span
+                  class="Label-text"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="octo-table-footer"
+      />
+      <div
+        class="CalculationRow octo-table-row"
+      >
+        <div
+          class="Calculation count octo-table-cell disabled  "
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Count
+          </span>
+          <span
+            class="calculationValue"
+          >
+            2
+          </span>
+        </div>
+        <div
+          class="Calculation none octo-table-cell disabled  "
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+        <div
+          class="Calculation none octo-table-cell disabled  "
+          style="width: 100px;"
+          tabindex="0"
+        >
+          <span
+            class="calculationLabel"
+          >
+            Calculate
+          </span>
+          <i
+            class="CompassIcon icon-chevron-up ChevronUpIcon"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="HiddenCardCount"
+    >
+      <div
+        class="hidden-card-title"
+      >
+        Cards hidden
+      </div>
+      <button
+        class="Button"
+        title="hidden-card-count"
+        type="button"
+      >
+        <span>
+          2
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`components/table/Table should match snapshot 1`] = `
 <div>
   <div
@@ -1582,7 +2202,7 @@ exports[`components/table/Table should match snapshot 1`] = `
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1600,13 +2220,12 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1636,13 +2255,12 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1672,7 +2290,6 @@ exports[`components/table/Table should match snapshot 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -1684,6 +2301,44 @@ exports[`components/table/Table should match snapshot 1`] = `
           draggable="true"
           style="opacity: 1;"
         >
+          <div
+            class="action-cell octo-table-cell-btn"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper optionsMenu"
+              role="button"
+            >
+              <button
+                aria-label="MenuBtn"
+                class="IconButton"
+                title="MenuBtn"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
+            </div>
+            <button
+              class="IconButton"
+              type="button"
+            >
+              <svg
+                class="GripIcon Icon"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0V0z"
+                  fill="none"
+                />
+                <path
+                  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                />
+              </svg>
+            </button>
+          </div>
           <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
@@ -1834,7 +2489,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1852,13 +2507,12 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1888,13 +2542,12 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -1924,7 +2577,6 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
           />
           <div
             class="HorizontalGrip"
-            draggable="true"
           />
         </div>
       </div>
@@ -2068,7 +2720,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2088,7 +2740,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2120,7 +2772,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2198,7 +2850,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2218,7 +2870,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2303,7 +2955,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
       >
         <div
           class="octo-table-cell header-cell"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2323,7 +2975,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2355,7 +3007,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         <div
           class="octo-table-cell header-cell"
           draggable="true"
-          style="overflow: unset; width: 100px; opacity: 1;"
+          style="overflow: unset; opacity: 1; width: 100px;"
         >
           <div
             aria-label="menuwrapper"
@@ -2433,7 +3085,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >
@@ -2453,7 +3105,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
             style="width: 100px;"
           >
             <div
-              class="octo-propertyvalue"
+              class="octo-propertyvalue octo-propertyvalue--readonly"
               data-testid="select-non-editable"
               tabindex="0"
             >

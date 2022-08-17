@@ -728,6 +728,20 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                             class="EventContent"
                                           >
                                             <div
+                                              aria-label="menuwrapper"
+                                              class="MenuWrapper optionsMenu"
+                                              role="button"
+                                            >
+                                              <button
+                                                class="IconButton"
+                                                type="button"
+                                              >
+                                                <i
+                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                                                />
+                                              </button>
+                                            </div>
+                                            <div
                                               class="octo-icontitle"
                                             >
                                               <div
@@ -2987,6 +3001,20 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                           <div
                                             class="EventContent"
                                           >
+                                            <div
+                                              aria-label="menuwrapper"
+                                              class="MenuWrapper optionsMenu"
+                                              role="button"
+                                            >
+                                              <button
+                                                class="IconButton"
+                                                type="button"
+                                              >
+                                                <i
+                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                                                />
+                                              </button>
+                                            </div>
                                             <div
                                               class="octo-icontitle"
                                             >
@@ -5946,6 +5974,20 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                             class="EventContent"
                                           >
                                             <div
+                                              aria-label="menuwrapper"
+                                              class="MenuWrapper optionsMenu"
+                                              role="button"
+                                            >
+                                              <button
+                                                class="IconButton"
+                                                type="button"
+                                              >
+                                                <i
+                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                                                />
+                                              </button>
+                                            </div>
+                                            <div
                                               class="octo-icontitle"
                                             >
                                               <div
@@ -7513,6 +7555,20 @@ exports[`components/calendar/toolbar return calendar, without permissions 1`] = 
                                           <div
                                             class="EventContent"
                                           >
+                                            <div
+                                              aria-label="menuwrapper"
+                                              class="MenuWrapper optionsMenu"
+                                              role="button"
+                                            >
+                                              <button
+                                                class="IconButton"
+                                                type="button"
+                                              >
+                                                <i
+                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                                                />
+                                              </button>
+                                            </div>
                                             <div
                                               class="octo-icontitle"
                                             >

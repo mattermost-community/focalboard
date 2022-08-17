@@ -3,9 +3,9 @@
 
 import React from 'react'
 
-export default function SearchIllustration(props: React.HTMLAttributes<HTMLSpanElement>): JSX.Element {
+export default function SearchIllustration(): JSX.Element {
     return (
-        <span {...props}>
+        <span>
             <svg
                 width='160'
                 height='160'

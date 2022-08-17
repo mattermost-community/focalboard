@@ -3,14 +3,14 @@
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
+import PropertyMenu, {PropertyTypes} from '../../widgets/propertyMenu'
 
 import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
@@ -21,6 +21,8 @@ import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import propRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
 type Props = {
     board: Board
@@ -49,7 +51,7 @@ const CardDetailProperties = (props: Props) => {
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
     function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate:IPropertyTemplate) {
-        const oldType = propertyTemplate.type
+        const oldType = propRegistry.get(propertyTemplate.type)
 
         // do nothing if no change
         if (oldType === newType && propertyTemplate.name === newName) {
@@ -58,26 +60,19 @@ const CardDetailProperties = (props: Props) => {
 
         const affectsNumOfCards:string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
 
-        // if no card has this value set delete the property directly without warning
-        if (affectsNumOfCards === '0') {
-            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+        // if only the name has changed, set the property without warning
+        if (affectsNumOfCards === '0' || oldType === newType) {
+            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
             return
         }
 
-        let subTextString = intl.formatMessage({
+        const subTextString = intl.formatMessage({
             id: 'CardDetailProperty.property-name-change-subtext',
             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
         }, {oldPropType: oldType, newPropType: newType})
 
-        if (propertyTemplate.name !== newName) {
-            subTextString = intl.formatMessage({
-                id: 'CardDetailProperty.property-type-change-subtext',
-                defaultMessage: 'name to "{newPropName}"',
-            }, {newPropName: newName})
-        }
-
         setConfirmationDialogBox({
-            heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm Property Type Change!'}),
+            heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm property type change'}),
             subText: intl.formatMessage({
                 id: 'CardDetailProperty.confirm-property-name-change-subtext',
                 defaultMessage: 'Are you sure you want to change property "{propertyName}" {customText}? This will affect value(s) across {numOfCards} card(s) in this board, and can result in data loss.',
@@ -88,11 +83,11 @@ const CardDetailProperties = (props: Props) => {
                 numOfCards: affectsNumOfCards,
             }),
 
-            confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.property-change-action-button', defaultMessage: 'Change Property'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.property-change-action-button', defaultMessage: 'Change property'}),
             onConfirm: async () => {
                 setShowConfirmationDialog(false)
                 try {
-                    await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+                    await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
                 } catch (err:any) {
                     Utils.logError(`Error Changing Property And Name:${propertyTemplate.name}: ${err?.toString()}`)
                 }
@@ -101,14 +96,14 @@ const CardDetailProperties = (props: Props) => {
             onClose: () => setShowConfirmationDialog(false),
         })
 
-        // open confirmation dialog for property type or name change
+        // open confirmation dialog for property type change
         setShowConfirmationDialog(true)
     }
 
     function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate:IPropertyTemplate) {
         // set ConfirmationDialogBox Props
         setConfirmationDialogBox({
-            heading: intl.formatMessage({id: 'CardDetailProperty.confirm-delete-heading', defaultMessage: 'Confirm Delete Property'}),
+            heading: intl.formatMessage({id: 'CardDetailProperty.confirm-delete-heading', defaultMessage: 'Confirm delete property'}),
             subText: intl.formatMessage({
                 id: 'CardDetailProperty.confirm-delete-subtext',
                 defaultMessage: 'Are you sure you want to delete the property "{propertyName}"? Deleting it will delete the property from all cards in this board.',
@@ -120,7 +115,7 @@ const CardDetailProperties = (props: Props) => {
                 setShowConfirmationDialog(false)
                 try {
                     await mutator.deleteProperty(board, views, cards, propertyTemplate.id)
-                    sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} Successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
                 } catch (err:any) {
                     Utils.logError(`Error Deleting Property!: Could Not delete Property -" + ${deletingPropName} ${err?.toString()}`)
                 }
@@ -148,7 +143,7 @@ const CardDetailProperties = (props: Props) => {
                                 <PropertyMenu
                                     propertyId={propertyTemplate.id}
                                     propertyName={propertyTemplate.name}
-                                    propertyType={propertyTemplate.type}
+                                    propertyType={propRegistry.get(propertyTemplate.type)}
                                     onTypeAndNameChanged={(newType: PropertyType, newName: string) => onPropertyChangeSetAndOpenConfirmationDialog(newType, newName, propertyTemplate)}
                                     onDelete={() => onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate)}
                                 />
@@ -186,8 +181,8 @@ const CardDetailProperties = (props: Props) => {
                                 onTypeSelected={async (type) => {
                                     const template: IPropertyTemplate = {
                                         id: Utils.createGuid(IDType.BlockID),
-                                        name: typeDisplayName(intl, type),
-                                        type,
+                                        name: type.displayName(intl),
+                                        type: type.type,
                                         options: [],
                                     }
                                     const templateId = await mutator.insertPropertyTemplate(board, activeView, -1, template)

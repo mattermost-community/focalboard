@@ -8,19 +8,21 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 type APIInterface interface {
 	HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool
-	LogError(string, ...interface{})
+	HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool
 }
 
 type Service struct {
-	store permissions.Store
-	api   APIInterface
+	store  permissions.Store
+	api    APIInterface
+	logger mlog.LoggerIFace
 }
 
-func New(store permissions.Store, api APIInterface) *Service {
+func New(store permissions.Store, api APIInterface, logger mlog.LoggerIFace) *Service {
 	return &Service{
 		store: store,
 		api:   api,
@@ -32,6 +34,13 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 		return false
 	}
 	return s.api.HasPermissionToTeam(userID, teamID, permission)
+}
+
+func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {
+	if userID == "" || channelID == "" || permission == nil {
+		return false
+	}
+	return s.api.HasPermissionToChannel(userID, channelID, permission)
 }
 
 func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool {
@@ -51,10 +60,10 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		}
 		board = boards[0]
 	} else if err != nil {
-		s.api.LogError("error getting board",
-			"boardID", boardID,
-			"userID", userID,
-			"error", err,
+		s.logger.Error("error getting board",
+			mlog.String("boardID", boardID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return false
 	}
@@ -70,12 +79,23 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		return false
 	}
 	if err != nil {
-		s.api.LogError("error getting member for board",
-			"boardID", boardID,
-			"userID", userID,
-			"error", err,
+		s.logger.Error("error getting member for board",
+			mlog.String("boardID", boardID),
+			mlog.String("userID", userID),
+			mlog.Err(err),
 		)
 		return false
+	}
+
+	switch member.MinimumRole {
+	case "admin":
+		member.SchemeAdmin = true
+	case "editor":
+		member.SchemeEditor = true
+	case "commenter":
+		member.SchemeCommenter = true
+	case "viewer":
+		member.SchemeViewer = true
 	}
 
 	switch permission {

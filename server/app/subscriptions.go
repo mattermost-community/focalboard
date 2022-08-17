@@ -48,6 +48,5 @@ func (a *App) notifySubscriptionChanged(subscription *model.Subscription) {
 			mlog.Err(err),
 		)
 	}
-
-	a.notifications.BroadcastSubscriptionChange(board.TeamID, subscription)
+	a.wsAdapter.BroadcastSubscriptionChange(board.TeamID, subscription)
 }

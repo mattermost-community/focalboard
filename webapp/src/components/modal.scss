@@ -1,8 +1,10 @@
+@import '../styles/z-index';
+
 .Modal {
+    @include z-index(modal);
     position: absolute;
     top: 25px;
     left: -240px;
-    z-index: 10;
     background-color: rgb(var(--center-channel-bg-rgb));
     padding: 10px;
     border-radius: 3px;

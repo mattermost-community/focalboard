@@ -41,7 +41,8 @@ func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(teamID string, sub
 
 	mm_model.ParseSlackAttachment(post, attachments)
 
-	return pd.api.CreatePost(post)
+	_, err = pd.api.CreatePost(post)
+	return err
 }
 
 func (pd *PluginDelivery) getDirectChannelID(teamID string, subscriberID string, subscriberType model.SubscriberType, botID string) (string, error) {

@@ -5,9 +5,9 @@ import {IntlShape} from 'react-intl'
 import {BoardView} from './blocks/boardView'
 import {Board, IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
-import {OctoUtils} from './octoUtils'
 import {Utils} from './utils'
 import {IAppWindow} from './types'
+import propsRegistry from './properties'
 
 declare let window: IAppWindow
 const hashSignToken = '___hash_sign___'
@@ -79,17 +79,8 @@ class CsvExporter {
             row.push(`"${this.encodeText(card.title)}"`)
             visibleProperties.forEach((template: IPropertyTemplate) => {
                 const propertyValue = card.fields.properties[template.id]
-                const displayValue = (OctoUtils.propertyDisplayValue(card, propertyValue, template, intl) || '') as string
-                if (template.type === 'number') {
-                    const numericValue = propertyValue ? Number(propertyValue).toString() : ''
-                    row.push(numericValue)
-                } else if (template.type === 'multiSelect') {
-                    const multiSelectValue = ((displayValue as unknown || []) as string[]).join('|')
-                    row.push(multiSelectValue)
-                } else {
-                    // Export as string
-                    row.push(`"${this.encodeText(displayValue)}"`)
-                }
+                const property = propsRegistry.get(template.type)
+                row.push(property.exportValue(propertyValue, card, template, intl))
             })
             rows.push(row)
         })

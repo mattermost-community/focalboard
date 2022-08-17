@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -11,6 +12,10 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
+var (
+	errUnsupportedOperation = errors.New("unsupported operation")
 )
 
 type UserNotFoundError struct {
@@ -94,6 +99,10 @@ func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, 
 
 func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, error) {
 	return s.getUserByCondition(db, sq.Eq{"id": userID})
+}
+
+func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
 }
 
 func (s *SQLStore) getUserByEmail(db sq.BaseRunner, email string) (*model.User, error) {
@@ -264,4 +273,12 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 	}
 
 	return s.updateUser(db, user)
+}
+
+func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
+	return errUnsupportedOperation
+}
+
+func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
+	return "", errUnsupportedOperation
 }
