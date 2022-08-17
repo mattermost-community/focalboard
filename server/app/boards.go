@@ -20,6 +20,15 @@ var (
 	ErrInsufficientLicense    = errors.New("appropriate license required")
 )
 
+//todo: remove and use common error
+type BoardNotFoundErr struct {
+	boardID string
+}
+
+func (be BoardNotFoundErr) Error() string {
+	return fmt.Sprintf("board not found (board id: %s", be.boardID)
+}
+
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
 	if model.IsErrNotFound(err) {
@@ -302,16 +311,35 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
 	var oldMembers []*model.BoardMember
+	var oldChannelID string
 	if patch.ChannelID != nil && *patch.ChannelID == "" {
 		var err error
 		oldMembers, err = a.GetMembersForBoard(boardID)
 		if err != nil {
 			a.logger.Error("Unable to get the board members", mlog.Err(err))
 		}
+		board, err := a.store.GetBoard(boardID)
+		if model.IsErrNotFound(err) {
+			return nil, BoardNotFoundErr{boardID}
+		}
+		if err != nil {
+			return nil, err
+		}
+		oldChannelID = board.ChannelID
 	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
+	}
+
+	if patch.ChannelID != nil && *patch.ChannelID != "" {
+		a.logger.Debug(">>>>>>>>>>POSTIND Added>>>>>")
+		message := fmt.Sprintf("%s board associated to channel", updatedBoard.Title)
+		a.store.PostMessage(message, "custom_channel_association", *patch.ChannelID)
+	} else if patch.ChannelID != nil && *patch.ChannelID == "" {
+		a.logger.Debug(">>>>>>>>>>POSTIND Removed>>>>>")
+		message := fmt.Sprintf("%s board association removed from channel", updatedBoard.Title)
+		a.store.PostMessage(message, "custom_channel_association", oldChannelID)
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {

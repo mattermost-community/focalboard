@@ -896,7 +896,30 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 			continue
 		}
 	}
+	return nil
+}
 
+func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) error {
+	// botID, err := s.getSystemBotID()
+	// if err != nil {
+	// 	return err
+	// }
+	// botID := "819yz8oewpr5fdp6yi59m3zfdr"
+	s.logger.Debug(">>>>>>>>>>>SEMDMESSAGE>>>>>>>>>>>>>>")
+
+	post := &mmModel.Post{
+		Message:   message,
+		UserId:    "819yz8oewpr5fdp6yi59m3zfdr",
+		ChannelId: channelID,
+		Type:      postType,
+	}
+
+	if _, err := s.servicesAPI.CreatePost(post); err != nil {
+		s.logger.Error(
+			"failed to send message to receipt from SendMessage",
+			mlog.Err(err),
+		)
+	}
 	return nil
 }
 

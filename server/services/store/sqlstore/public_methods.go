@@ -712,6 +712,13 @@ func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) erro
 
 }
 
+func (s *SQLStore) PostMessage(message string, postType string, channel string) error {
+	s.logger.Debug(">>>>>>>>>>WRONG POST MESSAGE>>>>>")
+
+	return s.postMessage(s.db, message, postType, channel)
+
+}
+
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
 
