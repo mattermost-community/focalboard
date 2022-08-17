@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, {useCallback, useState, useMemo} from 'react'
+import React, { useCallback, useState, useMemo, useEffect } from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
@@ -21,6 +21,7 @@ import {Constants, Permission} from '../../constants'
 
 import {dragAndDropRearrange} from '../cardDetail/cardDetailContentsUtility'
 
+import {getCurrentBoardTemplates} from '../../store/cards'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
 
@@ -55,7 +56,20 @@ const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
+    const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
+    const [defaultTemplateID, setDefaultTemplateID] = useState('')
+
+    useEffect(() => {
+        if(currentView.fields.defaultTemplateId) {
+            cardTemplates.forEach((cardTemplate) => {
+                if(cardTemplate.id === currentView.fields.defaultTemplateId) {
+                    setDefaultTemplateID(currentView.fields.defaultTemplateId)
+                }
+            })
+        }
+    }, [currentView])
+
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
@@ -297,8 +311,8 @@ const Kanban = (props: Props) => {
                             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                                 <Button
                                     onClick={() => {
-                                        if(currentView.fields.defaultTemplateId) {
-                                            props.addCardFromTemplate(currentView.fields.defaultTemplateId, group.option.id)
+                                        if(defaultTemplateID !== '') {
+                                            props.addCardFromTemplate(defaultTemplateID, group.option.id)
                                         } else {
                                             props.addCard(group.option.id, true)
                                         }
