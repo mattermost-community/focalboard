@@ -1,5 +1,25 @@
 package model
 
+import (
+	"fmt"
+
+	"github.com/mattermost/focalboard/server/utils"
+)
+
+type ErrInvalidCard struct {
+	field string
+}
+
+func NewErrInvalidCard(field string) ErrInvalidCard {
+	return ErrInvalidCard{
+		field: field,
+	}
+}
+
+func (e ErrInvalidCard) Error() string {
+	return fmt.Sprintf("invalid card, field %s is missing", e.field)
+}
+
 // Card represents a group of content blocks and properties.
 // swagger:model
 type Card struct {
@@ -52,6 +72,49 @@ type Card struct {
 	DeleteAt int64 `json:"deleteAt"`
 }
 
+// Populate populates a Card with default values.
+func (c *Card) Populate() {
+	if c.ID == "" {
+		c.ID = utils.NewID(utils.IDTypeCard)
+	}
+	if c.ContentOrder == nil {
+		c.ContentOrder = make([]string, 0)
+	}
+	if c.Properties == nil {
+		c.Properties = make(map[string]any)
+	}
+	now := utils.GetMillis()
+	if c.CreateAt == 0 {
+		c.CreateAt = now
+	}
+	if c.UpdateAt == 0 {
+		c.UpdateAt = now
+	}
+}
+
+// CheckValid returns an error if the Card has invalid field values.
+func (c *Card) CheckValid() error {
+	if c.ID == "" {
+		return ErrInvalidCard{"ID"}
+	}
+	if c.BoardID == "" {
+		return ErrInvalidCard{"BoardID"}
+	}
+	if c.ContentOrder == nil {
+		return ErrInvalidCard{"ContentOrder"}
+	}
+	if c.Properties == nil {
+		return ErrInvalidCard{"Properties"}
+	}
+	if c.CreateAt == 0 {
+		return ErrInvalidCard{"CreateAt"}
+	}
+	if c.UpdateAt == 0 {
+		return ErrInvalidCard{"UpdateAt"}
+	}
+	return nil
+}
+
 // CardPatch is a patch for modifying cards
 // swagger:model
 type CardPatch struct {
@@ -74,21 +137,6 @@ type CardPatch struct {
 	// A an array of property ids to delete
 	// required: false
 	DeletedProperties []string `json:"deletedProperties"`
-}
-
-type InvalidCardErr struct {
-	msg string
-}
-
-func (e InvalidCardErr) Error() string {
-	return "invalid card (" + e.msg + ")"
-}
-
-func (c *Card) IsValid() error {
-	if c.BoardID == "" {
-		return InvalidCardErr{"empty-board-id"}
-	}
-	return nil
 }
 
 // Patch returns an updated version of the card.

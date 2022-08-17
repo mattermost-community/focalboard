@@ -72,7 +72,8 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = newCard.IsValid(); err != nil {
+	newCard.Populate()
+	if err = newCard.CheckValid(); err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
 		return
 	}
