@@ -61,7 +61,6 @@ const RHSChannelBoardItem = (props: Props) => {
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu
-                        fixed={true}
                         position='left'
                     >
                         {allowed &&
@@ -76,18 +75,17 @@ const RHSChannelBoardItem = (props: Props) => {
                          />
                         }
                         {!allowed &&
-                         <div className='non-admin-unlink-board'>
-                             <Menu.Text
-                                 key={`unlinkBoard-${board.id}`}
-                                 id='unlinkBoard'
-                                 name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
-                                 icon={<DeleteIcon/>}
-                                 onClick={() => {
-                                     onUnlinkBoard(board)
-                                 }}
-                                 subText={intl.formatMessage({id: 'rhs-board-non-admin-msg', defaultMessage:'You are not an admin of the board'})}
-                             />
-                         </div>
+                         <Menu.Text
+                             key={`unlinkBoard-${board.id}`}
+                             id='unlinkBoard'
+                             disabled={true}
+                             name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
+                             icon={<DeleteIcon/>}
+                             onClick={() => {
+                                 onUnlinkBoard(board)
+                             }}
+                             subText={intl.formatMessage({id: 'rhs-board-non-admin-msg', defaultMessage:'You are not an admin of the board'})}
+                         />
                         }
                     </Menu>
                 </MenuWrapper>

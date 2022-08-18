@@ -68,6 +68,17 @@
             padding: 4px 20px;
             cursor: pointer;
 
+            &.menu-option--disabled {
+                cursor: not-allowed;
+                pointer-events: none;
+                opacity: 0.32;
+            }
+
+            &.menu-option--with-subtext {
+                height: auto;
+                align-items: initial;
+            }
+
             &:hover {
                 background: rgba(var(--button-bg-rgb), 0.08);
             }
