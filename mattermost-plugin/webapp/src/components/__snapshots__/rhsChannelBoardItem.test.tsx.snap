@@ -91,15 +91,23 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-content"
                   >
-                    Unlink board
+                    <div
+                      class="menu-name"
+                    >
+                      Unlink board
+                    </div>
+                    <div
+                      class="menu-subtext"
+                    />
                   </div>
                   <div
                     class="noicon"
                   />
                 </div>
               </div>
+              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
@@ -120,9 +128,16 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
