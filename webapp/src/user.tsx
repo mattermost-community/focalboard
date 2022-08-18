@@ -27,15 +27,34 @@ interface UserConfigPatch {
     deletedFields?: string[]
 }
 
-function parseUserProps(props: Record<string, any>): Record<string, any> {
-    const processedProps = props
-    const hiddenBoardIDs = props.hiddenBoardIDs ? JSON.parse(props.hiddenBoardIDs) : []
-    processedProps.hiddenBoardIDs = {}
-    hiddenBoardIDs.forEach((boardID: string) => processedProps.hiddenBoardIDs[boardID] = true)
+function parseUserProps(props: Array<UserPreference>): Record<string, UserPreference> {
+    // const processedProps = props
+    // const hiddenBoardIDs = props.hiddenBoardIDs ? JSON.parse(props.hiddenBoardIDs) : []
+    // processedProps.hiddenBoardIDs = {}
+    // hiddenBoardIDs.forEach((boardID: string) => processedProps.hiddenBoardIDs[boardID] = true)
+    // return processedProps
+
+    const processedProps: Record<string, UserPreference> = {}
+
+    props.forEach((prop) => {
+        const processedProp = prop
+        if (prop.name === 'hiddenBoardIDs') {
+            processedProp.value = JSON.parse(processedProp.value)
+        }
+        processedProps[processedProp.name] = processedProp
+    })
+
     return processedProps
 }
 
 const UserPropPrefix = 'focalboard_'
+
+interface UserPreference {
+    user_id: string
+    category: string
+    name: string
+    value: string
+}
 
 export {
     IUser,
@@ -43,4 +62,5 @@ export {
     UserConfigPatch,
     UserPropPrefix,
     parseUserProps,
+    UserPreference,
 }

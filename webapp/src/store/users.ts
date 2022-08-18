@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser, parseUserProps} from '../user'
+import {IUser, parseUserProps, UserPreference} from '../user'
 
 import {Utils} from '../utils'
 
@@ -13,6 +13,8 @@ import {Subscription} from '../wsclient'
 // TODO: change this whene the initial load is complete
 // import {initialLoad} from './initialLoad'
 import {UserSettings} from '../userSettings'
+
+import {initialLoad} from "./initialLoad"
 
 import {RootState} from './index'
 
@@ -28,6 +30,7 @@ type UsersStatus = {
     boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
     blockSubscriptions: Array<Subscription>
+    myConfig: Record<string, UserPreference>
 }
 
 export const fetchUserBlockSubscriptions = createAsyncThunk(
@@ -41,6 +44,7 @@ const initialState = {
     loggedIn: null,
     userWorkspaces: [],
     blockSubscriptions: [],
+    myConfig: {},
 } as UsersStatus
 
 const usersSlice = createSlice({
@@ -49,9 +53,6 @@ const usersSlice = createSlice({
     reducers: {
         setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
-            if (state.me) {
-                state.me.props = parseUserProps(state.me.props)
-            }
             state.loggedIn = Boolean(state.me)
         },
         setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
@@ -77,18 +78,13 @@ const usersSlice = createSlice({
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
-        patchProps: (state, action: PayloadAction<Record<string, string>>) => {
-            if (state.me) {
-                state.me.props = parseUserProps(action.payload)
-            }
+        patchProps: (state, action: PayloadAction<Array<UserPreference>>) => {
+            state.myConfig = parseUserProps(action.payload)
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
             state.me = action.payload || null
-            if (state.me) {
-                state.me.props = parseUserProps(state.me.props)
-            }
             state.loggedIn = Boolean(state.me)
         })
         builder.addCase(fetchMe.rejected, (state) => {
@@ -106,6 +102,15 @@ const usersSlice = createSlice({
 
         builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
             state.blockSubscriptions = action.payload
+        })
+
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            if (action.payload.myConfig) {
+                state.myConfig = {}
+                action.payload.myConfig.forEach((config) => {
+                    state.myConfig[config.name] = config
+                })
+            }
         })
     },
 })
@@ -176,7 +181,7 @@ export const getVersionMessageCanceled = createSelector(
             if (me.id === 'single-user') {
                 return true
             }
-            return Boolean(me.props[versionProperty])    
+            return Boolean(me.props[versionProperty])
         }
         return true
     },

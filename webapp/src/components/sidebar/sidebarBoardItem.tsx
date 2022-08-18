@@ -146,7 +146,6 @@ const SidebarBoardItem = (props: Props) => {
     }
 
     const handleHideBoard = async() => {
-        console.log('handleHideBoard')
         if (!me ) {
             return
         }

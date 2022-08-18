@@ -89,6 +89,10 @@ const BoardTemplateSelector = (props: Props) => {
                 [UserPropPrefix + 'onboardingTourStarted']: '1',
                 [UserPropPrefix + 'onboardingTourStep']: BaseTourSteps.OPEN_A_CARD.toString(),
                 [UserPropPrefix + 'tourCategory']: TOUR_BASE,
+                focalboard_cardLimitSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
+                focalboard_cardHiddenWarningSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
+                focalboard_cloudMessageCanceled: 'true',
+                focalboard_version72MessageCanceled: 'true'
             },
         }
 

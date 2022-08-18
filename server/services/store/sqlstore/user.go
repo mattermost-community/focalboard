@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -281,4 +282,8 @@ func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, recei
 
 func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
 	return "", errUnsupportedOperation
+}
+
+func (s *SQLStore) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
+	return nil, errUnsupportedOperation
 }
