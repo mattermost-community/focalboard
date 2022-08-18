@@ -9,10 +9,11 @@ type TextOptionProps = MenuOptionProps & {
     icon?: React.ReactNode,
     rightIcon?: React.ReactNode,
     className?: string
+    subText?: string
 }
 
 function TextOption(props:TextOptionProps): JSX.Element {
-    const {name, icon, rightIcon, check} = props
+    const {name, icon, rightIcon, check, subText} = props
     let className = 'MenuOption TextOption menu-option'
     if (props.className) {
         className += ' ' + props.className
@@ -29,7 +30,10 @@ function TextOption(props:TextOptionProps): JSX.Element {
             }}
         >
             <div className={`${check ? 'd-flex menu-option__check' : 'd-flex'}`}>{icon ?? <div className='noicon'/>}</div>
-            <div className='menu-name'>{name}</div>
+            <div className='menu-content'>
+                <div className='menu-name'>{name}</div>
+                <div className='menu-subtext'>{subText}</div>
+            </div>
             {rightIcon ?? <div className='noicon'/>}
         </div>
     )

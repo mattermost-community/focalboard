@@ -90,11 +90,20 @@
                 margin-left: 0;
             }
 
+            > .menu-content {
+                display: block;
+            }
+
             > .menu-name {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 flex-grow: 1;
                 white-space: nowrap;
+                text-align: left;
+            }
+
+            > .menu-subtext {
+                font-size: 10px;
                 text-align: left;
             }
 

@@ -15,6 +15,10 @@ import Menu from '../../../../webapp/src/widgets/menu'
 import MenuWrapper from '../../../../webapp/src/widgets/menuWrapper'
 import {SuiteWindow} from '../../../../webapp/src/types/index'
 
+import {Permission} from '../../../../webapp/src/constants'
+
+import {useHasPermissions} from '../../../../webapp/src/hooks/permissions'
+
 import './rhsChannelBoardItem.scss'
 
 const windowAny = (window as SuiteWindow)
@@ -31,6 +35,8 @@ const RHSChannelBoardItem = (props: Props) => {
     if (!team) {
         return null
     }
+
+    const allowed = useHasPermissions(team.id, board.id, [Permission.ManageBoardRoles])
 
     const handleBoardClicked = (boardID: string) => {
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
@@ -58,15 +64,31 @@ const RHSChannelBoardItem = (props: Props) => {
                         fixed={true}
                         position='left'
                     >
-                        <Menu.Text
-                            key={`unlinkBoard-${board.id}`}
-                            id='unlinkBoard'
-                            name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
-                            icon={<DeleteIcon/>}
-                            onClick={() => {
-                                onUnlinkBoard(board)
-                            }}
-                        />
+                        {allowed &&
+                         <Menu.Text
+                             key={`unlinkBoard-${board.id}`}
+                             id='unlinkBoard'
+                             name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
+                             icon={<DeleteIcon/>}
+                             onClick={() => {
+                                 onUnlinkBoard(board)
+                             }}
+                         />
+                        }
+                        {!allowed &&
+                         <div className='non-admin-unlink-board'>
+                             <Menu.Text
+                                 key={`unlinkBoard-${board.id}`}
+                                 id='unlinkBoard'
+                                 name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
+                                 icon={<DeleteIcon/>}
+                                 onClick={() => {
+                                     onUnlinkBoard(board)
+                                 }}
+                                 subText={intl.formatMessage({id: 'rhs-board-non-admin-msg', defaultMessage:'You are not an admin of the board'})}
+                             />
+                         </div>
+                        }
                     </Menu>
                 </MenuWrapper>
             </div>

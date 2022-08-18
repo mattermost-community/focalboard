@@ -33,4 +33,11 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+
+    .non-admin-unlink-board {
+        cursor: not-allowed;
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
 }
