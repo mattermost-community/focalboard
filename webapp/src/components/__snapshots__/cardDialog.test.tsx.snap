@@ -693,9 +693,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Delete
+                          <div
+                            class="menu-name"
+                          >
+                            Delete
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -716,9 +723,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Copy link
+                          <div
+                            class="menu-name"
+                          >
+                            Copy link
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -739,9 +753,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          New template from card
+                          <div
+                            class="menu-name"
+                          >
+                            New template from card
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -768,9 +789,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                         />
                       </div>
                       <div
-                        class="menu-name"
+                        class="menu-content"
                       >
-                        Cancel
+                        <div
+                          class="menu-name"
+                        >
+                          Cancel
+                        </div>
+                        <div
+                          class="menu-subtext"
+                        />
                       </div>
                       <div
                         class="noicon"

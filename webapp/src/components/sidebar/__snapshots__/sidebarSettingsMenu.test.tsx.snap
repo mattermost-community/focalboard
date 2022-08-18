@@ -68,9 +68,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Import archive
+                          <div
+                            class="menu-name"
+                          >
+                            Import archive
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -89,9 +96,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Trello
+                          <div
+                            class="menu-name"
+                          >
+                            Trello
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -110,9 +124,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Asana
+                          <div
+                            class="menu-name"
+                          >
+                            Asana
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -131,9 +152,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Notion
+                          <div
+                            class="menu-name"
+                          >
+                            Notion
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -152,9 +180,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Jira
+                          <div
+                            class="menu-name"
+                          >
+                            Jira
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -173,9 +208,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Todoist
+                          <div
+                            class="menu-name"
+                          >
+                            Todoist
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -201,9 +243,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Cancel
+                          <div
+                            class="menu-name"
+                          >
+                            Cancel
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -228,9 +277,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Export archive
+                  <div
+                    class="menu-name"
+                  >
+                    Export archive
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -328,9 +384,16 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -406,9 +469,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Export archive
+                  <div
+                    class="menu-name"
+                  >
+                    Export archive
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -459,9 +529,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          English
+                          <div
+                            class="menu-name"
+                          >
+                            English
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <svg
                           class="CheckIcon Icon"
@@ -486,9 +563,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Español
+                          <div
+                            class="menu-name"
+                          >
+                            Español
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -507,9 +591,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Deutsch
+                          <div
+                            class="menu-name"
+                          >
+                            Deutsch
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -528,9 +619,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          日本語
+                          <div
+                            class="menu-name"
+                          >
+                            日本語
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -549,9 +647,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Français
+                          <div
+                            class="menu-name"
+                          >
+                            Français
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -570,9 +675,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Nederlands
+                          <div
+                            class="menu-name"
+                          >
+                            Nederlands
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -591,9 +703,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Pусский
+                          <div
+                            class="menu-name"
+                          >
+                            Pусский
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -612,9 +731,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          中文 (繁體)
+                          <div
+                            class="menu-name"
+                          >
+                            中文 (繁體)
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -633,9 +759,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          中文 (简体)
+                          <div
+                            class="menu-name"
+                          >
+                            中文 (简体)
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -654,9 +787,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Türkçe
+                          <div
+                            class="menu-name"
+                          >
+                            Türkçe
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -675,9 +815,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Occitan
+                          <div
+                            class="menu-name"
+                          >
+                            Occitan
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -696,9 +843,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Português (Brasil)
+                          <div
+                            class="menu-name"
+                          >
+                            Português (Brasil)
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -717,9 +871,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Català
+                          <div
+                            class="menu-name"
+                          >
+                            Català
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -738,9 +899,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Ελληνικά
+                          <div
+                            class="menu-name"
+                          >
+                            Ελληνικά
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -759,9 +927,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          bahasa Indonesia
+                          <div
+                            class="menu-name"
+                          >
+                            bahasa Indonesia
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -780,9 +955,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Italiano
+                          <div
+                            class="menu-name"
+                          >
+                            Italiano
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -801,9 +983,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Svenska
+                          <div
+                            class="menu-name"
+                          >
+                            Svenska
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -829,9 +1018,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Cancel
+                          <div
+                            class="menu-name"
+                          >
+                            Cancel
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -909,9 +1105,16 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -1007,9 +1210,16 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Export archive
+                  <div
+                    class="menu-name"
+                  >
+                    Export archive
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -1107,9 +1317,16 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -1185,9 +1402,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Export archive
+                  <div
+                    class="menu-name"
+                  >
+                    Export archive
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -1262,9 +1486,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Default theme
+                          <div
+                            class="menu-name"
+                          >
+                            Default theme
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <svg
                           class="CheckIcon Icon"
@@ -1289,9 +1520,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Dark theme
+                          <div
+                            class="menu-name"
+                          >
+                            Dark theme
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -1310,9 +1548,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Light theme
+                          <div
+                            class="menu-name"
+                          >
+                            Light theme
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -1331,9 +1576,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          System theme
+                          <div
+                            class="menu-name"
+                          >
+                            System theme
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -1359,9 +1611,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-content"
                         >
-                          Cancel
+                          <div
+                            class="menu-name"
+                          >
+                            Cancel
+                          </div>
+                          <div
+                            class="menu-subtext"
+                          />
                         </div>
                         <div
                           class="noicon"
@@ -1415,9 +1674,16 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"

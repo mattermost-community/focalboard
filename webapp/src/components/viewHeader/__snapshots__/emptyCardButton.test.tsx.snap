@@ -26,9 +26,16 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton 1`] = `
       </svg>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      Empty card
+      <div
+        class="menu-name"
+      >
+        Empty card
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -74,9 +81,16 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
       </svg>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      Empty card
+      <div
+        class="menu-name"
+      >
+        Empty card
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -120,9 +134,16 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Set as default
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -149,9 +170,16 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -191,9 +219,16 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and addCar
       </svg>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      Empty card
+      <div
+        class="menu-name"
+      >
+        Empty card
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"

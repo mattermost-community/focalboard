@@ -47,9 +47,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  text
+                  <div
+                    class="menu-name"
+                  >
+                    text
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -76,9 +83,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  image
+                  <div
+                    class="menu-name"
+                  >
+                    image
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -105,9 +119,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  divider
+                  <div
+                    class="menu-name"
+                  >
+                    divider
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -134,9 +155,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  checkbox
+                  <div
+                    class="menu-name"
+                  >
+                    checkbox
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -163,9 +191,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -226,9 +261,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  text
+                  <div
+                    class="menu-name"
+                  >
+                    text
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -255,9 +297,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  image
+                  <div
+                    class="menu-name"
+                  >
+                    image
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -284,9 +333,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  divider
+                  <div
+                    class="menu-name"
+                  >
+                    divider
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -313,9 +369,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  checkbox
+                  <div
+                    class="menu-name"
+                  >
+                    checkbox
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -342,9 +405,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -405,9 +475,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  text
+                  <div
+                    class="menu-name"
+                  >
+                    text
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -434,9 +511,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  image
+                  <div
+                    class="menu-name"
+                  >
+                    image
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -463,9 +547,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  divider
+                  <div
+                    class="menu-name"
+                  >
+                    divider
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -492,9 +583,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  checkbox
+                  <div
+                    class="menu-name"
+                  >
+                    checkbox
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -521,9 +619,16 @@ exports[`components/cardDetail/cardDetailContentsMenu return cardDetailContentsM
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"

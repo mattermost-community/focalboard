@@ -55,9 +55,16 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                       </svg>
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Move up
+                      <div
+                        class="menu-name"
+                      >
+                        Move up
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -87,9 +94,16 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                       </svg>
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Move down
+                      <div
+                        class="menu-name"
+                      >
+                        Move down
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -134,9 +148,16 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Delete
+                      <div
+                        class="menu-name"
+                      >
+                        Delete
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -163,9 +184,16 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-content"
                   >
-                    Cancel
+                    <div
+                      class="menu-name"
+                    >
+                      Cancel
+                    </div>
+                    <div
+                      class="menu-subtext"
+                    />
                   </div>
                   <div
                     class="noicon"

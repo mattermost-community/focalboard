@@ -68,9 +68,16 @@ exports[`components/blockIconSelector return menu on click 1`] = `
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Random
+                  <div
+                    class="menu-name"
+                  >
+                    Random
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -121,9 +128,16 @@ exports[`components/blockIconSelector return menu on click 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Remove icon
+                  <div
+                    class="menu-name"
+                  >
+                    Remove icon
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -150,9 +164,16 @@ exports[`components/blockIconSelector return menu on click 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"

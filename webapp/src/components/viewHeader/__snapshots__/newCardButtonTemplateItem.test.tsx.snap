@@ -17,9 +17,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -63,9 +70,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Set as default
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -86,9 +100,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Edit
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -109,9 +130,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -138,9 +166,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -171,9 +206,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -217,9 +259,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Set as default
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -240,9 +289,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Edit
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -263,9 +319,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -292,9 +355,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -325,9 +395,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -364,9 +441,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -410,9 +494,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Set as default
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -433,9 +524,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Edit
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -456,9 +554,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -485,9 +590,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -518,9 +630,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
+      <div
+        class="menu-subtext"
+      />
     </div>
     <div
       aria-label="menuwrapper"
@@ -564,9 +683,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Set as default
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -587,9 +713,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Edit
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -610,9 +743,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -639,9 +779,16 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"

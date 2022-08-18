@@ -43,9 +43,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Hide 1 empty groups
+                <div
+                  class="menu-name"
+                >
+                  Hide 1 empty groups
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="HideIcon Icon"
@@ -70,9 +77,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Ungroup
+                <div
+                  class="menu-name"
+                >
+                  Ungroup
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -96,9 +110,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Status
+                <div
+                  class="menu-name"
+                >
+                  Status
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="CheckIcon Icon"
@@ -125,9 +146,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 1
+                <div
+                  class="menu-name"
+                >
+                  Property 1
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -148,9 +176,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 2
+                <div
+                  class="menu-name"
+                >
+                  Property 2
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -171,9 +206,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 3
+                <div
+                  class="menu-name"
+                >
+                  Property 3
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -200,9 +242,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"
@@ -258,9 +307,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Show 1 hidden groups
+                <div
+                  class="menu-name"
+                >
+                  Show 1 hidden groups
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="ShowIcon Icon"
@@ -285,9 +341,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Ungroup
+                <div
+                  class="menu-name"
+                >
+                  Ungroup
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -311,9 +374,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Status
+                <div
+                  class="menu-name"
+                >
+                  Status
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="CheckIcon Icon"
@@ -340,9 +410,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 1
+                <div
+                  class="menu-name"
+                >
+                  Property 1
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -363,9 +440,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 2
+                <div
+                  class="menu-name"
+                >
+                  Property 2
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -386,9 +470,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 3
+                <div
+                  class="menu-name"
+                >
+                  Property 3
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -415,9 +506,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"
@@ -474,9 +572,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Status
+                <div
+                  class="menu-name"
+                >
+                  Status
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="CheckIcon Icon"
@@ -503,9 +608,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 1
+                <div
+                  class="menu-name"
+                >
+                  Property 1
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -526,9 +638,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 2
+                <div
+                  class="menu-name"
+                >
+                  Property 2
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -549,9 +668,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 3
+                <div
+                  class="menu-name"
+                >
+                  Property 3
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -578,9 +704,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"
@@ -660,9 +793,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Hide 1 empty groups
+                <div
+                  class="menu-name"
+                >
+                  Hide 1 empty groups
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="HideIcon Icon"
@@ -687,9 +827,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Show 1 hidden groups
+                <div
+                  class="menu-name"
+                >
+                  Show 1 hidden groups
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="ShowIcon Icon"
@@ -714,9 +861,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Ungroup
+                <div
+                  class="menu-name"
+                >
+                  Ungroup
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -740,9 +894,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Status
+                <div
+                  class="menu-name"
+                >
+                  Status
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="CheckIcon Icon"
@@ -769,9 +930,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 1
+                <div
+                  class="menu-name"
+                >
+                  Property 1
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -792,9 +960,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 2
+                <div
+                  class="menu-name"
+                >
+                  Property 2
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -815,9 +990,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 3
+                <div
+                  class="menu-name"
+                >
+                  Property 3
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -844,9 +1026,16 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"

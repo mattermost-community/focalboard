@@ -67,9 +67,16 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"
@@ -149,9 +156,16 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"
@@ -231,9 +245,16 @@ exports[`components/viewHeader/filterValue return filterValue and click Status w
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"

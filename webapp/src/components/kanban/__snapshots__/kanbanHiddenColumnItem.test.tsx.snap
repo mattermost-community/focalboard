@@ -73,9 +73,16 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Show
+                  <div
+                    class="menu-name"
+                  >
+                    Show
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -102,9 +109,16 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -170,9 +184,16 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                   </svg>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Show
+                  <div
+                    class="menu-name"
+                  >
+                    Show
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -199,9 +220,16 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"

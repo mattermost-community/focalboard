@@ -229,9 +229,16 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-content"
                   >
-                    Delete
+                    <div
+                      class="menu-name"
+                    >
+                      Delete
+                    </div>
+                    <div
+                      class="menu-subtext"
+                    />
                   </div>
                   <div
                     class="noicon"
@@ -250,9 +257,16 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-content"
                   >
-                    Duplicate
+                    <div
+                      class="menu-name"
+                    >
+                      Duplicate
+                    </div>
+                    <div
+                      class="menu-subtext"
+                    />
                   </div>
                   <div
                     class="noicon"
@@ -273,9 +287,16 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-content"
                   >
-                    Copy link
+                    <div
+                      class="menu-name"
+                    >
+                      Copy link
+                    </div>
+                    <div
+                      class="menu-subtext"
+                    />
                   </div>
                   <div
                     class="noicon"
@@ -303,9 +324,16 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"
@@ -405,9 +433,16 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-content"
                   >
-                    Copy link
+                    <div
+                      class="menu-name"
+                    >
+                      Copy link
+                    </div>
+                    <div
+                      class="menu-subtext"
+                    />
                   </div>
                   <div
                     class="noicon"
@@ -435,9 +470,16 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                  <div
+                    class="menu-subtext"
+                  />
                 </div>
                 <div
                   class="noicon"

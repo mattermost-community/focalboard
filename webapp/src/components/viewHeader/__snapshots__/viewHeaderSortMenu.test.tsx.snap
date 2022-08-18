@@ -38,9 +38,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Manual
+                <div
+                  class="menu-name"
+                >
+                  Manual
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -59,9 +66,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Revert
+                <div
+                  class="menu-name"
+                >
+                  Revert
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -85,9 +99,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Name
+                <div
+                  class="menu-name"
+                >
+                  Name
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -108,9 +129,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Status
+                <div
+                  class="menu-name"
+                >
+                  Status
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -131,9 +159,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 1
+                <div
+                  class="menu-name"
+                >
+                  Property 1
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <svg
                 class="SortDownIcon Icon"
@@ -163,9 +198,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 2
+                <div
+                  class="menu-name"
+                >
+                  Property 2
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -186,9 +228,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-content"
               >
-                Property 3
+                <div
+                  class="menu-name"
+                >
+                  Property 3
+                </div>
+                <div
+                  class="menu-subtext"
+                />
               </div>
               <div
                 class="noicon"
@@ -215,9 +264,16 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"

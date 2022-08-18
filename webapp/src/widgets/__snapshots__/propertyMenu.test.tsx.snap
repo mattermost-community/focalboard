@@ -84,9 +84,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Text
+                      <div
+                        class="menu-name"
+                      >
+                        Text
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -105,9 +112,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Number
+                      <div
+                        class="menu-name"
+                      >
+                        Number
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -126,9 +140,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Email
+                      <div
+                        class="menu-name"
+                      >
+                        Email
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -147,9 +168,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Phone
+                      <div
+                        class="menu-name"
+                      >
+                        Phone
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -168,9 +196,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      URL
+                      <div
+                        class="menu-name"
+                      >
+                        URL
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -189,9 +224,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Select
+                      <div
+                        class="menu-name"
+                      >
+                        Select
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -210,9 +252,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Multi select
+                      <div
+                        class="menu-name"
+                      >
+                        Multi select
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -231,9 +280,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Date
+                      <div
+                        class="menu-name"
+                      >
+                        Date
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -252,9 +308,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Person
+                      <div
+                        class="menu-name"
+                      >
+                        Person
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -273,9 +336,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Checkbox
+                      <div
+                        class="menu-name"
+                      >
+                        Checkbox
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -294,9 +364,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Created time
+                      <div
+                        class="menu-name"
+                      >
+                        Created time
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -315,9 +392,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Created by
+                      <div
+                        class="menu-name"
+                      >
+                        Created by
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -336,9 +420,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Last updated time
+                      <div
+                        class="menu-name"
+                      >
+                        Last updated time
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -357,9 +448,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Last updated by
+                      <div
+                        class="menu-name"
+                      >
+                        Last updated by
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -385,9 +483,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-content"
                     >
-                      Cancel
+                      <div
+                        class="menu-name"
+                      >
+                        Cancel
+                      </div>
+                      <div
+                        class="menu-subtext"
+                      />
                     </div>
                     <div
                       class="noicon"
@@ -412,9 +517,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-content"
             >
-              Delete
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
+              <div
+                class="menu-subtext"
+              />
             </div>
             <div
               class="noicon"
@@ -441,9 +553,16 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
             />
           </div>
           <div
-            class="menu-name"
+            class="menu-content"
           >
-            Cancel
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
+            <div
+              class="menu-subtext"
+            />
           </div>
           <div
             class="noicon"
