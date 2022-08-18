@@ -16,6 +16,7 @@
     border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
+    cursor: default;
 
     &.fixed {
         position: fixed;
