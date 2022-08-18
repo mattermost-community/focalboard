@@ -311,7 +311,7 @@ export default class Plugin {
 
             if (this.registry.registerAppBarComponent) {
                 const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Boards')
+                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Toggle Linked Boards')
             }
 
             this.registry.registerPostWillRenderEmbedComponent(
