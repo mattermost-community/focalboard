@@ -5,21 +5,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    position: absolute;
-    bottom: 120px;
-    left: 0;
-    right: 0;
+    position: fixed;
+    bottom: 48px;
+    left: 50%;
+    margin-left: -160px;
     margin: 0 auto;
     padding: 10px 20px;
-    min-width: 150px;
-    max-width: 420px;
-    min-height: 50px;
-    color: #fff;
-    background: rgba(100, 100, 100, 0.8);
-    font-size: 18px;
+    width: 320px;
+    min-height: 48px;
+    color: rgba(var(--center-channel-bg-rgb), 1);
+    background-color: rgba(var(--center-channel-color-rgb), 0.8);
+    font-size: 16px;
+    font-weight: 600;
     vertical-align: middle;
-    border-radius: 20px;
+    border-radius: 4px;
 
     &.flashIn {
         visibility: visible;

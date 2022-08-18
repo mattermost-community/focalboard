@@ -735,7 +735,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           class="d-flex"
                         >
                           <i
-                            class="CompassIcon icon-plus undefined"
+                            class="CompassIcon icon-plus"
                           />
                         </div>
                         <div
