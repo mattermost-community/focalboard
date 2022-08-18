@@ -256,25 +256,29 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 }
 
 func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.UserPropPatch) error {
-	user, err := s.getUserByID(db, userID)
-	if err != nil {
-		return err
-	}
+	//user, err := s.getUserByID(db, userID)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//if user.Props == nil {
+	//	user.Props = map[string]interface{}{}
+	//}
+	//
+	//for _, key := range patch.DeletedFields {
+	//	delete(user.Props, key)
+	//}
+	//
+	//for key, value := range patch.UpdatedFields {
+	//	user.Props[key] = value
+	//}
+	//
+	//return s.updateUser(db, user)
 
-	if user.Props == nil {
-		user.Props = map[string]interface{}{}
-	}
 
-	for _, key := range patch.DeletedFields {
-		delete(user.Props, key)
-	}
-
-	for key, value := range patch.UpdatedFields {
-		user.Props[key] = value
-	}
-
-	return s.updateUser(db, user)
 }
+
+func 
 
 func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
 	return errUnsupportedOperation
@@ -284,6 +288,51 @@ func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
 	return "", errUnsupportedOperation
 }
 
-func (s *SQLStore) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
-	return nil, errUnsupportedOperation
+func (s *SQLStore) GetUserPreferences(db sq.BaseRunner, userID string) ([]mmModel.Preference, error) {
+	query := s.getQueryBuilder(db).
+		Select("userid", "category", "name", "value").
+		From(s.tablePrefix + "preferences").
+		Where(sq.Eq{
+			"userid":   userID,
+			"category": "focalboard",
+		})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("failed to fetch user preferences", mlog.String("user_id", userID), mlog.Err(err))
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	preferences, err := s.preferencesFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return preferences, nil
+}
+
+func (s *SQLStore) preferencesFromRows(rows *sql.Rows) ([]mmModel.Preference, error) {
+	preferences := []mmModel.Preference{}
+
+	for rows.Next() {
+		var preference mmModel.Preference
+
+		err := rows.Scan(
+			&preference.UserId,
+			&preference.Category,
+			&preference.Name,
+			&preference.Value,
+		)
+
+		if err != nil {
+			s.logger.Error("failed to scan row for user preference", mlog.Err(err))
+			return nil, err
+		}
+
+		preferences = append(preferences, preference)
+	}
+
+	return preferences, nil
 }
