@@ -39,7 +39,9 @@ function parseUserProps(props: Array<UserPreference>): Record<string, UserPrefer
     props.forEach((prop) => {
         const processedProp = prop
         if (prop.name === 'hiddenBoardIDs') {
-            processedProp.value = JSON.parse(processedProp.value)
+            const hiddenBoardIDs = JSON.parse(processedProp.value)
+            processedProp.value = {}
+            hiddenBoardIDs.forEach((boardID: string) => processedProp.value[boardID] = true)
         }
         processedProps[processedProp.name] = processedProp
     })
@@ -53,7 +55,7 @@ interface UserPreference {
     user_id: string
     category: string
     name: string
-    value: string
+    value: any
 }
 
 export {

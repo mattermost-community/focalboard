@@ -111,9 +111,9 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
 
                             const patch: UserConfigPatch = {
                                 updatedFields: {
-                                    [UserPropPrefix + 'onboardingTourStarted']: '1',
-                                    [UserPropPrefix + 'onboardingTourStep']: '0',
-                                    [UserPropPrefix + 'tourCategory']: 'onboarding',
+                                    onboardingTourStarted: '1',
+                                    onboardingTourStep: '0',
+                                    tourCategory: 'onboarding',
                                 },
                             }
 

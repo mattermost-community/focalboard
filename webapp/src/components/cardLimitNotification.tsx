@@ -40,7 +40,7 @@ const CardLimitNotification = (props: Props) => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_cardLimitSnoozeUntil: `${Date.now() + snoozeTime}`,
+                    cardLimitSnoozeUntil: `${Date.now() + snoozeTime}`,
                 },
             }
 
@@ -55,7 +55,7 @@ const CardLimitNotification = (props: Props) => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_cardHiddenWarningSnoozeUntil: `${Date.now() + snoozeTime}`,
+                    cardHiddenWarningSnoozeUntil: `${Date.now() + snoozeTime}`,
                 },
             }
 

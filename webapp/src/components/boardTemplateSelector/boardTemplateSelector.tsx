@@ -86,13 +86,13 @@ const BoardTemplateSelector = (props: Props) => {
 
         const patch: UserConfigPatch = {
             updatedFields: {
-                [UserPropPrefix + 'onboardingTourStarted']: '1',
-                [UserPropPrefix + 'onboardingTourStep']: BaseTourSteps.OPEN_A_CARD.toString(),
-                [UserPropPrefix + 'tourCategory']: TOUR_BASE,
-                focalboard_cardLimitSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
-                focalboard_cardHiddenWarningSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
-                focalboard_cloudMessageCanceled: 'true',
-                focalboard_version72MessageCanceled: 'true'
+                onboardingTourStarted: '1',
+                onboardingTourStep: BaseTourSteps.OPEN_A_CARD.toString(),
+                tourCategory: TOUR_BASE,
+                cardLimitSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
+                cardHiddenWarningSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
+                cloudMessageCanceled: 'true',
+                version72MessageCanceled: 'true'
             },
         }
 

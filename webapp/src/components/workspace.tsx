@@ -22,7 +22,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
 import propsRegistry from '../properties'
 
-import {getMe} from "../store/users"
+import {getMyConfig} from "../store/users"
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
@@ -50,10 +50,10 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const me = useAppSelector(getMe)
+    const myConfig = useAppSelector(getMyConfig)
 
     const isBoardHidden = () => {
-        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
         return hiddenBoardIDs[board.id]
     }
 

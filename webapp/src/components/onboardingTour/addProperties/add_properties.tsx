@@ -76,8 +76,8 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
 
             const patch: UserConfigPatch = {}
             patch.updatedFields = {}
-            patch.updatedFields[UserPropPrefix + 'tourCategory'] = TOUR_CARD
-            patch.updatedFields[UserPropPrefix + 'onboardingTourStep'] = CardTourSteps.ADD_PROPERTIES.toString()
+            patch.updatedFields.tourCategory = TOUR_CARD
+            patch.updatedFields.onboardingTourStep = CardTourSteps.ADD_PROPERTIES.toString()
 
             const updatedProps = await mutator.patchUserConfig(me.id, patch)
             if (updatedProps) {

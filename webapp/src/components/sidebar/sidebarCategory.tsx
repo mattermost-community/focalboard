@@ -23,7 +23,7 @@ import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 import {
-    getMe,
+    getMe, getMyConfig,
     getOnboardingTourCategory,
     getOnboardingTourStep,
 } from '../../store/users'
@@ -70,6 +70,7 @@ const SidebarCategory = (props: Props) => {
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const me = useAppSelector<IUser|null>(getMe)
+    const myConfig = useAppSelector(getMyConfig)
 
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
@@ -120,7 +121,7 @@ const SidebarCategory = (props: Props) => {
         }
 
         // hide if board was hidden by the user
-        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
         return !hiddenBoardIDs[boardID]
     }
 

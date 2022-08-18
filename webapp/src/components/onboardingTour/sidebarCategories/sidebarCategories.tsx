@@ -71,9 +71,9 @@ const SidebarCategoriesTourStep = (): JSX.Element | null => {
 
             const patch: UserConfigPatch = {}
             patch.updatedFields = {}
-            patch.updatedFields[UserPropPrefix + 'tourCategory'] = TOUR_SIDEBAR
-            patch.updatedFields[UserPropPrefix + 'onboardingTourStep'] = SidebarTourSteps.SIDE_BAR.toString()
-            patch.updatedFields[UserPropPrefix + 'lastWelcomeVersion'] = Constants.versionString
+            patch.updatedFields.tourCategory = TOUR_SIDEBAR
+            patch.updatedFields.onboardingTourStep = SidebarTourSteps.SIDE_BAR.toString()
+            patch.updatedFields.lastWelcomeVersion = Constants.versionString
 
             const updatedProps = await mutator.patchUserConfig(me.id, patch)
             if (updatedProps) {
