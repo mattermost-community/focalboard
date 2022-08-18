@@ -6,8 +6,10 @@ import {Post} from 'mattermost-redux/types/posts'
 
 const PostTypeChannelAssociation = (props: {post: Post}): JSX.Element => {
 
+    const boardTitle = props.post.props.boardTitle
     return (
         <div className='PostTypeChannelAssociation'>
+            <a>{boardTitle}</a>
             <span>{props.post.message}</span>
         </div>
     )

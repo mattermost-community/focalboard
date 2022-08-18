@@ -899,7 +899,7 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 	return nil
 }
 
-func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) error {
+func (s *MattermostAuthLayer) PostMessage(message, postType, boardTitle, channelID string) error {
 	// botID, err := s.getSystemBotID()
 	// if err != nil {
 	// 	return err
@@ -913,6 +913,9 @@ func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) e
 		ChannelId: channelID,
 		Type:      postType,
 	}
+	var t = make(mmModel.StringInterface)
+	t["BoardTitle"] = boardTitle
+	post.SetProps(t)
 
 	if _, err := s.servicesAPI.CreatePost(post); err != nil {
 		s.logger.Error(

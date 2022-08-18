@@ -334,12 +334,12 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 	if patch.ChannelID != nil && *patch.ChannelID != "" {
 		a.logger.Debug(">>>>>>>>>>POSTIND Added>>>>>")
-		message := fmt.Sprintf("%s board associated to channel", updatedBoard.Title)
-		a.store.PostMessage(message, "custom_channel_association", *patch.ChannelID)
+		message := "%s board associated to channel"
+		a.store.PostMessage(message, "custom_channel_association", updatedBoard.Title, *patch.ChannelID)
 	} else if patch.ChannelID != nil && *patch.ChannelID == "" {
 		a.logger.Debug(">>>>>>>>>>POSTIND Removed>>>>>")
-		message := fmt.Sprintf("%s board association removed from channel", updatedBoard.Title)
-		a.store.PostMessage(message, "custom_channel_association", oldChannelID)
+		message := "%s board association removed from channel"
+		a.store.PostMessage(message, "custom_channel_association", updatedBoard.Title, oldChannelID)
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {

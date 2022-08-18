@@ -712,10 +712,8 @@ func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) erro
 
 }
 
-func (s *SQLStore) PostMessage(message string, postType string, channel string) error {
-	s.logger.Debug(">>>>>>>>>>WRONG POST MESSAGE>>>>>")
-
-	return s.postMessage(s.db, message, postType, channel)
+func (s *SQLStore) PostMessage(message string, postType string, boardTitle string, channelID string) error {
+	return s.postMessage(s.db, message, postType, boardTitle, channelID)
 
 }
 

@@ -279,7 +279,7 @@ func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, recei
 	return errUnsupportedOperation
 }
 
-func (s *SQLStore) postMessage(db sq.BaseRunner, message, postType, channel string) error {
+func (s *SQLStore) postMessage(db sq.BaseRunner, message, postType, boardTitle string, channel string) error {
 	return errUnsupportedOperation
 }
 
