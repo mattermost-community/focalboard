@@ -1,6 +1,7 @@
 .IconButton {
     cursor: pointer;
     border-radius: 4px;
+    flex: 0 0 24px;
     height: 24px;
     width: 24px;
     padding: 0;
@@ -45,18 +46,21 @@
     }
 
     &.size--large {
+        flex: 0 0 48px;
         width: 48px;
         height: 48px;
         font-size: 31.2px;
     }
 
     &.size--medium {
+        flex: 0 0 40px;
         width: 40px;
         height: 40px;
         font-size: 24px;
     }
 
     &.size--small {
+        flex: 0 0 32px;
         width: 32px;
         height: 32px;
         font-size: 18px;

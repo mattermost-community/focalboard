@@ -131,7 +131,7 @@ test('should match snapshot, hide group', async () => {
         </Wrapper>
     )
 
-    const triangle = container.querySelector('svg.DisclosureTriangleIcon')
+    const triangle = container.querySelector('.octo-table-cell__expand')
     expect(triangle).not.toBeNull()
 
     act(() => {
