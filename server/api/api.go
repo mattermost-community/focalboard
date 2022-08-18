@@ -193,6 +193,11 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 	}
 
 	setResponseHeader(w, "Content-Type", "application/json")
+
+	if sourceError != nil && message != sourceError.Error() {
+		message += "; " + sourceError.Error()
+	}
+
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {
 		data = []byte("{}")

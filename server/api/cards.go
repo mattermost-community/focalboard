@@ -72,9 +72,14 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newCard.Populate()
+	if newCard.BoardID != "" && newCard.BoardID != boardID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", model.ErrBoardIDMismatch)
+		return
+	}
+
+	newCard.PopulateWithBoardID(boardID)
 	if err = newCard.CheckValid(); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
 		return
 	}
 

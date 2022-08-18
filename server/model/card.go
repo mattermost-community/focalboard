@@ -1,23 +1,27 @@
 package model
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/rivo/uniseg"
 )
 
+var ErrBoardIDMismatch = errors.New("Board IDs do not match")
+
 type ErrInvalidCard struct {
-	field string
+	msg string
 }
 
-func NewErrInvalidCard(field string) ErrInvalidCard {
+func NewErrInvalidCard(msg string) ErrInvalidCard {
 	return ErrInvalidCard{
-		field: field,
+		msg: msg,
 	}
 }
 
 func (e ErrInvalidCard) Error() string {
-	return fmt.Sprintf("invalid card, field %s is missing", e.field)
+	return fmt.Sprintf("invalid card, %s", e.msg)
 }
 
 // Card represents a group of content blocks and properties.
@@ -28,7 +32,7 @@ type Card struct {
 	ID string `json:"id"`
 
 	// The id for board this card belongs to.
-	// required: true
+	// required: false
 	BoardID string `json:"boardId"`
 
 	// The id for user who created this card
@@ -92,16 +96,24 @@ func (c *Card) Populate() {
 	}
 }
 
+func (c *Card) PopulateWithBoardID(boardID string) {
+	c.BoardID = boardID
+	c.Populate()
+}
+
 // CheckValid returns an error if the Card has invalid field values.
 func (c *Card) CheckValid() error {
 	if c.ID == "" {
-		return ErrInvalidCard{"ID"}
+		return ErrInvalidCard{"IDis missing"}
 	}
 	if c.BoardID == "" {
-		return ErrInvalidCard{"BoardID"}
+		return ErrInvalidCard{"BoardID is missing"}
 	}
 	if c.ContentOrder == nil {
-		return ErrInvalidCard{"ContentOrder"}
+		return ErrInvalidCard{"ContentOrder is missing"}
+	}
+	if uniseg.GraphemeClusterCount(c.Icon) > 1 {
+		return ErrInvalidCard{"Icon can have only one grapheme"}
 	}
 	if c.Properties == nil {
 		return ErrInvalidCard{"Properties"}
