@@ -106,7 +106,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 		if board.IsTemplate {
 			var isGuest bool
-			isGuest, err := a.userIsGuest(userID)
+			isGuest, err = a.userIsGuest(userID)
 			if err != nil {
 				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 				return
