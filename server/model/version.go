@@ -47,7 +47,7 @@ var (
 )
 
 // LogServerInfo logs information about the server instance.
-func LogServerInfo(logger *mlog.Logger) {
+func LogServerInfo(logger mlog.LoggerIFace) {
 	logger.Info("FocalBoard Server",
 		mlog.String("version", CurrentVersion),
 		mlog.String("edition", Edition),

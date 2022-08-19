@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/app"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
@@ -190,6 +191,7 @@ func (bp *boardsProduct) Start() error {
 	}
 
 	bp.logger.Info("Starting boards service")
+	model.LogServerInfo(bp.logger)
 
 	adapter := newServiceAPIAdapter(bp)
 	boardsApp, err := boards.NewBoardsApp(adapter)
