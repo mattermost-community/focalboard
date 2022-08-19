@@ -69,36 +69,36 @@ func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
 	return a.store.GetBlocksWithBoardID(boardID)
 }
 
-func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
+func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string, allowNotifications bool) (*model.Block, error) {
 	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if a.IsCloudLimited() {
 		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]model.Block{*oldBlock})
 		if lErr != nil {
-			return lErr
+			return nil, lErr
 		}
 		if containsLimitedBlocks {
-			return ErrPatchUpdatesLimitedCards
+			return nil, ErrPatchUpdatesLimitedCards
 		}
 	}
 
 	board, err := a.store.GetBoard(oldBlock.BoardID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = a.store.PatchBlock(blockID, blockPatch, modifiedByID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	a.metrics.IncrementBlocksPatched(1)
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	a.blockChangeNotifier.Enqueue(func() error {
 		// broadcast on websocket
@@ -108,10 +108,12 @@ func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedB
 		a.webhook.NotifyUpdate(*block)
 
 		// send notifications
-		a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
+		if allowNotifications {
+			a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
+		}
 		return nil
 	})
-	return nil
+	return block, nil
 }
 
 func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, modifiedByID string) error {

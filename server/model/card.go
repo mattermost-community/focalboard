@@ -24,6 +24,16 @@ func (e ErrInvalidCard) Error() string {
 	return fmt.Sprintf("invalid card, %s", e.msg)
 }
 
+var ErrNotCardBlock = errors.New("not a card block")
+
+type ErrInvalidFieldType struct {
+	field string
+}
+
+func (e ErrInvalidFieldType) Error() string {
+	return fmt.Sprintf("invalid type for field '%s'", e.field)
+}
+
 // Card represents a group of content blocks and properties.
 // swagger:model
 type Card struct {
@@ -191,4 +201,108 @@ func (p *CardPatch) Patch(card *Card) *Card {
 	}
 
 	return card
+}
+
+// Card2Block converts a card to block using a shallow copy. Not needed once cards are first class entities.
+func Card2Block(card *Card) *Block {
+	fields := make(map[string]interface{})
+
+	fields["contentOrder"] = card.ContentOrder
+	fields["icon"] = card.Icon
+	fields["isTemplate"] = card.IsTemplate
+	fields["properties"] = card.Properties
+
+	return &Block{
+		ID:         card.ID,
+		ParentID:   card.BoardID,
+		CreatedBy:  card.CreatedBy,
+		ModifiedBy: card.ModifiedBy,
+		Schema:     1,
+		Type:       TypeCard,
+		Title:      card.Title,
+		Fields:     fields,
+		CreateAt:   card.CreateAt,
+		UpdateAt:   card.UpdateAt,
+		DeleteAt:   card.DeleteAt,
+		BoardID:    card.BoardID,
+	}
+}
+
+// Block2Card converts a block to a card. Not needed once cards are first class entities.
+func Block2Card(block *Block) (*Card, error) {
+	if block.Type != TypeCard {
+		return nil, fmt.Errorf("cannot convert block to card: %w", ErrNotCardBlock)
+	}
+
+	contentOrder := make([]string, 0)
+	icon := ""
+	isTemplate := false
+	properties := make(map[string]any)
+
+	if co, ok := block.Fields["contentOrder"]; ok {
+		switch arr := co.(type) {
+		case []any:
+			for _, str := range arr {
+				if id, ok := str.(string); ok {
+					contentOrder = append(contentOrder, id)
+				} else {
+					return nil, ErrInvalidFieldType{"contentOrder item"}
+				}
+			}
+		case []string:
+			for _, id := range arr {
+				contentOrder = append(contentOrder, id)
+			}
+		default:
+			return nil, ErrInvalidFieldType{"contentOrder"}
+		}
+	}
+
+	if iconAny, ok := block.Fields["icon"]; ok {
+		if id, ok := iconAny.(string); ok {
+			icon = id
+		} else {
+			return nil, ErrInvalidFieldType{"icon"}
+		}
+	}
+
+	if isTemplateAny, ok := block.Fields["isTemplate"]; ok {
+		if b, ok := isTemplateAny.(bool); ok {
+			isTemplate = b
+		} else {
+			return nil, ErrInvalidFieldType{"isTemplate"}
+		}
+	}
+
+	if props, ok := block.Fields["properties"]; ok {
+		if propMap, ok := props.(map[string]any); ok {
+			for k, v := range propMap {
+				properties[k] = v
+			}
+		} else {
+			return nil, ErrInvalidFieldType{"properties"}
+		}
+	}
+
+	card := &Card{
+		ID:           block.ID,
+		BoardID:      block.BoardID,
+		CreatedBy:    block.CreatedBy,
+		ModifiedBy:   block.ModifiedBy,
+		Title:        block.Title,
+		ContentOrder: contentOrder,
+		Icon:         icon,
+		IsTemplate:   isTemplate,
+		Properties:   properties,
+		CreateAt:     block.CreateAt,
+		UpdateAt:     block.UpdateAt,
+		DeleteAt:     block.DeleteAt,
+	}
+	card.Populate()
+	return card, nil
+}
+
+// CardPatch2BlockPatch converts a CardPatch to a BlockPatch. Not needed once cards are first class entities.
+func CardPatch2BlockPatch(cardPatch *CardPatch) (*BlockPatch, error) {
+
 }
