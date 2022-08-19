@@ -3,7 +3,7 @@
 import React from 'react'
 
 import {FormattedMessage} from 'react-intl'
-import {top} from '@popperjs/core'
+import {right} from '@popperjs/core'
 
 import { SidebarTourSteps, TOUR_SIDEBAR } from '..'
 
@@ -16,18 +16,18 @@ const SearchForBoardsTourStep = (): JSX.Element | null  => {
     const title = (
         <FormattedMessage
             id='SidebarTour.SearchForBoards.Title'
-            defaultMessage='Search For Boards'
+            defaultMessage='Search for boards'
         />
     )
 
     const screen = (
         <FormattedMessage
-            id='SidebarTour.SearchForBoards.title'
+            id='SidebarTour.SearchForBoards.Body'
             defaultMessage='Open the board switcher (Cmd/Ctrl + K) to quickly search and add boards to your sidebar.'
         />
     )
 
-    const punchout = useMeasurePunchouts(['BoardsSwitcherWrapper'], [])
+    const punchout = useMeasurePunchouts(['.BoardsSwitcher'], [])
 
     return (
         <TourTipRenderer
@@ -40,7 +40,7 @@ const SearchForBoardsTourStep = (): JSX.Element | null  => {
             punchout={punchout}
             classname='SearchForBoards'
             telemetryTag='tourPoint4d'
-            placement={top}
+            placement={right}
             hideBackdrop={false}
             showForce={true}
         />

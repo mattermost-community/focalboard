@@ -194,7 +194,7 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	err := sqlStore.runUniqueIDsMigration()
+	err := sqlStore.RunUniqueIDsMigration()
 	require.NoError(t, err)
 
 	// blocks from workspace 1 haven't changed, so we can simply fetch them

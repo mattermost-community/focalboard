@@ -17,6 +17,7 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
 import mutator from '../../mutator'
+import propsRegistry from '../../properties'
 
 import FilterValue from './filterValue'
 
@@ -54,6 +55,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
@@ -70,6 +72,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
@@ -91,6 +94,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
@@ -112,6 +116,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),

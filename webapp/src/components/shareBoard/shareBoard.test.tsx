@@ -252,7 +252,7 @@ describe('src/components/shareBoard/shareBoard', () => {
             )
             container = result.container
         })
-        const copyLinkElement = screen.getByTitle('Copy internal link')
+        const copyLinkElement = screen.getByTitle('Copy link')
         expect(copyLinkElement).toBeDefined()
 
         expect(container).toMatchSnapshot()
@@ -283,10 +283,10 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         expect(container).toMatchSnapshot()
 
-        const copyLinkElement = screen.getByTitle('Copy internal link')
+        const copyLinkElement = screen.getByTitle('Copy link')
         expect(copyLinkElement).toBeDefined()
 
-        await act(async () => {
+        act(() => {
             userEvent.click(copyLinkElement!)
         })
 
@@ -295,7 +295,6 @@ describe('src/components/shareBoard/shareBoard', () => {
 
         const copiedLinkElement = screen.getByText('Copied!')
         expect(copiedLinkElement).toBeDefined()
-        expect(copiedLinkElement.textContent).toContain('Copied!')
     })
 
     test('return shareBoard and click Regenerate token', async () => {

@@ -8,6 +8,8 @@ package model
 import (
 	"database/sql"
 
+	"github.com/gorilla/mux"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -67,4 +69,7 @@ type ServicesAPI interface {
 
 	// System service
 	GetDiagnosticID() string
+
+	// Router service
+	RegisterRouter(sub *mux.Router)
 }

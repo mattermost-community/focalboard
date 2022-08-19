@@ -10,8 +10,7 @@ import {Card} from '../../blocks/card'
 import {Constants} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
-
-import {OctoUtils} from '../../octoUtils'
+import propsRegistry from '../../properties'
 
 import './table.scss'
 
@@ -73,26 +72,8 @@ const TableHeaders = (props: Props): JSX.Element => {
             if (columnID === Constants.titleColumnId) {
                 thisLen = Utils.getTextWidth(card.title, columnFontPadding.fontDescriptor) + columnFontPadding.padding
             } else if (template) {
-                const displayValue = (OctoUtils.propertyDisplayValue(card, card.fields.properties[columnID], template as IPropertyTemplate, intl) || '')
-                switch (template.type) {
-                case 'select': {
-                    thisLen = Utils.getTextWidth(displayValue.toString().toUpperCase(), columnFontPadding.fontDescriptor)
-                    break
-                }
-                case 'multiSelect': {
-                    if (displayValue) {
-                        const displayValues = displayValue as string[]
-                        displayValues.forEach((value) => {
-                            thisLen += Utils.getTextWidth(value.toUpperCase(), columnFontPadding.fontDescriptor) + perItemPadding
-                        })
-                    }
-                    break
-                }
-                default: {
-                    thisLen = Utils.getTextWidth(displayValue.toString(), columnFontPadding.fontDescriptor)
-                    break
-                }
-                }
+                const property = propsRegistry.get(template.type)
+                property.valueLength(card.fields.properties[columnID], card, template as IPropertyTemplate, intl, columnFontPadding.fontDescriptor, perItemPadding)
                 thisLen += columnFontPadding.padding
             }
             if (thisLen > longestSize) {

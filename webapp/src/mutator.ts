@@ -7,7 +7,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
+import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
@@ -646,7 +646,7 @@ class Mutator {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.boardId, card: card.id})
     }
 
-    async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
+    async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyTypeEnum, newName: string) {
         if (propertyTemplate.type === newType && propertyTemplate.name === newName) {
             return
         }

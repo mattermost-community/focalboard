@@ -53,9 +53,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
       >
         board title
       </div>
-      <div
-        class=""
-      >
+      <div>
         <div
           aria-label="menuwrapper"
           class="MenuWrapper x"
@@ -86,9 +84,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
       >
         board title
       </div>
-      <div
-        class=""
-      >
+      <div>
         <div
           aria-label="menuwrapper"
           class="MenuWrapper x"
@@ -162,9 +158,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
       >
         board title
       </div>
-      <div
-        class=""
-      >
+      <div>
         <div
           aria-label="menuwrapper"
           class="MenuWrapper x"
@@ -195,9 +189,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
       >
         board title
       </div>
-      <div
-        class=""
-      >
+      <div>
         <div
           aria-label="menuwrapper"
           class="MenuWrapper x"
@@ -271,9 +263,7 @@ exports[`components/sidebarCategory sidebar collapsed with active board in it 1`
       >
         board title
       </div>
-      <div
-        class=""
-      >
+      <div>
         <div
           aria-label="menuwrapper"
           class="MenuWrapper x"

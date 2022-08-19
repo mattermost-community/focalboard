@@ -74,7 +74,7 @@ type BoardsAndBlocksPatch = {
     blockPatches: BlockPatch[],
 }
 
-type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
+type PropertyTypeEnum = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy' | 'unknown'
 
 interface IPropertyOption {
     id: string
@@ -86,7 +86,7 @@ interface IPropertyOption {
 interface IPropertyTemplate {
     id: string
     name: string
-    type: PropertyType
+    type: PropertyTypeEnum
     options: IPropertyOption[]
 }
 
@@ -310,7 +310,7 @@ export {
     BoardMember,
     BoardsAndBlocks,
     BoardsAndBlocksPatch,
-    PropertyType,
+    PropertyTypeEnum,
     IPropertyOption,
     IPropertyTemplate,
     BoardGroup,

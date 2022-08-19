@@ -26,7 +26,6 @@ import {
 
 type Props = {
     onClose: () => void
-    shouldViewSearchForBoardsTour?: boolean
 }
 
 const BoardSwitcherDialog = (props: Props): JSX.Element => {
@@ -140,7 +139,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
             searchHandler={searchHandler}
             selected={selected}
             setSelected={(n: number) => setSelected(n)}
-            shouldViewSearchForBoardsTour={props.shouldViewSearchForBoardsTour}
         />
     )
 }
