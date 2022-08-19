@@ -146,7 +146,7 @@ type CardPatch struct {
 
 	// An array of content block ids specifying the ordering of content for this card.
 	// required: false
-	ContentOrder []string `json:"contentOrder"`
+	ContentOrder *[]string `json:"contentOrder"`
 
 	// The icon of the card
 	// required: false
@@ -167,8 +167,8 @@ func (p *CardPatch) Patch(card *Card) *Card {
 		card.Title = *p.Title
 	}
 
-	if len(p.ContentOrder) != 0 {
-		card.ContentOrder = p.ContentOrder
+	if p.ContentOrder != nil {
+		card.ContentOrder = *p.ContentOrder
 	}
 
 	if p.Icon != nil {
@@ -304,5 +304,19 @@ func Block2Card(block *Block) (*Card, error) {
 
 // CardPatch2BlockPatch converts a CardPatch to a BlockPatch. Not needed once cards are first class entities.
 func CardPatch2BlockPatch(cardPatch *CardPatch) (*BlockPatch, error) {
+	blockPatch := &BlockPatch{
+		Title: cardPatch.Title,
+	}
 
+	updatedFields := make(map[string]any, 0)
+	deletedFields := make([]string, 0)
+
+	if cardPatch.ContentOrder != 0 {
+		updatedFields["contentOrder"] = cardPatch.ContentOrder
+	}
+	if cardPatch.Icon != nil {
+		updatedFields["icon"] = cardPatch.Icon
+	}
+
+	return blockPatch, nil
 }

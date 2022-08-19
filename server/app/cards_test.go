@@ -36,7 +36,7 @@ func TestBlock2Card(t *testing.T) {
 	}
 
 	t.Run("Good block", func(t *testing.T) {
-		card, err := Block2Card(block)
+		card, err := model.Block2Card(block)
 		require.NoError(t, err)
 
 		assert.Equal(t, block.ID, card.ID)
@@ -49,7 +49,7 @@ func TestBlock2Card(t *testing.T) {
 	t.Run("Not a card", func(t *testing.T) {
 		blockNotCard := &model.Block{}
 
-		card, err := Block2Card(blockNotCard)
+		card, err := model.Block2Card(blockNotCard)
 		require.Error(t, err)
 		require.Nil(t, card)
 	})
