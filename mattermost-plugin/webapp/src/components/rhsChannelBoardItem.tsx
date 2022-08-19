@@ -17,9 +17,8 @@ import {SuiteWindow} from '../../../../webapp/src/types/index'
 
 import {Permission} from '../../../../webapp/src/constants'
 
-import {useHasPermissions} from '../../../../webapp/src/hooks/permissions'
-
 import './rhsChannelBoardItem.scss'
+import BoardPermissionGate from '../../../../webapp/src/components/permissions/boardPermissionGate'
 
 const windowAny = (window as SuiteWindow)
 
@@ -35,8 +34,6 @@ const RHSChannelBoardItem = (props: Props) => {
     if (!team) {
         return null
     }
-
-    const allowed = useHasPermissions(team.id, board.id, [Permission.ManageBoardRoles])
 
     const handleBoardClicked = (boardID: string) => {
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
@@ -63,30 +60,39 @@ const RHSChannelBoardItem = (props: Props) => {
                     <Menu
                         position='left'
                     >
-                        {allowed &&
-                         <Menu.Text
-                             key={`unlinkBoard-${board.id}`}
-                             id='unlinkBoard'
-                             name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
-                             icon={<DeleteIcon/>}
-                             onClick={() => {
-                                 onUnlinkBoard(board)
-                             }}
-                         />
-                        }
-                        {!allowed &&
-                         <Menu.Text
-                             key={`unlinkBoard-${board.id}`}
-                             id='unlinkBoard'
-                             disabled={true}
-                             name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
-                             icon={<DeleteIcon/>}
-                             onClick={() => {
-                                 onUnlinkBoard(board)
-                             }}
-                             subText={intl.formatMessage({id: 'rhs-board-non-admin-msg', defaultMessage:'You are not an admin of the board'})}
-                         />
-                        }
+                        <BoardPermissionGate
+                            boardId={board.id}
+                            teamId={team.id}
+                            permissions={[Permission.ManageBoardRoles]}
+                        >
+                            <Menu.Text
+                                key={`unlinkBoard-${board.id}`}
+                                id='unlinkBoard'
+                                name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
+                                icon={<DeleteIcon/>}
+                                onClick={() => {
+                                    onUnlinkBoard(board)
+                                }}
+                            />
+                        </BoardPermissionGate>
+                        <BoardPermissionGate
+                            boardId={board.id}
+                            teamId={team.id}
+                            permissions={[Permission.ManageBoardRoles]}
+                            invert={true}
+                        >
+                            <Menu.Text
+                                key={`unlinkBoard-${board.id}`}
+                                id='unlinkBoard'
+                                disabled={true}
+                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board Hello'})}
+                                icon={<DeleteIcon/>}
+                                onClick={() => {
+                                    onUnlinkBoard(board)
+                                }}
+                                subText={intl.formatMessage({id: 'rhs-board-non-admin-msg', defaultMessage:'You are not an admin of the board'})}
+                            />
+                        </BoardPermissionGate>
                     </Menu>
                 </MenuWrapper>
             </div>
