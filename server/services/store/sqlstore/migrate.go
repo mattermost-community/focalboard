@@ -386,6 +386,8 @@ func (s *SQLStore) createTempSchemaTable() error {
 }
 
 func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
+	s.logger.Info("Populating the temporal schema table", mlog.Uint32("legacySchemaVersion", legacySchemaVersion))
+
 	query := s.getQueryBuilder(s.db).
 		Insert(s.tablePrefix+tempSchemaMigrationTableName).
 		Columns("Version", "Name")
@@ -399,8 +401,10 @@ func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legac
 		}
 
 		if migration.Version > legacySchemaVersion {
-			break
+			continue
 		}
+
+		s.logger.Info("-- Registering migration", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
 
 		query = query.Values(migration.Version, migration.Name)
 	}
