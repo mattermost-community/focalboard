@@ -40,7 +40,7 @@ import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
-    onBoardTemplateSelectorOpen?: () => void
+    onBoardTemplateSelectorOpen: () => void
 }
 
 function getWindowDimensions() {

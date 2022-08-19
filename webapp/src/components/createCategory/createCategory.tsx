@@ -40,7 +40,7 @@ const CreateCategory = (props: Props): JSX.Element => {
             onClose={props.onClose}
         >
             <div className='CreateCategory'>
-                <h3>{props.title}</h3>
+                <h3 className='dialog-title'>{props.title}</h3>
                 <div className='inputWrapper'>
                     <input
                         className='categoryNameInput'
