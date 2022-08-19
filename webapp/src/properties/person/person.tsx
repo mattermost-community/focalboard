@@ -59,12 +59,11 @@ const Person = (props: PropertyProps): JSX.Element => {
     const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
-    const user = boardUsersById[propertyValue as string]
-
+    const me: IUser = boardUsersById[propertyValue as string]
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
-    const formatOptionLabel = (user: any) => {
+    const formatOptionLabel = (user: IUser) => {
         let profileImg
         if (imageURLForUser) {
             profileImg = imageURLForUser(user.id)
@@ -87,7 +86,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     if (readOnly) {
         return (
             <div className={`Person ${props.property.valueClassName(true)}`}>
-                {user ? formatOptionLabel(user) : propertyValue}
+                {me ? formatOptionLabel(me) : propertyValue}
             </div>
         )
     }

@@ -8,7 +8,7 @@ import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
 import {IUser} from '../../user'
-import {createCard, Card} from '../../blocks/card'
+import {createCard} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 
 import {wrapIntl} from '../../testUtils'
