@@ -191,13 +191,14 @@ func (bp *boardsProduct) Start() error {
 	}
 
 	bp.logger.Info("Starting boards service")
-	model.LogServerInfo(bp.logger)
 
 	adapter := newServiceAPIAdapter(bp)
 	boardsApp, err := boards.NewBoardsApp(adapter)
 	if err != nil {
 		return fmt.Errorf("failed to create Boards service: %w", err)
 	}
+
+	model.LogServerInfo(bp.logger)
 
 	bp.boardsApp = boardsApp
 	if err := bp.boardsApp.Start(); err != nil {
