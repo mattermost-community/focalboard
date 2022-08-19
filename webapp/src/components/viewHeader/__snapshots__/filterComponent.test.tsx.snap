@@ -61,16 +61,13 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Title
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -91,16 +88,13 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Status
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -121,16 +115,13 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 1
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -151,16 +142,13 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 2
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -181,16 +169,13 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 3
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -217,16 +202,13 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Cancel
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -351,16 +333,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Title
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -381,16 +360,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Status
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -411,16 +387,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 1
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -441,16 +414,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 2
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -471,16 +441,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 3
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -507,16 +474,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Cancel
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -655,16 +619,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         includes
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -683,16 +644,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         doesn't include
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -711,16 +669,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         is empty
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -739,16 +694,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         is not empty
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -777,16 +729,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Cancel
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -897,16 +846,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Title
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -927,16 +873,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Status
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -957,16 +900,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 1
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -987,16 +927,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 2
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -1017,16 +954,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Property 3
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -1053,16 +987,13 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Cancel
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"

@@ -229,16 +229,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Delete
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -257,16 +254,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Duplicate
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -287,16 +281,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Copy link
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -324,16 +315,13 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -433,16 +421,13 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Copy link
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -470,16 +455,13 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"

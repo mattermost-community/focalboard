@@ -160,16 +160,13 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Cancel
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -364,16 +361,13 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Cancel
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"

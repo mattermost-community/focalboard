@@ -41,16 +41,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Title
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -71,16 +68,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Status
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -101,16 +95,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Property 1
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -131,16 +122,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Property 2
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -161,16 +149,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Property 3
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -197,16 +182,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -314,16 +296,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     includes
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -342,16 +321,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't include
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -370,16 +346,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -398,16 +371,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is not empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -436,16 +406,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -539,16 +506,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     includes
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -567,16 +531,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't include
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -595,16 +556,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -623,16 +581,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is not empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -661,16 +616,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -764,16 +716,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     includes
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -792,16 +741,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't include
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -820,16 +766,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -848,16 +791,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is not empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -886,16 +826,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -989,16 +926,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     includes
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1017,16 +951,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't include
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1045,16 +976,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1073,16 +1001,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is not empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1111,16 +1036,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -1214,16 +1136,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     includes
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1242,16 +1161,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't include
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1270,16 +1186,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1298,16 +1211,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is not empty
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1336,16 +1246,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -1425,16 +1332,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Title
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1455,16 +1359,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Status
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1485,16 +1386,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Property 1
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1515,16 +1413,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Property 2
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1545,16 +1440,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Property 3
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1581,16 +1473,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -1733,16 +1622,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is set
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1761,16 +1647,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is not set
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1798,16 +1681,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -1943,16 +1823,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     is
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1971,16 +1848,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     contains
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -1999,16 +1873,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't contain
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -2027,16 +1898,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     starts with
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -2055,16 +1923,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't start with
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -2083,16 +1948,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     ends with
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -2111,16 +1973,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     doesn't end with
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -2147,16 +2006,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"

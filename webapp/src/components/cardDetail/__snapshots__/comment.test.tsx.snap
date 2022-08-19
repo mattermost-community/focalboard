@@ -61,16 +61,13 @@ exports[`components/cardDetail/comment return comment 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Delete
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -97,16 +94,13 @@ exports[`components/cardDetail/comment return comment 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -189,16 +183,13 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Delete
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -225,16 +216,13 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"

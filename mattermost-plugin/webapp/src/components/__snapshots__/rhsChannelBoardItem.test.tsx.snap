@@ -69,7 +69,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
           />
         </button>
         <div
-          class="Menu noselect left  fixed"
+          class="Menu noselect left "
         >
           <div
             class="menu-contents"
@@ -91,16 +91,13 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Unlink board
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -128,16 +125,13 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"

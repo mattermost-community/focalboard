@@ -73,16 +73,13 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                   </svg>
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Show
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -109,16 +106,13 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -184,16 +178,13 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                   </svg>
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Show
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -220,16 +211,13 @@ exports[`src/components/kanban/kanbanHiddenColumnItem return kanbanHiddenColumnI
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"

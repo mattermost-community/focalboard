@@ -76,16 +76,13 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                   </svg>
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Hide
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -106,16 +103,13 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Delete
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -315,16 +309,13 @@ exports[`src/components/kanban/kanbanColumnHeader return kanbanColumnHeader and 
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"

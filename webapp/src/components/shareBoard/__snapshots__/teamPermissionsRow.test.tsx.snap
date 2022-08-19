@@ -53,16 +53,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Editor
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -83,16 +80,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Commenter
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -113,16 +107,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Viewer
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -149,16 +140,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     </svg>
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       None
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -185,16 +173,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -265,16 +250,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Editor
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -295,16 +277,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Commenter
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -325,16 +304,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Viewer
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -361,16 +337,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     </svg>
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       None
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -397,16 +370,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -479,16 +449,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in t
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Viewer
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -515,16 +482,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in t
                     </svg>
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       None
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"
@@ -551,16 +515,13 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in t
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Cancel
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"

@@ -41,16 +41,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Export to CSV
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -71,16 +68,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Export board archive
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -107,16 +101,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -171,16 +162,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Export to CSV
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -201,16 +189,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Export board archive
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -237,16 +222,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -301,16 +283,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Export to CSV
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -331,16 +310,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Export board archive
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -367,16 +343,13 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"

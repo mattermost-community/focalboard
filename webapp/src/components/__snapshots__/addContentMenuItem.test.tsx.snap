@@ -21,16 +21,13 @@ exports[`components/addContentMenuItem return a checkbox menu item 1`] = `
       </svg>
     </div>
     <div
-      class="menu-content"
+      class="menu-option__content"
     >
       <div
         class="menu-name"
       >
         checkbox
       </div>
-      <div
-        class="menu-subtext"
-      />
     </div>
     <div
       class="noicon"
@@ -60,16 +57,13 @@ exports[`components/addContentMenuItem return a divider menu item 1`] = `
       </svg>
     </div>
     <div
-      class="menu-content"
+      class="menu-option__content"
     >
       <div
         class="menu-name"
       >
         divider
       </div>
-      <div
-        class="menu-subtext"
-      />
     </div>
     <div
       class="noicon"
@@ -99,16 +93,13 @@ exports[`components/addContentMenuItem return a text menu item 1`] = `
       </svg>
     </div>
     <div
-      class="menu-content"
+      class="menu-option__content"
     >
       <div
         class="menu-name"
       >
         text
       </div>
-      <div
-        class="menu-subtext"
-      />
     </div>
     <div
       class="noicon"
@@ -140,16 +131,13 @@ exports[`components/addContentMenuItem return an image menu item 1`] = `
       </svg>
     </div>
     <div
-      class="menu-content"
+      class="menu-option__content"
     >
       <div
         class="menu-name"
       >
         image
       </div>
-      <div
-        class="menu-subtext"
-      />
     </div>
     <div
       class="noicon"

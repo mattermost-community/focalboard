@@ -57,16 +57,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                   </svg>
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Empty card
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   aria-label="menuwrapper"
@@ -98,16 +95,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     New template
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -134,16 +128,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -214,16 +205,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                   </svg>
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Empty card
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   aria-label="menuwrapper"
@@ -255,16 +243,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     New template
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -291,16 +276,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"
@@ -371,16 +353,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                   </svg>
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     Empty card
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   aria-label="menuwrapper"
@@ -412,16 +391,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                   />
                 </div>
                 <div
-                  class="menu-content"
+                  class="menu-option__content"
                 >
                   <div
                     class="menu-name"
                   >
                     New template
                   </div>
-                  <div
-                    class="menu-subtext"
-                  />
                 </div>
                 <div
                   class="noicon"
@@ -448,16 +424,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 />
               </div>
               <div
-                class="menu-content"
+                class="menu-option__content"
               >
                 <div
                   class="menu-name"
                 >
                   Cancel
                 </div>
-                <div
-                  class="menu-subtext"
-                />
               </div>
               <div
                 class="noicon"

@@ -55,16 +55,13 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                       </svg>
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Move up
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -94,16 +91,13 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                       </svg>
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Move down
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -148,16 +142,13 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                       />
                     </div>
                     <div
-                      class="menu-content"
+                      class="menu-option__content"
                     >
                       <div
                         class="menu-name"
                       >
                         Delete
                       </div>
-                      <div
-                        class="menu-subtext"
-                      />
                     </div>
                     <div
                       class="noicon"
@@ -184,16 +175,13 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     />
                   </div>
                   <div
-                    class="menu-content"
+                    class="menu-option__content"
                   >
                     <div
                       class="menu-name"
                     >
                       Cancel
                     </div>
-                    <div
-                      class="menu-subtext"
-                    />
                   </div>
                   <div
                     class="noicon"

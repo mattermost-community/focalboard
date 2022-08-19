@@ -25,16 +25,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Sort ascending
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -55,16 +52,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Sort descending
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -85,16 +79,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Insert left
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -115,16 +106,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Insert right
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -145,16 +133,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Hide
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -173,16 +158,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Duplicate
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -201,16 +183,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Delete
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -237,16 +216,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, other column 1`
             />
           </div>
           <div
-            class="menu-content"
+            class="menu-option__content"
           >
             <div
               class="menu-name"
             >
               Cancel
             </div>
-            <div
-              class="menu-subtext"
-            />
           </div>
           <div
             class="noicon"
@@ -283,16 +259,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Sort ascending
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -313,16 +286,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Sort descending
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -343,16 +313,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Insert left
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -373,16 +340,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
               />
             </div>
             <div
-              class="menu-content"
+              class="menu-option__content"
             >
               <div
                 class="menu-name"
               >
                 Insert right
               </div>
-              <div
-                class="menu-subtext"
-              />
             </div>
             <div
               class="noicon"
@@ -410,16 +374,13 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
             />
           </div>
           <div
-            class="menu-content"
+            class="menu-option__content"
           >
             <div
               class="menu-name"
             >
               Cancel
             </div>
-            <div
-              class="menu-subtext"
-            />
           </div>
           <div
             class="noicon"
