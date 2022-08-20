@@ -175,29 +175,19 @@ func (p *CardPatch) Patch(card *Card) *Card {
 		card.Icon = *p.Icon
 	}
 
-	for key, property := range p.UpdatedProperties {
-		card.Properties[key] = property
+	if card.Properties == nil {
+		card.Properties = make(map[string]any)
 	}
 
-	for _, key := range p.DeletedProperties {
-		delete(card.Properties, key)
+	// if there are properties marked for update, we replace the
+	// existing ones or add them
+	for propID, propVal := range p.UpdatedProperties {
+		card.Properties[propID] = propVal
 	}
 
-	if len(p.UpdatedProperties) != 0 || len(p.DeletedProperties) != 0 {
-		if card.Properties == nil {
-			card.Properties = make(map[string]any)
-		}
-
-		// if there are properties marked for removal, we delete them
-		for _, propID := range p.DeletedProperties {
-			delete(card.Properties, propID)
-		}
-
-		// if there are properties marked for update, we replace the
-		// existing ones or add them
-		for propID, propVal := range p.UpdatedProperties {
-			card.Properties[propID] = propVal
-		}
+	// if there are properties marked for removal, we delete them
+	for _, propID := range p.DeletedProperties {
+		delete(card.Properties, propID)
 	}
 
 	return card
