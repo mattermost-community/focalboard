@@ -309,14 +309,28 @@ func CardPatch2BlockPatch(cardPatch *CardPatch) (*BlockPatch, error) {
 	}
 
 	updatedFields := make(map[string]any, 0)
-	deletedFields := make([]string, 0)
 
-	if cardPatch.ContentOrder != 0 {
+	if cardPatch.ContentOrder != nil {
 		updatedFields["contentOrder"] = cardPatch.ContentOrder
 	}
 	if cardPatch.Icon != nil {
 		updatedFields["icon"] = cardPatch.Icon
 	}
+
+	properties := make(map[string]any)
+	for k, v := range cardPatch.UpdatedProperties {
+		properties[k] = v
+	}
+
+	for _, k := range cardPatch.DeletedProperties {
+		delete(properties, k)
+	}
+
+	if len(properties) != 0 {
+		updatedFields["properties"] = cardPatch.UpdatedProperties
+	}
+
+	blockPatch.UpdatedFields = updatedFields
 
 	return blockPatch, nil
 }
