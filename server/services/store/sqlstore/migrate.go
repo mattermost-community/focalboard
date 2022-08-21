@@ -23,7 +23,6 @@ import (
 	_ "github.com/lib/pq" // postgres driver
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
 
 //go:embed migrations
@@ -70,6 +69,20 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 }
 
 func (s *SQLStore) Migrate() error {
+	if s.isPlugin {
+		mutex, mutexErr := s.NewMutexFn("Boards_dbMutex")
+		if mutexErr != nil {
+			return fmt.Errorf("error creating database mutex: %w", mutexErr)
+		}
+
+		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
+		mutex.Lock()
+		defer func() {
+			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
+			mutex.Unlock()
+		}()
+	}
+
 	if err := s.EnsureSchemaMigrationFormat(); err != nil {
 		return err
 	}
@@ -188,22 +201,6 @@ func (s *SQLStore) Migrate() error {
 		s.logger.Debug("Closing migration engine")
 		engine.Close()
 	}()
-
-	var mutex *cluster.Mutex
-	if s.isPlugin {
-		var mutexErr error
-		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
-		if mutexErr != nil {
-			return fmt.Errorf("error creating database mutex: %w", mutexErr)
-		}
-
-		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
-		mutex.Lock()
-		defer func() {
-			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
-			mutex.Unlock()
-		}()
-	}
 
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
 		return mErr
