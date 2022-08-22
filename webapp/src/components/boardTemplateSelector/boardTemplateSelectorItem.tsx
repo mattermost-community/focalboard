@@ -41,7 +41,7 @@ const BoardTemplateSelectorItem = (props: Props) => {
             onClick={onClickHandler}
         >
             <span className='template-icon'>{template.icon || <CompassIcon icon='product-boards'/>}</span>
-            <span className='template-name'>{template.title}</span>
+            <span className='template-name'>{template.title || intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled'})}</span>
 
             {/* don't show template menu options for default templates */}
             {template.teamId !== Constants.globalTeamId &&

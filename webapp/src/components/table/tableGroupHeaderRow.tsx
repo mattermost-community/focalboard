@@ -13,7 +13,7 @@ import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
-import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import HideIcon from '../../widgets/icons/hide'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
@@ -67,9 +67,12 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                 ref={(ref) => columnResize.updateRef(group.option.id, Constants.titleColumnId, ref)}
             >
                 <IconButton
-                    icon={<DisclosureTriangle/>}
+                    icon={
+                        <CompassIcon
+                            icon='menu-down'
+                        />}
                     onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
-                    className={props.readonly ? 'readonly' : ''}
+                    className={`octo-table-cell__expand ${props.readonly ? 'readonly' : ''}`}
                 />
 
                 {!group.option.id &&

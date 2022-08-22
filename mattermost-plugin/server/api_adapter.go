@@ -6,6 +6,7 @@ package main
 import (
 	"database/sql"
 
+	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -206,6 +207,13 @@ func (a *pluginAPIAdapter) GetMasterDB() (*sql.DB, error) {
 //
 func (a *pluginAPIAdapter) GetDiagnosticID() string {
 	return a.api.GetDiagnosticId()
+}
+
+//
+// Router service.
+//
+func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
+	// NOOP for plugin
 }
 
 // Ensure the adapter implements ServicesAPI.

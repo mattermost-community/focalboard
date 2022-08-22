@@ -170,6 +170,11 @@ func (b *BoardsApp) Start() error {
 	if err := b.server.Start(); err != nil {
 		return fmt.Errorf("error starting Boards server: %w", err)
 	}
+
+	b.servicesAPI.RegisterRouter(b.server.GetRootRouter())
+
+	b.logger.Info("Boards product successfully started.")
+
 	return nil
 }
 
