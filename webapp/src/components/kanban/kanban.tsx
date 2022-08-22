@@ -66,7 +66,7 @@ const Kanban = (props: Props) => {
                 setDefaultTemplateID(currentView.fields.defaultTemplateId)
             }
         }
-    }, [currentView])
+    }, [currentView.fields.defaultTemplateId])
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
