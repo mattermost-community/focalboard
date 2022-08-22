@@ -202,10 +202,12 @@ func (s *SQLStore) Migrate() error {
 		engine.Close()
 	}()
 
-	return s.doMigrate(engine, driver)
+	return s.runMigrationSequence(engine, driver)
 }
 
-func (s *SQLStore) doMigrate(engine *morph.Morph, driver drivers.Driver) error {
+// runMigrationSequence executes all the migrations in order, both
+// plain SQL and data migrations
+func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driver) error {
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
 		return mErr
 	}
