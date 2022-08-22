@@ -60,13 +60,15 @@ const Kanban = (props: Props) => {
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
     const [defaultTemplateID, setDefaultTemplateID] = useState<string>()
 
-    useEffect(() => {
-        if(currentView && currentView.fields && currentView.fields.defaultTemplateId) {
-            if(cardTemplates.find(ct => ct.id === currentView.fields.defaultTemplateId)) {
-                setDefaultTemplateID(currentView.fields.defaultTemplateId)
+    if(currentView) {
+        useEffect(() => {
+            if(currentView.fields.defaultTemplateId) {
+                if(cardTemplates.find(ct => ct.id === currentView.fields.defaultTemplateId)) {
+                    setDefaultTemplateID(currentView.fields.defaultTemplateId)
+                }
             }
-        }
-    }, [currentView.fields.defaultTemplateId])
+        }, [currentView.fields.defaultTemplateId])
+    }
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
