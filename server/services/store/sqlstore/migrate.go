@@ -206,7 +206,7 @@ func (s *SQLStore) Migrate() error {
 }
 
 // runMigrationSequence executes all the migrations in order, both
-// plain SQL and data migrations
+// plain SQL and data migrations.
 func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driver) error {
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
 		return mErr
