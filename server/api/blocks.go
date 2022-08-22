@@ -289,7 +289,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	newBlocks, err := a.app.InsertBlocksAndNotify(blocks, session.UserID, !disableNotify)
+	newBlocks, err := a.app.InsertBlocksAndNotify(blocks, session.UserID, disableNotify)
 	if err != nil {
 		if errors.Is(err, app.ErrViewsLimitReached) {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
