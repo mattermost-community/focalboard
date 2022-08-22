@@ -12,6 +12,7 @@ enum Permission {
     ManageBoardProperties = 'manage_board_properties',
     CommentBoardCards = 'comment_board_cards',
     ViewBoard = 'view_board',
+    DeleteOthersComments = 'delete_others_comments'
 }
 
 class Constants {
