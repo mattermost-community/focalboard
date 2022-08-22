@@ -11,8 +11,8 @@ import (
 	"sync"
 
 	"github.com/mattermost/focalboard/server/auth"
-	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
