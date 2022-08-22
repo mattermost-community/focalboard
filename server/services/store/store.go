@@ -64,6 +64,8 @@ type Store interface {
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByTeam(teamID string) ([]*model.User, error)
 	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
+
+	// @withTransaction
 	PatchUserProps(userID string, patch model.UserPropPatch) error
 	GetUserPreferences(userID string) ([]mmModel.Preference, error)
 

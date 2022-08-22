@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/store"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -256,29 +257,74 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 }
 
 func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.UserPropPatch) error {
-	//user, err := s.getUserByID(db, userID)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//if user.Props == nil {
-	//	user.Props = map[string]interface{}{}
-	//}
-	//
-	//for _, key := range patch.DeletedFields {
-	//	delete(user.Props, key)
-	//}
-	//
-	//for key, value := range patch.UpdatedFields {
-	//	user.Props[key] = value
-	//}
-	//
-	//return s.updateUser(db, user)
+	if len(patch.UpdatedFields) > 0 {
+		for key, value := range patch.UpdatedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: "focalboard",
+				Name:     key,
+				Value:    value,
+			}
 
+			if err := s.updateUserProps(db, preference); err != nil {
+				return err
+			}
+		}
+	}
 
+	if len(patch.DeletedFields) > 0 {
+		for _, key := range patch.DeletedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: "focalboard",
+				Name:     key,
+			}
+
+			if err := s.deleteUserProps(db, preference); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
 }
 
-func 
+func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+	query := s.getQueryBuilder(db).
+		Insert("Preferences").
+		Columns("UserId", "Category", "Name", "Value").
+		Values(preference.UserId, preference.Category, preference.Name, preference.Value)
+
+	if s.dbType == model.MysqlDBType {
+		query = query.SuffixExpr(sq.Expr("ON DUPLICATE KEY UPDATE Value = ?", preference.Value))
+	} else if s.dbType == model.PostgresDBType {
+		query = query.SuffixExpr(sq.Expr("ON CONFLICT (userid, category, name) DO UPDATE SET Value = ?", preference.Value))
+	} else if s.dbType == model.SqliteDBType {
+		query = query.SuffixExpr(sq.Expr(" on conflict(userid, category, name) do update set value = excluded.value"))
+	} else {
+		return store.NewErrNotImplemented("failed to update preference because of missing driver")
+	}
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to upsert user preference in database: name: %s value: %s error: %w", preference.Name, preference.Value, err)
+	}
+
+	return nil
+}
+
+func (s *SQLStore) deleteUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+	query := s.getQueryBuilder(db).
+		Delete("Preferences").
+		Where(sq.Eq{"UserId": preference.UserId}).
+		Where(sq.Eq{"Category": preference.Category}).
+		Where(sq.Eq{"Name": preference.Name})
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to delete user preference from database: %w", err)
+	}
+
+	return nil
+}
 
 func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
 	return errUnsupportedOperation
@@ -288,7 +334,7 @@ func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
 	return "", errUnsupportedOperation
 }
 
-func (s *SQLStore) GetUserPreferences(db sq.BaseRunner, userID string) ([]mmModel.Preference, error) {
+func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) ([]mmModel.Preference, error) {
 	query := s.getQueryBuilder(db).
 		Select("userid", "category", "name", "value").
 		From(s.tablePrefix + "preferences").
