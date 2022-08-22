@@ -161,7 +161,7 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 	}
 
 	bab.Boards = []*model.Board{board}
-	blocks, err := s.getBlocksWithBoardID(db, boardID)
+	blocks, err := s.getBlocksForBoard(db, boardID)
 	if err != nil {
 		return nil, nil, err
 	}

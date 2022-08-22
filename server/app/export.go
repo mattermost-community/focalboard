@@ -82,7 +82,7 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 	var files []string
 	// write the board's blocks
 	// TODO: paginate this
-	blocks, err := a.GetBlocksWithBoardID(board.ID)
+	blocks, err := a.GetBlocksForBoard(board.ID)
 	if err != nil {
 		return err
 	}

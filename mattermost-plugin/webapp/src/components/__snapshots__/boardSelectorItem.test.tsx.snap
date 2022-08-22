@@ -12,7 +12,7 @@ exports[`components/boardSelectorItem renders board without title 1`] = `
         class="icon"
       >
         <i
-          class="CompassIcon icon-product-boards undefined"
+          class="CompassIcon icon-product-boards"
         />
       </span>
       <div
@@ -56,7 +56,7 @@ exports[`components/boardSelectorItem renders linked board 1`] = `
         class="icon"
       >
         <i
-          class="CompassIcon icon-product-boards undefined"
+          class="CompassIcon icon-product-boards"
         />
       </span>
       <div
@@ -100,7 +100,7 @@ exports[`components/boardSelectorItem renders not linked board 1`] = `
         class="icon"
       >
         <i
-          class="CompassIcon icon-product-boards undefined"
+          class="CompassIcon icon-product-boards"
         />
       </span>
       <div

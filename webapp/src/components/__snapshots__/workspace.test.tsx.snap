@@ -317,7 +317,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-eye-off-outline undefined"
+                    class="CompassIcon icon-eye-off-outline"
                   />
                   <span>
                     hide description
@@ -1552,7 +1552,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-eye-off-outline undefined"
+                    class="CompassIcon icon-eye-off-outline"
                   />
                   <span>
                     hide description
