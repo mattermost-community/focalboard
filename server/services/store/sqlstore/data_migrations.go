@@ -14,10 +14,16 @@ import (
 )
 
 const (
-	TemplatesToTeamsMigrationKey = "TemplatesToTeamsMigrationComplete"
-	UniqueIDsMigrationKey        = "UniqueIDsMigrationComplete"
-	CategoryUUIDIDMigrationKey   = "CategoryUuidIdMigrationComplete"
-	TeamLessBoardsMigrationKey   = "TeamLessBoardsMigrationComplete"
+	// we group the inserts on batches of 1000 because PostgreSQL
+	// supports a limit of around 64K values (not rows) on an insert
+	// query, so we want to stay safely below.
+	CategoryInsertBatch = 1000
+
+	TemplatesToTeamsMigrationKey        = "TemplatesToTeamsMigrationComplete"
+	UniqueIDsMigrationKey               = "UniqueIDsMigrationComplete"
+	CategoryUUIDIDMigrationKey          = "CategoryUuidIdMigrationComplete"
+	TeamLessBoardsMigrationKey          = "TeamLessBoardsMigrationComplete"
+	DeletedMembershipBoardsMigrationKey = "DeletedMembershipBoardsMigrationComplete"
 )
 
 func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
@@ -59,7 +65,7 @@ func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) 
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) runUniqueIDsMigration() error {
+func (s *SQLStore) RunUniqueIDsMigration() error {
 	setting, err := s.GetSystemSetting(UniqueIDsMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -122,7 +128,11 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 	return nil
 }
 
-func (s *SQLStore) runCategoryUUIDIDMigration() error {
+// RunCategoryUUIDIDMigration takes care of deriving the categories
+// from the boards and its memberships. The name references UUID
+// because of the preexisting purpose of this migration, and has been
+// preserved for compatibility with already migrated instances.
+func (s *SQLStore) RunCategoryUUIDIDMigration() error {
 	setting, err := s.GetSystemSetting(CategoryUUIDIDMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -140,159 +150,197 @@ func (s *SQLStore) runCategoryUUIDIDMigration() error {
 		return txErr
 	}
 
-	if err := s.updateCategoryIDs(tx); err != nil {
-		return err
-	}
+	if s.isPlugin {
+		if err := s.createCategories(tx); err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				s.logger.Error("category UUIDs insert categories transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
+			}
+			return err
+		}
 
-	if err := s.updateCategoryBlocksIDs(tx); err != nil {
-		return err
+		if err := s.createCategoryBoards(tx); err != nil {
+			if rollbackErr := tx.Rollback(); rollbackErr != nil {
+				s.logger.Error("category UUIDs insert category boards transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
+			}
+			return err
+		}
 	}
 
 	if err := s.setSystemSetting(tx, CategoryUUIDIDMigrationKey, strconv.FormatBool(true)); err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("category IDs transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
+			s.logger.Error("category UUIDs transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "setSystemSetting"))
 		}
 		return fmt.Errorf("cannot mark migration as completed: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		return fmt.Errorf("cannot commit category IDs transaction: %w", err)
+		return fmt.Errorf("cannot commit category UUIDs transaction: %w", err)
 	}
 
-	s.logger.Debug("category IDs migration finished successfully")
+	s.logger.Debug("category UUIDs migration finished successfully")
 	return nil
 }
 
-func (s *SQLStore) updateCategoryIDs(db sq.BaseRunner) error {
-	// fetch all category IDs
-	oldCategoryIDs, err := s.getIDs(db, "categories")
-	if err != nil {
-		return err
-	}
-
-	// map old category ID to new ID
-	categoryIDs := map[string]string{}
-	for _, oldID := range oldCategoryIDs {
-		newID := utils.NewID(utils.IDTypeNone)
-		categoryIDs[oldID] = newID
-	}
-
-	// update for each category ID.
-	// Update the new ID in category table,
-	// and update corresponding rows in category boards table.
-	for oldID, newID := range categoryIDs {
-		if err := s.updateCategoryID(db, oldID, newID); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (s *SQLStore) getIDs(db sq.BaseRunner, table string) ([]string, error) {
+func (s *SQLStore) createCategories(db sq.BaseRunner) error {
 	rows, err := s.getQueryBuilder(db).
-		Select("id").
-		From(s.tablePrefix + table).
+		Select("c.DisplayName, cm.UserId, c.TeamId, cm.ChannelId").
+		From(s.tablePrefix + "boards boards").
+		Join("ChannelMembers cm on boards.channel_id = cm.ChannelId").
+		Join("Channels c on cm.ChannelId = c.id and (c.Type = 'O' or c.Type = 'P')").
+		GroupBy("cm.UserId, c.TeamId, cm.ChannelId, c.DisplayName").
 		Query()
 
 	if err != nil {
-		s.logger.Error("getIDs error", mlog.String("table", table), mlog.Err(err))
-		return nil, err
+		s.logger.Error("get boards data error", mlog.Err(err))
+		return err
 	}
-
 	defer s.CloseRows(rows)
-	var categoryIDs []string
+
+	initQuery := func() sq.InsertBuilder {
+		return s.getQueryBuilder(db).
+			Insert(s.tablePrefix+"categories").
+			Columns(
+				"id",
+				"name",
+				"user_id",
+				"team_id",
+				"channel_id",
+				"create_at",
+				"update_at",
+				"delete_at",
+			)
+	}
+	// query will accumulate the insert values until the limit is
+	// reached, and then it will be stored and reset
+	query := initQuery()
+	// queryList stores those queries that already reached the limit
+	// to be run when all the data is processed
+	queryList := []sq.InsertBuilder{}
+	counter := 0
+	now := model.GetMillis()
+
 	for rows.Next() {
-		var id string
-		err := rows.Scan(&id)
+		var displayName string
+		var userID string
+		var teamID string
+		var channelID string
+
+		err := rows.Scan(
+			&displayName,
+			&userID,
+			&teamID,
+			&channelID,
+		)
 		if err != nil {
-			s.logger.Error("getIDs scan row error", mlog.String("table", table), mlog.Err(err))
-			return nil, err
+			return fmt.Errorf("cannot scan result while trying to create categories: %w", err)
 		}
 
-		categoryIDs = append(categoryIDs, id)
+		query = query.Values(
+			utils.NewID(utils.IDTypeNone),
+			displayName,
+			userID,
+			teamID,
+			channelID,
+			now,
+			0,
+			0,
+		)
+
+		counter++
+		if counter%CategoryInsertBatch == 0 {
+			queryList = append(queryList, query)
+			query = initQuery()
+		}
 	}
 
-	return categoryIDs, nil
-}
-
-func (s *SQLStore) updateCategoryID(db sq.BaseRunner, oldID, newID string) error {
-	// update in category table
-	rows, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"categories").
-		Set("id", newID).
-		Where(sq.Eq{"id": oldID}).
-		Query()
-
-	if err != nil {
-		s.logger.Error("updateCategoryID update category error", mlog.Err(err))
-		return err
+	if counter%CategoryInsertBatch != 0 {
+		queryList = append(queryList, query)
 	}
 
-	if err = rows.Close(); err != nil {
-		s.logger.Error("updateCategoryID error closing rows after updating categories table IDs", mlog.Err(err))
-		return err
-	}
-
-	// update category boards table
-
-	rows, err = s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("category_id", newID).
-		Where(sq.Eq{"category_id": oldID}).
-		Query()
-
-	if err != nil {
-		s.logger.Error("updateCategoryID update category boards error", mlog.Err(err))
-		return err
-	}
-
-	if err := rows.Close(); err != nil {
-		s.logger.Error("updateCategoryID error closing rows after updating category boards table IDs", mlog.Err(err))
-		return err
+	for _, q := range queryList {
+		if _, err := q.Exec(); err != nil {
+			return fmt.Errorf("cannot create category values: %w", err)
+		}
 	}
 
 	return nil
 }
 
-func (s *SQLStore) updateCategoryBlocksIDs(db sq.BaseRunner) error {
-	// fetch all category IDs
-	oldCategoryIDs, err := s.getIDs(db, "category_boards")
-	if err != nil {
-		return err
-	}
-
-	// map old category ID to new ID
-	categoryIDs := map[string]string{}
-	for _, oldID := range oldCategoryIDs {
-		newID := utils.NewID(utils.IDTypeNone)
-		categoryIDs[oldID] = newID
-	}
-
-	// update for each category ID.
-	// Update the new ID in category table,
-	// and update corresponding rows in category boards table.
-	for oldID, newID := range categoryIDs {
-		if err := s.updateCategoryBlocksID(db, oldID, newID); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string) error {
-	// update in category table
+func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 	rows, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("id", newID).
-		Where(sq.Eq{"id": oldID}).
+		Select("categories.user_id, categories.id, boards.id").
+		From(s.tablePrefix + "categories categories").
+		Join(s.tablePrefix + "boards boards on categories.channel_id = boards.channel_id AND boards.is_template = false").
 		Query()
 
 	if err != nil {
-		s.logger.Error("updateCategoryBlocksID update category error", mlog.Err(err))
+		s.logger.Error("get categories data error", mlog.Err(err))
 		return err
 	}
-	rows.Close()
+	defer s.CloseRows(rows)
+
+	initQuery := func() sq.InsertBuilder {
+		return s.getQueryBuilder(db).
+			Insert(s.tablePrefix+"category_boards").
+			Columns(
+				"id",
+				"user_id",
+				"category_id",
+				"board_id",
+				"create_at",
+				"update_at",
+				"delete_at",
+			)
+	}
+	// query will accumulate the insert values until the limit is
+	// reached, and then it will be stored and reset
+	query := initQuery()
+	// queryList stores those queries that already reached the limit
+	// to be run when all the data is processed
+	queryList := []sq.InsertBuilder{}
+	counter := 0
+	now := model.GetMillis()
+
+	for rows.Next() {
+		var userID string
+		var categoryID string
+		var boardID string
+
+		err := rows.Scan(
+			&userID,
+			&categoryID,
+			&boardID,
+		)
+		if err != nil {
+			return fmt.Errorf("cannot scan result while trying to create category boards: %w", err)
+		}
+
+		query = query.Values(
+			utils.NewID(utils.IDTypeNone),
+			userID,
+			categoryID,
+			boardID,
+			now,
+			0,
+			0,
+		)
+
+		counter++
+		if counter%CategoryInsertBatch == 0 {
+			queryList = append(queryList, query)
+			query = initQuery()
+		}
+	}
+
+	if counter%CategoryInsertBatch != 0 {
+		queryList = append(queryList, query)
+	}
+
+	for _, q := range queryList {
+		if _, err := q.Exec(); err != nil {
+			return fmt.Errorf("cannot create category boards values: %w", err)
+		}
+	}
 
 	return nil
 }
@@ -300,7 +348,7 @@ func (s *SQLStore) updateCategoryBlocksID(db sq.BaseRunner, oldID, newID string)
 // We no longer support boards existing in DMs and private
 // group messages. This function migrates all boards
 // belonging to a DM to the best possible team.
-func (s *SQLStore) migrateTeamLessBoards() error {
+func (s *SQLStore) RunTeamLessBoardsMigration() error {
 	if !s.isPlugin {
 		return nil
 	}
@@ -329,7 +377,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 
 	tx, err := s.db.BeginTx(context.Background(), nil)
 	if err != nil {
-		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
+		s.logger.Error("error starting transaction in runTeamLessBoardsMigration", mlog.Err(err))
 		return err
 	}
 
@@ -343,6 +391,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 			if err != nil {
 				// don't let one board's error spoil
 				// the mood for others
+				s.logger.Error("could not find the best team for board during team less boards migration. Continuing", mlog.String("boardID", boards[i].ID))
 				continue
 			}
 		}
@@ -364,13 +413,13 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 
 	if err := s.setSystemSetting(tx, TeamLessBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "migrateTeamLessBoards"))
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "runTeamLessBoardsMigration"))
 		}
 		return fmt.Errorf("cannot mark migration as completed: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.logger.Error("failed to commit migrateTeamLessBoards transaction", mlog.Err(err))
+		s.logger.Error("failed to commit runTeamLessBoardsMigration transaction", mlog.Err(err))
 		return err
 	}
 
@@ -467,10 +516,15 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 
 func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[string][]string, error) {
 	query := s.getQueryBuilder(tx).
-		Select("TeamMembers.UserId", "TeamMembers.TeamId").
-		From("ChannelMembers").
-		Join("TeamMembers ON ChannelMembers.UserId = TeamMembers.UserId").
-		Where(sq.Eq{"ChannelId": board.ChannelID})
+		Select("tm.UserId", "tm.TeamId").
+		From("ChannelMembers cm").
+		Join("TeamMembers tm ON cm.UserId = tm.UserId").
+		Join("Teams t ON tm.TeamId = t.Id").
+		Where(sq.Eq{
+			"cm.ChannelId": board.ChannelID,
+			"t.DeleteAt":   0,
+			"tm.DeleteAt":  0,
+		})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -494,4 +548,100 @@ func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[
 	}
 
 	return userTeams, nil
+}
+
+func (s *SQLStore) RunDeletedMembershipBoardsMigration() error {
+	if !s.isPlugin {
+		return nil
+	}
+
+	setting, err := s.GetSystemSetting(DeletedMembershipBoardsMigrationKey)
+	if err != nil {
+		return fmt.Errorf("cannot get deleted membership boards migration state: %w", err)
+	}
+
+	// If the migration is already completed, do not run it again.
+	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
+		return nil
+	}
+
+	boards, err := s.getDeletedMembershipBoards(s.db)
+	if err != nil {
+		return err
+	}
+
+	if len(boards) == 0 {
+		s.logger.Debug("No boards with owner not anymore on their team found, marking runDeletedMembershipBoardsMigration as done")
+		if sErr := s.SetSystemSetting(DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); sErr != nil {
+			return fmt.Errorf("cannot mark migration as completed: %w", sErr)
+		}
+		return nil
+	}
+
+	s.logger.Debug("Migrating boards with owner not anymore on their team", mlog.Int("count", len(boards)))
+
+	tx, err := s.db.BeginTx(context.Background(), nil)
+	if err != nil {
+		s.logger.Error("error starting transaction in runDeletedMembershipBoardsMigration", mlog.Err(err))
+		return err
+	}
+
+	for i := range boards {
+		teamID, err := s.getBestTeamForBoard(s.db, boards[i])
+		if err != nil {
+			// don't let one board's error spoil
+			// the mood for others
+			s.logger.Error("could not find the best team for board during deleted membership boards migration. Continuing", mlog.String("boardID", boards[i].ID))
+			continue
+		}
+
+		boards[i].TeamID = teamID
+
+		query := s.getQueryBuilder(tx).
+			Update(s.tablePrefix+"boards").
+			Set("team_id", teamID).
+			Where(sq.Eq{"id": boards[i].ID})
+
+		if _, err := query.Exec(); err != nil {
+			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
+			return err
+		}
+	}
+
+	if err := s.setSystemSetting(tx, DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "runDeletedMembershipBoardsMigration"))
+		}
+		return fmt.Errorf("cannot mark migration as completed: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		s.logger.Error("failed to commit runDeletedMembershipBoardsMigration transaction", mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
+// getDeletedMembershipBoards retrieves those boards whose creator is
+// associated to the board's team with a deleted team membership.
+func (s *SQLStore) getDeletedMembershipBoards(tx sq.BaseRunner) ([]*model.Board, error) {
+	rows, err := s.getQueryBuilder(tx).
+		Select(legacyBoardFields("b.")...).
+		From(s.tablePrefix + "boards b").
+		Join("TeamMembers tm ON b.created_by = tm.UserId").
+		Where("b.team_id = tm.TeamId").
+		Where(sq.NotEq{"tm.DeleteAt": 0}).
+		Query()
+	if err != nil {
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	boards, err := s.boardsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return boards, err
 }

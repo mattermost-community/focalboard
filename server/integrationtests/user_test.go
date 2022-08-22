@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/require"
@@ -21,7 +20,7 @@ func TestUserRegister(t *testing.T) {
 	defer th.TearDown()
 
 	// register
-	registerRequest := &api.RegisterRequest{
+	registerRequest := &model.RegisterRequest{
 		Username: fakeUsername,
 		Email:    fakeEmail,
 		Password: utils.NewID(utils.IDTypeNone),
@@ -41,7 +40,7 @@ func TestUserLogin(t *testing.T) {
 	defer th.TearDown()
 
 	t.Run("with nonexist user", func(t *testing.T) {
-		loginRequest := &api.LoginRequest{
+		loginRequest := &model.LoginRequest{
 			Type:     "normal",
 			Username: "nonexistuser",
 			Email:    "",
@@ -55,7 +54,7 @@ func TestUserLogin(t *testing.T) {
 	t.Run("with registered user", func(t *testing.T) {
 		password := utils.NewID(utils.IDTypeNone)
 		// register
-		registerRequest := &api.RegisterRequest{
+		registerRequest := &model.RegisterRequest{
 			Username: fakeUsername,
 			Email:    fakeEmail,
 			Password: password,
@@ -65,7 +64,7 @@ func TestUserLogin(t *testing.T) {
 		require.True(t, success)
 
 		// login
-		loginRequest := &api.LoginRequest{
+		loginRequest := &model.LoginRequest{
 			Type:     "normal",
 			Username: fakeUsername,
 			Email:    fakeEmail,
@@ -91,7 +90,7 @@ func TestGetMe(t *testing.T) {
 	t.Run("logged in", func(t *testing.T) {
 		// register
 		password := utils.NewID(utils.IDTypeNone)
-		registerRequest := &api.RegisterRequest{
+		registerRequest := &model.RegisterRequest{
 			Username: fakeUsername,
 			Email:    fakeEmail,
 			Password: password,
@@ -100,7 +99,7 @@ func TestGetMe(t *testing.T) {
 		require.NoError(t, resp.Error)
 		require.True(t, success)
 		// login
-		loginRequest := &api.LoginRequest{
+		loginRequest := &model.LoginRequest{
 			Type:     "normal",
 			Username: fakeUsername,
 			Email:    fakeEmail,
@@ -126,7 +125,7 @@ func TestGetUser(t *testing.T) {
 
 	// register
 	password := utils.NewID(utils.IDTypeNone)
-	registerRequest := &api.RegisterRequest{
+	registerRequest := &model.RegisterRequest{
 		Username: fakeUsername,
 		Email:    fakeEmail,
 		Password: password,
@@ -135,7 +134,7 @@ func TestGetUser(t *testing.T) {
 	require.NoError(t, resp.Error)
 	require.True(t, success)
 	// login
-	loginRequest := &api.LoginRequest{
+	loginRequest := &model.LoginRequest{
 		Type:     "normal",
 		Username: fakeUsername,
 		Email:    fakeEmail,
@@ -171,7 +170,7 @@ func TestUserChangePassword(t *testing.T) {
 
 	// register
 	password := utils.NewID(utils.IDTypeNone)
-	registerRequest := &api.RegisterRequest{
+	registerRequest := &model.RegisterRequest{
 		Username: fakeUsername,
 		Email:    fakeEmail,
 		Password: password,
@@ -180,7 +179,7 @@ func TestUserChangePassword(t *testing.T) {
 	require.NoError(t, resp.Error)
 	require.True(t, success)
 	// login
-	loginRequest := &api.LoginRequest{
+	loginRequest := &model.LoginRequest{
 		Type:     "normal",
 		Username: fakeUsername,
 		Email:    fakeEmail,
@@ -196,7 +195,7 @@ func TestUserChangePassword(t *testing.T) {
 	require.NotNil(t, originalMe)
 
 	// change password
-	success, resp = th.Client.UserChangePassword(originalMe.ID, &api.ChangePasswordRequest{
+	success, resp = th.Client.UserChangePassword(originalMe.ID, &model.ChangePasswordRequest{
 		OldPassword: password,
 		NewPassword: utils.NewID(utils.IDTypeNone),
 	})

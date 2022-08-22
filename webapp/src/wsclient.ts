@@ -65,10 +65,10 @@ export interface Subscription {
 export interface MMWebSocketClient {
     conn: WebSocket | null;
     sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
-    setFirstConnectCallback(callback: () => void): void
-    setReconnectCallback(callback: () => void): void
-    setErrorCallback(callback: (event: Event) => void): void
-    setCloseCallback(callback: (connectFailCount: number) => void): void
+    addFirstConnectListener(callback: () => void): void
+    addReconnectListener(callback: () => void): void
+    addErrorListener(callback: (event: Event) => void): void
+    addCloseListener(callback: (connectFailCount: number) => void): void
 }
 
 type OnChangeHandler = (client: WSClient, items: any[]) => void
@@ -368,10 +368,10 @@ class WSClient {
                 }
             }
 
-            this.client.setFirstConnectCallback(onConnect)
-            this.client.setErrorCallback(onError)
-            this.client.setCloseCallback(onClose)
-            this.client.setReconnectCallback(onReconnect)
+            this.client.addFirstConnectListener(onConnect)
+            this.client.addErrorListener(onError)
+            this.client.addCloseListener(onClose)
+            this.client.addReconnectListener(onReconnect)
 
             return
         }
@@ -473,7 +473,7 @@ class WSClient {
     }
 
     hasConn(): boolean {
-        return this.ws !== null || this.client !== null
+        return this.ws?.readyState === 1 || this.client !== null
     }
 
     updateHandler(message: WSMessage): void {

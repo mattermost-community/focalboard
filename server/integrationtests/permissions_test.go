@@ -10,7 +10,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/require"
@@ -366,6 +365,43 @@ func TestPermissionsSearchTeamBoards(t *testing.T) {
 		testData := setupData(t, th)
 		ttCases[1].expectedStatusCode = http.StatusOK
 		ttCases[1].totalResults = 1
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsSearchTeamLinkableBoards(t *testing.T) {
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			// Search boards
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userTeamMember, http.StatusOK, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userViewer, http.StatusOK, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userCommenter, http.StatusOK, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userEditor, http.StatusOK, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userAdmin, http.StatusOK, 2},
+		}
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			// Search boards
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userNoTeamMember, http.StatusNotImplemented, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userTeamMember, http.StatusNotImplemented, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userViewer, http.StatusNotImplemented, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userCommenter, http.StatusNotImplemented, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userEditor, http.StatusNotImplemented, 0},
+			{"/teams/test-team/boards/search/linkable?q=b", methodGet, "", userAdmin, http.StatusNotImplemented, 0},
+		}
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
@@ -2304,7 +2340,7 @@ func TestPermissionsGetUser(t *testing.T) {
 }
 
 func TestPermissionsUserChangePassword(t *testing.T) {
-	postBody := toJSON(t, api.ChangePasswordRequest{
+	postBody := toJSON(t, model.ChangePasswordRequest{
 		OldPassword: password,
 		NewPassword: "newpa$$word123",
 	})
@@ -2512,7 +2548,7 @@ func TestPermissionsDeleteBoardsAndBlocks(t *testing.T) {
 
 func TestPermissionsLogin(t *testing.T) {
 	loginReq := func(username, password string) string {
-		return toJSON(t, api.LoginRequest{
+		return toJSON(t, model.LoginRequest{
 			Type:     "normal",
 			Username: username,
 			Password: password,
@@ -2591,7 +2627,7 @@ func TestPermissionsRegister(t *testing.T) {
 		require.NotNil(th.T, team)
 		require.NotNil(th.T, team.SignupToken)
 
-		postData := toJSON(t, api.RegisterRequest{
+		postData := toJSON(t, model.RegisterRequest{
 			Username: "newuser",
 			Email:    "newuser@test.com",
 			Password: password,

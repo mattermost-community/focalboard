@@ -304,11 +304,6 @@ func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 
 }
 
-func (s *SQLStore) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
-	return s.getBlocksWithBoardID(s.db, boardID)
-
-}
-
 func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 
@@ -469,6 +464,11 @@ func (s *SQLStore) GetTeam(ID string) (*model.Team, error) {
 
 }
 
+func (s *SQLStore) GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+	return s.getTeamBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
+
+}
+
 func (s *SQLStore) GetTeamCount() (int64, error) {
 	return s.getTeamCount(s.db)
 
@@ -486,6 +486,11 @@ func (s *SQLStore) GetTemplateBoards(teamID string, userID string) ([]*model.Boa
 
 func (s *SQLStore) GetUsedCardsCount() (int, error) {
 	return s.getUsedCardsCount(s.db)
+
+}
+
+func (s *SQLStore) GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+	return s.getUserBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
 
 }
 
@@ -509,8 +514,18 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
+func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
+	return s.getUserTimezone(s.db, userID)
+
+}
+
 func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return s.getUsersByTeam(s.db, teamID)
+
+}
+
+func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs)
 
 }
 

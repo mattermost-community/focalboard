@@ -17,7 +17,6 @@ type Store interface {
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
 	GetBlocksByIDs(ids []string) ([]model.Block, error)
-	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetBlocksForBoard(boardID string) ([]model.Block, error)
@@ -55,6 +54,7 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
+	GetUsersList(userIDs []string) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) error
@@ -155,6 +155,11 @@ type Store interface {
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
 	SendMessage(message, postType string, receipts []string) error
+
+	// Insights
+	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetUserTimezone(userID string) (string, error)
 }
 
 type NotSupportedError struct {

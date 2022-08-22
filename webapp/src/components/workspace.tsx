@@ -4,7 +4,6 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
-import {getCurrentTeam} from '../store/teams'
 import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
 import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
@@ -21,11 +20,15 @@ import {getClientConfig, setClientConfig} from '../store/clientConfig'
 import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
+import propsRegistry from '../properties'
+
+import {getMe} from "../store/users"
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 
 import Sidebar from './sidebar/sidebar'
+
 import './workspace.scss'
 
 type Props = {
@@ -33,9 +36,8 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
-    const team = useAppSelector(getCurrentTeam)
     const isLoading = useAppSelector(isLoadingBoard)
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, channelId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
@@ -48,10 +50,16 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
+    const me = useAppSelector(getMe)
+
+    const isBoardHidden = () => {
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return hiddenBoardIDs[board.id]
+    }
 
     const showCard = useCallback((cardId?: string) => {
         const params = {...match.params, cardId}
-        let newPath = generatePath(match.path, params)
+        let newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         if (props.readonly) {
             newPath += `?r=${Utils.getReadToken()}`
         }
@@ -78,15 +86,37 @@ function CenterContent(props: Props) {
         }
     }, [cardLimitTimestamp, match.params.boardId, templates])
 
-    if (board && activeView) {
+    const templateSelector = (
+        <BoardTemplateSelector
+            title={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-title'
+                    defaultMessage='Create a board'
+                />
+            }
+            description={
+                <FormattedMessage
+                    id='BoardTemplateSelector.plugin.no-content-description'
+                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
+                />
+            }
+            channelId={match.params.channelId}
+        />
+    )
+
+    if (match.params.channelId) {
+        return templateSelector
+    }
+
+    if (board && !isBoardHidden() && activeView) {
         let property = groupByProperty
-        if ((!property || property.type !== 'select') && activeView.fields.viewType === 'board') {
-            property = board?.cardProperties.find((o) => o.type === 'select')
+        if ((!property || !propsRegistry.get(property.type).canGroup) && activeView.fields.viewType === 'board') {
+            property = board?.cardProperties.find((o) => propsRegistry.get(o.type).canGroup)
         }
 
         let displayProperty = dateDisplayProperty
         if (!displayProperty && activeView.fields.viewType === 'calendar') {
-            displayProperty = board.cardProperties.find((o) => o.type === 'date')
+            displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
         }
 
         return (
@@ -106,31 +136,11 @@ function CenterContent(props: Props) {
         )
     }
 
-    if (board || isLoading) {
+    if ((board && !isBoardHidden()) || isLoading) {
         return null
     }
 
-    return (
-        <BoardTemplateSelector
-            title={
-                <FormattedMessage
-                    id='BoardTemplateSelector.plugin.no-content-title'
-                    defaultMessage='Create a Board in {teamName}'
-                    values={{teamName: team?.title}}
-                />
-            }
-            description={
-                <FormattedMessage
-                    id='BoardTemplateSelector.plugin.no-content-description'
-                    defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.{lineBreak} Members of "{teamName}" will have access to boards created here.'
-                    values={{
-                        teamName: <b>{team?.title}</b>,
-                        lineBreak: <br/>,
-                    }}
-                />
-            }
-        />
-    )
+    return templateSelector
 }
 
 const Workspace = (props: Props) => {

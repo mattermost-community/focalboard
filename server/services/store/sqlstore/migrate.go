@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/morph/models"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
 
 	"github.com/mattermost/morph"
 	drivers "github.com/mattermost/morph/drivers"
@@ -21,7 +22,6 @@ import (
 	sqlite "github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
 
-	mysqldriver "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq" // postgres driver
 
 	sq "github.com/Masterminds/squirrel"
@@ -31,7 +31,7 @@ import (
 )
 
 //go:embed migrations
-var assets embed.FS
+var Assets embed.FS
 
 const (
 	uniqueIDsMigrationRequiredVersion        = 14
@@ -43,30 +43,6 @@ const (
 
 var errChannelCreatorNotInTeam = errors.New("channel creator not found in user teams")
 
-func appendMultipleStatementsFlag(connectionString string) (string, error) {
-	config, err := mysqldriver.ParseDSN(connectionString)
-	if err != nil {
-		return "", err
-	}
-
-	if config.Params == nil {
-		config.Params = map[string]string{}
-	}
-
-	config.Params["multiStatements"] = "true"
-	return config.FormatDSN(), nil
-}
-
-// resetReadTimeout removes the timeout contraint from the MySQL dsn.
-func resetReadTimeout(dataSource string) (string, error) {
-	config, err := mysqldriver.ParseDSN(dataSource)
-	if err != nil {
-		return "", err
-	}
-	config.ReadTimeout = 0
-	return config.FormatDSN(), nil
-}
-
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
@@ -74,12 +50,12 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
 	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = resetReadTimeout(connectionString)
+		connectionString, err = sqlstore.ResetReadTimeout(connectionString)
 		if err != nil {
 			return nil, err
 		}
 
-		connectionString, err = appendMultipleStatementsFlag(connectionString)
+		connectionString, err = sqlstore.AppendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
@@ -141,7 +117,7 @@ func (s *SQLStore) Migrate() error {
 		}
 	}
 
-	assetsList, err := assets.ReadDir("migrations")
+	assetsList, err := Assets.ReadDir("migrations")
 	if err != nil {
 		return err
 	}
@@ -162,7 +138,7 @@ func (s *SQLStore) Migrate() error {
 	migrationAssets := &embedded.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
-			asset, mErr := assets.ReadFile("migrations/" + name)
+			asset, mErr := Assets.ReadFile("migrations/" + name)
 			if mErr != nil {
 				return nil, mErr
 			}
@@ -229,7 +205,7 @@ func (s *SQLStore) Migrate() error {
 		return mErr
 	}
 
-	if mErr := s.runUniqueIDsMigration(); mErr != nil {
+	if mErr := s.RunUniqueIDsMigration(); mErr != nil {
 		return fmt.Errorf("error running unique IDs migration: %w", mErr)
 	}
 
@@ -237,7 +213,11 @@ func (s *SQLStore) Migrate() error {
 		return mErr
 	}
 
-	if mErr := s.migrateTeamLessBoards(); mErr != nil {
+	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
 		return mErr
 	}
 
@@ -245,7 +225,7 @@ func (s *SQLStore) Migrate() error {
 		return mErr
 	}
 
-	if mErr := s.runCategoryUUIDIDMigration(); mErr != nil {
+	if mErr := s.RunCategoryUUIDIDMigration(); mErr != nil {
 		return fmt.Errorf("error running categoryID migration: %w", mErr)
 	}
 

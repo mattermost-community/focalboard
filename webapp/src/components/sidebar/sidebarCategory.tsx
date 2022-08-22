@@ -1,8 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+
+import {debounce} from "lodash"
 
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
@@ -20,15 +22,25 @@ import CreateNewFolder from '../../widgets/icons/newFolder'
 import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
-import {getMe} from '../../store/users'
+import {
+    getMe,
+    getOnboardingTourCategory,
+    getOnboardingTourStep,
+} from '../../store/users'
+
+import {getCurrentCard} from '../../store/cards'
 import {Utils} from '../../utils'
 import Update from '../../widgets/icons/update'
 
+import { TOUR_SIDEBAR, SidebarTourSteps, TOUR_BOARD, FINISHED } from '../../components/onboardingTour/index'
 import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import {getCurrentTeam} from '../../store/teams'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
+
+import SidebarCategoriesTourStep from '../../components/onboardingTour/sidebarCategories/sidebarCategories'
+import ManageCategoriesTourStep from '../../components/onboardingTour/manageCategories/manageCategories'
 
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'
@@ -40,10 +52,13 @@ type Props = {
     categoryBoards: CategoryBoards
     boards: Board[]
     allCategories: Array<CategoryBoards>
+    index: number
 }
 
+export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
+
 const SidebarCategory = (props: Props) => {
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
     const intl = useIntl()
     const history = useHistory()
 
@@ -56,8 +71,30 @@ const SidebarCategory = (props: Props) => {
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const me = useAppSelector<IUser|null>(getMe)
 
+    const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const onboardingTourStep = useAppSelector(getOnboardingTourStep)
+    const currentCard = useAppSelector(getCurrentCard)
+    const noCardOpen = !currentCard
     const team = useAppSelector(getCurrentTeam)
     const teamID = team?.id || ''
+
+    const menuWrapperRef = useRef<HTMLDivElement>(null)
+
+    const shouldViewSidebarTour = props.boards.length !== 0 &&
+                                  noCardOpen &&
+                                  (onboardingTourCategory === TOUR_SIDEBAR || onboardingTourCategory === TOUR_BOARD) &&
+                                  ((onboardingTourCategory === TOUR_SIDEBAR && onboardingTourStep === SidebarTourSteps.SIDE_BAR.toString()) || (onboardingTourCategory === TOUR_BOARD && onboardingTourStep === FINISHED.toString()))
+
+    const shouldViewManageCatergoriesTour = props.boards.length !== 0 &&
+                                            noCardOpen &&
+                                            onboardingTourCategory === TOUR_SIDEBAR &&
+                                            onboardingTourStep === SidebarTourSteps.MANAGE_CATEGORIES.toString()
+
+    useEffect(() => {
+        if(shouldViewManageCatergoriesTour && props.index === 0) {
+            setCategoryMenuOpen(true)
+        }
+    }, [shouldViewManageCatergoriesTour])
 
     const showBoard = useCallback((boardId) => {
         Utils.showBoard(boardId, match, history)
@@ -71,12 +108,24 @@ const SidebarCategory = (props: Props) => {
         if (boardId !== match.params.boardId && viewId !== match.params.viewId) {
             params.cardId = undefined
         }
-        const newPath = generatePath(match.path, params)
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         history.push(newPath)
         props.hideSidebar()
     }, [match, history])
 
+    const isBoardVisible = (boardID: string): boolean => {
+        // hide if board doesn't belong to current category
+        if (!blocks.includes(boardID)) {
+            return false
+        }
+
+        // hide if board was hidden by the user
+        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        return !hiddenBoardIDs[boardID]
+    }
+
     const blocks = props.categoryBoards.boardIDs || []
+    const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
 
     const handleCreateNewCategory = () => {
         setShowCreateCategoryModal(true)
@@ -137,62 +186,109 @@ const SidebarCategory = (props: Props) => {
         )
     }, [showBoard, deleteBoard, props.boards])
 
+    const updateCategory = useCallback(async (value: boolean) => {
+        const updatedCategory: Category = {
+            ...props.categoryBoards,
+            collapsed: value,
+        }
+        await mutator.updateCategory(updatedCategory)
+    }, [props.categoryBoards])
+
+    const debouncedUpdateCategory = useMemo(() => debounce(updateCategory, 400), [updateCategory])
+
+    const toggleCollapse = async () => {
+        const newVal = !collapsed
+        await setCollapsed(newVal)
+
+        // The default 'Boards' category isn't stored in database,
+        // so avoid making the API call for it
+        if (props.categoryBoards.id !== '') {
+            debouncedUpdateCategory(newVal)
+        }
+    }
+
     return (
-        <div className='SidebarCategory'>
+        <div className='SidebarCategory' ref={menuWrapperRef}>
             <div
                 className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
             >
                 <div
                     className='octo-sidebar-title category-title'
                     title={props.categoryBoards.name}
-                    onClick={() => setCollapsed(!collapsed)}
+                    onClick={toggleCollapse}
                 >
                     {collapsed ? <ChevronRight/> : <ChevronDown/>}
                     {props.categoryBoards.name}
+                    <div className='sidebarCategoriesTour'>
+                        {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
+                    </div>
                 </div>
-                <MenuWrapper
-                    className={categoryMenuOpen ? 'menuOpen' : ''}
-                    stopPropagationOnToggle={true}
-                    onToggle={(open) => setCategoryMenuOpen(open)}
-                >
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <Menu position='left'>
-                        <Menu.Text
-                            id='createNewCategory'
-                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                            icon={<CreateNewFolder/>}
-                            onClick={handleCreateNewCategory}
-                        />
-                        {
-                            props.categoryBoards.id !== '' &&
-                            <React.Fragment>
-                                <Menu.Text
-                                    id='deleteCategory'
-                                    className='text-danger'
-                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => setShowDeleteCategoryDialog(true)}
-                                />
-                                <Menu.Text
-                                    id='updateCategory'
-                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
-                                    icon={<Update/>}
-                                    onClick={handleUpdateCategory}
-                                />
-                            </React.Fragment>
-                        }
-                    </Menu>
-                </MenuWrapper>
+                <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
+                    {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
+                    <MenuWrapper
+                        className={categoryMenuOpen ? 'menuOpen' : ''}
+                        stopPropagationOnToggle={true}
+                        onToggle={(open) => setCategoryMenuOpen(open)}
+                    >
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <Menu
+                            position='auto'
+                            parentRef={menuWrapperRef}
+                        >
+                            <Menu.Text
+                                id='createNewCategory'
+                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                icon={<CreateNewFolder/>}
+                                onClick={handleCreateNewCategory}
+                            />
+                            {
+                                props.categoryBoards.id !== '' &&
+                                <React.Fragment>
+                                    <Menu.Text
+                                        id='deleteCategory'
+                                        className='text-danger'
+                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
+                                        icon={<DeleteIcon/>}
+                                        onClick={() => setShowDeleteCategoryDialog(true)}
+                                    />
+                                    <Menu.Text
+                                        id='updateCategory'
+                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
+                                        icon={<Update/>}
+                                        onClick={handleUpdateCategory}
+                                    />
+                                </React.Fragment>
+                            }
+                        </Menu>
+                    </MenuWrapper>
+                </div>
             </div>
-            {!collapsed && blocks.length === 0 &&
+            {!collapsed && visibleBlocks.length === 0 &&
                 <div className='octo-sidebar-item subitem no-views'>
                     <FormattedMessage
                         id='Sidebar.no-boards-in-category'
                         defaultMessage='No boards inside'
                     />
                 </div>}
+            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
+                if (!isBoardVisible(board.id)) {
+                    return null
+                }
+                return (
+                    <SidebarBoardItem
+                        key={board.id}
+                        board={board}
+                        categoryBoards={props.categoryBoards}
+                        allCategories={props.allCategories}
+                        isActive={board.id === props.activeBoardID}
+                        showBoard={showBoard}
+                        showView={showView}
+                        onDeleteRequest={setDeleteBoard}
+                    />
+                )
+            })}
             {!collapsed && props.boards.map((board: Board) => {
-                if (!blocks.includes(board.id)) {
+                if (!isBoardVisible(board.id)) {
                     return null
                 }
                 return (

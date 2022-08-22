@@ -16,20 +16,29 @@ export const BoardTourSteps: {[key: string]: number} = {
     SHARE_BOARD: 2,
 }
 
+export const SidebarTourSteps: {[key: string]: number} = {
+    SIDE_BAR: 0,
+    MANAGE_CATEGORIES: 1,
+    SEARCH_FOR_BOARDS: 2,
+}
+
 export const FINISHED = 999
 
 export const TOUR_BASE = 'onboarding'
 export const TOUR_CARD = 'card'
 export const TOUR_BOARD = 'board'
+export const TOUR_SIDEBAR = 'sidebar'
 
 export const TOUR_ORDER = [
     TOUR_BASE,
     TOUR_CARD,
     TOUR_BOARD,
+    TOUR_SIDEBAR
 ]
 
 export const TourCategoriesMapToSteps: Record<string, Record<string, number>> = {
     [TOUR_BASE]: BaseTourSteps,
     [TOUR_CARD]: CardTourSteps,
     [TOUR_BOARD]: BoardTourSteps,
+    [TOUR_SIDEBAR]: SidebarTourSteps,
 }

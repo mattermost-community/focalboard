@@ -275,11 +275,33 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.ID").
-		LeftJoin("Bots b ON ( b.UserId = Users.ID )").
+		Join("TeamMembers as tm ON tm.UserID = u.id").
+		LeftJoin("Bots b ON ( b.UserID = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.NotEq{"u.roles": "system_guest"}).
 		Where(sq.Eq{"tm.TeamId": teamID})
+
+	rows, err := query.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	users, err := s.usersFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
+	query := s.getQueryBuilder().
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+		From("Users as u").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Eq{"u.id": userIDs})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -546,6 +568,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
+		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"tm.userID": userID}).
 		Where(sq.Eq{"tm.deleteAt": 0}).
@@ -553,18 +576,21 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.And{
 				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
+				sq.Or{
+					sq.Eq{"bm.user_id": userID},
+					sq.Eq{"cm.userId": userID},
+				},
 			},
 		})
 
 	if term != "" {
 		// break search query into space separated words
-		// and search for each word.
+		// and search for all words.
 		// This should later be upgraded to industrial-strength
 		// word tokenizer, that uses much more than space
 		// to break words.
 
-		conditions := sq.Or{}
+		conditions := sq.And{}
 
 		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
 			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
@@ -662,15 +688,23 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
-		b, err := s.Store.GetBoard(boardID)
-		if err != nil {
-			return nil, err
+		b, boardErr := s.Store.GetBoard(boardID)
+		if boardErr != nil {
+			return nil, boardErr
 		}
 		if b.ChannelID != "" {
-			_, err := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
-			if err != nil {
-				return nil, err
+			_, memberErr := s.servicesAPI.GetChannelMember(b.ChannelID, userID)
+			if memberErr != nil {
+				var appErr *mmModel.AppError
+				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
+					// Plugin API returns error if channel member doesn't exist.
+					// We're fine if it doesn't exist, so its not an error for us.
+					return nil, model.NewErrNotFound(userID)
+				}
+
+				return nil, memberErr
 			}
+
 			return &model.BoardMember{
 				BoardID:         boardID,
 				UserID:          userID,
@@ -682,6 +716,9 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				Synthetic:       true,
 			}, nil
 		}
+	}
+	if err != nil {
+		return nil, err
 	}
 	return bm, nil
 }
@@ -789,13 +826,14 @@ func (s *MattermostAuthLayer) SearchUserChannels(teamID, userID, query string) (
 	if err != nil {
 		return nil, err
 	}
+	lowerQuery := strings.ToLower(query)
 
 	result := []*mmModel.Channel{}
 	count := 0
 	for _, channel := range channels {
 		if channel.Type != mmModel.ChannelTypeDirect &&
 			channel.Type != mmModel.ChannelTypeGroup &&
-			(strings.Contains(channel.Name, query) || strings.Contains(channel.DisplayName, query)) {
+			(strings.Contains(strings.ToLower(channel.Name), lowerQuery) || strings.Contains(strings.ToLower(channel.DisplayName), lowerQuery)) {
 			result = append(result, channel)
 			count++
 			if count >= 10 {
@@ -860,4 +898,13 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 	}
 
 	return nil
+}
+
+func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
+	user, err := s.servicesAPI.GetUserByID(userID)
+	if err != nil {
+		return "", err
+	}
+	timezone := user.Timezone
+	return mmModel.GetPreferredTimezone(timezone), nil
 }

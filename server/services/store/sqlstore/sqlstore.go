@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 	"net/url"
 
 	sq "github.com/Masterminds/squirrel"
@@ -59,11 +60,12 @@ func New(params Params) (*SQLStore, error) {
 		return nil, err
 	}
 
-	err = store.Migrate()
-	if err != nil {
-		params.Logger.Error(`Table creation / migration failed`, mlog.Err(err))
+	if !params.SkipMigrations {
+		if mErr := store.Migrate(); mErr != nil {
+			params.Logger.Error(`Table creation / migration failed`, mlog.Err(mErr))
 
-		return nil, err
+			return nil, mErr
+		}
 	}
 	return store, nil
 }
@@ -116,6 +118,29 @@ func (s *SQLStore) escapeField(fieldName string) string {
 		return "\"" + fieldName + "\""
 	}
 	return fieldName
+}
+
+func (s *SQLStore) concatenationSelector(field string, delimiter string) string {
+	if s.dbType == model.SqliteDBType {
+		return fmt.Sprintf("group_concat(%s)", field)
+	}
+	if s.dbType == model.PostgresDBType {
+		return fmt.Sprintf("string_agg(%s, '%s')", field, delimiter)
+	}
+	if s.dbType == model.MysqlDBType {
+		return fmt.Sprintf("GROUP_CONCAT(%s SEPARATOR '%s')", field, delimiter)
+	}
+	return ""
+}
+
+func (s *SQLStore) elementInColumn(column string) string {
+	if s.dbType == model.SqliteDBType || s.dbType == model.MysqlDBType {
+		return fmt.Sprintf("instr(%s, ?) > 0", column)
+	}
+	if s.dbType == model.PostgresDBType {
+		return fmt.Sprintf("position(? in %s) > 0", column)
+	}
+	return ""
 }
 
 func (s *SQLStore) getLicense(db sq.BaseRunner) *mmModel.License {

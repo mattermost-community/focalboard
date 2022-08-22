@@ -12,8 +12,7 @@ import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
 import octoClient from '../../../../webapp/src/octoClient'
 import mutator from '../../../../webapp/src/mutator'
 import {getCurrentTeamId, getAllTeams, Team} from '../../../../webapp/src/store/teams'
-import {createBoard, BoardsAndBlocks, Board} from '../../../../webapp/src/blocks/board'
-import {createBoardView} from '../../../../webapp/src/blocks/boardView'
+import {createBoard, Board} from '../../../../webapp/src/blocks/board'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import {EmptySearch, EmptyResults} from '../../../../webapp/src/components/searchDialog/searchDialog'
 import ConfirmationDialog from '../../../../webapp/src/components/confirmationDialogBox'
@@ -21,10 +20,12 @@ import Dialog from '../../../../webapp/src/components/dialog'
 import SearchIcon from '../../../../webapp/src/widgets/icons/search'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 import {getCurrentLinkToChannel, setLinkToChannel} from '../../../../webapp/src/store/boards'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../../webapp/src/telemetry/telemetryClient'
 import {WSClient} from '../../../../webapp/src/wsclient'
+import {SuiteWindow} from '../../../../webapp/src/types/index'
 
 import BoardSelectorItem from './boardSelectorItem'
+
+const windowAny = (window as SuiteWindow)
 
 import './boardSelector.scss'
 
@@ -49,7 +50,7 @@ const BoardSelector = () => {
         if (query.trim().length === 0 || !teamId) {
             return
         }
-        const items = await octoClient.search(teamId, query)
+        const items = await octoClient.searchLinkableBoards(teamId, query)
 
         setResults(items)
         setIsSearching(false)
@@ -107,27 +108,21 @@ const BoardSelector = () => {
     }
 
     const newLinkedBoard = async (): Promise<void> => {
-        const board = {...createBoard(), teamId, channelId: currentChannel}
+        window.open(`${windowAny.frontendBaseURL}/team/${teamId}/new/${currentChannel}`, '_blank', 'noopener')
+        dispatch(setLinkToChannel(''))
+    }
 
-        const view = createBoardView()
-        view.fields.viewType = 'board'
-        view.parentId = board.id
-        view.boardId = board.id
-        view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
-
-        await mutator.createBoardsAndBlocks(
-            {boards: [board], blocks: [view]},
-            'add linked board',
-            async (bab: BoardsAndBlocks): Promise<void> => {
-                const windowAny: any = window
-                const newBoard = bab.boards[0]
-                // TODO: Maybe create a new event for create linked board
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
-                windowAny.WebappUtils.browserHistory.push(`/boards/team/${teamId}/${newBoard.id}`)
-                dispatch(setLinkToChannel(''))
-            },
-            async () => {return},
-        )
+    let confirmationSubText
+    if (showLinkBoardConfirmation?.channelId !== '') {
+        confirmationSubText = intl.formatMessage({
+            id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
+        }, {boardName: showLinkBoardConfirmation?.title, lineBreak: <p/>})
+    } else {
+        confirmationSubText = intl.formatMessage({
+            id: 'boardSelector.confirm-link-board-subtext',
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. You can unlink a board from a channel at any time.'
+        }, {boardName: showLinkBoardConfirmation?.title})
     }
 
     return (
@@ -146,11 +141,9 @@ const BoardSelector = () => {
                     <ConfirmationDialog
                         dialogBox={{
                             heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link board to channel'}),
-                            subText: intl.formatMessage({
-                                id: 'boardSelector.confirm-link-board-subtext',
-                                defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board. Are you sure you want to link it?'
-                            }, {boardName: showLinkBoardConfirmation.title}),
+                            subText: confirmationSubText,
                             confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
+                            destructive: showLinkBoardConfirmation?.channelId !== '',
                             onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
                             onClose: () => setShowLinkBoardConfirmation(null),
                         }}
@@ -168,7 +161,7 @@ const BoardSelector = () => {
                                 onClick={() => newLinkedBoard()}
                                 emphasis='secondary'
                             >
-                                <FormattedMessage 
+                                <FormattedMessage
                                     id='boardSelector.create-a-board'
                                     defaultMessage='Create a board'
                                 />

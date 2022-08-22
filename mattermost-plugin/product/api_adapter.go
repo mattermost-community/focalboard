@@ -6,6 +6,8 @@ package product
 import (
 	"database/sql"
 
+	"github.com/gorilla/mux"
+
 	"github.com/mattermost/mattermost-server/v6/app/request"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -34,7 +36,7 @@ type serviceAPIAdapter struct {
 func newServiceAPIAdapter(api *boardsProduct) *serviceAPIAdapter {
 	return &serviceAPIAdapter{
 		api: api,
-		ctx: &request.Context{},
+		ctx: request.EmptyContext(api.logger),
 	}
 }
 
@@ -94,7 +96,7 @@ func (a *serviceAPIAdapter) GetUserByEmail(email string) (*mm_model.User, error)
 }
 
 func (a *serviceAPIAdapter) UpdateUser(user *mm_model.User) (*mm_model.User, error) {
-	user, appErr := a.api.userService.UpdateUser(user, true)
+	user, appErr := a.api.userService.UpdateUser(a.ctx, user, true)
 	return user, normalizeAppErr(appErr)
 }
 
@@ -203,6 +205,13 @@ func (a *serviceAPIAdapter) GetMasterDB() (*sql.DB, error) {
 //
 func (a *serviceAPIAdapter) GetDiagnosticID() string {
 	return a.api.systemService.GetDiagnosticId()
+}
+
+//
+// Router service.
+//
+func (a *serviceAPIAdapter) RegisterRouter(sub *mux.Router) {
+	a.api.routerService.RegisterRouter(boardsProductName, sub)
 }
 
 // Ensure the adapter implements ServicesAPI.

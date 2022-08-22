@@ -6,7 +6,9 @@ package sqlstore
 import (
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/storetests"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSQLStore(t *testing.T) {
@@ -23,4 +25,41 @@ func TestSQLStore(t *testing.T) {
 	t.Run("DataRetention", func(t *testing.T) { storetests.StoreTestDataRetention(t, SetupTests) })
 	t.Run("CloudStore", func(t *testing.T) { storetests.StoreTestCloudStore(t, SetupTests) })
 	t.Run("StoreTestFileStore", func(t *testing.T) { storetests.StoreTestFileStore(t, SetupTests) })
+	t.Run("StoreTestCategoryStore", func(t *testing.T) { storetests.StoreTestCategoryStore(t, SetupTests) })
+	t.Run("StoreTestCategoryBoardsStore", func(t *testing.T) { storetests.StoreTestCategoryBoardsStore(t, SetupTests) })
+	t.Run("BoardsInsightsStore", func(t *testing.T) { storetests.StoreTestBoardsInsightsStore(t, SetupTests) })
+}
+
+//  tests for  utility functions inside sqlstore.go
+
+func TestConcatenationSelector(t *testing.T) {
+	store, tearDown := SetupTests(t)
+	sqlStore := store.(*SQLStore)
+	defer tearDown()
+
+	concatenationString := sqlStore.concatenationSelector("a", ",")
+	switch sqlStore.dbType {
+	case model.SqliteDBType:
+		require.Equal(t, concatenationString, "group_concat(a)")
+	case model.MysqlDBType:
+		require.Equal(t, concatenationString, "GROUP_CONCAT(a SEPARATOR ',')")
+	case model.PostgresDBType:
+		require.Equal(t, concatenationString, "string_agg(a, ',')")
+	}
+}
+
+func TestElementInColumn(t *testing.T) {
+	store, tearDown := SetupTests(t)
+	sqlStore := store.(*SQLStore)
+	defer tearDown()
+
+	inLiteral := sqlStore.elementInColumn("test_column")
+	switch sqlStore.dbType {
+	case model.SqliteDBType:
+		require.Equal(t, inLiteral, "instr(test_column, ?) > 0")
+	case model.MysqlDBType:
+		require.Equal(t, inLiteral, "instr(test_column, ?) > 0")
+	case model.PostgresDBType:
+		require.Equal(t, inLiteral, "position(? in test_column) > 0")
+	}
 }

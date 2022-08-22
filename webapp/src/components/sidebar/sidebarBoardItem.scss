@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: row;
     font-weight: 500;
-    padding: 0 20px;
+    padding: 0 12px 0 20px;
     height: 36px;
     align-items: center;
     gap: 8px;
@@ -23,7 +23,7 @@
     }
 
     &.sidebar-view-item {
-        padding-left: 32px;
+        padding-left: 42px;
         color: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
     }
@@ -32,6 +32,10 @@
         background: rgba(var(--sidebar-text-rgb), 0.1);
         position: relative;
         color: rgb(var(--sidebar-text-rgb));
+
+        .octo-sidebar-title {
+            color: inherit;
+        }
 
         &:not(.subitem) {
             &::before {
@@ -127,41 +131,47 @@
     }
 
     .MenuWrapper {
+        border-radius: 4px;
+
         &:hover {
             background: rgba(var(--sidebar-text-rgb), 0.08);
         }
     }
 
-    .octo-sidebar-title {
-        font-weight: 600;
-        flex-grow: 1;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: flex;
-        align-items: baseline;
+    .octo-sidebar-icon {
+        .CompassIcon {
+            font-size: 18px;
+            margin: 0 -2px 0 -1px;
 
-        .octo-icon {
-            margin-right: 6px;
+            &::before {
+                margin: 0;
+            }
         }
 
-        .octo-sidebar-name {
-            flex: 1;
-            min-width: 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        > .Icon {
+            width: 16px;
+            vertical-align: top;
+            margin-left: -2px;
         }
-    }
-
-    .octo-sidebar-icon > .Icon {
-        width: 19px;
-        vertical-align: top;
     }
 
     .Menu.noselect.left {
         position: fixed;
-        right: calc(100% - 480px + 50px);
-        left: calc(240px - 50px);
+        right: auto;
+        left: auto;
+    }
+
+    .boardMoveToCategorySubmenu {
+        .menu-options {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        @media only screen and (max-height: 768px) {
+            .menu-options {
+                max-height: min(350px, 50vh);
+            }
+        }
     }
 }
 

@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/golang/mock v1.6.0
-	github.com/mattermost/mattermost-plugin-api v0.0.28-0.20220623051512-0afd85e854d4
+	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
 	github.com/stretchr/testify v1.7.2
 )
 
@@ -49,7 +49,7 @@ require (
 	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/dsnet/compress v0.0.2-0.20210315054119-f66993602bf5 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/dyatlov/go-opengraph v0.0.0-20210112100619-dae8665a5b09 // indirect
+	github.com/dyatlov/go-opengraph/opengraph v0.0.0-20220524092352-606d7b1e5f8a // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/set v0.2.1 // indirect
 	github.com/felixge/httpsnoop v1.0.3 // indirect
@@ -96,7 +96,7 @@ require (
 	github.com/mattermost/go-i18n v1.11.1-0.20211013152124-5c415071e404 // indirect
 	github.com/mattermost/ldap v0.0.0-20201202150706-ee0e6284187d // indirect
 	github.com/mattermost/logr/v2 v2.0.15 // indirect
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220711175838-7ee7523729e6 // indirect
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220802151854-f07c31c5d933 // indirect
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8 // indirect
 	github.com/mattermost/rsc v0.0.0-20160330161541-bbaefb05eaa0 // indirect
 	github.com/mattermost/squirrel v0.2.0 // indirect

@@ -161,6 +161,10 @@ class Constants {
 
     static readonly keyCodes: {[key: string]: [string, number]} = {
         COMPOSING: ['Composing', 229],
+        ESC: ['Esc', 27],
+        UP: ['Up', 38],
+        DOWN: ['Down', 40],
+        ENTER: ['Enter', 13],
         A: ['a', 65],
         B: ['b', 66],
         C: ['c', 67],
@@ -190,6 +194,8 @@ class Constants {
     }
 
     static readonly globalTeamId = '0'
+
+    static readonly myInsights = 'MY'
 }
 
 export {Constants, Permission}

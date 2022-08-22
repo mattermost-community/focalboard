@@ -88,6 +88,12 @@ describe('src/component/kanban/kanban', () => {
                 board_id_1: {userId: 'user_id_1', schemeAdmin: true},
             },
         },
+        views: {
+            views: {
+                boardView: activeView,
+            },
+            current: 'boardView',
+        },
         contents: {},
         comments: {
             comments: {},
@@ -126,6 +132,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -162,6 +169,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -197,6 +205,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -234,6 +243,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -281,6 +291,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -328,6 +339,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -376,6 +388,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={mockedAddCard}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -415,6 +428,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -454,6 +468,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -500,6 +515,7 @@ describe('src/component/kanban/kanban', () => {
                     readonly={false}
                     onCardClicked={jest.fn()}
                     addCard={jest.fn()}
+                    addCardFromTemplate={jest.fn()}
                     showCard={jest.fn()}
                     hiddenCardsCount={0}
                     showHiddenCardCountNotification={jest.fn()}
@@ -513,4 +529,129 @@ describe('src/component/kanban/kanban', () => {
             expect(mockedinsertPropertyOption).toBeCalled()
         })
     })
+})
+
+describe('src/component/kanban/kanban', () => {
+    const board = TestBlockFactory.createBoard()
+    const activeView = TestBlockFactory.createBoardView(board)
+    const card1 = TestBlockFactory.createCard(board)
+    card1.id = 'id1'
+    card1.fields.properties = {id: 'property_value_id_1'}
+    const card2 = TestBlockFactory.createCard(board)
+    card2.id = 'id2'
+    card2.fields.properties = {id: 'property_value_id_1'}
+    const card3 = TestBlockFactory.createCard(board)
+    card3.id = 'id3'
+    card3.fields.properties = {id: 'property_value_id_2'}
+    activeView.fields.kanbanCalculations = {
+        id1: {
+            calculation: 'countEmpty',
+            propertyId: '1',
+
+        },
+    }
+    activeView.fields.defaultTemplateId = "defaultTemplateId"
+    const optionQ1:IPropertyOption = {
+        color: 'propColorOrange',
+        id: 'property_value_id_1',
+        value: 'Q1',
+    }
+    const optionQ2:IPropertyOption = {
+        color: 'propColorBlue',
+        id: 'property_value_id_2',
+        value: 'Q2',
+    }
+    const optionQ3:IPropertyOption = {
+        color: 'propColorDefault',
+        id: 'property_value_id_3',
+        value: 'Q3',
+    }
+
+    const groupProperty: IPropertyTemplate = {
+        id: 'id',
+        name: 'name',
+        type: 'text',
+        options: [optionQ1, optionQ2],
+    }
+
+    const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+                props: {},
+            },
+        },
+        cards: {
+            cards: [card1, card2, card3],
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: 'board_id_1',
+            boards: {
+                board_id_1: {id: 'board_id_1'},
+            },
+            myBoardMemberships: {
+                board_id_1: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        views: {
+            views: {
+                boardView: activeView,
+            },
+            current: 'boardView',
+        },
+        contents: {},
+        comments: {
+            comments: {},
+        },
+    }
+    const store = mockStateStore([], state)
+    beforeAll(() => {
+        console.error = jest.fn()
+        mockDOM()
+    })
+    beforeEach(jest.resetAllMocks)
+    test('return kanban and click on New if view have already have defaultTemplateId', () => {
+        const mockedAddCard = jest.fn()
+        render(wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Kanban
+                    board={board}
+                    activeView={activeView}
+                    cards={[card1, card2]}
+                    groupByProperty={groupProperty}
+                    visibleGroups={[
+                        {
+                            option: optionQ1,
+                            cards: [card1, card2],
+                        }, {
+                            option: optionQ2,
+                            cards: [card3],
+                        },
+                    ]}
+                    hiddenGroups={[
+                        {
+                            option: optionQ3,
+                            cards: [],
+                        },
+                    ]}
+                    selectedCardIds={[]}
+                    readonly={false}
+                    onCardClicked={jest.fn()}
+                    addCard={jest.fn()}
+                    addCardFromTemplate={mockedAddCard}
+                    showCard={jest.fn()}
+                    hiddenCardsCount={0}
+                    showHiddenCardCountNotification={jest.fn()}
+                />
+            </ReduxProvider>,
+        ), {wrapper: MemoryRouter})
+        const allButtonsNew = screen.getAllByRole('button', {name: '+ New'})
+        expect(allButtonsNew).not.toBeNull()
+        userEvent.click(allButtonsNew[0])
+        expect(mockedAddCard).toBeCalledTimes(1)
+    })
+
 })

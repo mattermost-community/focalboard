@@ -12,7 +12,7 @@ exports[`components/viewTitle add random icon 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-emoticon-outline undefined"
+          class="CompassIcon icon-emoticon-outline"
         />
         <span>
           Add icon
@@ -22,7 +22,7 @@ exports[`components/viewTitle add random icon 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-outline undefined"
+          class="CompassIcon icon-eye-outline"
         />
         <span>
           show description
@@ -56,7 +56,7 @@ exports[`components/viewTitle hide description 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-outline undefined"
+          class="CompassIcon icon-eye-outline"
         />
         <span>
           show description
@@ -107,7 +107,7 @@ exports[`components/viewTitle should match snapshot 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-off-outline undefined"
+          class="CompassIcon icon-eye-off-outline"
         />
         <span>
           hide description
@@ -217,7 +217,7 @@ exports[`components/viewTitle show description 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-off-outline undefined"
+          class="CompassIcon icon-eye-off-outline"
         />
         <span>
           hide description
