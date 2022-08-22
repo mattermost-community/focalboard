@@ -1,10 +1,16 @@
 .SidebarCategory {
+    margin-top: 12px;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
     .octo-sidebar-item {
         display: flex;
         flex-direction: row;
         font-weight: 500;
         padding: 0 16px 0 8px;
-        height: 36px;
+        height: 32px;
         align-items: center;
         gap: 4px;
 
@@ -127,20 +133,27 @@
     }
 
     .MenuWrapper {
+        border-radius: 4px;
+
         &:hover {
             background: rgba(var(--sidebar-text-rgb), 0.08);
         }
     }
 
     .octo-sidebar-title {
-        font-weight: 600;
         flex-grow: 1;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         display: flex;
         align-items: baseline;
-        color: rgba(var(--sidebar-text-rgb), 0.6);
+        color: rgba(var(--sidebar-text-rgb), 0.72);
+
+        &.category-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
 
         .octo-icon {
             margin-right: 6px;

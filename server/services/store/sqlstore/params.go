@@ -25,6 +25,7 @@ type Params struct {
 	IsSingleUser     bool
 	NewMutexFn       MutexFactory
 	ServicesAPI      servicesAPI
+	SkipMigrations   bool
 }
 
 func (p Params) CheckValid() error {
