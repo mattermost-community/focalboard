@@ -126,23 +126,6 @@ func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block
 	return blocks, nil
 }
 
-func (s *SQLStore) getBlocksWithBoardID(db sq.BaseRunner, boardID string) ([]model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"board_id": boardID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`GetBlocksWithBoardID ERROR`, mlog.Err(err))
-
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
-}
-
 func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).

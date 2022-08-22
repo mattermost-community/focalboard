@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
+import {createIntl, createIntlCache} from 'react-intl'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {createBrowserHistory, History} from 'history'
@@ -13,6 +14,7 @@ import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
 import {UserSettings} from '../../../webapp/src/userSettings'
+import {getMessages, getCurrentLanguage} from '../../../webapp/src/i18n'
 
 
 const windowAny = (window as SuiteWindow)
@@ -183,6 +185,13 @@ export default class Plugin {
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
         browserHistory = customHistory()
+        const cache = createIntlCache()
+        const intl = createIntl({
+            // modeled after <IntlProvider> in webapp/src/app.tsx
+            locale: getCurrentLanguage(),
+            messages: getMessages(getCurrentLanguage())
+        }, cache)
+
 
         this.registry = registry
 
@@ -311,7 +320,7 @@ export default class Plugin {
 
             if (this.registry.registerAppBarComponent) {
                 const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Boards')
+                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(

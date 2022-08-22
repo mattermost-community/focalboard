@@ -18,12 +18,6 @@ import {Utils} from '../../utils'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
 import { Constants } from '../../constants'
 
-import {
-    CategoryBoards,
-    DefaultCategory,
-    getSidebarCategories,
-} from '../../store/sidebar'
-
 type Props = {
     onClose: () => void
 }
@@ -35,7 +29,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [IDs, setIDs] = useState<any>({})
     const intl = useIntl()
-    const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const team = useAppSelector(getCurrentTeam)
     const me = useAppSelector(getMe)
     const title = intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find Boards'})
@@ -76,15 +69,6 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         return items.map((item, i) => {
             const resultTitle = item.title || untitledBoardTitle
             const teamTitle = teamsById[item.teamId].title
-
-            let categoryTitle = DefaultCategory.name
-            for(const category of partialCategories){
-                if(category.boardIDs.find(id => id === item.id)){
-                    categoryTitle = category.name
-                    break
-                }
-            }
-
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             setIDs((prevIDs: any) => ({
                 ...prevIDs,
@@ -99,12 +83,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
                 >
                     {item.type === BoardTypeOpen && <Globe/>}
                     {item.type === BoardTypePrivate && <LockOutline/>}
-                    <div className='resultTitle'>
-                        <span>{resultTitle}</span>
-                    </div>
-                    <div className='categoryTitle'>
-                        <span className='ml-2 text-light'>{categoryTitle}</span>
-                    </div>
+                    <span className='resultTitle'>{resultTitle}</span>
                     <span className='teamTitle'>{teamTitle}</span>
                 </div>
             )
