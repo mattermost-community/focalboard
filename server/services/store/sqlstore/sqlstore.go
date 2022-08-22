@@ -60,11 +60,12 @@ func New(params Params) (*SQLStore, error) {
 		return nil, err
 	}
 
-	err = store.Migrate()
-	if err != nil {
-		params.Logger.Error(`Table creation / migration failed`, mlog.Err(err))
+	if !params.SkipMigrations {
+		if mErr := store.Migrate(); mErr != nil {
+			params.Logger.Error(`Table creation / migration failed`, mlog.Err(mErr))
 
-		return nil, err
+			return nil, mErr
+		}
 	}
 	return store, nil
 }

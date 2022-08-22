@@ -55,7 +55,7 @@ html {
     textarea {
         background: rgb(var(--center-channel-bg-rgb));
         color: rgb(var(--center-channel-color-rgb));
-
+        border-radius: 4px;
         user-select: text;
     }
 

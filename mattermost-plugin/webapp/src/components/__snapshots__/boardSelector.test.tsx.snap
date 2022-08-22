@@ -188,7 +188,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                     class="icon"
                   >
                     <i
-                      class="CompassIcon icon-product-boards undefined"
+                      class="CompassIcon icon-product-boards"
                     />
                   </span>
                   <div
@@ -227,7 +227,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                     class="icon"
                   >
                     <i
-                      class="CompassIcon icon-product-boards undefined"
+                      class="CompassIcon icon-product-boards"
                     />
                   </span>
                   <div
@@ -266,7 +266,7 @@ exports[`components/boardSelector renders with some results 1`] = `
                     class="icon"
                   >
                     <i
-                      class="CompassIcon icon-product-boards undefined"
+                      class="CompassIcon icon-product-boards"
                     />
                   </span>
                   <div
