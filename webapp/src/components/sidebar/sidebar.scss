@@ -125,13 +125,17 @@
         }
     }
 
-    .OptionsIcon {
-        color: rgba(var(--sidebar-text-rgb), 0.5);
+    .IconButton {
+        color: rgba(var(--sidebar-text-rgb), 0.56);
+
+        &:hover {
+            color: rgb(var(--sidebar-text-rgb));
+        }
     }
 
     .DisclosureTriangleIcon,
     .DotIcon {
-        fill: rgba(var(--sidebar-text-rgb), 0.5);
+        fill: rgba(var(--sidebar-text-rgb), 0.56);
         flex-shrink: 0;
     }
 

@@ -115,6 +115,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 			Email:    model.SingleUser,
 			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
+			Props:    map[string]interface{}{},
 		}
 	} else {
 		user, err = a.app.GetUser(userID)

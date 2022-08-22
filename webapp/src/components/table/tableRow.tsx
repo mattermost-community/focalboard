@@ -17,7 +17,7 @@ import PropertyValueElement from '../propertyValueElement'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import IconButton from '../../widgets/buttons/iconButton'
-import GripIcon from '../../widgets/icons/grip'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
 import DeleteIcon from '../../widgets/icons/delete'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
@@ -142,24 +142,7 @@ const TableRow = (props: Props) => {
 
             {!props.readonly && (
                 <div className='action-cell octo-table-cell-btn'>
-                    <MenuWrapper
-                        className='optionsMenu'
-                        stopPropagationOnToggle={true}
-                    >
-                        <IconButton
-                            title='MenuBtn'
-                            icon={<OptionsIcon/>}
-                        />
-                        <Menu>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
-                                onClick={handleDeleteButtonOnClick}
-                            />
-                        </Menu>
-                    </MenuWrapper>
-                    <IconButton icon={<GripIcon/>}/>
+                    <IconButton icon={<CompassIcon icon='drag-vertical'/>}/>
                 </div>
             )}
 
@@ -183,6 +166,26 @@ const TableRow = (props: Props) => {
                         spellCheck={true}
                     />
                 </div>
+
+                {!props.readonly && (
+                    <MenuWrapper
+                        className='optionsMenu ml-2 mr-2'
+                        stopPropagationOnToggle={true}
+                    >
+                        <IconButton
+                            title='MenuBtn'
+                            icon={<OptionsIcon/>}
+                        />
+                        <Menu>
+                            <Menu.Text
+                                icon={<DeleteIcon/>}
+                                id='delete'
+                                name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
+                                onClick={handleDeleteButtonOnClick}
+                            />
+                        </Menu>
+                    </MenuWrapper>
+                )}
 
                 <div className='open-button'>
                     <Button onClick={() => props.showCard(props.card.id || '')}>

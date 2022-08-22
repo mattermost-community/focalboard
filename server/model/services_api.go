@@ -8,6 +8,8 @@ package model
 import (
 	"database/sql"
 
+	"github.com/gorilla/mux"
+
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -71,4 +73,7 @@ type ServicesAPI interface {
 	GetPreferencesForUser(userID string) ([]mm_model.Preference, error)
 	DeletePreferencesForUser(userID string, preferences []mm_model.Preference) error
 	UpdatePreferencesForUser(userID string, preferences []mm_model.Preference) error
+
+	// Router service
+	RegisterRouter(sub *mux.Router)
 }

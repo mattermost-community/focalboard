@@ -6,6 +6,7 @@ package main
 import (
 	"database/sql"
 
+	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -230,6 +231,13 @@ func (a *pluginAPIAdapter) DeletePreferencesForUser(userID string, preferences [
 
 func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences []mm_model.Preference) error {
 	return normalizeAppErr(a.api.UpdatePreferencesForUser(userID, preferences))
+}
+
+//
+// Router service.
+//
+func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
+	// NOOP for plugin
 }
 
 // Ensure the adapter implements ServicesAPI.

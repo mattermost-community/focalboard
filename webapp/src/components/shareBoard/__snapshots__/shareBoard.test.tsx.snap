@@ -876,7 +876,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh undefined"
+                    class="CompassIcon icon-refresh"
                   />
                 </button>
               </div>
@@ -3022,7 +3022,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh undefined"
+                    class="CompassIcon icon-refresh"
                   />
                 </button>
               </div>
@@ -3254,7 +3254,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh undefined"
+                    class="CompassIcon icon-refresh"
                   />
                 </button>
               </div>
