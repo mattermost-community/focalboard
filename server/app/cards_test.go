@@ -133,7 +133,7 @@ func TestGetCard(t *testing.T) {
 	fields := make(map[string]any)
 	fields["contentOrder"] = contentOrder
 	fields["properties"] = props
-	fields["icon"] = "X"
+	fields["icon"] = "😀"
 	fields["isTemplate"] = true
 
 	block := &model.Block{
@@ -148,7 +148,6 @@ func TestGetCard(t *testing.T) {
 	}
 
 	t.Run("success scenario", func(t *testing.T) {
-		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{ID: boardID}, nil)
 		th.Store.EXPECT().GetBlock(block.ID).Return(block, nil)
 
 		card, err := th.App.GetCardByID(block.ID)
@@ -156,7 +155,7 @@ func TestGetCard(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, boardID, card.BoardID)
 		require.Equal(t, block.Title, card.Title)
-		require.Equal(t, "X", card.Icon)
+		require.Equal(t, "😀", card.Icon)
 		require.Equal(t, true, card.IsTemplate)
 		require.Equal(t, contentOrder, card.ContentOrder)
 		require.EqualValues(t, props, card.Properties)
@@ -164,7 +163,7 @@ func TestGetCard(t *testing.T) {
 
 	t.Run("not found", func(t *testing.T) {
 		bogusID := utils.NewID(utils.IDTypeBlock)
-		th.Store.EXPECT().GetBlock(bogusID).Return(model.NewErrNotFound(bogusID))
+		th.Store.EXPECT().GetBlock(bogusID).Return(nil, model.NewErrNotFound(bogusID))
 
 		card, err := th.App.GetCardByID(bogusID)
 
@@ -174,14 +173,12 @@ func TestGetCard(t *testing.T) {
 	})
 
 	t.Run("error scenario", func(t *testing.T) {
-		var blockPatch *model.BlockPatch
-		th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
-		th.Store.EXPECT().PatchBlock(card.ID, gomock.AssignableToTypeOf(reflect.TypeOf(blockPatch)), userID).Return(blockError{"error"})
+		th.Store.EXPECT().GetBlock(block.ID).Return(nil, blockError{"error"})
 
-		patchedCard, err := th.App.PatchCard(cardPatch, card.ID, userID, false)
+		card, err := th.App.GetCardByID(block.ID)
 
 		require.Error(t, err, "error")
-		require.Nil(t, patchedCard)
+		require.Nil(t, card)
 	})
 }
 
