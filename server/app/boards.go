@@ -20,6 +20,9 @@ var (
 	ErrInsufficientLicense    = errors.New("appropriate license required")
 )
 
+const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
+const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
+
 //todo: remove and use common error
 type BoardNotFoundErr struct {
 	boardID string
@@ -332,14 +335,25 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		return nil, err
 	}
 
-	if patch.ChannelID != nil && *patch.ChannelID != "" {
-		a.logger.Debug(">>>>>>>>>>POSTIND Added>>>>>")
-		message := "%s board associated to channel"
-		a.store.PostMessage(message, "custom_channel_association", updatedBoard.Title, *patch.ChannelID)
-	} else if patch.ChannelID != nil && *patch.ChannelID == "" {
-		a.logger.Debug(">>>>>>>>>>POSTIND Removed>>>>>")
-		message := "%s board association removed from channel"
-		a.store.PostMessage(message, "custom_channel_association", updatedBoard.Title, oldChannelID)
+	if patch.ChannelID != nil {
+		var username string
+		user, err := a.store.GetUserByID(userID)
+		if err != nil {
+			a.logger.Error("Unable to get the board updater", mlog.Err(err))
+			username = "unknown"
+		} else {
+			username = user.Username
+		}
+
+		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		if *patch.ChannelID != "" {
+			// TODO: this needs translated when available on the server
+			message := fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink)
+			a.store.PostMessage(message, "", *patch.ChannelID)
+		} else if *patch.ChannelID == "" {
+			message := fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink)
+			a.store.PostMessage(message, "", oldChannelID)
+		}
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {

@@ -18,10 +18,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var systemsBot = &mmModel.Bot{
-	Username:    mmModel.BotSystemBotUsername,
-	DisplayName: "System",
-}
+var boardsBotID string
 
 // servicesAPI is the interface required my the MattermostAuthLayer to interact with
 // the mattermost-server. You can use plugin-api or product-api adapter implementations.
@@ -852,24 +849,17 @@ func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Cha
 	return channel, nil
 }
 
-func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
-	botID, err := s.servicesAPI.EnsureBot(systemsBot)
-	if err != nil {
-		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
-		return "", err
-	}
-
-	return botID, nil
-}
-
 func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
-	botID, err := s.getSystemBotID()
-	if err != nil {
-		return err
+	if boardsBotID == "" {
+		var err error
+		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
+		if err != nil {
+			return err
+		}
 	}
 
 	for _, receipt := range receipts {
-		channel, err := s.servicesAPI.GetDirectChannel(botID, receipt)
+		channel, err := s.servicesAPI.GetDirectChannel(boardsBotID, receipt)
 		if err != nil {
 			s.logger.Error(
 				"failed to get DM channel between system bot and user for receipt",
@@ -880,14 +870,7 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 			continue
 		}
 
-		post := &mmModel.Post{
-			Message:   message,
-			UserId:    botID,
-			ChannelId: channel.Id,
-			Type:      postType,
-		}
-
-		if _, err := s.servicesAPI.CreatePost(post); err != nil {
+		if err := s.PostMessage(message, postType, channel.Id); err != nil {
 			s.logger.Error(
 				"failed to send message to receipt from SendMessage",
 				mlog.String("receipt", receipt),
@@ -899,27 +882,27 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 	return nil
 }
 
-func (s *MattermostAuthLayer) PostMessage(message, postType, boardTitle, channelID string) error {
-	// botID, err := s.getSystemBotID()
-	// if err != nil {
-	// 	return err
-	// }
-	// botID := "819yz8oewpr5fdp6yi59m3zfdr"
-	s.logger.Debug(">>>>>>>>>>>SEMDMESSAGE>>>>>>>>>>>>>>")
+func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) error {
+
+	if boardsBotID == "" {
+		var err error
+		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
+		if err != nil {
+			return err
+		}
+	}
 
 	post := &mmModel.Post{
 		Message:   message,
-		UserId:    "819yz8oewpr5fdp6yi59m3zfdr",
+		UserId:    boardsBotID,
 		ChannelId: channelID,
 		Type:      postType,
 	}
-	var t = make(mmModel.StringInterface)
-	t["BoardTitle"] = boardTitle
-	post.SetProps(t)
 
-	if _, err := s.servicesAPI.CreatePost(post); err != nil {
+	var err error
+	if post, err = s.servicesAPI.CreatePost(post); err != nil {
 		s.logger.Error(
-			"failed to send message to receipt from SendMessage",
+			"failed to send message to receipt from PostMessage",
 			mlog.Err(err),
 		)
 	}

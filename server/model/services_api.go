@@ -14,6 +14,20 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const (
+	botUsername    = "boards"
+	botDisplayname = "Boards"
+	botDescription = "Created by Boards plugin."
+)
+
+var FocalboardBot = &mm_model.Bot{
+	Username:    botUsername,
+	DisplayName: botDisplayname,
+	Description: botDescription,
+	OwnerId:     SystemUserID,
+}
+var boardsBotId string
+
 type ServicesAPI interface {
 	// Channels service
 	GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error)
