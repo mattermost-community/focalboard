@@ -883,7 +883,6 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 }
 
 func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) error {
-
 	if boardsBotID == "" {
 		var err error
 		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
