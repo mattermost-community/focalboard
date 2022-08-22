@@ -219,11 +219,11 @@ func (s *SQLStore) doMigrate(engine *morph.Morph, driver drivers.Driver) error {
 	}
 
 	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
-		return mErr
+		return fmt.Errorf("error running teamless boards migration: %w", mErr)
 	}
 
 	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
-		return mErr
+		return fmt.Errorf("error running deleted membership boards migration: %w", mErr)
 	}
 
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
