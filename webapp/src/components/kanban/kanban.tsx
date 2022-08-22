@@ -7,7 +7,6 @@ import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
 
 import {useAppSelector} from '../../store/hooks'
-import {getCurrentView} from '../../store/views'
 
 import {Position} from '../cardDetail/cardDetailContents'
 
@@ -55,20 +54,19 @@ const hStrength = createHorizontalStrength(Utils.isMobile() ? 60 : 250)
 const vStrength = createVerticalStrength(Utils.isMobile() ? 60 : 250)
 
 const Kanban = (props: Props) => {
-    const currentView = useAppSelector(getCurrentView)
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
     const [defaultTemplateID, setDefaultTemplateID] = useState<string>()
 
     useEffect(() => {
-        if(currentView && currentView.fields && currentView.fields.defaultTemplateId) {
+        if(activeView && activeView.fields && activeView.fields.defaultTemplateId) {
             cardTemplates.forEach((cardTemplate) => {
-                if(cardTemplate.id === currentView.fields.defaultTemplateId) {
-                    setDefaultTemplateID(currentView.fields.defaultTemplateId)
+                if(cardTemplate.id === activeView.fields.defaultTemplateId) {
+                    setDefaultTemplateID(activeView.fields.defaultTemplateId)
                 }
             })
         }
-    }, [currentView.fields.defaultTemplateId])
+    }, [activeView.fields.defaultTemplateId])
 
     if (!groupByProperty) {
         Utils.assertFailure('Board views must have groupByProperty set')
