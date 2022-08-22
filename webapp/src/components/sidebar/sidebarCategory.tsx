@@ -48,11 +48,13 @@ import SidebarBoardItem from './sidebarBoardItem'
 type Props = {
     activeCategoryId?: string
     activeBoardID?: string
+    activeViewID?: string
     hideSidebar: () => void
     categoryBoards: CategoryBoards
     boards: Board[]
     allCategories: Array<CategoryBoards>
     index: number
+    onBoardTemplateSelectorClose?: () => void
 }
 
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
@@ -97,11 +99,17 @@ const SidebarCategory = (props: Props) => {
     }, [shouldViewManageCatergoriesTour])
 
     const showBoard = useCallback((boardId) => {
+        if (boardId === props.activeBoardID && props.onBoardTemplateSelectorClose) {
+            props.onBoardTemplateSelectorClose()
+        }
         Utils.showBoard(boardId, match, history)
         props.hideSidebar()
     }, [match, history])
 
     const showView = useCallback((viewId, boardId) => {
+        if (viewId === props.activeViewID && props.onBoardTemplateSelectorClose) {
+            props.onBoardTemplateSelectorClose()
+        }
         // if the same board, reuse the match params
         // otherwise remove viewId and cardId, results in first view being selected
         const params = {...match.params, boardId: boardId || '', viewId: viewId || ''}

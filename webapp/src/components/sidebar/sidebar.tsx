@@ -32,6 +32,7 @@ import {getCurrentTeam} from '../../store/teams'
 import {Constants} from "../../constants"
 
 import {getMe} from "../../store/users"
+import {getCurrentViewId} from '../../store/views'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -41,6 +42,7 @@ import {addMissingItems} from './utils'
 type Props = {
     activeBoardId?: string
     onBoardTemplateSelectorOpen?: () => void
+    onBoardTemplateSelectorClose?: () => void
 }
 
 function getWindowDimensions() {
@@ -60,6 +62,7 @@ const Sidebar = (props: Props) => {
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const sidebarCategories = addMissingItems(partialCategories, boards)
     const me = useAppSelector(getMe)
+    const activeViewID = useAppSelector(getCurrentViewId)
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
@@ -189,10 +192,12 @@ const Sidebar = (props: Props) => {
                             hideSidebar={hideSidebar}
                             key={category.id}
                             activeBoardID={props.activeBoardId}
+                            activeViewID={activeViewID}
                             categoryBoards={category}
                             boards={boards}
                             allCategories={sidebarCategories}
                             index={index}
+                            onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
                         />
                     ))
                 }
