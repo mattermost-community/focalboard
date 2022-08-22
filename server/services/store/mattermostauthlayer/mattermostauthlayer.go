@@ -860,7 +860,6 @@ func (s *MattermostAuthLayer) getBoardsBotID() (string, error) {
 }
 
 func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
-
 	botID, err := s.getBoardsBotID()
 	if err != nil {
 		return err
