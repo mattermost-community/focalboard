@@ -26,7 +26,6 @@ var FocalboardBot = &mm_model.Bot{
 	Description: botDescription,
 	OwnerId:     SystemUserID,
 }
-var boardsBotId string
 
 type ServicesAPI interface {
 	// Channels service

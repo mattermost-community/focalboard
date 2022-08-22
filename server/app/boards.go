@@ -349,10 +349,16 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		if *patch.ChannelID != "" {
 			// TODO: this needs translated when available on the server
 			message := fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink)
-			a.store.PostMessage(message, "", *patch.ChannelID)
+			err := a.store.PostMessage(message, "", *patch.ChannelID)
+			if err != nil {
+				a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
+			}
 		} else if *patch.ChannelID == "" {
 			message := fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink)
-			a.store.PostMessage(message, "", oldChannelID)
+			err := a.store.PostMessage(message, "", oldChannelID)
+			if err != nil {
+				a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
+			}
 		}
 	}
 

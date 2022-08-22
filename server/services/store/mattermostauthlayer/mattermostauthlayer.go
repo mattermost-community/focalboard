@@ -900,7 +900,7 @@ func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) e
 	}
 
 	var err error
-	if post, err = s.servicesAPI.CreatePost(post); err != nil {
+	if _, err = s.servicesAPI.CreatePost(post); err != nil {
 		s.logger.Error(
 			"failed to send message to receipt from PostMessage",
 			mlog.Err(err),
