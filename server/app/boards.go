@@ -23,15 +23,6 @@ var (
 const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
 const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
 
-//todo: remove and use common error
-type BoardNotFoundErr struct {
-	boardID string
-}
-
-func (be BoardNotFoundErr) Error() string {
-	return fmt.Sprintf("board not found (board id: %s", be.boardID)
-}
-
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
 	if model.IsErrNotFound(err) {
@@ -323,7 +314,7 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 		board, err := a.store.GetBoard(boardID)
 		if model.IsErrNotFound(err) {
-			return nil, BoardNotFoundErr{boardID}
+			return nil, model.NewErrNotFound(boardID)
 		}
 		if err != nil {
 			return nil, err
