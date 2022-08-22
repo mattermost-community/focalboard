@@ -122,6 +122,69 @@ func TestPatchCard(t *testing.T) {
 	})
 }
 
+func TestGetCard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	boardID := utils.NewID(utils.IDTypeBoard)
+	userID := utils.NewID(utils.IDTypeUser)
+	props := makeProps(5)
+	contentOrder := []string{utils.NewID(utils.IDTypeUser), utils.NewID(utils.IDTypeUser)}
+	fields := make(map[string]any)
+	fields["contentOrder"] = contentOrder
+	fields["properties"] = props
+	fields["icon"] = "X"
+	fields["isTemplate"] = true
+
+	block := &model.Block{
+		ID:         utils.NewID(utils.IDTypeBlock),
+		ParentID:   boardID,
+		Type:       model.TypeCard,
+		Title:      "test card",
+		BoardID:    boardID,
+		Fields:     fields,
+		CreatedBy:  userID,
+		ModifiedBy: userID,
+	}
+
+	t.Run("success scenario", func(t *testing.T) {
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{ID: boardID}, nil)
+		th.Store.EXPECT().GetBlock(block.ID).Return(block, nil)
+
+		card, err := th.App.GetCardByID(block.ID)
+
+		require.NoError(t, err)
+		require.Equal(t, boardID, card.BoardID)
+		require.Equal(t, block.Title, card.Title)
+		require.Equal(t, "X", card.Icon)
+		require.Equal(t, true, card.IsTemplate)
+		require.Equal(t, contentOrder, card.ContentOrder)
+		require.EqualValues(t, props, card.Properties)
+	})
+
+	t.Run("not found", func(t *testing.T) {
+		bogusID := utils.NewID(utils.IDTypeBlock)
+		th.Store.EXPECT().GetBlock(bogusID).Return(model.NewErrNotFound(bogusID))
+
+		card, err := th.App.GetCardByID(bogusID)
+
+		require.Error(t, err, "error")
+		require.True(t, model.IsErrNotFound(err))
+		require.Nil(t, card)
+	})
+
+	t.Run("error scenario", func(t *testing.T) {
+		var blockPatch *model.BlockPatch
+		th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
+		th.Store.EXPECT().PatchBlock(card.ID, gomock.AssignableToTypeOf(reflect.TypeOf(blockPatch)), userID).Return(blockError{"error"})
+
+		patchedCard, err := th.App.PatchCard(cardPatch, card.ID, userID, false)
+
+		require.Error(t, err, "error")
+		require.Nil(t, patchedCard)
+	})
+}
+
 // reverse is a helper function to copy and reverse a slice of strings.
 func reverse(src []string) []string {
 	out := make([]string, 0, len(src))

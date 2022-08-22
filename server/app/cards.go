@@ -55,3 +55,17 @@ func (a *App) PatchCard(cardPatch *model.CardPatch, cardID string, userID string
 
 	return newCard, nil
 }
+
+func (a *App) GetCardByID(cardID string) (*model.Card, error) {
+	cardBlock, err := a.GetBlockByID(cardID)
+	if err != nil {
+		return nil, err
+	}
+
+	card, err := model.Block2Card(cardBlock)
+	if err != nil {
+		return nil, err
+	}
+
+	return card, nil
+}

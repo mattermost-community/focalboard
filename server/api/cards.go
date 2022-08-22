@@ -15,6 +15,7 @@ import (
 func (a *API) registerCardsRoutes(r *mux.Router) {
 	// Cards APIs
 	r.HandleFunc("/boards/{boardID}/cards", a.sessionRequired(a.handleCreateCard)).Methods("POST")
+	r.HandleFunc("/cards/{cardID}/cards", a.sessionRequired(a.handlePatchCard)).Methods("POST")
 }
 
 func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +27,11 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
 	// - name: Body
 	//   in: body
 	//   description: the card to create
@@ -121,6 +127,11 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 	// produces:
 	// - application/json
 	// parameters:
+	// - name: cardID
+	//   in: path
+	//   description: Card ID
+	//   required: true
+	//   type: string
 	// - name: Body
 	//   in: body
 	//   description: the card patch
@@ -186,6 +197,74 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	a.logger.Debug("PatchCard",
+		mlog.String("boardID", card.BoardID),
+		mlog.String("cardID", card.ID),
+		mlog.String("userID", userID),
+	)
+
+	data, err := json.Marshal(card)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
+func (a *API) handleGetCard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /cards/{cardID}
+	//
+	// Fetches the specified card.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: cardID
+	//   in: path
+	//   description: Card ID
+	//   required: true
+	//   type: string
+	//  security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       $ref: '#/definitions/Card'
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+	cardID := mux.Vars(r)["cardID"]
+
+	cardBlock, err := a.app.GetBlockByID(cardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "could not fetch card "+cardID, err)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, cardBlock.BoardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to fetch card"})
+		return
+	}
+
+	card, err := model.Block2Card(cardBlock)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "could not fetch card "+cardID, err)
+	}
+
+	auditRec := a.makeAuditRecord(r, "getCard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", cardBlock.BoardID)
+	auditRec.AddMeta("cardID", cardBlock.ID)
+
+	a.logger.Debug("GetCard",
 		mlog.String("boardID", card.BoardID),
 		mlog.String("cardID", card.ID),
 		mlog.String("userID", userID),
