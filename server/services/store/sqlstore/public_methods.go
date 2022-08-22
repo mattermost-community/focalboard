@@ -304,11 +304,6 @@ func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 
 }
 
-func (s *SQLStore) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
-	return s.getBlocksWithBoardID(s.db, boardID)
-
-}
-
 func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 

@@ -5,15 +5,15 @@
         display: none;
 
         .Button {
-            padding: 2px 4px;
+            padding: 2px 6px;
             font-size: 11px;
             text-transform: uppercase;
             font-weight: 600;
             color: rgba(var(--center-channel-color-rgb), 0.64);
-            background-color: rgba(var(--center-channel-color-rgb), 0.1);
+            background-color: rgb(var(--center-channel-bg-rgb));
             box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
                 rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
-            height: 90%;
+            height: 24px;
             width: 100%;
         }
     }
@@ -34,22 +34,14 @@
         .open-button {
             display: block;
         }
-        
+
         .action-cell {
             @include z-index(table-row-action-cell);
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: row;
-            color: rgb(var(--center-channel-color-rgb));
-            border-left: 1px solid transparent;
-            border-top: 1px solid transparent;
-            border-bottom: 1px solid transparent;
-            box-sizing: border-box;
+            position: relative;
+            align-items: center;
+            left: 8px;
             padding: 8px;
             height: 44px;
-            font-size: 14px;
-            text-overflow: ellipsis;
-            position: fixed;
         }
 
         .octo-table-cell-btn {
@@ -57,13 +49,13 @@
         }
 
         .title-cell {
-            margin-left: 60px;
+            margin-left: 0;
         }
     }
 
     .action-cell {
         display: none;
-        width: 60px;
+        margin-left: 20px;
     }
 
     .URLProperty:hover .Button_Copy {

@@ -31,7 +31,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		IsPlugin:         false,
 	}
 	store, err := New(storeParams)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	tearDown := func() {
 		defer func() { _ = logger.Shutdown() }()

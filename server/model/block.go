@@ -94,10 +94,6 @@ type BlockPatch struct {
 	// The block removed fields
 	// required: false
 	DeletedFields []string `json:"deletedFields"`
-
-	// The board id that the block belongs to
-	// required: false
-	BoardID *string `json:"boardId"`
 }
 
 // BlockPatchBatch is a batch of IDs and patches for modify blocks
@@ -147,10 +143,6 @@ func (b Block) LogClone() interface{} {
 func (p *BlockPatch) Patch(block *Block) *Block {
 	if p.ParentID != nil {
 		block.ParentID = *p.ParentID
-	}
-
-	if p.BoardID != nil {
-		block.BoardID = *p.BoardID
 	}
 
 	if p.Schema != nil {

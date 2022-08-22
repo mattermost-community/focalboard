@@ -4,7 +4,6 @@ go 1.18
 
 require (
 	github.com/Masterminds/squirrel v1.5.2
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/gorilla/websocket v1.5.0
@@ -14,13 +13,14 @@ require (
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20220802151854-f07c31c5d933
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
+	github.com/mgdelacroix/foundation v0.0.0-20220812143423-0bfc18f73538
 	github.com/oklog/run v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.12.1
 	github.com/rudderlabs/analytics-go v3.3.2+incompatible
 	github.com/sergi/go-diff v1.2.0
 	github.com/spf13/viper v1.10.1
-	github.com/stretchr/testify v1.7.2
+	github.com/stretchr/testify v1.8.0
 	github.com/wiggin77/merror v1.0.3
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
 )
@@ -37,6 +37,8 @@ require (
 	github.com/francoispqt/gojay v1.2.13 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-asn1-ber/asn1-ber v1.5.4 // indirect
+	github.com/go-sql-driver/mysql v1.6.0 // indirect
+	github.com/golang-migrate/migrate/v4 v4.15.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/graph-gophers/graphql-go v1.4.0 // indirect
@@ -44,6 +46,7 @@ require (
 	github.com/hashicorp/go-plugin v1.4.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/yamux v0.0.0-20211028200310-0bc27b27de87 // indirect
+	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/klauspost/compress v1.15.6 // indirect
@@ -54,6 +57,7 @@ require (
 	github.com/mattermost/go-i18n v1.11.1-0.20211013152124-5c415071e404 // indirect
 	github.com/mattermost/ldap v0.0.0-20201202150706-ee0e6284187d // indirect
 	github.com/mattermost/logr/v2 v2.0.15 // indirect
+	github.com/mattermost/squirrel v0.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
@@ -93,6 +97,7 @@ require (
 	github.com/yuin/goldmark v1.4.12 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
 	golang.org/x/net v0.0.0-20220614195744-fb05da6f9022 // indirect
+	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f // indirect
 	golang.org/x/sys v0.0.0-20220614162138-6c1b26c55098 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.11 // indirect

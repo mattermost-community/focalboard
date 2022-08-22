@@ -1,5 +1,9 @@
 package model
 
+import (
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
 // This is a list of all the current versions including any patches.
 // It should be maintained in chronological order with most current
 // release at the front of the list.
@@ -41,3 +45,14 @@ var (
 	BuildHash      string
 	Edition        string
 )
+
+// LogServerInfo logs information about the server instance.
+func LogServerInfo(logger mlog.LoggerIFace) {
+	logger.Info("FocalBoard Server",
+		mlog.String("version", CurrentVersion),
+		mlog.String("edition", Edition),
+		mlog.String("build_number", BuildNumber),
+		mlog.String("build_date", BuildDate),
+		mlog.String("build_hash", BuildHash),
+	)
+}

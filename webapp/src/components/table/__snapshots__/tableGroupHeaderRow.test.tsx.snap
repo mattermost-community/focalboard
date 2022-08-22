@@ -12,18 +12,12 @@ exports[`should match snapshot on read only 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton readonly"
+        class="IconButton octo-table-cell__expand readonly"
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down"
+        />
       </button>
       <span
         class="Label propColorBrown "
@@ -62,18 +56,12 @@ exports[`should match snapshot with Group 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton"
+        class="IconButton octo-table-cell__expand "
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down"
+        />
       </button>
       <span
         class="Label propColorBrown "
@@ -133,18 +121,12 @@ exports[`should match snapshot, add new 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton"
+        class="IconButton octo-table-cell__expand "
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down"
+        />
       </button>
       <span
         class="Label propColorBrown "
@@ -204,18 +186,12 @@ exports[`should match snapshot, edit title 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton"
+        class="IconButton octo-table-cell__expand "
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down"
+        />
       </button>
       <span
         class="Label propColorBrown "
@@ -275,18 +251,12 @@ exports[`should match snapshot, hide group 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton"
+        class="IconButton octo-table-cell__expand "
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down"
+        />
       </button>
       <span
         class="Label propColorBrown "
@@ -346,18 +316,12 @@ exports[`should match snapshot, no groups 1`] = `
       style="width: 100px;"
     >
       <button
-        class="IconButton"
+        class="IconButton octo-table-cell__expand "
         type="button"
       >
-        <svg
-          class="DisclosureTriangleIcon Icon"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <polygon
-            points="37,35 37,65 63,50"
-          />
-        </svg>
+        <i
+          class="CompassIcon icon-menu-down"
+        />
       </button>
       <span
         class="Label empty "

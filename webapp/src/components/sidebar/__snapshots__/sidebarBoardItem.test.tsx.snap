@@ -9,7 +9,7 @@ exports[`components/sidebarBoardItem renders default icon if no custom icon set 
       class="octo-sidebar-icon"
     >
       <i
-        class="CompassIcon icon-product-boards undefined"
+        class="CompassIcon icon-product-boards"
       />
     </div>
     <div
