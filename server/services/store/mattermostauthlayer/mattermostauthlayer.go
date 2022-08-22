@@ -849,17 +849,25 @@ func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Cha
 	return channel, nil
 }
 
-func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
+func (s *MattermostAuthLayer) getBoardsBotID() (string, error) {
 	if boardsBotID == "" {
 		var err error
 		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
-		if err != nil {
-			return err
-		}
+		s.logger.Error("failed to ensure boards bot", mlog.Err(err))
+		return "", err
+	}
+	return boardsBotID, nil
+}
+
+func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
+
+	botID, err := s.getBoardsBotID()
+	if err != nil {
+		return err
 	}
 
 	for _, receipt := range receipts {
-		channel, err := s.servicesAPI.GetDirectChannel(boardsBotID, receipt)
+		channel, err := s.servicesAPI.GetDirectChannel(botID, receipt)
 		if err != nil {
 			s.logger.Error(
 				"failed to get DM channel between system bot and user for receipt",
@@ -883,23 +891,19 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 }
 
 func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) error {
-	if boardsBotID == "" {
-		var err error
-		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
-		if err != nil {
-			return err
-		}
+	botID, err := s.getBoardsBotID()
+	if err != nil {
+		return err
 	}
 
 	post := &mmModel.Post{
 		Message:   message,
-		UserId:    boardsBotID,
+		UserId:    botID,
 		ChannelId: channelID,
 		Type:      postType,
 	}
 
-	var err error
-	if _, err = s.servicesAPI.CreatePost(post); err != nil {
+	if _, err := s.servicesAPI.CreatePost(post); err != nil {
 		s.logger.Error(
 			"failed to send message to receipt from PostMessage",
 			mlog.Err(err),
