@@ -10,6 +10,7 @@ import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -30,7 +31,6 @@ import {
 
 import {getCurrentCard} from '../../store/cards'
 import {Utils} from '../../utils'
-import Update from '../../widgets/icons/update'
 
 import { TOUR_SIDEBAR, SidebarTourSteps, TOUR_BOARD, FINISHED } from '../../components/onboardingTour/index'
 import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -235,15 +235,15 @@ const SidebarCategory = (props: Props) => {
                             position='auto'
                             parentRef={menuWrapperRef}
                         >
-                            <Menu.Text
-                                id='createNewCategory'
-                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                icon={<CreateNewFolder/>}
-                                onClick={handleCreateNewCategory}
-                            />
                             {
                                 props.categoryBoards.id !== '' &&
                                 <React.Fragment>
+                                    <Menu.Text
+                                        id='updateCategory'
+                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
+                                        icon={<CompassIcon icon='pencil-outline'/>}
+                                        onClick={handleUpdateCategory}
+                                    />
                                     <Menu.Text
                                         id='deleteCategory'
                                         className='text-danger'
@@ -251,11 +251,12 @@ const SidebarCategory = (props: Props) => {
                                         icon={<DeleteIcon/>}
                                         onClick={() => setShowDeleteCategoryDialog(true)}
                                     />
+                                    <Menu.Separator/>
                                     <Menu.Text
-                                        id='updateCategory'
-                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
-                                        icon={<Update/>}
-                                        onClick={handleUpdateCategory}
+                                        id='createNewCategory'
+                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                        icon={<CreateNewFolder/>}
+                                        onClick={handleCreateNewCategory}
                                     />
                                 </React.Fragment>
                             }

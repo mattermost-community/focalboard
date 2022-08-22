@@ -235,20 +235,6 @@ const SidebarBoardItem = (props: Props) => {
                             position='auto'
                             parentRef={boardItemRef}
                         >
-                            <BoardPermissionGate
-                                boardId={board.id}
-                                permissions={[Permission.DeleteBoard]}
-                            >
-                                <Menu.Text
-                                    key={`deleteBlock-${board.id}`}
-                                    id='deleteBlock'
-                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => {
-                                        props.onDeleteRequest(board)
-                                    }}
-                                />
-                            </BoardPermissionGate>
                             <Menu.SubMenu
                                 key={`moveBlock-${board.id}`}
                                 id='moveBlock'
@@ -259,6 +245,7 @@ const SidebarBoardItem = (props: Props) => {
                             >
                                 {generateMoveToCategoryOptions(board.id)}
                             </Menu.SubMenu>
+                            <Menu.Separator/>
                             <Menu.Text
                                 id='duplicateBoard'
                                 name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
@@ -271,12 +258,28 @@ const SidebarBoardItem = (props: Props) => {
                                 icon={<AddIcon/>}
                                 onClick={() => handleDuplicateBoard(true)}
                             />
+                            <Menu.Separator/>
                             <Menu.Text
                                 id='hideBoard'
                                 name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
                                 icon={<CloseIcon/>}
                                 onClick={() => handleHideBoard()}
                             />
+                            <BoardPermissionGate
+                                boardId={board.id}
+                                permissions={[Permission.DeleteBoard]}
+                            >
+                                <Menu.Text
+                                    key={`deleteBlock-${board.id}`}
+                                    id='deleteBlock'
+                                    className='text-danger'
+                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
+                                    icon={<DeleteIcon/>}
+                                    onClick={() => {
+                                        props.onDeleteRequest(board)
+                                    }}
+                                />
+                            </BoardPermissionGate>
                         </Menu>
                     </MenuWrapper>
                 </div>
