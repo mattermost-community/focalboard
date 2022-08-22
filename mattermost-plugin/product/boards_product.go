@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/app"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
@@ -196,6 +197,8 @@ func (bp *boardsProduct) Start() error {
 	if err != nil {
 		return fmt.Errorf("failed to create Boards service: %w", err)
 	}
+
+	model.LogServerInfo(bp.logger)
 
 	bp.boardsApp = boardsApp
 	if err := bp.boardsApp.Start(); err != nil {
