@@ -58,13 +58,15 @@ const Kanban = (props: Props) => {
     const currentView = useAppSelector(getCurrentView)
     const cardTemplates: Card[] = useAppSelector(getCurrentBoardTemplates)
     const {board, activeView, cards, groupByProperty, visibleGroups, hiddenGroups, hiddenCardsCount} = props
-    const [defaultTemplateID, setDefaultTemplateID] = useState<string>()
+    const [defaultTemplateID, setDefaultTemplateID] = useState('')
 
     useEffect(() => {
-        if(currentView && currentView.fields && currentView.fields.defaultTemplateId) {
-            if(cardTemplates.find(ct => ct.id === currentView.fields.defaultTemplateId)) {
-                setDefaultTemplateID(currentView.fields.defaultTemplateId)
-            }
+        if(currentView.fields && currentView.fields.defaultTemplateId) {
+            cardTemplates.forEach((cardTemplate) => {
+                if(cardTemplate.id === currentView.fields.defaultTemplateId) {
+                    setDefaultTemplateID(currentView.fields.defaultTemplateId)
+                }
+            })
         }
     }, [currentView, currentView.fields.defaultTemplateId])
 
@@ -308,7 +310,7 @@ const Kanban = (props: Props) => {
                             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                                 <Button
                                     onClick={() => {
-                                        if(defaultTemplateID) {
+                                        if(defaultTemplateID !== '') {
                                             props.addCardFromTemplate(defaultTemplateID, group.option.id)
                                         } else {
                                             props.addCard(group.option.id, true)
