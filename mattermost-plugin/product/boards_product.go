@@ -180,6 +180,12 @@ func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (a
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.systemService = systemService
+		case app.PreferencesKey:
+			preferencesService, ok := service.(product.PreferencesService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.preferencesService = preferencesService
 		case app.HooksKey: // not needed
 		}
 	}
