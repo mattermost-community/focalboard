@@ -7,7 +7,7 @@ import createMentionPlugin from '@draft-js-plugins/mention'
 import '@draft-js-plugins/mention/lib/plugin.css'
 import {ContentState, DraftHandleValue, EditorState, getDefaultKeyBinding} from 'draft-js'
 import React, {
-    ReactElement, useCallback,
+    ReactElement, useCallback, useEffect,
     useMemo, useRef,
     useState,
 } from 'react'
