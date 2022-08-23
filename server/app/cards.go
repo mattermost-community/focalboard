@@ -10,7 +10,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
-func (a *App) CreateCard(card *model.Card, boardID string, userID string, disableNotifications bool) (*model.Card, error) {
+func (a *App) CreateCard(card *model.Card, boardID string, userID string, disableNotify bool) (*model.Card, error) {
 	// Convert the card struct to a block and insert the block.
 	now := utils.GetMillis()
 
@@ -24,7 +24,7 @@ func (a *App) CreateCard(card *model.Card, boardID string, userID string, disabl
 
 	block := model.Card2Block(card)
 
-	newBlocks, err := a.InsertBlocks([]model.Block{*block}, userID, !disableNotifications)
+	newBlocks, err := a.InsertBlocksAndNotify([]model.Block{*block}, userID, disableNotify)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create card: %w", err)
 	}
@@ -37,13 +37,13 @@ func (a *App) CreateCard(card *model.Card, boardID string, userID string, disabl
 	return newCard, nil
 }
 
-func (a *App) PatchCard(cardPatch *model.CardPatch, cardID string, userID string, disableNotifications bool) (*model.Card, error) {
+func (a *App) PatchCard(cardPatch *model.CardPatch, cardID string, userID string, disableNotify bool) (*model.Card, error) {
 	blockPatch, err := model.CardPatch2BlockPatch(cardPatch)
 	if err != nil {
 		return nil, err
 	}
 
-	newBlock, err := a.PatchBlock(cardID, blockPatch, userID, !disableNotifications)
+	newBlock, err := a.PatchBlockAndNotify(cardID, blockPatch, userID, disableNotify)
 	if err != nil {
 		return nil, fmt.Errorf("cannot patch card %s: %w", cardID, err)
 	}
