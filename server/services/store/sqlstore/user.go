@@ -291,7 +291,7 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 
 func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
 	query := s.getQueryBuilder(db).
-		Insert("Preferences").
+		Insert(s.tablePrefix+"preferences").
 		Columns("UserId", "Category", "Name", "Value").
 		Values(preference.UserId, preference.Category, preference.Name, preference.Value)
 
@@ -314,7 +314,7 @@ func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preferen
 
 func (s *SQLStore) deleteUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
 	query := s.getQueryBuilder(db).
-		Delete("Preferences").
+		Delete(s.tablePrefix + "preferences").
 		Where(sq.Eq{"UserId": preference.UserId}).
 		Where(sq.Eq{"Category": preference.Category}).
 		Where(sq.Eq{"Name": preference.Name})
