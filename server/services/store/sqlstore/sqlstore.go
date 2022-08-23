@@ -17,7 +17,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var InvalidMariaDBErr = errors.New("MariaDB database is not supported")
+var ErrInvalidMariaDB = errors.New("MariaDB database is not supported")
 
 // SQLStore is a SQL database.
 type SQLStore struct {
@@ -58,7 +58,7 @@ func New(params Params) (*SQLStore, error) {
 	}
 
 	if store.IsMariaDB() {
-		return nil, InvalidMariaDBErr
+		return nil, ErrInvalidMariaDB
 	}
 
 	var err error
