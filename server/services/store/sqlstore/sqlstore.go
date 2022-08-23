@@ -2,8 +2,10 @@ package sqlstore
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"net/url"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -14,6 +16,8 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+var InvalidMariaDBErr = errors.New("MariaDB database is not supported")
 
 // SQLStore is a SQL database.
 type SQLStore struct {
@@ -53,6 +57,10 @@ func New(params Params) (*SQLStore, error) {
 		servicesAPI:      params.ServicesAPI,
 	}
 
+	if store.IsMariaDB() {
+		return nil, InvalidMariaDBErr
+	}
+
 	var err error
 	store.isBinaryParam, err = store.computeBinaryParam()
 	if err != nil {
@@ -68,6 +76,22 @@ func New(params Params) (*SQLStore, error) {
 		}
 	}
 	return store, nil
+}
+
+func (s *SQLStore) IsMariaDB() bool {
+	if s.dbType != model.MysqlDBType {
+		return false
+	}
+
+	row := s.db.QueryRow("SELECT Version()")
+
+	var version string
+	if err := row.Scan(&version); err != nil {
+		s.logger.Error("error checking database version", mlog.Err(err))
+		return false
+	}
+
+	return strings.Contains(strings.ToLower(version), "mariadb")
 }
 
 // computeBinaryParam returns whether the data source uses binary_parameters
