@@ -34,7 +34,7 @@ func TestGetBlocks(t *testing.T) {
 			Type:     model.TypeCard,
 		},
 	}
-	newBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+	newBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks, false)
 	require.NoError(t, resp.Error)
 	require.Len(t, newBlocks, 2)
 	blockID1 := newBlocks[0].ID
@@ -73,7 +73,7 @@ func TestPostBlock(t *testing.T) {
 			Title:    "New title",
 		}
 
-		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block}, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 		blockID1 = newBlocks[0].ID
@@ -109,7 +109,7 @@ func TestPostBlock(t *testing.T) {
 			},
 		}
 
-		newBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+		newBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 2)
 		blockID2 = newBlocks[0].ID
@@ -140,7 +140,7 @@ func TestPostBlock(t *testing.T) {
 			Title:    "Updated title",
 		}
 
-		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block}, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 		blockID4 := newBlocks[0].ID
@@ -180,7 +180,7 @@ func TestPatchBlock(t *testing.T) {
 		Fields:   map[string]interface{}{"test": "test value", "test2": "test value 2"},
 	}
 
-	newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block})
+	newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block}, false)
 	th.CheckOK(resp)
 	require.Len(t, newBlocks, 1)
 	blockID := newBlocks[0].ID
@@ -191,7 +191,7 @@ func TestPatchBlock(t *testing.T) {
 			Title: &newTitle,
 		}
 
-		_, resp := th.Client.PatchBlock(board.ID, blockID, blockPatch)
+		_, resp := th.Client.PatchBlock(board.ID, blockID, blockPatch, false)
 		require.NoError(t, resp.Error)
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
@@ -216,7 +216,7 @@ func TestPatchBlock(t *testing.T) {
 			},
 		}
 
-		_, resp := th.Client.PatchBlock(board.ID, blockID, blockPatch)
+		_, resp := th.Client.PatchBlock(board.ID, blockID, blockPatch, false)
 		require.NoError(t, resp.Error)
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
@@ -239,7 +239,7 @@ func TestPatchBlock(t *testing.T) {
 			DeletedFields: []string{"test", "test3", "test100"},
 		}
 
-		_, resp := th.Client.PatchBlock(board.ID, blockID, blockPatch)
+		_, resp := th.Client.PatchBlock(board.ID, blockID, blockPatch, false)
 		require.NoError(t, resp.Error)
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
@@ -278,7 +278,7 @@ func TestDeleteBlock(t *testing.T) {
 			Title:    "New title",
 		}
 
-		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block}, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 		require.NotZero(t, newBlocks[0].ID)
@@ -301,7 +301,7 @@ func TestDeleteBlock(t *testing.T) {
 		// id,insert_at on block history
 		time.Sleep(10 * time.Millisecond)
 
-		_, resp := th.Client.DeleteBlock(board.ID, blockID)
+		_, resp := th.Client.DeleteBlock(board.ID, blockID, false)
 		require.NoError(t, resp.Error)
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
@@ -332,7 +332,7 @@ func TestUndeleteBlock(t *testing.T) {
 			Title:    "New title",
 		}
 
-		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block})
+		newBlocks, resp := th.Client.InsertBlocks(board.ID, []model.Block{block}, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 		require.NotZero(t, newBlocks[0].ID)
@@ -355,7 +355,7 @@ func TestUndeleteBlock(t *testing.T) {
 		// id,insert_at on block history
 		time.Sleep(10 * time.Millisecond)
 
-		_, resp := th.Client.DeleteBlock(board.ID, blockID)
+		_, resp := th.Client.DeleteBlock(board.ID, blockID, false)
 		require.NoError(t, resp.Error)
 
 		blocks, resp := th.Client.GetBlocksForBoard(board.ID)
@@ -381,7 +381,7 @@ func TestUndeleteBlock(t *testing.T) {
 		// id,insert_at on block history
 		time.Sleep(10 * time.Millisecond)
 
-		_, resp := th.Client.DeleteBlock(board.ID, blockID)
+		_, resp := th.Client.DeleteBlock(board.ID, blockID, false)
 		require.NoError(t, resp.Error)
 
 		_, resp = th.Client2.UndeleteBlock(board.ID, blockID)

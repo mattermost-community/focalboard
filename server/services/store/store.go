@@ -154,6 +154,7 @@ type Store interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
+	PostMessage(message, postType, channelID string) error
 	SendMessage(message, postType string, receipts []string) error
 
 	// Insights

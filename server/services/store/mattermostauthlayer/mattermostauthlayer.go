@@ -18,10 +18,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var systemsBot = &mmModel.Bot{
-	Username:    mmModel.BotSystemBotUsername,
-	DisplayName: "System",
-}
+var boardsBotID string
 
 // servicesAPI is the interface required my the MattermostAuthLayer to interact with
 // the mattermost-server. You can use plugin-api or product-api adapter implementations.
@@ -852,18 +849,18 @@ func (s *MattermostAuthLayer) GetChannel(teamID, channelID string) (*mmModel.Cha
 	return channel, nil
 }
 
-func (s *MattermostAuthLayer) getSystemBotID() (string, error) {
-	botID, err := s.servicesAPI.EnsureBot(systemsBot)
-	if err != nil {
-		s.logger.Error("failed to ensure system bot", mlog.String("username", systemsBot.Username), mlog.Err(err))
+func (s *MattermostAuthLayer) getBoardsBotID() (string, error) {
+	if boardsBotID == "" {
+		var err error
+		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
+		s.logger.Error("failed to ensure boards bot", mlog.Err(err))
 		return "", err
 	}
-
-	return botID, nil
+	return boardsBotID, nil
 }
 
 func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []string) error {
-	botID, err := s.getSystemBotID()
+	botID, err := s.getBoardsBotID()
 	if err != nil {
 		return err
 	}
@@ -880,14 +877,7 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 			continue
 		}
 
-		post := &mmModel.Post{
-			Message:   message,
-			UserId:    botID,
-			ChannelId: channel.Id,
-			Type:      postType,
-		}
-
-		if _, err := s.servicesAPI.CreatePost(post); err != nil {
+		if err := s.PostMessage(message, postType, channel.Id); err != nil {
 			s.logger.Error(
 				"failed to send message to receipt from SendMessage",
 				mlog.String("receipt", receipt),
@@ -896,7 +886,28 @@ func (s *MattermostAuthLayer) SendMessage(message, postType string, receipts []s
 			continue
 		}
 	}
+	return nil
+}
 
+func (s *MattermostAuthLayer) PostMessage(message, postType, channelID string) error {
+	botID, err := s.getBoardsBotID()
+	if err != nil {
+		return err
+	}
+
+	post := &mmModel.Post{
+		Message:   message,
+		UserId:    botID,
+		ChannelId: channelID,
+		Type:      postType,
+	}
+
+	if _, err := s.servicesAPI.CreatePost(post); err != nil {
+		s.logger.Error(
+			"failed to send message to receipt from PostMessage",
+			mlog.Err(err),
+		)
+	}
 	return nil
 }
 
