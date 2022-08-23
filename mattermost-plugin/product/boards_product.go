@@ -70,7 +70,7 @@ type boardsProduct struct {
 	boardsApp *boards.BoardsApp
 }
 
-//nolint:gocyclo
+//nolint:gocyclo,exhaustive
 func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
 	boards := &boardsProduct{}
 
