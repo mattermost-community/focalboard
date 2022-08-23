@@ -31,7 +31,7 @@ board.id = boardId
 board.teamId = 'team-id'
 board.channelId = 'channel_1'
 
-describe('src/components/shareBoard/teamPermissionsRow', () => {
+describe('src/components/shareBoard/userPermissionsRow', () => {
     const me: IUser = {
         id: 'user-id-1',
         username: 'username_1',
