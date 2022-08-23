@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/store"
 
@@ -295,13 +296,14 @@ func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preferen
 		Columns("UserId", "Category", "Name", "Value").
 		Values(preference.UserId, preference.Category, preference.Name, preference.Value)
 
-	if s.dbType == model.MysqlDBType {
+	switch s.dbType {
+	case model.MysqlDBType:
 		query = query.SuffixExpr(sq.Expr("ON DUPLICATE KEY UPDATE Value = ?", preference.Value))
-	} else if s.dbType == model.PostgresDBType {
+	case model.PostgresDBType:
 		query = query.SuffixExpr(sq.Expr("ON CONFLICT (userid, category, name) DO UPDATE SET Value = ?", preference.Value))
-	} else if s.dbType == model.SqliteDBType {
+	case model.SqliteDBType:
 		query = query.SuffixExpr(sq.Expr(" on conflict(userid, category, name) do update set value = excluded.value"))
-	} else {
+	default:
 		return store.NewErrNotImplemented("failed to update preference because of missing driver")
 	}
 

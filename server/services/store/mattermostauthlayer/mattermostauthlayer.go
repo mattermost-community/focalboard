@@ -134,31 +134,6 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	//user, err := s.servicesAPI.GetUserByID(userID)
-	//if err != nil {
-	//	s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
-	//	return err
-	//}
-	//
-	//props := user.Props
-	//
-	//for _, key := range patch.DeletedFields {
-	//	delete(props, key)
-	//}
-	//
-	//for key, value := range patch.UpdatedFields {
-	//	props[key] = value
-	//}
-	//
-	//user.Props = props
-	//
-	//if _, err := s.servicesAPI.UpdateUser(user); err != nil {
-	//	s.logger.Error("failed to update user", mlog.String("userID", userID), mlog.Err(err))
-	//	return err
-	//}
-	//
-	//return nil
-
 	if len(patch.UpdatedFields) > 0 {
 		updatedPreferences := []mmModel.Preference{}
 		for key, value := range patch.UpdatedFields {

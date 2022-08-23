@@ -176,12 +176,16 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	err := store.CreateUser(user)
 	require.NoError(t, err)
 
+	key1 := "new_key_1"
+	key2 := "new_key_2"
+	key3 := "new_key_3"
+
 	// Only update props
 	patch := model.UserPropPatch{
 		UpdatedFields: map[string]string{
-			"new_key_1": "new_value_1",
-			"new_key_2": "new_value_2",
-			"new_key_3": "new_value_3",
+			key1: "new_value_1",
+			key2: "new_value_2",
+			key3: "new_value_3",
 		},
 	}
 
@@ -192,11 +196,12 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	require.Equal(t, 3, len(userPreferences))
 
 	for _, preference := range userPreferences {
-		if preference.Name == "new_key_1" {
+		switch preference.Name {
+		case key1:
 			require.Equal(t, "new_value_1", preference.Value)
-		} else if preference.Name == "new_key_2" {
+		case key2:
 			require.Equal(t, "new_value_2", preference.Value)
-		} else if preference.Name == "new_key_3" {
+		case key3:
 			require.Equal(t, "new_value_3", preference.Value)
 		}
 	}
@@ -204,7 +209,7 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	// Delete a prop
 	patch = model.UserPropPatch{
 		DeletedFields: []string{
-			"new_key_1",
+			key1,
 		},
 	}
 
@@ -214,11 +219,12 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 
 	for _, preference := range userPreferences {
-		if preference.Name == "new_key_1" {
+		switch preference.Name {
+		case key1:
 			t.Errorf("new_key_1 shouldn't exist in user preference as we just deleted it")
-		} else if preference.Name == "new_key_2" {
+		case key2:
 			require.Equal(t, "new_value_2", preference.Value)
-		} else if preference.Name == "new_key_3" {
+		case key3:
 			require.Equal(t, "new_value_3", preference.Value)
 		}
 	}
@@ -226,10 +232,10 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	// update and delete together
 	patch = model.UserPropPatch{
 		UpdatedFields: map[string]string{
-			"new_key_3": "new_value_3_new_again",
+			key3: "new_value_3_new_again",
 		},
 		DeletedFields: []string{
-			"new_key_2",
+			key2,
 		},
 	}
 	err = store.PatchUserProps(user.ID, patch)
@@ -238,11 +244,12 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 
 	for _, preference := range userPreferences {
-		if preference.Name == "new_key_1" {
+		switch preference.Name {
+		case key1:
 			t.Errorf("new_key_1 shouldn't exist in user preference as we just deleted it")
-		} else if preference.Name == "new_key_2" {
+		case key2:
 			t.Errorf("new_key_2 shouldn't exist in user preference as we just deleted it")
-		} else if preference.Name == "new_key_3" {
+		case key3:
 			require.Equal(t, "new_value_3_new_again", preference.Value)
 		}
 	}
