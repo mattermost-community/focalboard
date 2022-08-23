@@ -8,9 +8,10 @@
     INSERT INTO preferences (userid, category, name, value) SELECT id, 'focalboard', 'lastWelcomeVersion', replace((props->'focalboard_lastWelcomeVersion')::varchar, '"', '') FROM users WHERE props ? 'focalboard_lastWelcomeVersion';
 
     UPDATE users SET props = (props - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion');
-{{end}}
 
-{{if .mysql}}
+{{else}}
+    {{- /* Surprisingly SQLite and MySQL have same JSON functions and syntax! */ -}}
+
     INSERT INTO preferences (userid, category, name, value) SELECT id, 'focalboard', 'welcomePageViewed', replace(JSON_EXTRACT(props, '$.focalboard_welcomePageViewed'), '"', '') FROM users WHERE JSON_EXTRACT(props, '$.focalboard_welcomePageViewed') IS NOT NULL;
     INSERT INTO preferences (userid, category, name, value) SELECT id, 'focalboard', 'hiddenBoardIDs', replace(replace(replace(JSON_EXTRACT(props, '$.hiddenBoardIDs'), '"[', '['), ']"', ']'), '\\"', '"') FROM users WHERE JSON_EXTRACT(props, '$.hiddenBoardIDs') IS NOT NULL;
     INSERT INTO preferences (userid, category, name, value) SELECT id, 'focalboard', 'tourCategory', replace(JSON_EXTRACT(props, '$.focalboard_tourCategory'), '"', '') FROM users WHERE JSON_EXTRACT(props, '$.focalboard_tourCategory') IS NOT NULL;
