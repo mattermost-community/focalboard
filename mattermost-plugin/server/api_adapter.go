@@ -209,30 +209,6 @@ func (a *pluginAPIAdapter) GetDiagnosticID() string {
 	return a.api.GetDiagnosticId()
 }
 
-func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) ([]mm_model.Preference, error) {
-	preferences, appErr := a.api.GetPreferencesForUser(userID)
-	if appErr != nil {
-		return nil, normalizeAppErr(appErr)
-	}
-
-	boardsPreferences := []mm_model.Preference{}
-	for _, preference := range preferences {
-		if preference.Category == "focalboard" {
-			boardsPreferences = append(boardsPreferences, preference)
-		}
-	}
-
-	return boardsPreferences, nil
-}
-
-func (a *pluginAPIAdapter) DeletePreferencesForUser(userID string, preferences []mm_model.Preference) error {
-	return normalizeAppErr(a.api.DeletePreferencesForUser(userID, preferences))
-}
-
-func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences []mm_model.Preference) error {
-	return normalizeAppErr(a.api.UpdatePreferencesForUser(userID, preferences))
-}
-
 //
 // Router service.
 //

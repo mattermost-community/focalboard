@@ -4,10 +4,12 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mmStore "github.com/mattermost/mattermost-server/v6/store"
 
 	sq "github.com/Masterminds/squirrel"
 
@@ -39,9 +41,6 @@ type servicesAPI interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	EnsureBot(bot *mmModel.Bot) (string, error)
 	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
-	GetPreferencesForUser(userID string) ([]mmModel.Preference, error)
-	DeletePreferencesForUser(userID string, preferences []mmModel.Preference) error
-	UpdatePreferencesForUser(userID string, preferences []mmModel.Preference) error
 }
 
 // Store represents the abstraction of the data storage.
@@ -133,9 +132,44 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
+func (s *MattermostAuthLayer) updateUserProps(preference mmModel.Preference) error {
+	query := s.getQueryBuilder().
+		Insert("preferences").
+		Columns("UserId", "Category", "Name", "Value").
+		Values(preference.UserId, preference.Category, preference.Name, preference.Value)
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		query = query.SuffixExpr(sq.Expr("ON DUPLICATE KEY UPDATE Value = ?", preference.Value))
+	case model.PostgresDBType:
+		query = query.SuffixExpr(sq.Expr("ON CONFLICT (userid, category, name) DO UPDATE SET Value = ?", preference.Value))
+	default:
+		return mmStore.NewErrNotImplemented("failed to update preference because of missing driver")
+	}
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to upsert user preference in database: name: %s value: %s error: %w", preference.Name, preference.Value, err)
+	}
+
+	return nil
+}
+
+func (s *MattermostAuthLayer) deleteUserProps(preference mmModel.Preference) error {
+	query := s.getQueryBuilder().
+		Delete("preferences").
+		Where(sq.Eq{"UserId": preference.UserId}).
+		Where(sq.Eq{"Category": preference.Category}).
+		Where(sq.Eq{"Name": preference.Name})
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to delete user preference from database: %w", err)
+	}
+
+	return nil
+}
+
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
 	if len(patch.UpdatedFields) > 0 {
-		updatedPreferences := []mmModel.Preference{}
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
@@ -144,17 +178,14 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 				Value:    value,
 			}
 
-			updatedPreferences = append(updatedPreferences, preference)
-		}
-
-		if err := s.servicesAPI.UpdatePreferencesForUser(userID, updatedPreferences); err != nil {
-			s.logger.Error("failed to update user preferences", mlog.String("user_id", userID), mlog.Err(err))
-			return err
+			if err := s.updateUserProps(preference); err != nil {
+				s.logger.Error("failed to update user preference", mlog.String("user_id", userID), mlog.Err(err))
+				return err
+			}
 		}
 	}
 
 	if len(patch.DeletedFields) > 0 {
-		deletedPreferences := []mmModel.Preference{}
 		for _, key := range patch.DeletedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
@@ -162,12 +193,10 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 				Name:     key,
 			}
 
-			deletedPreferences = append(deletedPreferences, preference)
-		}
-
-		if err := s.servicesAPI.DeletePreferencesForUser(userID, deletedPreferences); err != nil {
-			s.logger.Error("failed to delete user preferences", mlog.String("user_id", userID), mlog.Err(err))
-			return err
+			if err := s.deleteUserProps(preference); err != nil {
+				s.logger.Error("failed to delete user preference", mlog.String("user_id", userID), mlog.Err(err))
+				return err
+			}
 		}
 	}
 
@@ -175,7 +204,52 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 }
 
 func (s *MattermostAuthLayer) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
-	return s.servicesAPI.GetPreferencesForUser(userID)
+	query := s.getQueryBuilder().
+		Select("userid", "category", "name", "value").
+		From("preferences").
+		Where(sq.Eq{
+			"userid":   userID,
+			"category": "focalboard",
+		})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("failed to fetch user preferences", mlog.String("user_id", userID), mlog.Err(err))
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	preferences, err := s.preferencesFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return preferences, nil
+}
+
+func (s *MattermostAuthLayer) preferencesFromRows(rows *sql.Rows) ([]mmModel.Preference, error) {
+	preferences := []mmModel.Preference{}
+
+	for rows.Next() {
+		var preference mmModel.Preference
+
+		err := rows.Scan(
+			&preference.UserId,
+			&preference.Category,
+			&preference.Name,
+			&preference.Value,
+		)
+
+		if err != nil {
+			s.logger.Error("failed to scan row for user preference", mlog.Err(err))
+			return nil, err
+		}
+
+		preferences = append(preferences, preference)
+	}
+
+	return preferences, nil
 }
 
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
