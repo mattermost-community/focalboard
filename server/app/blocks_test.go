@@ -287,7 +287,7 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
 		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
 		require.NoError(t, err)
 	})
 
@@ -297,7 +297,7 @@ func TestInsertBlocks(t *testing.T) {
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
 		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(blockError{"error"})
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
 		require.Error(t, err, "error")
 	})
 
@@ -329,7 +329,7 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}}, nil)
 
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
 		require.NoError(t, err)
 	})
 
@@ -359,7 +359,7 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}, {}}, nil)
 
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1", false)
+		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
 		require.Error(t, err)
 	})
 
@@ -400,7 +400,7 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil).Times(2)
 		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}}, nil).Times(2)
 
-		_, err := th.App.InsertBlocks([]model.Block{view1, view2}, "user-id-1", false)
+		_, err := th.App.InsertBlocks([]model.Block{view1, view2}, "user-id-1")
 		require.Error(t, err)
 	})
 }

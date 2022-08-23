@@ -450,7 +450,7 @@ func TestGetAllBlocksForBoard(t *testing.T) {
 			},
 		}
 
-		insertedBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+		insertedBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, insertedBlocks, len(newBlocks))
 
@@ -1984,7 +1984,7 @@ func TestDuplicateBoard(t *testing.T) {
 			},
 		}
 
-		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 
@@ -2069,7 +2069,7 @@ func TestDuplicateBoard(t *testing.T) {
 			},
 		}
 
-		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 

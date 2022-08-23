@@ -38,9 +38,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Manual
+                <div
+                  class="menu-name"
+                >
+                  Manual
+                </div>
               </div>
               <div
                 class="noicon"
@@ -59,9 +63,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Revert
+                <div
+                  class="menu-name"
+                >
+                  Revert
+                </div>
               </div>
               <div
                 class="noicon"
@@ -85,9 +93,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Name
+                <div
+                  class="menu-name"
+                >
+                  Name
+                </div>
               </div>
               <div
                 class="noicon"
@@ -108,9 +120,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Status
+                <div
+                  class="menu-name"
+                >
+                  Status
+                </div>
               </div>
               <div
                 class="noicon"
@@ -131,9 +147,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Property 1
+                <div
+                  class="menu-name"
+                >
+                  Property 1
+                </div>
               </div>
               <svg
                 class="SortDownIcon Icon"
@@ -163,9 +183,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Property 2
+                <div
+                  class="menu-name"
+                >
+                  Property 2
+                </div>
               </div>
               <div
                 class="noicon"
@@ -186,9 +210,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Property 3
+                <div
+                  class="menu-name"
+                >
+                  Property 3
+                </div>
               </div>
               <div
                 class="noicon"
@@ -215,9 +243,13 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
             </div>
             <div
               class="noicon"
