@@ -359,9 +359,13 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Delete
+                    <div
+                      class="menu-name"
+                    >
+                      Delete
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -388,9 +392,13 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -484,9 +492,13 @@ exports[`components/cardDetail/comment return guest comment and delete comment 1
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Delete
+                    <div
+                      class="menu-name"
+                    >
+                      Delete
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -513,9 +525,13 @@ exports[`components/cardDetail/comment return guest comment and delete comment 1
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
                 </div>
                 <div
                   class="noicon"
