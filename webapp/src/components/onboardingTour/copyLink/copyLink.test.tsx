@@ -19,12 +19,12 @@ describe('components/onboardingTour/addComments/CopyLinkTourStep', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: true,
-                    focalboard_tourCategory: 'board',
-                    focalboard_onboardingTourStep: '1',
-                },
             },
+            myConfig: {
+                onboardingTourStarted: true,
+                tourCategory: 'board',
+                onboardingTourStep: '1',
+            }
         },
         boards: {
             boards: {

@@ -125,15 +125,4 @@ exports[`components/onboardingTour/addComments/CopyLinkTourStep after hover 1`] 
 </div>
 `;
 
-exports[`components/onboardingTour/addComments/CopyLinkTourStep before hover 1`] = `
-<div>
-  <div
-    aria-expanded="true"
-    class="tutorial-tour-tip__pulsating-dot-ctr CopyLinkTourStep"
-  >
-    <span
-      class="pulsating_dot"
-    />
-  </div>
-</div>
-`;
+exports[`components/onboardingTour/addComments/CopyLinkTourStep before hover 1`] = `<div />`;

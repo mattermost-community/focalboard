@@ -108,10 +108,10 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
             users: {
                 me: {
                     id: 'user-id',
-                    props: {
-                        focalboard_onboardingTourStarted: false,
-                    },
                 },
+                myConfig: {
+                    onboardingTourStarted: false,
+                }
             },
             cards: {
                 templates: [],

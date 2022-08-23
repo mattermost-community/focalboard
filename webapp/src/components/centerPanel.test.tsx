@@ -81,9 +81,9 @@ describe('components/centerPanel', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: false,
-                },
+            },
+            myConfig: {
+                onboardingTourStarted: false,
             },
             workspaceUsers: [
                 {username: 'username_1'},
@@ -585,9 +585,9 @@ describe('components/centerPanel', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: false,
-                },
+            },
+            myConfig: {
+                onboardingTourStarted: false,
             },
             workspaceUsers: [
                 {username: 'username_1'},

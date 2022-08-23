@@ -118,7 +118,7 @@ export const {reducer} = usersSlice
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
 export const getBoardUsers = (state: RootState): {[key: string]: IUser} => state.users.boardUsers
-export const getMyConfig = (state: RootState): Record<string, UserPreference> => state.users.myConfig
+export const getMyConfig = (state: RootState): Record<string, UserPreference> => state.users.myConfig || {}
 
 export const getBoardUsersList = createSelector(
     getBoardUsers,

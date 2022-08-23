@@ -19,12 +19,12 @@ describe('components/onboardingTour/addComments/AddPropertiesTourStep', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: true,
-                    focalboard_tourCategory: 'card',
-                    focalboard_onboardingTourStep: '0',
-                },
             },
+            myConfig: {
+                onboardingTourStarted: true,
+                tourCategory: 'card',
+                onboardingTourStep: '0',
+            }
         },
         boards: {
             boards: {

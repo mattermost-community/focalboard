@@ -63,6 +63,11 @@ describe('pages/welcome', () => {
             me: {
                 props: {},
             },
+            myConfig: {
+                welcomePageViewed: '1',
+                onboardingTourStep: '0',
+                tourCategory: 'onboarding',
+            }
         },
     })
 
@@ -139,11 +144,10 @@ describe('pages/welcome', () => {
                 current: {id: 'team_id_1'},
             },
             users: {
-                me: {
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                    },
-                },
+                me: {},
+                myConfig: {
+                    welcomePageViewed: '1',
+                }
             },
         })
 
@@ -174,11 +178,10 @@ describe('pages/welcome', () => {
                 current: {id: 'team_id_1'},
             },
             users: {
-                me: {
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                    },
-                },
+                me: {},
+                myConfig: {
+                    welcomePageViewed: '1',
+                }
             },
         })
         const component = (
@@ -237,13 +240,7 @@ describe('pages/welcome', () => {
 
     test('Welcome page starts tour on clicking Take a tour button', async () => {
         history.replace = jest.fn()
-        const user = {
-            props: {
-                focalboard_welcomePageViewed: '1',
-                focalboard_onboardingTourStep: '0',
-                focalboard_tourCategory: 'onboarding',
-            },
-        } as unknown as IUser
+        const user = {} as unknown as IUser
         mockedOctoClient.getMe.mockResolvedValue(user)
 
         const component = (
@@ -267,13 +264,7 @@ describe('pages/welcome', () => {
 
     test('Welcome page skips tour on clicking no thanks option', async () => {
         history.replace = jest.fn()
-        const user = {
-            props: {
-                focalboard_welcomePageViewed: '1',
-                focalboard_onboardingTourStep: '0',
-                focalboard_tourCategory: 'onboarding',
-            },
-        } as unknown as IUser
+        const user = {} as unknown as IUser
         mockedOctoClient.getMe.mockResolvedValue(user)
 
         const component = (

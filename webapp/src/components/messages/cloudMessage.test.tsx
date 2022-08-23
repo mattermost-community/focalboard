@@ -42,7 +42,7 @@ describe('components/messages/CloudMessage', () => {
             username: 'username_1',
             email: '',
             nickname: '',
-            firstname: '', 
+            firstname: '',
             lastname: '',
             props: {},
             create_at: 0,
@@ -74,11 +74,8 @@ describe('components/messages/CloudMessage', () => {
             username: 'username_1',
             email: '',
             nickname: '',
-            firstname: '', 
+            firstname: '',
             lastname: '',
-            props: {
-                focalboard_cloudMessageCanceled: 'true',
-            },
             create_at: 0,
             update_at: 0,
             is_bot: false,
@@ -87,6 +84,9 @@ describe('components/messages/CloudMessage', () => {
         const state = {
             users: {
                 me,
+                myConfig: {
+                    cloudMessageCanceled: 'true',
+                },
             },
         }
         const store = mockStore(state)
@@ -108,7 +108,7 @@ describe('components/messages/CloudMessage', () => {
             username: 'username_1',
             email: '',
             nickname: '',
-            firstname: '', 
+            firstname: '',
             lastname: '',
             props: {},
             create_at: 0,
@@ -137,7 +137,7 @@ describe('components/messages/CloudMessage', () => {
         userEvent.click(buttonElement)
         expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id-1', {
             updatedFields: {
-                focalboard_cloudMessageCanceled: 'true',
+                cloudMessageCanceled: 'true',
             },
         })
     })
@@ -148,7 +148,7 @@ describe('components/messages/CloudMessage', () => {
             username: 'single-user',
             email: 'single-user',
             nickname: '',
-            firstname: '', 
+            firstname: '',
             lastname: '',
             props: {},
             create_at: 0,

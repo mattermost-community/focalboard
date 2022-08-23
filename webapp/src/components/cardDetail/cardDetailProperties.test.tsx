@@ -74,11 +74,11 @@ describe('components/cardDetail/CardDetailProperties', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: true,
-                    focalboard_tourCategory: 'card',
-                    focalboard_onboardingTourStep: '1',
-                },
+            },
+            myConfig: {
+                onboardingTourStarted: true,
+                tourCategory: 'card',
+                onboardingTourStep: '1',
             },
         },
         teams: {

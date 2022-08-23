@@ -21,7 +21,7 @@ import {
     getOnboardingTourStep,
     patchProps,
 } from '../../../store/users'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../../user'
+import {IUser, UserConfigPatch} from '../../../user'
 import mutator from '../../../mutator'
 import {getCurrentBoard} from '../../../store/boards'
 import {getCurrentCard} from '../../../store/cards'
@@ -69,6 +69,8 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
                 onboardingTourStarted &&
                 onboardingTourCategory === TOUR_BASE &&
                 onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
+
+            console.log(`card.id: ${card.id} isOnboardingBoard: ${isOnboardingBoard} isOnboardingCard: ${isOnboardingCard} onboardingTourStarted: ${onboardingTourStarted} onboardingTourCategory: ${onboardingTourCategory} onboardingTourStep: ${onboardingTourStep}`)
 
             if (!should) {
                 return

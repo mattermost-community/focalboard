@@ -59,6 +59,7 @@ describe('components/cardDetail/cardDetailContents', () => {
                 4: {username: 'f'},
                 5: {username: 'g'},
             },
+
         },
         boards: {
             boards: {

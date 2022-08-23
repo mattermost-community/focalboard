@@ -133,6 +133,17 @@ export function setTheme(theme: Theme | null): Theme {
         document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
         document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
         document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
+    } else {
+        const style = document.documentElement.style
+
+        style.setProperty('--center-channel-bg-rgb', style.getPropertyValue('--center-channel-bg-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--center-channel-color-rgb', style.getPropertyValue('--center-channel-color-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--button-bg-rgb', style.getPropertyValue('--button-bg-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--button-color-rgb', style.getPropertyValue('--button-color-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--sidebar-bg-rgb', style.getPropertyValue('--sidebar-bg-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--sidebar-text-rgb', style.getPropertyValue('--sidebar-text-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--link-color-rgb', style.getPropertyValue('--link-color-rgb') || consolidatedTheme.mainBg)
+        style.setProperty('--sidebar-text-active-border-rgb', style.getPropertyValue('--sidebar-text-active-border-rgb') || consolidatedTheme.mainBg)
     }
 
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)
