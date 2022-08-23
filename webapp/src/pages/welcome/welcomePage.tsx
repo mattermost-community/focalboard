@@ -93,6 +93,18 @@ const WelcomePage = () => {
         history.replace(newPath)
     }
 
+    // It's still possible for a guest to end up at this route/page directly, so
+    // let's mark it as viewed, if necessary, and route them forward
+    if (me?.is_guest) {
+        if (!me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
+            (async() => {
+                await setWelcomePageViewed(me.id)
+            })()
+        }
+        goForward()
+        return null
+    }
+
     if (me?.props && me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
