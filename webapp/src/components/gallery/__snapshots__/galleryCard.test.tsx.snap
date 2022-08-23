@@ -70,9 +70,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -91,9 +95,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -114,9 +122,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -144,9 +156,13 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -219,9 +235,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -240,9 +260,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -263,9 +287,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -293,9 +321,13 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -406,9 +438,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -427,9 +463,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -450,9 +490,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -480,9 +524,13 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -559,9 +607,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -580,9 +632,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -603,9 +659,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -633,9 +693,13 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -878,9 +942,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -899,9 +967,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -922,9 +994,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -952,9 +1028,13 @@ exports[`src/components/gallery/GalleryCard without block content should match s
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"

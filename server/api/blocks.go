@@ -190,7 +190,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	//   type: string
 	// - name: disable_notify
 	//   in: query
-	//   description: Disables notifications (for bulk data inserting)
+	//   description: Disables notifications (for bulk inserting)
 	//   required: false
 	//   type: bool
 	// - name: Body
@@ -303,7 +303,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	newBlocks, err := a.app.InsertBlocks(blocks, session.UserID, !disableNotify)
+	newBlocks, err := a.app.InsertBlocksAndNotify(blocks, session.UserID, disableNotify)
 	if err != nil {
 		if errors.Is(err, app.ErrViewsLimitReached) {
 			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
@@ -350,6 +350,11 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	//   description: ID of block to delete
 	//   required: true
 	//   type: string
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk deletion)
+	//   required: false
+	//   type: bool
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -366,6 +371,9 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
 	blockID := vars["blockID"]
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
@@ -387,7 +395,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("blockID", blockID)
 
-	err = a.app.DeleteBlock(blockID, userID)
+	err = a.app.DeleteBlockAndNotify(blockID, userID, disableNotify)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -511,6 +519,11 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	//   description: ID of block to patch
 	//   required: true
 	//   type: string
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk patching)
+	//   required: false
+	//   type: bool
 	// - name: Body
 	//   in: body
 	//   description: block patch to apply
@@ -533,6 +546,9 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
 	blockID := vars["blockID"]
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
@@ -567,7 +583,7 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("blockID", blockID)
 
-	err = a.app.PatchBlock(blockID, patch, userID)
+	err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify)
 	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
 		return
@@ -597,6 +613,11 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	//   description: Workspace ID
 	//   required: true
 	//   type: string
+	// - name: disable_notify
+	//   in: query
+	//   description: Disables notifications (for bulk patching)
+	//   required: false
+	//   type: bool
 	// - name: Body
 	//   in: body
 	//   description: block Ids and block patches to apply
@@ -619,6 +640,9 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
+
+	val := r.URL.Query().Get("disable_notify")
+	disableNotify := val == True
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -652,7 +676,7 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	err = a.app.PatchBlocks(teamID, patches, userID)
+	err = a.app.PatchBlocksAndNotify(teamID, patches, userID, disableNotify)
 	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
 		return
