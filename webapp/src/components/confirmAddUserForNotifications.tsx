@@ -3,10 +3,12 @@
 
 import React, {useState, useRef} from 'react'
 import Select from 'react-select'
-import {useIntl} from 'react-intl'
+import {useIntl, FormattedMessage} from 'react-intl'
 
 import {IUser} from '../user'
 import ConfirmationDialog from './confirmationDialogBox'
+
+import './confirmAddUserForNotifications.scss'
 
 type Props = {
     user: IUser,
@@ -27,26 +29,52 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
         {id: 'Commenter', label: intl.formatMessage({id:'PersonProperty.add-user-commenter-role', defaultMessage:'Commenter'})},
         {id: 'Viewer', label: intl.formatMessage({id:'PersonProperty.add-user-viewer-role', defaultMessage:'Viewer'})},
     ]
-    const roleSelector = (
-        <Select
-            getOptionLabel={(o: {id: string, label: string}) => o.label}
-            getOptionValue={(o: {id: string, label: string}) => o.id}
-            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
-            menuPortalTarget={document.body}
-            options={roleOptions}
-            onChange={(option) => {
-                setNewUserRole(option?.id || 'Editor')
-                userRole.current = option?.id || 'Editor'
-            }}
-            value={roleOptions.find((o) => o.id === newUserRole)}
-        />
+
+    const subText = (
+        <div className='ConfirmAddUserForNotifications'>
+            <p>
+                <FormattedMessage
+                    id='person.add-user-to-board-warning'
+                    defaultMessage='{username} is not a member of the board, and will not received any notifications about it.'
+                    values={{username: props.user.username}}
+                />
+            </p>
+            <p>
+                <FormattedMessage
+                    id='person.add-user-to-board-question'
+                    defaultMessage='Do you want to add {username} to the board?'
+                    values={{username: props.user.username}}
+                />
+            </p>
+            <div className='permissions-title'>
+                <label>
+                    <FormattedMessage
+                        id='person.add-user-to-board-permissions'
+                        defaultMessage='Permissions'
+                    />
+                </label>
+            </div>
+            <Select
+                className='select'
+                getOptionLabel={(o: {id: string, label: string}) => o.label}
+                getOptionValue={(o: {id: string, label: string}) => o.id}
+                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                menuPortalTarget={document.body}
+                options={roleOptions}
+                onChange={(option) => {
+                    setNewUserRole(option?.id || 'Editor')
+                    userRole.current = option?.id || 'Editor'
+                }}
+                value={roleOptions.find((o) => o.id === newUserRole)}
+            />
+        </div>
     )
 
     return (
         <ConfirmationDialog
             dialogBox={{
                 heading: intl.formatMessage({id: 'person.add-user-to-board', defaultMessage: 'Add {username} to board'}, {username: props.user.username}),
-                subText: intl.formatMessage({id: 'person.add-user-to-board-question', defaultMessage: '{username} is not a member of the board, and will not received any notifications about it.{lineBreak}Do you want to add {username} to the board?{lineBreak}{roleSelector}'}, {lineBreak: <p/>, username: props.user.username, roleSelector}),
+                subText,
                 confirmButtonText: intl.formatMessage({id: 'person.add-user-to-board-confirm-button', defaultMessage: 'Add to board'}),
                 onConfirm: () => props.onConfirm(user.id, userRole.current),
                 onClose: props.onClose,
