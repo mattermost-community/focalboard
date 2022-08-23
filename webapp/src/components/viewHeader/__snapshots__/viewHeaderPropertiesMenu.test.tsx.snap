@@ -160,9 +160,13 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
             </div>
             <div
               class="noicon"
@@ -357,9 +361,13 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Cancel
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
             </div>
             <div
               class="noicon"

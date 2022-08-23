@@ -316,9 +316,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Text
+                    <div
+                      class="menu-name"
+                    >
+                      Text
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -337,9 +341,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Number
+                    <div
+                      class="menu-name"
+                    >
+                      Number
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -358,9 +366,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Email
+                    <div
+                      class="menu-name"
+                    >
+                      Email
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -379,9 +391,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Phone
+                    <div
+                      class="menu-name"
+                    >
+                      Phone
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -400,9 +416,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    URL
+                    <div
+                      class="menu-name"
+                    >
+                      URL
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -421,9 +441,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Select
+                    <div
+                      class="menu-name"
+                    >
+                      Select
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -442,9 +466,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Multi select
+                    <div
+                      class="menu-name"
+                    >
+                      Multi select
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -463,9 +491,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Date
+                    <div
+                      class="menu-name"
+                    >
+                      Date
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -484,9 +516,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Person
+                    <div
+                      class="menu-name"
+                    >
+                      Person
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -505,9 +541,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Checkbox
+                    <div
+                      class="menu-name"
+                    >
+                      Checkbox
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -526,9 +566,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Created time
+                    <div
+                      class="menu-name"
+                    >
+                      Created time
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -547,9 +591,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Created by
+                    <div
+                      class="menu-name"
+                    >
+                      Created by
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -568,9 +616,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Last updated time
+                    <div
+                      class="menu-name"
+                    >
+                      Last updated time
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -589,9 +641,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Last updated by
+                    <div
+                      class="menu-name"
+                    >
+                      Last updated by
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -618,9 +674,13 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
                 </div>
                 <div
                   class="noicon"
