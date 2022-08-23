@@ -984,12 +984,12 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 	})
 
 	t.Run("get block history before updateAt", func(t *testing.T) {
-		rBlocks, err2 := store.GetBlocksWithType(boardID, "test")
+		rBlock, err2 := store.GetBlock("block3")
 		require.NoError(t, err2)
-		require.NotZero(t, rBlocks[2].UpdateAt)
+		require.NotZero(t, rBlock.UpdateAt)
 
 		opts := model.QueryBlockHistoryOptions{
-			BeforeUpdateAt: rBlocks[2].UpdateAt,
+			BeforeUpdateAt: rBlock.UpdateAt,
 			Descending:     true,
 		}
 		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
