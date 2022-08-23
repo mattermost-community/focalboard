@@ -44,6 +44,7 @@ func init() {
 			app.KVStoreKey:       {},
 			app.StoreKey:         {},
 			app.SystemKey:        {},
+			app.PreferencesKey:   {},
 		},
 	})
 }
@@ -66,6 +67,7 @@ type boardsProduct struct {
 	kvStoreService       product.KVStoreService
 	storeService         product.StoreService
 	systemService        product.SystemService
+	preferencesService   product.PreferencesService
 
 	boardsApp *boards.BoardsApp
 }

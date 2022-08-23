@@ -85,4 +85,9 @@ type ServicesAPI interface {
 
 	// Router service
 	RegisterRouter(sub *mux.Router)
+
+	// Preferences services
+	GetPreferencesForUser(userID string) (mm_model.Preferences, error)
+	UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error
+	DeletePreferencesForUser(userID string, preferences mm_model.Preferences) error
 }
