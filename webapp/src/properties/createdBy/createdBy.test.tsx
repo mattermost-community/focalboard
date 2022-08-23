@@ -8,6 +8,7 @@ import {render} from '@testing-library/react'
 import configureStore from 'redux-mock-store'
 
 import {IUser} from '../../user'
+import {wrapIntl} from '../../testUtils'
 import {createCard, Card} from '../../blocks/card'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 
@@ -47,7 +48,7 @@ describe('properties/createdBy', () => {
             </ReduxProvider>
         )
 
-        const {container} = render(component)
+        const {container} = render(wrapIntl(component))
         expect(container).toMatchSnapshot()
     })
 })

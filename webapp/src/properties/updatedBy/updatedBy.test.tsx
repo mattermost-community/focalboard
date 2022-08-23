@@ -9,6 +9,7 @@ import configureStore from 'redux-mock-store'
 
 import {createCard} from '../../blocks/card'
 import {IUser} from '../../user'
+import {wrapIntl} from '../../testUtils'
 
 import {createBoard, IPropertyTemplate} from '../../blocks/board'
 
@@ -64,7 +65,7 @@ describe('properties/updatedBy', () => {
             </ReduxProvider>
         )
 
-        const {container} = render(component)
+        const {container} = render(wrapIntl(component))
         expect(container).toMatchSnapshot()
     })
 })
