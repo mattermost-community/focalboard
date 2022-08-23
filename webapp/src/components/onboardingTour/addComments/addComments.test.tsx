@@ -21,9 +21,9 @@ describe('components/onboardingTour/addComments/AddCommentTourStep', () => {
                 id: 'user_id_1',
             },
             myConfig: {
-                onboardingTourStarted: true,
-                tourCategory: 'card',
-                onboardingTourStep: '1',
+                onboardingTourStarted: {value: true},
+                tourCategory: {value: 'card'},
+                onboardingTourStep: {value: '1'},
             }
         },
         boards: {

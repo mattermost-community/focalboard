@@ -110,7 +110,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                     id: 'user-id',
                 },
                 myConfig: {
-                    onboardingTourStarted: false,
+                    onboardingTourStarted: {value: false},
                 }
             },
             cards: {

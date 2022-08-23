@@ -206,10 +206,10 @@ describe('components/cardDetail/CardDetail', () => {
                     id: 'user_id_1',
                 },
                 myConfig: {
-                    welcomePageViewed: '1',
-                    onboardingTourStarted: true,
-                    tourCategory: 'card',
-                    onboardingTourStep: '0',
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '0'},
                 },
                 boardUsers: [
                     {username: 'username_1'},
@@ -312,10 +312,10 @@ describe('components/cardDetail/CardDetail', () => {
                     id: 'user_id_1',
                 },
                 myConfig: {
-                    welcomePageViewed: '1',
-                    onboardingTourStarted: true,
-                    tourCategory: 'card',
-                    onboardingTourStep: '1',
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '1'},
                 },
                 boardUsers: [
                     {username: 'username_1'},
@@ -416,10 +416,10 @@ describe('components/cardDetail/CardDetail', () => {
                     id: 'user_id_1',
                 },
                 myConfig: {
-                    welcomePageViewed: '1',
-                    onboardingTourStarted: true,
-                    tourCategory: 'card',
-                    onboardingTourStep: '2',
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '2'},
                 },
                 boardUsers: [
                     {username: 'username_1'},

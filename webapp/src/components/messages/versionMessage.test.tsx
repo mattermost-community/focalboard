@@ -31,13 +31,13 @@ describe('components/messages/VersionMessage', () => {
     const mockStore = configureStore([])
 
     if (versionProperty){
-        test('single user mode, no display', () => {    
+        test('single user mode, no display', () => {
             const me: IUser = {
                 id: 'single-user',
                 username: 'username_1',
                 email: '',
                 nickname: '',
-                firstname: '', 
+                firstname: '',
                 lastname: '',
                 props: {},
                 create_at: 0,
@@ -50,9 +50,9 @@ describe('components/messages/VersionMessage', () => {
                     me,
                 },
             }
-    
+
             const store = mockStore(state)
-    
+
             const component = wrapIntl(
                 <ReduxProvider store={store}>
                     <VersionMessage/>
@@ -68,11 +68,9 @@ describe('components/messages/VersionMessage', () => {
                 username: 'username_1',
                 email: '',
                 nickname: '',
-                firstname: '', 
+                firstname: '',
                 lastname: '',
-                props: {
-                    [versionProperty]: 'true',
-                },
+                props: {},
                 create_at: 0,
                 update_at: 0,
                 is_bot: false,
@@ -81,27 +79,30 @@ describe('components/messages/VersionMessage', () => {
             const state = {
                 users: {
                     me,
+                    myConfig: {
+                        [versionProperty]: {value: 'true'}
+                    }
                 },
             }
             const store = mockStore(state)
-    
+
             const component = wrapIntl(
                 <ReduxProvider store={store}>
                     <VersionMessage/>
                 </ReduxProvider>,
             )
-    
+
             const {container} = render(component)
             expect(container.firstChild).toBeNull()
         })
-   
+
         test('show message, click close', () => {
             const me: IUser = {
                 id: 'user-id-1',
                 username: 'username_1',
                 email: '',
                 nickname: '',
-                firstname: '', 
+                firstname: '',
                 lastname: '',
                 props: {},
                 create_at: 0,
@@ -115,13 +116,13 @@ describe('components/messages/VersionMessage', () => {
                 },
             }
             const store = mockStore(state)
-    
+
             const component = wrapIntl(
                 <ReduxProvider store={store}>
                     <VersionMessage/>
                 </ReduxProvider>,
             )
-    
+
             render(component)
             const buttonElement = screen.getByRole('button', {name: 'Close dialog'})
             userEvent.click(buttonElement)
@@ -142,7 +143,7 @@ describe('components/messages/VersionMessage', () => {
                     <VersionMessage/>
                 </ReduxProvider>,
             )
-    
+
             const {container} = render(component)
             expect(container.firstChild).toBeNull()
         })
@@ -153,7 +154,7 @@ describe('components/messages/VersionMessage', () => {
                 username: 'username_1',
                 email: '',
                 nickname: '',
-                firstname: '', 
+                firstname: '',
                 lastname: '',
                 props: {
                 },
@@ -168,7 +169,7 @@ describe('components/messages/VersionMessage', () => {
                 },
             }
             const store = mockStore(state)
-    
+
             const component = wrapIntl(
                 <ReduxProvider store={store}>
                     <VersionMessage/>

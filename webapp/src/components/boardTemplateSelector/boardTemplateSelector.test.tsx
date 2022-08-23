@@ -154,6 +154,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             },
         }
         store = mockStateStore([], state)
+        jest.useRealTimers()
     })
     describe('not a focalboard Plugin', () => {
         beforeAll(() => {
@@ -397,13 +398,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             await waitFor(() => expect(mockedMutator.addBoardFromTemplate).toBeCalledWith(team1.id, expect.anything(), expect.anything(), expect.anything(), '2', team1.id))
             await waitFor(() => expect(mockedTelemetry.trackEvent).toBeCalledWith('boards', 'createBoardViaTemplate', {boardTemplateId: 'template_id_2'}))
             await waitFor(() => expect(mockedMutator.updateBoard).toBeCalledWith(newBoard, newBoard, 'linked channel'))
-            expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id-1', {
-                updatedFields: {
-                    onboardingTourStarted: '1',
-                    onboardingTourStep: '0',
-                    tourCategory: 'onboarding',
-                },
-            })
+            expect(mockedOctoClient.patchUserConfig).toBeCalledTimes(1)
         })
     })
 })

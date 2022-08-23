@@ -123,4 +123,15 @@ exports[`components/onboardingTour/addComments/AddDescriptionTourStep after hove
 </div>
 `;
 
-exports[`components/onboardingTour/addComments/AddDescriptionTourStep before hover 1`] = `<div />`;
+exports[`components/onboardingTour/addComments/AddDescriptionTourStep before hover 1`] = `
+<div>
+  <div
+    aria-expanded="true"
+    class="tutorial-tour-tip__pulsating-dot-ctr AddDescriptionTourStep"
+  >
+    <span
+      class="pulsating_dot"
+    />
+  </div>
+</div>
+`;

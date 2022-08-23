@@ -135,9 +135,14 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
 export const getOnboardingTourStarted = createSelector(
     getMyConfig,
     (myConfig): boolean => {
+        console.log(`getOnboardingTourStarted myConfig: ${JSON.stringify(myConfig || 'NULL')}`)
         if (!myConfig) {
+            console.log('getOnboardingTourStarted AAA')
             return false
         }
+
+        console.log('getOnboardingTourStarted BBB')
+        console.log('getOnboardingTourStarted BBB')
 
         return Boolean(myConfig.onboardingTourStarted?.value)
     },

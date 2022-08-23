@@ -83,7 +83,7 @@ describe('components/centerPanel', () => {
                 id: 'user_id_1',
             },
             myConfig: {
-                onboardingTourStarted: false,
+                onboardingTourStarted: {value: false},
             },
             workspaceUsers: [
                 {username: 'username_1'},
@@ -587,7 +587,7 @@ describe('components/centerPanel', () => {
                 id: 'user_id_1',
             },
             myConfig: {
-                onboardingTourStarted: false,
+                onboardingTourStarted: {value: false},
             },
             workspaceUsers: [
                 {username: 'username_1'},

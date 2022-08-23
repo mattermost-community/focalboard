@@ -65,4 +65,15 @@ exports[`components/onboardingTour/addComments/OpenCardTourStep after hover 1`] 
 </div>
 `;
 
-exports[`components/onboardingTour/addComments/OpenCardTourStep before hover 1`] = `<div />`;
+exports[`components/onboardingTour/addComments/OpenCardTourStep before hover 1`] = `
+<div>
+  <div
+    aria-expanded="true"
+    class="tutorial-tour-tip__pulsating-dot-ctr OpenCardTourStep"
+  >
+    <span
+      class="pulsating_dot"
+    />
+  </div>
+</div>
+`;

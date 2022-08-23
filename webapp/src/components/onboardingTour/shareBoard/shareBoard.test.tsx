@@ -21,9 +21,9 @@ describe('components/onboardingTour/addComments/ShareBoardTourStep', () => {
                 id: 'user_id_1',
             },
             myConfig: {
-                onboardingTourStarted: true,
-                tourCategory: 'board',
-                onboardingTourStep: '2',
+                onboardingTourStarted: {value: true},
+                tourCategory: {value: 'board'},
+                onboardingTourStep: {value: '2'},
             }
         },
         boards: {

@@ -80,12 +80,13 @@ describe('components/messages/CloudMessage', () => {
             update_at: 0,
             is_bot: false,
             roles: 'system_user',
+            props: {},
         }
         const state = {
             users: {
                 me,
                 myConfig: {
-                    cloudMessageCanceled: 'true',
+                    cloudMessageCanceled: {value: 'true'},
                 },
             },
         }

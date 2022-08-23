@@ -24,7 +24,7 @@ import mutator from '../../mutator'
 
 import octoClient from '../../octoClient'
 
-import {IUser} from '../../user'
+import {IUser, UserPreference} from '../../user'
 
 import WelcomePage from './welcomePage'
 
@@ -39,9 +39,14 @@ const mockedOctoClient = mocked(octoClient, true)
 
 beforeEach(() => {
     jest.resetAllMocks()
-    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
-        welcomePageViewed: '1',
-    }))
+    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve([
+        {
+            user_id: '',
+            category: 'focalboard',
+            name: 'welcomePageViewed',
+            value: '1',
+        },
+    ]))
     mockedOctoClient.prepareOnboarding.mockResolvedValue({
         teamID: 'team_id_1',
         boardID: 'board_id_1',
@@ -64,9 +69,8 @@ describe('pages/welcome', () => {
                 props: {},
             },
             myConfig: {
-                welcomePageViewed: '1',
-                onboardingTourStep: '0',
-                tourCategory: 'onboarding',
+                onboardingTourStep: {value: '0'},
+                tourCategory: {value: 'onboarding'},
             }
         },
     })
@@ -146,7 +150,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {},
                 myConfig: {
-                    welcomePageViewed: '1',
+                    welcomePageViewed: {value: '1'},
                 }
             },
         })
@@ -180,7 +184,7 @@ describe('pages/welcome', () => {
             users: {
                 me: {},
                 myConfig: {
-                    welcomePageViewed: '1',
+                    welcomePageViewed: {value: '1'},
                 }
             },
         })
