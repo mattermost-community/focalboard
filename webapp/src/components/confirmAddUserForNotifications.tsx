@@ -6,6 +6,7 @@ import Select from 'react-select'
 import {useIntl, FormattedMessage} from 'react-intl'
 
 import {IUser} from '../user'
+
 import ConfirmationDialog from './confirmationDialogBox'
 
 import './confirmAddUserForNotifications.scss'

@@ -129,13 +129,13 @@ const Person = (props: PropertyProps): JSX.Element => {
             return boardUsers.filter((u) => u.username.toLowerCase().includes(value.toLowerCase()))
         }
         const allUsers = await client.searchTeamUsers(value)
-        let usersInsideBoard: IUser[] = []
-        let usersOutsideBoard: IUser[] = []
-        for (const user of allUsers) {
-            if (boardUsersById[user.id]) {
-                usersInsideBoard.push(user)
+        const usersInsideBoard: IUser[] = []
+        const usersOutsideBoard: IUser[] = []
+        for (const u of allUsers) {
+            if (boardUsersById[u.id]) {
+                usersInsideBoard.push(u)
             } else {
-                usersOutsideBoard.push(user)
+                usersOutsideBoard.push(u)
             }
         }
         return [
@@ -146,38 +146,38 @@ const Person = (props: PropertyProps): JSX.Element => {
 
     return (
         <>
-        {confirmAddUser &&
+            {confirmAddUser &&
             <ConfirmAddUserForNotifications
                 user={confirmAddUser}
                 onConfirm={addUser}
                 onClose={() => setConfirmAddUser(null)}
             />}
-        <Select
-            loadOptions={loadOptions}
-            defaultOptions={boardUsers}
-            isSearchable={true}
-            isClearable={true}
-            backspaceRemovesValue={true}
-            className={`Person ${props.property.valueClassName(props.readOnly)}`}
-            classNamePrefix={'react-select'}
-            formatOptionLabel={formatOptionLabel}
-            styles={selectStyles}
-            placeholder={'Empty'}
-            getOptionLabel={(o: IUser) => o.username}
-            getOptionValue={(a: IUser) => a.id}
-            value={boardUsersById[propertyValue as string] || null}
-            onChange={(item, action) => {
-                if (action.action === 'select-option') {
-                    if (!boardUsersById[item?.id || '']) {
-                        setConfirmAddUser(item)
-                    } else {
-                        onChange(item?.id || '')
+            <Select
+                loadOptions={loadOptions}
+                defaultOptions={boardUsers}
+                isSearchable={true}
+                isClearable={true}
+                backspaceRemovesValue={true}
+                className={`Person ${props.property.valueClassName(props.readOnly)}`}
+                classNamePrefix={'react-select'}
+                formatOptionLabel={formatOptionLabel}
+                styles={selectStyles}
+                placeholder={'Empty'}
+                getOptionLabel={(o: IUser) => o.username}
+                getOptionValue={(a: IUser) => a.id}
+                value={boardUsersById[propertyValue as string] || null}
+                onChange={(item, action) => {
+                    if (action.action === 'select-option') {
+                        if (!boardUsersById[item?.id || '']) {
+                            setConfirmAddUser(item)
+                        } else {
+                            onChange(item?.id || '')
+                        }
+                    } else if (action.action === 'clear') {
+                        onChange('')
                     }
-                } else if (action.action === 'clear') {
-                    onChange('')
-                }
-            }}
-        />
+                }}
+            />
         </>
     )
 }

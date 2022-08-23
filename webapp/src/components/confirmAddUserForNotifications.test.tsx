@@ -7,6 +7,7 @@ import React from 'react'
 
 import {wrapDNDIntl} from '../testUtils'
 import {IUser} from '../user'
+
 import ConfirmAddUserForNotifications from './confirmAddUserForNotifications'
 
 describe('/components/confirmAddUserForNotifications', () => {

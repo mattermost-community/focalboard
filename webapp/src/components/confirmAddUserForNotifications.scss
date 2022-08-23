@@ -1,3 +1,5 @@
+@import '../../styles/z-index';
+
 .ConfirmAddUserForNotifications {
     display: flex;
     flex-direction: column;
@@ -8,6 +10,7 @@
         width: 250px;
         margin-top: 10px;
     }
+
     .permissions-title {
         width: 250px;
         position: relative;
@@ -18,10 +21,10 @@
         font-size: 12px;
 
         label {
+            @include z-index(modal-permission-label);
             position: absolute;
             padding: 0 5px;
             margin: 0;
-            z-index: 1000;
             background-color: rgb(var(--center-channel-bg-rgb));
             color: rgba(var(--center-channel-color-rgb), 0.8);
         }
