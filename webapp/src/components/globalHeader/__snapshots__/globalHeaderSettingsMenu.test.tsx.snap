@@ -70,9 +70,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Import archive
+                          <div
+                            class="menu-name"
+                          >
+                            Import archive
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -91,9 +95,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Trello
+                          <div
+                            class="menu-name"
+                          >
+                            Trello
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -112,9 +120,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Asana
+                          <div
+                            class="menu-name"
+                          >
+                            Asana
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -133,9 +145,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Notion
+                          <div
+                            class="menu-name"
+                          >
+                            Notion
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -154,9 +170,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Jira
+                          <div
+                            class="menu-name"
+                          >
+                            Jira
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -175,9 +195,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Todoist
+                          <div
+                            class="menu-name"
+                          >
+                            Todoist
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -203,9 +227,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Cancel
+                          <div
+                            class="menu-name"
+                          >
+                            Cancel
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -277,9 +305,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Product tour
+                  <div
+                    class="menu-name"
+                  >
+                    Product tour
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -306,9 +338,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -416,9 +452,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          English
+                          <div
+                            class="menu-name"
+                          >
+                            English
+                          </div>
                         </div>
                         <svg
                           class="CheckIcon Icon"
@@ -443,9 +483,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Español
+                          <div
+                            class="menu-name"
+                          >
+                            Español
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -464,9 +508,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Deutsch
+                          <div
+                            class="menu-name"
+                          >
+                            Deutsch
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -485,9 +533,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          日本語
+                          <div
+                            class="menu-name"
+                          >
+                            日本語
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -506,9 +558,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Français
+                          <div
+                            class="menu-name"
+                          >
+                            Français
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -527,9 +583,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Nederlands
+                          <div
+                            class="menu-name"
+                          >
+                            Nederlands
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -548,9 +608,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Pусский
+                          <div
+                            class="menu-name"
+                          >
+                            Pусский
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -569,9 +633,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          中文 (繁體)
+                          <div
+                            class="menu-name"
+                          >
+                            中文 (繁體)
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -590,9 +658,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          中文 (简体)
+                          <div
+                            class="menu-name"
+                          >
+                            中文 (简体)
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -611,9 +683,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Türkçe
+                          <div
+                            class="menu-name"
+                          >
+                            Türkçe
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -632,9 +708,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Occitan
+                          <div
+                            class="menu-name"
+                          >
+                            Occitan
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -653,9 +733,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Português (Brasil)
+                          <div
+                            class="menu-name"
+                          >
+                            Português (Brasil)
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -674,9 +758,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Català
+                          <div
+                            class="menu-name"
+                          >
+                            Català
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -695,9 +783,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Ελληνικά
+                          <div
+                            class="menu-name"
+                          >
+                            Ελληνικά
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -716,9 +808,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          bahasa Indonesia
+                          <div
+                            class="menu-name"
+                          >
+                            bahasa Indonesia
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -737,9 +833,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Italiano
+                          <div
+                            class="menu-name"
+                          >
+                            Italiano
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -758,9 +858,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Svenska
+                          <div
+                            class="menu-name"
+                          >
+                            Svenska
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -786,9 +890,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Cancel
+                          <div
+                            class="menu-name"
+                          >
+                            Cancel
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -836,9 +944,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Product tour
+                  <div
+                    class="menu-name"
+                  >
+                    Product tour
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -865,9 +977,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -1014,9 +1130,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Product tour
+                  <div
+                    class="menu-name"
+                  >
+                    Product tour
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1043,9 +1163,13 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
