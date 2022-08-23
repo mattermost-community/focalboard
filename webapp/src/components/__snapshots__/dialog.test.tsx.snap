@@ -78,7 +78,7 @@ exports[`components/dialog should return dialog and click on cancel button 1`] =
               role="button"
             >
               <button
-                class="IconButton dialog__close size--medium"
+                class="IconButton size--medium"
                 type="button"
               >
                 <i
