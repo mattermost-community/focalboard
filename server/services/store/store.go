@@ -17,7 +17,6 @@ type Store interface {
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
 	GetBlocksByIDs(ids []string) ([]model.Block, error)
-	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetBlocksForBoard(boardID string) ([]model.Block, error)
@@ -155,6 +154,7 @@ type Store interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
+	PostMessage(message, postType, channelID string) error
 	SendMessage(message, postType string, receipts []string) error
 
 	// Insights

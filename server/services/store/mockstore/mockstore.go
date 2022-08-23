@@ -1251,6 +1251,20 @@ func (mr *MockStoreMockRecorder) PatchUserProps(arg0, arg1 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserProps", reflect.TypeOf((*MockStore)(nil).PatchUserProps), arg0, arg1)
 }
 
+// PostMessage mocks base method.
+func (m *MockStore) PostMessage(arg0, arg1, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PostMessage", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// PostMessage indicates an expected call of PostMessage.
+func (mr *MockStoreMockRecorder) PostMessage(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PostMessage", reflect.TypeOf((*MockStore)(nil).PostMessage), arg0, arg1, arg2)
+}
+
 // RefreshSession mocks base method.
 func (m *MockStore) RefreshSession(arg0 *model.Session) error {
 	m.ctrl.T.Helper()

@@ -473,7 +473,7 @@ class WSClient {
     }
 
     hasConn(): boolean {
-        return this.ws !== null || this.client !== null
+        return this.ws?.readyState === 1 || this.client !== null
     }
 
     updateHandler(message: WSMessage): void {

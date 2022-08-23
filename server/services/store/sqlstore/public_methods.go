@@ -304,11 +304,6 @@ func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 
 }
 
-func (s *SQLStore) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
-	return s.getBlocksWithBoardID(s.db, boardID)
-
-}
-
 func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 
@@ -709,6 +704,11 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 
 func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
 	return s.patchUserProps(s.db, userID, patch)
+
+}
+
+func (s *SQLStore) PostMessage(message string, postType string, channelID string) error {
+	return s.postMessage(s.db, message, postType, channelID)
 
 }
 

@@ -693,9 +693,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Delete
+                          <div
+                            class="menu-name"
+                          >
+                            Delete
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -716,9 +720,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          Copy link
+                          <div
+                            class="menu-name"
+                          >
+                            Copy link
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -739,9 +747,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                           />
                         </div>
                         <div
-                          class="menu-name"
+                          class="menu-option__content"
                         >
-                          New template from card
+                          <div
+                            class="menu-name"
+                          >
+                            New template from card
+                          </div>
                         </div>
                         <div
                           class="noicon"
@@ -768,9 +780,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                         />
                       </div>
                       <div
-                        class="menu-name"
+                        class="menu-option__content"
                       >
-                        Cancel
+                        <div
+                          class="menu-name"
+                        >
+                          Cancel
+                        </div>
                       </div>
                       <div
                         class="noicon"

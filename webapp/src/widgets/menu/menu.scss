@@ -16,6 +16,7 @@
     border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     border-radius: var(--default-rad);
     box-shadow: var(--elevation-4);
+    cursor: default;
 
     &.fixed {
         position: fixed;
@@ -68,6 +69,17 @@
             padding: 4px 20px;
             cursor: pointer;
 
+            &.menu-option--disabled {
+                cursor: not-allowed;
+                pointer-events: none;
+                opacity: 0.32;
+            }
+
+            &.menu-option--with-subtext {
+                height: auto;
+                align-items: initial;
+            }
+
             &:hover {
                 background: rgba(var(--button-bg-rgb), 0.08);
             }
@@ -90,11 +102,20 @@
                 margin-left: 0;
             }
 
+            > .menu-content {
+                display: block;
+            }
+
             > .menu-name {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 flex-grow: 1;
                 white-space: nowrap;
+                text-align: left;
+            }
+
+            > .menu-subtext {
+                font-size: 10px;
                 text-align: left;
             }
 
