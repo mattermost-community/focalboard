@@ -125,6 +125,8 @@ export function setTheme(theme: Theme | null): Theme {
     setActiveThemeName(consolidatedTheme, theme)
 
     if (!Utils.isFocalboardPlugin()) {
+        // for personal server and desktop, Focalboard is responsible for managing the theme,
+        // so we set all the color variables here.
         document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
         document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
         document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
@@ -134,6 +136,21 @@ export function setTheme(theme: Theme | null): Theme {
         document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
         document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
     } else {
+        // in plugin mode, Focalbaord reuses Mattermost's color pallet, so we don't really need to
+        // set the color variables here because in the app, Mattermost webapp would have already
+        // declared them.
+        // But,
+        // when testing the plugin mode in Jest unit test,
+        // since there is no Mattermost webapp, we need to ensure someone declares the variables.
+        // So here we set the variable if it wasn't already declared.
+        // In plugins, since Mattermost webapp renders always before the plugin/product,
+        // the variables are guaranteed to be set there.
+        //
+        // Fun fact - in a Jest test suite, if there are some non-plugin tests and a few plugin tests,
+        // if a non-plugin test ran first, it creates the variables in document, which is somehow
+        // shared to other tests as well. That's why the tests don't fail unless you run ONLY
+        // a plugin test.
+
         const style = document.documentElement.style
 
         style.setProperty('--center-channel-bg-rgb', style.getPropertyValue('--center-channel-bg-rgb') || consolidatedTheme.mainBg)
