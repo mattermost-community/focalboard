@@ -9,7 +9,7 @@ import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'jest-mock'
 
-import {BoardMember} from 'blocks/board'
+import {BoardMember} from '../../blocks/board'
 
 import {IUser} from '../../user'
 import {TestBlockFactory} from '../../test/testBlockFactory'
