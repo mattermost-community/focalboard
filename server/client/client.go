@@ -256,8 +256,14 @@ func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response)
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
-	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID), toJSON(blockPatch))
+const disableNotifyQueryParam = "disable_notify=true"
+
+func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch, disableNotify bool) (bool, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID)+queryParams, toJSON(blockPatch))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -307,8 +313,12 @@ func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
-func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Block, *Response) {
-	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID), toJSON(blocks))
+func (c *Client) InsertBlocks(boardID string, blocks []model.Block, disableNotify bool) ([]model.Block, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+queryParams, toJSON(blocks))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -317,18 +327,12 @@ func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Blo
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) InsertBlocksDisableNotify(boardID string, blocks []model.Block) ([]model.Block, *Response) {
-	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+"?disable_notify=true", toJSON(blocks))
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
+func (c *Client) DeleteBlock(boardID, blockID string, disableNotify bool) (bool, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
 	}
-	defer closeBody(r)
-
-	return model.BlocksFromJSON(r.Body), BuildResponse(r)
-}
-
-func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
-	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID), "")
+	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID)+queryParams, "")
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}

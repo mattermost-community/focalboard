@@ -707,6 +707,11 @@ func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) erro
 
 }
 
+func (s *SQLStore) PostMessage(message string, postType string, channelID string) error {
+	return s.postMessage(s.db, message, postType, channelID)
+
+}
+
 func (s *SQLStore) RefreshSession(session *model.Session) error {
 	return s.refreshSession(s.db, session)
 

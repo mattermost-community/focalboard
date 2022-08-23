@@ -25,9 +25,13 @@ exports[`components/cardActionsMenu should match snapshot 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Delete
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
             </div>
             <div
               class="noicon"
@@ -48,9 +52,13 @@ exports[`components/cardActionsMenu should match snapshot 1`] = `
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Copy link
+              <div
+                class="menu-name"
+              >
+                Copy link
+              </div>
             </div>
             <div
               class="noicon"
@@ -78,9 +86,13 @@ exports[`components/cardActionsMenu should match snapshot 1`] = `
             />
           </div>
           <div
-            class="menu-name"
+            class="menu-option__content"
           >
-            Cancel
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
           </div>
           <div
             class="noicon"
@@ -117,9 +129,13 @@ exports[`components/cardActionsMenu should match snapshot w/ children prop 1`] =
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Delete
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
             </div>
             <div
               class="noicon"
@@ -140,9 +156,13 @@ exports[`components/cardActionsMenu should match snapshot w/ children prop 1`] =
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Copy link
+              <div
+                class="menu-name"
+              >
+                Copy link
+              </div>
             </div>
             <div
               class="noicon"
@@ -172,9 +192,13 @@ exports[`components/cardActionsMenu should match snapshot w/ children prop 1`] =
             />
           </div>
           <div
-            class="menu-name"
+            class="menu-option__content"
           >
-            Cancel
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
           </div>
           <div
             class="noicon"
@@ -211,9 +235,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Delete
+              <div
+                class="menu-name"
+              >
+                Delete
+              </div>
             </div>
             <div
               class="noicon"
@@ -232,9 +260,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Duplicate
+              <div
+                class="menu-name"
+              >
+                Duplicate
+              </div>
             </div>
             <div
               class="noicon"
@@ -255,9 +287,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
               />
             </div>
             <div
-              class="menu-name"
+              class="menu-option__content"
             >
-              Copy link
+              <div
+                class="menu-name"
+              >
+                Copy link
+              </div>
             </div>
             <div
               class="noicon"
@@ -285,9 +321,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
             />
           </div>
           <div
-            class="menu-name"
+            class="menu-option__content"
           >
-            Cancel
+            <div
+              class="menu-name"
+            >
+              Cancel
+            </div>
           </div>
           <div
             class="noicon"

@@ -41,9 +41,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Title
+                  <div
+                    class="menu-name"
+                  >
+                    Title
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -64,9 +68,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Status
+                  <div
+                    class="menu-name"
+                  >
+                    Status
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -87,9 +95,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Property 1
+                  <div
+                    class="menu-name"
+                  >
+                    Property 1
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -110,9 +122,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Property 2
+                  <div
+                    class="menu-name"
+                  >
+                    Property 2
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -133,9 +149,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Property 3
+                  <div
+                    class="menu-name"
+                  >
+                    Property 3
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -162,9 +182,13 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -272,9 +296,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  includes
+                  <div
+                    class="menu-name"
+                  >
+                    includes
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -293,9 +321,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't include
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't include
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -314,9 +346,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is empty
+                  <div
+                    class="menu-name"
+                  >
+                    is empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -335,9 +371,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is not empty
+                  <div
+                    class="menu-name"
+                  >
+                    is not empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -366,9 +406,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -462,9 +506,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  includes
+                  <div
+                    class="menu-name"
+                  >
+                    includes
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -483,9 +531,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't include
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't include
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -504,9 +556,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is empty
+                  <div
+                    class="menu-name"
+                  >
+                    is empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -525,9 +581,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is not empty
+                  <div
+                    class="menu-name"
+                  >
+                    is not empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -556,9 +616,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -652,9 +716,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  includes
+                  <div
+                    class="menu-name"
+                  >
+                    includes
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -673,9 +741,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't include
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't include
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -694,9 +766,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is empty
+                  <div
+                    class="menu-name"
+                  >
+                    is empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -715,9 +791,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is not empty
+                  <div
+                    class="menu-name"
+                  >
+                    is not empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -746,9 +826,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -842,9 +926,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  includes
+                  <div
+                    class="menu-name"
+                  >
+                    includes
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -863,9 +951,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't include
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't include
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -884,9 +976,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is empty
+                  <div
+                    class="menu-name"
+                  >
+                    is empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -905,9 +1001,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is not empty
+                  <div
+                    class="menu-name"
+                  >
+                    is not empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -936,9 +1036,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -1032,9 +1136,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  includes
+                  <div
+                    class="menu-name"
+                  >
+                    includes
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1053,9 +1161,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't include
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't include
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1074,9 +1186,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is empty
+                  <div
+                    class="menu-name"
+                  >
+                    is empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1095,9 +1211,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is not empty
+                  <div
+                    class="menu-name"
+                  >
+                    is not empty
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1126,9 +1246,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -1208,9 +1332,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Title
+                  <div
+                    class="menu-name"
+                  >
+                    Title
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1231,9 +1359,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Status
+                  <div
+                    class="menu-name"
+                  >
+                    Status
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1254,9 +1386,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Property 1
+                  <div
+                    class="menu-name"
+                  >
+                    Property 1
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1277,9 +1413,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Property 2
+                  <div
+                    class="menu-name"
+                  >
+                    Property 2
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1300,9 +1440,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Property 3
+                  <div
+                    class="menu-name"
+                  >
+                    Property 3
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1329,9 +1473,13 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -1474,9 +1622,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is set
+                  <div
+                    class="menu-name"
+                  >
+                    is set
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1495,9 +1647,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is not set
+                  <div
+                    class="menu-name"
+                  >
+                    is not set
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1525,9 +1681,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -1663,9 +1823,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  is
+                  <div
+                    class="menu-name"
+                  >
+                    is
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1684,9 +1848,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  contains
+                  <div
+                    class="menu-name"
+                  >
+                    contains
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1705,9 +1873,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't contain
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't contain
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1726,9 +1898,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  starts with
+                  <div
+                    class="menu-name"
+                  >
+                    starts with
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1747,9 +1923,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't start with
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't start with
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1768,9 +1948,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  ends with
+                  <div
+                    class="menu-name"
+                  >
+                    ends with
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1789,9 +1973,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  doesn't end with
+                  <div
+                    class="menu-name"
+                  >
+                    doesn't end with
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -1818,9 +2006,13 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
