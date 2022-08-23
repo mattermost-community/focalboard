@@ -305,6 +305,25 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetUserPreferences(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /users/me/config getUserConfig
+	//
+	// Returns an array of user preferences
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/Preferences"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	userID := getUserID(r)
 
 	auditRec := a.makeAuditRecord(r, "getUserConfig", audit.Fail)
