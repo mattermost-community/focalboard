@@ -256,10 +256,12 @@ func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response)
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
+const disableNotifyQueryParam = "disable_notify=true"
+
 func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch, disableNotify bool) (bool, *Response) {
 	var queryParams string
 	if disableNotify {
-		queryParams = "?disable_notify=true"
+		queryParams = "?" + disableNotifyQueryParam
 	}
 	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID)+queryParams, toJSON(blockPatch))
 	if err != nil {
@@ -314,7 +316,7 @@ func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
 func (c *Client) InsertBlocks(boardID string, blocks []model.Block, disableNotify bool) ([]model.Block, *Response) {
 	var queryParams string
 	if disableNotify {
-		queryParams = "?disable_notify=true"
+		queryParams = "?" + disableNotifyQueryParam
 	}
 	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+queryParams, toJSON(blocks))
 	if err != nil {
@@ -328,7 +330,7 @@ func (c *Client) InsertBlocks(boardID string, blocks []model.Block, disableNotif
 func (c *Client) DeleteBlock(boardID, blockID string, disableNotify bool) (bool, *Response) {
 	var queryParams string
 	if disableNotify {
-		queryParams = "?disable_notify=true"
+		queryParams = "?" + disableNotifyQueryParam
 	}
 	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID)+queryParams, "")
 	if err != nil {
