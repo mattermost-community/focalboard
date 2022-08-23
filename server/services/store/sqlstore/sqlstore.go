@@ -17,7 +17,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-var ErrInvalidMariaDB = errors.New("MariaDB database is not supported")
+//nolint:lll
+var ErrInvalidMariaDB = errors.New("MariaDB database is not supported, you can find more information at https://docs.mattermost.com/install/software-hardware-requirements.html#database-software")
 
 // SQLStore is a SQL database.
 type SQLStore struct {
