@@ -219,9 +219,20 @@ func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 //
 // Preferences service.
 //
-func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
-	p, appErr := a.api.GetPreferencesForUser(userID)
-	return p, normalizeAppErr(appErr)
+func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) ([]mm_model.Preference, error) {
+	preferences, appErr := a.api.GetPreferencesForUser(userID)
+	if appErr != nil {
+		return nil, normalizeAppErr(appErr)
+	}
+
+	boardsPreferences := []mm_model.Preference{}
+	for _, preference := range preferences {
+		if preference.Category == "focalboard" {
+			boardsPreferences = append(boardsPreferences, preference)
+		}
+	}
+
+	return boardsPreferences, nil
 }
 
 func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error {
