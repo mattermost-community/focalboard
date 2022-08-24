@@ -196,6 +196,14 @@ func (c *Client) GetBoardsAndBlocksRoute() string {
 	return "/boards-and-blocks"
 }
 
+func (c *Client) GetCardsRoute() string {
+	return "/cards"
+}
+
+func (c *Client) GetCardRoute(cardID string) string {
+	return fmt.Sprintf("%s/%s", c.GetCardsRoute(), cardID)
+}
+
 func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID), "")
 	if err != nil {
@@ -341,7 +349,65 @@ func (c *Client) DeleteBlock(boardID, blockID string, disableNotify bool) (bool,
 	return true, BuildResponse(r)
 }
 
+//
+// Cards
+//
+
+func (c *Client) CreateCard(boardID string, card *model.Card, disableNotify bool) (*model.Card, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/cards"+queryParams, toJSON(card))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var cardNew *model.Card
+	if err := json.NewDecoder(r.Body).Decode(&cardNew); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return cardNew, BuildResponse(r)
+}
+
+func (c *Client) PatchCard(cardID string, cardPatch *model.CardPatch, disableNotify bool) (*model.Card, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPost(c.GetCardRoute(cardID)+queryParams, toJSON(cardPatch))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var cardNew *model.Card
+	if err := json.NewDecoder(r.Body).Decode(&cardNew); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return cardNew, BuildResponse(r)
+}
+
+func (c *Client) GetCard(cardID string) (*model.Card, *Response) {
+	r, err := c.DoAPIPost(c.GetCardRoute(cardID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var card *model.Card
+	if err := json.NewDecoder(r.Body).Decode(&card); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return card, BuildResponse(r)
+}
+
+//
 // Boards and blocks.
+//
+
 func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardsAndBlocksRoute(), toJSON(bab))
 	if err != nil {

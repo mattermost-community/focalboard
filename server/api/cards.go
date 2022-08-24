@@ -15,7 +15,7 @@ import (
 func (a *API) registerCardsRoutes(r *mux.Router) {
 	// Cards APIs
 	r.HandleFunc("/boards/{boardID}/cards", a.sessionRequired(a.handleCreateCard)).Methods("POST")
-	r.HandleFunc("/cards/{cardID}/cards", a.sessionRequired(a.handlePatchCard)).Methods("POST")
+	r.HandleFunc("/cards/{cardID}", a.sessionRequired(a.handlePatchCard)).Methods("PATCH")
 	r.HandleFunc("/cards/{cardID}", a.sessionRequired(a.handleGetCard)).Methods("GET")
 }
 
@@ -64,7 +64,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "invalid request body", err)
 		return
 	}
 

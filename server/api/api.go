@@ -77,9 +77,11 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.Use(a.panicHandler)
 	apiv2.Use(a.requireCSRFToken)
 
-	apiv3 := r.PathPrefix("/api/v3").Subrouter()
-	apiv3.Use(a.panicHandler)
-	apiv3.Use(a.requireCSRFToken)
+	/*
+		apiv3 := r.PathPrefix("/api/v3").Subrouter()
+		apiv3.Use(a.panicHandler)
+		apiv3.Use(a.requireCSRFToken)
+	*/
 
 	// V2 routes (migrate these to V3 when ready to ship V3)
 	a.registerUsersRoutes(apiv2)
@@ -103,7 +105,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerBlocksRoutes(apiv2)
 
 	// V3 routes
-	a.registerCardsRoutes(apiv3)
+	a.registerCardsRoutes(apiv2)
 
 	// System routes are outside the /api/v2 path
 	a.registerSystemRoutes(r)
