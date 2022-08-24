@@ -62,6 +62,8 @@ type TestHelper struct {
 	Server  *server.Server
 	Client  *client.Client
 	Client2 *client.Client
+
+	origEnvUnitTesting string
 }
 
 type FakePermissionPluginAPI struct{}
@@ -248,8 +250,16 @@ func newTestServerLocalMode() *server.Server {
 }
 
 func SetupTestHelperWithToken(t *testing.T) *TestHelper {
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
 	sessionToken := "TESTTOKEN"
-	th := &TestHelper{T: t}
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = newTestServer(sessionToken)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
@@ -261,21 +271,42 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
-	th := &TestHelper{T: t}
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = NewTestServerPluginMode()
 	th.Start()
 	return th
 }
 
 func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
-	th := &TestHelper{T: t}
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = newTestServerLocalMode()
 	th.Start()
 	return th
 }
 
 func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
-	th := &TestHelper{T: t}
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = newTestServerWithLicense("", licenseType)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
@@ -343,6 +374,8 @@ func (th *TestHelper) InitBasic() *TestHelper {
 var ErrRegisterFail = errors.New("register failed")
 
 func (th *TestHelper) TearDown() {
+	os.Setenv("FOCALBOARD_UNIT_TESTING", th.origEnvUnitTesting)
+
 	logger := th.Server.Logger()
 
 	if l, ok := logger.(*mlog.Logger); ok {
