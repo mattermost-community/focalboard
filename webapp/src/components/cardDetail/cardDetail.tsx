@@ -22,13 +22,11 @@ import {useAppDispatch} from '../../store/hooks'
 import {setCurrent as setCurrentCard} from '../../store/cards'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import BlocksEditor from '../blocksEditor/blocksEditor'
 
 import CardSkeleton from '../../svg/card-skeleton'
 
 import CommentsList from './commentsList'
-import {CardDetailProvider} from './cardDetailContext'
-import CardDetailContents from './cardDetailContents'
-import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
@@ -215,17 +213,22 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {/* Content blocks */}
 
             {!limited && <div className='CardDetail content fullwidth content-blocks'>
-                <CardDetailProvider card={card}>
-                    <CardDetailContents
-                        card={props.card}
-                        contents={props.contents}
-                        readonly={props.readonly || !canEditBoardCards}
-                    />
-                    {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
-                </CardDetailProvider>
+                <BlocksEditor
+                    card={props.card}
+                    contents={props.contents}
+                    readonly={props.readonly || !canEditBoardCards}
+                />
             </div>}
         </>
     )
 }
+                // <CardDetailProvider card={card}>
+                //     <CardDetailContents
+                //         card={props.card}
+                //         contents={props.contents}
+                //         readonly={props.readonly || !canEditBoardCards}
+                //     />
+                //     {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
+                // </CardDetailProvider>
 
 export default CardDetail

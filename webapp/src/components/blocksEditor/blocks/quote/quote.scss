@@ -1,0 +1,20 @@
+.Editor .Quote input {
+    width: calc(100% - 80px);
+}
+
+.Quote {
+    width: 100%;
+
+    p {
+        &:before {
+            color: #ccc;
+            content: open-quote;
+            font-size: 4em;
+            line-height: 0.1em;
+            margin-right: 0.25em;
+            vertical-align: -0.4em;
+            width: 25px;
+            display: inline-block;
+        }
+    }
+}

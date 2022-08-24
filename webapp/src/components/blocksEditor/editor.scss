@@ -1,0 +1,11 @@
+.Editor {
+    input {
+        width: 100%;
+        border: 1px solid hsl(0, 0%, 80%);
+        border-radius: 4px;
+        padding: 10px;
+        &:focus {
+            border: 2px solid #2684FF;
+        }
+    }
+}

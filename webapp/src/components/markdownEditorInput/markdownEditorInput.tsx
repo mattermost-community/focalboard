@@ -44,9 +44,11 @@ type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
+    onEditorCancel?: () => void
     initialText?: string
     id?: string
     isEditing: boolean
+    saveOnEnter?: boolean
 }
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
@@ -151,17 +153,28 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return 'editor-blur'
         }
 
+        if (e.key === 'Backspace') {
+            return 'backspace'
+        }
+
         return getDefaultKeyBinding(e as any)
     }, [isEmojiPopoverOpen, isMentionPopoverOpen])
 
-    const handleKeyCommand = useCallback((command: string): DraftHandleValue => {
+    const handleKeyCommand = useCallback((command: string, editorState: EditorState): DraftHandleValue => {
         if (command === 'editor-blur') {
             ref.current?.blur()
             return 'handled'
         }
 
+        if (command === 'backspace') {
+            if (props.onEditorCancel && editorState.getCurrentContent().getPlainText().length === 0) {
+                props.onEditorCancel()
+                return 'handled'
+            }
+        }
+
         return 'not-handled'
-    }, [])
+    }, [props.onEditorCancel])
 
     const onEditorStateBlur = useCallback(() => {
         const text = editorState.getCurrentContent().getPlainText()
@@ -196,6 +209,16 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         className += ' MarkdownEditorInput--IsNotEditing'
     }
 
+
+    const handleReturn = (e: any, editorState: EditorState): DraftHandleValue => {
+        if (!e.shiftKey) {
+            const text = editorState.getCurrentContent().getPlainText()
+            onBlur && onBlur(text)
+            return 'handled'
+        }
+        return 'not-handled'
+    }
+
     return (
         <div
             className={className}
@@ -210,6 +233,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 onFocus={onFocus}
                 keyBindingFn={customKeyBindingFn}
                 handleKeyCommand={handleKeyCommand}
+                handleReturn={props.saveOnEnter ? handleReturn : undefined}
             />
             <MentionSuggestions
                 open={isMentionPopoverOpen}
