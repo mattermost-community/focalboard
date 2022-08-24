@@ -105,3 +105,135 @@ func TestAddMemberToBoard(t *testing.T) {
 		require.Equal(t, boardID, addedBoardMember.BoardID)
 	})
 }
+
+func TestPatchBoard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("base case, title patch", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_1"
+		const teamID = "team_id_1"
+
+		patchTitle := "Patched Title"
+		patch := &model.BoardPatch{
+			Title: &patchTitle,
+		}
+
+		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
+			&model.Board{
+				ID:     boardID,
+				TeamID: teamID,
+				Title:  patchTitle,
+			},
+			nil)
+
+		// for WS BroadcastBoardChange
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil).Times(1)
+
+		patchedBoard, err := th.App.PatchBoard(patch, boardID, userID)
+		require.NoError(t, err)
+		require.Equal(t, patchTitle, patchedBoard.Title)
+	})
+
+	t.Run("patch type open, no users", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type: &patchType,
+		}
+
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID).Return([]*model.User{}, nil)
+
+		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
+			&model.Board{
+				ID:     boardID,
+				TeamID: teamID,
+			},
+			nil)
+
+		// for WS BroadcastBoardChange
+		// for AddTeamMembers check
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil).Times(2)
+
+		patchedBoard, err := th.App.PatchBoard(patch, boardID, userID)
+		require.NoError(t, err)
+		require.Equal(t, boardID, patchedBoard.ID)
+	})
+
+	t.Run("patch type open, single user", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type: &patchType,
+		}
+
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID).Return([]*model.User{{ID: userID}}, nil)
+
+		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
+			&model.Board{
+				ID:     boardID,
+				TeamID: teamID,
+			},
+			nil)
+
+		// for WS BroadcastBoardChange
+		// for AddTeamMembers check
+		// for WS BroadcastMemberChange
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil).Times(3)
+
+		patchedBoard, err := th.App.PatchBoard(patch, boardID, userID)
+		require.NoError(t, err)
+		require.Equal(t, boardID, patchedBoard.ID)
+	})
+
+	t.Run("patch type open, user with member", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type: &patchType,
+		}
+
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID).Return([]*model.User{{ID: userID}}, nil)
+
+		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
+			&model.Board{
+				ID:     boardID,
+				TeamID: teamID,
+			},
+			nil)
+
+		// for WS BroadcastBoardChange
+		// for AddTeamMembers check
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{{BoardID: boardID, UserID: userID, SchemeEditor: true}}, nil).Times(2)
+
+		patchedBoard, err := th.App.PatchBoard(patch, boardID, userID)
+		require.NoError(t, err)
+		require.Equal(t, boardID, patchedBoard.ID)
+	})
+
+}

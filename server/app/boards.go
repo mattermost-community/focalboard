@@ -306,12 +306,14 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
 	var oldMembers []*model.BoardMember
 	var oldChannelID string
-	if patch.ChannelID != nil && *patch.ChannelID == "" {
-		var err error
-		oldMembers, err = a.GetMembersForBoard(boardID)
-		if err != nil {
-			a.logger.Error("Unable to get the board members", mlog.Err(err))
-		}
+	var removeChannelMembers = false
+	var addChannelMembers = false
+
+	var removeTeamMembers = false
+	var addTeamMembers = false
+	var teamUsers []*model.User
+
+	if patch.Type != nil || patch.ChannelID != nil {
 		board, err := a.store.GetBoard(boardID)
 		if model.IsErrNotFound(err) {
 			return nil, model.NewErrNotFound(boardID)
@@ -319,13 +321,41 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		if err != nil {
 			return nil, err
 		}
-		oldChannelID = board.ChannelID
+
+		if patch.Type != nil && board.IsTemplate {
+			teamUsers, err = a.GetTeamUsers(board.TeamID)
+			if err != nil {
+				return nil, err
+			}
+			if *patch.Type == model.BoardTypeOpen {
+				addTeamMembers = true
+			}
+			if *patch.Type == model.BoardTypePrivate {
+				removeTeamMembers = true
+			}
+		}
+
+		if patch.ChannelID != nil && *patch.ChannelID == "" {
+			removeChannelMembers = true
+		} else if patch.ChannelID != nil && *patch.ChannelID != "" {
+			addChannelMembers = true
+		}
+
+		if removeTeamMembers || removeChannelMembers {
+			var err error
+			oldMembers, err = a.GetMembersForBoard(boardID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			oldChannelID = board.ChannelID
+		}
 	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
 	}
 
+	// Post message to channel if linked/unlinked
 	if patch.ChannelID != nil {
 		var username string
 		user, err := a.store.GetUserByID(userID)
@@ -353,9 +383,10 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 	}
 
+	// Broadcast Messages to affected users
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
-		if patch.ChannelID != nil && *patch.ChannelID != "" {
+		if addChannelMembers {
 			members, err := a.GetMembersForBoard(updatedBoard.ID)
 			if err != nil {
 				a.logger.Error("Unable to get the board members", mlog.Err(err))
@@ -365,10 +396,40 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
 				}
 			}
-		} else if patch.ChannelID != nil && *patch.ChannelID == "" {
+		} else if removeChannelMembers {
 			for _, oldMember := range oldMembers {
 				if oldMember.Synthetic {
 					a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, oldMember.UserID)
+				}
+			}
+		} else if addTeamMembers {
+			members, err := a.GetMembersForBoard(updatedBoard.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, user := range teamUsers {
+				isMember := false
+				for _, member := range members {
+					if member.UserID == user.ID {
+						isMember = true
+						break
+					}
+				}
+				if !isMember {
+					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: updatedBoard.ID, SchemeViewer: true})
+				}
+			}
+		} else if removeTeamMembers {
+			for _, user := range teamUsers {
+				isMember := false
+				for _, oldMember := range oldMembers {
+					if oldMember.UserID == user.ID {
+						isMember = true
+						break
+					}
+				}
+				if !isMember {
+					a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, user.ID)
 				}
 			}
 		}
@@ -541,8 +602,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		if synteticMember, _ := a.store.GetMemberForBoard(boardID, userID); synteticMember != nil {
-			a.wsAdapter.BroadcastMemberChange(board.TeamID, boardID, synteticMember)
+		if syntheticMember, _ := a.GetMemberForBoard(boardID, userID); syntheticMember != nil {
+			a.wsAdapter.BroadcastMemberChange(board.TeamID, boardID, syntheticMember)
 		} else {
 			a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
 		}
