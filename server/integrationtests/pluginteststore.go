@@ -160,6 +160,19 @@ func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatc
 	return nil
 }
 
+func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
+	if userID == userTeamMember {
+		return mmModel.Preferences{{
+			UserId:   userTeamMember,
+			Category: "focalboard",
+			Name:     "test",
+			Value:    "test",
+		}}, nil
+	}
+
+	return nil, errTestStore
+}
+
 func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	switch {
 	case teamID == s.testTeam.ID:
