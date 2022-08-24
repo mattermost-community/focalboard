@@ -75,6 +75,7 @@ describe('src/component/kanban/kanban', () => {
         },
         cards: {
             cards: [card1, card2, card3],
+            templates: [],
         },
         teams: {
             current: {id: 'team-id'},
@@ -542,6 +543,7 @@ describe('src/component/kanban/kanban', () => {
     card2.fields.properties = {id: 'property_value_id_1'}
     const card3 = TestBlockFactory.createCard(board)
     card3.id = 'id3'
+    card3.boardId = 'board_id_1'
     card3.fields.properties = {id: 'property_value_id_2'}
     activeView.fields.kanbanCalculations = {
         id1: {
@@ -550,7 +552,7 @@ describe('src/component/kanban/kanban', () => {
 
         },
     }
-    activeView.fields.defaultTemplateId = "defaultTemplateId"
+    activeView.fields.defaultTemplateId = card3.id
     const optionQ1:IPropertyOption = {
         color: 'propColorOrange',
         id: 'property_value_id_1',
@@ -582,7 +584,8 @@ describe('src/component/kanban/kanban', () => {
             },
         },
         cards: {
-            cards: [card1, card2, card3],
+            cards: [card1, card2],
+            templates: [card3],
         },
         teams: {
             current: {id: 'team-id'},
