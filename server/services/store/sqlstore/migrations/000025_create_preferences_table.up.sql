@@ -1,6 +1,6 @@
 create table {{.prefix}}preferences
 (
-    userid   varchar(26) not null,
+    userid   varchar(36) not null,
     category varchar(32) not null,
     name     varchar(32) not null,
     value    text        null,
