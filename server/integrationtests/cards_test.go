@@ -48,4 +48,20 @@ func TestCreateCard(t *testing.T) {
 		require.Equal(t, contentOrder, cardNew.ContentOrder)
 	})
 
+	t.Run("invalid card", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		board := th.CreateBoard(testTeamID, model.BoardTypeOpen)
+
+		card := &model.Card{
+			Title: "too many emoji's",
+			Icon:  "😱😱😱😱",
+		}
+
+		cardNew, resp := th.Client.CreateCard(board.ID, card, false)
+		require.Error(t, resp.Error)
+		require.Nil(t, cardNew)
+	})
+
 }
