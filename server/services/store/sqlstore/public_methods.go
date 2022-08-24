@@ -514,7 +514,7 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
-func (s *SQLStore) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
+func (s *SQLStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
 	return s.getUserPreferences(s.db, userID)
 
 }

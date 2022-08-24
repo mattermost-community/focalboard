@@ -1061,10 +1061,10 @@ func (mr *MockStoreMockRecorder) GetUserCategoryBoards(arg0, arg1 interface{}) *
 }
 
 // GetUserPreferences mocks base method.
-func (m *MockStore) GetUserPreferences(arg0 string) ([]model0.Preference, error) {
+func (m *MockStore) GetUserPreferences(arg0 string) (model0.Preferences, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetUserPreferences", arg0)
-	ret0, _ := ret[0].([]model0.Preference)
+	ret0, _ := ret[0].(model0.Preferences)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

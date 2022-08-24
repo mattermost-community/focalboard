@@ -67,6 +67,14 @@ func (mr *MockServicesAPIMockRecorder) CreatePost(arg0 interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePost", reflect.TypeOf((*MockServicesAPI)(nil).CreatePost), arg0)
 }
 
+// DeletePreferencesForUser mocks base method.
+func (m *MockServicesAPI) DeletePreferencesForUser(arg0 string, arg1 model.Preferences) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeletePreferencesForUser", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
 // DeletePreferencesForUser indicates an expected call of DeletePreferencesForUser.
 func (mr *MockServicesAPIMockRecorder) DeletePreferencesForUser(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
@@ -249,6 +257,14 @@ func (mr *MockServicesAPIMockRecorder) GetMasterDB() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMasterDB", reflect.TypeOf((*MockServicesAPI)(nil).GetMasterDB))
 }
 
+// GetPreferencesForUser mocks base method.
+func (m *MockServicesAPI) GetPreferencesForUser(arg0 string) (model.Preferences, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPreferencesForUser", arg0)
+	ret0, _ := ret[0].(model.Preferences)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
 
 // GetPreferencesForUser indicates an expected call of GetPreferencesForUser.
 func (mr *MockServicesAPIMockRecorder) GetPreferencesForUser(arg0 interface{}) *gomock.Call {
@@ -410,6 +426,14 @@ func (m *MockServicesAPI) RegisterRouter(arg0 *mux.Router) {
 func (mr *MockServicesAPIMockRecorder) RegisterRouter(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterRouter", reflect.TypeOf((*MockServicesAPI)(nil).RegisterRouter), arg0)
+}
+
+// UpdatePreferencesForUser mocks base method.
+func (m *MockServicesAPI) UpdatePreferencesForUser(arg0 string, arg1 model.Preferences) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePreferencesForUser", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
 // UpdatePreferencesForUser indicates an expected call of UpdatePreferencesForUser.

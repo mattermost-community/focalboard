@@ -340,7 +340,7 @@ func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
 	return "", errUnsupportedOperation
 }
 
-func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) ([]mmModel.Preference, error) {
+func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) (mmModel.Preferences, error) {
 	query := s.getQueryBuilder(db).
 		Select("userid", "category", "name", "value").
 		From(s.tablePrefix + "preferences").

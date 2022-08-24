@@ -36,9 +36,9 @@ type servicesAPI interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	EnsureBot(bot *mmModel.Bot) (string, error)
 	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
-	GetPreferencesForUser(userID string) ([]mmModel.Preference, error)
-	DeletePreferencesForUser(userID string, preferences []mmModel.Preference) error
-	UpdatePreferencesForUser(userID string, preferences []mmModel.Preference) error
+	GetPreferencesForUser(userID string) (mmModel.Preferences, error)
+	DeletePreferencesForUser(userID string, preferences mmModel.Preferences) error
+	UpdatePreferencesForUser(userID string, preferences mmModel.Preferences) error
 }
 
 // Store represents the abstraction of the data storage.
@@ -132,7 +132,7 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
 	if len(patch.UpdatedFields) > 0 {
-		updatedPreferences := []mmModel.Preference{}
+		updatedPreferences := mmModel.Preferences{}
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
@@ -151,7 +151,7 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 	}
 
 	if len(patch.DeletedFields) > 0 {
-		deletedPreferences := []mmModel.Preference{}
+		deletedPreferences := mmModel.Preferences{}
 		for _, key := range patch.DeletedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
@@ -171,7 +171,7 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 	return nil
 }
 
-func (s *MattermostAuthLayer) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
+func (s *MattermostAuthLayer) GetUserPreferences(userID string) (mmModel.Preferences, error) {
 	return s.servicesAPI.GetPreferencesForUser(userID)
 }
 

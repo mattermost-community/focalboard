@@ -66,7 +66,7 @@ type Store interface {
 
 	// @withTransaction
 	PatchUserProps(userID string, patch model.UserPropPatch) error
-	GetUserPreferences(userID string) ([]mmModel.Preference, error)
+	GetUserPreferences(userID string) (mmModel.Preferences, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
