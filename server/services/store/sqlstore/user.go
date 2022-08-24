@@ -308,7 +308,7 @@ func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preferen
 	}
 
 	if _, err := query.Exec(); err != nil {
-		return fmt.Errorf("failed to upsert user preference in database: name: %s value: %s error: %w", preference.Name, preference.Value, err)
+		return fmt.Errorf("failed to upsert user preference in database: userID: %s name: %s value: %s error: %w", preference.UserId, preference.Name, preference.Value, err)
 	}
 
 	return nil
