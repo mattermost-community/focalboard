@@ -235,6 +235,12 @@ const SidebarCategory = (props: Props) => {
                             position='auto'
                             parentRef={menuWrapperRef}
                         >
+                            <Menu.Text
+                                id='createNewCategory'
+                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                icon={<CreateNewFolder/>}
+                                onClick={handleCreateNewCategory}
+                            />
                             {
                                 props.categoryBoards.id !== '' &&
                                 <React.Fragment>

@@ -242,6 +242,7 @@
   "Sidebar.untitled-view": "(Untitled View)",
   "SidebarCategories.BlocksMenu.Move": "Move To...",
   "SidebarCategories.CategoryMenu.CreateNew": "Create New Category",
+  "SidebarCategories.CategoryMenu.CreateBoard": "Create New Board",
   "SidebarCategories.CategoryMenu.Delete": "Delete Category",
   "SidebarCategories.CategoryMenu.DeleteModal.Body": "Boards in <b>{categoryName}</b> will move back to the Boards categories. You're not removed from any boards.",
   "SidebarCategories.CategoryMenu.DeleteModal.Title": "Delete this category?",
