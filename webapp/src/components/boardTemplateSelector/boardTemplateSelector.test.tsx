@@ -63,12 +63,13 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         username: 'username_1',
         email: '',
         nickname: '',
-        firstname: '', 
+        firstname: '',
         lastname: '',
         props: {},
         create_at: 0,
         update_at: 0,
         is_bot: false,
+        is_guest: false,
         roles: 'system_user',
     }
     const template1Title = 'Template 1'
@@ -84,7 +85,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             },
             users: {
                 me,
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
             },
             boards: {
                 boards: [

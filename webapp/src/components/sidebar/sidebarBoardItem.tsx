@@ -259,18 +259,20 @@ const SidebarBoardItem = (props: Props) => {
                             >
                                 {generateMoveToCategoryOptions(board.id)}
                             </Menu.SubMenu>
-                            <Menu.Text
-                                id='duplicateBoard'
-                                name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                                icon={<DuplicateIcon/>}
-                                onClick={() => handleDuplicateBoard(board.isTemplate)}
-                            />
-                            <Menu.Text
-                                id='templateFromBoard'
-                                name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                                icon={<AddIcon/>}
-                                onClick={() => handleDuplicateBoard(true)}
-                            />
+                            {!me?.is_guest &&
+                                <Menu.Text
+                                    id='duplicateBoard'
+                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                                    icon={<DuplicateIcon/>}
+                                    onClick={() => handleDuplicateBoard(board.isTemplate)}
+                                />}
+                            {!me?.is_guest &&
+                                <Menu.Text
+                                    id='templateFromBoard'
+                                    name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
+                                    icon={<AddIcon/>}
+                                    onClick={() => handleDuplicateBoard(true)}
+                                />}
                             <Menu.Text
                                 id='hideBoard'
                                 name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}

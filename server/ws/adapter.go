@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockstore.go -package mocks . Store
+//go:generate mockgen -destination=mocks/mockstore.go -package mocks . Store
 package ws
 
 import (

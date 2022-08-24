@@ -95,40 +95,41 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                         isOn={randomIcons}
                         onClick={async () => toggleRandomIcons()}
                     />
-                    <Menu.Text
-                        id='product-tour'
-                        className='product-tour'
-                        name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}
-                        onClick={async () => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
+                    {me?.is_guest !== true &&
+                        <Menu.Text
+                            id='product-tour'
+                            className='product-tour'
+                            name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}
+                            onClick={async () => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
 
-                            if (!me) {
-                                return
-                            }
-                            if (!currentTeam) {
-                                return
-                            }
+                                if (!me) {
+                                    return
+                                }
+                                if (!currentTeam) {
+                                    return
+                                }
 
-                            const patch: UserConfigPatch = {
-                                updatedFields: {
-                                    [UserPropPrefix + 'onboardingTourStarted']: '1',
-                                    [UserPropPrefix + 'onboardingTourStep']: '0',
-                                    [UserPropPrefix + 'tourCategory']: 'onboarding',
-                                },
-                            }
+                                const patch: UserConfigPatch = {
+                                    updatedFields: {
+                                        [UserPropPrefix + 'onboardingTourStarted']: '1',
+                                        [UserPropPrefix + 'onboardingTourStep']: '0',
+                                        [UserPropPrefix + 'tourCategory']: 'onboarding',
+                                    },
+                                }
 
-                            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-                            if (patchedProps) {
-                                await dispatch(patchProps(patchedProps))
-                            }
+                                const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+                                if (patchedProps) {
+                                    await dispatch(patchProps(patchedProps))
+                                }
 
-                            const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
+                                const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
 
-                            const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
+                                const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
 
-                            props.history.push(newPath)
-                        }}
-                    />
+                                props.history.push(newPath)
+                            }}
+                        />}
                 </Menu>
             </MenuWrapper>
         </div>

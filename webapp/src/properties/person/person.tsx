@@ -13,6 +13,7 @@ import mutator from '../../mutator'
 import {getSelectBaseStyle} from '../../theme'
 import {ClientConfig} from '../../config/clientConfig'
 import {getClientConfig} from '../../store/clientConfig'
+import GuestBadge from '../../widgets/guestBadge'
 
 import {PropertyProps} from '../types'
 
@@ -55,9 +56,14 @@ const selectStyles = {
 const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
 
+    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
+
+    const me: IUser = boardUsersById[propertyValue as string]
+
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
-    const formatOptionLabel = (user: any) => {
+    const formatOptionLabel = (user: IUser) => {
         let profileImg
         if (imageURLForUser) {
             profileImg = imageURLForUser(user.id)
@@ -72,19 +78,15 @@ const Person = (props: PropertyProps): JSX.Element => {
                     />
                 )}
                 {Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
+                <GuestBadge show={Boolean(user?.is_guest)}/>
             </div>
         )
     }
 
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
-    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
-
-    const user = boardUsersById[propertyValue as string]
-
     if (readOnly) {
         return (
             <div className={`Person ${props.property.valueClassName(true)}`}>
-                {user ? formatOptionLabel(user) : propertyValue}
+                {me ? formatOptionLabel(me) : propertyValue}
             </div>
         )
     }

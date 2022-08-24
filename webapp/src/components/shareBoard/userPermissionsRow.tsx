@@ -14,6 +14,7 @@ import {BoardMember} from '../../blocks/board'
 import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import {Permission} from '../../constants'
+import GuestBadge from '../../widgets/guestBadge'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
 
@@ -54,6 +55,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     <strong>{Utils.getUserDisplayName(user, teammateNameDisplay)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     {isMe && <strong className='ml-2 text-light'>{intl.formatMessage({id: 'ShareBoard.userPermissionsYouText', defaultMessage: '(You)'})}</strong>}
+                    <GuestBadge show={user.is_guest}/>
                 </div>
             </div>
             <div>
@@ -89,13 +91,14 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                                 onClick={() => props.onUpdateBoardMember(member, 'Editor')}
                             />
-                            <Menu.Text
-                                id='Admin'
-                                check={true}
-                                icon={currentRole === 'Admin' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Admin')}
-                            />
+                            {user.is_guest !== true &&
+                                <Menu.Text
+                                    id='Admin'
+                                    check={true}
+                                    icon={currentRole === 'Admin' ? <CheckIcon/> : null}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
+                                    onClick={() => props.onUpdateBoardMember(member, 'Admin')}
+                                />}
                             <Menu.Separator/>
                             <Menu.Text
                                 id='Remove'

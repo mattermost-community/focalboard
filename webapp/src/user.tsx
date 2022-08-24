@@ -13,6 +13,7 @@ interface IUser {
     create_at: number,
     update_at: number,
     is_bot: boolean,
+    is_guest: boolean,
     roles: string,
 }
 

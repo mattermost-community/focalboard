@@ -27,6 +27,7 @@ import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBo
 
 type Props = {
     onBoardTemplateSelectorOpen?: () => void,
+    userIsGuest?: boolean,
 }
 
 const BoardsSwitcher = (props: Props): JSX.Element => {
@@ -93,7 +94,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
             </div>
             {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
-                Utils.isFocalboardPlugin() &&
+                Utils.isFocalboardPlugin() && !props.userIsGuest &&
                 <IconButton
                     size='small'
                     inverted={true}
