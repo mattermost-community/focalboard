@@ -35,7 +35,7 @@
         INSERT INTO {{.prefix}}preferences (userid, category, name, value) SELECT id, 'focalboard', 'version72MessageCanceled', replace((props->'focalboard_version72MessageCanceled')::varchar, '"', '') from {{.prefix}}users WHERE props->'focalboard_version72MessageCanceled' IS NOT NULL;
         INSERT INTO {{.prefix}}preferences (userid, category, name, value) SELECT id, 'focalboard', 'lastWelcomeVersion', replace((props->'focalboard_lastWelcomeVersion')::varchar, '"', '') from {{.prefix}}users WHERE props->'focalboard_lastWelcomeVersion' IS NOT NULL;
 
-        UPDATE users SET props = (props - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion');
+        UPDATE {{.prefix}}users SET props = (props - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion');
 
     {{else}}
             {{- /* Surprisingly SQLite and MySQL have same JSON functions and syntax! */ -}}
