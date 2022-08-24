@@ -44,6 +44,7 @@ func init() {
 			app.KVStoreKey:       {},
 			app.StoreKey:         {},
 			app.SystemKey:        {},
+			app.PreferencesKey:   {},
 		},
 	})
 }
@@ -66,11 +67,11 @@ type boardsProduct struct {
 	kvStoreService       product.KVStoreService
 	storeService         product.StoreService
 	systemService        product.SystemService
+	preferencesService   product.PreferencesService
 
 	boardsApp *boards.BoardsApp
 }
 
-//nolint:gocyclo,exhaustive
 func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
 	boards := &boardsProduct{}
 
@@ -178,6 +179,12 @@ func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (a
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.systemService = systemService
+		case app.PreferencesKey:
+			preferencesService, ok := service.(product.PreferencesService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.preferencesService = preferencesService
 		case app.HooksKey: // not needed
 		}
 	}
