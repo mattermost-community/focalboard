@@ -10,7 +10,6 @@ import Menu from '../../widgets/menu'
 import Search from '../../widgets/icons/search'
 import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
-import mutator from '../../mutator'
 
 import {
     getMe,
@@ -44,11 +43,6 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
     const currentCard = useAppSelector(getCurrentCard)
     const noCardOpen = !currentCard
-    const team = useAppSelector(getCurrentTeam)
-    const teamID = team?.id || ''
-
-    const me = useAppSelector<IUser|null>(getMe)
-
 
     const shouldViewSearchForBoardsTour = noCardOpen &&
                                        onboardingTourCategory === TOUR_SIDEBAR &&
