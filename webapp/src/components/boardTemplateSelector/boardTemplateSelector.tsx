@@ -89,10 +89,6 @@ const BoardTemplateSelector = (props: Props) => {
                 onboardingTourStarted: '1',
                 onboardingTourStep: BaseTourSteps.OPEN_A_CARD.toString(),
                 tourCategory: TOUR_BASE,
-                cardLimitSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
-                cardHiddenWarningSnoozeUntil: `${Date.now() + (1000 * 60 * 60 * 24 * 10)}`,
-                cloudMessageCanceled: 'true',
-                version72MessageCanceled: 'true'
             },
         }
 

@@ -28,12 +28,6 @@ interface UserConfigPatch {
 }
 
 function parseUserProps(props: Array<UserPreference>): Record<string, UserPreference> {
-    // const processedProps = props
-    // const hiddenBoardIDs = props.hiddenBoardIDs ? JSON.parse(props.hiddenBoardIDs) : []
-    // processedProps.hiddenBoardIDs = {}
-    // hiddenBoardIDs.forEach((boardID: string) => processedProps.hiddenBoardIDs[boardID] = true)
-    // return processedProps
-
     const processedProps: Record<string, UserPreference> = {}
 
     props.forEach((prop) => {
