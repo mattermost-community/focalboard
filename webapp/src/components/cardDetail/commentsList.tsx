@@ -13,6 +13,8 @@ import {MarkdownEditor} from '../markdownEditor'
 
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import {Permission} from '../../constants'
 
 import AddCommentTourStep from '../onboardingTour/addComments/addComments'
 
@@ -30,6 +32,7 @@ type Props = {
 const CommentsList = (props: Props) => {
     const [newComment, setNewComment] = useState('')
     const me = useAppSelector<IUser|null>(getMe)
+    const canDeleteOthersComments = useHasCurrentBoardPermissions([Permission.DeleteOthersComments])
 
     const onSendClicked = () => {
         const commentText = newComment
@@ -88,15 +91,20 @@ const CommentsList = (props: Props) => {
             {/* New comment */}
             {!props.readonly && newCommentComponent}
 
-            {comments.slice(0).reverse().map((comment) => (
-                <Comment
-                    key={comment.id}
-                    comment={comment}
-                    userImageUrl={Utils.getProfilePicture(comment.modifiedBy)}
-                    userId={comment.modifiedBy}
-                    readonly={props.readonly}
-                />
-            ))}
+            {comments.slice(0).reverse().map((comment) => {
+
+                // Only modify _own_ comments, EXCEPT for Admins, which can delete _any_ comment
+                // NOTE: editing comments will exist in the future (in addition to deleting)
+                const canDeleteComment: boolean = canDeleteOthersComments || me?.id === comment.modifiedBy
+                return (
+                    <Comment
+                        key={comment.id}
+                        comment={comment}
+                        userImageUrl={Utils.getProfilePicture(comment.modifiedBy)}
+                        userId={comment.modifiedBy}
+                        readonly={props.readonly || !canDeleteComment}
+                    />
+                )})}
 
             {/* horizontal divider below comments */}
             {!(comments.length === 0 && props.readonly) && <hr className='CommentsList__divider'/>}

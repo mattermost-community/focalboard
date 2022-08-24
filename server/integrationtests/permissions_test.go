@@ -1075,6 +1075,74 @@ func TestPermissionsCreateBoardBlocks(t *testing.T) {
 	})
 }
 
+func TestPermissionsCreateBoardComments(t *testing.T) {
+	ttCasesF := func(testData TestData) []TestCase {
+		counter := 0
+		newBlockJSON := func(boardID string) string {
+			counter++
+			return toJSON(t, []*model.Block{{
+				ID:       fmt.Sprintf("%d", counter),
+				Title:    "Comment to create",
+				BoardID:  boardID,
+				Type:     model.TypeComment,
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+			}})
+		}
+
+		return []TestCase{
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userCommenter, http.StatusOK, 1},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PRIVATE_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.privateBoard.ID), userAdmin, http.StatusOK, 1},
+
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userCommenter, http.StatusOK, 1},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PUBLIC_BOARD_ID}/blocks", methodPost, newBlockJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
+
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userCommenter, http.StatusOK, 1},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PRIVATE_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.privateTemplate.ID), userAdmin, http.StatusOK, 1},
+
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAnon, http.StatusUnauthorized, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userNoTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userCommenter, http.StatusOK, 1},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/blocks", methodPost, newBlockJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
+		}
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		ttCases := ttCasesF(testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases := ttCasesF(testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
 func TestPermissionsPatchBoardBlocks(t *testing.T) {
 	newBlocksPatchJSON := func(blockID string) string {
 		newTitle := "New Patch Block Title"
@@ -1420,37 +1488,104 @@ func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 	}
 
 	ttCases := []TestCase{
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
-		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-4/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
 
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
-		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-3/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
 
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
-		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-2/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
 
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
-		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-1/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userCommenter, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+
+		// Invalid boardID/blockID combination
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3/duplicate", methodPost, "", userAdmin, http.StatusNotFound, 0},
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsDuplicateBoardComment(t *testing.T) {
+	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
+		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: model.TypeComment, BoardID: testData.publicTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: model.TypeComment, BoardID: testData.privateTemplate.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: model.TypeComment, BoardID: testData.publicBoard.ID}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: model.TypeComment, BoardID: testData.privateBoard.ID}, userAdmin)
+		require.NoError(t, err)
+	}
+
+	ttCases := []TestCase{
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_BOARD_ID}/blocks/block-8/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_BOARD_ID}/blocks/block-7/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PRIVATE_TEMPLATE_ID}/blocks/block-6/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
+
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userAnon, http.StatusUnauthorized, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userTeamMember, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userViewer, http.StatusForbidden, 0},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userCommenter, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userEditor, http.StatusOK, 1},
+		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-5/duplicate", methodPost, "", userAdmin, http.StatusOK, 1},
 
 		// Invalid boardID/blockID combination
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3/duplicate", methodPost, "", userAdmin, http.StatusNotFound, 0},
