@@ -15,6 +15,8 @@ import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import {Permission} from '../../constants'
 import GuestBadge from '../../widgets/guestBadge'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoard} from '../../store/boards'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -29,6 +31,7 @@ type Props = {
 
 const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
+    const board = useAppSelector(getCurrentBoard)
     const {user, member, isMe, teammateNameDisplay} = props
     let currentRole = 'Viewer'
     if (member.schemeAdmin) {
@@ -73,6 +76,14 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
                                 onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
                             />
+                            {!board.isTemplate &&
+                                <Menu.Text
+                                    id='Commenter'
+                                    check={true}
+                                    icon={currentRole === 'Commenter' ? <CheckIcon/> : null}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
+                                    onClick={() => props.onUpdateBoardMember(member, 'Commenter')}
+                                />}
                             <Menu.Text
                                 id='Editor'
                                 check={true}
