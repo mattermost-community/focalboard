@@ -216,5 +216,23 @@ func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 	// NOOP for plugin
 }
 
+//
+// Preferences service.
+//
+func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
+	p, appErr := a.api.GetPreferencesForUser(userID)
+	return p, normalizeAppErr(appErr)
+}
+
+func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.UpdatePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
+func (a *pluginAPIAdapter) DeletePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.DeletePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
 // Ensure the adapter implements ServicesAPI.
 var _ model.ServicesAPI = &pluginAPIAdapter{}
