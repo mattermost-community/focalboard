@@ -24,7 +24,7 @@ import mutator from '../../mutator'
 
 import octoClient from '../../octoClient'
 
-import {IUser, UserPreference} from '../../user'
+import {IUser} from '../../user'
 
 import WelcomePage from './welcomePage'
 

@@ -16,7 +16,7 @@ import {
     getOnboardingTourStep,
     patchProps,
 } from '../../../store/users'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../../user'
+import {IUser, UserConfigPatch} from '../../../user'
 import mutator from '../../../mutator'
 import {Constants} from '../../../constants'
 

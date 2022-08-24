@@ -19,7 +19,7 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import './boardTemplateSelector.scss'
 import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {IUser, UserConfigPatch} from '../../user'
 import {getMe, patchProps} from '../../store/users'
 import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
 
