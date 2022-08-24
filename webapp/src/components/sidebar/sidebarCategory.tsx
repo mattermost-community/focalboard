@@ -322,21 +322,6 @@ const SidebarCategory = (props: Props) => {
                                 defaultMessage='Create New Category'
                             />
                         )}
-                        onCreate={async (name) => {
-                            if (!me) {
-                                Utils.logError('me not initialized')
-                                return
-                            }
-
-                            const category: Category = {
-                                name,
-                                userID: me.id,
-                                teamID,
-                            } as Category
-
-                            await mutator.createCategory(category)
-                            setShowCreateCategoryModal(false)
-                        }}
                     />
                 )
             }
@@ -352,22 +337,6 @@ const SidebarCategory = (props: Props) => {
                             />
                         )}
                         onClose={() => setShowUpdateCategoryModal(false)}
-                        onCreate={async (name) => {
-                            if (!me) {
-                                Utils.logError('me not initialized')
-                                return
-                            }
-
-                            const category: Category = {
-                                name,
-                                id: props.categoryBoards.id,
-                                userID: me.id,
-                                teamID,
-                            } as Category
-
-                            await mutator.updateCategory(category)
-                            setShowUpdateCategoryModal(false)
-                        }}
                     />
                 )
             }

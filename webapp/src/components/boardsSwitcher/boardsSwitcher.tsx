@@ -17,7 +17,6 @@ import {
     getOnboardingTourCategory,
     getOnboardingTourStep,
 } from '../../store/users'
-import {Category} from '../../store/sidebar'
 import {getCurrentCard} from '../../store/cards'
 import {getCurrentTeam} from '../../store/teams'
 import {IUser} from '../../user'
@@ -122,7 +121,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                                 id='create-new-board-option'
                                 icon={<CompassIcon icon='plus' />}
                                 onClick={props.onBoardTemplateSelectorOpen}
-                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateBoard', defaultMessage: 'Create New Board'})}
+                                name='Create new board'
                             />
                             <Menu.Text
                                 id='createNewCategory'
@@ -155,21 +154,6 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                                 defaultMessage='Create New Category'
                             />
                         )}
-                        onCreate={async (name) => {
-                            if (!me) {
-                                Utils.logError('me not initialized')
-                                return
-                            }
-
-                            const category: Category = {
-                                name,
-                                userID: me.id,
-                                teamID,
-                            } as Category
-
-                            await mutator.createCategory(category)
-                            setShowCreateCategoryModal(false)
-                        }}
                     />
                 )
             }

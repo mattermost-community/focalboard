@@ -16,7 +16,6 @@ describe('components/createCategory/CreateCategory', () => {
         const component = wrapIntl(
             <CreateCategory
                 onClose={jest.fn()}
-                onCreate={jest.fn()}
                 title={
                     <span>{'title'}</span>
                 }
@@ -32,7 +31,6 @@ describe('components/createCategory/CreateCategory', () => {
         const component = wrapIntl(
             <CreateCategory
                 onClose={onCloseHandler}
-                onCreate={jest.fn()}
                 title={
                     <span>{'title'}</span>
                 }
@@ -56,7 +54,6 @@ describe('components/createCategory/CreateCategory', () => {
         const component = wrapIntl(
             <CreateCategory
                 onClose={jest.fn()}
-                onCreate={onCreateHandler}
                 title={
                     <span>{'title'}</span>
                 }
@@ -71,12 +68,10 @@ describe('components/createCategory/CreateCategory', () => {
     })
 
     it('should show initial value', () => {
-        const onCreateHandler = jest.fn()
         const component = wrapIntl(
             <CreateCategory
                 initialValue='Dwight prank ideas'
                 onClose={jest.fn()}
-                onCreate={onCreateHandler}
                 title={
                     <span>{'title'}</span>
                 }
@@ -90,12 +85,10 @@ describe('components/createCategory/CreateCategory', () => {
     })
 
     it('should clear input field on clicking clear icon', () => {
-        const onCreateHandler = jest.fn()
         const component = wrapIntl(
             <CreateCategory
                 initialValue='Dunder Mifflin'
                 onClose={jest.fn()}
-                onCreate={onCreateHandler}
                 title={
                     <span>{'title'}</span>
                 }
