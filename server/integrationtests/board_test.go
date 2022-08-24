@@ -1465,39 +1465,6 @@ func TestAddMember(t *testing.T) {
 		require.True(t, members[0].SchemeAdmin)
 		require.True(t, members[0].SchemeEditor)
 	})
-
-	// TODO: Review this after the default role PR is merged
-	// t.Run("should always disable the admin role on new member if the user is a guest", func(t *testing.T) {
-	// 	th := SetupTestHelperPluginMode(t)
-	// 	defer th.TearDown()
-	// 	clients := setupClients(th)
-
-	// 	newBoard := &model.Board{
-	// 		Title:  "title",
-	// 		Type:   model.BoardTypeOpen,
-	// 		TeamID: teamID,
-	// 	}
-	// 	board, err := th.Server.App().CreateBoard(newBoard, userAdmin, true)
-	// 	require.NoError(t, err)
-
-	// 	newMember := &model.BoardMember{
-	// 		UserID:          userGuestID,
-	// 		BoardID:         board.ID,
-	// 		SchemeViewer:    true,
-	// 		SchemeCommenter: true,
-	// 		SchemeEditor:    true,
-	// 		SchemeAdmin:     true,
-	// 	}
-
-	// 	member, resp := clients.Admin.AddMemberToBoard(newMember)
-	// 	th.CheckOK(resp)
-	// 	require.Equal(t, newMember.UserID, member.UserID)
-	// 	require.Equal(t, newMember.BoardID, member.BoardID)
-	// 	require.False(t, member.SchemeAdmin)
-	// 	require.True(t, member.SchemeEditor)
-	// 	require.True(t, member.SchemeCommenter)
-	// 	require.True(t, member.SchemeViewer)
-	// })
 }
 
 func TestUpdateMember(t *testing.T) {
