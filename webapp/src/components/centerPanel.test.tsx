@@ -85,12 +85,9 @@ describe('components/centerPanel', () => {
                     focalboard_onboardingTourStarted: false,
                 },
             },
-            workspaceUsers: [
-                {username: 'username_1'},
-            ],
-            boardUsers: [
-                {username: 'username_1'},
-            ],
+            boardUsers: {
+                'user-id-1': {username: 'username_1'},
+            },
             blockSubscriptions: [],
         },
         teams: {

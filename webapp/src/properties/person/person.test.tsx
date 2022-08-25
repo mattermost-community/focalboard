@@ -19,7 +19,7 @@ import {Card} from '../../blocks/card'
 import PersonProperty from './property'
 import Person from './person'
 
-describe('properties/user', () => {
+describe('properties/person', () => {
     const mockStore = configureStore([])
     const state = {
         users: {
@@ -70,6 +70,32 @@ describe('properties/user', () => {
 
     test('not readonly', async () => {
         const store = mockStore(state)
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Person
+                    property={new PersonProperty()}
+                    propertyValue={'user-id-1'}
+                    readOnly={false}
+                    showEmptyPlaceholder={false}
+                    propertyTemplate={{} as IPropertyTemplate}
+                    board={{} as Board}
+                    card={{} as Card}
+                />
+            </ReduxProvider>,
+        )
+
+        const renderResult = render(component)
+        const container = await waitFor(() => {
+            if (!renderResult.container) {
+                return Promise.reject(new Error('container not found'))
+            }
+            return Promise.resolve(renderResult.container)
+        })
+        expect(container).toMatchSnapshot()
+    })
+
+    test('not readonly guest user', async () => {
+        const store = mockStore({...state, users: {boardUsers: {'user-id-1': {...state.users.boardUsers['user-id-1'], is_guest: true}}}})
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Person

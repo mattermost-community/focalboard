@@ -10,6 +10,7 @@ import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -30,7 +31,6 @@ import {
 
 import {getCurrentCard} from '../../store/cards'
 import {Utils} from '../../utils'
-import Update from '../../widgets/icons/update'
 
 import { TOUR_SIDEBAR, SidebarTourSteps, TOUR_BOARD, FINISHED } from '../../components/onboardingTour/index'
 import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -253,17 +253,24 @@ const SidebarCategory = (props: Props) => {
                                 props.categoryBoards.id !== '' &&
                                 <React.Fragment>
                                     <Menu.Text
+                                        id='updateCategory'
+                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
+                                        icon={<CompassIcon icon='pencil-outline'/>}
+                                        onClick={handleUpdateCategory}
+                                    />
+                                    <Menu.Text
                                         id='deleteCategory'
                                         className='text-danger'
                                         name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
                                         icon={<DeleteIcon/>}
                                         onClick={() => setShowDeleteCategoryDialog(true)}
                                     />
+                                    <Menu.Separator/>
                                     <Menu.Text
-                                        id='updateCategory'
-                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
-                                        icon={<Update/>}
-                                        onClick={handleUpdateCategory}
+                                        id='createNewCategory'
+                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                        icon={<CreateNewFolder/>}
+                                        onClick={handleCreateNewCategory}
                                     />
                                 </React.Fragment>
                             }
@@ -323,21 +330,6 @@ const SidebarCategory = (props: Props) => {
                                 defaultMessage='Create New Category'
                             />
                         )}
-                        onCreate={async (name) => {
-                            if (!me) {
-                                Utils.logError('me not initialized')
-                                return
-                            }
-
-                            const category: Category = {
-                                name,
-                                userID: me.id,
-                                teamID,
-                            } as Category
-
-                            await mutator.createCategory(category)
-                            setShowCreateCategoryModal(false)
-                        }}
                     />
                 )
             }
@@ -353,22 +345,6 @@ const SidebarCategory = (props: Props) => {
                             />
                         )}
                         onClose={() => setShowUpdateCategoryModal(false)}
-                        onCreate={async (name) => {
-                            if (!me) {
-                                Utils.logError('me not initialized')
-                                return
-                            }
-
-                            const category: Category = {
-                                name,
-                                id: props.categoryBoards.id,
-                                userID: me.id,
-                                teamID,
-                            } as Category
-
-                            await mutator.updateCategory(category)
-                            setShowUpdateCategoryModal(false)
-                        }}
                     />
                 )
             }

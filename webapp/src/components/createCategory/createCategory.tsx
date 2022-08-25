@@ -5,6 +5,17 @@ import React, {useState, KeyboardEvent} from 'react'
 
 import {useIntl} from 'react-intl'
 
+import {IUser} from '../../user'
+import {Category} from '../../store/sidebar'
+import {getCurrentTeam} from '../../store/teams'
+import mutator from '../../mutator'
+import {useAppSelector} from '../../store/hooks'
+import {
+    getMe,
+} from '../../store/users'
+
+import {Utils} from '../../utils'
+
 import Dialog from '../dialog'
 import Button from '../../widgets/buttons/button'
 
@@ -12,15 +23,18 @@ import './createCategory.scss'
 import CloseCircle from "../../widgets/icons/closeCircle"
 
 type Props = {
+    boardCategoryId?: string
+    renameModal?: boolean
     initialValue?: string
     onClose: () => void
-    onCreate: (name: string) => void
     title: JSX.Element
 }
 
 const CreateCategory = (props: Props): JSX.Element => {
     const intl = useIntl()
-
+    const me = useAppSelector<IUser|null>(getMe)
+    const team = useAppSelector(getCurrentTeam)
+    const teamID = team?.id || ''
     const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category' })
     const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel' })
     const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create' })
@@ -30,8 +44,36 @@ const CreateCategory = (props: Props): JSX.Element => {
 
     const handleKeypress = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
-            props.onCreate(name)
+            onCreate(name)
         }
+    }
+
+    const onCreate = async (categoryName: string) => {
+        if (!me) {
+            Utils.logError('me not initialized')
+            return
+        }
+
+        if (props.renameModal) {
+            const category: Category = {
+                name: categoryName,
+                id: props.boardCategoryId,
+                userID: me.id,
+                teamID,
+            } as Category
+
+            await mutator.updateCategory(category)
+        } else {
+            const category: Category = {
+                name: categoryName,
+                userID: me.id,
+                teamID,
+            } as Category
+
+            await mutator.createCategory(category)
+        }
+
+        props.onClose()
     }
 
     return (
@@ -40,7 +82,7 @@ const CreateCategory = (props: Props): JSX.Element => {
             onClose={props.onClose}
         >
             <div className='CreateCategory'>
-                <h3>{props.title}</h3>
+                <h3 className='dialog-title'>{props.title}</h3>
                 <div className='inputWrapper'>
                     <input
                         className='categoryNameInput'
@@ -70,7 +112,7 @@ const CreateCategory = (props: Props): JSX.Element => {
                     <Button
                         size={'medium'}
                         filled={Boolean(name.trim())}
-                        onClick={() => props.onCreate(name.trim())}
+                        onClick={() => onCreate(name.trim())}
                         disabled={!(name.trim())}
                     >
                         {props.initialValue ? updateText : createText}
