@@ -377,7 +377,7 @@ func (c *Client) PatchCard(cardID string, cardPatch *model.CardPatch, disableNot
 	if disableNotify {
 		queryParams = "?" + disableNotifyQueryParam
 	}
-	r, err := c.DoAPIPost(c.GetCardRoute(cardID)+queryParams, toJSON(cardPatch))
+	r, err := c.DoAPIPatch(c.GetCardRoute(cardID)+queryParams, toJSON(cardPatch))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -391,7 +391,7 @@ func (c *Client) PatchCard(cardID string, cardPatch *model.CardPatch, disableNot
 }
 
 func (c *Client) GetCard(cardID string) (*model.Card, *Response) {
-	r, err := c.DoAPIPost(c.GetCardRoute(cardID), "")
+	r, err := c.DoAPIGet(c.GetCardRoute(cardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

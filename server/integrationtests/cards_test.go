@@ -63,5 +63,114 @@ func TestCreateCard(t *testing.T) {
 		require.Error(t, resp.Error)
 		require.Nil(t, cardNew)
 	})
+}
 
+func TestPatchCard(t *testing.T) {
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		_, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 1)
+		card := cards[0]
+
+		th.Logout(th.Client)
+
+		newTitle := "another title"
+		patch := &model.CardPatch{
+			Title: &newTitle,
+		}
+
+		patchedCard, resp := th.Client.PatchCard(card.ID, patch, false)
+		th.CheckUnauthorized(resp)
+		require.Nil(t, patchedCard)
+	})
+
+	t.Run("good", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		board, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 1)
+		card := cards[0]
+
+		// Patch the card
+		newTitle := "another title"
+		newIcon := "🐿"
+		newContentOrder := reverse(card.ContentOrder)
+		updatedProps := modifyCardProps(card.Properties)
+		deletedPropKey := firstKey(card.Properties)
+		patch := &model.CardPatch{
+			Title:             &newTitle,
+			Icon:              &newIcon,
+			ContentOrder:      &newContentOrder,
+			UpdatedProperties: updatedProps,
+			DeletedProperties: []string{deletedPropKey},
+		}
+
+		patchedCard, resp := th.Client.PatchCard(card.ID, patch, false)
+
+		th.CheckOK(resp)
+		require.NotNil(t, patchedCard)
+		require.Equal(t, board.ID, patchedCard.BoardID)
+		require.Equal(t, newTitle, patchedCard.Title)
+		require.Equal(t, newIcon, patchedCard.Icon)
+		require.NotEqual(t, card.ContentOrder, patchedCard.ContentOrder)
+		require.ElementsMatch(t, card.ContentOrder, patchedCard.ContentOrder)
+
+		expectedProps := copyCardProps(card.Properties)
+		delete(expectedProps, deletedPropKey)
+		require.Len(t, patchedCard.Properties, len(card.Properties)-1) // a property was removed
+		require.ElementsMatch(t, expectedProps, patchedCard.Properties)
+	})
+
+	t.Run("invalid card patch", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		_, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 1)
+		card := cards[0]
+
+		// Bad patch  (too many emoji)
+		newIcon := "🐿🐿🐿"
+		patch := &model.CardPatch{
+			Icon: &newIcon,
+		}
+
+		cardNew, resp := th.Client.PatchCard(card.ID, patch, false)
+		require.Error(t, resp.Error)
+		require.Nil(t, cardNew)
+	})
+}
+
+//
+// Helpers
+//
+func reverse(src []string) []string {
+	out := make([]string, 0, len(src))
+	for i := len(src) - 1; i >= 0; i-- {
+		out = append(out, src[i])
+	}
+	return out
+}
+
+func copyCardProps(m map[string]any) map[string]any {
+	out := make(map[string]any)
+	for k, v := range m {
+		out[k] = v
+	}
+	return out
+}
+
+func modifyCardProps(m map[string]any) map[string]any {
+	out := make(map[string]any)
+	for k := range m {
+		out[k] = utils.NewID(utils.IDTypeBlock)
+	}
+	return out
+}
+
+func firstKey(m map[string]any) string {
+	for k := range m {
+		return k
+	}
+	return ""
 }

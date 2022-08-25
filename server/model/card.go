@@ -313,7 +313,7 @@ func CardPatch2BlockPatch(cardPatch *CardPatch) (*BlockPatch, error) {
 	}
 
 	for _, k := range cardPatch.DeletedProperties {
-		delete(properties, k)
+		properties[k] = nil
 	}
 
 	if len(properties) != 0 {
