@@ -323,7 +323,7 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 
 		if patch.Type != nil && board.IsTemplate {
-			teamUsers, err = a.GetTeamUsers(board.TeamID)
+			teamUsers, err = a.GetTeamUsers(board.TeamID, "")
 			if err != nil {
 				return nil, err
 			}
@@ -416,7 +416,7 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 					}
 				}
 				if !isMember {
-					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: updatedBoard.ID, SchemeViewer: true})
+					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: updatedBoard.ID, SchemeViewer: true, Synthetic: true})
 				}
 			}
 		} else if removeTeamMembers {
