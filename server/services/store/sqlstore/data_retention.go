@@ -127,8 +127,8 @@ func idsFromRows(rows *sql.Rows) ([]string, error) {
 	return deleteIds, nil
 }
 
-// genericRetentionPoliciesDeletion actually executes the DELETE query using a sq.SelectBuilder
-// which selects the rows to delete.
+// genericRetentionPoliciesDeletion actually executes the DELETE query
+// using a sq.SelectBuilder which selects the rows to delete.
 func (s *SQLStore) genericRetentionPoliciesDeletion(
 	db sq.BaseRunner,
 	info RetentionTableDeletionInfo,

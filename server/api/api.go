@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/focalboard/server/services/permissions"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -29,14 +30,6 @@ const (
 )
 
 var errAPINotSupportedInStandaloneMode = errors.New("API not supported in standalone mode")
-
-type PermissionError struct {
-	msg string
-}
-
-func (pe PermissionError) Error() string {
-	return pe.msg
-}
 
 // ----------------------------------------------------------------------------------------------------
 // REST APIs
@@ -123,7 +116,7 @@ func (a *API) panicHandler(next http.Handler) http.Handler {
 					mlog.String("stack", string(debug.Stack())),
 					mlog.String("uri", r.URL.Path),
 				)
-				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", nil)
+				a.customErrorResponse(w, r.URL.Path, http.StatusInternalServerError, "", nil)
 			}
 		}()
 
@@ -135,7 +128,7 @@ func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !a.checkCSRFToken(r) {
 			a.logger.Error("checkCSRFToken FAILED")
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "checkCSRFToken FAILED", nil)
+			a.errorResponse(w, r, model.NewErrBadRequest("checkCSRFToken FAILED"))
 			return
 		}
 
@@ -165,9 +158,64 @@ func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 	return isValid
 }
 
+func (a *API) ensurePermissionToTeam(userID, teamID string, permission *mmModel.Permission) error {
+	if !a.permissions.HasPermissionToTeam(userID, teamID, permission) {
+		return model.NewErrPermission("access denied to team")
+	}
+	return nil
+}
+
+func (a *API) ensurePermissionToChannel(userID, channelID string, permission *mmModel.Permission) error {
+	if !a.permissions.HasPermissionToChannel(userID, channelID, permission) {
+		return model.NewErrPermission("access denied to channel")
+	}
+	return nil
+}
+
+func (a *API) ensurePermissionToBoard(userID, boardID string, permission *mmModel.Permission) error {
+	if !a.permissions.HasPermissionToBoard(userID, boardID, permission) {
+		return model.NewErrPermission("access denied to board")
+	}
+	return nil
+}
+
 // Response helpers
 
-func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
+func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {
+	errorResponse := model.ErrorResponse{Error: err.Error()}
+
+	switch {
+	case model.IsErrUnauthorized(err):
+		errorResponse.ErrorCode = http.StatusUnauthorized
+	case model.IsErrForbidden(err):
+		errorResponse.ErrorCode = http.StatusForbidden
+	case model.IsErrBadRequest(err):
+		errorResponse.ErrorCode = http.StatusBadRequest
+	case model.IsErrNotFound(err):
+		errorResponse.ErrorCode = http.StatusNotFound
+	case model.IsErrNotImplemented(err):
+		errorResponse.ErrorCode = http.StatusNotImplemented
+	default:
+		a.logger.Error("API ERROR",
+			mlog.Int("code", http.StatusInternalServerError),
+			mlog.Err(err),
+			mlog.String("api", r.URL.Path),
+		)
+		errorResponse.Error = "internal server error"
+		errorResponse.ErrorCode = http.StatusInternalServerError
+	}
+
+	setResponseHeader(w, "Content-Type", "application/json")
+	data, err := json.Marshal(errorResponse)
+	if err != nil {
+		data = []byte("{}")
+	}
+
+	w.WriteHeader(errorResponse.ErrorCode)
+	_, _ = w.Write(data)
+}
+
+func (a *API) customErrorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
 	if code == http.StatusUnauthorized || code == http.StatusForbidden {
 		a.logger.Debug("API DEBUG",
 			mlog.Int("code", code),

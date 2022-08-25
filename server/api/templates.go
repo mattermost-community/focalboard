@@ -47,7 +47,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if teamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -58,7 +58,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 	// retrieve boards list
 	boards, err := a.app.GetTemplateBoards(teamID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -78,7 +78,7 @@ func (a *API) handleGetTemplates(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(results)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

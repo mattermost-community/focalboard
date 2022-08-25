@@ -17,14 +17,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-type BoardNotFoundErr struct {
-	boardID string
-}
-
-func (be BoardNotFoundErr) Error() string {
-	return fmt.Sprintf("board not found (board id: %s", be.boardID)
-}
-
 func boardFields(prefix string) []string {
 	fields := []string{
 		"id",
@@ -231,7 +223,7 @@ func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string,
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`getBoardsByCondition ERROR`, mlog.Err(err))
+		s.logger.Error(`getBoardsFieldsByCondition ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -242,7 +234,7 @@ func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string,
 	}
 
 	if len(boards) == 0 {
-		return nil, sql.ErrNoRows
+		return nil, model.NewErrNotFound("board")
 	}
 
 	return boards, nil
@@ -293,7 +285,16 @@ func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, tea
 	}
 	defer s.CloseRows(rows)
 
-	return s.boardsFromRows(rows)
+	boards, err := s.boardsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(boards) != len(boardIDs) {
+		return boards, model.NewErrNotAllFound("board", boardIDs)
+	}
+
+	return boards, nil
 }
 
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
@@ -406,7 +407,7 @@ func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *mode
 		return nil, err
 	}
 	if existingBoard == nil {
-		return nil, BoardNotFoundErr{boardID}
+		return nil, model.NewErrNotFound("board")
 	}
 
 	board := boardPatch.Patch(existingBoard)
@@ -594,7 +595,7 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 	}
 
 	if len(members) == 0 {
-		return nil, sql.ErrNoRows
+		return nil, model.NewErrNotFound("board member")
 	}
 
 	return members[0], nil

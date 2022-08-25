@@ -311,6 +311,10 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 		return nil, err
 	}
 
+	if len(users) != len(userIDs) {
+		return users, model.NewErrNotAllFound("user", userIDs)
+	}
+
 	return users, nil
 }
 
@@ -439,7 +443,7 @@ func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) 
 		var appErr *mmModel.AppError
 		if errors.As(err, &appErr) {
 			if appErr.StatusCode == http.StatusNotFound {
-				return nil, nil
+				return nil, model.NewErrNotFound("file info")
 			}
 		}
 

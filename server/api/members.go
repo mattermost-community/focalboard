@@ -2,12 +2,10 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -54,8 +52,8 @@ func (a *API) handleGetMembersForBoard(w http.ResponseWriter, r *http.Request) {
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board members"})
+	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
@@ -65,7 +63,7 @@ func (a *API) handleGetMembersForBoard(w http.ResponseWriter, r *http.Request) {
 
 	members, err := a.app.GetMembersForBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -76,7 +74,7 @@ func (a *API) handleGetMembersForBoard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(members)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -125,33 +123,29 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var reqBoardMember *model.BoardMember
 	if err = json.Unmarshal(requestBody, &reqBoardMember); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
 	if reqBoardMember.UserID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
@@ -169,7 +163,7 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 
 	member, err := a.app.AddMemberToBoard(newBoardMember)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -180,7 +174,7 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(member)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -222,27 +216,23 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	if userID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest(""))
 		return
 	}
 
 	boardID := mux.Vars(r)["boardID"]
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if board.Type != model.BoardTypeOpen {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+		a.errorResponse(w, r, model.NewErrForbidden(""))
 		return
 	}
 
-	if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+	if pErr := a.ensurePermissionToTeam(userID, board.TeamID, model.PermissionViewTeam); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
@@ -262,7 +252,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	member, err := a.app.AddMemberToBoard(newBoardMember)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -273,7 +263,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(member)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -313,24 +303,20 @@ func (a *API) handleLeaveBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	if userID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest(""))
 		return
 	}
 
 	boardID := mux.Vars(r)["boardID"]
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -340,12 +326,8 @@ func (a *API) handleLeaveBoard(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("addedUserID", userID)
 
 	err = a.app.DeleteBoardMember(boardID, userID)
-	if errors.Is(err, app.ErrBoardMemberIsLastAdmin) {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
-		return
-	}
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -402,13 +384,13 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var reqBoardMember *model.BoardMember
 	if err = json.Unmarshal(requestBody, &reqBoardMember); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
@@ -421,8 +403,8 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 		SchemeViewer:    reqBoardMember.SchemeViewer,
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
@@ -432,12 +414,8 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("patchedUserID", paramsUserID)
 
 	member, err := a.app.UpdateBoardMember(newBoardMember)
-	if errors.Is(err, app.ErrBoardMemberIsLastAdmin) {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
-		return
-	}
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -448,7 +426,7 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(member)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -493,18 +471,13 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	paramsUserID := mux.Vars(r)["userID"]
 	userID := getUserID(r)
 
-	board, err := a.app.GetBoard(boardID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
+	if _, err := a.app.GetBoard(boardID); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
@@ -514,12 +487,8 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("addedUserID", paramsUserID)
 
 	deleteErr := a.app.DeleteBoardMember(boardID, paramsUserID)
-	if errors.Is(deleteErr, app.ErrBoardMemberIsLastAdmin) {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", deleteErr)
-		return
-	}
 	if deleteErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", deleteErr)
+		a.errorResponse(w, r, deleteErr)
 		return
 	}
 

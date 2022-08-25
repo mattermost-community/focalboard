@@ -48,14 +48,14 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
 	teamID, boardID, err := a.app.PrepareOnboardingTour(userID, teamID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -65,7 +65,7 @@ func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
 	}
 	data, err := json.Marshal(response)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

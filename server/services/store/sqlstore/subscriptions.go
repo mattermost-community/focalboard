@@ -113,7 +113,7 @@ func (s *SQLStore) deleteSubscription(db sq.BaseRunner, blockID string, subscrib
 	}
 
 	if count == 0 {
-		return model.NewErrNotFound(blockID + "," + subscriberID)
+		return model.NewErrNotFound("subscription")
 	}
 
 	return nil
@@ -149,7 +149,7 @@ func (s *SQLStore) getSubscription(db sq.BaseRunner, blockID string, subscriberI
 		return nil, err
 	}
 	if len(subscriptions) == 0 {
-		return nil, model.NewErrNotFound(blockID + "," + subscriberID)
+		return nil, model.NewErrNotFound("subscription")
 	}
 	return subscriptions[0], nil
 }

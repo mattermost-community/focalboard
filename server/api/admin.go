@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/gorilla/mux"
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -22,14 +23,14 @@ func (a *API) handleAdminSetPassword(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var requestData AdminSetPasswordData
 	err = json.Unmarshal(requestBody, &requestData)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -38,13 +39,13 @@ func (a *API) handleAdminSetPassword(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("username", username)
 
 	if !strings.Contains(requestData.Password, "") {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "password is required", err)
+		a.errorResponse(w, r, model.NewErrBadRequest("password is required"))
 		return
 	}
 
 	err = a.app.UpdateUserPassword(username, requestData.Password)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

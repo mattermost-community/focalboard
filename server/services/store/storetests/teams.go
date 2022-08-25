@@ -17,6 +17,12 @@ import (
 )
 
 func StoreTestTeamStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
+	t.Run("GetTeam", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetTeam(t, store)
+	})
+
 	t.Run("UpsertTeamSignupToken", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -33,6 +39,30 @@ func StoreTestTeamStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetAllTeams(t, store)
+	})
+}
+
+func testGetTeam(t *testing.T, store store.Store) {
+	t.Run("Nonexistent team", func(t *testing.T) {
+		got, err := store.GetTeam("nonexistent-id")
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
+		require.Nil(t, got)
+	})
+
+	t.Run("Valid team", func(t *testing.T) {
+		teamID := "0"
+		team := &model.Team{
+			ID:          teamID,
+			SignupToken: utils.NewID(utils.IDTypeToken),
+		}
+
+		err := store.UpsertTeamSignupToken(*team)
+		require.NoError(t, err)
+
+		got, err := store.GetTeam(teamID)
+		require.NoError(t, err)
+		require.Equal(t, teamID, got.ID)
 	})
 }
 
@@ -100,6 +130,12 @@ func testUpsertTeamSettings(t *testing.T, store store.Store) {
 }
 
 func testGetAllTeams(t *testing.T, store store.Store) {
+	t.Run("No teams response", func(t *testing.T) {
+		got, err := store.GetAllTeams()
+		require.NoError(t, err)
+		require.Empty(t, got)
+	})
+
 	t.Run("Insert multiple team and get all teams", func(t *testing.T) {
 		// insert
 		teamCount := 10

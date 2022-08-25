@@ -1068,7 +1068,8 @@ func TestDeleteBoard(t *testing.T) {
 		require.True(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 }
@@ -1098,7 +1099,8 @@ func TestUndeleteBoard(t *testing.T) {
 		require.False(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 
@@ -1123,7 +1125,8 @@ func TestUndeleteBoard(t *testing.T) {
 		require.False(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 
@@ -1156,7 +1159,8 @@ func TestUndeleteBoard(t *testing.T) {
 		require.False(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 

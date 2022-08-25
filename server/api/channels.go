@@ -50,7 +50,7 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
 		return
 	}
 
@@ -58,13 +58,13 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	channelID := mux.Vars(r)["channelID"]
 	userID := getUserID(r)
 
-	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
-	if !a.permissions.HasPermissionToChannel(userID, channelID, model.PermissionReadChannel) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to channel"})
+	if pErr := a.ensurePermissionToChannel(userID, channelID, model.PermissionReadChannel); pErr != nil {
+		a.errorResponse(w, r, pErr)
 		return
 	}
 
@@ -75,7 +75,7 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 
 	channel, err := a.app.GetChannel(teamID, channelID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -86,14 +86,14 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 
 	if channel.TeamId != teamID {
 		if channel.Type != mm_model.ChannelTypeDirect && channel.Type != mm_model.ChannelTypeGroup {
-			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+			a.errorResponse(w, r, model.NewErrNotFound("channel"))
 			return
 		}
 	}
 
 	data, err := json.Marshal(channel)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

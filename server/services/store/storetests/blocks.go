@@ -259,7 +259,9 @@ func testPatchBlock(t *testing.T, store store.Store) {
 
 	t.Run("not existing block id", func(t *testing.T) {
 		err := store.PatchBlock("invalid-block-id", &model.BlockPatch{}, "user-id-1")
-		require.Error(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
+		require.True(t, model.IsErrNotFound(err))
 
 		blocks, err := store.GetBlocksForBoard(boardID)
 		require.NoError(t, err)
@@ -407,7 +409,8 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 
 		time.Sleep(1 * time.Millisecond)
 		err := store.PatchBlocks(&model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
-		require.Error(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 
 		retrievedBlock, err := store.GetBlock("id-test")
 		require.NoError(t, err)
@@ -489,7 +492,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	t.Run("from not existing id", func(t *testing.T) {
 		blocks, err = store.GetSubTree2(boardID, "not-exists", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 }
 
@@ -590,7 +593,8 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		block, err := store.GetBlock("block1")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, block)
 
 		time.Sleep(1 * time.Millisecond)
@@ -609,7 +613,8 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		block, err := store.GetBlock("block1")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, block)
 
 		// Wait for not colliding the ID+insert_at key
@@ -638,7 +643,8 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		block, err := store.GetBlock("not-exists")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, block)
 	})
 }
@@ -692,14 +698,14 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithParentAndType(boardID, "not-exists", "test")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithParentAndType(boardID, "block1", "not-existing")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("valid parent and type", func(t *testing.T) {
@@ -713,7 +719,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithParent(boardID, "not-exists")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
@@ -727,7 +733,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithType(boardID, "not-exists")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("valid type", func(t *testing.T) {
@@ -741,7 +747,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksForBoard("not-exists")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("all blocks of the a board", func(t *testing.T) {
@@ -749,6 +755,31 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		blocks, err = store.GetBlocksForBoard(boardID)
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
+	})
+
+	t.Run("several blocks by ids", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksByIDs([]string{"block2", "block4"})
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+	})
+
+	t.Run("blocks by ids where some are not found", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksByIDs([]string{"block2", "blockNonexistent"})
+		var naf *model.ErrNotAllFound
+		require.ErrorAs(t, err, &naf)
+		require.True(t, model.IsErrNotFound(err))
+		require.Len(t, blocks, 1)
+	})
+
+	t.Run("blocks by ids where none are found", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksByIDs([]string{"blockNonexistent1", "blockNonexistent2"})
+		var naf *model.ErrNotAllFound
+		require.ErrorAs(t, err, &naf)
+		require.True(t, model.IsErrNotFound(err))
+		require.Empty(t, blocks)
 	})
 }
 
@@ -776,7 +807,8 @@ func testGetBlock(t *testing.T, store store.Store) {
 
 	t.Run("get a non-existing block", func(t *testing.T) {
 		fetchedBlock, err := store.GetBlock("non-existing-id")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, fetchedBlock)
 	})
 }
@@ -1019,5 +1051,13 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		block := blocks[0]
 
 		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get block history of a board with no history", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{}
+
+		blocks, err = store.GetBlockHistoryDescendants("nonexistent-board-id", opts)
+		require.NoError(t, err)
+		require.Empty(t, blocks)
 	})
 }
