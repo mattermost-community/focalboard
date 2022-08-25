@@ -30,6 +30,7 @@ describe('components/createCategory/CreateCategory', () => {
         update_at: 0,
         is_bot: false,
         roles: 'system_user',
+        is_guest: false,
     }
 
     const state = {
