@@ -49,7 +49,7 @@ func TestGetTeamAndUserBoardsInsights(t *testing.T) {
 			IsGuest: false,
 		}
 		th.Store.EXPECT().GetUserByID("user-id").Return(fakeUser, nil).AnyTimes()
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user-id", "team-id").Return(mockInsightsBoards, nil).AnyTimes()
+		th.Store.EXPECT().GetBoardsForUserAndTeam("user-id", "team-id", true).Return(mockInsightsBoards, nil).AnyTimes()
 		th.Store.EXPECT().
 			GetTeamBoardsInsights("team-id", "user-id", int64(0), 0, 10, []string{"mock-user-workspace-id"}).
 			Return(mockTeamInsightsList, nil)
@@ -72,7 +72,7 @@ func TestGetTeamAndUserBoardsInsights(t *testing.T) {
 			IsGuest: false,
 		}
 		th.Store.EXPECT().GetUserByID("user-id").Return(fakeUser, nil).AnyTimes()
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user-id", "team-id").Return(mockInsightsBoards, nil).AnyTimes()
+		th.Store.EXPECT().GetBoardsForUserAndTeam("user-id", "team-id", true).Return(mockInsightsBoards, nil).AnyTimes()
 		th.Store.EXPECT().
 			GetTeamBoardsInsights("team-id", "user-id", int64(0), 0, 10, []string{"mock-user-workspace-id"}).
 			Return(nil, insightError{"board-insight-error"})

@@ -214,5 +214,23 @@ func (a *serviceAPIAdapter) RegisterRouter(sub *mux.Router) {
 	a.api.routerService.RegisterRouter(boardsProductName, sub)
 }
 
+//
+// Preferences service.
+//
+func (a *serviceAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
+	p, appErr := a.api.preferencesService.GetPreferencesForUser(userID)
+	return p, normalizeAppErr(appErr)
+}
+
+func (a *serviceAPIAdapter) UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.preferencesService.UpdatePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
+func (a *serviceAPIAdapter) DeletePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.preferencesService.DeletePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
 // Ensure the adapter implements ServicesAPI.
 var _ model.ServicesAPI = &serviceAPIAdapter{}

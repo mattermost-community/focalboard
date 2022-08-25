@@ -46,6 +46,11 @@ func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, bloc
 
 }
 
+func (s *SQLStore) CanSeeUser(seerID string, seenID string) (bool, error) {
+	return s.canSeeUser(s.db, seerID, seenID)
+
+}
+
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 
@@ -344,8 +349,8 @@ func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit ui
 
 }
 
-func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
-	return s.getBoardsForUserAndTeam(s.db, userID, teamID)
+func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	return s.getBoardsForUserAndTeam(s.db, userID, teamID, includePublicBoards)
 
 }
 
@@ -519,8 +524,8 @@ func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
 
 }
 
-func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
-	return s.getUsersByTeam(s.db, teamID)
+func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID, asGuestID)
 
 }
 
@@ -756,8 +761,8 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 }
 
-func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
-	return s.searchBoardsForUser(s.db, term, userID)
+func (s *SQLStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return s.searchBoardsForUser(s.db, term, userID, includePublicBoards)
 
 }
 
@@ -771,8 +776,8 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID)
 
 }
 

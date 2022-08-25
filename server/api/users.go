@@ -219,6 +219,19 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	canSeeUser, err := a.app.CanSeeUser(session.UserID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if !canSeeUser {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
 	userData, err := json.Marshal(user)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)

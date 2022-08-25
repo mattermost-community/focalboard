@@ -12,13 +12,10 @@ import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
 
 import {
-    getMe,
     getOnboardingTourCategory,
     getOnboardingTourStep,
 } from '../../store/users'
 import {getCurrentCard} from '../../store/cards'
-import {getCurrentTeam} from '../../store/teams'
-import {IUser} from '../../user'
 
 import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
@@ -32,6 +29,7 @@ import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBo
 
 type Props = {
     onBoardTemplateSelectorOpen: () => void,
+    userIsGuest?: boolean,
 }
 
 const BoardsSwitcher = (props: Props): JSX.Element => {
@@ -102,35 +100,34 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
             </div>
             {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
-                Utils.isFocalboardPlugin() && (
-                    <MenuWrapper>
-                        <IconButton
-                            size='small'
-                            inverted={true}
-                            className='add-board-icon'
-                            icon={<AddIcon/>}
+                Utils.isFocalboardPlugin() && !props.userIsGuest &&
+                <MenuWrapper>
+                    <IconButton
+                        size='small'
+                        inverted={true}
+                        className='add-board-icon'
+                        icon={<AddIcon/>}
+                    />
+                    <Menu>
+                        <Menu.Text
+                            id='create-new-board-option'
+                            icon={<CompassIcon icon='plus' />}
+                            onClick={props.onBoardTemplateSelectorOpen}
+                            name='Create new board'
                         />
-                        <Menu>
-                            <Menu.Text
-                                id='create-new-board-option'
-                                icon={<CompassIcon icon='plus' />}
-                                onClick={props.onBoardTemplateSelectorOpen}
-                                name='Create new board'
-                            />
-                            <Menu.Text
-                                id='createNewCategory'
-                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                icon={
-                                    <CompassIcon
-                                        icon='folder-plus-outline'
-                                        className='CreateNewFolderIcon'
-                                    />
-                                }
-                                onClick={handleCreateNewCategory}
-                            />
-                        </Menu>
-                    </MenuWrapper>
-                )
+                        <Menu.Text
+                            id='createNewCategory'
+                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                            icon={
+                                <CompassIcon
+                                    icon='folder-plus-outline'
+                                    className='CreateNewFolderIcon'
+                                />
+                            }
+                            onClick={handleCreateNewCategory}
+                        />
+                    </Menu>
+                </MenuWrapper>
             }
 
             {

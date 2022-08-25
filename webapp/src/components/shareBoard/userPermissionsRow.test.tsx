@@ -9,12 +9,14 @@ import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'jest-mock'
 
+import {BoardMember} from '../../blocks/board'
+
 import {IUser} from '../../user'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 import {Utils} from '../../utils'
 
-import TeamPermissionsRow from './teamPermissionsRow'
+import UserPermissionsRow from './userPermissionsRow'
 
 jest.useFakeTimers()
 
@@ -29,7 +31,7 @@ board.id = boardId
 board.teamId = 'team-id'
 board.channelId = 'channel_1'
 
-describe('src/components/shareBoard/teamPermissionsRow', () => {
+describe('src/components/shareBoard/userPermissionsRow', () => {
     const me: IUser = {
         id: 'user-id-1',
         username: 'username_1',
@@ -81,7 +83,14 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
             const result = render(
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
-                        <TeamPermissionsRow/>
+                        <UserPermissionsRow
+                            user={me}
+                            isMe={true}
+                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
+                            teammateNameDisplay={'test'}
+                            onDeleteBoardMember={() => {}}
+                            onUpdateBoardMember={() => {}}
+                        />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
@@ -103,7 +112,13 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
             const result = render(
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
-                        <TeamPermissionsRow/>
+                        <UserPermissionsRow
+                            user={me}
+                            isMe={true}
+                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
+                            teammateNameDisplay={'test'}
+                            onDeleteBoardMember={() => {}}
+                            onUpdateBoardMember={() => {}}/>
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
@@ -135,7 +150,14 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
             const result = render(
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
-                        <TeamPermissionsRow/>
+                        <UserPermissionsRow
+                            user={me}
+                            isMe={true}
+                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
+                            teammateNameDisplay={'test'}
+                            onDeleteBoardMember={() => {}}
+                            onUpdateBoardMember={() => {}}
+                        />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
