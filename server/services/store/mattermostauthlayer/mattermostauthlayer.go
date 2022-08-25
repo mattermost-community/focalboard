@@ -310,7 +310,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([
 func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
 		Where(sq.Eq{"u.id": userIDs})
