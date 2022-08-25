@@ -23,7 +23,7 @@ exports[`components/boardSelector renders with no results 1`] = `
           >
             <button
               aria-label="Close dialog"
-              class="IconButton size--medium"
+              class="IconButton dialog__close size--medium"
               title="Close dialog"
               type="button"
             >
@@ -126,7 +126,7 @@ exports[`components/boardSelector renders with some results 1`] = `
           >
             <button
               aria-label="Close dialog"
-              class="IconButton size--medium"
+              class="IconButton dialog__close size--medium"
               title="Close dialog"
               type="button"
             >
@@ -327,7 +327,7 @@ exports[`components/boardSelector renders without start searching 1`] = `
           >
             <button
               aria-label="Close dialog"
-              class="IconButton size--medium"
+              class="IconButton dialog__close size--medium"
               title="Close dialog"
               type="button"
             >
