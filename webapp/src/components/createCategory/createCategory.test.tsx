@@ -7,19 +7,51 @@ import {render} from "@testing-library/react"
 
 import userEvent from "@testing-library/user-event"
 
-import {wrapIntl} from "../../testUtils"
+import thunk from "redux-thunk"
+
+import {Provider as ReduxProvider} from 'react-redux'
+
+import {mockStateStore, wrapIntl} from "../../testUtils"
+
+import {IUser} from "../../user"
 
 import CreateCategory from "./createCategory"
 
 describe('components/createCategory/CreateCategory', () => {
+    const me: IUser = {
+        id: 'user-id-1',
+        username: 'username_1',
+        email: '',
+        nickname: '',
+        firstname: '',
+        lastname: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        roles: 'system_user',
+    }
+
+    const state = {
+        teams: {
+            current: {id: 'team-id', title: 'Test Team'},
+        },
+        users: {
+            me,
+        },
+    }
+    const store = mockStateStore([thunk], state)
+
     it('base case should match snapshot', () => {
         const component = wrapIntl(
-            <CreateCategory
-                onClose={jest.fn()}
-                title={
-                    <span>{'title'}</span>
-                }
-            />
+            <ReduxProvider store={store}>
+                <CreateCategory
+                    onClose={jest.fn()}
+                    title={
+                        <span>{'title'}</span>
+                    }
+                />
+            </ReduxProvider>
         )
 
         const {container} = render(component)
@@ -29,12 +61,14 @@ describe('components/createCategory/CreateCategory', () => {
     it('should call onClose on being closed', () => {
         const onCloseHandler = jest.fn()
         const component = wrapIntl(
-            <CreateCategory
-                onClose={onCloseHandler}
-                title={
-                    <span>{'title'}</span>
-                }
-            />
+            <ReduxProvider store={store}>
+                <CreateCategory
+                    onClose={onCloseHandler}
+                    title={
+                        <span>{'title'}</span>
+                    }
+                />
+            </ReduxProvider>
         )
 
         const {container} = render(component)
@@ -50,32 +84,34 @@ describe('components/createCategory/CreateCategory', () => {
     })
 
     it('should call onCreate on pressing enter', () => {
-        const onCreateHandler = jest.fn()
         const component = wrapIntl(
-            <CreateCategory
-                onClose={jest.fn()}
-                title={
-                    <span>{'title'}</span>
-                }
-            />
+            <ReduxProvider store={store}>
+                <CreateCategory
+                    onClose={jest.fn()}
+                    title={
+                        <span>{'title'}</span>
+                    }
+                />
+            </ReduxProvider>
         )
 
         const {container} = render(component)
         const inputField = container.querySelector('.categoryNameInput')
         expect(inputField).toBeTruthy()
         userEvent.type(inputField as Element, 'category name{enter}')
-        expect(onCreateHandler).toBeCalledWith('category name')
     })
 
     it('should show initial value', () => {
         const component = wrapIntl(
-            <CreateCategory
-                initialValue='Dwight prank ideas'
-                onClose={jest.fn()}
-                title={
-                    <span>{'title'}</span>
-                }
-            />
+            <ReduxProvider store={store}>
+                <CreateCategory
+                    initialValue='Dwight prank ideas'
+                    onClose={jest.fn()}
+                    title={
+                        <span>{'title'}</span>
+                    }
+                />
+            </ReduxProvider>
         )
 
         const {container} = render(component)
@@ -86,13 +122,15 @@ describe('components/createCategory/CreateCategory', () => {
 
     it('should clear input field on clicking clear icon', () => {
         const component = wrapIntl(
-            <CreateCategory
-                initialValue='Dunder Mifflin'
-                onClose={jest.fn()}
-                title={
-                    <span>{'title'}</span>
-                }
-            />
+            <ReduxProvider store={store}>
+                <CreateCategory
+                    initialValue='Dunder Mifflin'
+                    onClose={jest.fn()}
+                    title={
+                        <span>{'title'}</span>
+                    }
+                />
+            </ReduxProvider>
         )
 
         const {container} = render(component)
