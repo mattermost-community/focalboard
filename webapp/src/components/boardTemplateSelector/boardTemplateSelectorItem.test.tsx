@@ -96,16 +96,17 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
     }
 
     const me: IUser = {
-        id: 'user-id-1', 
-        username: 'username_1', 
+        id: 'user-id-1',
+        username: 'username_1',
         nickname: '',
-        firstname: '', 
+        firstname: '',
         lastname: '',
-        email: '', 
-        props: {}, 
-        create_at: 0, 
-        update_at: 0, 
+        email: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
         is_bot: false,
+        is_guest: false,
         roles: 'system_user',
     }
 

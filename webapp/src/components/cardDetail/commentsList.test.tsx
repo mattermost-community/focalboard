@@ -48,15 +48,18 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             boards: {
                 boards: {
                     board_id_1: {title: 'Board'},
                 },
                 current: 'board_id_1',
+                myBoardMemberships: {
+                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
@@ -68,6 +71,9 @@ describe('components/cardDetail/CommentsList', () => {
                 value: {
                     featureFlags: {},
                 },
+            },
+            teams: {
+                current: {id: 'team_id_1'},
             },
         })
 
@@ -105,10 +111,22 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
+            boards: {
+                boards: {
+                    board_id_1: {title: 'Board'},
+                },
+                current: 'board_id_1',
+                myBoardMemberships: {
+                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            teams: {
+                current: {id: 'team_id_1'}
+            }
         })
 
         const component = (
