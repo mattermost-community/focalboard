@@ -28,7 +28,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
-    onBoardTemplateSelectorOpen?: () => void,
+    onBoardTemplateSelectorOpen: () => void,
     userIsGuest?: boolean,
 }
 
