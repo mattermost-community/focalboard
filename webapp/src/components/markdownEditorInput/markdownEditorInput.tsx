@@ -37,6 +37,7 @@ type MentionUser = {
     name: string
     avatar: string
     is_bot: boolean
+    is_guest: boolean
     displayName: string
 }
 
@@ -65,10 +66,18 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             users = await octoClient.searchTeamUsers(term)
         } else {
             users = boardUsers
+                .filter(user => {
+                    // no search term
+                    if (!term) return true
+                    // does the search term occur anywhere in the display name?
+                    return Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay).includes(term)
+                })
+                // first 10 results
+                .slice(0, 10)
         }
 
-        const mentions = users.map(
-            (user) => ({
+        const mentions: Array<MentionUser> = users.map(
+            (user: IUser): MentionUser => ({
                 name: user.username,
                 avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
                 is_bot: user.is_bot,
