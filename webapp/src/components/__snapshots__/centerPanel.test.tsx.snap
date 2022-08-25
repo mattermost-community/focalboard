@@ -786,53 +786,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1386,53 +1339,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
