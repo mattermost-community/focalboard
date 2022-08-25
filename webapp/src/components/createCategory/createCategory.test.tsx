@@ -11,11 +11,22 @@ import thunk from "redux-thunk"
 
 import {Provider as ReduxProvider} from 'react-redux'
 
+import {mocked} from "jest-mock"
+
 import {mockStateStore, wrapIntl} from "../../testUtils"
 
 import {IUser} from "../../user"
 
+import octoClient from "../../octoClient"
+
+import {FetchMock} from "../../test/fetchMock"
+
+import mutator from "../../mutator"
+
 import CreateCategory from "./createCategory"
+
+jest.mock('../../mutator')
+const mockedMutator = mocked(mutator, true)
 
 describe('components/createCategory/CreateCategory', () => {
     const me: IUser = {
@@ -100,6 +111,11 @@ describe('components/createCategory/CreateCategory', () => {
         const inputField = container.querySelector('.categoryNameInput')
         expect(inputField).toBeTruthy()
         userEvent.type(inputField as Element, 'category name{enter}')
+        expect(mockedMutator.createCategory).toBeCalledWith({
+            name: "category name",
+            teamID: "team-id",
+            userID: "user-id-1",
+        })
     })
 
     it('should show initial value', () => {
