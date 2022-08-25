@@ -50,6 +50,7 @@
             font-size: 18px;
             opacity: 0.56;
             width: 18px;
+            margin-right: 12px;
 
             &::before {
                 margin: 0;
@@ -74,10 +75,6 @@
 
             &-active {
                 background: rgba(var(--button-bg-rgb), 0.08);
-            }
-
-            > * {
-                margin-left: 16px;
             }
 
             .noicon {
@@ -187,6 +184,7 @@
                 > .noicon {
                     width: 16px;
                     height: 16px;
+                    margin-right: 12px;
                 }
 
                 > .menu-name {
