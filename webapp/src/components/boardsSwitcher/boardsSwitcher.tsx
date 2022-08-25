@@ -12,13 +12,10 @@ import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
 
 import {
-    getMe,
     getOnboardingTourCategory,
     getOnboardingTourStep,
 } from '../../store/users'
 import {getCurrentCard} from '../../store/cards'
-import {getCurrentTeam} from '../../store/teams'
-import {IUser} from '../../user'
 
 import './boardsSwitcher.scss'
 import AddIcon from '../../widgets/icons/add'
