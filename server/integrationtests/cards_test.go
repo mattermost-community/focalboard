@@ -135,6 +135,40 @@ func TestPatchCard(t *testing.T) {
 	})
 }
 
+func TestGetCard(t *testing.T) {
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		_, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 1)
+		card := cards[0]
+
+		th.Logout(th.Client)
+
+		cardFetched, resp := th.Client.GetCard(card.ID)
+		th.CheckUnauthorized(resp)
+		require.Nil(t, cardFetched)
+	})
+
+	t.Run("good", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+
+		board, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 1)
+		card := cards[0]
+
+		cardFetched, resp := th.Client.GetCard(card.ID)
+
+		th.CheckOK(resp)
+		require.NotNil(t, cardFetched)
+		require.Equal(t, board.ID, cardFetched.BoardID)
+		require.Equal(t, card.Title, cardFetched.Title)
+		require.Equal(t, card.Icon, cardFetched.Icon)
+		require.Equal(t, card.ContentOrder, cardFetched.ContentOrder)
+		require.EqualValues(t, card.Properties, cardFetched.Properties)
+	})
+}
+
 //
 // Helpers
 //
