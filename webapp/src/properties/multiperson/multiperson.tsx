@@ -117,7 +117,7 @@ const MultiPerson = (props: PropertyProps) => {
                     onChange(item.map(a => a.id) || [])
                 } else if (action.action === 'clear') {
                     onChange([])
-                } else if (action.action ===  'remove-value') {
+                } else if (action.action === 'remove-value') {
                     onChange(item.filter(a => a.id !== action.removedValue.id).map(b => b.id) || [])
                 }
             }}
