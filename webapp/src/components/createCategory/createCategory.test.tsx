@@ -17,10 +17,6 @@ import {mockStateStore, wrapIntl} from "../../testUtils"
 
 import {IUser} from "../../user"
 
-import octoClient from "../../octoClient"
-
-import {FetchMock} from "../../test/fetchMock"
-
 import mutator from "../../mutator"
 
 import CreateCategory from "./createCategory"
