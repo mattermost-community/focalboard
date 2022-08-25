@@ -20,12 +20,14 @@ import {getClientConfig, setClientConfig} from '../store/clientConfig'
 import wsClient, {WSClient} from '../wsclient'
 import {ClientConfig} from '../config/clientConfig'
 import {Utils} from '../utils'
+import {IUser} from '../user'
 import propsRegistry from '../properties'
 
 import {getMe} from "../store/users"
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
+import GuestNoBoards from './guestNoBoards'
 
 import Sidebar from './sidebar/sidebar'
 
@@ -50,7 +52,7 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const me = useAppSelector(getMe)
+    const me = useAppSelector<IUser|null>(getMe)
 
     const isBoardHidden = () => {
         const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
@@ -105,6 +107,9 @@ function CenterContent(props: Props) {
     )
 
     if (match.params.channelId) {
+        if (me?.is_guest) {
+            return <GuestNoBoards/>
+        }
         return templateSelector
     }
 
@@ -138,6 +143,10 @@ function CenterContent(props: Props) {
 
     if ((board && !isBoardHidden()) || isLoading) {
         return null
+    }
+
+    if (me?.is_guest) {
+        return <GuestNoBoards/>
     }
 
     return templateSelector

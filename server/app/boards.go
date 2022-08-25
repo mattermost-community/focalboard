@@ -256,8 +256,8 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	return bab, members, err
 }
 
-func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
-	return a.store.GetBoardsForUserAndTeam(userID, teamID)
+func (a *App) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.GetBoardsForUserAndTeam(userID, teamID, includePublicBoards)
 }
 
 func (a *App) GetTemplateBoards(teamID, userID string) ([]*model.Board, error) {
@@ -552,8 +552,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID)
+func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

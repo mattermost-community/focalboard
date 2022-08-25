@@ -68,9 +68,9 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -149,9 +149,9 @@ describe('components/cardDetail/CardDetail', () => {
                 },
             },
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
         })
 
@@ -211,9 +211,9 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '0',
                     },
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -317,9 +317,9 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '1',
                     },
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -421,9 +421,9 @@ describe('components/cardDetail/CardDetail', () => {
                         focalboard_onboardingTourStep: '2',
                     },
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
