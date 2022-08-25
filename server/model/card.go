@@ -114,7 +114,7 @@ func (c *Card) PopulateWithBoardID(boardID string) {
 // CheckValid returns an error if the Card has invalid field values.
 func (c *Card) CheckValid() error {
 	if c.ID == "" {
-		return ErrInvalidCard{"IDis missing"}
+		return ErrInvalidCard{"ID is missing"}
 	}
 	if c.BoardID == "" {
 		return ErrInvalidCard{"BoardID is missing"}
@@ -155,10 +155,6 @@ type CardPatch struct {
 	// A map of property ids to property option ids to be updated
 	// required: false
 	UpdatedProperties map[string]any `json:"updatedProperties"`
-
-	// A an array of property ids to delete
-	// required: false
-	DeletedProperties []string `json:"deletedProperties"`
 }
 
 // Patch returns an updated version of the card.
@@ -185,12 +181,15 @@ func (p *CardPatch) Patch(card *Card) *Card {
 		card.Properties[propID] = propVal
 	}
 
-	// if there are properties marked for removal, we delete them
-	for _, propID := range p.DeletedProperties {
-		delete(card.Properties, propID)
-	}
-
 	return card
+}
+
+// CheckValid returns an error if the CardPatch has invalid field values.
+func (p *CardPatch) CheckValid() error {
+	if p.Icon != nil && uniseg.GraphemeClusterCount(*p.Icon) > 1 {
+		return ErrInvalidCard{"Icon can have only one grapheme"}
+	}
+	return nil
 }
 
 // Card2Block converts a card to block using a shallow copy. Not needed once cards are first class entities.
@@ -294,6 +293,10 @@ func Block2Card(block *Block) (*Card, error) {
 
 // CardPatch2BlockPatch converts a CardPatch to a BlockPatch. Not needed once cards are first class entities.
 func CardPatch2BlockPatch(cardPatch *CardPatch) (*BlockPatch, error) {
+	if err := cardPatch.CheckValid(); err != nil {
+		return nil, err
+	}
+
 	blockPatch := &BlockPatch{
 		Title: cardPatch.Title,
 	}
@@ -310,10 +313,6 @@ func CardPatch2BlockPatch(cardPatch *CardPatch) (*BlockPatch, error) {
 	properties := make(map[string]any)
 	for k, v := range cardPatch.UpdatedProperties {
 		properties[k] = v
-	}
-
-	for _, k := range cardPatch.DeletedProperties {
-		properties[k] = nil
 	}
 
 	if len(properties) != 0 {

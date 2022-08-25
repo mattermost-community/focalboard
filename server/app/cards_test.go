@@ -85,7 +85,6 @@ func TestPatchCard(t *testing.T) {
 		ContentOrder:      &newContentOrder,
 		Icon:              &newIcon,
 		UpdatedProperties: modifyProps(props),
-		DeletedProperties: []string{firstKey(props)},
 	}
 
 	t.Run("success scenario", func(t *testing.T) {
@@ -105,8 +104,6 @@ func TestPatchCard(t *testing.T) {
 		require.Equal(t, newTitle, patchedCard.Title)
 		require.Equal(t, newIcon, patchedCard.Icon)
 		require.Equal(t, newContentOrder, patchedCard.ContentOrder)
-		// one property was deleted
-		require.Len(t, patchedCard.Properties, len(props)-1)
 		require.EqualValues(t, expectedPatchedCard.Properties, patchedCard.Properties)
 	})
 
@@ -213,11 +210,4 @@ func modifyProps(m map[string]any) map[string]any {
 		out[k] = utils.NewID(utils.IDTypeBlock)
 	}
 	return out
-}
-
-func firstKey(m map[string]any) string {
-	for k := range m {
-		return k
-	}
-	return ""
 }
