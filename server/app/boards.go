@@ -303,15 +303,38 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 	return newBoard, nil
 }
 
-func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
+func (a *App) retrieveOldMembers(patch *model.BoardPatch, boardID string) []*model.BoardMember {
 	var oldMembers []*model.BoardMember
-	var oldChannelID string
-	var removeChannelMembers = false
-	var addChannelMembers = false
+	if (patch.Type != nil && *patch.Type == model.BoardTypePrivate) || (patch.ChannelID != nil && *patch.ChannelID == "") {
+		var err error
+		oldMembers, err = a.GetMembersForBoard(boardID)
+		if err != nil {
+			a.logger.Error("Unable to get the board members", mlog.Err(err))
+		}
+	}
+	return oldMembers
+}
 
-	var removeTeamMembers = false
-	var addTeamMembers = false
+func (a *App) retrieveTeamUsers(teamID string) []*model.User {
 	var teamUsers []*model.User
+	var err error
+	teamUsers, err = a.GetTeamUsers(teamID, "")
+	if err != nil {
+		a.logger.Error("Unable to get the team users", mlog.Err(err))
+	}
+	return teamUsers
+}
+
+func (a *App) postChannelMessage(message, channelID string) {
+	err := a.store.PostMessage(message, "", channelID)
+	if err != nil {
+		a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
+	}
+}
+
+func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
+	var oldChannelID string
+	var oldMembers []*model.BoardMember
 
 	if patch.Type != nil || patch.ChannelID != nil {
 		board, err := a.store.GetBoard(boardID)
@@ -321,34 +344,8 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		if err != nil {
 			return nil, err
 		}
-
-		if patch.Type != nil && board.IsTemplate {
-			teamUsers, err = a.GetTeamUsers(board.TeamID, "")
-			if err != nil {
-				return nil, err
-			}
-			if *patch.Type == model.BoardTypeOpen {
-				addTeamMembers = true
-			}
-			if *patch.Type == model.BoardTypePrivate {
-				removeTeamMembers = true
-			}
-		}
-
-		if patch.ChannelID != nil && *patch.ChannelID == "" {
-			removeChannelMembers = true
-		} else if patch.ChannelID != nil && *patch.ChannelID != "" {
-			addChannelMembers = true
-		}
-
-		if removeTeamMembers || removeChannelMembers {
-			var err error
-			oldMembers, err = a.GetMembersForBoard(boardID)
-			if err != nil {
-				a.logger.Error("Unable to get the board members", mlog.Err(err))
-			}
-			oldChannelID = board.ChannelID
-		}
+		oldMembers = a.retrieveOldMembers(patch, boardID)
+		oldChannelID = board.ChannelID
 	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
@@ -368,25 +365,17 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
 		if *patch.ChannelID != "" {
-			// TODO: this needs translated when available on the server
-			message := fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink)
-			err := a.store.PostMessage(message, "", *patch.ChannelID)
-			if err != nil {
-				a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
-			}
+			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink), updatedBoard.ChannelID)
 		} else if *patch.ChannelID == "" {
-			message := fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink)
-			err := a.store.PostMessage(message, "", oldChannelID)
-			if err != nil {
-				a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
-			}
+			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink), oldChannelID)
 		}
 	}
 
 	// Broadcast Messages to affected users
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
-		if addChannelMembers {
+		switch {
+		case patch.ChannelID != nil && *patch.ChannelID != "":
 			members, err := a.GetMembersForBoard(updatedBoard.ID)
 			if err != nil {
 				a.logger.Error("Unable to get the board members", mlog.Err(err))
@@ -396,47 +385,51 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
 				}
 			}
-		} else if removeChannelMembers {
+		case patch.ChannelID != nil && *patch.ChannelID == "":
 			for _, oldMember := range oldMembers {
 				if oldMember.Synthetic {
 					a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, oldMember.UserID)
 				}
 			}
-		} else if addTeamMembers {
+		case patch.Type != nil && *patch.Type == model.BoardTypeOpen:
 			members, err := a.GetMembersForBoard(updatedBoard.ID)
 			if err != nil {
 				a.logger.Error("Unable to get the board members", mlog.Err(err))
 			}
-			for _, user := range teamUsers {
-				isMember := false
-				for _, member := range members {
-					if member.UserID == user.ID {
-						isMember = true
-						break
-					}
-				}
-				if !isMember {
-					a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: updatedBoard.ID, SchemeViewer: true, Synthetic: true})
-				}
-			}
-		} else if removeTeamMembers {
-			for _, user := range teamUsers {
-				isMember := false
-				for _, oldMember := range oldMembers {
-					if oldMember.UserID == user.ID {
-						isMember = true
-						break
-					}
-				}
-				if !isMember {
-					a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, user.ID)
-				}
-			}
+			a.broadcastTeamUsers(updatedBoard.TeamID, updatedBoard.ID, patch, members)
+		case patch.Type != nil && *patch.Type == model.BoardTypePrivate:
+			a.broadcastTeamUsers(updatedBoard.TeamID, updatedBoard.ID, patch, oldMembers)
 		}
 		return nil
 	})
 
 	return updatedBoard, nil
+}
+
+func (a *App) broadcastTeamUsers(teamID, boardID string, patch *model.BoardPatch, members []*model.BoardMember) {
+	a.logger.Debug("broadcastTeamUsers")
+	if patch.Type != nil {
+		users := a.retrieveTeamUsers(teamID)
+		a.logger.Debug("broadcastTeamUsers", mlog.Int("count", len(users)))
+		for _, user := range users {
+			isMember := false
+			for _, member := range members {
+				if member.UserID == user.ID {
+					isMember = true
+					break
+				}
+			}
+			if !isMember {
+				a.logger.Debug("BroadcastMemberDelete")
+				if *patch.Type == model.BoardTypePrivate {
+					a.logger.Debug("BroadcastMemberDelete2")
+					a.wsAdapter.BroadcastMemberDelete(teamID, boardID, user.ID)
+				} else if *patch.Type == model.BoardTypeOpen {
+					a.wsAdapter.BroadcastMemberChange(teamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: boardID, SchemeViewer: true, Synthetic: true})
+				}
+			}
+		}
+	}
 }
 
 func (a *App) DeleteBoard(boardID, userID string) error {

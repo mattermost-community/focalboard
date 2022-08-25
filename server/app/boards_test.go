@@ -363,5 +363,4 @@ func TestPatchBoard(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, boardID, patchedBoard.ID)
 	})
-
 }
