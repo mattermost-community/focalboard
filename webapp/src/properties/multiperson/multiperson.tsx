@@ -67,7 +67,7 @@ const MultiPerson = (props: PropertyProps) => {
         }
 
         return (
-            <div className='MultiPerson-item'>
+            <div key={user.id} className='MultiPerson-item'>
                 {profileImg && (
                     <img
                         alt='MultiPerson-avatar'
