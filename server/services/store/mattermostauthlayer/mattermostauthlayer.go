@@ -380,8 +380,8 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			boardsIDs = append(boardsIDs, board.ID)
 		}
 		query = query.
-			Join(s.tablePrefix + "board_members as bm ON bm.UserID = u.ID").
-			Where(sq.Eq{"bm.BoardId": boardsIDs})
+			Join(s.tablePrefix + "board_members as bm ON bm.user_id = u.ID").
+			Where(sq.Eq{"bm.board_id": boardsIDs})
 	}
 
 	rows, err := query.Query()
