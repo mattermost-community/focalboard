@@ -43,10 +43,10 @@ const KanbanCard = (props: Props) => {
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
-    let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
-    if (props.isManualSort && isOver) {
-        className += ' dragover'
-    }
+    const className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
+    // if (props.isManualSort && isOver) {
+    //     className += ' dragover'
+    // }
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const handleDeleteCard = useCallback(() => {
@@ -98,62 +98,69 @@ const KanbanCard = (props: Props) => {
                 style={{opacity: isDragging ? 0.5 : 1}}
                 onClick={handleOnClick}
             >
-                {!props.readonly &&
-                <MenuWrapper
-                    className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
-                    stopPropagationOnToggle={true}
-                >
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <CardActionsMenu
-                        cardId={card!.id}
-                        onClickDelete={handleDeleteButtonOnClick}
-                        onClickDuplicate={() => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                            mutator.duplicateCard(
-                                card.id,
-                                board.id,
-                                false,
-                                'duplicate card',
-                                false,
-                                {},
-                                async (newCardId) => {
-                                    props.showCard(newCardId)
-                                },
-                                async () => {
-                                    props.showCard(undefined)
-                                },
-                            )
-                        }}
-                    />
-                </MenuWrapper>
+                {
+                    props.isManualSort && isOver && !isDragging &&
+                    <div className='pseudoDragPlaceholder'/>
                 }
 
-                <div className='octo-icontitle'>
-                    { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
-                    <div
-                        key='__title'
-                        className='octo-titletext'
-                    >
-                        {card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}
+                <div className='kanbanCardInnerWrapper'>
+                    {!props.readonly &&
+                        <MenuWrapper
+                            className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
+                            stopPropagationOnToggle={true}
+                        >
+                            <IconButton icon={<OptionsIcon/>}/>
+                            <CardActionsMenu
+                                cardId={card!.id}
+                                onClickDelete={handleDeleteButtonOnClick}
+                                onClickDuplicate={() => {
+                                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                    mutator.duplicateCard(
+                                        card.id,
+                                        board.id,
+                                        false,
+                                        'duplicate card',
+                                        false,
+                                        {},
+                                        async (newCardId) => {
+                                            props.showCard(newCardId)
+                                        },
+                                        async () => {
+                                            props.showCard(undefined)
+                                        },
+                                    )
+                                }}
+                            />
+                        </MenuWrapper>
+                    }
+
+                    <div className='octo-icontitle'>
+                        { card.fields.icon ? <div className='octo-icon'>{card.fields.icon}</div> : undefined }
+                        <div
+                            key='__title'
+                            className='octo-titletext'
+                        >
+                            {card.title || intl.formatMessage({id: 'KanbanCard.untitled', defaultMessage: 'Untitled'})}
+                        </div>
                     </div>
+                    {visiblePropertyTemplates.map((template) => (
+                        <Tooltip
+                            key={template.id}
+                            title={template.name}
+                        >
+                            <PropertyValueElement
+                                board={board}
+                                readOnly={true}
+                                card={card}
+                                propertyTemplate={template}
+                                showEmptyPlaceholder={false}
+                            />
+                        </Tooltip>
+                    ))}
+                    {props.visibleBadges && <CardBadges card={card}/>}
+                    {showOnboarding && !match.params.cardId && <OpenCardTourStep/>}
+                    {showOnboarding && !match.params.cardId && <CopyLinkTourStep/>}
                 </div>
-                {visiblePropertyTemplates.map((template) => (
-                    <Tooltip
-                        key={template.id}
-                        title={template.name}
-                    >
-                        <PropertyValueElement
-                            board={board}
-                            readOnly={true}
-                            card={card}
-                            propertyTemplate={template}
-                            showEmptyPlaceholder={false}
-                        />
-                    </Tooltip>
-                ))}
-                {props.visibleBadges && <CardBadges card={card}/>}
-                {showOnboarding && !match.params.cardId && <OpenCardTourStep/>}
-                {showOnboarding && !match.params.cardId && <CopyLinkTourStep/>}
             </div>
 
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
