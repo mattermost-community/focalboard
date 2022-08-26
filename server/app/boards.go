@@ -407,10 +407,8 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 }
 
 func (a *App) broadcastTeamUsers(teamID, boardID string, patch *model.BoardPatch, members []*model.BoardMember) {
-	a.logger.Debug("broadcastTeamUsers")
 	if patch.Type != nil {
 		users := a.retrieveTeamUsers(teamID)
-		a.logger.Debug("broadcastTeamUsers", mlog.Int("count", len(users)))
 		for _, user := range users {
 			isMember := false
 			for _, member := range members {
@@ -420,9 +418,7 @@ func (a *App) broadcastTeamUsers(teamID, boardID string, patch *model.BoardPatch
 				}
 			}
 			if !isMember {
-				a.logger.Debug("BroadcastMemberDelete")
 				if *patch.Type == model.BoardTypePrivate {
-					a.logger.Debug("BroadcastMemberDelete2")
 					a.wsAdapter.BroadcastMemberDelete(teamID, boardID, user.ID)
 				} else if *patch.Type == model.BoardTypeOpen {
 					a.wsAdapter.BroadcastMemberChange(teamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: boardID, SchemeViewer: true, Synthetic: true})
