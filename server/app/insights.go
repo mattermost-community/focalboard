@@ -65,7 +65,7 @@ func (a *App) GetUserTimezone(userID string) (string, error) {
 
 func getUserBoards(userID string, teamID string, a *App) ([]string, error) {
 	// get boards accessible by user and filter boardIDs
-	boards, err := a.store.GetBoardsForUserAndTeam(userID, teamID)
+	boards, err := a.store.GetBoardsForUserAndTeam(userID, teamID, true)
 	if err != nil {
 		return nil, errors.New("error getting boards for user")
 	}

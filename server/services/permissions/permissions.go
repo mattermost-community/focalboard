@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockstore.go -package mocks . Store
+//go:generate mockgen -destination=mocks/mockstore.go -package mocks . Store
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 

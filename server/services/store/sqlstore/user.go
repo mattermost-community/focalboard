@@ -211,11 +211,11 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 	return nil
 }
 
-func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string) ([]*model.User, error) {
+func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string) ([]*model.User, error) {
 	return s.getUsersByCondition(db, nil, 0)
 }
 
-func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string) ([]*model.User, error) {
+func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string) ([]*model.User, error) {
 	return s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
 }
 
@@ -273,6 +273,10 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 	}
 
 	return s.updateUser(db, user)
+}
+
+func (s *SQLStore) canSeeUser(db sq.BaseRunner, seerID string, seenID string) (bool, error) {
+	return true, nil
 }
 
 func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {

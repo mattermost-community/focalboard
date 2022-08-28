@@ -20,7 +20,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >
@@ -96,7 +96,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >

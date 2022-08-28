@@ -23,15 +23,8 @@
             position: relative;
             width: 600px;
             height: 450px;
-
-            .toolbar {
-                flex-direction: row-reverse;
-                padding: 0;
-                position: absolute;
-                right: 18px;
-                top: 18px;
-            }
         }
+
         .confirmation-dialog-box {
             .dialog {
                 position: fixed;

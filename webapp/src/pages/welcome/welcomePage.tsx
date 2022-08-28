@@ -93,6 +93,18 @@ const WelcomePage = () => {
         history.replace(newPath)
     }
 
+    // It's still possible for a guest to end up at this route/page directly, so
+    // let's mark it as viewed, if necessary, and route them forward
+    if (me?.is_guest) {
+        if (!me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
+            (async() => {
+                await setWelcomePageViewed(me.id)
+            })()
+        }
+        goForward()
+        return null
+    }
+
     if (me?.props && me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
@@ -128,32 +140,45 @@ const WelcomePage = () => {
                     alt='Boards Welcome Image'
                 />
 
-                <Button
-                    onClick={startTour}
-                    filled={true}
-                    size='large'
-                    icon={
-                        <CompassIcon
-                            icon='chevron-right'
-                            className='Icon Icon--right'
-                        />}
-                    rightIcon={true}
-                >
-                    <FormattedMessage
-                        id='WelcomePage.Explore.Button'
-                        defaultMessage='Take a tour'
-                    />
-                </Button>
+                {me?.is_guest !== true &&
+                    <Button
+                        onClick={startTour}
+                        filled={true}
+                        size='large'
+                        icon={
+                            <CompassIcon
+                                icon='chevron-right'
+                                className='Icon Icon--right'
+                            />}
+                        rightIcon={true}
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.Explore.Button'
+                            defaultMessage='Take a tour'
+                        />
+                    </Button>}
 
-                <a
-                    className='skip'
-                    onClick={skipTour}
-                >
-                    <FormattedMessage
-                        id='WelcomePage.NoThanks.Text'
-                        defaultMessage="No thanks, I'll figure it out myself"
-                    />
-                </a>
+                {me?.is_guest !== true &&
+                    <a
+                        className='skip'
+                        onClick={skipTour}
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.NoThanks.Text'
+                            defaultMessage="No thanks, I'll figure it out myself"
+                        />
+                    </a>}
+                {me?.is_guest === true &&
+                    <Button
+                        onClick={skipTour}
+                        filled={true}
+                        size='large'
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.StartUsingIt.Text'
+                            defaultMessage="Start using it"
+                        />
+                    </Button>}
             </div>
         </div>
     )

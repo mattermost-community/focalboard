@@ -71,17 +71,17 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
         // ensure the users for the new memberships get loaded
         const boardUsers = thunkAPI.getState().users.boardUsers
         members.forEach(async (m) => {
+            const deleted = !m.schemeAdmin && !m.schemeEditor && !m.schemeViewer && !m.schemeCommenter
+            if (deleted) {
+                thunkAPI.dispatch(removeBoardUsersById([m.userId]))
+                return
+            }
             if (boardUsers[m.userId]) {
                 return
             }
             const user = await client.getUser(m.userId)
             if (user) {
-                const deleted = !m.schemeAdmin && !m.schemeEditor && !m.schemeViewer && !m.schemeCommenter
-                if (deleted) {
-                    thunkAPI.dispatch(removeBoardUsersById([user.id]))
-                } else {
-                    thunkAPI.dispatch(addBoardUsers([user]))
-                }
+                thunkAPI.dispatch(addBoardUsers([user]))
             }
         })
 
