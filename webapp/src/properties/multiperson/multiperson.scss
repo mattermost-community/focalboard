@@ -38,6 +38,33 @@
         max-width: 100%;
     }
 
+    .react-select__value-container--is-multi {
+        display: inline-flex;
+
+        .react-select__multi-value {
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+            border-radius: 24px;
+            display: inline-flex;
+            color: rgb(var(--center-channel-color-rgb));
+
+            .MultiPerson-item,
+            .react-select__multi-value__label {
+                color: inherit;
+            }
+        }
+    }
+
+    .react-select__multi-value__remove  {
+        font-size: 18px;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+        margin: 6px;
+        border-radius: 100%;
+
+        &:hover {
+            background: rgba(var(--center-channel-color-rgb), 0.26);
+        }
+    }
+
     .react-select__option {
         display: flex;
         align-items: center;
