@@ -262,7 +262,7 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: "focalboard",
+				Category: model.PreferencesCategoryFocalboard,
 				Name:     key,
 				Value:    value,
 			}
@@ -277,7 +277,7 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 		for _, key := range patch.DeletedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: "focalboard",
+				Category: model.PreferencesCategoryFocalboard,
 				Name:     key,
 			}
 
@@ -350,7 +350,7 @@ func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) (mmModel.
 		From(s.tablePrefix + "preferences").
 		Where(sq.Eq{
 			"userid":   userID,
-			"category": "focalboard",
+			"category": model.PreferencesCategoryFocalboard,
 		})
 
 	rows, err := query.Query()

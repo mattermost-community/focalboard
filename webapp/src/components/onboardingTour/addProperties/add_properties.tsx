@@ -70,8 +70,6 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
                 onboardingTourCategory === TOUR_BASE &&
                 onboardingTourStep === BaseTourSteps.OPEN_A_CARD.toString()
 
-            console.log(`card.id: ${card.id} isOnboardingBoard: ${isOnboardingBoard} isOnboardingCard: ${isOnboardingCard} onboardingTourStarted: ${onboardingTourStarted} onboardingTourCategory: ${onboardingTourCategory} onboardingTourStep: ${onboardingTourStep}`)
-
             if (!should) {
                 return
             }

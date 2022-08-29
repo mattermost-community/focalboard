@@ -89,8 +89,6 @@ const KanbanCard = (props: Props) => {
     const isOnboardingCard = card.title === 'Create a new card'
     const showOnboarding = isOnboardingCard && !match.params.cardId && !board.isTemplate && Utils.isFocalboardPlugin()
 
-    console.log(`showOnboarding: ${showOnboarding}`)
-
     return (
         <>
             <div

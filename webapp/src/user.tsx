@@ -44,8 +44,6 @@ function parseUserProps(props: Array<UserPreference>): Record<string, UserPrefer
     return processedProps
 }
 
-const UserPropPrefix = 'focalboard_'
-
 interface UserPreference {
     user_id: string
     category: string
@@ -57,7 +55,6 @@ export {
     IUser,
     UserWorkspace,
     UserConfigPatch,
-    UserPropPrefix,
     parseUserProps,
     UserPreference,
 }

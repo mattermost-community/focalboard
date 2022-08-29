@@ -135,7 +135,7 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: "focalboard",
+				Category: model.PreferencesCategoryFocalboard,
 				Name:     key,
 				Value:    value,
 			}
@@ -154,7 +154,7 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 		for _, key := range patch.DeletedFields {
 			preference := mmModel.Preference{
 				UserId:   userID,
-				Category: "focalboard",
+				Category: model.PreferencesCategoryFocalboard,
 				Name:     key,
 			}
 

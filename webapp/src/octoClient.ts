@@ -206,8 +206,6 @@ class OctoClient {
     }
 
     async getMyConfig(): Promise<Array<UserPreference> | undefined> {
-        console.log('getMyConfig called')
-
         const path = `/api/v2/users/me/config`
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
@@ -215,11 +213,9 @@ class OctoClient {
         })
 
         if (response.status !== 200) {
-            console.log('AAAAAAAAAAAA')
             return undefined
         }
 
-        console.log('BBBBBBBBBBBB')
         return (await this.getJson(response, [])) as Array<UserPreference>
     }
 

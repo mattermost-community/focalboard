@@ -230,7 +230,7 @@ func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Prefer
 	// Mattermost API gives us all preferences.
 	// We want just the Focalboard ones.
 	for _, preference := range preferences {
-		if preference.Category == "focalboard" {
+		if preference.Category == model.PreferencesCategoryFocalboard {
 			boardsPreferences = append(boardsPreferences, preference)
 		}
 	}
