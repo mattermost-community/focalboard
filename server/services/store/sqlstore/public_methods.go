@@ -299,6 +299,11 @@ func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBl
 
 }
 
+func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]model.Block, error) {
+	return s.getBlocks(s.db, opts)
+
+}
+
 func (s *SQLStore) GetBlocksByIDs(ids []string) ([]model.Block, error) {
 	return s.getBlocksByIDs(s.db, ids)
 
@@ -713,26 +718,7 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 }
 
 func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	if s.dbType == model.SqliteDBType {
-		return s.patchUserProps(s.db, userID, patch)
-	}
-	tx, txErr := s.db.BeginTx(context.Background(), nil)
-	if txErr != nil {
-		return txErr
-	}
-	err := s.patchUserProps(tx, userID, patch)
-	if err != nil {
-		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchUserProps"))
-		}
-		return err
-	}
-
-	if err := tx.Commit(); err != nil {
-		return err
-	}
-
-	return nil
+	return s.patchUserProps(s.db, userID, patch)
 
 }
 
