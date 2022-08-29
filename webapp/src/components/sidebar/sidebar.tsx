@@ -29,7 +29,6 @@ import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 import wsClient, {WSClient} from '../../wsclient'
 
 import {getCurrentTeam} from '../../store/teams'
-import {getMe} from '../../store/users'
 
 import {Constants} from "../../constants"
 
@@ -64,7 +63,6 @@ const Sidebar = (props: Props) => {
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
     const sidebarCategories = addMissingItems(partialCategories, boards)
-    const me = useAppSelector(getMe)
     const activeViewID = useAppSelector(getCurrentViewId)
 
     useEffect(() => {
