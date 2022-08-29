@@ -64,6 +64,7 @@ type Store interface {
 	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
 	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
+	GetUserPreferences(userID string) (mmModel.Preferences, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
