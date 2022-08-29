@@ -6,6 +6,9 @@ import (
 	"errors"
 	"fmt"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/store"
+
 	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -255,24 +258,74 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 }
 
 func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.UserPropPatch) error {
-	user, err := s.getUserByID(db, userID)
-	if err != nil {
-		return err
+	if len(patch.UpdatedFields) > 0 {
+		for key, value := range patch.UpdatedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: model.PreferencesCategoryFocalboard,
+				Name:     key,
+				Value:    value,
+			}
+
+			if err := s.updateUserProps(db, preference); err != nil {
+				return err
+			}
+		}
 	}
 
-	if user.Props == nil {
-		user.Props = map[string]interface{}{}
+	if len(patch.DeletedFields) > 0 {
+		for _, key := range patch.DeletedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: model.PreferencesCategoryFocalboard,
+				Name:     key,
+			}
+
+			if err := s.deleteUserProps(db, preference); err != nil {
+				return err
+			}
+		}
 	}
 
-	for _, key := range patch.DeletedFields {
-		delete(user.Props, key)
+	return nil
+}
+
+func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+	query := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"preferences").
+		Columns("UserId", "Category", "Name", "Value").
+		Values(preference.UserId, preference.Category, preference.Name, preference.Value)
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		query = query.SuffixExpr(sq.Expr("ON DUPLICATE KEY UPDATE Value = ?", preference.Value))
+	case model.PostgresDBType:
+		query = query.SuffixExpr(sq.Expr("ON CONFLICT (userid, category, name) DO UPDATE SET Value = ?", preference.Value))
+	case model.SqliteDBType:
+		query = query.SuffixExpr(sq.Expr(" on conflict(userid, category, name) do update set value = excluded.value"))
+	default:
+		return store.NewErrNotImplemented("failed to update preference because of missing driver")
 	}
 
-	for key, value := range patch.UpdatedFields {
-		user.Props[key] = value
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to upsert user preference in database: userID: %s name: %s value: %s error: %w", preference.UserId, preference.Name, preference.Value, err)
 	}
 
-	return s.updateUser(db, user)
+	return nil
+}
+
+func (s *SQLStore) deleteUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+	query := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + "preferences").
+		Where(sq.Eq{"UserId": preference.UserId}).
+		Where(sq.Eq{"Category": preference.Category}).
+		Where(sq.Eq{"Name": preference.Name})
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to delete user preference from database: %w", err)
+	}
+
+	return nil
 }
 
 func (s *SQLStore) canSeeUser(db sq.BaseRunner, seerID string, seenID string) (bool, error) {
@@ -289,4 +342,53 @@ func (s *SQLStore) postMessage(db sq.BaseRunner, message, postType string, chann
 
 func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
 	return "", errUnsupportedOperation
+}
+
+func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) (mmModel.Preferences, error) {
+	query := s.getQueryBuilder(db).
+		Select("userid", "category", "name", "value").
+		From(s.tablePrefix + "preferences").
+		Where(sq.Eq{
+			"userid":   userID,
+			"category": model.PreferencesCategoryFocalboard,
+		})
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("failed to fetch user preferences", mlog.String("user_id", userID), mlog.Err(err))
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	preferences, err := s.preferencesFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return preferences, nil
+}
+
+func (s *SQLStore) preferencesFromRows(rows *sql.Rows) ([]mmModel.Preference, error) {
+	preferences := []mmModel.Preference{}
+
+	for rows.Next() {
+		var preference mmModel.Preference
+
+		err := rows.Scan(
+			&preference.UserId,
+			&preference.Category,
+			&preference.Name,
+			&preference.Value,
+		)
+
+		if err != nil {
+			s.logger.Error("failed to scan row for user preference", mlog.Err(err))
+			return nil, err
+		}
+
+		preferences = append(preferences, preference)
+	}
+
+	return preferences, nil
 }

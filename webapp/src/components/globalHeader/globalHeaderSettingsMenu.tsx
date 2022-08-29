@@ -11,7 +11,7 @@ import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {storeLanguage} from '../../store/language'
 import {patchProps, getMe} from '../../store/users'
 import {getCurrentTeam, Team} from '../../store/teams'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {IUser, UserConfigPatch} from '../../user'
 import octoClient from '../../octoClient'
 import {UserSettings} from '../../userSettings'
 import CheckIcon from '../../widgets/icons/check'
@@ -112,9 +112,9 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
 
                                 const patch: UserConfigPatch = {
                                     updatedFields: {
-                                        [UserPropPrefix + 'onboardingTourStarted']: '1',
-                                        [UserPropPrefix + 'onboardingTourStep']: '0',
-                                        [UserPropPrefix + 'tourCategory']: 'onboarding',
+                                        onboardingTourStarted: '1',
+                                        onboardingTourStep: '0',
+                                        tourCategory: 'onboarding',
                                     },
                                 }
 

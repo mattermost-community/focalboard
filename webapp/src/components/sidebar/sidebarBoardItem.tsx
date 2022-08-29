@@ -35,7 +35,7 @@ import {Utils} from "../../utils"
 import AddIcon from "../../widgets/icons/add"
 import CloseIcon from "../../widgets/icons/close"
 import {UserConfigPatch} from "../../user"
-import {getMe, patchProps} from "../../store/users"
+import {getMe, getMyConfig, patchProps} from "../../store/users"
 import octoClient from "../../octoClient"
 import {getCurrentBoardId, getMySortedBoards} from "../../store/boards"
 import {UserSettings} from "../../userSettings"
@@ -70,6 +70,7 @@ const SidebarBoardItem = (props: Props) => {
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
     const me = useAppSelector(getMe)
+    const myConfig = useAppSelector(getMyConfig)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
@@ -146,20 +147,13 @@ const SidebarBoardItem = (props: Props) => {
     }
 
     const handleHideBoard = async() => {
-        console.log('handleHideBoard')
-        if (!me ) {
+        if (!me) {
             return
         }
 
-        // creating new array from me.props.hiddenBoardIDs as
-        // me.props.hiddenBoardIDs belongs to Redux state and
-        // so is immutable.
-        const hiddenBoards = {...(me.props.hiddenBoardIDs || {})}
-
-        // check for already hidden board. Skip if so
-        // if (hiddenBoards.indexOf(board.id) > -1) {
-        //     return
-        // }
+        // creating new array as myConfig.hiddenBoardIDs.value
+        // belongs to Redux state and so is immutable.
+        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
 
         hiddenBoards[board.id] = true
         const hiddenBoardsArray = Object.keys(hiddenBoards)
