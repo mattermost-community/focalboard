@@ -860,11 +860,19 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 		return nil, err
 	}
 
-	// TODO: Handle the includePublicBoards
-
 	boardIDs := []string{}
 	for _, m := range members {
 		boardIDs = append(boardIDs, m.BoardID)
+	}
+
+	if includePublicBoards {
+		boards, err := s.SearchBoardsForUserInTeam(teamID, "", userID)
+		if err != nil {
+			return nil, err
+		}
+		for _, b := range boards {
+			boardIDs = append(boardIDs, b.ID)
+		}
 	}
 
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
