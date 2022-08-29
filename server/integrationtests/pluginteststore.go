@@ -73,6 +73,15 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 				CreateAt: model.GetMillis(),
 				UpdateAt: model.GetMillis(),
 			},
+			"guest": {
+				ID:       "guest",
+				Props:    map[string]interface{}{},
+				Username: "guest",
+				Email:    "guest@sample.com",
+				CreateAt: model.GetMillis(),
+				UpdateAt: model.GetMillis(),
+				IsGuest:  true,
+			},
 		},
 		testTeam:  &model.Team{ID: "test-team", Title: "Test Team"},
 		otherTeam: &model.Team{ID: "other-team", Title: "Other Team"},
@@ -109,6 +118,8 @@ func (s *PluginTestStore) GetTeamsForUser(userID string) ([]*model.Team, error) 
 		return []*model.Team{s.testTeam, s.otherTeam}, nil
 	case "admin":
 		return []*model.Team{s.testTeam, s.otherTeam}, nil
+	case "guest":
+		return []*model.Team{s.testTeam}, nil
 	}
 	return nil, errTestStore
 }
@@ -160,7 +171,30 @@ func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatc
 	return nil
 }
 
-func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
+func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
+	if userID == userTeamMember {
+		return mmModel.Preferences{{
+			UserId:   userTeamMember,
+			Category: "focalboard",
+			Name:     "test",
+			Value:    "test",
+		}}, nil
+	}
+
+	return nil, errTestStore
+}
+
+func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+	if asGuestID == "guest" {
+		return []*model.User{
+			s.users["viewer"],
+			s.users["commenter"],
+			s.users["editor"],
+			s.users["admin"],
+			s.users["guest"],
+		}, nil
+	}
+
 	switch {
 	case teamID == s.testTeam.ID:
 		return []*model.User{
@@ -169,6 +203,7 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 			s.users["commenter"],
 			s.users["editor"],
 			s.users["admin"],
+			s.users["guest"],
 		}, nil
 	case teamID == s.otherTeam.ID:
 		return []*model.User{
@@ -184,9 +219,9 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
+func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
 	users := []*model.User{}
-	teamUsers, err := s.GetUsersByTeam(teamID)
+	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID)
 	if err != nil {
 		return nil, err
 	}
@@ -197,6 +232,32 @@ func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string) (
 		}
 	}
 	return users, nil
+}
+
+func (s *PluginTestStore) CanSeeUser(seerID string, seenID string) (bool, error) {
+	user, err := s.GetUserByID(seerID)
+	if err != nil {
+		return false, err
+	}
+	if !user.IsGuest {
+		return true, nil
+	}
+	seerMembers, err := s.GetMembersForUser(seerID)
+	if err != nil {
+		return false, err
+	}
+	seenMembers, err := s.GetMembersForUser(seenID)
+	if err != nil {
+		return false, err
+	}
+	for _, seerMember := range seerMembers {
+		for _, seenMember := range seenMembers {
+			if seerMember.BoardID == seenMember.BoardID {
+				return true, nil
+			}
+		}
+	}
+	return false, nil
 }
 
 func (s *PluginTestStore) SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error) {
@@ -235,8 +296,8 @@ func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, 
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
-	boards, err := s.Store.SearchBoardsForUser(term, userID)
+func (s *PluginTestStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	boards, err := s.Store.SearchBoardsForUser(term, userID, includePublicBoards)
 	if err != nil {
 		return nil, err
 	}

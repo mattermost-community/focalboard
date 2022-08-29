@@ -46,6 +46,11 @@ func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, bloc
 
 }
 
+func (s *SQLStore) CanSeeUser(seerID string, seenID string) (bool, error) {
+	return s.canSeeUser(s.db, seerID, seenID)
+
+}
+
 func (s *SQLStore) CleanUpSessions(expireTime int64) error {
 	return s.cleanUpSessions(s.db, expireTime)
 
@@ -304,11 +309,6 @@ func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 
 }
 
-func (s *SQLStore) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
-	return s.getBlocksWithBoardID(s.db, boardID)
-
-}
-
 func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 
@@ -349,8 +349,8 @@ func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit ui
 
 }
 
-func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string) ([]*model.Board, error) {
-	return s.getBoardsForUserAndTeam(s.db, userID, teamID)
+func (s *SQLStore) GetBoardsForUserAndTeam(userID string, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	return s.getBoardsForUserAndTeam(s.db, userID, teamID, includePublicBoards)
 
 }
 
@@ -519,13 +519,18 @@ func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.
 
 }
 
+func (s *SQLStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
+	return s.getUserPreferences(s.db, userID)
+
+}
+
 func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
 	return s.getUserTimezone(s.db, userID)
 
 }
 
-func (s *SQLStore) GetUsersByTeam(teamID string) ([]*model.User, error) {
-	return s.getUsersByTeam(s.db, teamID)
+func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID, asGuestID)
 
 }
 
@@ -708,7 +713,31 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 }
 
 func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	return s.patchUserProps(s.db, userID, patch)
+	if s.dbType == model.SqliteDBType {
+		return s.patchUserProps(s.db, userID, patch)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.patchUserProps(tx, userID, patch)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "PatchUserProps"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (s *SQLStore) PostMessage(message string, postType string, channelID string) error {
+	return s.postMessage(s.db, message, postType, channelID)
 
 }
 
@@ -756,8 +785,8 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 }
 
-func (s *SQLStore) SearchBoardsForUser(term string, userID string) ([]*model.Board, error) {
-	return s.searchBoardsForUser(s.db, term, userID)
+func (s *SQLStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return s.searchBoardsForUser(s.db, term, userID, includePublicBoards)
 
 }
 
@@ -771,8 +800,8 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID)
 
 }
 

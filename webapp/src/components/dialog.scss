@@ -10,12 +10,25 @@
         bottom: 0;
     }
 
+    .dialog-title {
+        margin-top: 24px;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    .dialog__close {
+        top: 18px;
+        right: 18px;
+        position: absolute;
+    }
+
     .backdrop {
         @include z-index(dialog-backdrop);
         position: fixed;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.65);
+        background-color: rgba(var(--center-channel-color-rgb), 0.5);
     }
 
     .wrapper {
@@ -26,14 +39,8 @@
         justify-content: center;
     }
 
-    .toolbar {
-        display: flex;
-        flex-direction: row;
-        padding: 16px;
-        justify-content: space-between;
-    }
-
     .dialog {
+        position: relative;
         display: flex;
         flex-direction: column;
         background-color: rgb(var(--center-channel-bg-rgb));
@@ -77,6 +84,20 @@
 
         >.banner.error {
             background-color: rgba(230, 192, 192, 0.9);
+        }
+
+        .IconButton {
+            color: rgba(var(--center-channel-color-rgb), 0.56);
+
+            &:hover {
+                color: rgba(var(--center-channel-color-rgb), 0.72);
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+
+            &:active {
+                background-color: rgba(var(--button-bg-rgb), 0.08);
+                color: rgba(var(--button-bg-rgb), 1);
+            }
         }
 
         >.toolbar {

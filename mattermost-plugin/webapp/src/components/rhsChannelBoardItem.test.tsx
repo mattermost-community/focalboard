@@ -14,6 +14,7 @@ import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 describe('components/rhsChannelBoardItem', () => {
     it('render board', async () => {
+        const board = createBoard()
         const state = {
             teams: {
                 current: {
@@ -22,8 +23,12 @@ describe('components/rhsChannelBoardItem', () => {
                     display_name: 'Team name',
                 },
             },
+            boards: {
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            }
         }
-        const board = createBoard()
         board.updateAt = 1657311058157
         board.title = 'Test board'
 
@@ -37,6 +42,7 @@ describe('components/rhsChannelBoardItem', () => {
     })
 
     it('render board with menu open', async () => {
+        const board = createBoard()
         const state = {
             teams: {
                 current: {
@@ -45,8 +51,12 @@ describe('components/rhsChannelBoardItem', () => {
                     display_name: 'Team name',
                 },
             },
+            boards: {
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            }
         }
-        const board = createBoard()
         board.updateAt = 1657311058157
         board.title = 'Test board'
 

@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockauth_interface.go -package mocks . AuthInterface
+//go:generate mockgen -destination=mocks/mockauth_interface.go -package mocks . AuthInterface
 package auth
 
 import (

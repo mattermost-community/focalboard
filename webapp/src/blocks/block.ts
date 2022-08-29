@@ -13,7 +13,6 @@ type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 
 interface BlockPatch {
-    boardId?: string
     parentId?: string
     schema?: number
     type?: BlockTypes

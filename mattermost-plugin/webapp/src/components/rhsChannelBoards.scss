@@ -1,9 +1,9 @@
 .RHSChannelBoards {
-    padding: 20px;
+    padding: 16px 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 16px;
 
     &.empty {
         display: flex;
@@ -45,7 +45,8 @@
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 16px;
+        min-height: 100%;
     }
 
     .Button {

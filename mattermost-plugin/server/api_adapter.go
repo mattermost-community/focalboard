@@ -216,5 +216,37 @@ func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 	// NOOP for plugin
 }
 
+//
+// Preferences service.
+//
+func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
+	preferences, appErr := a.api.GetPreferencesForUser(userID)
+	if appErr != nil {
+		return nil, normalizeAppErr(appErr)
+	}
+
+	boardsPreferences := mm_model.Preferences{}
+
+	// Mattermost API gives us all preferences.
+	// We want just the Focalboard ones.
+	for _, preference := range preferences {
+		if preference.Category == model.PreferencesCategoryFocalboard {
+			boardsPreferences = append(boardsPreferences, preference)
+		}
+	}
+
+	return boardsPreferences, nil
+}
+
+func (a *pluginAPIAdapter) UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.UpdatePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
+func (a *pluginAPIAdapter) DeletePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.DeletePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
 // Ensure the adapter implements ServicesAPI.
 var _ model.ServicesAPI = &pluginAPIAdapter{}

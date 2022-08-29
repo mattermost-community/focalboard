@@ -263,7 +263,7 @@ func TestCreateBoard(t *testing.T) {
 			th.CheckBadRequest(resp)
 			require.Nil(t, board)
 
-			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID, true)
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
@@ -277,7 +277,7 @@ func TestCreateBoard(t *testing.T) {
 			th.CheckBadRequest(resp)
 			require.Nil(t, board)
 
-			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID, true)
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
@@ -292,7 +292,7 @@ func TestCreateBoard(t *testing.T) {
 			th.CheckForbidden(resp)
 			require.Nil(t, board)
 
-			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID)
+			boards, err := th.Server.App().GetBoardsForUserAndTeam(user1.ID, teamID, true)
 			require.NoError(t, err)
 			require.Empty(t, boards)
 		})
@@ -450,7 +450,7 @@ func TestGetAllBlocksForBoard(t *testing.T) {
 			},
 		}
 
-		insertedBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks)
+		insertedBlocks, resp := th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, insertedBlocks, len(newBlocks))
 
@@ -530,7 +530,7 @@ func TestSearchBoards(t *testing.T) {
 			Type:   model.BoardTypePrivate,
 			TeamID: "other-team-id",
 		}
-		_, err = th.Server.App().CreateBoard(board5, user1.ID, true)
+		rBoard5, err := th.Server.App().CreateBoard(board5, user1.ID, true)
 		require.NoError(t, err)
 
 		testCases := []struct {
@@ -543,13 +543,13 @@ func TestSearchBoards(t *testing.T) {
 				Name:        "should return all boards where user1 is member or that are public",
 				Client:      th.Client,
 				Term:        "board",
-				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard2.ID, rBoard3.ID, rBoard5.ID},
 			},
 			{
 				Name:        "matching a full word",
 				Client:      th.Client,
 				Term:        "admin",
-				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID},
+				ExpectedIDs: []string{rBoard1.ID, rBoard3.ID, rBoard5.ID},
 			},
 			{
 				Name:        "matching part of the word",
@@ -1595,6 +1595,52 @@ func TestUpdateMember(t *testing.T) {
 		require.Len(t, members, 1)
 		require.True(t, members[0].SchemeAdmin)
 	})
+
+	t.Run("should always disable the admin role on update member if the user is a guest", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+
+		newBoard := &model.Board{
+			Title:  "title",
+			Type:   model.BoardTypeOpen,
+			TeamID: teamID,
+		}
+		board, err := th.Server.App().CreateBoard(newBoard, userAdmin, true)
+		require.NoError(t, err)
+
+		newGuestMember := &model.BoardMember{
+			UserID:          userGuest,
+			BoardID:         board.ID,
+			SchemeViewer:    true,
+			SchemeCommenter: true,
+			SchemeEditor:    true,
+			SchemeAdmin:     false,
+		}
+		guestMember, err := th.Server.App().AddMemberToBoard(newGuestMember)
+		require.NoError(t, err)
+		require.NotNil(t, guestMember)
+		require.True(t, guestMember.SchemeViewer)
+		require.True(t, guestMember.SchemeCommenter)
+		require.True(t, guestMember.SchemeEditor)
+		require.False(t, guestMember.SchemeAdmin)
+
+		memberUpdate := &model.BoardMember{
+			UserID:          userGuest,
+			BoardID:         board.ID,
+			SchemeAdmin:     true,
+			SchemeViewer:    true,
+			SchemeCommenter: true,
+			SchemeEditor:    true,
+		}
+
+		updatedGuestMember, resp := clients.Admin.UpdateBoardMember(memberUpdate)
+		th.CheckOK(resp)
+		require.True(t, updatedGuestMember.SchemeViewer)
+		require.True(t, updatedGuestMember.SchemeCommenter)
+		require.True(t, updatedGuestMember.SchemeEditor)
+		require.False(t, updatedGuestMember.SchemeAdmin)
+	})
 }
 
 func TestDeleteMember(t *testing.T) {
@@ -1905,7 +1951,7 @@ func TestDuplicateBoard(t *testing.T) {
 			},
 		}
 
-		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 
@@ -1990,7 +2036,7 @@ func TestDuplicateBoard(t *testing.T) {
 			},
 		}
 
-		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks)
+		newBlocks, resp = th.Client.InsertBlocks(board.ID, newBlocks, false)
 		require.NoError(t, resp.Error)
 		require.Len(t, newBlocks, 1)
 

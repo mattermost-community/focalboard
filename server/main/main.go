@@ -53,16 +53,6 @@ func monitorPid(pid int, logger *mlog.Logger) {
 	}()
 }
 
-func logInfo(logger *mlog.Logger) {
-	logger.Info("FocalBoard Server",
-		mlog.String("version", model.CurrentVersion),
-		mlog.String("edition", model.Edition),
-		mlog.String("build_number", model.BuildNumber),
-		mlog.String("build_date", model.BuildDate),
-		mlog.String("build_hash", model.BuildHash),
-	)
-}
-
 func main() {
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
@@ -101,7 +91,7 @@ func main() {
 		defer restore()
 	}
 
-	logInfo(logger)
+	model.LogServerInfo(logger)
 
 	singleUser := false
 	if pSingleUser != nil {
@@ -214,7 +204,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		return
 	}
 
-	logInfo(logger)
+	model.LogServerInfo(logger)
 
 	if len(filesPath) > 0 {
 		config.FilesPath = filesPath

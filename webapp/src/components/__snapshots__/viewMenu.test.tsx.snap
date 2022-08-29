@@ -50,9 +50,13 @@ Object {
                       </svg>
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-option__content"
                     >
-                      view title
+                      <div
+                        class="menu-name"
+                      >
+                        view title
+                      </div>
                     </div>
                     <div
                       class="noicon"
@@ -87,9 +91,13 @@ Object {
                       </svg>
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-option__content"
                     >
-                      view title
+                      <div
+                        class="menu-name"
+                      >
+                        view title
+                      </div>
                     </div>
                     <div
                       class="noicon"
@@ -116,9 +124,13 @@ Object {
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Duplicate view
+                    <div
+                      class="menu-name"
+                    >
+                      Duplicate view
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -139,9 +151,13 @@ Object {
                     />
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    Delete view
+                    <div
+                      class="menu-name"
+                    >
+                      Delete view
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -192,9 +208,13 @@ Object {
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -252,9 +272,13 @@ Object {
                     </svg>
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    view title
+                    <div
+                      class="menu-name"
+                    >
+                      view title
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -289,9 +313,13 @@ Object {
                     </svg>
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    view title
+                    <div
+                      class="menu-name"
+                    >
+                      view title
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -318,9 +346,13 @@ Object {
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate view
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate view
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -341,9 +373,13 @@ Object {
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete view
+                  <div
+                    class="menu-name"
+                  >
+                    Delete view
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -394,9 +430,13 @@ Object {
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -511,9 +551,13 @@ Object {
                       </svg>
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-option__content"
                     >
-                      view title
+                      <div
+                        class="menu-name"
+                      >
+                        view title
+                      </div>
                     </div>
                     <div
                       class="noicon"
@@ -548,9 +592,13 @@ Object {
                       </svg>
                     </div>
                     <div
-                      class="menu-name"
+                      class="menu-option__content"
                     >
-                      view title
+                      <div
+                        class="menu-name"
+                      >
+                        view title
+                      </div>
                     </div>
                     <div
                       class="noicon"
@@ -586,9 +634,13 @@ Object {
                   />
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Cancel
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -646,9 +698,13 @@ Object {
                     </svg>
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    view title
+                    <div
+                      class="menu-name"
+                    >
+                      view title
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -683,9 +739,13 @@ Object {
                     </svg>
                   </div>
                   <div
-                    class="menu-name"
+                    class="menu-option__content"
                   >
-                    view title
+                    <div
+                      class="menu-name"
+                    >
+                      view title
+                    </div>
                   </div>
                   <div
                     class="noicon"
@@ -721,9 +781,13 @@ Object {
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
