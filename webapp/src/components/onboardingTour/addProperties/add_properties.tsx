@@ -21,7 +21,7 @@ import {
     getOnboardingTourStep,
     patchProps,
 } from '../../../store/users'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../../user'
+import {IUser, UserConfigPatch} from '../../../user'
 import mutator from '../../../mutator'
 import {getCurrentBoard} from '../../../store/boards'
 import {getCurrentCard} from '../../../store/cards'
@@ -76,8 +76,8 @@ const AddPropertiesTourStep = (): JSX.Element | null => {
 
             const patch: UserConfigPatch = {}
             patch.updatedFields = {}
-            patch.updatedFields[UserPropPrefix + 'tourCategory'] = TOUR_CARD
-            patch.updatedFields[UserPropPrefix + 'onboardingTourStep'] = CardTourSteps.ADD_PROPERTIES.toString()
+            patch.updatedFields.tourCategory = TOUR_CARD
+            patch.updatedFields.onboardingTourStep = CardTourSteps.ADD_PROPERTIES.toString()
 
             const updatedProps = await mutator.patchUserConfig(me.id, patch)
             if (updatedProps) {

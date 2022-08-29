@@ -179,12 +179,12 @@ describe('components/sidebarSidebar', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        hiddenBoardIDs: {
-                            [board.id]: true,
-                        }
-                    },
                 },
+                myConfig: {
+                    hiddenBoardIDs: {value: {
+                        [board.id]: true,
+                    }}
+                }
             },
             sidebar: {
                 categoryAttributes: [

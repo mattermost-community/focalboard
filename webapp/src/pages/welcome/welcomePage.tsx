@@ -15,8 +15,8 @@ import {Utils} from '../../utils'
 import './welcomePage.scss'
 import mutator from '../../mutator'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
-import {fetchMe, getMe, patchProps} from '../../store/users'
+import {IUser, UserConfigPatch} from '../../user'
+import {fetchMe, getMe, getMyConfig, patchProps} from '../../store/users'
 import {getCurrentTeam, Team} from '../../store/teams'
 import octoClient from '../../octoClient'
 import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
@@ -27,13 +27,14 @@ const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const me = useAppSelector<IUser|null>(getMe)
+    const myConfig = useAppSelector(getMyConfig)
     const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
 
     const setWelcomePageViewed = async (userID: string):Promise<any> => {
         const patch: UserConfigPatch = {}
         patch.updatedFields = {}
-        patch.updatedFields[UserPropPrefix + UserSettingKey.WelcomePageViewed] = '1'
+        patch.updatedFields[UserSettingKey.WelcomePageViewed] = '1'
 
         const updatedProps = await mutator.patchUserConfig(userID, patch)
         if (updatedProps) {
@@ -62,8 +63,8 @@ const WelcomePage = () => {
             await setWelcomePageViewed(me.id)
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_tourCategory: TOUR_ORDER[TOUR_ORDER.length - 1],
-                    focalboard_onboardingTourStep: FINISHED.toString(),
+                    tourCategory: TOUR_ORDER[TOUR_ORDER.length - 1],
+                    onboardingTourStep: FINISHED.toString(),
                 },
             }
 
@@ -96,7 +97,7 @@ const WelcomePage = () => {
     // It's still possible for a guest to end up at this route/page directly, so
     // let's mark it as viewed, if necessary, and route them forward
     if (me?.is_guest) {
-        if (!me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
+        if (!myConfig[UserSettingKey.WelcomePageViewed]) {
             (async() => {
                 await setWelcomePageViewed(me.id)
             })()
@@ -105,7 +106,7 @@ const WelcomePage = () => {
         return null
     }
 
-    if (me?.props && me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
+    if (myConfig[UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
     }

@@ -166,7 +166,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             role='button'
                             onClick={() => {
                                 props.onClose();
-                                (window as any).openPricingModal()()
+                                (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
                             }}
                         >
                             <FormattedMessage
@@ -179,7 +179,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         className='CardDetail__limited-button'
                         onClick={() => {
                             props.onClose();
-                            (window as any).openPricingModal()()
+                            (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
                         }}
                         emphasis='primary'
                         size='large'

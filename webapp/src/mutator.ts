@@ -21,7 +21,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 import {Category} from './store/sidebar'
 
 /* eslint-disable max-lines */
-import {UserConfigPatch} from './user'
+import {UserConfigPatch, UserPreference} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
@@ -963,7 +963,7 @@ class Mutator {
         )
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Array<UserPreference> | undefined> {
         return octoClient.patchUserConfig(userID, patch)
     }
 

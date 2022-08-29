@@ -13,17 +13,21 @@ func (a *App) SearchTeamUsers(teamID string, searchQuery string, asGuestID strin
 	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID)
 }
 
-func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) (map[string]interface{}, error) {
+func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) ([]mmModel.Preference, error) {
 	if err := a.store.PatchUserProps(userID, patch); err != nil {
 		return nil, err
 	}
 
-	user, err := a.store.GetUserByID(userID)
+	updatedPreferences, err := a.store.GetUserPreferences(userID)
 	if err != nil {
 		return nil, err
 	}
 
-	return user.Props, nil
+	return updatedPreferences, nil
+}
+
+func (a *App) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
+	return a.store.GetUserPreferences(userID)
 }
 
 func (a *App) UserIsGuest(userID string) (bool, error) {

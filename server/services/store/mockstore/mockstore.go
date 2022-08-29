@@ -1075,6 +1075,21 @@ func (mr *MockStoreMockRecorder) GetUserCategoryBoards(arg0, arg1 interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCategoryBoards", reflect.TypeOf((*MockStore)(nil).GetUserCategoryBoards), arg0, arg1)
 }
 
+// GetUserPreferences mocks base method.
+func (m *MockStore) GetUserPreferences(arg0 string) (model0.Preferences, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserPreferences", arg0)
+	ret0, _ := ret[0].(model0.Preferences)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserPreferences indicates an expected call of GetUserPreferences.
+func (mr *MockStoreMockRecorder) GetUserPreferences(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserPreferences", reflect.TypeOf((*MockStore)(nil).GetUserPreferences), arg0)
+}
+
 // GetUserTimezone mocks base method.
 func (m *MockStore) GetUserTimezone(arg0 string) (string, error) {
 	m.ctrl.T.Helper()
