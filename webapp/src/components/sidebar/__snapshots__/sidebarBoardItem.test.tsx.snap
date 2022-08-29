@@ -109,33 +109,6 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
             >
               <div>
                 <div
-                  aria-label="Delete board"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex"
-                  >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Delete board
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-              <div>
-                <div
                   class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
                   id="moveBlock"
                 >
@@ -232,6 +205,33 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                       class="menu-name"
                     >
                       Hide board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="Delete board"
+                  class="MenuOption TextOption menu-option text-danger"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Delete board
                     </div>
                   </div>
                   <div
@@ -351,33 +351,6 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
             >
               <div>
                 <div
-                  aria-label="Delete board"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex"
-                  >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Delete board
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-              <div>
-                <div
                   class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
                   id="moveBlock"
                 >
@@ -422,6 +395,33 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
                       class="menu-name"
                     >
                       Hide board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="Delete board"
+                  class="MenuOption TextOption menu-option text-danger"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Delete board
                     </div>
                   </div>
                   <div

@@ -10,18 +10,6 @@
 
     .wrapper {
         .dialog {
-            .toolbar {
-                flex-direction: row-reverse;
-                padding: 0;
-                position: absolute;
-                right: 18px;
-                top: 18px;
-            }
-        }
-    }
-
-    .wrapper {
-        .dialog {
             position: relative;
             width: 600px;
             height: 450px;
@@ -58,7 +46,7 @@
                 padding: 0 32px;
                 cursor: pointer;
                 overflow: hidden;
-              
+
                 &.freesize {
                     height: unset;
                 }

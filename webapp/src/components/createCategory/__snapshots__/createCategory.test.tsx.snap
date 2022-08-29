@@ -20,7 +20,7 @@ exports[`components/createCategory/CreateCategory base case should match snapsho
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >
@@ -35,7 +35,9 @@ exports[`components/createCategory/CreateCategory base case should match snapsho
         <div
           class="CreateCategory"
         >
-          <h3>
+          <h3
+            class="dialog-title"
+          >
             <span>
               title
             </span>

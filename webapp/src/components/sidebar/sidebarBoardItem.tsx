@@ -229,20 +229,6 @@ const SidebarBoardItem = (props: Props) => {
                             position='auto'
                             parentRef={boardItemRef}
                         >
-                            <BoardPermissionGate
-                                boardId={board.id}
-                                permissions={[Permission.DeleteBoard]}
-                            >
-                                <Menu.Text
-                                    key={`deleteBlock-${board.id}`}
-                                    id='deleteBlock'
-                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => {
-                                        props.onDeleteRequest(board)
-                                    }}
-                                />
-                            </BoardPermissionGate>
                             <Menu.SubMenu
                                 key={`moveBlock-${board.id}`}
                                 id='moveBlock'
@@ -273,6 +259,21 @@ const SidebarBoardItem = (props: Props) => {
                                 icon={<CloseIcon/>}
                                 onClick={() => handleHideBoard()}
                             />
+                            <BoardPermissionGate
+                                boardId={board.id}
+                                permissions={[Permission.DeleteBoard]}
+                            >
+                                <Menu.Text
+                                    key={`deleteBlock-${board.id}`}
+                                    id='deleteBlock'
+                                    className='text-danger'
+                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
+                                    icon={<DeleteIcon/>}
+                                    onClick={() => {
+                                        props.onDeleteRequest(board)
+                                    }}
+                                />
+                            </BoardPermissionGate>
                         </Menu>
                     </MenuWrapper>
                 </div>

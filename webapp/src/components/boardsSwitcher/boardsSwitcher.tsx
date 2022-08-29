@@ -2,17 +2,19 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
+import MenuWrapper from '../../widgets/menuWrapper'
+import CompassIcon from '../../widgets/icons/compassIcon'
+import Menu from '../../widgets/menu'
 import Search from '../../widgets/icons/search'
-
+import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
 
 import {
     getOnboardingTourCategory,
     getOnboardingTourStep,
 } from '../../store/users'
-
 import {getCurrentCard} from '../../store/cards'
 
 import './boardsSwitcher.scss'
@@ -26,7 +28,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
-    onBoardTemplateSelectorOpen?: () => void,
+    onBoardTemplateSelectorOpen: () => void,
     userIsGuest?: boolean,
 }
 
@@ -35,10 +37,10 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
     const [showSwitcher, setShowSwitcher] = useState<boolean>(false)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
+    const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
     const currentCard = useAppSelector(getCurrentCard)
     const noCardOpen = !currentCard
-
 
     const shouldViewSearchForBoardsTour = noCardOpen &&
                                        onboardingTourCategory === TOUR_SIDEBAR &&
@@ -68,6 +70,10 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
         }
     }
 
+    const handleCreateNewCategory = () => {
+        setShowCreateCategoryModal(true)
+    }
+
     useEffect(() => {
         document.addEventListener('keydown', handleQuickSwitchKeyPress)
         document.addEventListener('keydown', handleEscKeyPress)
@@ -95,18 +101,52 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
             {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
                 Utils.isFocalboardPlugin() && !props.userIsGuest &&
-                <IconButton
-                    size='small'
-                    inverted={true}
-                    className='add-board-icon'
-                    onClick={props.onBoardTemplateSelectorOpen}
-                    icon={<AddIcon/>}
-                />
+                <MenuWrapper>
+                    <IconButton
+                        size='small'
+                        inverted={true}
+                        className='add-board-icon'
+                        icon={<AddIcon/>}
+                    />
+                    <Menu>
+                        <Menu.Text
+                            id='create-new-board-option'
+                            icon={<CompassIcon icon='plus' />}
+                            onClick={props.onBoardTemplateSelectorOpen}
+                            name='Create new board'
+                        />
+                        <Menu.Text
+                            id='createNewCategory'
+                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                            icon={
+                                <CompassIcon
+                                    icon='folder-plus-outline'
+                                    className='CreateNewFolderIcon'
+                                />
+                            }
+                            onClick={handleCreateNewCategory}
+                        />
+                    </Menu>
+                </MenuWrapper>
             }
 
             {
                 showSwitcher &&
                 <BoardSwitcherDialog onClose={() => setShowSwitcher(false)} />
+            }
+
+            {
+                showCreateCategoryModal && (
+                    <CreateCategory
+                        onClose={() => setShowCreateCategoryModal(false)}
+                        title={(
+                            <FormattedMessage
+                                id='SidebarCategories.CategoryMenu.CreateNew'
+                                defaultMessage='Create New Category'
+                            />
+                        )}
+                    />
+                )
             }
         </div>
     )
