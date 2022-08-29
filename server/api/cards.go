@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
@@ -12,9 +13,15 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+const (
+	defaultPage    = "0"
+	defaultPerPage = "100"
+)
+
 func (a *API) registerCardsRoutes(r *mux.Router) {
 	// Cards APIs
 	r.HandleFunc("/boards/{boardID}/cards", a.sessionRequired(a.handleCreateCard)).Methods("POST")
+	r.HandleFunc("/boards/{boardID}/cards", a.sessionRequired(a.handleGetCards)).Methods("GET")
 	r.HandleFunc("/cards/{cardID}", a.sessionRequired(a.handlePatchCard)).Methods("PATCH")
 	r.HandleFunc("/cards/{cardID}", a.sessionRequired(a.handleGetCard)).Methods("GET")
 }
@@ -108,6 +115,103 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	)
 
 	data, err := json.Marshal(card)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
+func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /boards/{boardID}/cards
+	//
+	// Fetches cards for the specified board.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: The page to select (default=0)
+	//   required: false
+	//   type: integer
+	// - name: per_page
+	//   in: query
+	//   description: Number of cards to return per page(default=100)
+	//   required: false
+	//   type: integer
+	//  security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Card"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+	userID := getUserID(r)
+	boardID := mux.Vars(r)["boardID"]
+
+	query := r.URL.Query()
+	strPage := query.Get("page")
+	strPerPage := query.Get("per_page")
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to fetch cards"})
+		return
+	}
+
+	if strPage == "" {
+		strPage = defaultPage
+	}
+	if strPerPage == "" {
+		strPerPage = defaultPerPage
+	}
+
+	page, err := strconv.Atoi(strPage)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid `page` parameter", err)
+	}
+
+	perPage, err := strconv.Atoi(strPerPage)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid `per_page` parameter", err)
+	}
+
+	auditRec := a.makeAuditRecord(r, "getCards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+	auditRec.AddMeta("page", page)
+	auditRec.AddMeta("per_page", perPage)
+
+	cards, err := a.GetCardsForBoard(boardID, page, perPage)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	a.logger.Debug("GetCards",
+		mlog.String("boardID", boardID),
+		mlog.Int("page", page),
+		mlog.Int("per_page", perPage),
+		mlog.Int("count", len(cards)),
+	)
+
+	data, err := json.Marshal(cards)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

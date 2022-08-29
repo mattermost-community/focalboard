@@ -37,6 +37,10 @@ func (a *App) CreateCard(card *model.Card, boardID string, userID string, disabl
 	return newCard, nil
 }
 
+func (a *App) GetCardsForBoard(boardID string, page int, perPage int) ([]*model.Card, error) {
+
+}
+
 func (a *App) PatchCard(cardPatch *model.CardPatch, cardID string, userID string, disableNotify bool) (*model.Card, error) {
 	blockPatch, err := model.CardPatch2BlockPatch(cardPatch)
 	if err != nil {

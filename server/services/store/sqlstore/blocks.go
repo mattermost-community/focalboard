@@ -135,7 +135,7 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`getBlocksWithParentAndType ERROR`, mlog.Err(err))
+		s.logger.Error(`getBlocksWithType ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
