@@ -75,7 +75,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 is_guest: user.is_guest,
                 displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
             ))
-        setSuggestions(mentions)
+        setSuggestions(mentions.filter(user => !user.is_bot))
     }
 
     const debouncedLoadSuggestion = useMemo(() => debounce(loadSuggestions, 200), [])
