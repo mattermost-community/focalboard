@@ -16,7 +16,7 @@ import {debounce} from "lodash"
 
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
-import {getBoardUsersList} from '../../store/users'
+import {getBoardUsersList, getMe} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
 
 import './markdownEditorInput.scss'
@@ -56,13 +56,14 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const board = useAppSelector(getCurrentBoard)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
+    const me = useAppSelector<IUser|null>(getMe)
 
     const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
 
     const loadSuggestions = async (term: string) => {
         let users: Array<IUser>
 
-        if (board && board.type === BoardTypeOpen) {
+        if (!me?.is_guest && (board && board.type === BoardTypeOpen)) {
             users = await octoClient.searchTeamUsers(term)
         } else {
             users = boardUsers
