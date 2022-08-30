@@ -8,6 +8,8 @@ import * as registry from './blocks';
 import mutator from '../../mutator';
 import {createBlock} from '../../blocks/block'
 
+import BlocksEditorContentBlock from './blocksEditorContentBlock'
+
 import './blocksEditor.scss'
 
 type Props = {
@@ -17,50 +19,21 @@ type Props = {
     readonly: boolean
 }
 
-function showContent(intl: IntlShape, editing: ContentBlockType|null, setEditing: (block: ContentBlockType|null) => void, content: ContentBlockType|ContentBlockType[]): React.ReactNode {
-    if (Array.isArray(content)) {
-        return <>{content.map((c) => showContent(intl, editing, setEditing, c))}</>
-    }
-    if (editing && editing.id === content.id) {
-        return (
-            <Editor
-                onSave={(value, contentType) => {
-                    if (contentType === 'text' && value === '') {
-                        mutator.deleteBlock(editing, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
-                    }
-                    if (value !== editing.title) {
-                        mutator.changeBlockTitle(editing.boardId, editing.id, editing.title, value, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card text'}))
-                    }
-                    setEditing(null)
-                }}
-                initialValue={content.title}
-                initialContentType={content.type}
-            />
-        )
-    }
-    const contentType = registry.get(content.type)
-    if (contentType) {
-        return (
-            <div
-                key={content.id}
-                onClick={() => {
-                    setEditing(content)
-                }}
-            >
-                {contentType.render(content.title)}
-            </div>
-        )
-    }
-    return null
-}
-
 function BlocksEditor(props: Props) {
     const [editing, setEditing] = useState<ContentBlockType|null>(null)
     const intl = useIntl()
 
     return (
         <div className="BlocksEditor">
-            {Object.values(props.contents).map((c) => showContent(intl, editing, setEditing, c))}
+            {Object.values(props.contents).map((c) => (
+                <BlocksEditorContentBlock
+                    editing={editing}
+                    setEditing={setEditing}
+                    content={c}
+                    card={props.card}
+                    contentOrder={props.card.fields.contentOrder}
+                />
+            ))}
             {!editing && (
                 <Editor onSave={async (value, contentType) => {
                     const contentBlock = createBlock()
