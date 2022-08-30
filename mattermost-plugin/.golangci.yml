@@ -1,6 +1,8 @@
 run:
   timeout: 5m
   modules-download-mode: readonly
+  skip-files:
+    - product/boards_product.go
 
 linters-settings:
   gofmt:

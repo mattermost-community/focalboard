@@ -39,9 +39,14 @@ const mockedOctoClient = mocked(octoClient, true)
 
 beforeEach(() => {
     jest.resetAllMocks()
-    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
-        welcomePageViewed: '1',
-    }))
+    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve([
+        {
+            user_id: '',
+            category: 'focalboard',
+            name: 'welcomePageViewed',
+            value: '1',
+        },
+    ]))
     mockedOctoClient.prepareOnboarding.mockResolvedValue({
         teamID: 'team_id_1',
         boardID: 'board_id_1',
@@ -63,6 +68,10 @@ describe('pages/welcome', () => {
             me: {
                 props: {},
             },
+            myConfig: {
+                onboardingTourStep: {value: '0'},
+                tourCategory: {value: 'onboarding'},
+            }
         },
     })
 
@@ -139,11 +148,10 @@ describe('pages/welcome', () => {
                 current: {id: 'team_id_1'},
             },
             users: {
-                me: {
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                    },
-                },
+                me: {},
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                }
             },
         })
 
@@ -174,11 +182,10 @@ describe('pages/welcome', () => {
                 current: {id: 'team_id_1'},
             },
             users: {
-                me: {
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                    },
-                },
+                me: {},
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                }
             },
         })
         const component = (
@@ -237,13 +244,7 @@ describe('pages/welcome', () => {
 
     test('Welcome page starts tour on clicking Take a tour button', async () => {
         history.replace = jest.fn()
-        const user = {
-            props: {
-                focalboard_welcomePageViewed: '1',
-                focalboard_onboardingTourStep: '0',
-                focalboard_tourCategory: 'onboarding',
-            },
-        } as unknown as IUser
+        const user = {} as unknown as IUser
         mockedOctoClient.getMe.mockResolvedValue(user)
 
         const component = (
@@ -267,13 +268,7 @@ describe('pages/welcome', () => {
 
     test('Welcome page skips tour on clicking no thanks option', async () => {
         history.replace = jest.fn()
-        const user = {
-            props: {
-                focalboard_welcomePageViewed: '1',
-                focalboard_onboardingTourStep: '0',
-                focalboard_tourCategory: 'onboarding',
-            },
-        } as unknown as IUser
+        const user = {} as unknown as IUser
         mockedOctoClient.getMe.mockResolvedValue(user)
 
         const component = (

@@ -6,9 +6,10 @@ import (
 )
 
 const (
-	SingleUser   = "single-user"
-	GlobalTeamID = "0"
-	SystemUserID = "system"
+	SingleUser                    = "single-user"
+	GlobalTeamID                  = "0"
+	SystemUserID                  = "system"
+	PreferencesCategoryFocalboard = "focalboard"
 )
 
 // User is a user

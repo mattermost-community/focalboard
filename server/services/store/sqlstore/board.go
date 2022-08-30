@@ -252,21 +252,25 @@ func (s *SQLStore) getBoard(db sq.BaseRunner, boardID string) (*model.Board, err
 	return s.getBoardByCondition(db, sq.Eq{"id": boardID})
 }
 
-func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string) ([]*model.Board, error) {
+func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Or{
+		Where(sq.Eq{"b.is_template": false})
+
+	if includePublicBoards {
+		query = query.Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.And{
-				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
-			},
+			sq.Eq{"bm.user_id": userID},
 		})
+	} else {
+		query = query.Where(sq.Or{
+			sq.Eq{"bm.user_id": userID},
+		})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -643,20 +647,24 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string) ([]*model.Board, error) {
+func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Or{
+		Where(sq.Eq{"b.is_template": false})
+
+	if includePublicBoards {
+		query = query.Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.And{
-				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
-			},
+			sq.Eq{"bm.user_id": userID},
 		})
+	} else {
+		query = query.Where(sq.Or{
+			sq.Eq{"bm.user_id": userID},
+		})
+	}
 
 	if term != "" {
 		// break search query into space separated words
