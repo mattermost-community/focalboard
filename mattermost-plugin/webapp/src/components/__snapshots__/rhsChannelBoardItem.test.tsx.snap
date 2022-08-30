@@ -31,7 +31,16 @@ exports[`components/rhsChannelBoardItem render board 1`] = `
     </div>
     <div
       class="description"
-    />
+    >
+      <div
+        class="MarkdownEditor octo-editor  "
+      >
+        <div
+          class="octo-editor-preview octo-placeholder"
+          data-testid="preview-element"
+        />
+      </div>
+    </div>
     <div
       class="date"
     >
@@ -144,7 +153,67 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
     </div>
     <div
       class="description"
-    />
+    >
+      <div
+        class="MarkdownEditor octo-editor  "
+      >
+        <div
+          class="octo-editor-preview"
+          data-testid="preview-element"
+        >
+          <p>
+            New board
+          </p>
+        </div>
+        <div
+          class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
+        >
+          <div
+            class="DraftEditor-root"
+          >
+            <div
+              class="DraftEditor-editorContainer"
+            >
+              <div
+                aria-autocomplete="list"
+                aria-expanded="false"
+                class="notranslate public-DraftEditor-content"
+                contenteditable="true"
+                role="combobox"
+                spellcheck="false"
+                style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+              >
+                <div
+                  data-contents="true"
+                >
+                  <div
+                    class=""
+                    data-block="true"
+                    data-editor="2a8q6"
+                    data-offset-key="4dadh-0-0"
+                  >
+                    <div
+                      class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                      data-offset-key="4dadh-0-0"
+                    >
+                      <span
+                        data-offset-key="4dadh-0-0"
+                      >
+                        <span
+                          data-text="true"
+                        >
+                          New board
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div
       class="date"
     >

@@ -60,7 +60,16 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           </div>
           <div
             class="description"
-          />
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview octo-placeholder"
+                data-testid="preview-element"
+              />
+            </div>
+          </div>
           <div
             class="date"
           >
@@ -96,7 +105,16 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
           </div>
           <div
             class="description"
-          />
+          >
+            <div
+              class="MarkdownEditor octo-editor  "
+            >
+              <div
+                class="octo-editor-preview octo-placeholder"
+                data-testid="preview-element"
+              />
+            </div>
+          </div>
           <div
             class="date"
           >

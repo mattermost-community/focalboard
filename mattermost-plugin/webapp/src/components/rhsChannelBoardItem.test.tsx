@@ -43,6 +43,7 @@ describe('components/rhsChannelBoardItem', () => {
 
     it('render board with menu open', async () => {
         const board = createBoard()
+        board.description = 'New board'
         const state = {
             teams: {
                 current: {
@@ -52,10 +53,22 @@ describe('components/rhsChannelBoardItem', () => {
                 },
             },
             boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
                 myBoardMemberships: {
                     [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                 },
-            }
+            },
+            users: {
+                boardUsers: {
+                    1: {username: 'abc'},
+                },
+            },
+            clientConfig: {
+                value: {},
+            },
         }
         board.updateAt = 1657311058157
         board.title = 'Test board'
