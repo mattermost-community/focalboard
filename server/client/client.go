@@ -372,6 +372,21 @@ func (c *Client) CreateCard(boardID string, card *model.Card, disableNotify bool
 	return cardNew, BuildResponse(r)
 }
 
+func (c *Client) GetCards(boardID string, page int, perPage int) ([]*model.Card, *Response) {
+	url := fmt.Sprintf("%s/cards?page=%d&per_page=%d", c.GetBoardRoute(boardID), page, perPage)
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var cards []*model.Card
+	if err := json.NewDecoder(r.Body).Decode(&cards); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return cards, BuildResponse(r)
+}
+
 func (c *Client) PatchCard(cardID string, cardPatch *model.CardPatch, disableNotify bool) (*model.Card, *Response) {
 	var queryParams string
 	if disableNotify {

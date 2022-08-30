@@ -198,7 +198,7 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("page", page)
 	auditRec.AddMeta("per_page", perPage)
 
-	cards, err := a.GetCardsForBoard(boardID, page, perPage)
+	cards, err := a.app.GetCardsForBoard(boardID, page, perPage)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

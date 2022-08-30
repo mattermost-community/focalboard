@@ -1,10 +1,13 @@
 package integrationtests
 
 import (
+	"fmt"
+	"strconv"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -62,6 +65,97 @@ func TestCreateCard(t *testing.T) {
 		cardNew, resp := th.Client.CreateCard(board.ID, card, false)
 		require.Error(t, resp.Error)
 		require.Nil(t, cardNew)
+	})
+}
+
+func TestGetCards(t *testing.T) {
+	th := SetupTestHelper(t).InitBasic()
+	defer th.TearDown()
+
+	board := th.CreateBoard(testTeamID, model.BoardTypeOpen)
+	userID := th.GetUser1().ID
+
+	const cardCount = 25
+
+	// make some cards with content
+	for i := 0; i < cardCount; i++ {
+		card := &model.Card{
+			BoardID:    board.ID,
+			CreatedBy:  userID,
+			ModifiedBy: userID,
+			Title:      fmt.Sprintf("%d", i),
+		}
+		cardNew, resp := th.Client.CreateCard(board.ID, card, true)
+		th.CheckOK(resp)
+
+		blocks := make([]model.Block, 0, 3)
+		for j := 0; j < 3; j++ {
+			now := model.GetMillis()
+			block := model.Block{
+				ID:         utils.NewID(utils.IDTypeBlock),
+				ParentID:   cardNew.ID,
+				CreatedBy:  userID,
+				ModifiedBy: userID,
+				CreateAt:   now,
+				UpdateAt:   now,
+				Schema:     1,
+				Type:       model.TypeText,
+				Title:      fmt.Sprintf("text %d for card %d", j, i),
+				BoardID:    board.ID,
+			}
+			blocks = append(blocks, block)
+		}
+		_, resp = th.Client.InsertBlocks(board.ID, blocks, true)
+		th.CheckOK(resp)
+	}
+
+	t.Run("fetch all cards", func(t *testing.T) {
+		cards, resp := th.Client.GetCards(board.ID, 0, -1)
+		th.CheckOK(resp)
+		assert.Len(t, cards, cardCount)
+	})
+
+	t.Run("fetch with pagination", func(t *testing.T) {
+		// return first 10
+		cards, resp := th.Client.GetCards(board.ID, 0, 10)
+		th.CheckOK(resp)
+		assert.Len(t, cards, 10)
+		for _, card := range cards {
+			cardNum, err := strconv.Atoi(card.Title)
+			require.NoError(t, err)
+			require.GreaterOrEqual(t, cardNum, 0)
+			require.Less(t, cardNum, 10)
+		}
+
+		// return second 10
+		cards, resp = th.Client.GetCards(board.ID, 1, 10)
+		th.CheckOK(resp)
+		assert.Len(t, cards, 10)
+		for _, card := range cards {
+			cardNum, err := strconv.Atoi(card.Title)
+			require.NoError(t, err)
+			require.GreaterOrEqual(t, cardNum, 10)
+			require.Less(t, cardNum, 20)
+		}
+
+		// return remaining 5
+		cards, resp = th.Client.GetCards(board.ID, 2, 10)
+		th.CheckOK(resp)
+		assert.Len(t, cards, 5)
+		for _, card := range cards {
+			cardNum, err := strconv.Atoi(card.Title)
+			require.NoError(t, err)
+			require.GreaterOrEqual(t, cardNum, 20)
+			require.Less(t, cardNum, 25)
+		}
+	})
+
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th.Logout(th.Client)
+
+		cards, resp := th.Client.GetCards(board.ID, 0, 10)
+		th.CheckUnauthorized(resp)
+		require.Nil(t, cards)
 	})
 }
 

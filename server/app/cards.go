@@ -38,7 +38,27 @@ func (a *App) CreateCard(card *model.Card, boardID string, userID string, disabl
 }
 
 func (a *App) GetCardsForBoard(boardID string, page int, perPage int) ([]*model.Card, error) {
+	opts := model.QueryBlocksOptions{
+		BoardID:   boardID,
+		BlockType: model.TypeCard,
+		Page:      page,
+		PerPage:   perPage,
+	}
 
+	blocks, err := a.store.GetBlocks(opts)
+	if err != nil {
+		return nil, err
+	}
+
+	cards := make([]*model.Card, 0, len(blocks))
+	for _, blk := range blocks {
+		if card, err := model.Block2Card(&blk); err != nil {
+			return nil, fmt.Errorf("Block2Card fail: %w", err)
+		} else {
+			cards = append(cards, card)
+		}
+	}
+	return cards, nil
 }
 
 func (a *App) PatchCard(cardPatch *model.CardPatch, cardID string, userID string, disableNotify bool) (*model.Card, error) {

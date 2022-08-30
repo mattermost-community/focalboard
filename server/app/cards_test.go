@@ -1,12 +1,14 @@
 package app
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -53,6 +55,57 @@ func TestCreateCard(t *testing.T) {
 
 		require.Error(t, err, "error")
 		require.Nil(t, newCard)
+	})
+}
+
+func TestGetCards(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	board := &model.Board{
+		ID: utils.NewID(utils.IDTypeBoard),
+	}
+
+	const cardCount = 25
+
+	// make some cards
+	blocks := make([]model.Block, 0, cardCount)
+	for i := 0; i < cardCount; i++ {
+		card := model.Block{
+			ID:       utils.NewID(utils.IDTypeBlock),
+			ParentID: board.ID,
+			Schema:   1,
+			Type:     model.TypeCard,
+			Title:    fmt.Sprintf("card %d", i),
+			BoardID:  board.ID,
+		}
+		blocks = append(blocks, card)
+	}
+
+	t.Run("success scenario", func(t *testing.T) {
+		opts := model.QueryBlocksOptions{
+			BoardID:   board.ID,
+			BlockType: model.TypeCard,
+		}
+
+		th.Store.EXPECT().GetBlocks(opts).Return(blocks, nil)
+
+		cards, err := th.App.GetCardsForBoard(board.ID, 0, 0)
+		require.NoError(t, err)
+		assert.Len(t, cards, cardCount)
+	})
+
+	t.Run("error scenario", func(t *testing.T) {
+		opts := model.QueryBlocksOptions{
+			BoardID:   board.ID,
+			BlockType: model.TypeCard,
+		}
+
+		th.Store.EXPECT().GetBlocks(opts).Return(nil, blockError{"error"})
+
+		cards, err := th.App.GetCardsForBoard(board.ID, 0, 0)
+		require.Error(t, err)
+		require.Nil(t, cards)
 	})
 }
 
