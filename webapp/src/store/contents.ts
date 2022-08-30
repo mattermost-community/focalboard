@@ -30,7 +30,6 @@ const contentsSlice = createSlice({
                     for (let i = 0; i < state.contentsByCard[content.parentId].length; i++) {
                         if (state.contentsByCard[content.parentId][i].id === content.id) {
                             state.contentsByCard[content.parentId][i] = content
-                            return
                         }
                     }
                     state.contentsByCard[content.parentId].push(content)
