@@ -4,7 +4,7 @@ import {Block, BlockPatch, FileInfo} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
-import {IUser, UserConfigPatch} from './user'
+import {IUser, UserConfigPatch, UserPreference} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
@@ -205,7 +205,21 @@ class OctoClient {
 
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+    async getMyConfig(): Promise<Array<UserPreference> | undefined> {
+        const path = `/api/v2/users/me/config`
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET'
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as Array<UserPreference>
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Array<UserPreference> | undefined> {
         const path = `/api/v2/users/${encodeURIComponent(userID)}/config`
         const body = JSON.stringify(patch)
         const response = await fetch(this.getBaseURL() + path, {
@@ -218,7 +232,7 @@ class OctoClient {
             return undefined
         }
 
-        return (await this.getJson(response, {})) as Record<string, string>
+        return (await this.getJson(response, {})) as Array<UserPreference>
     }
 
     async exportBoardArchive(boardID: string): Promise<Response> {

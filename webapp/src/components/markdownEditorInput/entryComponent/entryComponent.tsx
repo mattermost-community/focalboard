@@ -3,6 +3,9 @@
 import React, {ReactElement} from 'react'
 import {FormattedMessage} from 'react-intl'
 import {EntryComponentProps} from '@draft-js-plugins/mention/lib/MentionSuggestions/Entry/Entry'
+
+import GuestBadge from '../../../widgets/guestBadge'
+
 import './entryComponent.scss'
 
 const BotBadge = (window as any).Components?.BotBadge
@@ -27,6 +30,7 @@ const Entry = (props: EntryComponentProps): ReactElement => {
                 <div className={theme?.mentionSuggestionsEntryText}>
                     {mention.name}
                     {BotBadge && <BotBadge show={mention.is_bot}/>}
+                    <GuestBadge show={mention.is_guest}/>
                 </div>
                 <div className={theme?.mentionSuggestionsEntryText}>
                     {mention.displayName}

@@ -250,4 +250,17 @@
             }
         }
     }
+
+    .ShareBoard-user-selector-item {
+        display: flex;
+        align-items: center;
+
+        img {
+            border-radius: 50px;
+            width: 24px;
+            height: 24px;
+            margin-right: 6px;
+        }
+    }
+
 }

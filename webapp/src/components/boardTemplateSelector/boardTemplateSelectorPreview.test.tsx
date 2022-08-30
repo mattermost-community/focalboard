@@ -9,6 +9,8 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {IPropertyTemplate} from '../../blocks/board'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
+import {TestBlockFactory} from '../../test/testBlockFactory'
+
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 
 jest.mock('react-router-dom', () => {
@@ -94,24 +96,25 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
-        const board = {
-            id: '2',
-            title: boardTitle,
-            teamId: 'team-id',
-            icon: '🚴🏻‍♂️',
-            cardProperties: [groupProperty],
-            dateDisplayPropertyId: 'id-6',
-        }
+
+        const board = TestBlockFactory.createBoard()
+        board.id = '2'
+        board.title = boardTitle
+        board.teamId = 'team-id'
+        board.icon =  '🚴🏻‍♂️'
+        board.cardProperties = [groupProperty]
+        const activeView = TestBlockFactory.createBoardView(board)
+        activeView.fields.defaultTemplateId = 'defaultTemplateId'
 
         const state = {
             searchText: {value: ''},
             users: {
                 me: {
                     id: 'user-id',
-                    props: {
-                        focalboard_onboardingTourStarted: false,
-                    },
                 },
+                myConfig: {
+                    onboardingTourStarted: {value: false},
+                }
             },
             cards: {
                 templates: [],
@@ -120,7 +123,12 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 },
                 current: 'card_id_1',
             },
-            views: {views: []},
+            views: {
+                views: {
+                    boardView: activeView
+                },
+                current: 'boardView'
+            },
             contents: {contents: []},
             comments: {comments: []},
             teams: {

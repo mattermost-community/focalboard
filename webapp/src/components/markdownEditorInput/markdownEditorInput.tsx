@@ -82,6 +82,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 name: user.username,
                 avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
                 is_bot: user.is_bot,
+                is_guest: user.is_guest,
                 displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay),
                 isBoardMember: Boolean(boardUsers.find((u) => u.id === user.id)),
                 user: user,

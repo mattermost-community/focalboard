@@ -7,10 +7,9 @@ import (
 )
 
 const (
-	KeyPrefix                 = "focalboard_" // use key prefix to namespace focalboard props
-	KeyOnboardingTourStarted  = KeyPrefix + "onboardingTourStarted"
-	KeyOnboardingTourCategory = KeyPrefix + "tourCategory"
-	KeyOnboardingTourStep     = KeyPrefix + "onboardingTourStep"
+	KeyOnboardingTourStarted  = "onboardingTourStarted"
+	KeyOnboardingTourCategory = "tourCategory"
+	KeyOnboardingTourStep     = "onboardingTourStep"
 
 	ValueOnboardingFirstStep    = "0"
 	ValueTourCategoryOnboarding = "onboarding"

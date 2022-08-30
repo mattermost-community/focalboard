@@ -19,6 +19,7 @@ import {useHasPermissions} from '../../hooks/permissions'
 import {Permission} from '../../constants'
 import client from '../../octoClient'
 import ConfirmAddUserForNotifications from '../../components/confirmAddUserForNotifications'
+import GuestBadge from '../../widgets/guestBadge'
 
 import {PropertyProps} from '../types'
 
@@ -62,10 +63,15 @@ const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
+    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
+
+    const me: IUser = boardUsersById[propertyValue as string]
+
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const intl = useIntl()
 
-    const formatOptionLabel = (user: any) => {
+    const formatOptionLabel = (user: IUser) => {
         let profileImg
         if (imageURLForUser) {
             profileImg = imageURLForUser(user.id)
@@ -80,11 +86,10 @@ const Person = (props: PropertyProps): JSX.Element => {
                     />
                 )}
                 {Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
+                <GuestBadge show={Boolean(user?.is_guest)}/>
             </div>
         )
     }
-
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
 
     const addUser = useCallback(async (userId: string, role: string) => {
         const newMember = {
@@ -103,16 +108,10 @@ const Person = (props: PropertyProps): JSX.Element => {
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
     }, [board, card, propertyTemplate])
 
-    const onChange = useCallback(async (newValue) => {
-        mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue)
-    }, [board.id, card, propertyTemplate.id, boardUsersById])
-
-    const user = boardUsersById[propertyValue as string]
-
     if (readOnly) {
         return (
             <div className={`Person ${props.property.valueClassName(true)}`}>
-                {user ? formatOptionLabel(user) : propertyValue}
+                {me ? formatOptionLabel(me) : propertyValue}
             </div>
         )
     }

@@ -165,6 +165,13 @@ func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 	return isValid
 }
 
+func (a *API) userIsGuest(userID string) (bool, error) {
+	if a.singleUserToken != "" {
+		return false, nil
+	}
+	return a.app.UserIsGuest(userID)
+}
+
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {

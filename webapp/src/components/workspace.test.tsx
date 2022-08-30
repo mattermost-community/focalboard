@@ -86,6 +86,7 @@ const me: IUser = {
     create_at: 0,
     update_at: 0,
     is_bot: false,
+    is_guest: false,
     roles: 'system_user',
 }
 
@@ -116,7 +117,7 @@ describe('src/components/workspace', () => {
         },
         users: {
             me,
-            boardUsers: [me],
+            boardUsers: {[me.id]: me},
             blockSubscriptions: [],
         },
         boards: {
@@ -250,7 +251,7 @@ describe('src/components/workspace', () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
             },
             teams: {
                 current: {id: 'team-id', title: 'Test Team'},
@@ -320,21 +321,21 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     nickname: '',
-                    firstname: '', 
+                    firstname: '',
                     lastname: '',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'onboarding',
-                        focalboard_onboardingTourStep: '0',
-                    },
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
                     roles: 'system_user',
                 },
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'onboarding'},
+                    onboardingTourStep: {value: '0'},
+                }
             },
             boards: {
                 current: welcomeBoard.id,
@@ -424,20 +425,20 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     nickname: '',
-                    firstname: '', 
+                    firstname: '',
                     lastname: '',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'board',
-                        focalboard_onboardingTourStep: '0',
-                    },
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
                     roles: 'system_user',
                 },
-                boardUsers: [me],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'board'},
+                    onboardingTourStep: {value: '0'},
+                },
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {
@@ -533,20 +534,20 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     nickname: '',
-                    firstname: '', 
+                    firstname: '',
                     lastname: '',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'board',
-                        focalboard_onboardingTourStep: '1',
-                    },
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
                     roles: 'system_user',
                 },
-                boardUsers: [me],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'board'},
+                    onboardingTourStep: {value: '1'},
+                },
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {

@@ -6,6 +6,7 @@ import {createMemoryHistory} from 'history'
 import {Router} from 'react-router-dom'
 
 import {render} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
@@ -51,6 +52,9 @@ describe('components/sidebarBoardItem', () => {
             boards: {
                 [board.id]: board,
             },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         views: {
             current: view.id,
@@ -85,6 +89,9 @@ describe('components/sidebarBoardItem', () => {
             </ReduxProvider>,
         )
         const {container} = render(component)
+        const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
+        expect(elementMenuWrapper).not.toBeNull()
+        userEvent.click(elementMenuWrapper!)
         expect(container).toMatchSnapshot()
     })
 
@@ -109,6 +116,32 @@ describe('components/sidebarBoardItem', () => {
             </ReduxProvider>,
         )
         const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('sidebar board item for guest', () => {
+        const mockStore = configureStore([])
+        const store = mockStore({...state, users: { me: { is_guest: true }}})
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={board}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
+        expect(elementMenuWrapper).not.toBeNull()
+        userEvent.click(elementMenuWrapper!)
         expect(container).toMatchSnapshot()
     })
 })
