@@ -866,7 +866,8 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 	}
 
 	if includePublicBoards {
-		boards, err := s.SearchBoardsForUserInTeam(teamID, "", userID)
+		var boards []*model.Board
+		boards, err = s.SearchBoardsForUserInTeam(teamID, "", userID)
 		if err != nil {
 			return nil, err
 		}
