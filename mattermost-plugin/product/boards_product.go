@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
+	"github.com/mattermost/focalboard/server/model"
 
 	"github.com/mattermost/mattermost-server/v6/app"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
@@ -43,6 +44,7 @@ func init() {
 			app.KVStoreKey:       {},
 			app.StoreKey:         {},
 			app.SystemKey:        {},
+			app.PreferencesKey:   {},
 		},
 	})
 }
@@ -65,11 +67,11 @@ type boardsProduct struct {
 	kvStoreService       product.KVStoreService
 	storeService         product.StoreService
 	systemService        product.SystemService
+	preferencesService   product.PreferencesService
 
 	boardsApp *boards.BoardsApp
 }
 
-//nolint:gocyclo
 func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
 	boards := &boardsProduct{}
 
@@ -177,6 +179,12 @@ func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (a
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.systemService = systemService
+		case app.PreferencesKey:
+			preferencesService, ok := service.(product.PreferencesService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.preferencesService = preferencesService
 		case app.HooksKey: // not needed
 		}
 	}
@@ -196,6 +204,8 @@ func (bp *boardsProduct) Start() error {
 	if err != nil {
 		return fmt.Errorf("failed to create Boards service: %w", err)
 	}
+
+	model.LogServerInfo(bp.logger)
 
 	bp.boardsApp = boardsApp
 	if err := bp.boardsApp.Start(); err != nil {

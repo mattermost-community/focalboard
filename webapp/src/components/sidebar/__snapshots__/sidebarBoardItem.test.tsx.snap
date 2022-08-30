@@ -9,7 +9,7 @@ exports[`components/sidebarBoardItem renders default icon if no custom icon set 
       class="octo-sidebar-icon"
     >
       <i
-        class="CompassIcon icon-product-boards undefined"
+        class="CompassIcon icon-product-boards"
       />
     </div>
     <div
@@ -86,7 +86,7 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
     <div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper x"
+        class="MenuWrapper menuOpen"
         role="button"
       >
         <button
@@ -97,6 +97,373 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
             class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
         </button>
+        <div
+          class="Menu noselect auto  fixed"
+          style="top: 40px;"
+        >
+          <div
+            class="menu-contents"
+          >
+            <div
+              class="menu-options"
+            >
+              <div>
+                <div
+                  class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
+                  id="moveBlock"
+                >
+                  <i
+                    class="CompassIcon icon-folder-plus-outline CreateNewFolderIcon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Move To...
+                  </div>
+                  <svg
+                    class="SubmenuTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="50,35 75,50 50,65"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="Duplicate board"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Duplicate board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="New template from board"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-plus AddIcon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      New template from board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="Hide board"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-close CloseIcon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Hide board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="Delete board"
+                  class="MenuOption TextOption menu-option text-danger"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Delete board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="menu-spacer hideOnWidescreen"
+            />
+            <div
+              class="menu-options hideOnWidescreen"
+            >
+              <div
+                aria-label="Cancel"
+                class="MenuOption TextOption menu-option menu-cancel"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="SidebarBoardItem sidebar-view-item active"
+  >
+    <svg
+      class="BoardIcon Icon"
+      fill="currentColor"
+      height="24"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g
+        opacity="0.8"
+      >
+        <path
+          clip-rule="evenodd"
+          d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+          fill="currentColor"
+          fill-rule="evenodd"
+        />
+      </g>
+    </svg>
+    <div
+      class="octo-sidebar-title"
+      title="view title"
+    >
+      view title
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
+<div>
+  <div
+    class="SidebarBoardItem subitem active"
+  >
+    <div
+      class="octo-sidebar-icon"
+    >
+      i
+    </div>
+    <div
+      class="octo-sidebar-title"
+      title="board title"
+    >
+      board title
+    </div>
+    <div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper menuOpen"
+        role="button"
+      >
+        <button
+          class="IconButton"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
+        <div
+          class="Menu noselect auto  fixed"
+          style="top: 40px;"
+        >
+          <div
+            class="menu-contents"
+          >
+            <div
+              class="menu-options"
+            >
+              <div>
+                <div
+                  class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
+                  id="moveBlock"
+                >
+                  <i
+                    class="CompassIcon icon-folder-plus-outline CreateNewFolderIcon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    Move To...
+                  </div>
+                  <svg
+                    class="SubmenuTriangleIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polygon
+                      points="50,35 75,50 50,65"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div />
+              <div />
+              <div>
+                <div
+                  aria-label="Hide board"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-close CloseIcon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Hide board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  aria-label="Delete board"
+                  class="MenuOption TextOption menu-option text-danger"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Delete board
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="menu-spacer hideOnWidescreen"
+            />
+            <div
+              class="menu-options hideOnWidescreen"
+            >
+              <div
+                aria-label="Cancel"
+                class="MenuOption TextOption menu-option menu-cancel"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

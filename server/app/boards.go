@@ -20,6 +20,9 @@ var (
 	ErrInsufficientLicense    = errors.New("appropriate license required")
 )
 
+const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
+const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
+
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
 	if model.IsErrNotFound(err) {
@@ -253,8 +256,8 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	return bab, members, err
 }
 
-func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
-	return a.store.GetBoardsForUserAndTeam(userID, teamID)
+func (a *App) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.GetBoardsForUserAndTeam(userID, teamID, includePublicBoards)
 }
 
 func (a *App) GetTemplateBoards(teamID, userID string) ([]*model.Board, error) {
@@ -302,16 +305,52 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
 	var oldMembers []*model.BoardMember
+	var oldChannelID string
 	if patch.ChannelID != nil && *patch.ChannelID == "" {
 		var err error
 		oldMembers, err = a.GetMembersForBoard(boardID)
 		if err != nil {
 			a.logger.Error("Unable to get the board members", mlog.Err(err))
 		}
+		board, err := a.store.GetBoard(boardID)
+		if model.IsErrNotFound(err) {
+			return nil, model.NewErrNotFound(boardID)
+		}
+		if err != nil {
+			return nil, err
+		}
+		oldChannelID = board.ChannelID
 	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
+	}
+
+	if patch.ChannelID != nil {
+		var username string
+		user, err := a.store.GetUserByID(userID)
+		if err != nil {
+			a.logger.Error("Unable to get the board updater", mlog.Err(err))
+			username = "unknown"
+		} else {
+			username = user.Username
+		}
+
+		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		if *patch.ChannelID != "" {
+			// TODO: this needs translated when available on the server
+			message := fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink)
+			err := a.store.PostMessage(message, "", *patch.ChannelID)
+			if err != nil {
+				a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
+			}
+		} else if *patch.ChannelID == "" {
+			message := fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink)
+			err := a.store.PostMessage(message, "", oldChannelID)
+			if err != nil {
+				a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
+			}
+		}
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
@@ -513,8 +552,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID)
+func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

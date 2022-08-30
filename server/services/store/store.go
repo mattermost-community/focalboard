@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mockstore/mockstore.go -package mockstore . Store
+//go:generate mockgen -destination=mockstore/mockstore.go -package mockstore . Store
 //go:generate go run ./generators/main.go
 package store
 
@@ -14,10 +14,10 @@ const CardLimitTimestampSystemKey = "card_limit_timestamp"
 
 // Store represents the abstraction of the data storage.
 type Store interface {
+	GetBlocks(opts model.QueryBlocksOptions) ([]model.Block, error)
 	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
 	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
 	GetBlocksByIDs(ids []string) ([]model.Block, error)
-	GetBlocksWithBoardID(boardID string) ([]model.Block, error)
 	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
 	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
 	GetBlocksForBoard(boardID string) ([]model.Block, error)
@@ -62,9 +62,10 @@ type Store interface {
 	UpdateUser(user *model.User) error
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
-	GetUsersByTeam(teamID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error)
+	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
+	GetUserPreferences(userID string) (mmModel.Preferences, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)
 	GetSession(token string, expireTime int64) (*model.Session, error)
@@ -90,7 +91,7 @@ type Store interface {
 	// @withTransaction
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
-	GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error)
+	GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error)
 	GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error)
 	// @withTransaction
 	DeleteBoard(boardID, userID string) error
@@ -101,7 +102,8 @@ type Store interface {
 	GetBoardMemberHistory(boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error)
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
-	SearchBoardsForUser(term, userID string) ([]*model.Board, error)
+	CanSeeUser(seerID string, seenID string) (bool, error)
+	SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error)
 	SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
@@ -155,6 +157,7 @@ type Store interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	SearchUserChannels(teamID, userID, query string) ([]*mmModel.Channel, error)
 	GetChannel(teamID, channelID string) (*mmModel.Channel, error)
+	PostMessage(message, postType, channelID string) error
 	SendMessage(message, postType string, receipts []string) error
 
 	// Insights

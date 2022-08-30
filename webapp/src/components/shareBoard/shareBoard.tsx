@@ -31,6 +31,7 @@ import Switch from '../../widgets/switch'
 import Button from '../../widgets/buttons/button'
 import {sendFlashMessage} from '../flashMessages'
 import {Permission} from '../../constants'
+import GuestBadge from '../../widgets/guestBadge'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -299,6 +300,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     <div className='ml-3'>
                         <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                         <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
+                        <GuestBadge show={Boolean(user?.is_guest)}/>
                     </div>
                 </div>
             )
@@ -358,6 +360,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
+                            filterOption={(o) => !members[o.value]}
                             loadOptions={async (inputValue: string) => {
                                 const result = []
                                 if (Utils.isFocalboardPlugin()) {

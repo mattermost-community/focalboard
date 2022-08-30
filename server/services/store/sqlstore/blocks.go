@@ -63,17 +63,34 @@ func (s *SQLStore) blockFields() []string {
 	}
 }
 
-func (s *SQLStore) getBlocksWithParentAndType(db sq.BaseRunner, boardID, parentID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([]model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"board_id": boardID}).
-		Where(sq.Eq{"parent_id": parentID}).
-		Where(sq.Eq{"type": blockType})
+		From(s.tablePrefix + "blocks")
+
+	if opts.BoardID != "" {
+		query = query.Where(sq.Eq{"board_id": opts.BoardID})
+	}
+
+	if opts.ParentID != "" {
+		query = query.Where(sq.Eq{"parent_id": opts.ParentID})
+	}
+
+	if opts.BlockType != "" && opts.BlockType != model.TypeUnknown {
+		query = query.Where(sq.Eq{"type": opts.BlockType})
+	}
+
+	if opts.Page != 0 {
+		query = query.Offset(uint64(opts.Page))
+	}
+
+	if opts.PerPage > 0 {
+		query = query.Limit(uint64(opts.PerPage))
+	}
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`getBlocksWithParentAndType ERROR`, mlog.Err(err))
+		s.logger.Error(`getBlocks ERROR`, mlog.Err(err))
 
 		return nil, err
 	}
@@ -82,22 +99,21 @@ func (s *SQLStore) getBlocksWithParentAndType(db sq.BaseRunner, boardID, parentI
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID string) ([]model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"parent_id": parentID}).
-		Where(sq.Eq{"board_id": boardID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getBlocksWithParent ERROR`, mlog.Err(err))
-
-		return nil, err
+func (s *SQLStore) getBlocksWithParentAndType(db sq.BaseRunner, boardID, parentID string, blockType string) ([]model.Block, error) {
+	opts := model.QueryBlocksOptions{
+		BoardID:   boardID,
+		ParentID:  parentID,
+		BlockType: model.BlockType(blockType),
 	}
-	defer s.CloseRows(rows)
+	return s.getBlocks(db, opts)
+}
 
-	return s.blocksFromRows(rows)
+func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID string) ([]model.Block, error) {
+	opts := model.QueryBlocksOptions{
+		BoardID:  boardID,
+		ParentID: parentID,
+	}
+	return s.getBlocks(db, opts)
 }
 
 func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block, error) {
@@ -126,39 +142,12 @@ func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block
 	return blocks, nil
 }
 
-func (s *SQLStore) getBlocksWithBoardID(db sq.BaseRunner, boardID string) ([]model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"board_id": boardID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`GetBlocksWithBoardID ERROR`, mlog.Err(err))
-
-		return nil, err
-	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
-}
-
 func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string) ([]model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"type": blockType}).
-		Where(sq.Eq{"board_id": boardID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getBlocksWithParentAndType ERROR`, mlog.Err(err))
-
-		return nil, err
+	opts := model.QueryBlocksOptions{
+		BoardID:   boardID,
+		BlockType: model.BlockType(blockType),
 	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
+	return s.getBlocks(db, opts)
 }
 
 // getSubTree2 returns blocks within 2 levels of the given blockID.
@@ -194,19 +183,10 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 }
 
 func (s *SQLStore) getBlocksForBoard(db sq.BaseRunner, boardID string) ([]model.Block, error) {
-	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
-		From(s.tablePrefix + "blocks").
-		Where(sq.Eq{"board_id": boardID})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error(`getAllBlocksForBoard ERROR`, mlog.Err(err))
-		return nil, err
+	opts := model.QueryBlocksOptions{
+		BoardID: boardID,
 	}
-	defer s.CloseRows(rows)
-
-	return s.blocksFromRows(rows)
+	return s.getBlocks(db, opts)
 }
 
 func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {

@@ -94,10 +94,6 @@ type BlockPatch struct {
 	// The block removed fields
 	// required: false
 	DeletedFields []string `json:"deletedFields"`
-
-	// The board id that the block belongs to
-	// required: false
-	BoardID *string `json:"boardId"`
 }
 
 // BlockPatchBatch is a batch of IDs and patches for modify blocks
@@ -149,10 +145,6 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 		block.ParentID = *p.ParentID
 	}
 
-	if p.BoardID != nil {
-		block.BoardID = *p.BoardID
-	}
-
 	if p.Schema != nil {
 		block.Schema = *p.Schema
 	}
@@ -174,6 +166,14 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 	}
 
 	return block
+}
+
+type QueryBlocksOptions struct {
+	BoardID   string    // if not empty then filter for blocks belonging to specified board
+	ParentID  string    // if not empty then filter for blocks belonging to specified parent
+	BlockType BlockType // if not empty and not `TypeUnknown` then filter for records of specified block type
+	Page      int       // page number to select when paginating
+	PerPage   int       // number of blocks per page (default=-1, meaning unlimited)
 }
 
 // QuerySubtreeOptions are query options that can be passed to GetSubTree methods.

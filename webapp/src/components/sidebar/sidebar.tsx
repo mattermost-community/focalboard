@@ -11,6 +11,7 @@ import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
+import {IUser} from "../../user"
 
 import './sidebar.scss'
 
@@ -32,6 +33,7 @@ import {getCurrentTeam} from '../../store/teams'
 import {Constants} from "../../constants"
 
 import {getMe} from "../../store/users"
+import {getCurrentViewId} from '../../store/views'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -40,7 +42,8 @@ import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
-    onBoardTemplateSelectorOpen?: () => void
+    onBoardTemplateSelectorOpen: () => void
+    onBoardTemplateSelectorClose?: () => void
 }
 
 function getWindowDimensions() {
@@ -58,8 +61,9 @@ const Sidebar = (props: Props) => {
     const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
     const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
+    const me = useAppSelector<IUser|null>(getMe)
     const sidebarCategories = addMissingItems(partialCategories, boards)
-    const me = useAppSelector(getMe)
+    const activeViewID = useAppSelector(getCurrentViewId)
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
@@ -180,7 +184,10 @@ const Sidebar = (props: Props) => {
                 </div>
             }
 
-            <BoardsSwitcher onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}/>
+            <BoardsSwitcher
+                onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
+                userIsGuest={me?.is_guest}
+            />
 
             <div className='octo-sidebar-list'>
                 {
@@ -189,10 +196,12 @@ const Sidebar = (props: Props) => {
                             hideSidebar={hideSidebar}
                             key={category.id}
                             activeBoardID={props.activeBoardId}
+                            activeViewID={activeViewID}
                             categoryBoards={category}
                             boards={boards}
                             allCategories={sidebarCategories}
                             index={index}
+                            onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
                         />
                     ))
                 }
