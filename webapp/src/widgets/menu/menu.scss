@@ -58,6 +58,10 @@
             }
         }
 
+        .menu-option__content {
+            flex: 1;
+        }
+
         .menu-option {
             display: flex;
             flex-direction: row;
@@ -118,7 +122,7 @@
             }
 
             > .SubmenuTriangleIcon {
-                fill: rgba(var(--center-channel-color-rgb), 0.7);
+                fill: currentColor;
             }
 
             .Icon {
