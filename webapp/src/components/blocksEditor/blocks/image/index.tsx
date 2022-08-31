@@ -3,41 +3,61 @@ import {BlockInputProps, ContentType} from '../types'
 
 import './image.scss'
 
-const Image: ContentType = {
+type FileInfo = {
+    file: string|ArrayBuffer
+    width?: number
+    align?: 'left'|'center'|'right'
+}
+
+const Image: ContentType<FileInfo> = {
     name: 'image',
     displayName: 'Image',
     slashCommand: '/image',
     prefix: '',
-    render: (value: string) => <img className='ImageView' src={value}/>,
     runSlashCommand: (): void => {},
-    Input: (props: BlockInputProps) => {
+    editable: false,
+    Display: (props: BlockInputProps<FileInfo>) => {
+        if (props.value.file) {
+            return <img className='ImageView' src={props.value.file as string}/>
+        }
+        return null
+    },
+    Input: (props: BlockInputProps<FileInfo>) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {
             ref.current?.click()
         }, [])
 
         return (
-            <input
-                ref={ref}
-                className='Image'
-                type='file'
-                accept='image/*'
-                onChange={(e) => {
-                    const reader = new FileReader();
-                    const file = (e.currentTarget?.files || [])[0]
-                    reader.readAsDataURL(file);
-                    reader.onload = function () {
-                        props.onSave(reader.result as string)
-                    }
-                }}
-            />
+            <div>
+                {props.value.file && (typeof props.value.file === 'string') && (
+                    <img
+                        className='ImageView' src={props.value.file}
+                        onClick={() => ref.current?.click()}
+                    />
+                )}
+                <input
+                    ref={ref}
+                    className='Image'
+                    type='file'
+                    accept='image/*'
+                    onChange={(e) => {
+                        const reader = new FileReader();
+                        const file = (e.currentTarget?.files || [])[0]
+                        reader.readAsArrayBuffer(file);
+                        reader.onload = function () {
+                            props.onSave({file: reader.result as ArrayBuffer})
+                        }
+                    }}
+                />
+            </div>
         )
     }
 }
 
-Image.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void): void => {
+Image.runSlashCommand = (changeType: (contentType: ContentType<FileInfo>) => void, changeValue: (value: FileInfo) => void): void => {
     changeType(Image)
-    changeValue('')
+    changeValue({file: ''})
 }
 
 export default Image

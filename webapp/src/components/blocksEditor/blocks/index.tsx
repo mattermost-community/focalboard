@@ -5,16 +5,18 @@ import H3 from './h3'
 import Image from './image'
 import Text from './text'
 import Divider from './divider'
+// import Markdown from './markdown'
 import ListItem from './list-item'
 import Attachment from './attachment'
 import Quote from './quote'
 import Video from './video'
+import Checkbox from './checkbox'
 
 const blocks: {[key: string]: ContentType} = {}
 const blocksByPrefix: {[key: string]: ContentType} = {}
 const blocksBySlashCommand: {[key: string]: ContentType} = {}
 
-export function register(contentType: ContentType) {
+export function register(contentType: ContentType<any>) {
     blocks[contentType.name] = contentType
     if (contentType.prefix !== '') {
         blocksByPrefix[contentType.prefix] = contentType
@@ -62,7 +64,9 @@ register(H3)
 register(Image)
 register(Text)
 register(Divider)
+// register(Markdown)
 register(ListItem)
 register(Attachment)
 register(Quote)
 register(Video)
+register(Checkbox)

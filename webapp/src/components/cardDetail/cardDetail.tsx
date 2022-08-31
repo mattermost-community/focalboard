@@ -9,6 +9,7 @@ import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
+import {Block} from '../../blocks/block'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
@@ -23,6 +24,7 @@ import {setCurrent as setCurrentCard} from '../../store/cards'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import BlocksEditor from '../blocksEditor/blocksEditor'
+import {BlockData} from '../blocksEditor/blocks/types'
 
 import CardSkeleton from '../../svg/card-skeleton'
 
@@ -214,9 +216,23 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
             {!limited && <div className='CardDetail content fullwidth content-blocks'>
                 <BlocksEditor
-                    card={props.card}
-                    contents={props.contents}
-                    readonly={props.readonly || !canEditBoardCards}
+                    blocks={props.contents.flatMap((value: Block | Block[]): BlockData<any> => {
+                        if (Array.isArray(value)) {
+                            return {
+                                id: value[0]?.id,
+                                value: value[0]?.title,
+                                contentType: value[0]?.type,
+                            }
+                        }
+                        return {
+                            id: value.id,
+                            value: value.title,
+                            contentType: value.type,
+                        }
+                    })}
+                    onBlockCreated={(block: any, afterBlock: any): BlockData<any>|null => { return null}}
+                    onBlockModified={(block: any): BlockData<any>|null => {return null}}
+                    onBlockMoved={() => {}}
                 />
             </div>}
         </>

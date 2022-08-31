@@ -9,8 +9,9 @@ const ListItem: ContentType = {
     slashCommand: '/list-item',
     prefix: '* ',
     nextType: 'list-item',
-    render: (value: string) => <ul><li>{value}</li></ul>,
     runSlashCommand: (): void => {},
+    editable: true,
+    Display: (props: BlockInputProps) => <ul><li>{props.value}</li></ul>,
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {

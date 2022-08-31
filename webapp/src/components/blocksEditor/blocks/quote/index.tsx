@@ -10,15 +10,16 @@ const Quote: ContentType = {
     displayName: 'Quote',
     slashCommand: '/quote',
     prefix: '> ',
-    render: (value: string) => {
+    Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
-        const html = marked('> '+value, {renderer, breaks: true})
+        const html = marked('> '+props.value, {renderer, breaks: true})
         return <div
             className='Quote'
             dangerouslySetInnerHTML={{__html: html.trim()}}
         />
     },
     runSlashCommand: (): void => {},
+    editable: true,
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {

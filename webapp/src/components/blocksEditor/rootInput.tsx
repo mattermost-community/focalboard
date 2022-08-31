@@ -1,13 +1,12 @@
 import React, {useState} from 'react'
 import * as registry from './blocks/'
 import {ContentType} from './blocks/types'
-import {ContentBlockTypes} from '../../blocks/block'
 import Select from 'react-select'
 
 type Props = {
     onChange: (value: string) => void
     onChangeType: (blockType: ContentType) => void
-    onSave: (value: string, blockType: ContentBlockTypes) => void
+    onSave: (value: string, blockType: string) => void
     value: string
 }
 

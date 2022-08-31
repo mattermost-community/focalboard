@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from 'react'
 
 import * as contentBlocks from './blocks/'
-import {ContentType} from './blocks/types'
-import {ContentBlockTypes} from '../../blocks/block'
+import {ContentType, BlockData} from './blocks/types'
 import RootInput from './rootInput'
 
 import './editor.scss'
 
 type Props = {
-    onSave: (value: string, contentType: ContentBlockTypes) => void
+    onSave: (block: BlockData) => BlockData|null
+    id?: string
     initialValue?: string
     initialContentType?: string
 }
@@ -38,8 +38,11 @@ export default function Editor(props: Props) {
                     onChange={setValue}
                     onChangeType={setCurrentBlockType}
                     value={value}
-                    onSave={(val: string, blockType: ContentBlockTypes) => {
-                        props.onSave(val, blockType)
+                    onSave={(val: string, blockType: string) => {
+                        if (blockType === null && val === '') {
+                            return
+                        }
+                        props.onSave({value: val, contentType: blockType, id: props.id})
                         setValue('')
                         setCurrentBlockType(null)
                     }}
@@ -53,7 +56,7 @@ export default function Editor(props: Props) {
                         setCurrentBlockType(null)
                     }}
                     onSave={(val: string) => {
-                        props.onSave(val, currentBlockType.name)
+                        props.onSave({value: val, contentType: currentBlockType.name, id: props.id})
                         const nextType = contentBlocks.get(currentBlockType.nextType || '')
                         setValue('')
                         setCurrentBlockType(nextType || null)

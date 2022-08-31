@@ -1,0 +1,26 @@
+.BlockContent {
+    display: flex;
+
+    &.over {
+        border-bottom: 1px solid blue;
+    }
+
+    &:hover {
+        .action {
+            opacity: 1;
+            .AddIcon {
+                opacity: 0.5;
+            }
+        }
+    }
+
+    .action {
+        transition: opacity 0.3s;
+        opacity: 0;
+        margin: 5px;
+    }
+
+    .content {
+        flex-grow: 1;
+    }
+}

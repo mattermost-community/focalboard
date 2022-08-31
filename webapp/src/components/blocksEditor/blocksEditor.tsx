@@ -1,51 +1,109 @@
-import React, {useState} from 'react';
-import {useIntl, IntlShape} from 'react-intl';
-import {ContentBlock as ContentBlockType} from '../../blocks/contentBlock'
-import {Card} from '../../blocks/card';
+import React, {useState} from 'react'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
-import Editor from './editor';
-import * as registry from './blocks';
-import mutator from '../../mutator';
-import {createBlock} from '../../blocks/block'
-
-import BlocksEditorContentBlock from './blocksEditorContentBlock'
-
-import './blocksEditor.scss'
+import Editor from './editor'
+import {BlockData} from './blocks/types'
+import BlockContent from './blockContent'
+import * as registry from './blocks'
 
 type Props = {
-    id?: string
-    card: Card
-    contents: Array<ContentBlockType|ContentBlockType[]>
-    readonly: boolean
+    onBlockCreated: (block: BlockData, afterBlock?: BlockData) => BlockData|null
+    onBlockModified: (block: BlockData) => BlockData|null
+    onBlockMoved: (block: BlockData, afterBlock: BlockData) => void
+    blocks: BlockData[]
 }
 
 function BlocksEditor(props: Props) {
-    const [editing, setEditing] = useState<ContentBlockType|null>(null)
-    const intl = useIntl()
+  const [editing, setEditing] = useState<BlockData|null>(null)
+  const [afterBlock, setAfterBlock] = useState<BlockData|null>(null)
+  return (
+      <div
+          className="BlocksEditor"
+          onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+              if (e.key === 'ArrowUp') {
+                  if (editing === null) {
+                      if (afterBlock === null) {
+                          setEditing(props.blocks[props.blocks.length - 1] || null)
+                      } else {
+                          setEditing(afterBlock)
+                      }
+                      setAfterBlock(null)
+                      return
+                  }
+                  let prevBlock = null
+                  for (const b of props.blocks) {
+                      if (editing?.id === b.id) {
+                          break
+                      }
+                      const blockType = registry.get(b.contentType)
+                      if (blockType.editable) {
+                          prevBlock = b
+                      }
+                  }
+                  if (prevBlock) {
+                      setEditing(prevBlock)
+                      setAfterBlock(null)
+                  }
+              } else if (e.key === 'ArrowDown') {
+                  let currentBlock = editing
+                  if (currentBlock === null) {
+                      currentBlock = afterBlock
+                  }
+                  if (currentBlock === null) {
+                      return
+                  }
 
-    return (
-        <div className="BlocksEditor">
-            {Object.values(props.contents).map((c) => (
-                <BlocksEditorContentBlock
-                    editing={editing}
-                    setEditing={setEditing}
-                    content={c}
-                    card={props.card}
-                    contentOrder={props.card.fields.contentOrder}
-                />
-            ))}
-            {!editing && (
-                <Editor onSave={async (value, contentType) => {
-                    const contentBlock = createBlock()
-                    contentBlock.boardId = props.card.boardId
-                    contentBlock.title = value
-                    contentBlock.type = contentType
-                    contentBlock.parentId = props.card.id
-                    const newBlock = await mutator.insertBlock(contentBlock.boardId, contentBlock, intl.formatMessage({id: 'ContentBlock.addNewBlock', defaultMessage: 'add new content'}))
-                    mutator.changeCardContentOrder(props.card.boardId, props.card.id, props.card.fields.contentOrder, [...props.card.fields.contentOrder, newBlock.id])
-                }}/>)}
-        </div>
-    );
+                  let nextBlock = null
+                  let breakNext = false
+                  for (const b of props.blocks) {
+                      if (breakNext) {
+                          const blockType = registry.get(b.contentType)
+                          if (blockType.editable) {
+                              nextBlock = b
+                              break
+                          }
+                      }
+                      if (currentBlock.id === b.id) {
+                          breakNext = true
+                      }
+                  }
+                  setEditing(nextBlock)
+                  setAfterBlock(null)
+              }
+          }}
+      >
+          <DndProvider backend={HTML5Backend}>
+              {Object.values(props.blocks).map((d) => (
+                  <div
+                      key={d.id}
+                  >
+                      <BlockContent
+                          key={d.id}
+                          block={d}
+                          editing={editing}
+                          setEditing={(block) => {
+                              setEditing(block)
+                              setAfterBlock(null)
+                          }}
+                          setAfterBlock={setAfterBlock}
+                          onSave={props.onBlockModified}
+                          onMove={props.onBlockMoved}
+                      />
+                      {afterBlock && afterBlock.id === d.id && (
+                          <Editor
+                              onSave={(b) => {
+                                  const newBlock = props.onBlockCreated(b, afterBlock)
+                                  setAfterBlock(newBlock)
+                                  return newBlock
+                              }}
+                          />)}
+                  </div>
+              ))}
+              {!editing && !afterBlock && <Editor onSave={props.onBlockCreated}/>}
+          </DndProvider>
+    </div>
+  );
 }
 
 export default BlocksEditor;

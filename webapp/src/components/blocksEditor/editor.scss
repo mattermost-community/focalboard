@@ -1,9 +1,19 @@
 .Editor {
+    margin-left: 50px;
+    .RootInput {
+        display: block;
+    }
+    &.with-content-type {
+        .RootInput {
+            display: none;
+        }
+    }
     input {
         width: 100%;
         border: 1px solid hsl(0, 0%, 80%);
         border-radius: 4px;
-        padding: 10px;
+        padding: 3px 6px;
+        outline: 0;
         &:focus {
             border: 2px solid #2684FF;
         }

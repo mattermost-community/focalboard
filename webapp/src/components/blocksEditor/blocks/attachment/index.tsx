@@ -8,8 +8,9 @@ const Attachment: ContentType = {
     displayName: 'Attachment',
     slashCommand: '/attachment',
     prefix: '',
-    render: (value: string) => <div className='AttachmentView'>📎 {value}</div>,
     runSlashCommand: (): void => {},
+    editable: false,
+    Display: (props: BlockInputProps) => <div className='AttachmentView'>📎 {props.value}</div>,
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {

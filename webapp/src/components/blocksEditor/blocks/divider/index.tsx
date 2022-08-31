@@ -8,8 +8,9 @@ const Divider: ContentType = {
     displayName: 'Divider',
     slashCommand: '/divider',
     prefix: '--- ',
-    render: () => <hr className='Divider'/>,
     runSlashCommand: (): void => {},
+    editable: false,
+    Display: () => <hr className='Divider'/>,
     Input: (props: BlockInputProps) => {
         useEffect(() => {
             props.onSave(props.value)

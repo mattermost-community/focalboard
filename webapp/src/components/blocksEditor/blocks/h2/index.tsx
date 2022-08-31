@@ -10,14 +10,15 @@ const H2: ContentType = {
     displayName: 'Sub title',
     slashCommand: '/subtitle',
     prefix: '## ',
-    render: (value: string) => {
+    runSlashCommand: (): void => {},
+    editable: true,
+    Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
-        const html = marked('## '+value, {renderer, breaks: true})
+        const html = marked('## '+props.value, {renderer, breaks: true})
         return <div
             dangerouslySetInnerHTML={{__html: html.trim()}}
         />
     },
-    runSlashCommand: (): void => {},
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {

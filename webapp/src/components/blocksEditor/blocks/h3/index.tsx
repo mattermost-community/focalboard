@@ -10,14 +10,15 @@ const H3: ContentType = {
     displayName: 'Sub Sub title',
     slashCommand: '/subsubtitle',
     prefix: '### ',
-    render: (value: string) => {
+    runSlashCommand: (): void => {},
+    editable: true,
+    Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
-        const html = marked('### '+value, {renderer, breaks: true})
+        const html = marked('### '+props.value, {renderer, breaks: true})
         return <div
             dangerouslySetInnerHTML={{__html: html.trim()}}
         />
     },
-    runSlashCommand: (): void => {},
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {

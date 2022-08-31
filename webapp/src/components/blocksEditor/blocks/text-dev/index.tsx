@@ -1,22 +1,21 @@
 import React, {useRef, useEffect} from 'react'
-import {marked} from 'marked'
-
 import {BlockInputProps, ContentType} from '../types'
+import {Utils} from '../../../../utils'
 
-import './h1.scss'
+import './text.scss'
 
-const H1: ContentType = {
-    name: 'h1',
-    displayName: 'Title',
-    slashCommand: '/title',
-    prefix: '# ',
+const Text: ContentType = {
+    name: 'text',
+    displayName: 'Text',
+    slashCommand: '/text',
+    prefix: '',
     runSlashCommand: (): void => {},
     editable: true,
     Display: (props: BlockInputProps) => {
-        const renderer = new marked.Renderer()
-        const html = marked('# '+props.value, {renderer, breaks: true})
+        const html: string = Utils.htmlFromMarkdown(props.value || '')
         return <div
-            dangerouslySetInnerHTML={{__html: html.trim()}}
+            dangerouslySetInnerHTML={{__html: html}}
+            className={props.value ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
         />
     },
     Input: (props: BlockInputProps) => {
@@ -27,7 +26,7 @@ const H1: ContentType = {
         return (
             <input
                 ref={ref}
-                className='H1'
+                className='Text'
                 onChange={(e) => props.onChange(e.currentTarget.value)}
                 onKeyDown={(e) => {
                     if (props.value === '' && e.key === "Backspace") {
@@ -43,9 +42,9 @@ const H1: ContentType = {
     }
 }
 
-H1.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {
-    changeType(H1)
+Text.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {
+    changeType(Text)
     changeValue(args.join(' '))
 }
 
-export default H1
+export default Text

@@ -8,12 +8,13 @@ const Video: ContentType = {
     displayName: 'Video',
     slashCommand: '/video',
     prefix: '',
-    render: (value: string) => (
+    runSlashCommand: (): void => {},
+    editable: false,
+    Display: (props: BlockInputProps) => (
         <video width="320" height="240" controls className='VideoView'>
-            <source src={value} type='video/mp4'/>
+            <source src={props.value} type='video/mp4'/>
         </video>
     ),
-    runSlashCommand: (): void => {},
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {
