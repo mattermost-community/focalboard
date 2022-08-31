@@ -50,7 +50,7 @@ type Props = {
 }
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
-    const {onChange, onFocus, onBlur, initialText, id, isEditing} = props
+    const {onChange, onFocus, onBlur, initialText, id} = props
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const board = useAppSelector(getCurrentBoard)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
@@ -92,24 +92,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         return EditorState.moveSelectionToEnd(state)
     }
 
-    const [editorState, setEditorState] = useState(() => {
-        return generateEditorState(initialText)
-    })
-
-    const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
-
-    // avoiding stale closure
-    useEffect(() => {
-        // only change editor state when initialText actually changes from one defined value to another.
-        // This is needed to make the mentions plugin work. For some reason, if we don't check
-        // for this if condition here, mentions don't work. I suspect it's because without
-        // the in condition, we're changing editor state twice during component initialization
-        // and for some reason it causes mentions to not show up.
-        if (initialText && initialText !== initialTextCache) {
-            setEditorState(generateEditorState(initialText || ''))
-            setInitialTextCache(initialText)
-        }
-    }, [initialText])
+    const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
 
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
     const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false)
@@ -132,16 +115,13 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         return {plugins, MentionSuggestions, EmojiSuggestions}
     }, [])
 
-    useEffect(() => {
-        if (isEditing) {
-            if (initialText === '') {
-                setEditorState(EditorState.createEmpty())
-            } else {
-                setEditorState(EditorState.moveSelectionToEnd(editorState))
-            }
-            setTimeout(() => ref.current?.focus(), 200)
-        }
-    }, [isEditing, initialText])
+    const onEditorStateChange = useCallback((newEditorState: EditorState) => {
+        // newEditorState.
+        const newText = newEditorState.getCurrentContent().getPlainText()
+
+        onChange && onChange(newText)
+        setEditorState(newEditorState)
+    }, [onChange])
 
     const customKeyBindingFn = useCallback((e: React.KeyboardEvent) => {
         if (isMentionPopoverOpen || isEmojiPopoverOpen) {
@@ -152,12 +132,34 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return 'editor-blur'
         }
 
+        if(getDefaultKeyBinding(e) === 'undo'){
+            return 'editor-undo'
+        }
+
+        if(getDefaultKeyBinding(e) === 'redo'){
+            return 'editor-redo'
+        }
+
         return getDefaultKeyBinding(e as any)
     }, [isEmojiPopoverOpen, isMentionPopoverOpen])
 
-    const handleKeyCommand = useCallback((command: string): DraftHandleValue => {
+    const handleKeyCommand = useCallback((command: string, currentState: EditorState): DraftHandleValue => {        
         if (command === 'editor-blur') {
             ref.current?.blur()
+            return 'handled'
+        }
+        
+        if(command === 'editor-redo'){
+            const selectionRemovedState = EditorState.redo(currentState)
+            onEditorStateChange(EditorState.redo(selectionRemovedState))
+
+            return 'handled'
+        }
+        
+        if(command === 'editor-undo'){
+            const selectionRemovedState = EditorState.undo(currentState)
+            onEditorStateChange(EditorState.undo(selectionRemovedState))
+            
             return 'handled'
         }
 
@@ -168,13 +170,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         const text = editorState.getCurrentContent().getPlainText()
         onBlur && onBlur(text)
     }, [editorState, onBlur])
-
-    const onEditorStateChange = useCallback((newEditorState: EditorState) => {
-        const newText = newEditorState.getCurrentContent().getPlainText()
-
-        onChange && onChange(newText)
-        setEditorState(newEditorState)
-    }, [onChange])
 
     const onMentionPopoverOpenChange = useCallback((open: boolean) => {
         setIsMentionPopoverOpen(open)
@@ -192,10 +187,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         debouncedLoadSuggestion(value)
     }, [suggestions])
 
-    let className = 'MarkdownEditorInput'
-    if (!isEditing) {
-        className += ' MarkdownEditorInput--IsNotEditing'
-    }
+    const className = 'MarkdownEditorInput'
 
     return (
         <div
