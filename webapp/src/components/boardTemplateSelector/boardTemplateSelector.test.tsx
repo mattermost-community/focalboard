@@ -12,8 +12,6 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {MemoryRouter, Router} from 'react-router-dom'
 
-import {systemThemeName} from 'theme'
-
 import Mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {Team} from '../../store/teams'
