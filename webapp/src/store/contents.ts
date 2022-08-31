@@ -22,6 +22,7 @@ const contentsSlice = createSlice({
         updateContents: (state, action: PayloadAction<ContentBlock[]>) => {
             for (const content of action.payload) {
                 if (content.deleteAt === 0) {
+                    let existsInParent = false
                     state.contents[content.id] = content
                     if (!state.contentsByCard[content.parentId]) {
                         state.contentsByCard[content.parentId] = [content]
@@ -30,9 +31,13 @@ const contentsSlice = createSlice({
                     for (let i = 0; i < state.contentsByCard[content.parentId].length; i++) {
                         if (state.contentsByCard[content.parentId][i].id === content.id) {
                             state.contentsByCard[content.parentId][i] = content
+                            existsInParent = true
+                            break
                         }
                     }
-                    state.contentsByCard[content.parentId].push(content)
+                    if( !existsInParent ){
+                        state.contentsByCard[content.parentId].push(content)
+                    }
                 } else {
                     const parentId = state.contents[content.id]?.parentId
                     if (!state.contentsByCard[parentId]) {
