@@ -16,7 +16,7 @@ import {debounce} from "lodash"
 
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
-import {getBoardUsersList} from '../../store/users'
+import {getBoardUsersList, getMe} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
 
 import './markdownEditorInput.scss'
@@ -37,6 +37,7 @@ type MentionUser = {
     name: string
     avatar: string
     is_bot: boolean
+    is_guest: boolean
     displayName: string
 }
 
@@ -55,20 +56,29 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const board = useAppSelector(getCurrentBoard)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
+    const me = useAppSelector<IUser|null>(getMe)
 
     const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
 
     const loadSuggestions = async (term: string) => {
         let users: Array<IUser>
 
-        if (board && board.type === BoardTypeOpen) {
+        if (!me?.is_guest && (board && board.type === BoardTypeOpen)) {
             users = await octoClient.searchTeamUsers(term)
         } else {
             users = boardUsers
+                .filter(user => {
+                    // no search term
+                    if (!term) return true
+                    // does the search term occur anywhere in the display name?
+                    return Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay).includes(term)
+                })
+                // first 10 results
+                .slice(0, 10)
         }
 
-        const mentions = users.map(
-            (user) => ({
+        const mentions: Array<MentionUser> = users.map(
+            (user: IUser): MentionUser => ({
                 name: user.username,
                 avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
                 is_bot: user.is_bot,
