@@ -267,7 +267,7 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 }
 
 func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /boards/search searchBoards
+	// swagger:operation GET /boards/search searchAllBoards
 	//
 	// Returns the boards that match with a search term
 	//
