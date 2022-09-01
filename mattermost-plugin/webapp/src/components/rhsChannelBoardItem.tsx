@@ -99,6 +99,7 @@ const RHSChannelBoardItem = (props: Props) => {
             </div>
             <div className='description'>
                 <MarkdownEditor
+                    id={board.id}
                     text={board.description}
                     readonly={true}
                 />

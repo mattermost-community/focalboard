@@ -58,11 +58,15 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
     <div
       class="board-info"
     >
-      
+      <span
+        class="icon"
+      >
+        i
+      </span>
       <span
         class="title"
       >
-        Test board
+        board title
       </span>
       <div
         aria-label="menuwrapper"
@@ -86,10 +90,11 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
             <div
               class="menu-options"
             >
+              <div />
               <div>
                 <div
-                  aria-label="Unlink board"
-                  class="MenuOption TextOption menu-option"
+                  aria-label="Unlink board Hello"
+                  class="MenuOption TextOption menu-option menu-option--with-subtext menu-option--disabled"
                   role="button"
                 >
                   <div
@@ -109,7 +114,12 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                     <div
                       class="menu-name"
                     >
-                      Unlink board
+                      Unlink board Hello
+                    </div>
+                    <div
+                      class="menu-subtext text-75 mt-1"
+                    >
+                      You are not an admin of the board
                     </div>
                   </div>
                   <div
@@ -117,7 +127,6 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                   />
                 </div>
               </div>
-              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
@@ -166,7 +175,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
           data-testid="preview-element"
         >
           <p>
-            New board
+            description
           </p>
         </div>
         <div
@@ -193,20 +202,20 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                   <div
                     class=""
                     data-block="true"
-                    data-editor="emg9f"
-                    data-offset-key="2mefm-0-0"
+                    data-editor="test_id"
+                    data-offset-key="1de7b-0-0"
                   >
                     <div
                       class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="2mefm-0-0"
+                      data-offset-key="1de7b-0-0"
                     >
                       <span
-                        data-offset-key="2mefm-0-0"
+                        data-offset-key="1de7b-0-0"
                       >
                         <span
                           data-text="true"
                         >
-                          New board
+                          description
                         </span>
                       </span>
                     </div>

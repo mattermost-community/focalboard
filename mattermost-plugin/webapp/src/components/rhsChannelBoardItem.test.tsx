@@ -10,6 +10,8 @@ import userEvent from '@testing-library/user-event'
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
 
+import {TestBlockFactory} from '../../../../webapp/src/test/testBlockFactory'
+
 import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 describe('components/rhsChannelBoardItem', () => {
@@ -42,8 +44,7 @@ describe('components/rhsChannelBoardItem', () => {
     })
 
     it('render board with menu open', async () => {
-        const board = createBoard()
-        board.description = 'New board'
+        const board = TestBlockFactory.createBoard()
         const state = {
             teams: {
                 current: {
@@ -63,16 +64,15 @@ describe('components/rhsChannelBoardItem', () => {
             },
             users: {
                 boardUsers: {
-                    1: {username: 'abc'},
+                    user_id_1: {username: 'abc'},
                 },
             },
             clientConfig: {
                 value: {},
             },
         }
+        board.id = 'test_id'
         board.updateAt = 1657311058157
-        board.title = 'Test board'
-
         const store = mockStateStore([], state)
         const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
