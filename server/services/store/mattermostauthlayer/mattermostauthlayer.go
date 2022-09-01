@@ -380,8 +380,8 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			boardsIDs = append(boardsIDs, board.ID)
 		}
 		query = query.
-			Join(s.tablePrefix + "board_members as bm ON bm.UserID = u.ID").
-			Where(sq.Eq{"bm.BoardId": boardsIDs})
+			Join(s.tablePrefix + "board_members as bm ON bm.user_id = u.ID").
+			Where(sq.Eq{"bm.board_id": boardsIDs})
 	}
 
 	rows, err := query.Query()
@@ -860,11 +860,20 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 		return nil, err
 	}
 
-	// TODO: Handle the includePublicBoards
-
 	boardIDs := []string{}
 	for _, m := range members {
 		boardIDs = append(boardIDs, m.BoardID)
+	}
+
+	if includePublicBoards {
+		var boards []*model.Board
+		boards, err = s.SearchBoardsForUserInTeam(teamID, "", userID)
+		if err != nil {
+			return nil, err
+		}
+		for _, b := range boards {
+			boardIDs = append(boardIDs, b.ID)
+		}
 	}
 
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
