@@ -21,7 +21,7 @@
         INSERT INTO Preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'version72MessageCanceled', replace(JSON_EXTRACT(Props, '$."focalboard_version72MessageCanceled"'), '"', '') FROM Users WHERE JSON_EXTRACT(Props, '$.focalboard_version72MessageCanceled') IS NOT NULL;
         INSERT INTO Preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'lastWelcomeVersion', replace(JSON_EXTRACT(Props, 'focalboard_lastWelcomeVersion"'), '"', '') FROM Users WHERE JSON_EXTRACT(Props, '$.focalboard_lastWelcomeVersion') IS NOT NULL;
 
-        UPDATE Users SET props =  JSON_REMOVE(props, '$.focalboard_welcomePageViewed', '$.hiddenBoardIDs', '$.focalboard_tourCategory', '$.focalboard_onboardingTourStep', '$.focalboard_onboardingTourStarted', '$.focalboard_version72MessageCanceled', '$.focalboard_lastWelcomeVersion');
+        UPDATE Users SET Props =  JSON_REMOVE(Props, '$."focalboard_welcomePageViewed"', '$."hiddenBoardIDs"', '$."focalboard_tourCategory"', '$."focalboard_onboardingTourStep"', '$."focalboard_onboardingTourStarted"', '$."focalboard_version72MessageCanceled"', '$."focalboard_lastWelcomeVersion"');
     {{end}}
 {{else}}
     {{- /* For personal server, we need to write to Focalboard's preferences table, hence the use of `prefix`. */ -}}
@@ -48,6 +48,6 @@
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'version72MessageCanceled', replace(JSON_EXTRACT(Props, '$."focalboard_version72MessageCanceled"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_version72MessageCanceled') IS NOT NULL;
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'lastWelcomeVersion', replace(JSON_EXTRACT(Props, 'focalboard_lastWelcomeVersion"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_lastWelcomeVersion') IS NOT NULL;
 
-        UPDATE {{.prefix}}users SET props =  JSON_REMOVE(props, '$.focalboard_welcomePageViewed', '$.hiddenBoardIDs', '$.focalboard_tourCategory', '$.focalboard_onboardingTourStep', '$.focalboard_onboardingTourStarted', '$.focalboard_version72MessageCanceled', '$.focalboard_lastWelcomeVersion');
+        UPDATE {{.prefix}}Users SET Props =  JSON_REMOVE(Props, '$."focalboard_welcomePageViewed"', '$."hiddenBoardIDs"', '$."focalboard_tourCategory"', '$."focalboard_onboardingTourStep"', '$."focalboard_onboardingTourStarted"', '$."focalboard_version72MessageCanceled"', '$."focalboard_lastWelcomeVersion"');
     {{end}}
 {{end}}
