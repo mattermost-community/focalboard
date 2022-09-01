@@ -227,8 +227,8 @@ const CenterPanel = (props: Props) => {
 
         const patch: UserConfigPatch = {
             updatedFields: {
-                focalboard_tourCategory: TOUR_BOARD,
-                focalboard_onboardingTourStep: BoardTourSteps.ADD_VIEW.toString(),
+                tourCategory: TOUR_BOARD,
+                onboardingTourStep: BoardTourSteps.ADD_VIEW.toString(),
             },
         }
 

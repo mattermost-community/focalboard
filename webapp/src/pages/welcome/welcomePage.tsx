@@ -15,8 +15,8 @@ import {Utils} from '../../utils'
 import './welcomePage.scss'
 import mutator from '../../mutator'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
-import {fetchMe, getMe, patchProps} from '../../store/users'
+import {IUser, UserConfigPatch} from '../../user'
+import {fetchMe, getMe, getMyConfig, patchProps} from '../../store/users'
 import {getCurrentTeam, Team} from '../../store/teams'
 import octoClient from '../../octoClient'
 import {FINISHED, TOUR_ORDER} from '../../components/onboardingTour'
@@ -27,13 +27,14 @@ const WelcomePage = () => {
     const history = useHistory()
     const queryString = new URLSearchParams(useLocation().search)
     const me = useAppSelector<IUser|null>(getMe)
+    const myConfig = useAppSelector(getMyConfig)
     const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
 
     const setWelcomePageViewed = async (userID: string):Promise<any> => {
         const patch: UserConfigPatch = {}
         patch.updatedFields = {}
-        patch.updatedFields[UserPropPrefix + UserSettingKey.WelcomePageViewed] = '1'
+        patch.updatedFields[UserSettingKey.WelcomePageViewed] = '1'
 
         const updatedProps = await mutator.patchUserConfig(userID, patch)
         if (updatedProps) {
@@ -62,8 +63,8 @@ const WelcomePage = () => {
             await setWelcomePageViewed(me.id)
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_tourCategory: TOUR_ORDER[TOUR_ORDER.length - 1],
-                    focalboard_onboardingTourStep: FINISHED.toString(),
+                    tourCategory: TOUR_ORDER[TOUR_ORDER.length - 1],
+                    onboardingTourStep: FINISHED.toString(),
                 },
             }
 
@@ -93,7 +94,19 @@ const WelcomePage = () => {
         history.replace(newPath)
     }
 
-    if (me?.props && me?.props[UserPropPrefix + UserSettingKey.WelcomePageViewed]) {
+    // It's still possible for a guest to end up at this route/page directly, so
+    // let's mark it as viewed, if necessary, and route them forward
+    if (me?.is_guest) {
+        if (!myConfig[UserSettingKey.WelcomePageViewed]) {
+            (async() => {
+                await setWelcomePageViewed(me.id)
+            })()
+        }
+        goForward()
+        return null
+    }
+
+    if (myConfig[UserSettingKey.WelcomePageViewed]) {
         goForward()
         return null
     }
@@ -128,32 +141,45 @@ const WelcomePage = () => {
                     alt='Boards Welcome Image'
                 />
 
-                <Button
-                    onClick={startTour}
-                    filled={true}
-                    size='large'
-                    icon={
-                        <CompassIcon
-                            icon='chevron-right'
-                            className='Icon Icon--right'
-                        />}
-                    rightIcon={true}
-                >
-                    <FormattedMessage
-                        id='WelcomePage.Explore.Button'
-                        defaultMessage='Take a tour'
-                    />
-                </Button>
+                {me?.is_guest !== true &&
+                    <Button
+                        onClick={startTour}
+                        filled={true}
+                        size='large'
+                        icon={
+                            <CompassIcon
+                                icon='chevron-right'
+                                className='Icon Icon--right'
+                            />}
+                        rightIcon={true}
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.Explore.Button'
+                            defaultMessage='Take a tour'
+                        />
+                    </Button>}
 
-                <a
-                    className='skip'
-                    onClick={skipTour}
-                >
-                    <FormattedMessage
-                        id='WelcomePage.NoThanks.Text'
-                        defaultMessage="No thanks, I'll figure it out myself"
-                    />
-                </a>
+                {me?.is_guest !== true &&
+                    <a
+                        className='skip'
+                        onClick={skipTour}
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.NoThanks.Text'
+                            defaultMessage="No thanks, I'll figure it out myself"
+                        />
+                    </a>}
+                {me?.is_guest === true &&
+                    <Button
+                        onClick={skipTour}
+                        filled={true}
+                        size='large'
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.StartUsingIt.Text'
+                            defaultMessage="Start using it"
+                        />
+                    </Button>}
             </div>
         </div>
     )

@@ -4,7 +4,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser, parseUserProps} from '../user'
+import {IUser, parseUserProps, UserPreference} from '../user'
 
 import {Utils} from '../utils'
 
@@ -14,6 +14,8 @@ import {Subscription} from '../wsclient'
 // import {initialLoad} from './initialLoad'
 import {UserSettings} from '../userSettings'
 
+import {initialLoad} from "./initialLoad"
+
 import {RootState} from './index'
 
 export const fetchMe = createAsyncThunk(
@@ -21,13 +23,14 @@ export const fetchMe = createAsyncThunk(
     async () => client.getMe(),
 )
 
-export const versionProperty = 'focalboard_version72MessageCanceled'
+export const versionProperty = 'version72MessageCanceled'
 
 type UsersStatus = {
     me: IUser|null
     boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
     blockSubscriptions: Array<Subscription>
+    myConfig: Record<string, UserPreference>
 }
 
 export const fetchUserBlockSubscriptions = createAsyncThunk(
@@ -41,6 +44,7 @@ const initialState = {
     loggedIn: null,
     userWorkspaces: [],
     blockSubscriptions: [],
+    myConfig: {},
 } as UsersStatus
 
 const usersSlice = createSlice({
@@ -49,9 +53,6 @@ const usersSlice = createSlice({
     reducers: {
         setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
-            if (state.me) {
-                state.me.props = parseUserProps(state.me.props)
-            }
             state.loggedIn = Boolean(state.me)
         },
         setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
@@ -77,18 +78,13 @@ const usersSlice = createSlice({
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
-        patchProps: (state, action: PayloadAction<Record<string, string>>) => {
-            if (state.me) {
-                state.me.props = parseUserProps(action.payload)
-            }
+        patchProps: (state, action: PayloadAction<Array<UserPreference>>) => {
+            state.myConfig = parseUserProps(action.payload)
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
             state.me = action.payload || null
-            if (state.me) {
-                state.me.props = parseUserProps(state.me.props)
-            }
             state.loggedIn = Boolean(state.me)
         })
         builder.addCase(fetchMe.rejected, (state) => {
@@ -107,6 +103,12 @@ const usersSlice = createSlice({
         builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
             state.blockSubscriptions = action.payload
         })
+
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            if (action.payload.myConfig) {
+                state.myConfig = parseUserProps(action.payload.myConfig)
+            }
+        })
     },
 })
 
@@ -116,6 +118,7 @@ export const {reducer} = usersSlice
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
 export const getBoardUsers = (state: RootState): {[key: string]: IUser} => state.users.boardUsers
+export const getMyConfig = (state: RootState): Record<string, UserPreference> => state.users.myConfig || {} as Record<string, UserPreference>
 
 export const getBoardUsersList = createSelector(
     getBoardUsers,
@@ -130,66 +133,73 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
 }
 
 export const getOnboardingTourStarted = createSelector(
-    getMe,
-    (me): boolean => {
-        if (!me) {
+    getMyConfig,
+    (myConfig): boolean => {
+        console.log(`getOnboardingTourStarted myConfig: ${JSON.stringify(myConfig || 'NULL')}`)
+        if (!myConfig) {
+            console.log('getOnboardingTourStarted AAA')
             return false
         }
 
-        return Boolean(me.props?.focalboard_onboardingTourStarted)
+        console.log('getOnboardingTourStarted BBB')
+        console.log('getOnboardingTourStarted BBB')
+
+        return Boolean(myConfig.onboardingTourStarted?.value)
     },
 )
 
 export const getOnboardingTourStep = createSelector(
-    getMe,
-    (me): string => {
-        if (!me) {
+    getMyConfig,
+    (myConfig): string => {
+        if (!myConfig) {
             return ''
         }
 
-        return me.props?.focalboard_onboardingTourStep
+        return myConfig.onboardingTourStep?.value
     },
 )
 
 export const getOnboardingTourCategory = createSelector(
-    getMe,
-    (me): string => (me ? me.props?.focalboard_tourCategory : ''),
+    getMyConfig,
+    (myConfig): string => (myConfig.tourCategory ? myConfig.tourCategory.value : ''),
 )
 
 export const getCloudMessageCanceled = createSelector(
     getMe,
-    (me): boolean => {
+    getMyConfig,
+    (me, myConfig): boolean => {
         if (!me) {
             return false
         }
         if (me.id === 'single-user') {
             return UserSettings.hideCloudMessage
         }
-        return Boolean(me.props?.focalboard_cloudMessageCanceled)
+        return Boolean(myConfig.cloudMessageCanceled?.value)
     },
 )
 
 export const getVersionMessageCanceled = createSelector(
     getMe,
-    (me): boolean => {
+    getMyConfig,
+    (me, myConfig): boolean => {
         if (versionProperty && me){
             if (me.id === 'single-user') {
                 return true
             }
-            return Boolean(me.props[versionProperty])    
+            return Boolean(myConfig[versionProperty]?.value)
         }
         return true
     },
 )
 
 export const getCardLimitSnoozeUntil = createSelector(
-    getMe,
-    (me): number => {
-        if (!me) {
+    getMyConfig,
+    (myConfig): number => {
+        if (!myConfig) {
             return 0
         }
         try {
-            return parseInt(me.props?.focalboard_cardLimitSnoozeUntil, 10) || 0
+            return parseInt(myConfig.cardLimitSnoozeUntil?.value || '0', 10)
         } catch (_) {
             return 0
         }
@@ -197,13 +207,13 @@ export const getCardLimitSnoozeUntil = createSelector(
 )
 
 export const getCardHiddenWarningSnoozeUntil = createSelector(
-    getMe,
-    (me): number => {
-        if (!me) {
+    getMyConfig,
+    (myConfig): number => {
+        if (!myConfig) {
             return 0
         }
         try {
-            return parseInt(me.props?.focalboard_cardHiddenWarningSnoozeUntil, 10) || 0
+            return parseInt(myConfig.cardHiddenWarningSnoozeUntil?.value || 0, 10)
         } catch (_) {
             return 0
         }

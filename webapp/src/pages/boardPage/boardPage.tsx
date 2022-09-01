@@ -39,7 +39,7 @@ import {
     fetchUserBlockSubscriptions,
     getMe,
     followBlock,
-    unfollowBlock, patchProps,
+    unfollowBlock, patchProps, getMyConfig,
 } from '../../store/users'
 import {setGlobalError} from '../../store/globalError'
 import {UserSettings} from '../../userSettings'
@@ -74,6 +74,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
+    const myConfig = useAppSelector(getMyConfig)
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -206,7 +207,7 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        const hiddenBoards = {...(me.props.hiddenBoardIDs || {})}
+        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
         // const index = hiddenBoards.indexOf(boardID)
         // hiddenBoards.splice(index, 1)
         delete hiddenBoards[boardID]
@@ -229,7 +230,7 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        const hiddenBoardIDs = me?.props.hiddenBoardIDs || {}
+        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
         if (hiddenBoardIDs[match.params.boardId]) {
             handleUnhideBoard(match.params.boardId)
         }

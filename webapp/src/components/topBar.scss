@@ -28,7 +28,7 @@
 
     .HelpIcon {
         font-size: 20px;
-        color: rgba(var(--center-channel-color-rgb), 0.7);
+        color: currentColor;
     }
 
     .versionFrame {
@@ -41,7 +41,7 @@
         font-size: 11px;
         line-height: 14px;
         font-weight: 500;
-        color: rgba(var(--center-channel-color-rgb), 0.7);
+        color: currentColor;
     }
 
     .versionBadge {
@@ -49,6 +49,6 @@
         line-height: 14px;
         font-weight: 500;
         margin-left: 3px;
-        color: rgba(var(--center-channel-color-rgb), 0.7);
+        color: currentColor;
     }
 }

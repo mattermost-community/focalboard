@@ -100,6 +100,10 @@ const BoardSelector = () => {
         const newBoard = createBoard({...board, channelId: currentChannel})
         await mutator.updateBoard(newBoard, board, 'linked channel')
         setShowLinkBoardConfirmation(null)
+        dispatch(setLinkToChannel(''))
+        setResults([])
+        setIsSearching(false)
+        setSearchQuery('')
     }
 
     const unlinkBoard = async (board: Board): Promise<void> => {
