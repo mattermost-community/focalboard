@@ -4,10 +4,6 @@
         align-items: center;
     }
 
-    &--IsNotEditing {
-        display: none;
-    }
-
     span[data-testid='mentionText'] {
         background: rgba(var(--button-bg-rgb), 0.16);
         border-radius: 4px;

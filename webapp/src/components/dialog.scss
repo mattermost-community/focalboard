@@ -100,6 +100,13 @@
             }
         }
 
+        >.toolbar {
+            display: flex;
+            flex-direction: row;
+            padding: 24px;
+            justify-content: space-between;
+        }
+
         .toolbar--right {
             display: flex;
             gap: 8px;
