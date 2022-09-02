@@ -20,7 +20,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmat
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >
@@ -130,7 +130,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show view limit dialog 1`] 
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >

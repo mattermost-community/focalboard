@@ -80,7 +80,7 @@ export const ViewLimitModal = (props: Props): JSX.Element => {
         telemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewLimitCTAPerformed, {board: board.id})
 
         if (isAdmin) {
-            (window as any)?.openPricingModal()()
+            (window as any)?.openPricingModal()({trackingLocation: 'boards > view_limit_dialog'})
         } else {
             await octoClient.notifyAdminUpgrade()
             props.showNotifyAdminSuccess()

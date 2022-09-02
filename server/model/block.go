@@ -168,6 +168,14 @@ func (p *BlockPatch) Patch(block *Block) *Block {
 	return block
 }
 
+type QueryBlocksOptions struct {
+	BoardID   string    // if not empty then filter for blocks belonging to specified board
+	ParentID  string    // if not empty then filter for blocks belonging to specified parent
+	BlockType BlockType // if not empty and not `TypeUnknown` then filter for records of specified block type
+	Page      int       // page number to select when paginating
+	PerPage   int       // number of blocks per page (default=-1, meaning unlimited)
+}
+
 // QuerySubtreeOptions are query options that can be passed to GetSubTree methods.
 type QuerySubtreeOptions struct {
 	BeforeUpdateAt int64  // if non-zero then filter for records with update_at less than BeforeUpdateAt

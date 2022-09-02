@@ -65,8 +65,14 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	auditRec.AddMeta("teamID", teamID)
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
 	// retrieve boards list
-	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID)
+	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID, !isGuest)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -141,6 +147,16 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
 			return
 		}
+	}
+
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
 	}
 
 	if err = newBoard.IsValid(); err != nil {
@@ -233,6 +249,19 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		} else {
+			var isGuest bool
+			isGuest, err = a.userIsGuest(userID)
+			if err != nil {
+				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				return
+			}
+			if isGuest {
+				if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+					a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+					return
+				}
+			}
+
 			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 				return
@@ -500,6 +529,16 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
 			return
 		}
+	}
+
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		return
 	}
 
 	auditRec := a.makeAuditRecord(r, "duplicateBoard", audit.Fail)

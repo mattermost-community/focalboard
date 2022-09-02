@@ -168,7 +168,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		t.Run("should only find the two boards that the user is a member of for team 1 plus the one open board", func(t *testing.T) {
-			boards, err := store.GetBoardsForUserAndTeam(userID, teamID1)
+			boards, err := store.GetBoardsForUserAndTeam(userID, teamID1, true)
 			require.NoError(t, err)
 			require.ElementsMatch(t, []*model.Board{
 				rBoard1,
@@ -177,8 +177,17 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			}, boards)
 		})
 
+		t.Run("should only find the two boards that the user is a member of for team 1", func(t *testing.T) {
+			boards, err := store.GetBoardsForUserAndTeam(userID, teamID1, false)
+			require.NoError(t, err)
+			require.ElementsMatch(t, []*model.Board{
+				rBoard1,
+				rBoard2,
+			}, boards)
+		})
+
 		t.Run("should only find the board that the user is a member of for team 2", func(t *testing.T) {
-			boards, err := store.GetBoardsForUserAndTeam(userID, teamID2)
+			boards, err := store.GetBoardsForUserAndTeam(userID, teamID2, true)
 			require.NoError(t, err)
 			require.Len(t, boards, 1)
 			require.Equal(t, board5.ID, boards[0].ID)
@@ -688,7 +697,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 	userID := "user-id-1"
 
 	t.Run("should return empty if user is not a member of any board and there are no public boards on the team", func(t *testing.T) {
-		boards, err := store.SearchBoardsForUser("", userID)
+		boards, err := store.SearchBoardsForUser("", userID, true)
 		require.NoError(t, err)
 		require.Empty(t, boards)
 	})
@@ -743,6 +752,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 		TeamID           string
 		UserID           string
 		Term             string
+		IncludePublic    bool
 		ExpectedBoardIDs []string
 	}{
 		{
@@ -750,6 +760,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "",
+			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
 		},
 		{
@@ -757,13 +768,23 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "board",
+			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
+		},
+		{
+			Name:             "should find all with term board where the user is member of",
+			TeamID:           teamID1,
+			UserID:           userID,
+			Term:             "board",
+			IncludePublic:    false,
+			ExpectedBoardIDs: []string{board1.ID, board3.ID, board5.ID},
 		},
 		{
 			Name:             "should find only public as per the term, wether user is a member or not",
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "public",
+			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board1.ID, board2.ID, board5.ID},
 		},
 		{
@@ -771,6 +792,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "priv",
+			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board3.ID},
 		},
 		{
@@ -778,13 +800,14 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID2,
 			UserID:           userID,
 			Term:             "non-matching-term",
+			IncludePublic:    true,
 			ExpectedBoardIDs: []string{},
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID)
+			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID, tc.IncludePublic)
 			require.NoError(t, err)
 
 			boardIDs := []string{}

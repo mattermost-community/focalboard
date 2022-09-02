@@ -69,11 +69,12 @@ describe('components/sidebarSidebar', () => {
         })
 
         const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar/>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
                 </Router>
             </ReduxProvider>,
         )
@@ -131,11 +132,12 @@ describe('components/sidebarSidebar', () => {
         })
 
         const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar/>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
                 </Router>
             </ReduxProvider>,
         )
@@ -177,12 +179,12 @@ describe('components/sidebarSidebar', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        hiddenBoardIDs: {
-                            [board.id]: true,
-                        }
-                    },
                 },
+                myConfig: {
+                    hiddenBoardIDs: {value: {
+                        [board.id]: true,
+                    }}
+                }
             },
             sidebar: {
                 categoryAttributes: [
@@ -192,11 +194,12 @@ describe('components/sidebarSidebar', () => {
         })
 
         const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar/>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
                 </Router>
             </ReduxProvider>,
         )
@@ -254,11 +257,12 @@ describe('components/sidebarSidebar', () => {
         })
 
         const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar/>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
                 </Router>
             </ReduxProvider>,
         )
@@ -305,7 +309,7 @@ describe('components/sidebarSidebar', () => {
     //     const component = wrapIntl(
     //         <ReduxProvider store={store}>
     //             <Router history={history}>
-    //                 <Sidebar/>
+    //                 <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
     //             </Router>
     //         </ReduxProvider>,
     //     )
