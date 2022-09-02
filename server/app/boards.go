@@ -306,8 +306,17 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
 	var oldChannelID string
 	var isTemplate bool
+	var oldMembers []*model.BoardMember
 
 	if patch.Type != nil || patch.ChannelID != nil {
+		if *patch.ChannelID == "" {
+			var err error
+			oldMembers, err = a.GetMembersForBoard(boardID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+		}
+
 		board, err := a.store.GetBoard(boardID)
 		if model.IsErrNotFound(err) {
 			return nil, model.NewErrNotFound(boardID)
@@ -357,12 +366,8 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 						a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
 					}
 				}
-			} else if *patch.ChannelID == "" {
-				members, err := a.GetMembersForBoard(oldChannelID)
-				if err != nil {
-					a.logger.Error("Unable to get the board members", mlog.Err(err))
-				}
-				for _, oldMember := range members {
+			} else {
+				for _, oldMember := range oldMembers {
 					if oldMember.Synthetic {
 						a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, oldMember.UserID)
 					}
@@ -390,6 +395,8 @@ func (a *App) postChannelMessage(message, channelID string) {
 	}
 }
 
+// broadcastTeamUsers notifies the members of a team when a template changes its type
+// from public to private or viceversa.
 func (a *App) broadcastTeamUsers(teamID, boardID string, boardType model.BoardType, members []*model.BoardMember) {
 	users, err := a.GetTeamUsers(teamID, "")
 	if err != nil {
