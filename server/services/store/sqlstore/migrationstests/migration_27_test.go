@@ -15,6 +15,10 @@ func Test27MigrateUserPropsToPreferences(t *testing.T) {
 		th.f.MigrateToStep(26).
 			ExecFile("./fixtures/test27MigrateUserPropsToPreferences.sql")
 
+		// first we check that the data was correctly loaded from the
+		// fixtures. We could perfectly skip this step, but as the
+		// failing data is in a JSON field, I preferred to leave it
+		// for clarity
 		user := struct {
 			ID       string
 			Username string
@@ -42,8 +46,10 @@ func Test27MigrateUserPropsToPreferences(t *testing.T) {
 		require.Contains(t, userProps, "focalboard_lastWelcomeVersion")
 		require.Equal(t, float64(7), userProps["focalboard_lastWelcomeVersion"])
 
+		// we apply the migration
 		th.f.MigrateToStep(27)
 
+		// then we load the preferences on a new struct
 		userPreferences := []struct {
 			Name  string
 			Value string
@@ -64,7 +70,11 @@ func Test27MigrateUserPropsToPreferences(t *testing.T) {
 			return "this should never be reached"
 		}
 
+		// and we check that the values are correct
 		welcomePageViewedValue := getValue("welcomePageViewed")
+		// the checks for true or 1 make the test work for all DBs,
+		// that were representing the boolean values in the JSON
+		// struct in different ways
 		require.True(t, welcomePageViewedValue == "true" || welcomePageViewedValue == "1")
 
 		hiddenBoardIDsValue := getValue("hiddenBoardIDs")
