@@ -311,14 +311,12 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 	if patch.Type != nil || patch.ChannelID != nil {
 		if patch.ChannelID != nil && *patch.ChannelID == "" {
 			var err error
-			a.logger.Debug("getMembersforboard")
 			oldMembers, err = a.GetMembersForBoard(boardID)
 			if err != nil {
 				a.logger.Error("Unable to get the board members", mlog.Err(err))
 			}
 		}
 
-		a.logger.Debug("GetBoard")
 		board, err := a.store.GetBoard(boardID)
 		if model.IsErrNotFound(err) {
 			return nil, model.NewErrNotFound(boardID)
@@ -329,7 +327,6 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		oldChannelID = board.ChannelID
 		isTemplate = board.IsTemplate
 	}
-	a.logger.Debug("PatchBoard")
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
@@ -338,7 +335,6 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 	// Post message to channel if linked/unlinked
 	if patch.ChannelID != nil {
 		var username string
-		a.logger.Debug("GetUserByID")
 
 		user, err := a.store.GetUserByID(userID)
 		if err != nil {
@@ -362,7 +358,6 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 		if patch.ChannelID != nil {
 			if *patch.ChannelID != "" {
-				a.logger.Debug("getMembersforboard2")
 				members, err := a.GetMembersForBoard(updatedBoard.ID)
 				if err != nil {
 					a.logger.Error("Unable to get the board members", mlog.Err(err))
