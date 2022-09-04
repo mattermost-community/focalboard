@@ -36,6 +36,7 @@ type servicesAPI interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	EnsureBot(bot *mmModel.Bot) (string, error)
 	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
+	GetTeamMember(teamID string, userID string) (*mmModel.TeamMember, error)
 	GetPreferencesForUser(userID string) (mmModel.Preferences, error)
 	DeletePreferencesForUser(userID string, preferences mmModel.Preferences) error
 	UpdatePreferencesForUser(userID string, preferences mmModel.Preferences) error
@@ -765,6 +766,27 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				SchemeEditor:    true,
 				SchemeCommenter: false,
 				SchemeViewer:    false,
+				Synthetic:       true,
+			}, nil
+		}
+		if b.Type == model.BoardTypeOpen && b.IsTemplate {
+			_, memberErr := s.servicesAPI.GetTeamMember(b.TeamID, userID)
+			if memberErr != nil {
+				var appErr *mmModel.AppError
+				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
+					return nil, model.NewErrNotFound(userID)
+				}
+				return nil, memberErr
+			}
+
+			return &model.BoardMember{
+				BoardID:         boardID,
+				UserID:          userID,
+				Roles:           "viewer",
+				SchemeAdmin:     false,
+				SchemeEditor:    false,
+				SchemeCommenter: false,
+				SchemeViewer:    true,
 				Synthetic:       true,
 			}, nil
 		}
