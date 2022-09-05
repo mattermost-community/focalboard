@@ -44,7 +44,7 @@ const BoardTemplateSelectorItem = (props: Props) => {
             <span className='template-name'>{template.title || intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled'})}</span>
 
             {/* don't show template menu options for default templates */}
-            {template.teamId !== Constants.globalTeamId &&
+            {template.createdBy !== Constants.SystemUserID &&
                 <div className='actions'>
                     <BoardPermissionGate
                         boardId={template.id}
