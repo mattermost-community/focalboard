@@ -36,6 +36,10 @@ type servicesAPI interface {
 	GetCloudLimits() (*mmModel.ProductLimits, error)
 	EnsureBot(bot *mmModel.Bot) (string, error)
 	CreatePost(post *mmModel.Post) (*mmModel.Post, error)
+	GetTeamMember(teamID string, userID string) (*mmModel.TeamMember, error)
+	GetPreferencesForUser(userID string) (mmModel.Preferences, error)
+	DeletePreferencesForUser(userID string, preferences mmModel.Preferences) error
+	UpdatePreferencesForUser(userID string, preferences mmModel.Preferences) error
 }
 
 // Store represents the abstraction of the data storage.
@@ -71,8 +75,7 @@ func (s *MattermostAuthLayer) GetRegisteredUserCount() (int, error) {
 	query := s.getQueryBuilder().
 		Select("count(*)").
 		From("Users").
-		Where(sq.Eq{"deleteAt": 0}).
-		Where(sq.NotEq{"roles": "system_guest"})
+		Where(sq.Eq{"deleteAt": 0})
 	row := query.QueryRow()
 
 	var count int
@@ -128,30 +131,48 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 }
 
 func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	user, err := s.servicesAPI.GetUserByID(userID)
-	if err != nil {
-		s.logger.Error("failed to fetch user", mlog.String("userID", userID), mlog.Err(err))
-		return err
+	if len(patch.UpdatedFields) > 0 {
+		updatedPreferences := mmModel.Preferences{}
+		for key, value := range patch.UpdatedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: model.PreferencesCategoryFocalboard,
+				Name:     key,
+				Value:    value,
+			}
+
+			updatedPreferences = append(updatedPreferences, preference)
+		}
+
+		if err := s.servicesAPI.UpdatePreferencesForUser(userID, updatedPreferences); err != nil {
+			s.logger.Error("failed to update user preferences", mlog.String("user_id", userID), mlog.Err(err))
+			return err
+		}
 	}
 
-	props := user.Props
+	if len(patch.DeletedFields) > 0 {
+		deletedPreferences := mmModel.Preferences{}
+		for _, key := range patch.DeletedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: model.PreferencesCategoryFocalboard,
+				Name:     key,
+			}
 
-	for _, key := range patch.DeletedFields {
-		delete(props, key)
-	}
+			deletedPreferences = append(deletedPreferences, preference)
+		}
 
-	for key, value := range patch.UpdatedFields {
-		props[key] = value
-	}
-
-	user.Props = props
-
-	if _, err := s.servicesAPI.UpdateUser(user); err != nil {
-		s.logger.Error("failed to update user", mlog.String("userID", userID), mlog.Err(err))
-		return err
+		if err := s.servicesAPI.DeletePreferencesForUser(userID, deletedPreferences); err != nil {
+			s.logger.Error("failed to delete user preferences", mlog.String("user_id", userID), mlog.Err(err))
+			return err
+		}
 	}
 
 	return nil
+}
+
+func (s *MattermostAuthLayer) GetUserPreferences(userID string) (mmModel.Preferences, error) {
+	return s.servicesAPI.GetPreferencesForUser(userID)
 }
 
 // GetActiveUserCount returns the number of users with active sessions within N seconds ago.
@@ -267,16 +288,32 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	return builder.RunWith(s.mmDB)
 }
 
-func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.id").
 		LeftJoin("Bots b ON ( b.UserID = u.id )").
-		Where(sq.Eq{"u.deleteAt": 0}).
-		Where(sq.NotEq{"u.roles": "system_guest"}).
-		Where(sq.Eq{"tm.TeamId": teamID})
+		Where(sq.Eq{"u.deleteAt": 0})
+
+	if asGuestID == "" {
+		query = query.
+			Join("TeamMembers as tm ON tm.UserID = u.id").
+			Where(sq.Eq{"tm.TeamId": teamID})
+	} else {
+		boards, err := s.GetBoardsForUserAndTeam(asGuestID, teamID, false)
+		if err != nil {
+			return nil, err
+		}
+
+		boardsIDs := []string{}
+		for _, board := range boards {
+			boardsIDs = append(boardsIDs, board.ID)
+		}
+		query = query.
+			Join(s.tablePrefix + "board_members as bm ON bm.UserID = u.ID").
+			Where(sq.Eq{"bm.BoardId": boardsIDs})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -295,7 +332,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string) ([]*model.User, erro
 func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
 		Where(sq.Eq{"u.id": userIDs})
@@ -314,12 +351,11 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot").
+			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
-		Join("TeamMembers as tm ON tm.UserID = u.id").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.Or{
@@ -328,10 +364,26 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 			sq.Like{"u.firstname": "%" + searchQuery + "%"},
 			sq.Like{"u.lastname": "%" + searchQuery + "%"},
 		}).
-		Where(sq.Eq{"tm.TeamId": teamID}).
-		Where(sq.NotEq{"u.roles": "system_guest"}).
 		OrderBy("u.username").
 		Limit(10)
+
+	if asGuestID == "" {
+		query = query.
+			Join("TeamMembers as tm ON tm.UserID = u.id").
+			Where(sq.Eq{"tm.TeamId": teamID})
+	} else {
+		boards, err := s.GetBoardsForUserAndTeam(asGuestID, teamID, false)
+		if err != nil {
+			return nil, err
+		}
+		boardsIDs := []string{}
+		for _, board := range boards {
+			boardsIDs = append(boardsIDs, board.ID)
+		}
+		query = query.
+			Join(s.tablePrefix + "board_members as bm ON bm.user_id = u.ID").
+			Where(sq.Eq{"bm.board_id": boardsIDs})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -366,6 +418,7 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 			&user.UpdateAt,
 			&user.DeleteAt,
 			&user.IsBot,
+			&user.IsGuest,
 		)
 		if err != nil {
 			return nil, err
@@ -558,7 +611,7 @@ func boardFields(prefix string) []string {
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
+func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder().
 		Select(boardFields("b.")...).
 		Distinct().
@@ -568,17 +621,20 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string) ([]*model
 		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"tm.userID": userID}).
-		Where(sq.Eq{"tm.deleteAt": 0}).
-		Where(sq.Or{
+		Where(sq.Eq{"tm.deleteAt": 0})
+
+	if includePublicBoards {
+		query = query.Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.And{
-				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Or{
-					sq.Eq{"bm.user_id": userID},
-					sq.Eq{"cm.userId": userID},
-				},
-			},
+			sq.Eq{"bm.user_id": userID},
+			sq.Eq{"cm.userId": userID},
 		})
+	} else {
+		query = query.Where(sq.Or{
+			sq.Eq{"bm.user_id": userID},
+			sq.Eq{"cm.userId": userID},
+		})
+	}
 
 	if term != "" {
 		// break search query into space separated words
@@ -713,6 +769,27 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				Synthetic:       true,
 			}, nil
 		}
+		if b.Type == model.BoardTypeOpen && b.IsTemplate {
+			_, memberErr := s.servicesAPI.GetTeamMember(b.TeamID, userID)
+			if memberErr != nil {
+				var appErr *mmModel.AppError
+				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
+					return nil, model.NewErrNotFound(userID)
+				}
+				return nil, memberErr
+			}
+
+			return &model.BoardMember{
+				BoardID:         boardID,
+				UserID:          userID,
+				Roles:           "viewer",
+				SchemeAdmin:     false,
+				SchemeEditor:    false,
+				SchemeCommenter: false,
+				SchemeViewer:    true,
+				Synthetic:       true,
+			}, nil
+		}
 	}
 	if err != nil {
 		return nil, err
@@ -799,7 +876,7 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 	return members, nil
 }
 
-func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
+func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
 	members, err := s.GetMembersForUser(userID)
 	if err != nil {
 		return nil, err
@@ -808,6 +885,17 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string) ([]
 	boardIDs := []string{}
 	for _, m := range members {
 		boardIDs = append(boardIDs, m.BoardID)
+	}
+
+	if includePublicBoards {
+		var boards []*model.Board
+		boards, err = s.SearchBoardsForUserInTeam(teamID, "", userID)
+		if err != nil {
+			return nil, err
+		}
+		for _, b := range boards {
+			boardIDs = append(boardIDs, b.ID)
+		}
 	}
 
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
@@ -918,4 +1006,68 @@ func (s *MattermostAuthLayer) GetUserTimezone(userID string) (string, error) {
 	}
 	timezone := user.Timezone
 	return mmModel.GetPreferredTimezone(timezone), nil
+}
+
+func (s *MattermostAuthLayer) CanSeeUser(seerID string, seenID string) (bool, error) {
+	mmuser, appErr := s.servicesAPI.GetUserByID(seerID)
+	if appErr != nil {
+		return false, appErr
+	}
+	if !mmuser.IsGuest() {
+		return true, nil
+	}
+
+	query := s.getQueryBuilder().
+		Select("1").
+		From(s.tablePrefix + "board_members AS BM1").
+		Join(s.tablePrefix + "board_members AS BM2 ON BM1.BoardID=BM2.BoardID").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Or{
+			sq.And{
+				sq.Eq{"BM1.UserID": seerID},
+				sq.Eq{"BM2.UserID": seenID},
+			},
+			sq.And{
+				sq.Eq{"BM1.UserID": seenID},
+				sq.Eq{"BM2.UserID": seerID},
+			},
+		}).Limit(1)
+
+	rows, err := query.Query()
+	if err != nil {
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	for rows.Next() {
+		return true, err
+	}
+
+	query = s.getQueryBuilder().
+		Select("1").
+		From("ChannelMembers AS CM1").
+		Join("ChannelMembers AS CM2 ON CM1.BoardID=CM2.BoardID").
+		LeftJoin("Bots b ON ( b.UserId = u.id )").
+		Where(sq.Or{
+			sq.And{
+				sq.Eq{"CM1.UserID": seerID},
+				sq.Eq{"CM2.UserID": seenID},
+			},
+			sq.And{
+				sq.Eq{"CM1.UserID": seenID},
+				sq.Eq{"CM2.UserID": seerID},
+			},
+		}).Limit(1)
+
+	rows, err = query.Query()
+	if err != nil {
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	for rows.Next() {
+		return true, err
+	}
+
+	return false, nil
 }

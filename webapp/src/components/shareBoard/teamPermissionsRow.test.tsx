@@ -41,6 +41,7 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
         create_at: 0,
         update_at: 0,
         is_bot: false,
+        is_guest: false,
         roles: 'system_user',
     }
 

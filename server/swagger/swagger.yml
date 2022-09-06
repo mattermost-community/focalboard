@@ -557,6 +557,27 @@ definitions:
         x-go-name: ErrorCode
     type: object
     x-go-package: github.com/mattermost/focalboard/server/model
+  Preference:
+    description: Preference represents a single user preference. A user can have multiple preferences.
+    properties:
+      user_id:
+        description: The associated user's ID
+        type: string
+        x-go-name: UserId
+      Category:
+        description: The category of preference. Its always "Focalboard" for this project
+        type: string
+        x-go-name: Category
+      Name:
+        description: Preference's name
+        type: string
+        x-go-name: Name
+      value:
+        description: Preference's value
+        type: string
+        x-go-name: Value
+    type: object
+    x-go-package: github.com/mattermost/focalboard/server/model
   FileUploadResponse:
     description: FileUploadResponse is the response to a file upload
     properties:

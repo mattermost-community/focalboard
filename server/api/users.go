@@ -18,6 +18,7 @@ func (a *API) registerUsersRoutes(r *mux.Router) {
 	r.HandleFunc("/users/me/memberships", a.sessionRequired(a.handleGetMyMemberships)).Methods("GET")
 	r.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
 	r.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
+	r.HandleFunc("/users/me/config", a.sessionRequired(a.handleGetUserPreferences)).Methods(http.MethodGet)
 }
 
 func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
@@ -219,6 +220,19 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+
+	canSeeUser, err := a.app.CanSeeUser(session.UserID, userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if !canSeeUser {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
 	userData, err := json.Marshal(user)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
@@ -294,6 +308,47 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data, err := json.Marshal(updatedConfig)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleGetUserPreferences(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /users/me/config getUserConfig
+	//
+	// Returns an array of user preferences
+	//
+	// ---
+	// produces:
+	// - application/json
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/Preferences"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+
+	auditRec := a.makeAuditRecord(r, "getUserConfig", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+
+	preferences, err := a.app.GetUserPreferences(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	data, err := json.Marshal(preferences)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return

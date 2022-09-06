@@ -35,7 +35,7 @@ import {Utils} from "../../utils"
 import AddIcon from "../../widgets/icons/add"
 import CloseIcon from "../../widgets/icons/close"
 import {UserConfigPatch} from "../../user"
-import {getMe, patchProps} from "../../store/users"
+import {getMe, getMyConfig, patchProps} from "../../store/users"
 import octoClient from "../../octoClient"
 import {getCurrentBoardId, getMySortedBoards} from "../../store/boards"
 import {UserSettings} from "../../userSettings"
@@ -70,6 +70,7 @@ const SidebarBoardItem = (props: Props) => {
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
     const me = useAppSelector(getMe)
+    const myConfig = useAppSelector(getMyConfig)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
@@ -146,20 +147,13 @@ const SidebarBoardItem = (props: Props) => {
     }
 
     const handleHideBoard = async() => {
-        console.log('handleHideBoard')
-        if (!me ) {
+        if (!me) {
             return
         }
 
-        // creating new array from me.props.hiddenBoardIDs as
-        // me.props.hiddenBoardIDs belongs to Redux state and
-        // so is immutable.
-        const hiddenBoards = {...(me.props.hiddenBoardIDs || {})}
-
-        // check for already hidden board. Skip if so
-        // if (hiddenBoards.indexOf(board.id) > -1) {
-        //     return
-        // }
+        // creating new array as myConfig.hiddenBoardIDs.value
+        // belongs to Redux state and so is immutable.
+        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
 
         hiddenBoards[board.id] = true
         const hiddenBoardsArray = Object.keys(hiddenBoards)
@@ -235,20 +229,6 @@ const SidebarBoardItem = (props: Props) => {
                             position='auto'
                             parentRef={boardItemRef}
                         >
-                            <BoardPermissionGate
-                                boardId={board.id}
-                                permissions={[Permission.DeleteBoard]}
-                            >
-                                <Menu.Text
-                                    key={`deleteBlock-${board.id}`}
-                                    id='deleteBlock'
-                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => {
-                                        props.onDeleteRequest(board)
-                                    }}
-                                />
-                            </BoardPermissionGate>
                             <Menu.SubMenu
                                 key={`moveBlock-${board.id}`}
                                 id='moveBlock'
@@ -259,24 +239,41 @@ const SidebarBoardItem = (props: Props) => {
                             >
                                 {generateMoveToCategoryOptions(board.id)}
                             </Menu.SubMenu>
-                            <Menu.Text
-                                id='duplicateBoard'
-                                name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                                icon={<DuplicateIcon/>}
-                                onClick={() => handleDuplicateBoard(board.isTemplate)}
-                            />
-                            <Menu.Text
-                                id='templateFromBoard'
-                                name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                                icon={<AddIcon/>}
-                                onClick={() => handleDuplicateBoard(true)}
-                            />
+                            {!me?.is_guest &&
+                                <Menu.Text
+                                    id='duplicateBoard'
+                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                                    icon={<DuplicateIcon/>}
+                                    onClick={() => handleDuplicateBoard(board.isTemplate)}
+                                />}
+                            {!me?.is_guest &&
+                                <Menu.Text
+                                    id='templateFromBoard'
+                                    name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
+                                    icon={<AddIcon/>}
+                                    onClick={() => handleDuplicateBoard(true)}
+                                />}
                             <Menu.Text
                                 id='hideBoard'
                                 name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
                                 icon={<CloseIcon/>}
                                 onClick={() => handleHideBoard()}
                             />
+                            <BoardPermissionGate
+                                boardId={board.id}
+                                permissions={[Permission.DeleteBoard]}
+                            >
+                                <Menu.Text
+                                    key={`deleteBlock-${board.id}`}
+                                    id='deleteBlock'
+                                    className='text-danger'
+                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
+                                    icon={<DeleteIcon/>}
+                                    onClick={() => {
+                                        props.onDeleteRequest(board)
+                                    }}
+                                />
+                            </BoardPermissionGate>
                         </Menu>
                     </MenuWrapper>
                 </div>

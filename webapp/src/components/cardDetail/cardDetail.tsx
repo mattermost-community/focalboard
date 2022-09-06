@@ -129,6 +129,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     }, [card.title, title])
     const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
+    const canCommentBoardCards = useHasCurrentBoardPermissions([Permission.CommentBoardCards])
 
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
@@ -257,7 +258,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             role='button'
                             onClick={() => {
                                 props.onClose();
-                                (window as any).openPricingModal()()
+                                (window as any).openPricingModal()({trackingLocation: 'boards > learn_more_about_our_plans_click'})
                             }}
                         >
                             <FormattedMessage
@@ -270,7 +271,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         className='CardDetail__limited-button'
                         onClick={() => {
                             props.onClose();
-                            (window as any).openPricingModal()()
+                            (window as any).openPricingModal()({trackingLocation: 'boards > upgrade_click'})
                         }}
                         emphasis='primary'
                         size='large'
@@ -299,7 +300,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         comments={comments}
                         boardId={card.boardId}
                         cardId={card.id}
-                        readonly={props.readonly || !canEditBoardCards}
+                        readonly={props.readonly || !canCommentBoardCards}
                     />
                 </Fragment>}
             </div>

@@ -38,12 +38,19 @@ const CloudMessage = React.memo(() => {
         if (me) {
             if (me.id === 'single-user') {
                 UserSettings.hideCloudMessage = true
-                dispatch(patchProps({focalboard_cloudMessageCanceled: 'true'}))
+                dispatch(patchProps([
+                    {
+                        user_id: me.id,
+                        category: 'focalboard',
+                        name: 'cloudMessageCanceled',
+                        value: 'true'
+                    }
+                ]))
                 return
             }
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    focalboard_cloudMessageCanceled: 'true',
+                    cloudMessageCanceled: 'true',
                 },
             }
 
