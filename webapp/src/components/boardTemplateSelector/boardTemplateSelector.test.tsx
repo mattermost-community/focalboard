@@ -123,6 +123,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         properties: {
                             trackingTemplateId: 'template_id_2',
                         },
+                        createdBy: 'system',
                     },
                 ],
                 membersInBoards: {
@@ -151,6 +152,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                     properties: {
                         trackingTemplateId: 'template_id_global',
                     },
+                    createdBy: 'system',
                 }],
             },
         }

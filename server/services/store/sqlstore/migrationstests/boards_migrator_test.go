@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/morph/drivers"
 	"github.com/mattermost/morph/drivers/mysql"
 	"github.com/mattermost/morph/drivers/postgres"
+	"github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
 	"github.com/mgdelacroix/foundation"
 
@@ -86,15 +87,19 @@ func (bm *BoardsMigrator) getDriver(migrationsTable string) (drivers.Driver, err
 
 	var driver drivers.Driver
 	var err error
-	if bm.driverName == model.PostgresDBType {
+	switch bm.driverName {
+	case model.PostgresDBType:
 		driver, err = postgres.WithInstance(bm.db, &postgres.Config{Config: migrationConfig})
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	if bm.driverName == model.MysqlDBType {
+	case model.MysqlDBType:
 		driver, err = mysql.WithInstance(bm.db, &mysql.Config{Config: migrationConfig})
+		if err != nil {
+			return nil, err
+		}
+	case model.SqliteDBType:
+		driver, err = sqlite.WithInstance(bm.db, &sqlite.Config{Config: migrationConfig})
 		if err != nil {
 			return nil, err
 		}
@@ -204,7 +209,7 @@ func (bm *BoardsMigrator) Setup() error {
 		TablePrefix:      tablePrefix,
 		Logger:           mlog.CreateConsoleTestLogger(false, mlog.LvlDebug),
 		DB:               bm.db,
-		IsPlugin:         true,
+		IsPlugin:         bm.withMattermostMigrations,
 		NewMutexFn: func(name string) (*cluster.Mutex, error) {
 			return nil, fmt.Errorf("not implemented")
 		},

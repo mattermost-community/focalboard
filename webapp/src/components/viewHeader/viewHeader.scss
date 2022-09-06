@@ -72,8 +72,10 @@
 
     .board-search-icon {
         position: absolute;
-        top: 9px;
         left: 10px;
         color: rgba(var(--center-channel-color-rgb), 0.64);
+        display: flex;
+        align-items: center;
+        height: 100%;
     }
 }
