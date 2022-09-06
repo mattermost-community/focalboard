@@ -116,6 +116,8 @@ func TestGetCards(t *testing.T) {
 	})
 
 	t.Run("fetch with pagination", func(t *testing.T) {
+		cardNums := make(map[int]struct{})
+
 		// return first 10
 		cards, resp := th.Client.GetCards(board.ID, 0, 10)
 		th.CheckOK(resp)
@@ -123,8 +125,7 @@ func TestGetCards(t *testing.T) {
 		for _, card := range cards {
 			cardNum, err := strconv.Atoi(card.Title)
 			require.NoError(t, err)
-			require.GreaterOrEqual(t, cardNum, 0)
-			require.Less(t, cardNum, 10)
+			cardNums[cardNum] = struct{}{}
 		}
 
 		// return second 10
@@ -134,8 +135,7 @@ func TestGetCards(t *testing.T) {
 		for _, card := range cards {
 			cardNum, err := strconv.Atoi(card.Title)
 			require.NoError(t, err)
-			require.GreaterOrEqual(t, cardNum, 10)
-			require.Less(t, cardNum, 20)
+			cardNums[cardNum] = struct{}{}
 		}
 
 		// return remaining 5
@@ -145,8 +145,14 @@ func TestGetCards(t *testing.T) {
 		for _, card := range cards {
 			cardNum, err := strconv.Atoi(card.Title)
 			require.NoError(t, err)
-			require.GreaterOrEqual(t, cardNum, 20)
-			require.Less(t, cardNum, 25)
+			cardNums[cardNum] = struct{}{}
+		}
+
+		// make sure all card numbers were returned
+		assert.Len(t, cardNums, cardCount)
+		for i := 0; i < cardCount; i++ {
+			_, ok := cardNums[i]
+			assert.True(t, ok)
 		}
 	})
 
