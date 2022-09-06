@@ -72,6 +72,8 @@ describe('components/rhsChannelBoardItem', () => {
             },
         }
         board.id = 'test_id'
+        board.title = 'New board'
+        board.description = '**Board** with description'
         board.updateAt = 1657311058157
         const store = mockStateStore([], state)
         const {container} = render(wrapIntl(
