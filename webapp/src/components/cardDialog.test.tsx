@@ -89,7 +89,7 @@ describe('components/cardDialog', () => {
         },
     }
 
-    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers as {[key: string]: IUser}))
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers) as IUser[])
     const store = mockStateStore([], state)
     beforeEach(() => {
         jest.clearAllMocks()
