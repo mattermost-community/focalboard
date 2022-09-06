@@ -173,7 +173,7 @@ describe('src/components/workspace', () => {
             ],
         },
     }
-    mockedOctoClient.searchTeamUsers.mockResolvedValue(state.users.boardUsers)
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers))
     const store = mockStateStore([thunk], state)
     beforeAll(() => {
         mockDOM()

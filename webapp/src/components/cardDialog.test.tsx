@@ -10,7 +10,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {mocked} from 'jest-mock'
 
 import mutator from '../mutator'
-import IUser from '../user'
+import {IUser} from '../user'
 import {Utils} from '../utils'
 import octoClient from '../octoClient'
 import {TestBlockFactory} from '../test/testBlockFactory'

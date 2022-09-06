@@ -143,7 +143,7 @@ describe('components/centerPanel', () => {
             },
         },
     }
-    mockedOctoClient.searchTeamUsers.mockResolvedValue(state.users.boardUsers as IUser[])
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers) as IUser[])
     const store = mockStateStore([], state)
     beforeAll(() => {
         mockDOM()
