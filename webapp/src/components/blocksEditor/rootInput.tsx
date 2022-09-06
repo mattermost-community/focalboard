@@ -1,7 +1,11 @@
 import React, {useState} from 'react'
+import Select from 'react-select'
+import {CSSObject} from '@emotion/serialize'
+
+import {getSelectBaseStyle} from '../../theme'
+
 import * as registry from './blocks/'
 import {ContentType} from './blocks/types'
-import Select from 'react-select'
 
 type Props = {
     onChange: (value: string) => void
@@ -10,16 +14,51 @@ type Props = {
     value: string
 }
 
+const baseStyles = getSelectBaseStyle()
+
+const styles = {
+    ...baseStyles,
+    control: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        color: 'rgb(var(--center-channel-color-rgb))',
+        flexDirection: 'row',
+    }),
+    input: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        color: 'rgb(var(--center-channel-color-rgb))',
+    }),
+    menu: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        minWidth: '100%',
+        width: 'max-content',
+        background: 'rgb(var(--center-channel-bg-rgb))',
+        left: '0',
+        marginBottom: '0',
+    }),
+    menuPortal: (provided: CSSObject): CSSObject => ({
+        ...provided,
+        zIndex: 999,
+    }),
+}
+
 export default function RootInput(props: Props){
     const [showMenu, setShowMenu] = useState(false)
 
     return (
         <Select
+            styles={styles}
             components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
             className='RootInput'
             placeholder={"Introduce your text or your slash command"}
             autoFocus={true}
             menuIsOpen={showMenu}
+            menuPortalTarget={document.getElementById('focalboard-root-portal')}
+            menuPosition={'fixed'}
             options={registry.list()}
             getOptionValue={(ct: ContentType) => ct.slashCommand}
             getOptionLabel={(ct: ContentType) => ct.slashCommand + " Creates a new " + ct.displayName + " block."}

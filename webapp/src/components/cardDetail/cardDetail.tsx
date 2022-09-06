@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useRef, useState, Fragment} from 'react'
-import {FormattedMessage, useIntl} from 'react-intl'
+import React, {useCallback, useEffect, useRef, useState, Fragment, useMemo} from 'react'
+import {FormattedMessage, useIntl, IntlShape} from 'react-intl'
 
 import {BlockIcons} from '../../blockIcons'
 import {Card} from '../../blocks/card'
@@ -9,8 +9,9 @@ import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
-import {Block} from '../../blocks/block'
+import {Block, ContentBlockTypes, createBlock} from '../../blocks/block'
 import mutator from '../../mutator'
+import octoClient from '../../octoClient'
 import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
 import EditableArea from '../../widgets/editableArea'
@@ -48,6 +49,73 @@ type Props = {
     readonly: boolean
     onClose: () => void
 }
+
+async function addBlock(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string): Promise<Block> {
+    const block = createBlock()
+    block.parentId = card.id
+    block.boardId = card.boardId
+    block.title = title
+    block.type = contentType
+    block.fields = {...block.fields, ...fields}
+
+    const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add card text'})
+
+    const afterRedo = async (newBlock: Block) => {
+        const contentOrder = card.fields.contentOrder.slice()
+        if (afterBlockId) {
+            const idx = contentOrder.indexOf(afterBlockId)
+            if (idx === -1) {
+                contentOrder.push(newBlock.id)
+            } else {
+                contentOrder.splice(idx+1, 0, newBlock.id)
+            }
+        } else {
+            contentOrder.push(newBlock.id)
+        }
+        await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+    }
+
+    const beforeUndo = async () => {
+        const contentOrder = card.fields.contentOrder.slice()
+        await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+    }
+
+    return mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
+}
+
+function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
+    const contentOrder: Array<string|string[]> = []
+    if (card.fields.contentOrder) {
+        for (const contentId of card.fields.contentOrder) {
+            if (typeof contentId === 'string') {
+                contentOrder.push(contentId)
+            } else {
+                contentOrder.push(contentId.slice())
+            }
+        }
+    }
+
+    const srcBlockId = srcBlock.block.id
+    const dstBlockId = dstBlock.block.id
+
+    const srcBlockX = srcBlock.cords.x
+    const dstBlockX = dstBlock.cords.x
+
+    const srcBlockY = (srcBlock.cords.y || srcBlock.cords.y === 0) && (srcBlock.cords.y > -1) ? srcBlock.cords.y : -1
+    const dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
+
+    if (srcBlockId === dstBlockId) {
+        return
+    }
+
+    const newContentOrder = dragAndDropRearrange({contentOrder, srcBlockId, srcBlockX, srcBlockY, dstBlockId, dstBlockX, dstBlockY, moveTo})
+
+    mutator.performAsUndoGroup(async () => {
+        const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'Move card content'})
+        await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, newContentOrder, description)
+    })
+}
+
 
 const CardDetail = (props: Props): JSX.Element|null => {
     const {card, comments} = props
@@ -101,6 +169,30 @@ const CardDetail = (props: Props): JSX.Element|null => {
     if (!card) {
         return null
     }
+
+    console.log(props.contents)
+    const blocks = useMemo(() => props.contents.flatMap((value: Block | Block[]): BlockData<any> => {
+        let v: Block = Array.isArray(value) ? value[0] : value
+
+        let data: any = v?.title
+        if (v?.type === 'image') {
+            data = v?.fields.fileId
+        }
+
+        if (v?.type === 'checkbox') {
+            data = {
+                value: v?.title,
+                checked: v?.fields.value,
+            }
+        }
+
+        return {
+            id: v?.id,
+            value: data,
+            contentType: v?.type,
+        }
+    }), [props.contents])
+    console.log(blocks)
 
     return (
         <>
@@ -216,22 +308,42 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
             {!limited && <div className='CardDetail content fullwidth content-blocks'>
                 <BlocksEditor
-                    blocks={props.contents.flatMap((value: Block | Block[]): BlockData<any> => {
-                        if (Array.isArray(value)) {
-                            return {
-                                id: value[0]?.id,
-                                value: value[0]?.title,
-                                contentType: value[0]?.type,
-                            }
+                    blocks={blocks}
+                    onBlockCreated={(block: any, afterBlock: any): any => {
+                        if (block.contentType === 'text' && block.value === '') {
+                            return null
                         }
-                        return {
-                            id: value.id,
-                            value: value.title,
-                            contentType: value.type,
+                        if (block.contentType === 'checkbox') {
+                            addBlock(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id)
+                        } else {
+                            addBlock(card, intl, block.value, {}, block.contentType, afterBlock?.id)
                         }
-                    })}
-                    onBlockCreated={(block: any, afterBlock: any): BlockData<any>|null => { return null}}
-                    onBlockModified={(block: any): BlockData<any>|null => {return null}}
+                        return block
+                    }}
+                    onBlockModified={(block: any): BlockData<any>|null => {
+                        const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
+                        if (!originalContentBlock) {
+                            return null
+                        }
+
+                        if (block.contentType === 'text' && block.value === '') {
+                            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+
+                            mutator.deleteBlock(originalContentBlock, description)
+                            return null
+                        }
+                        const newBlock = {
+                            ...originalContentBlock,
+                            title: block.value,
+                        }
+
+                        if (block.contentType === 'checkbox') {
+                            newBlock.title = block.value.value
+                            newBlock.fields = {...newBlock.fields, value: block.value.checked}
+                        }
+                        mutator.updateBlock(card.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
+                        return block
+                    }}
                     onBlockMoved={() => {}}
                 />
             </div>}

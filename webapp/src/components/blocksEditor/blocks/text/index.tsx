@@ -11,13 +11,15 @@ const TextContent: ContentType = {
     displayName: 'Text',
     slashCommand: '/text',
     prefix: '',
-    render: (value: string) => {
-        const html: string = Utils.htmlFromMarkdown(value || '')
+    runSlashCommand: (): void => {},
+    editable: true,
+    Display: (props: BlockInputProps) => {
+        const html: string = Utils.htmlFromMarkdown(props.value || '')
         return <div
-            dangerouslySetInnerHTML={{__html: html.trim()}}
+            dangerouslySetInnerHTML={{__html: html}}
+            className={props.value ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
         />
     },
-    runSlashCommand: (): void => {},
     Input: (props: BlockInputProps) => {
         return (
             <div className="TextContent">

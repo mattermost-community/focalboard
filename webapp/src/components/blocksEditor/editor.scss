@@ -1,5 +1,8 @@
 .Editor {
     margin-left: 50px;
+    color: rgb(var(--center-channel-color-rgb));
+    background-color: rgb(var(--center-channel-bg-rgb));
+
     .RootInput {
         display: block;
     }
