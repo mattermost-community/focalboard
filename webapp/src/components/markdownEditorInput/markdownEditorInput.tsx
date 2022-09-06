@@ -108,12 +108,12 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         loadSuggestions('')
     }, [])
 
-    const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
-
     const generateEditorState = (text?: string) => {
         const state = EditorState.createWithContent(ContentState.createFromText(text || ''))
         return EditorState.moveSelectionToEnd(state)
     }
+
+    const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
 
     const addUser = useCallback(async (userId: string, role: string) => {
         const newMember = {
