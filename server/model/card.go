@@ -239,9 +239,7 @@ func Block2Card(block *Block) (*Card, error) {
 				}
 			}
 		case []string:
-			for _, id := range arr {
-				contentOrder = append(contentOrder, id)
-			}
+			contentOrder = append(contentOrder, arr...)
 		default:
 			return nil, ErrInvalidFieldType{"contentOrder"}
 		}

@@ -264,7 +264,7 @@ func TestGetCard(t *testing.T) {
 }
 
 //
-// Helpers
+// Helpers.
 //
 func reverse(src []string) []string {
 	out := make([]string, 0, len(src))

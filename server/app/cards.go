@@ -52,7 +52,8 @@ func (a *App) GetCardsForBoard(boardID string, page int, perPage int) ([]*model.
 
 	cards := make([]*model.Card, 0, len(blocks))
 	for _, blk := range blocks {
-		if card, err := model.Block2Card(&blk); err != nil {
+		b := blk
+		if card, err := model.Block2Card(&b); err != nil {
 			return nil, fmt.Errorf("Block2Card fail: %w", err)
 		} else {
 			cards = append(cards, card)
