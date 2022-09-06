@@ -739,6 +739,14 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 }
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
+	// No synthetic memberships for guests
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	if user.IsGuest {
+		return nil, nil
+	}
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
 		b, boardErr := s.Store.GetBoard(boardID)
@@ -817,15 +825,25 @@ func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMe
 	}
 	defer s.CloseRows(rows)
 
-	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
-	if err != nil {
-		return nil, err
-	}
 	members := []*model.BoardMember{}
 	existingMembers := map[string]bool{}
 	for _, m := range explicitMembers {
 		members = append(members, m)
 		existingMembers[m.BoardID] = true
+	}
+
+	// No synthetic memberships for guests
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	if user.IsGuest {
+		return members, nil
+	}
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
 	}
 	for _, m := range implicitMembers {
 		if !existingMembers[m.BoardID] {
@@ -868,7 +886,12 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		existingMembers[m.UserID] = true
 	}
 	for _, m := range implicitMembers {
-		if !existingMembers[m.UserID] {
+		// No synthetic memberships for guests
+		user, err := s.GetUserByID(m.UserID)
+		if err != nil {
+			return nil, err
+		}
+		if !user.IsGuest && !existingMembers[m.UserID] {
 			members = append(members, m)
 		}
 	}
