@@ -132,10 +132,11 @@
                 position: absolute;
                 left: 13px;
                 font-size: 18px;
-                top: 13px;
                 width: 20px;
-                height: 20px;
+                height: 100%;
                 opacity: 0.48;
+                display: flex;
+                align-items: center;
             }
 
             .searchQuery {
