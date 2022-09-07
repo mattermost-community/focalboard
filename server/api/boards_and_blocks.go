@@ -87,8 +87,8 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 	}
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board template"))
 		return
 	}
 
@@ -227,14 +227,14 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardProperties); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board properties"))
 			return
 		}
 
 		if patch.Type != nil || patch.MinimumRole != nil {
-			if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardType); pErr != nil {
-				a.errorResponse(w, r, pErr)
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
+				a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board type"))
 				return
 			}
 		}
@@ -266,8 +266,8 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			return
 		}
 
-		if pErr := a.ensurePermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying cards"))
 			return
 		}
 	}
@@ -360,8 +360,8 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 
 		// permission check
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionDeleteBoard); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to delete board"))
 			return
 		}
 	}
@@ -378,8 +378,8 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 			return
 		}
 
-		if pErr := a.ensurePermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying cards"))
 			return
 		}
 	}

@@ -55,8 +55,8 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	boardID := vars["boardID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 		return
 	}
 
@@ -125,8 +125,8 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create board"))
 		return
 	}
 

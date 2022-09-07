@@ -52,8 +52,8 @@ func (a *API) handleGetMembersForBoard(w http.ResponseWriter, r *http.Request) {
 	boardID := mux.Vars(r)["boardID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board members"))
 		return
 	}
 
@@ -127,8 +127,8 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
 
@@ -231,8 +231,8 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pErr := a.ensurePermissionToTeam(userID, board.TeamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -319,8 +319,8 @@ func (a *API) handleLeaveBoard(w http.ResponseWriter, r *http.Request) {
 
 	boardID := mux.Vars(r)["boardID"]
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 		return
 	}
 
@@ -423,8 +423,8 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 		newBoardMember.SchemeAdmin = false
 	}
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
 
@@ -496,8 +496,8 @@ func (a *API) handleDeleteMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
 

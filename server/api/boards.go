@@ -54,8 +54,8 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -136,13 +136,13 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if newBoard.Type == model.BoardTypeOpen {
-		if pErr := a.ensurePermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePublicChannel); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePublicChannel) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to create public boards"))
 			return
 		}
 	} else {
-		if pErr := a.ensurePermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePrivateChannel); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePrivateChannel) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to create private boards"))
 			return
 		}
 	}
@@ -238,8 +238,8 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 
 	if !hasValidReadToken {
 		if board.Type == model.BoardTypePrivate {
-			if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-				a.errorResponse(w, r, pErr)
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 				return
 			}
 		} else {
@@ -250,14 +250,14 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			if isGuest {
-				if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-					a.errorResponse(w, r, pErr)
+				if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+					a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 					return
 				}
 			}
 
-			if pErr := a.ensurePermissionToTeam(userID, board.TeamID, model.PermissionViewTeam); pErr != nil {
-				a.errorResponse(w, r, pErr)
+			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 				return
 			}
 		}
@@ -342,20 +342,20 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardProperties); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board properties"))
 		return
 	}
 
 	if patch.Type != nil || patch.MinimumRole != nil {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardType); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board type"))
 			return
 		}
 	}
 	if patch.ChannelID != nil {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board access"))
 			return
 		}
 	}
@@ -424,8 +424,8 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionDeleteBoard); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to delete board"))
 		return
 	}
 
@@ -505,8 +505,8 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	} else {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	}
@@ -582,8 +582,8 @@ func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("boardID", boardID)
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionDeleteBoard); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to undelete board"))
 		return
 	}
 
@@ -643,13 +643,13 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if board.Type == model.BoardTypePrivate {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	} else {
-		if pErr := a.ensurePermissionToTeam(userID, board.TeamID, model.PermissionViewTeam); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	}

@@ -196,8 +196,8 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	boardID := vars["boardID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 		return
 	}
 

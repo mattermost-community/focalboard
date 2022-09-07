@@ -165,27 +165,6 @@ func (a *API) userIsGuest(userID string) (bool, error) {
 	return a.app.UserIsGuest(userID)
 }
 
-func (a *API) ensurePermissionToTeam(userID, teamID string, permission *mmModel.Permission) error {
-	if !a.permissions.HasPermissionToTeam(userID, teamID, permission) {
-		return model.NewErrPermission("access denied to team")
-	}
-	return nil
-}
-
-func (a *API) ensurePermissionToChannel(userID, channelID string, permission *mmModel.Permission) error {
-	if !a.permissions.HasPermissionToChannel(userID, channelID, permission) {
-		return model.NewErrPermission("access denied to channel")
-	}
-	return nil
-}
-
-func (a *API) ensurePermissionToBoard(userID, boardID string, permission *mmModel.Permission) error {
-	if !a.permissions.HasPermissionToBoard(userID, boardID, permission) {
-		return model.NewErrPermission("access denied to board")
-	}
-	return nil
-}
-
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {

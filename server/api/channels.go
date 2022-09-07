@@ -58,13 +58,13 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	channelID := mux.Vars(r)["channelID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
-	if pErr := a.ensurePermissionToChannel(userID, channelID, model.PermissionReadChannel); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToChannel(userID, channelID, model.PermissionReadChannel) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to channel"))
 		return
 	}
 

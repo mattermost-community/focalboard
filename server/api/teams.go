@@ -91,8 +91,8 @@ func (a *API) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 	teamID := vars["teamID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -216,8 +216,8 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	query := r.URL.Query()
 	searchQuery := query.Get("search")
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 

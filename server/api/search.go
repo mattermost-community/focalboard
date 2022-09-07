@@ -62,8 +62,8 @@ func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
 	teamID := mux.Vars(r)["teamID"]
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -132,8 +132,8 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	term := r.URL.Query().Get("q")
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -220,8 +220,8 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 	term := r.URL.Query().Get("q")
 	userID := getUserID(r)
 
-	if pErr := a.ensurePermissionToTeam(userID, teamID, model.PermissionViewTeam); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 

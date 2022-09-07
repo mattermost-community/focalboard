@@ -93,8 +93,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		} else {
-			if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionViewBoard); pErr != nil {
-				a.errorResponse(w, r, pErr)
+			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 				return
 			}
 		}
@@ -276,14 +276,14 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if hasContents {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 			return
 		}
 	}
 	if hasComments {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionCommentBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to post card comments"))
 			return
 		}
 	}
@@ -375,8 +375,8 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	val := r.URL.Query().Get("disable_notify")
 	disableNotify := val == True
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 		return
 	}
 
@@ -465,8 +465,8 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
 
@@ -542,8 +542,8 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	val := r.URL.Query().Get("disable_notify")
 	disableNotify := val == True
 
-	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
-		a.errorResponse(w, r, pErr)
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 		return
 	}
 
@@ -658,8 +658,8 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r, model.NewErrForbidden("access denied to make board changes"))
 			return
 		}
-		if pErr := a.ensurePermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to make board changesa"))
 			return
 		}
 	}
@@ -740,13 +740,13 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if block.Type == model.TypeComment {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionCommentBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to comment on board cards"))
 			return
 		}
 	} else {
-		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
-			a.errorResponse(w, r, pErr)
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modify board cards"))
 			return
 		}
 	}
