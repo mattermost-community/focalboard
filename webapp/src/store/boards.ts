@@ -25,7 +25,7 @@ type BoardsState = {
 
 export const fetchBoardMembers = createAsyncThunk(
     'boardMembers/fetch',
-    async ({teamId, boardId}: {teamId: string; boardId: string}, thunkAPI: any) => {
+    async ({teamId, boardId}: {teamId: string, boardId: string}, thunkAPI: any) => {
         const members = await client.getBoardMembers(teamId, boardId)
         const users = [] as IUser[]
         const userIDs = members.map((member) => member.userId)

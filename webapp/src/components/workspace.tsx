@@ -39,7 +39,7 @@ type Props = {
 
 function CenterContent(props: Props) {
     const isLoading = useAppSelector(isLoadingBoard)
-    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string; channelId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, channelId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)

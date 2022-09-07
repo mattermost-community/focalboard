@@ -72,7 +72,7 @@ const SidebarBoardItem = (props: Props) => {
     const me = useAppSelector(getMe)
     const myConfig = useAppSelector(getMyConfig)
 
-    const match = useRouteMatch<{boardId: string; viewId?: string; cardId?: string; teamId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
     const dispatch = useAppDispatch()
     const myAllBoards = useAppSelector(getMySortedBoards)

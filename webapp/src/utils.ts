@@ -202,7 +202,7 @@ class Utils {
         return 0
     }
 
-    static getFontAndPaddingFromCell = (cell: Element): {fontDescriptor: string; padding: number} => {
+    static getFontAndPaddingFromCell = (cell: Element): {fontDescriptor: string, padding: number} => {
         const style = getComputedStyle(cell)
         const padding = Utils.getTotalHorizontalPadding(style)
         return Utils.getFontAndPaddingFromChildren(cell.children, padding)
@@ -210,7 +210,7 @@ class Utils {
 
     // recursive routine to determine the padding and font from its children
     // specifically for the table view
-    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number): {fontDescriptor: string; padding: number} => {
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number): {fontDescriptor: string, padding: number} => {
         const myResults = {
             fontDescriptor: '',
             padding: pad,
@@ -303,7 +303,7 @@ class Utils {
         return html.trim()
     }
 
-    static countCheckboxesInMarkdown(text: string): {total: number; checked: number} {
+    static countCheckboxesInMarkdown(text: string): {total: number, checked: number} {
         let total = 0
         let checked = 0
         const renderer = new marked.Renderer()
@@ -765,7 +765,7 @@ class Utils {
 
     static showBoard(
         boardId: string,
-        match: routerMatch<{boardId: string; viewId?: string; cardId?: string; teamId?: string}>,
+        match: routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>,
         history: History,
     ) {
         // if the same board, reuse the match params

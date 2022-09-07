@@ -503,7 +503,7 @@ class WSClient {
         }
     }
 
-    updateCardLimitTimestampHandler(action: {action: string; timestamp: number}): void {
+    updateCardLimitTimestampHandler(action: {action: string, timestamp: number}): void {
         for (const handler of this.onCardLimitTimestampChange) {
             handler(this, action.timestamp)
         }

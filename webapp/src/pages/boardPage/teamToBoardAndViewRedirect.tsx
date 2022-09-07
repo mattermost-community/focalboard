@@ -16,7 +16,7 @@ const TeamToBoardAndViewRedirect = (): null => {
     const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string; teamId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const categories = useAppSelector(getSidebarCategories)
     const boards = useAppSelector(getBoards)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId

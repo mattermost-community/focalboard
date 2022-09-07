@@ -182,7 +182,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         }
     }, [cards, dateDisplayProperty])
 
-    const onNewEvent = useCallback((args: {start: Date; end: Date}) => {
+    const onNewEvent = useCallback((args: {start: Date, end: Date}) => {
         let dateProperty: DateProperty
         if (args.start === args.end) {
             dateProperty = createDatePropertyFromCalendarDate(args.start)

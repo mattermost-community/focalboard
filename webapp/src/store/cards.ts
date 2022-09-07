@@ -79,7 +79,7 @@ const cardsSlice = createSlice({
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
-        setLimitTimestamp: (state, action: PayloadAction<{timestamp: number; templates: {[key: string]: Board}}>) => {
+        setLimitTimestamp: (state, action: PayloadAction<{timestamp: number, templates: {[key: string]: Board}}>) => {
             state.limitTimestamp = action.payload.timestamp
             for (const card of Object.values(state.cards)) {
                 state.cards[card.id] = limitCard(Boolean(action.payload.templates[card.id]), state.limitTimestamp, card)

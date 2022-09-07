@@ -57,8 +57,8 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
             </div>
             <Select
                 className='select'
-                getOptionLabel={(o: {id: string; label: string}) => o.label}
-                getOptionValue={(o: {id: string; label: string}) => o.id}
+                getOptionLabel={(o: {id: string, label: string}) => o.label}
+                getOptionValue={(o: {id: string, label: string}) => o.id}
                 styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
                 menuPortalTarget={document.body}
                 options={roleOptions}

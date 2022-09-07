@@ -112,7 +112,7 @@ class OctoClient {
         return json
     }
 
-    async register(email: string, username: string, password: string, token?: string): Promise<{code: number; json: {error?: string}}> {
+    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: {error?: string}}> {
         const path = '/api/v2/register'
         const body = JSON.stringify({email, username, password, token})
         const response = await fetch(this.getBaseURL() + path, {
@@ -124,7 +124,7 @@ class OctoClient {
         return {code: response.status, json}
     }
 
-    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number; json: {error?: string}}> {
+    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: {error?: string}}> {
         const path = `/api/v2/users/${encodeURIComponent(userId)}/changepassword`
         const body = JSON.stringify({oldPassword, newPassword})
         const response = await fetch(this.getBaseURL() + path, {

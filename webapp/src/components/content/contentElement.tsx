@@ -20,7 +20,7 @@ import './checkboxElement'
 type Props = {
     block: ContentBlock
     readonly: boolean
-    cords: {x: number; y?: number; z?: number}
+    cords: {x: number, y?: number, z?: number}
 }
 
 export default function ContentElement(props: Props): JSX.Element|null {

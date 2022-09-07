@@ -16,7 +16,7 @@ import {contentRegistry} from './content/contentRegistry'
 type Props = {
     type: BlockTypes
     card: Card
-    cords: {x: number; y?: number; z?: number}
+    cords: {x: number, y?: number, z?: number}
 }
 
 const AddContentMenuItem = (props: Props): JSX.Element => {

@@ -116,7 +116,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [publish, setPublish] = useState(false)
 
     const intl = useIntl()
-    const match = useRouteMatch<{teamId?: string; boardId: string; viewId: string}>()
+    const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
 
     const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
 

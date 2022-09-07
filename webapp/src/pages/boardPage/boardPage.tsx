@@ -68,7 +68,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const activeBoardId = useAppSelector(getCurrentBoardId)
     const activeViewId = useAppSelector(getCurrentViewId)
     const dispatch = useAppDispatch()
-    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string; teamId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId

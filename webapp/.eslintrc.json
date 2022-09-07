@@ -103,7 +103,7 @@
             "args": "after-used"
           }
         ],
-        "@typescript-eslint/member-delimiter-style": [2, {"multiline": {"delimiter": "none"}}],
+        "@typescript-eslint/member-delimiter-style": [2, {"multiline": {"delimiter": "none"}, "singleline": {"delimiter": "comma"}}],
         "@typescript-eslint/no-var-requires": 0,
         "@typescript-eslint/no-empty-function": 0,
         "@typescript-eslint/prefer-interface": 0,

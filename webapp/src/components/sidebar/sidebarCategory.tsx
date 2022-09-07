@@ -67,7 +67,7 @@ const SidebarCategory = (props: Props) => {
     const [showDeleteCategoryDialog, setShowDeleteCategoryDialog] = useState<boolean>(false)
     const [categoryMenuOpen, setCategoryMenuOpen] = useState<boolean>(false)
 
-    const match = useRouteMatch<{boardId: string; viewId?: string; cardId?: string; teamId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
     const myConfig = useAppSelector(getMyConfig)

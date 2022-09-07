@@ -42,7 +42,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         },
     )
 
-    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
     const history = useHistory()
 
     const selectBoard = async (teamId: string, boardId: string): Promise<void> => {

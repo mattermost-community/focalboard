@@ -45,7 +45,7 @@ const BoardTemplateSelector = (props: Props) => {
     const dispatch = useAppDispatch()
     const intl = useIntl()
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string; viewId?: string}>()
+    const match = useRouteMatch<{boardId: string, viewId?: string}>()
     const me = useAppSelector<IUser|null>(getMe)
 
     const showBoard = useCallback(async (boardId) => {

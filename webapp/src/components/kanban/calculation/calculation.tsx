@@ -18,7 +18,7 @@ type Props = {
     menuOpen: boolean
     onMenuClose: () => void
     onMenuOpen: () => void
-    onChange: (data: { calculation: string; propertyId: string }) => void
+    onChange: (data: { calculation: string, propertyId: string }) => void
     value: string
     property: IPropertyTemplate
     readonly: boolean
@@ -43,7 +43,7 @@ function KanbanCalculation(props: Props): JSX.Element {
                         value={props.value}
                         property={props.property}
                         menuOpen={props.menuOpen}
-                        onChange={(data: { calculation: string; propertyId: string }) => {
+                        onChange={(data: { calculation: string, propertyId: string }) => {
                             props.onChange(data)
                             props.onMenuClose()
                         }}

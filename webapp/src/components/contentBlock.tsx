@@ -32,7 +32,7 @@ type Props = {
     readonly: boolean
     onDrop: (srctBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, position: Position) => void
     width?: number
-    cords: {x: number; y?: number; z?: number}
+    cords: {x: number, y?: number, z?: number}
 }
 
 const ContentBlock = (props: Props): JSX.Element => {
