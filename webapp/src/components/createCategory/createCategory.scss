@@ -4,20 +4,14 @@
     .wrapper {
         .dialog {
             width: 600px;
-            height: 260px;
-        }
-
-        .toolbar {
-            flex-direction: row-reverse;
-            padding: 2px 6px;
+            height: auto;
         }
 
         .CreateCategory {
             display: flex;
             flex-direction: column;
-            padding: 0 40px 30px;
-            gap: 12px;
-            flex: 1;
+            padding: 0 32px 24px;
+            gap: 24px;
 
             .inputWrapper {
                 position: relative;
@@ -38,18 +32,20 @@
                 width: 100%;
             }
 
-            h3 {
-                margin-top: 0;
-            }
-
             input {
+                height: 48px;
                 font-size: 16px;
-                padding: 6px 12px;
                 border-radius: 4px;
-                border: 2px solid rgba(var(--center-channel-color-rgb), 0.16);
+                border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+                background: var(--center-channel-bg);
+                color: var(--center-channel-color);
+                padding: 0 16px;
+                flex: 1;
+                transition: border 0.15s ease-in;
 
                 &:focus {
                     border-color: var(--button-bg);
+                    box-shadow: inset 0 0 0 1px var(--button-bg);
                 }
             }
 

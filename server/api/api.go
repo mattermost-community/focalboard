@@ -158,6 +158,13 @@ func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 	return isValid
 }
 
+func (a *API) userIsGuest(userID string) (bool, error) {
+	if a.singleUserToken != "" {
+		return false, nil
+	}
+	return a.app.UserIsGuest(userID)
+}
+
 func (a *API) ensurePermissionToTeam(userID, teamID string, permission *mmModel.Permission) error {
 	if !a.permissions.HasPermissionToTeam(userID, teamID, permission) {
 		return model.NewErrPermission("access denied to team")

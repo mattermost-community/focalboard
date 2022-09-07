@@ -10,7 +10,9 @@ enum Permission {
     ManageBoardRoles = 'manage_board_roles',
     ManageBoardCards = 'manage_board_cards',
     ManageBoardProperties = 'manage_board_properties',
+    CommentBoardCards = 'comment_board_cards',
     ViewBoard = 'view_board',
+    DeleteOthersComments = 'delete_others_comments'
 }
 
 class Constants {
@@ -196,6 +198,8 @@ class Constants {
     static readonly globalTeamId = '0'
 
     static readonly myInsights = 'MY'
+
+    static readonly SystemUserID = 'system'
 }
 
 export {Constants, Permission}

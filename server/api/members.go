@@ -236,6 +236,16 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	isGuest, err := a.userIsGuest(userID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if isGuest {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guests not allowed to join boards"})
+		return
+	}
+
 	newBoardMember := &model.BoardMember{
 		UserID:          userID,
 		BoardID:         boardID,
@@ -401,6 +411,16 @@ func (a *API) handleUpdateMember(w http.ResponseWriter, r *http.Request) {
 		SchemeEditor:    reqBoardMember.SchemeEditor,
 		SchemeCommenter: reqBoardMember.SchemeCommenter,
 		SchemeViewer:    reqBoardMember.SchemeViewer,
+	}
+
+	isGuest, err := a.userIsGuest(paramsUserID)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	if isGuest {
+		newBoardMember.SchemeAdmin = false
 	}
 
 	if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardRoles); pErr != nil {

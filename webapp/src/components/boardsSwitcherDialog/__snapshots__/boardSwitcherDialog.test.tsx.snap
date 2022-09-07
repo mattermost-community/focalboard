@@ -20,7 +20,7 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >

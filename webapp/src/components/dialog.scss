@@ -10,6 +10,19 @@
         bottom: 0;
     }
 
+    .dialog-title {
+        margin-top: 24px;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    .dialog__close {
+        top: 18px;
+        right: 18px;
+        position: absolute;
+    }
+
     .backdrop {
         @include z-index(dialog-backdrop);
         position: fixed;
@@ -26,14 +39,8 @@
         justify-content: center;
     }
 
-    .toolbar {
-        display: flex;
-        flex-direction: row;
-        padding: 16px;
-        justify-content: space-between;
-    }
-
     .dialog {
+        position: relative;
         display: flex;
         flex-direction: column;
         background-color: rgb(var(--center-channel-bg-rgb));
@@ -55,6 +62,7 @@
                 display: none !important;
             }
         }
+
         @media screen and (max-width: 975px) {
             position: fixed;
             top: 0;
@@ -63,22 +71,36 @@
             bottom: 0;
         }
 
-        > * {
+        >* {
             flex-shrink: 0;
         }
 
-        > .banner {
+        >.banner {
             background-color: rgba(230, 220, 192, 0.9);
             text-align: center;
             padding: 10px;
             color: #222;
         }
 
-        > .banner.error {
+        >.banner.error {
             background-color: rgba(230, 192, 192, 0.9);
         }
 
-        > .toolbar {
+        .IconButton {
+            color: rgba(var(--center-channel-color-rgb), 0.56);
+
+            &:hover {
+                color: rgba(var(--center-channel-color-rgb), 0.72);
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+
+            &:active {
+                background-color: rgba(var(--button-bg-rgb), 0.08);
+                color: rgba(var(--button-bg-rgb), 1);
+            }
+        }
+
+        >.toolbar {
             display: flex;
             flex-direction: row;
             padding: 24px;
@@ -90,7 +112,7 @@
             gap: 8px;
         }
 
-        > .content {
+        >.content {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -98,12 +120,13 @@
             @media not screen and (max-width: 975px) {
                 padding: 10px 126px;
             }
+
             @media screen and (max-width: 975px) {
                 padding: 10px;
             }
         }
 
-        > .content.fullwidth {
+        >.content.fullwidth {
             padding-left: 78px;
         }
     }

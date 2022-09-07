@@ -19,7 +19,7 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import './boardTemplateSelector.scss'
 import {OnboardingBoardTitle} from '../cardDetail/cardDetail'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {IUser, UserConfigPatch} from '../../user'
 import {getMe, patchProps} from '../../store/users'
 import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
 
@@ -86,9 +86,9 @@ const BoardTemplateSelector = (props: Props) => {
 
         const patch: UserConfigPatch = {
             updatedFields: {
-                [UserPropPrefix + 'onboardingTourStarted']: '1',
-                [UserPropPrefix + 'onboardingTourStep']: BaseTourSteps.OPEN_A_CARD.toString(),
-                [UserPropPrefix + 'tourCategory']: TOUR_BASE,
+                onboardingTourStarted: '1',
+                onboardingTourStep: BaseTourSteps.OPEN_A_CARD.toString(),
+                tourCategory: TOUR_BASE,
             },
         }
 

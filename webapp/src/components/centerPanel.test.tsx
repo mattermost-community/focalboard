@@ -10,6 +10,8 @@ import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {IPropertyTemplate} from '../blocks/board'
 import {Utils} from '../utils'
+import {IUser} from '../user'
+import octoClient from '../octoClient'
 import Mutator from '../mutator'
 import {Constants} from '../constants'
 
@@ -26,11 +28,13 @@ jest.mock('react-router-dom', () => {
     }
 })
 jest.mock('../utils')
+jest.mock('../octoClient')
 jest.mock('../mutator')
 jest.mock('../telemetry/telemetryClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
+const mockedOctoClient= mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
 mockedUtils.generateClassName = jest.requireActual('../utils').Utils.generateClassName
 describe('components/centerPanel', () => {
@@ -81,16 +85,13 @@ describe('components/centerPanel', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: false,
-                },
             },
-            workspaceUsers: [
-                {username: 'username_1'},
-            ],
-            boardUsers: [
-                {username: 'username_1'},
-            ],
+            myConfig: {
+                onboardingTourStarted: {value: false},
+            },
+            boardUsers: {
+                'user-id-1': {username: 'username_1'},
+            },
             blockSubscriptions: [],
         },
         teams: {
@@ -142,6 +143,7 @@ describe('components/centerPanel', () => {
             },
         },
     }
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers) as IUser[])
     const store = mockStateStore([], state)
     beforeAll(() => {
         mockDOM()
@@ -585,9 +587,9 @@ describe('components/centerPanel', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: false,
-                },
+            },
+            myConfig: {
+                onboardingTourStarted: {value: false},
             },
             workspaceUsers: [
                 {username: 'username_1'},
