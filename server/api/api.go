@@ -185,12 +185,12 @@ func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	errorResponse := model.ErrorResponse{Error: err.Error()}
 
 	switch {
+	case model.IsErrBadRequest(err):
+		errorResponse.ErrorCode = http.StatusBadRequest
 	case model.IsErrUnauthorized(err):
 		errorResponse.ErrorCode = http.StatusUnauthorized
 	case model.IsErrForbidden(err):
 		errorResponse.ErrorCode = http.StatusForbidden
-	case model.IsErrBadRequest(err):
-		errorResponse.ErrorCode = http.StatusBadRequest
 	case model.IsErrNotFound(err):
 		errorResponse.ErrorCode = http.StatusNotFound
 	case model.IsErrNotImplemented(err):

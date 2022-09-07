@@ -234,11 +234,6 @@ func IsErrNotFound(err error) bool {
 		return false
 	}
 
-	// check if this is a sql.ErrNotFound
-	if errors.Is(err, sql.ErrNoRows) {
-		return true
-	}
-
 	// check if this is a model.ErrNotFound
 	var nf *ErrNotFound
 	if errors.As(err, &nf) {
@@ -251,17 +246,22 @@ func IsErrNotFound(err error) bool {
 		return true
 	}
 
+	// check if this is a sql.ErrNotFound
+	if errors.Is(err, sql.ErrNoRows) {
+		return true
+	}
+
+	// check if this is a plugin API error
+	if errors.Is(err, pluginapi.ErrNotFound) {
+		return true
+	}
+
 	// check if this is a Mattermost AppError with a Not Found status
 	var appErr *mmModel.AppError
 	if errors.As(err, &appErr) {
 		if appErr.StatusCode == http.StatusNotFound {
 			return true
 		}
-	}
-
-	// check if this is a plugin API error
-	if errors.Is(err, pluginapi.ErrNotFound) {
-		return true
 	}
 
 	// check if this is a model.ErrCategoryDeleted

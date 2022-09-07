@@ -1,7 +1,8 @@
 package api
 
 import (
-	"errors"
+	"database/sql"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -10,36 +11,60 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/stretchr/testify/require"
+
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 func TestErrorResponse(t *testing.T) {
 	testApi := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
 
-	t.Run("should respond with a 404 if a not found error is passed", func(t *testing.T) {
-		r := httptest.NewRequest(http.MethodGet, "/test", nil)
-		w := httptest.NewRecorder()
-		err := model.NewErrNotFound("board")
+	testCases := []struct {
+		Name         string
+		Error        error
+		ResponseCode int
+		ResponseBody string
+	}{
+		// bad request
+		{"ErrBadRequest", model.NewErrBadRequest("bad field"), http.StatusBadRequest, "bad field"},
+		{"ErrViewsLimitReached", model.ErrViewsLimitReached, http.StatusBadRequest, "limit reached"},
+		{"ErrAuthParam", model.NewErrAuthParam("password is required"), http.StatusBadRequest, "password is required"},
+		{"ErrInvalidCategory", model.NewErrInvalidCategory("open"), http.StatusBadRequest, "open"},
+		{"ErrBoardMemberIsLastAdmin", model.ErrBoardMemberIsLastAdmin, http.StatusBadRequest, "no admins"},
 
-		testApi.errorResponse(w, r, err)
-		res := w.Result()
+		// unauthorized
+		{"ErrUnauthorized", model.NewErrUnauthorized("not enough permissions"), http.StatusUnauthorized, "not enough permissions"},
 
-		require.Equal(t, http.StatusNotFound, res.StatusCode)
-		require.Equal(t, "application/json", res.Header.Get("Content-Type"))
-		b, rErr := ioutil.ReadAll(res.Body)
-		require.NoError(t, rErr)
-		defer res.Body.Close()
-		require.Contains(t, string(b), "board")
-	})
+		// forbidden
+		{"ErrForbidden", model.NewErrForbidden("not enough permissions"), http.StatusForbidden, "not enough permissions"},
+		{"ErrPermission", model.NewErrPermission("not enough permissions"), http.StatusForbidden, "not enough permissions"},
+		{"ErrPatchUpdatesLimitedCards", model.ErrPatchUpdatesLimitedCards, http.StatusForbidden, "cards that are limited"},
+		{"ErrCategoryPermissionDenied", model.ErrCategoryPermissionDenied, http.StatusForbidden, "doesn't belong to user"},
 
-	t.Run("should respond with a 500 if an unknown error is passed", func(t *testing.T) {
-		r := httptest.NewRequest(http.MethodGet, "/test", nil)
-		w := httptest.NewRecorder()
-		err := errors.New("shomething went wrong")
+		// not found
+		{"ErrNotFound", model.NewErrNotFound("board"), http.StatusNotFound, "board"},
+		{"ErrNotAllFound", model.NewErrNotAllFound("block", []string{"1", "2"}), http.StatusNotFound, "not all instances of {block} in {1, 2} found"},
+		{"sql.ErrNoRows", sql.ErrNoRows, http.StatusNotFound, "rows"},
+		{"mattermost-plugin-api/ErrNotFound", pluginapi.ErrNotFound, http.StatusNotFound, "not found"},
+		{"ErrNotFound", model.ErrCategoryDeleted, http.StatusNotFound, "category is deleted"},
 
-		testApi.errorResponse(w, r, err)
-		res := w.Result()
+		// not implemented
+		{"ErrNotFound", model.ErrInsufficientLicense, http.StatusNotImplemented, "appropriate license required"},
+	}
 
-		require.Equal(t, http.StatusInternalServerError, res.StatusCode)
-		require.Equal(t, "application/json", res.Header.Get("Content-Type"))
-	})
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("%s should be a %d code", tc.Name, tc.ResponseCode), func(t *testing.T) {
+			r := httptest.NewRequest(http.MethodGet, "/test", nil)
+			w := httptest.NewRecorder()
+
+			testApi.errorResponse(w, r, tc.Error)
+			res := w.Result()
+
+			require.Equal(t, tc.ResponseCode, res.StatusCode)
+			require.Equal(t, "application/json", res.Header.Get("Content-Type"))
+			b, rErr := ioutil.ReadAll(res.Body)
+			require.NoError(t, rErr)
+			res.Body.Close()
+			require.Contains(t, string(b), tc.ResponseBody)
+		})
+	}
 }
