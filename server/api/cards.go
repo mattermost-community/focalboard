@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -69,7 +69,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	val := r.URL.Query().Get("disable_notify")
 	disableNotify := val == True
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "invalid request body", err)
 		return
@@ -206,6 +206,7 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 
 	a.logger.Debug("GetCards",
 		mlog.String("boardID", boardID),
+		mlog.String("userID", userID),
 		mlog.Int("page", page),
 		mlog.Int("per_page", perPage),
 		mlog.Int("count", len(cards)),
@@ -266,19 +267,19 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 	val := r.URL.Query().Get("disable_notify")
 	disableNotify := val == True
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
-	cardBlock, err := a.app.GetBlockByID(cardID)
+	card, err := a.app.GetCardByID(cardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "could not fetch card "+cardID, err)
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, cardBlock.BoardID, model.PermissionManageBoardCards) {
+	if !a.permissions.HasPermissionToBoard(userID, card.BoardID, model.PermissionManageBoardCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to patch card"})
 		return
 	}
@@ -291,23 +292,23 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 
 	auditRec := a.makeAuditRecord(r, "patchCard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("boardID", cardBlock.BoardID)
-	auditRec.AddMeta("cardID", cardBlock.ID)
+	auditRec.AddMeta("boardID", card.BoardID)
+	auditRec.AddMeta("cardID", card.ID)
 
 	// patch card
-	card, err := a.app.PatchCard(patch, cardBlock.ID, userID, disableNotify)
+	cardPatched, err := a.app.PatchCard(patch, card.ID, userID, disableNotify)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
 	}
 
 	a.logger.Debug("PatchCard",
-		mlog.String("boardID", card.BoardID),
-		mlog.String("cardID", card.ID),
+		mlog.String("boardID", cardPatched.BoardID),
+		mlog.String("cardID", cardPatched.ID),
 		mlog.String("userID", userID),
 	)
 
-	data, err := json.Marshal(card)
+	data, err := json.Marshal(cardPatched)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
 		return
@@ -348,26 +349,21 @@ func (a *API) handleGetCard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	cardID := mux.Vars(r)["cardID"]
 
-	cardBlock, err := a.app.GetBlockByID(cardID)
+	card, err := a.app.GetCardByID(cardID)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "could not fetch card "+cardID, err)
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, cardBlock.BoardID, model.PermissionManageBoardCards) {
+	if !a.permissions.HasPermissionToBoard(userID, card.BoardID, model.PermissionManageBoardCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to fetch card"})
 		return
 	}
 
-	card, err := model.Block2Card(cardBlock)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "could not fetch card "+cardID, err)
-	}
-
 	auditRec := a.makeAuditRecord(r, "getCard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("boardID", cardBlock.BoardID)
-	auditRec.AddMeta("cardID", cardBlock.ID)
+	auditRec.AddMeta("boardID", card.BoardID)
+	auditRec.AddMeta("cardID", card.ID)
 
 	a.logger.Debug("GetCard",
 		mlog.String("boardID", card.BoardID),
