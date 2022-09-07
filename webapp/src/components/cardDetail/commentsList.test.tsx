@@ -97,6 +97,7 @@ describe('components/cardDetail/CommentsList', () => {
         })
 
         expect(container).toBeDefined()
+        expect(container).toMatchSnapshot()
 
         // Comments show up
         const comments = container!.querySelectorAll('.comment-text')
@@ -149,6 +150,7 @@ describe('components/cardDetail/CommentsList', () => {
         })
 
         expect(container).toBeDefined()
+        expect(container).toMatchSnapshot()
 
         // Comments show up
         const comments = container!.querySelectorAll('.comment-text')
