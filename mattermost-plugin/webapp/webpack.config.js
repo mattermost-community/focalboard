@@ -128,6 +128,7 @@ const config = {
 };
 
 if (TARGET_IS_PRODUCT) {
+    // Set up module federation
     function makeSingletonSharedModules(packageNames) {
         const sharedObject = {};
 
@@ -173,7 +174,16 @@ if (TARGET_IS_PRODUCT) {
 } else {
     config.resolve.alias['react-intl'] = path.resolve(__dirname, '../../webapp/node_modules/react-intl/');
 
-    config.outputs = {
+    config.externals = {
+        react: 'React',
+        redux: 'Redux',
+        'react-redux': 'ReactRedux',
+        'mm-react-router-dom': 'ReactRouterDom',
+        'prop-types': 'PropTypes',
+        'react-bootstrap': 'ReactBootstrap',
+    };
+
+    config.output = {
         devtoolNamespace: PLUGIN_ID,
         path: path.join(__dirname, '/dist'),
         publicPath: '/',
