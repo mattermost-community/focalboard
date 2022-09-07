@@ -25,6 +25,7 @@ func (a *API) registerBlocksRoutes(r *mux.Router) {
 	r.HandleFunc("/boards/{boardID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
 	r.HandleFunc("/boards/{boardID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
 	r.HandleFunc("/boards/{boardID}/blocks/{blockID}/duplicate", a.sessionRequired(a.handleDuplicateBlock)).Methods("POST")
+	r.HandleFunc("/boards/{boardID}/blocks/{blockID}/moveto/{where}/{dstBlockID}", a.sessionRequired(a.handleMoveBlockTo)).Methods("POST")
 }
 
 func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
@@ -811,6 +812,185 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
+
+	auditRec.Success()
+}
+
+func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /boards/{boardID}/blocks/{blockID}/move/{where}/{dstBlockID} moveBlockTo
+	//
+	// Move a block after another block in the parent card
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// - name: blockID
+	//   in: path
+	//   description: Block ID
+	//   required: true
+	//   type: string
+	// - name: where
+	//   in: path
+	//   description: Relative location respect destination block (after or before)
+	//   required: true
+	//   type: string
+	// - name: dstBlockID
+	//   in: path
+	//   description: Destination Block ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: array
+	//       items:
+	//         "$ref": "#/definitions/Block"
+	//   '404':
+	//     description: board or block not found
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	boardID := mux.Vars(r)["boardID"]
+	blockID := mux.Vars(r)["blockID"]
+	dstBlockID := mux.Vars(r)["dstBlockID"]
+	where := mux.Vars(r)["where"]
+	userID := getUserID(r)
+
+	if where != "after" && where != "before" {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid where parameter, use before or after", nil)
+	}
+
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if board == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+	}
+
+	if userID == "" {
+		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		return
+	}
+
+	block, err := a.app.GetBlockByID(blockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if block == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.ID != block.BoardID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	dstBlock, err := a.app.GetBlockByID(dstBlockID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+	if dstBlock == nil {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if board.ID != block.BoardID {
+		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		return
+	}
+
+	if block.ParentID != dstBlock.ParentID {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+		return
+	}
+
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board cards"})
+		return
+	}
+
+	card, err := a.app.GetBlockByID(block.ParentID)
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	contentOrder := card.Fields["contentOrder"].([]interface{})
+	newContentOrder := []interface{}{}
+	foundDst := false
+	foundSrc := false
+	for _, id := range contentOrder {
+		stringID, ok := id.(string)
+		if !ok {
+			newContentOrder = append(newContentOrder, id)
+			continue
+		}
+
+		if dstBlockID == stringID {
+			foundDst = true
+			if where == "after" {
+				newContentOrder = append(newContentOrder, id)
+				newContentOrder = append(newContentOrder, blockID)
+			} else {
+				newContentOrder = append(newContentOrder, id)
+				newContentOrder = append(newContentOrder, blockID)
+			}
+			continue
+		}
+
+		if blockID == stringID {
+			foundSrc = true
+			continue
+		}
+
+		newContentOrder = append(newContentOrder, id)
+	}
+
+	if !foundDst || !foundSrc {
+		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "moveBlockAfter", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+	auditRec.AddMeta("blockID", blockID)
+	auditRec.AddMeta("dstBlockID", dstBlockID)
+
+	patch := &model.BlockPatch{
+		UpdatedFields: map[string]interface{}{
+			"contentOrder": newContentOrder,
+		},
+	}
+
+	err = a.app.PatchBlockAndNotify(block.ParentID, patch, userID, false)
+	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+		return
+	}
+	if err != nil {
+		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		return
+	}
+
+	// response
+	jsonStringResponse(w, http.StatusOK, "{}")
 
 	auditRec.Success()
 }

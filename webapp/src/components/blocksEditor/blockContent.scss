@@ -1,7 +1,11 @@
 .BlockContent {
     display: flex;
 
-    &.over {
+    &.over-top {
+        border-top: 1px solid blue;
+    }
+
+    &.over-bottom {
         border-bottom: 1px solid blue;
     }
 

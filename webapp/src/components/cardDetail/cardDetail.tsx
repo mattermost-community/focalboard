@@ -83,37 +83,9 @@ async function addBlock(card: Card, intl: IntlShape, title: string, fields: any,
     return mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
 }
 
-function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: IContentBlockWithCords, intl: IntlShape, moveTo: Position): void {
-    const contentOrder: Array<string|string[]> = []
-    if (card.fields.contentOrder) {
-        for (const contentId of card.fields.contentOrder) {
-            if (typeof contentId === 'string') {
-                contentOrder.push(contentId)
-            } else {
-                contentOrder.push(contentId.slice())
-            }
-        }
-    }
-
-    const srcBlockId = srcBlock.block.id
-    const dstBlockId = dstBlock.block.id
-
-    const srcBlockX = srcBlock.cords.x
-    const dstBlockX = dstBlock.cords.x
-
-    const srcBlockY = (srcBlock.cords.y || srcBlock.cords.y === 0) && (srcBlock.cords.y > -1) ? srcBlock.cords.y : -1
-    const dstBlockY = (dstBlock.cords.y || dstBlock.cords.y === 0) && (dstBlock.cords.y > -1) ? dstBlock.cords.y : -1
-
-    if (srcBlockId === dstBlockId) {
-        return
-    }
-
-    const newContentOrder = dragAndDropRearrange({contentOrder, srcBlockId, srcBlockX, srcBlockY, dstBlockId, dstBlockX, dstBlockY, moveTo})
-
-    mutator.performAsUndoGroup(async () => {
-        const description = intl.formatMessage({id: 'CardDetail.moveContent', defaultMessage: 'Move card content'})
-        await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, newContentOrder, description)
-    })
+function moveBlock(boardId: string, blockId: string, dstBlockId: string): void {
+    // TODO: Make this a mutation
+    octoClient.moveBlockTo(boardId, blockId, "after", dstBlockId)
 }
 
 
@@ -345,7 +317,10 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         mutator.updateBlock(card.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
                         return block
                     }}
-                    onBlockMoved={() => {}}
+                    onBlockMoved={(block: any, afterBlock: any) => {
+                        console.log(block, afterBlock)
+                        moveBlock(card.boardId, block.id, afterBlock.id)
+                    }}
                 />
             </div>}
         </>
