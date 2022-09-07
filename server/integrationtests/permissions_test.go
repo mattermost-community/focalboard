@@ -38,7 +38,7 @@ type TestCase struct {
 	url                string
 	method             string
 	body               string
-	userRole           string // userAnon, userNoTeamMember, userTeamMember, userViewer, userCommenter, userEditor or userAdmin
+	userRole           string // userAnon, userNoTeamMember, userTeamMember, userViewer, userCommenter, userEditor, userAdmin or userGuest
 	expectedStatusCode int
 	totalResults       int
 }
