@@ -126,7 +126,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                         <>
                             <Menu.Text
                                 id='is'
-                                name={intl.formatMessage({id: 'Filter.contains', defaultMessage: 'is'})}
+                                name={intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
                             <Menu.Text
