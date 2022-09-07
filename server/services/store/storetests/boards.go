@@ -131,7 +131,7 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 	userID := "user-id-1"
 
 	t.Run("should return empty list if no results are found", func(t *testing.T) {
-		boards, err := store.GetBoardsForUserAndTeam(testUserID, testTeamID)
+		boards, err := store.GetBoardsForUserAndTeam(testUserID, testTeamID, true)
 		require.NoError(t, err)
 		require.Empty(t, boards)
 	})
