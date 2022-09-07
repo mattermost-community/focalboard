@@ -238,11 +238,11 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if isGuest {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guests not allowed to join boards"})
+		a.errorResponse(w, r, model.NewErrPermission("guests not allowed to join boards"))
 		return
 	}
 

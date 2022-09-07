@@ -102,12 +102,12 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			var isGuest bool
 			isGuest, err = a.userIsGuest(userID)
 			if err != nil {
-				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				a.errorResponse(w, r, err)
 				return
 			}
 
 			if isGuest {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get board templates"})
+				a.errorResponse(w, r, model.NewErrPermission("guest are not allowed to get board templates"))
 				return
 			}
 		}
@@ -276,14 +276,14 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if hasContents {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionManageBoardCards); pErr != nil {
+			a.errorResponse(w, r, pErr)
 			return
 		}
 	}
 	if hasComments {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to post card comments"})
+		if pErr := a.ensurePermissionToBoard(userID, boardID, model.PermissionCommentBoardCards); pErr != nil {
+			a.errorResponse(w, r, pErr)
 			return
 		}
 	}

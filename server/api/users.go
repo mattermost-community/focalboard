@@ -226,11 +226,11 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 
 	canSeeUser, err := a.app.CanSeeUser(session.UserID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if !canSeeUser {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, model.NewErrNotFound(""))
 		return
 	}
 
@@ -345,13 +345,13 @@ func (a *API) handleGetUserPreferences(w http.ResponseWriter, r *http.Request) {
 
 	preferences, err := a.app.GetUserPreferences(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(preferences)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

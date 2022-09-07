@@ -94,11 +94,11 @@ func (a *API) handleCreateBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if isGuest {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create board"))
 		return
 	}
 

@@ -226,7 +226,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	asGuestUser := ""
