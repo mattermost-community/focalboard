@@ -10,8 +10,6 @@ import (
 
 	"text/template"
 
-	"github.com/mattermost/morph/models"
-
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
 
@@ -24,10 +22,7 @@ import (
 
 	_ "github.com/lib/pq" // postgres driver
 
-	sq "github.com/Masterminds/squirrel"
-
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
 
 //go:embed migrations
@@ -74,6 +69,32 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 }
 
 func (s *SQLStore) Migrate() error {
+	if s.isPlugin {
+		mutex, mutexErr := s.NewMutexFn("Boards_dbMutex")
+		if mutexErr != nil {
+			return fmt.Errorf("error creating database mutex: %w", mutexErr)
+		}
+
+		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
+		mutex.Lock()
+		defer func() {
+			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
+			mutex.Unlock()
+		}()
+	}
+
+	if err := s.EnsureSchemaMigrationFormat(); err != nil {
+		return err
+	}
+	defer func() {
+		// the old schema migration table deletion happens after the
+		// migrations have run, to be able to recover its information
+		// in case there would be errors during the process.
+		if err := s.deleteOldSchemaMigrationTable(); err != nil {
+			s.logger.Error("cannot delete the old schema migration table", mlog.Err(err))
+		}
+	}()
+
 	var driver drivers.Driver
 	var err error
 
@@ -181,26 +202,12 @@ func (s *SQLStore) Migrate() error {
 		engine.Close()
 	}()
 
-	var mutex *cluster.Mutex
-	if s.isPlugin {
-		var mutexErr error
-		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
-		if mutexErr != nil {
-			return fmt.Errorf("error creating database mutex: %w", mutexErr)
-		}
+	return s.runMigrationSequence(engine, driver)
+}
 
-		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
-		mutex.Lock()
-		defer func() {
-			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
-			mutex.Unlock()
-		}()
-	}
-
-	if mErr := s.migrateSchemaVersionTable(src.Migrations()); mErr != nil {
-		return mErr
-	}
-
+// runMigrationSequence executes all the migrations in order, both
+// plain SQL and data migrations.
+func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driver) error {
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
 		return mErr
 	}
@@ -214,11 +221,11 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
-		return mErr
+		return fmt.Errorf("error running teamless boards migration: %w", mErr)
 	}
 
 	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
-		return mErr
+		return fmt.Errorf("error running deleted membership boards migration: %w", mErr)
 	}
 
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
@@ -227,10 +234,6 @@ func (s *SQLStore) Migrate() error {
 
 	if mErr := s.RunCategoryUUIDIDMigration(); mErr != nil {
 		return fmt.Errorf("error running categoryID migration: %w", mErr)
-	}
-
-	if mErr := s.deleteOldSchemaMigrationTable(); mErr != nil {
-		return mErr
 	}
 
 	appliedMigrations, err := driver.AppliedMigrations()
@@ -242,218 +245,6 @@ func (s *SQLStore) Migrate() error {
 		mlog.Int("current_version", len(appliedMigrations)))
 
 	return engine.ApplyAll()
-}
-
-// migrateSchemaVersionTable converts the schema version table from
-// the old format used by go-migrate to the new format used by
-// gomorph.
-// When running the Focalboard with go-migrate's schema version table
-// existing in the database, gomorph is unable to make sense of it as it's
-// not in the format required by gomorph.
-func (s *SQLStore) migrateSchemaVersionTable(migrations []*models.Migration) error {
-	migrationNeeded, err := s.isSchemaMigrationNeeded()
-	if err != nil {
-		return err
-	}
-
-	if !migrationNeeded {
-		return nil
-	}
-
-	s.logger.Info("Migrating schema migration to new format")
-
-	legacySchemaVersion, err := s.getLegacySchemaVersion()
-	if err != nil {
-		return err
-	}
-
-	if err := s.createTempSchemaTable(); err != nil {
-		return err
-	}
-
-	if err := s.populateTempSchemaTable(migrations, legacySchemaVersion); err != nil {
-		return err
-	}
-
-	if err := s.useNewSchemaTable(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
-	// Check if `dirty` column exists on schema version table.
-	// This column exists only for the old schema version table.
-
-	// SQLite needs a bit of a special handling
-	if s.dbType == model.SqliteDBType {
-		return s.isSchemaMigrationNeededSQLite()
-	}
-
-	query := s.getQueryBuilder(s.db).
-		Select("count(*)").
-		From("information_schema.COLUMNS").
-		Where(sq.Eq{
-			"TABLE_NAME":  s.tablePrefix + "schema_migrations",
-			"COLUMN_NAME": "dirty",
-		})
-
-	row := query.QueryRow()
-
-	var count int
-	if err := row.Scan(&count); err != nil {
-		s.logger.Error("failed to check for columns of schema_migrations table", mlog.Err(err))
-		return false, err
-	}
-
-	return count == 1, nil
-}
-
-func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
-	// the way to check presence of a column is different
-	// for SQLite. Hence, the separate function
-
-	query := fmt.Sprintf("PRAGMA table_info(\"%sschema_migrations\");", s.tablePrefix)
-	rows, err := s.db.Query(query)
-	if err != nil {
-		s.logger.Error("SQLite - failed to check for columns in schema_migrations table", mlog.Err(err))
-		return false, err
-	}
-
-	defer s.CloseRows(rows)
-
-	data := [][]*string{}
-	for rows.Next() {
-		// PRAGMA returns 6 columns
-		row := make([]*string, 6)
-
-		err := rows.Scan(
-			&row[0],
-			&row[1],
-			&row[2],
-			&row[3],
-			&row[4],
-			&row[5],
-		)
-		if err != nil {
-			s.logger.Error("error scanning rows from SQLite schema_migrations table definition", mlog.Err(err))
-			return false, err
-		}
-
-		data = append(data, row)
-	}
-
-	nameColumnFound := false
-	for _, row := range data {
-		if len(row) >= 2 && *row[1] == "dirty" {
-			nameColumnFound = true
-			break
-		}
-	}
-
-	return nameColumnFound, nil
-}
-
-func (s *SQLStore) getLegacySchemaVersion() (uint32, error) {
-	query := s.getQueryBuilder(s.db).
-		Select("version").
-		From(s.tablePrefix + "schema_migrations")
-
-	row := query.QueryRow()
-
-	var version uint32
-	if err := row.Scan(&version); err != nil {
-		s.logger.Error("error fetching legacy schema version", mlog.Err(err))
-		s.logger.Error("getLegacySchemaVersion err " + err.Error())
-		return version, err
-	}
-
-	return version, nil
-}
-
-func (s *SQLStore) createTempSchemaTable() error {
-	// squirrel doesn't support DDL query in query builder
-	// so, we need to use a plain old string
-	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to create temporary schema migration table", mlog.Err(err))
-		s.logger.Error("createTempSchemaTable error  " + err.Error())
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
-	query := s.getQueryBuilder(s.db).
-		Insert(s.tablePrefix+tempSchemaMigrationTableName).
-		Columns("Version", "Name")
-
-	for _, migration := range migrations {
-		// migrations param contains both up and down variant for
-		// each migration. Skipping for either one (down in this case)
-		// to process a migration only a single time.
-		if migration.Direction == models.Down {
-			continue
-		}
-
-		if migration.Version > legacySchemaVersion {
-			break
-		}
-
-		query = query.Values(migration.Version, migration.Name)
-	}
-
-	if _, err := query.Exec(); err != nil {
-		s.logger.Error("failed to insert migration records into temporary schema table", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) useNewSchemaTable() error {
-	// first delete the old table, then
-	// rename the new table to old table's name
-
-	// renaming old schema migration table. Will delete later once the migration is
-	// complete, just in case.
-	var query string
-	if s.dbType == model.MysqlDBType {
-		query = fmt.Sprintf("RENAME TABLE `%sschema_migrations` TO `%sschema_migrations_old_temp`", s.tablePrefix, s.tablePrefix)
-	} else {
-		query = fmt.Sprintf("ALTER TABLE %sschema_migrations RENAME TO %sschema_migrations_old_temp", s.tablePrefix, s.tablePrefix)
-	}
-
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to rename old schema migration table", mlog.Err(err))
-		return err
-	}
-
-	// renaming new temp table to old table's name
-	if s.dbType == model.MysqlDBType {
-		query = fmt.Sprintf("RENAME TABLE `%s%s` TO `%sschema_migrations`", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
-	} else {
-		query = fmt.Sprintf("ALTER TABLE %s%s RENAME TO %sschema_migrations", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
-	}
-
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to rename temp schema table", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) deleteOldSchemaMigrationTable() error {
-	query := "DROP TABLE IF EXISTS " + s.tablePrefix + "schema_migrations_old_temp"
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to delete old temp schema migrations table", mlog.Err(err))
-		return err
-	}
-
-	return nil
 }
 
 func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {

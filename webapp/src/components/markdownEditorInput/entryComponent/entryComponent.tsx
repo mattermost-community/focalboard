@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {ReactElement} from 'react'
+import {FormattedMessage} from 'react-intl'
 import {EntryComponentProps} from '@draft-js-plugins/mention/lib/MentionSuggestions/Entry/Entry'
 
 import GuestBadge from '../../../widgets/guestBadge'
@@ -34,6 +35,13 @@ const Entry = (props: EntryComponentProps): ReactElement => {
                 <div className={theme?.mentionSuggestionsEntryText}>
                     {mention.displayName}
                 </div>
+                {!mention.isBoardMember &&
+                    <div className={theme?.mentionSuggestionsEntryText}>
+                        <FormattedMessage
+                            id='MentionSuggestion.is-not-board-member'
+                            defaultMessage='(not board member)'
+                        />
+                    </div>}
             </div>
         </div>
     )

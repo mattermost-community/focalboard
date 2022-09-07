@@ -19,8 +19,10 @@ type Props = {
 const PropertyValueElement = (props:Props): JSX.Element => {
     const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board} = props
 
-    const propertyValue = card.fields.properties[propertyTemplate.id]
-
+    let propertyValue = card.fields.properties[propertyTemplate.id]
+    if(propertyValue === undefined) {
+        propertyValue = ''
+    }
     const property = propsRegistry.get(propertyTemplate.type)
     const Editor = property.Editor
     return (

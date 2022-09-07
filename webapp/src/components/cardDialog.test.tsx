@@ -10,18 +10,22 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {mocked} from 'jest-mock'
 
 import mutator from '../mutator'
+import {IUser} from '../user'
 import {Utils} from '../utils'
+import octoClient from '../octoClient'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
 
 import CardDialog from './cardDialog'
 
 jest.mock('../mutator')
+jest.mock('../octoClient')
 jest.mock('../utils')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(mutator, true)
+const mockedOctoClient = mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
 mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
@@ -84,6 +88,8 @@ describe('components/cardDialog', () => {
             blockSubscriptions: [],
         },
     }
+
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers) as IUser[])
     const store = mockStateStore([], state)
     beforeEach(() => {
         jest.clearAllMocks()
