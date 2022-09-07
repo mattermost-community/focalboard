@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import thunk from 'redux-thunk'
 
 import {IUser} from '../user'
+import octoClient from '../octoClient'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {mockDOM, mockMatchMedia, mockStateStore, wrapDNDIntl} from '../testUtils'
 import {Constants} from '../constants'
@@ -21,8 +22,10 @@ import Workspace from './workspace'
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
 jest.useFakeTimers()
 jest.mock('../utils')
+jest.mock('../octoClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
+const mockedOctoClient= mocked(octoClient, true)
 const board = TestBlockFactory.createBoard()
 board.id = 'board1'
 board.teamId = 'team-id'
@@ -170,6 +173,7 @@ describe('src/components/workspace', () => {
             ],
         },
     }
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers))
     const store = mockStateStore([thunk], state)
     beforeAll(() => {
         mockDOM()

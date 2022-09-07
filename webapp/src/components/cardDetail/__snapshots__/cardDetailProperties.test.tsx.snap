@@ -529,6 +529,31 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                   />
                 </div>
                 <div
+                  aria-label="Multi person"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Multi person
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
                   aria-label="Checkbox"
                   class="MenuOption TextOption menu-option"
                   role="button"

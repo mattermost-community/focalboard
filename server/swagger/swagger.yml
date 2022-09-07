@@ -1,2346 +1,1863 @@
 basePath: /api/v2
 consumes:
-- application/json
+    - application/json
 definitions:
-  Block:
-    description: Block is the basic data unit
-    properties:
-      boardId:
-        description: The board id that the block belongs to
-        type: string
-        x-go-name: BoardID
-      createAt:
-        description: The creation time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      createdBy:
-        description: The id for user who created this block
-        type: string
-        x-go-name: CreatedBy
-      deleteAt:
-        description: The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
-        format: int64
-        type: integer
-        x-go-name: DeleteAt
-      fields:
-        additionalProperties:
-          type: object
-        description: The block fields
-        type: object
-        x-go-name: Fields
-      id:
-        description: The id for this block
-        type: string
-        x-go-name: ID
-      modifiedBy:
-        description: The id for user who last modified this block
-        type: string
-        x-go-name: ModifiedBy
-      parentId:
-        description: The id for this block's parent block. Empty for root blocks
-        type: string
-        x-go-name: ParentID
-      schema:
-        description: The schema version of this block
-        format: int64
-        type: integer
-        x-go-name: Schema
-      title:
-        description: The display title
-        type: string
-        x-go-name: Title
-      type:
-        $ref: '#/definitions/BlockType'
-      updateAt:
-        description: The last modified time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-    required:
-    - id
-    - createdBy
-    - modifiedBy
-    - schema
-    - type
-    - createAt
-    - updateAt
-    - boardId
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BlockPatch:
-    description: BlockPatch is a patch for modify blocks
-    properties:
-      boardId:
-        description: The board id that the block belongs to
-        type: string
-        x-go-name: BoardID
-      deletedFields:
-        description: The block removed fields
-        items:
-          type: string
-        type: array
-        x-go-name: DeletedFields
-      parentId:
-        description: The id for this block's parent block. Empty for root blocks
-        type: string
-        x-go-name: ParentID
-      schema:
-        description: The schema version of this block
-        format: int64
-        type: integer
-        x-go-name: Schema
-      title:
-        description: The display title
-        type: string
-        x-go-name: Title
-      type:
-        $ref: '#/definitions/BlockType'
-      updatedFields:
-        additionalProperties:
-          type: object
-        description: The block updated fields
-        type: object
-        x-go-name: UpdatedFields
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BlockPatchBatch:
-    description: BlockPatchBatch is a batch of IDs and patches for modify blocks
-    properties:
-      block_ids:
-        description: The id's for of the blocks to patch
-        items:
-          type: string
-        type: array
-        x-go-name: BlockIDs
-      block_patches:
-        description: The BlockPatches to be applied
-        items:
-          $ref: '#/definitions/BlockPatch'
-        type: array
-        x-go-name: BlockPatches
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BlockType:
-    title: BlockType represents a block type.
-    type: string
-    x-go-package: github.com/mattermost/focalboard/server/model
-  Board:
-    description: Board groups a set of blocks and its layout
-    properties:
-      cardProperties:
-        description: The properties of the board cards
-        items:
-          additionalProperties:
-            type: object
-          type: object
-        type: array
-        x-go-name: CardProperties
-      channelId:
-        description: The ID of the channel that the board was created from
-        type: string
-        x-go-name: ChannelID
-      createAt:
-        description: The creation time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      createdBy:
-        description: The ID of the user that created the board
-        type: string
-        x-go-name: CreatedBy
-      deleteAt:
-        description: The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
-        format: int64
-        type: integer
-        x-go-name: DeleteAt
-      description:
-        description: The description of the board
-        type: string
-        x-go-name: Description
-      icon:
-        description: The icon of the board
-        type: string
-        x-go-name: Icon
-      id:
-        description: The ID for the board
-        type: string
-        x-go-name: ID
-      isTemplate:
-        description: Marks the template boards
-        type: boolean
-        x-go-name: IsTemplate
-      modifiedBy:
-        description: The ID of the last user that updated the board
-        type: string
-        x-go-name: ModifiedBy
-      properties:
-        additionalProperties:
-          type: object
-        description: The properties of the board
-        type: object
-        x-go-name: Properties
-      showDescription:
-        description: Indicates if the board shows the description on the interface
-        type: boolean
-        x-go-name: ShowDescription
-      teamId:
-        description: The ID of the team that the board belongs to
-        type: string
-        x-go-name: TeamID
-      templateVersion:
-        description: Marks the template boards
-        format: int64
-        type: integer
-        x-go-name: TemplateVersion
-      title:
-        description: The title of the board
-        type: string
-        x-go-name: Title
-      type:
-        $ref: '#/definitions/BoardType'
-      updateAt:
-        description: The last modified time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-    required:
-    - id
-    - teamId
-    - createdBy
-    - modifiedBy
-    - type
-    - createAt
-    - updateAt
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BoardMember:
-    description: BoardMember stores the information of the membership of a user on a board
-    properties:
-      boardId:
-        description: The ID of the board
-        type: string
-        x-go-name: BoardID
-      roles:
-        description: The independent roles of the user on the board
-        type: string
-        x-go-name: Roles
-      schemeAdmin:
-        description: Marks the user as an admin of the board
-        type: boolean
-        x-go-name: SchemeAdmin
-      schemeCommenter:
-        description: Marks the user as an commenter of the board
-        type: boolean
-        x-go-name: SchemeCommenter
-      schemeEditor:
-        description: Marks the user as an editor of the board
-        type: boolean
-        x-go-name: SchemeEditor
-      schemeViewer:
-        description: Marks the user as an viewer of the board
-        type: boolean
-        x-go-name: SchemeViewer
-      userId:
-        description: The ID of the user
-        type: string
-        x-go-name: UserID
-    required:
-    - boardId
-    - userId
-    - schemeAdmin
-    - schemeEditor
-    - schemeCommenter
-    - schemeViewer
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BoardMemberHistoryEntry:
-    description: BoardMemberHistoryEntry stores the information of the membership of a user on a board
-    properties:
-      action:
-        description: The action that added this history entry (created or deleted)
-        type: string
-        x-go-name: Action
-      boardId:
-        description: The ID of the board
-        type: string
-        x-go-name: BoardID
-      insertAt:
-        description: The insertion time
-        format: date-time
-        type: string
-        x-go-name: InsertAt
-      userId:
-        description: The ID of the user
-        type: string
-        x-go-name: UserID
-    required:
-    - boardId
-    - userId
-    - insertAt
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BoardMetadata:
-    description: BoardMetadata contains metadata for a Board
-    properties:
-      boardId:
-        description: The ID for the board
-        type: string
-        x-go-name: BoardID
-      createdBy:
-        description: The ID of the user that created the board
-        type: string
-        x-go-name: CreatedBy
-      descendantFirstUpdateAt:
-        description: The earliest time a descendant of this board was added, modified, or deleted
-        format: int64
-        type: integer
-        x-go-name: DescendantFirstUpdateAt
-      descendantLastUpdateAt:
-        description: The most recent time a descendant of this board was added, modified, or deleted
-        format: int64
-        type: integer
-        x-go-name: DescendantLastUpdateAt
-      lastModifiedBy:
-        description: The ID of the user that last modified the most recently modified descendant
-        type: string
-        x-go-name: LastModifiedBy
-    required:
-    - boardId
-    - descendantLastUpdateAt
-    - descendantFirstUpdateAt
-    - createdBy
-    - lastModifiedBy
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BoardPatch:
-    description: BoardPatch is a patch for modify boards
-    properties:
-      deletedCardProperties:
-        description: The board removed card properties
-        items:
-          type: string
-        type: array
-        x-go-name: DeletedCardProperties
-      deletedProperties:
-        description: The board removed properties
-        items:
-          type: string
-        type: array
-        x-go-name: DeletedProperties
-      description:
-        description: The description of the board
-        type: string
-        x-go-name: Description
-      icon:
-        description: The icon of the board
-        type: string
-        x-go-name: Icon
-      showDescription:
-        description: Indicates if the board shows the description on the interface
-        type: boolean
-        x-go-name: ShowDescription
-      title:
-        description: The title of the board
-        type: string
-        x-go-name: Title
-      type:
-        $ref: '#/definitions/BoardType'
-      updatedCardProperties:
-        description: The board updated card properties
-        items:
-          additionalProperties:
-            type: object
-          type: object
-        type: array
-        x-go-name: UpdatedCardProperties
-      updatedProperties:
-        additionalProperties:
-          type: object
-        description: The board updated properties
-        type: object
-        x-go-name: UpdatedProperties
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BoardType:
-    type: string
-    x-go-package: github.com/mattermost/focalboard/server/model
-  BoardsAndBlocks:
-    description: |-
-      BoardsAndBlocks is used to operate over boards and blocks at the
-      same time
-    properties:
-      blocks:
-        description: The blocks
-        items:
-          $ref: '#/definitions/Block'
-        type: array
-        x-go-name: Blocks
-      boards:
-        description: The boards
-        items:
-          $ref: '#/definitions/Board'
-        type: array
-        x-go-name: Boards
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  Category:
-    description: Category is a board category
-    properties:
-      createAt:
-        description: The creation time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      deleteAt:
-        description: The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
-        format: int64
-        type: integer
-        x-go-name: DeleteAt
-      id:
-        description: The id for this category
-        type: string
-        x-go-name: ID
-      name:
-        description: The name for this category
-        type: string
-        x-go-name: Name
-      teamID:
-        description: The team id for this category
-        type: string
-        x-go-name: TeamID
-      updateAt:
-        description: The last modified time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-      userID:
-        description: The user's id for this category
-        type: string
-        x-go-name: UserID
-    required:
-    - id
-    - name
-    - userID
-    - teamID
-    - createAt
-    - updateAt
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  CategoryBoards:
-    description: CategoryBoards is a board category and associated boards
-    properties:
-      boardIDs:
-        description: The IDs of boards in this category
-        items:
-          type: string
-        type: array
-        x-go-name: BoardIDs
-      createAt:
-        description: The creation time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      deleteAt:
-        description: The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
-        format: int64
-        type: integer
-        x-go-name: DeleteAt
-      id:
-        description: The id for this category
-        type: string
-        x-go-name: ID
-      name:
-        description: The name for this category
-        type: string
-        x-go-name: Name
-      teamID:
-        description: The team id for this category
-        type: string
-        x-go-name: TeamID
-      updateAt:
-        description: The last modified time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-      userID:
-        description: The user's id for this category
-        type: string
-        x-go-name: UserID
-    required:
-    - id
-    - name
-    - userID
-    - teamID
-    - createAt
-    - updateAt
-    - boardIDs
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  ChangePasswordRequest:
-    description: ChangePasswordRequest is a user password change request
-    properties:
-      newPassword:
-        description: New password
-        type: string
-        x-go-name: NewPassword
-      oldPassword:
-        description: Old password
-        type: string
-        x-go-name: OldPassword
-    required:
-    - oldPassword
-    - newPassword
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/api
-  ClientConfig:
-    description: ClientConfig is the client configuration
-    properties:
-      enablePublicSharedBoards:
-        description: Is public shared boards enabled
-        type: boolean
-        x-go-name: EnablePublicSharedBoards
-      featureFlags:
-        additionalProperties:
-          type: string
-        description: The server feature flags
-        type: object
-        x-go-name: FeatureFlags
-      telemetry:
-        description: Is telemetry enabled
-        type: boolean
-        x-go-name: Telemetry
-      telemetryid:
-        description: The telemetry ID
-        type: string
-        x-go-name: TelemetryID
-    required:
-    - telemetry
-    - telemetryid
-    - enablePublicSharedBoards
-    - featureFlags
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  DeleteBoardsAndBlocks:
-    description: |-
-      DeleteBoardsAndBlocks is used to list the boards and blocks to
-      delete on a request
-    properties:
-      blocks:
-        description: The blocks
-        items:
-          type: string
-        type: array
-        x-go-name: Blocks
-      boards:
-        description: The boards
-        items:
-          type: string
-        type: array
-        x-go-name: Boards
-    required:
-    - boards
-    - blocks
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  ErrorResponse:
-    description: ErrorResponse is an error response
-    properties:
-      error:
-        description: The error message
-        type: string
-        x-go-name: Error
-      errorCode:
-        description: The error code
-        format: int64
-        type: integer
-        x-go-name: ErrorCode
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  Preference:
-    description: Preference represents a single user preference. A user can have multiple preferences.
-    properties:
-      user_id:
-        description: The associated user's ID
-        type: string
-        x-go-name: UserId
-      Category:
-        description: The category of preference. Its always "Focalboard" for this project
-        type: string
-        x-go-name: Category
-      Name:
-        description: Preference's name
-        type: string
-        x-go-name: Name
-      value:
-        description: Preference's value
-        type: string
-        x-go-name: Value
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  FileUploadResponse:
-    description: FileUploadResponse is the response to a file upload
-    properties:
-      fileId:
-        description: The FileID to retrieve the uploaded file
-        type: string
-        x-go-name: FileID
-    required:
-    - fileId
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/api
-  LoginRequest:
-    description: LoginRequest is a login request
-    properties:
-      email:
-        description: If specified, login using email
-        type: string
-        x-go-name: Email
-      password:
-        description: Password
-        type: string
-        x-go-name: Password
-      type:
-        description: Type of login, currently must be set to "normal"
-        type: string
-        x-go-name: Type
-      username:
-        description: If specified, login using username
-        type: string
-        x-go-name: Username
-    required:
-    - type
-    - password
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/api
-  LoginResponse:
-    description: LoginResponse is a login response
-    properties:
-      token:
-        description: Session token
-        type: string
-        x-go-name: Token
-    required:
-    - token
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/api
-  NotificationHint:
-    description: |-
-      NotificationHint provides a hint that a block has been modified and has subscribers that
-      should be notified.
-    properties:
-      block_id:
-        description: BlockID is id of the entity that was updated
-        type: string
-        x-go-name: BlockID
-      block_type:
-        $ref: '#/definitions/BlockType'
-      create_at:
-        description: CreatedAt is the timestamp this notification hint was created in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      modified_by_id:
-        description: ModifiedByID is the id of the user who made the block change
-        type: string
-        x-go-name: ModifiedByID
-      notify_at:
-        description: NotifyAt is the timestamp this notification should be scheduled in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: NotifyAt
-    required:
-    - block_type
-    - block_id
-    - create_at
-    - notify_at
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  PatchBoardsAndBlocks:
-    description: |-
-      PatchBoardsAndBlocks is used to patch multiple boards and blocks on
-      a single request
-    properties:
-      blockIDs:
-        description: The block IDs to patch
-        items:
-          type: string
-        type: array
-        x-go-name: BlockIDs
-      blockPatches:
-        description: The block patches
-        items:
-          $ref: '#/definitions/BlockPatch'
-        type: array
-        x-go-name: BlockPatches
-      boardIDs:
-        description: The board IDs to patch
-        items:
-          type: string
-        type: array
-        x-go-name: BoardIDs
-      boardPatches:
-        description: The board patches
-        items:
-          $ref: '#/definitions/BoardPatch'
-        type: array
-        x-go-name: BoardPatches
-    required:
-    - boardIDs
-    - boardPatches
-    - blockIDs
-    - blockPatches
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  RegisterRequest:
-    description: RegisterRequest is a user registration request
-    properties:
-      email:
-        description: User's email
-        type: string
-        x-go-name: Email
-      password:
-        description: Password
-        type: string
-        x-go-name: Password
-      token:
-        description: Registration authorization token
-        type: string
-        x-go-name: Token
-      username:
-        description: User name
-        type: string
-        x-go-name: Username
-    required:
-    - username
-    - email
-    - password
-    - token
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/api
-  Sharing:
-    description: Sharing is sharing information for a root block
-    properties:
-      enabled:
-        description: Is sharing enabled
-        type: boolean
-        x-go-name: Enabled
-      id:
-        description: ID of the root block
-        type: string
-        x-go-name: ID
-      modifiedBy:
-        description: ID of the user who last modified this
-        type: string
-        x-go-name: ModifiedBy
-      token:
-        description: Access token
-        type: string
-        x-go-name: Token
-      update_at:
-        description: Updated time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-    required:
-    - id
-    - enabled
-    - token
-    - modifiedBy
-    - update_at
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  Subscriber:
-    description: Subscriber is an entity (e.g. user, channel) that can subscribe to events from boards, cards, etc
-    properties:
-      notified_at:
-        description: NotifiedAt is the timestamp this subscriber was last notified
-        format: int64
-        type: integer
-        x-go-name: NotifiedAt
-      subscriber_id:
-        description: SubscriberID is the id of the entity that is subscribing
-        type: string
-        x-go-name: SubscriberID
-      subscriber_type:
-        $ref: '#/definitions/SubscriberType'
-    required:
-    - subscriber_type
-    - subscriber_id
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  SubscriberType:
-    type: string
-    x-go-package: github.com/mattermost/focalboard/server/model
-  Subscription:
-    properties:
-      blockId:
-        description: BlockID is id of the entity being subscribed to
-        type: string
-        x-go-name: BlockID
-      blockType:
-        $ref: '#/definitions/BlockType'
-      createAt:
-        description: CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      deleteAt:
-        description: DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted
-        format: int64
-        type: integer
-        x-go-name: DeleteAt
-      notifiedAt:
-        description: NotifiedAt is the timestamp of the last notification sent for this subscription
-        format: int64
-        type: integer
-        x-go-name: NotifiedAt
-      subscriberId:
-        description: SubscriberID is the id of the entity that is subscribing
-        type: string
-        x-go-name: SubscriberID
-      subscriberType:
-        $ref: '#/definitions/SubscriberType'
-    required:
-    - blockType
-    - blockId
-    - subscriberType
-    - subscriberId
-    - notifiedAt
-    - createAt
-    - deleteAt
-    title: Subscription is a subscription to a board, card, etc, for a user or channel.
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  Team:
-    description: Team is information global to a team
-    properties:
-      id:
-        description: ID of the team
-        type: string
-        x-go-name: ID
-      modifiedBy:
-        description: ID of user who last modified this
-        type: string
-        x-go-name: ModifiedBy
-      settings:
-        additionalProperties:
-          type: object
-        description: Team settings
-        type: object
-        x-go-name: Settings
-      signupToken:
-        description: Token required to register new users
-        type: string
-        x-go-name: SignupToken
-      title:
-        description: Title of the team
-        type: string
-        x-go-name: Title
-      updateAt:
-        description: Updated time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-    required:
-    - id
-    - signupToken
-    - modifiedBy
-    - updateAt
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  User:
-    description: User is a user
-    properties:
-      create_at:
-        description: Created time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: CreateAt
-      delete_at:
-        description: Deleted time in miliseconds since the current epoch, set to indicate user is deleted
-        format: int64
-        type: integer
-        x-go-name: DeleteAt
-      id:
-        description: The user ID
-        type: string
-        x-go-name: ID
-      is_bot:
-        description: If the user is a bot or not
-        type: boolean
-        x-go-name: IsBot
-      is_guest:
-        description: If the user is a guest or not
-        type: boolean
-        x-go-name: IsGuest
-      props:
-        additionalProperties:
-          type: object
-        description: User settings
-        type: object
-        x-go-name: Props
-      update_at:
-        description: Updated time in miliseconds since the current epoch
-        format: int64
-        type: integer
-        x-go-name: UpdateAt
-      username:
-        description: The user name
-        type: string
-        x-go-name: Username
-    required:
-    - id
-    - username
-    - props
-    - create_at
-    - update_at
-    - delete_at
-    - is_bot
-    - is_guest
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
-  UserPropPatch:
-    description: UserPropPatch is a user property patch
-    properties:
-      deletedFields:
-        description: The user prop removed fields
-        items:
-          type: string
-        type: array
-        x-go-name: DeletedFields
-      updatedFields:
-        additionalProperties:
-          type: string
-        description: The user prop updated fields
-        type: object
-        x-go-name: UpdatedFields
-    type: object
-    x-go-package: github.com/mattermost/focalboard/server/model
+    Block:
+        description: Block is the basic data unit
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BlockPatch:
+        description: BlockPatch is a patch for modify blocks
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BlockPatchBatch:
+        description: BlockPatchBatch is a batch of IDs and patches for modify blocks
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Board:
+        description: Board groups a set of blocks and its layout
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardInsight:
+        description: BoardInsight gives insight into activities in a Board
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardMember:
+        description: BoardMember stores the information of the membership of a user on a board
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardMemberHistoryEntry:
+        description: BoardMemberHistoryEntry stores the information of the membership of a user on a board
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardMetadata:
+        description: BoardMetadata contains metadata for a Board
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardPatch:
+        description: BoardPatch is a patch for modify boards
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardsAndBlocks:
+        description: |-
+            BoardsAndBlocks is used to operate over boards and blocks at the
+            same time
+        x-go-package: github.com/mattermost/focalboard/server/model
+    BoardsCloudLimits:
+        description: |-
+            BoardsCloudLimits is the representation of the limits for the
+            Boards server
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Category:
+        description: Category is a board category
+        x-go-package: github.com/mattermost/focalboard/server/model
+    CategoryBoards:
+        description: CategoryBoards is a board category and associated boards
+        x-go-package: github.com/mattermost/focalboard/server/model
+    ChangePasswordRequest:
+        description: ChangePasswordRequest is a user password change request
+        x-go-package: github.com/mattermost/focalboard/server/model
+    ClientConfig:
+        description: ClientConfig is the client configuration
+        x-go-package: github.com/mattermost/focalboard/server/model
+    DeleteBoardsAndBlocks:
+        description: |-
+            DeleteBoardsAndBlocks is used to list the boards and blocks to
+            delete on a request
+        x-go-package: github.com/mattermost/focalboard/server/model
+    ErrorResponse:
+        description: ErrorResponse is an error response
+        x-go-package: github.com/mattermost/focalboard/server/model
+    FileUploadResponse:
+        description: FileUploadResponse is the response to a file upload
+        x-go-package: github.com/mattermost/focalboard/server/api
+    LoginRequest:
+        description: LoginRequest is a login request
+        x-go-package: github.com/mattermost/focalboard/server/model
+    LoginResponse:
+        description: LoginResponse is a login response
+        x-go-package: github.com/mattermost/focalboard/server/model
+    NotificationHint:
+        description: |-
+            NotificationHint provides a hint that a block has been modified and has subscribers that
+            should be notified.
+        x-go-package: github.com/mattermost/focalboard/server/model
+    PatchBoardsAndBlocks:
+        description: |-
+            PatchBoardsAndBlocks is used to patch multiple boards and blocks on
+            a single request
+        x-go-package: github.com/mattermost/focalboard/server/model
+    RegisterRequest:
+        description: RegisterRequest is a user registration request
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Sharing:
+        description: Sharing is sharing information for a root block
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Subscriber:
+        description: Subscriber is an entity (e.g. user, channel) that can subscribe to events from boards, cards, etc
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Subscription:
+        title: Subscription is a subscription to a board, card, etc, for a user or channel.
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Team:
+        description: Team is information global to a team
+        x-go-package: github.com/mattermost/focalboard/server/model
+    User:
+        description: User is a user
+        x-go-package: github.com/mattermost/focalboard/server/model
+    UserPropPatch:
+        description: UserPropPatch is a user property patch
+        x-go-package: github.com/mattermost/focalboard/server/model
 host: localhost
 info:
-  contact:
-    email: api@focalboard.com
-    name: Focalboard
-    url: https://www.focalboard.com
-  description: Focalboard Server
-  license:
-    name: Custom
-    url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
-  title: Focalboard Server
-  version: 1.0.0
+    contact:
+        email: api@focalboard.com
+        name: Focalboard
+        url: https://www.focalboard.com
+    description: Focalboard Server
+    license:
+        name: Custom
+        url: https://github.com/mattermost/focalboard/blob/main/LICENSE.txt
+    title: Focalboard Server
+    version: 2.0.0
 paths:
-  /boards:
-    post:
-      description: Creates a new board
-      operationId: createBoard
-      parameters:
-      - description: the board to create
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/Board'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Board'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards-and-blocks:
-    delete:
-      description: Deletes boards and blocks
-      operationId: deleteBoardsAndBlocks
-      parameters:
-      - description: the boards and blocks to delete
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/DeleteBoardsAndBlocks'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    patch:
-      description: Patches a set of related boards and blocks
-      operationId: patchBoardsAndBlocks
-      parameters:
-      - description: the patches for the boards and blocks
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/PatchBoardsAndBlocks'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardsAndBlocks'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: Creates new boards and blocks
-      operationId: insertBoardsAndBlocks
-      parameters:
-      - description: the boards and blocks to create
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/BoardsAndBlocks'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardsAndBlocks'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}:
-    delete:
-      description: Removes a board
-      operationId: deleteBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    get:
-      description: Returns a board
-      operationId: getBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Board'
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    patch:
-      description: Partially updates a board
-      operationId: patchBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: board patch to apply
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/BoardPatch'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Board'
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/archive/export:
-    get:
-      operationId: archiveExportBoard
-      parameters:
-      - description: Id of board to export
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Exports an archive of all blocks for one boards.
-  /boards/{boardID}/blocks:
-    get:
-      description: Returns blocks
-      operationId: getBlocks
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: ID of parent block, omit to specify all blocks
-        in: query
-        name: parent_id
-        type: string
-      - description: Type of blocks to return, omit to specify all types
-        in: query
-        name: type
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Block'
-            type: array
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: |-
-        Insert blocks. The specified IDs will only be used to link
-        blocks with existing ones, the rest will be replaced by server
-        generated IDs
-      operationId: updateBlocks
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: array of blocks to insert or update
-        in: body
-        name: Body
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/Block'
-          type: array
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Block'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/blocks/:
-    patch:
-      description: Partially updates batch of blocks
-      operationId: patchBlocks
-      parameters:
-      - description: Workspace ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: block Ids and block patches to apply
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/BlockPatchBatch'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/blocks/{blockID}:
-    delete:
-      description: Deletes a block
-      operationId: deleteBlock
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: ID of block to delete
-        in: path
-        name: blockID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "404":
-          description: block not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    patch:
-      description: Partially updates a block
-      operationId: patchBlock
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: ID of block to patch
-        in: path
-        name: blockID
-        required: true
-        type: string
-      - description: block patch to apply
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/BlockPatch'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "404":
-          description: block not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/blocks/{blockID}/duplicate:
-    post:
-      description: Returns the new created blocks
-      operationId: duplicateBlock
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: Block ID
-        in: path
-        name: blockID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Block'
-            type: array
-        "404":
-          description: board or block not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/blocks/{blockID}/undelete:
-    post:
-      description: Undeletes a block
-      operationId: undeleteBlock
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: ID of block to undelete
-        in: path
-        name: blockID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BlockPatch'
-        "404":
-          description: block not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/duplicate:
-    post:
-      description: Returns the new created board and all the blocks
-      operationId: duplicateBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardsAndBlocks'
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/join:
-    post:
-      description: Become a member of a board
-      operationId: joinBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardMember'
-        "403":
-          description: access denied
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/leave:
-    post:
-      description: Remove your own membership from a board
-      operationId: leaveBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "403":
-          description: access denied
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/members:
-    get:
-      description: Returns the members of the board
-      operationId: getMembersForBoard
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/BoardMember'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: Adds a new member to a board
-      operationId: addMember
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: membership to replace the current one with
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/BoardMember'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardMember'
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/members/{userID}:
-    delete:
-      description: Deletes a member from a board
-      operationId: deleteMember
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    put:
-      description: Updates a board member
-      operationId: updateMember
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
-      - description: membership to replace the current one with
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/BoardMember'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardMember'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/metadata:
-    get:
-      description: Returns a board's metadata
-      operationId: getBoardMetadata
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/BoardMetadata'
-        "404":
-          description: board not found
-        "501":
-          description: required license not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/sharing:
-    get:
-      description: Returns sharing information for a board
-      operationId: getSharing
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Sharing'
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: Sets sharing information for a board
-      operationId: postSharing
-      parameters:
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: sharing information for a root block
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/Sharing'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /boards/{boardID}/undelete:
-    post:
-      description: Undeletes a board
-      operationId: undeleteBoard
-      parameters:
-      - description: ID of board to undelete
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /clientConfig:
-    get:
-      description: Returns the client configuration
-      operationId: getClientConfig
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/ClientConfig'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-  /login:
-    post:
-      description: Login user
-      operationId: login
-      parameters:
-      - description: Login request
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/LoginRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/LoginResponse'
-        "401":
-          description: invalid login
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        "500":
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-  /logout:
-    post:
-      description: Logout user
-      operationId: logout
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "500":
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /register:
-    post:
-      description: Register new user
-      operationId: register
-      parameters:
-      - description: Register request
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/RegisterRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "401":
-          description: invalid registration token
-        "500":
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-  /subscriptions:
-    post:
-      operationId: createSubscription
-      parameters:
-      - description: subscription definition
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/Subscription'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/User'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Creates a subscription to a block for a user. The user will receive change notifications for the block.
-  /subscriptions/{blockID}/{subscriberID}:
-    delete:
-      operationId: deleteSubscription
-      parameters:
-      - description: Block ID
-        in: path
-        name: blockID
-        required: true
-        type: string
-      - description: Subscriber ID
-        in: path
-        name: subscriberID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Deletes a subscription a user has for a a block. The user will no longer receive change notifications for the block.
-  /subscriptions/{subscriberID}:
-    get:
-      operationId: getSubscriptions
-      parameters:
-      - description: Subscriber ID
-        in: path
-        name: subscriberID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/User'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Gets subscriptions for a user.
-  /team/{teamID}/onboard:
-    post:
-      operationId: onboard
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            properties:
-              boardID:
-                description: Board ID
-                type: string
-              teamID:
-                description: Team ID
-                type: string
-            type: object
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Onboards a user on Boards.
-  /teams:
-    get:
-      description: Returns information of all the teams
-      operationId: getTeams
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Team'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}:
-    get:
-      description: Returns information of the root team
-      operationId: getTeam
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Team'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/archive/export:
-    get:
-      operationId: archiveExportTeam
-      parameters:
-      - description: Id of team
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Exports an archive of all blocks for all the boards in a team.
-  /teams/{teamID}/archive/import:
-    post:
-      consumes:
-      - multipart/form-data
-      operationId: archiveImport
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: archive file to import
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-      summary: Import an archive of boards.
-  /teams/{teamID}/boards:
-    get:
-      description: Returns team boards
-      operationId: getBoards
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Board'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/boards/{boardID}/files:
-    post:
-      consumes:
-      - multipart/form-data
-      description: Upload a binary file, attached to a root block
-      operationId: uploadFile
-      parameters:
-      - description: ID of the team
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      - description: The file to upload
-        in: formData
-        name: uploaded file
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/FileUploadResponse'
-        "404":
-          description: board not found
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/boards/search:
-    get:
-      description: Returns the boards that match with a search term
-      operationId: searchBoards
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: The search term. Must have at least one character
-        in: query
-        name: q
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Board'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/categories:
-    get:
-      description: Gets the user's board categories
-      operationId: getUserCategoryBoards
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/CategoryBoards'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    post:
-      description: Create a category for boards
-      operationId: createCategory
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: category to create
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/Category'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Category'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/categories/{categoryID}:
-    delete:
-      description: Delete a category
-      operationId: deleteCategory
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: Category ID
-        in: path
-        name: categoryID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-    put:
-      description: Create a category for boards
-      operationId: updateCategory
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: Category ID
-        in: path
-        name: categoryID
-        required: true
-        type: string
-      - description: category to update
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/Category'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/Category'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/categories/{categoryID}/boards/{boardID}:
-    post:
-      description: Set the category of a board
-      operationId: updateCategoryBoard
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: Category ID
-        in: path
-        name: categoryID
-        required: true
-        type: string
-      - description: Board ID
-        in: path
-        name: boardID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/regenerate_signup_token:
-    post:
-      description: Regenerates the signup token for the root team
-      operationId: regenerateSignupToken
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/templates:
-    get:
-      description: Returns team templates
-      operationId: getTemplates
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/Board'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /teams/{teamID}/users:
-    get:
-      description: Returns team users
-      operationId: getTeamUsers
-      parameters:
-      - description: Team ID
-        in: path
-        name: teamID
-        required: true
-        type: string
-      - description: string to filter users list
-        in: query
-        name: search
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/User'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /users/{userID}:
-    get:
-      description: Returns a user
-      operationId: getUser
-      parameters:
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/User'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /users/{userID}/changepassword:
-    post:
-      description: Change a user's password
-      operationId: changePassword
-      parameters:
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
-      - description: Change password request
-        in: body
-        name: body
-        required: true
-        schema:
-          $ref: '#/definitions/ChangePasswordRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        "400":
-          description: invalid request
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-        "500":
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /users/{userID}/config:
-    patch:
-      description: Updates user config
-      operationId: updateUserConfig
-      parameters:
-      - description: User ID
-        in: path
-        name: userID
-        required: true
-        type: string
-      - description: User config patch to apply
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/UserPropPatch'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /users/me:
-    get:
-      description: Returns the currently logged-in user
-      operationId: getMe
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            $ref: '#/definitions/User'
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
-  /users/me/memberships:
-    get:
-      description: Returns the currently users board memberships
-      operationId: getMyMemberships
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: success
-          schema:
-            items:
-              $ref: '#/definitions/BoardMember'
-            type: array
-        default:
-          description: internal error
-          schema:
-            $ref: '#/definitions/ErrorResponse'
-      security:
-      - BearerAuth: []
+    /api/v2/teams/{teamID}/notifyadminupgrade:
+        get:
+            operationId: handleNotifyAdminUpgrade
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Notifies admins for upgrade request.
+    /boards:
+        post:
+            description: Creates a new board
+            operationId: createBoard
+            parameters:
+                - description: the board to create
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Board'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Board'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards-and-blocks:
+        delete:
+            description: Deletes boards and blocks
+            operationId: deleteBoardsAndBlocks
+            parameters:
+                - description: the boards and blocks to delete
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/DeleteBoardsAndBlocks'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        patch:
+            description: Patches a set of related boards and blocks
+            operationId: patchBoardsAndBlocks
+            parameters:
+                - description: the patches for the boards and blocks
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/PatchBoardsAndBlocks'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardsAndBlocks'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        post:
+            description: Creates new boards and blocks
+            operationId: insertBoardsAndBlocks
+            parameters:
+                - description: the boards and blocks to create
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BoardsAndBlocks'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardsAndBlocks'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}:
+        delete:
+            description: Removes a board
+            operationId: deleteBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        get:
+            description: Returns a board
+            operationId: getBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Board'
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        patch:
+            description: Partially updates a board
+            operationId: patchBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: board patch to apply
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BoardPatch'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Board'
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/archive/export:
+        get:
+            operationId: archiveExportBoard
+            parameters:
+                - description: Id of board to export
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Exports an archive of all blocks for one boards.
+    /boards/{boardID}/blocks:
+        get:
+            description: Returns blocks
+            operationId: getBlocks
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: ID of parent block, omit to specify all blocks
+                  in: query
+                  name: parent_id
+                  type: string
+                - description: Type of blocks to return, omit to specify all types
+                  in: query
+                  name: type
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Block'
+                        type: array
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        post:
+            description: |-
+                Insert blocks. The specified IDs will only be used to link
+                blocks with existing ones, the rest will be replaced by server
+                generated IDs
+            operationId: updateBlocks
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: Disables notifications (for bulk inserting)
+                  in: query
+                  name: disable_notify
+                  type: bool
+                - description: array of blocks to insert or update
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    items:
+                        $ref: '#/definitions/Block'
+                    type: array
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Block'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/blocks/:
+        patch:
+            description: Partially updates batch of blocks
+            operationId: patchBlocks
+            parameters:
+                - description: Workspace ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: Disables notifications (for bulk patching)
+                  in: query
+                  name: disable_notify
+                  type: bool
+                - description: block Ids and block patches to apply
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BlockPatchBatch'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/blocks/{blockID}:
+        delete:
+            description: Deletes a block
+            operationId: deleteBlock
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: ID of block to delete
+                  in: path
+                  name: blockID
+                  required: true
+                  type: string
+                - description: Disables notifications (for bulk deletion)
+                  in: query
+                  name: disable_notify
+                  type: bool
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "404":
+                    description: block not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        patch:
+            description: Partially updates a block
+            operationId: patchBlock
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: ID of block to patch
+                  in: path
+                  name: blockID
+                  required: true
+                  type: string
+                - description: Disables notifications (for bulk patching)
+                  in: query
+                  name: disable_notify
+                  type: bool
+                - description: block patch to apply
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BlockPatch'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "404":
+                    description: block not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/blocks/{blockID}/duplicate:
+        post:
+            description: Returns the new created blocks
+            operationId: duplicateBlock
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: Block ID
+                  in: path
+                  name: blockID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Block'
+                        type: array
+                "404":
+                    description: board or block not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/blocks/{blockID}/undelete:
+        post:
+            description: Undeletes a block
+            operationId: undeleteBlock
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: ID of block to undelete
+                  in: path
+                  name: blockID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BlockPatch'
+                "404":
+                    description: block not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/duplicate:
+        post:
+            description: Returns the new created board and all the blocks
+            operationId: duplicateBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardsAndBlocks'
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/join:
+        post:
+            description: Become a member of a board
+            operationId: joinBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardMember'
+                "403":
+                    description: access denied
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/leave:
+        post:
+            description: Remove your own membership from a board
+            operationId: leaveBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "403":
+                    description: access denied
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/members:
+        get:
+            description: Returns the members of the board
+            operationId: getMembersForBoard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/BoardMember'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        post:
+            description: Adds a new member to a board
+            operationId: addMember
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: membership to replace the current one with
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BoardMember'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardMember'
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/members/{userID}:
+        delete:
+            description: Deletes a member from a board
+            operationId: deleteMember
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: User ID
+                  in: path
+                  name: userID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        put:
+            description: Updates a board member
+            operationId: updateMember
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: User ID
+                  in: path
+                  name: userID
+                  required: true
+                  type: string
+                - description: membership to replace the current one with
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BoardMember'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardMember'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/metadata:
+        get:
+            description: Returns a board's metadata
+            operationId: getBoardMetadata
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardMetadata'
+                "404":
+                    description: board not found
+                "501":
+                    description: required license not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/sharing:
+        get:
+            description: Returns sharing information for a board
+            operationId: getSharing
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Sharing'
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        post:
+            description: Sets sharing information for a board
+            operationId: postSharing
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: sharing information for a root block
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Sharing'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/{boardID}/undelete:
+        post:
+            description: Undeletes a board
+            operationId: undeleteBoard
+            parameters:
+                - description: ID of board to undelete
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /boards/search:
+        get:
+            description: Returns the boards that match with a search term
+            operationId: searchAllBoards
+            parameters:
+                - description: The search term. Must have at least one character
+                  in: query
+                  name: q
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Board'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /clientConfig:
+        get:
+            description: Returns the client configuration
+            operationId: getClientConfig
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/ClientConfig'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+    /files/teams/{teamID}/{boardID}/{filename}:
+        get:
+            description: Returns the contents of an uploaded file
+            operationId: getFile
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: name of the file
+                  in: path
+                  name: filename
+                  required: true
+                  type: string
+            produces:
+                - application/json
+                - image/jpg
+                - image/png
+                - image/gif
+            responses:
+                "200":
+                    description: success
+                "404":
+                    description: file not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /hello:
+        get:
+            operationId: hello
+            produces:
+                - text/plain
+            responses:
+                "200":
+                    description: success
+            summary: Responds with `Hello` if the web service is running.
+    /limits:
+        get:
+            operationId: cloudLimits
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardsCloudLimits'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Fetches the cloud limits of the server.
+    /login:
+        post:
+            description: Login user
+            operationId: login
+            parameters:
+                - description: Login request
+                  in: body
+                  name: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/LoginRequest'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/LoginResponse'
+                "401":
+                    description: invalid login
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+                "500":
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+    /logout:
+        post:
+            description: Logout user
+            operationId: logout
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "500":
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /register:
+        post:
+            description: Register new user
+            operationId: register
+            parameters:
+                - description: Register request
+                  in: body
+                  name: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/RegisterRequest'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "401":
+                    description: invalid registration token
+                "500":
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+    /subscriptions:
+        post:
+            operationId: createSubscription
+            parameters:
+                - description: subscription definition
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Subscription'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/User'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Creates a subscription to a block for a user. The user will receive change notifications for the block.
+    /subscriptions/{blockID}/{subscriberID}:
+        delete:
+            operationId: deleteSubscription
+            parameters:
+                - description: Block ID
+                  in: path
+                  name: blockID
+                  required: true
+                  type: string
+                - description: Subscriber ID
+                  in: path
+                  name: subscriberID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Deletes a subscription a user has for a a block. The user will no longer receive change notifications for the block.
+    /subscriptions/{subscriberID}:
+        get:
+            operationId: getSubscriptions
+            parameters:
+                - description: Subscriber ID
+                  in: path
+                  name: subscriberID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/User'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Gets subscriptions for a user.
+    /team/{teamID}/onboard:
+        post:
+            operationId: onboard
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        properties:
+                            boardID:
+                                description: Board ID
+                                type: string
+                            teamID:
+                                description: Team ID
+                                type: string
+                        type: object
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Onboards a user on Boards.
+    /teams:
+        get:
+            description: Returns information of all the teams
+            operationId: getTeams
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Team'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}:
+        get:
+            description: Returns information of the root team
+            operationId: getTeam
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Team'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/archive/export:
+        get:
+            operationId: archiveExportTeam
+            parameters:
+                - description: Id of team
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Exports an archive of all blocks for all the boards in a team.
+    /teams/{teamID}/archive/import:
+        post:
+            consumes:
+                - multipart/form-data
+            operationId: archiveImport
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: archive file to import
+                  in: formData
+                  name: file
+                  required: true
+                  type: file
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Import an archive of boards.
+    /teams/{teamID}/boards:
+        get:
+            description: Returns team boards
+            operationId: getBoards
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Board'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/boards/{boardID}/files:
+        post:
+            consumes:
+                - multipart/form-data
+            description: Upload a binary file, attached to a root block
+            operationId: uploadFile
+            parameters:
+                - description: ID of the team
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: The file to upload
+                  in: formData
+                  name: uploaded file
+                  type: file
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/FileUploadResponse'
+                "404":
+                    description: board not found
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/boards/insights:
+        get:
+            description: Returns team boards insights
+            operationId: handleTeamBoardsInsights
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: duration of data to calculate insights for
+                  in: query
+                  name: time_range
+                  required: true
+                  type: string
+                - description: page offset for top boards
+                  in: query
+                  name: page
+                  required: true
+                  type: string
+                - description: limit for boards in a page.
+                  in: query
+                  name: per_page
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/BoardInsight'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/boards/search:
+        get:
+            description: Returns the boards that match with a search term in the team
+            operationId: searchBoards
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: The search term. Must have at least one character
+                  in: query
+                  name: q
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Board'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/boards/search/linkable:
+        get:
+            description: |-
+                Returns the boards that match with a search term in the team and the
+                user has permission to manage members
+            operationId: searchLinkableBoards
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: The search term. Must have at least one character
+                  in: query
+                  name: q
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Board'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/categories:
+        get:
+            description: Gets the user's board categories
+            operationId: getUserCategoryBoards
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/CategoryBoards'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        post:
+            description: Create a category for boards
+            operationId: createCategory
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: category to create
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Category'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Category'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/categories/{categoryID}:
+        delete:
+            description: Delete a category
+            operationId: deleteCategory
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: Category ID
+                  in: path
+                  name: categoryID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+        put:
+            description: Create a category for boards
+            operationId: updateCategory
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: Category ID
+                  in: path
+                  name: categoryID
+                  required: true
+                  type: string
+                - description: category to update
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Category'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Category'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/categories/{categoryID}/boards/{boardID}:
+        post:
+            description: Set the category of a board
+            operationId: updateCategoryBoard
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: Category ID
+                  in: path
+                  name: categoryID
+                  required: true
+                  type: string
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/channels:
+        get:
+            description: Returns the user available channels
+            operationId: searchMyChannels
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: string to filter channels list
+                  in: query
+                  name: search
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Channel'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/channels/{channelID}:
+        get:
+            description: Returns the requested channel
+            operationId: getChannel
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: Channel ID
+                  in: path
+                  name: channelID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Channel'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/regenerate_signup_token:
+        post:
+            description: Regenerates the signup token for the root team
+            operationId: regenerateSignupToken
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/templates:
+        get:
+            description: Returns team templates
+            operationId: getTemplates
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Board'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /teams/{teamID}/users:
+        get:
+            description: Returns team users
+            operationId: getTeamUsers
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: string to filter users list
+                  in: query
+                  name: search
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/User'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users:
+        post:
+            description: Returns a user[]
+            operationId: getUsersList
+            parameters:
+                - description: User ID
+                  in: path
+                  name: userID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/User'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/{userID}:
+        get:
+            description: Returns a user
+            operationId: getUser
+            parameters:
+                - description: User ID
+                  in: path
+                  name: userID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/User'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/{userID}/changepassword:
+        post:
+            description: Change a user's password
+            operationId: changePassword
+            parameters:
+                - description: User ID
+                  in: path
+                  name: userID
+                  required: true
+                  type: string
+                - description: Change password request
+                  in: body
+                  name: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/ChangePasswordRequest'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                "400":
+                    description: invalid request
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+                "500":
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/{userID}/config:
+        patch:
+            description: Updates user config
+            operationId: updateUserConfig
+            parameters:
+                - description: User ID
+                  in: path
+                  name: userID
+                  required: true
+                  type: string
+                - description: User config patch to apply
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/UserPropPatch'
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/me:
+        get:
+            description: Returns the currently logged-in user
+            operationId: getMe
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/User'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/me/boards/insights:
+        get:
+            description: Returns user boards insights
+            operationId: getUserBoardsInsights
+            parameters:
+                - description: Team ID
+                  in: path
+                  name: teamID
+                  required: true
+                  type: string
+                - description: duration of data to calculate insights for
+                  in: query
+                  name: time_range
+                  required: true
+                  type: string
+                - description: page offset for top boards
+                  in: query
+                  name: page
+                  required: true
+                  type: string
+                - description: limit for boards in a page.
+                  in: query
+                  name: per_page
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/BoardInsight'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/me/config:
+        get:
+            description: Returns an array of user preferences
+            operationId: getUserConfig
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Preferences'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+    /users/me/memberships:
+        get:
+            description: Returns the currently users board memberships
+            operationId: getMyMemberships
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/BoardMember'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
 produces:
-- application/json
+    - application/json
 schemes:
-- http
-- https
+    - http
+    - https
 securityDefinitions:
-  BearerAuth:
-    description: 'Pass session token using Bearer authentication, e.g. set header "Authorization: Bearer <session token>"'
-    in: header
-    name: Authorization
-    type: apiKey
+    BearerAuth:
+        description: 'Pass session token using Bearer authentication, e.g. set header "Authorization: Bearer <session token>"'
+        in: header
+        name: Authorization
+        type: apiKey
 swagger: "2.0"
