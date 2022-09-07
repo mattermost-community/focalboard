@@ -40,6 +40,8 @@ import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 import {Constants} from '../../../webapp/src/constants'
 
+import appBarIcon from '../../../webapp/static/app-bar-icon.png'
+
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSChannelBoards from './components/rhsChannelBoards'
 import RHSChannelBoardsHeader from './components/rhsChannelBoardsHeader'
@@ -318,8 +320,7 @@ export default class Plugin {
             }
 
             if (this.registry.registerAppBarComponent) {
-                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(

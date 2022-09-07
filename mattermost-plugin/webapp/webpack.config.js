@@ -117,7 +117,8 @@ const config = {
                 test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg|gif)$/,
                 type: 'asset/resource',
                 generator: {
-                    filename: 'static/[name].[ext]',
+                    filename: '[name][ext]',
+                    publicPath: TARGET_IS_PRODUCT ? 'http://localhost:9006/static/' : '/static/',
                 }
             },
         ],
@@ -204,6 +205,10 @@ if (NPM_TARGET === 'start:product') {
         port: 9006,
         devMiddleware: {
             writeToDisk: false,
+        },
+        static: {
+            directory: path.join(__dirname, '../../webapp/static'),
+            publicPath: '/static',
         },
     };
 }
