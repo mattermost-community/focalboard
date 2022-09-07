@@ -53,10 +53,10 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 }
 
 func testGetUsersByTeam(t *testing.T, store store.Store) {
-	t.Run("GetTeamUSers", func(t *testing.T) {
+	t.Run("GetTeamUsers", func(t *testing.T) {
 		users, err := store.GetUsersByTeam("team_1", "")
 		require.Equal(t, 0, len(users))
-		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
+		require.NoError(t, err)
 
 		userID := utils.NewID(utils.IDTypeUser)
 
