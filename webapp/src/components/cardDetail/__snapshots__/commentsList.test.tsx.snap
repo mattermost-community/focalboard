@@ -41,12 +41,12 @@ exports[`components/cardDetail/CommentsList comments show up 1`] = `
         />
         <div
           class="octo-tooltip tooltip-top"
-          data-tooltip="December 31, 2020, 6:00 PM"
+          data-tooltip="a long time ago"
         >
           <div
             class="comment-date"
           >
-            2 years ago
+            a long time ago
           </div>
         </div>
         <div
@@ -87,12 +87,12 @@ exports[`components/cardDetail/CommentsList comments show up 1`] = `
         />
         <div
           class="octo-tooltip tooltip-top"
-          data-tooltip="December 31, 2020, 6:00 PM"
+          data-tooltip="a long time ago"
         >
           <div
             class="comment-date"
           >
-            2 years ago
+            a long time ago
           </div>
         </div>
         <div
@@ -145,12 +145,12 @@ exports[`components/cardDetail/CommentsList comments show up in readonly mode 1`
         />
         <div
           class="octo-tooltip tooltip-top"
-          data-tooltip="December 31, 2020, 6:00 PM"
+          data-tooltip="a long time ago"
         >
           <div
             class="comment-date"
           >
-            2 years ago
+            a long time ago
           </div>
         </div>
       </div>
@@ -177,12 +177,12 @@ exports[`components/cardDetail/CommentsList comments show up in readonly mode 1`
         />
         <div
           class="octo-tooltip tooltip-top"
-          data-tooltip="December 31, 2020, 6:00 PM"
+          data-tooltip="a long time ago"
         >
           <div
             class="comment-date"
           >
-            2 years ago
+            a long time ago
           </div>
         </div>
       </div>
