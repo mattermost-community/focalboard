@@ -154,7 +154,7 @@ class CardFilter {
         return result
     }
 
-    static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: readonly IPropertyTemplate[]): { id: string, value?: string } {
+    static propertyThatMeetsFilterClause(filterClause: FilterClause, templates: readonly IPropertyTemplate[]): { id: string; value?: string } {
         const template = templates.find((o) => o.id === filterClause.propertyId)
         if (!template) {
             Utils.assertFailure(`propertyThatMeetsFilterClause. Cannot find template: ${filterClause.propertyId}`)

@@ -9,14 +9,14 @@ import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {UserSettings} from '../../userSettings'
 import {Utils} from '../../utils'
 import {getSidebarCategories} from '../../store/sidebar'
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
 const TeamToBoardAndViewRedirect = (): null => {
     const boardId = useAppSelector(getCurrentBoardId)
     const boardViews = useAppSelector(getCurrentBoardViews)
     const dispatch = useAppDispatch()
     const history = useHistory()
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
+    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string; teamId?: string}>()
     const categories = useAppSelector(getSidebarCategories)
     const boards = useAppSelector(getBoards)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId

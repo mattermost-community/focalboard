@@ -11,7 +11,7 @@ import {
     getCurrentViewGroupBy,
     getCurrentViewId,
     getCurrentViewDisplayBy,
-    getCurrentView
+    getCurrentView,
 } from '../store/views'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
@@ -23,7 +23,7 @@ import {Utils} from '../utils'
 import {IUser} from '../user'
 import propsRegistry from '../properties'
 
-import {getMe, getMyConfig} from "../store/users"
+import {getMe, getMyConfig} from '../store/users'
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
@@ -39,7 +39,7 @@ type Props = {
 
 function CenterContent(props: Props) {
     const isLoading = useAppSelector(isLoadingBoard)
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, channelId?: string}>()
+    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string; channelId?: string}>()
     const board = useAppSelector(getCurrentBoard)
     const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)

@@ -12,7 +12,7 @@ import {Utils} from '../../utils'
 import './shareBoardLoginButton.scss'
 
 const ShareBoardLoginButton = () => {
-    const match = useRouteMatch<{teamId: string, boardId: string, viewId?: string, cardId?: string}>()
+    const match = useRouteMatch<{teamId: string; boardId: string; viewId?: string; cardId?: string}>()
     const history = useHistory()
 
     let redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
@@ -28,7 +28,6 @@ const ShareBoardLoginButton = () => {
         } else {
             history.push(loginPath)
         }
-
     }, [])
 
     return (

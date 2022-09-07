@@ -4,9 +4,8 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {BlockTypes} from '../blocks/block'
+import {BlockTypes, Block} from '../blocks/block'
 import {Card} from '../blocks/card'
-import {Block} from '../blocks/block'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
@@ -17,10 +16,10 @@ import {contentRegistry} from './content/contentRegistry'
 type Props = {
     type: BlockTypes
     card: Card
-    cords: {x: number, y?: number, z?: number}
+    cords: {x: number; y?: number; z?: number}
 }
 
-const AddContentMenuItem = (props:Props): JSX.Element => {
+const AddContentMenuItem = (props: Props): JSX.Element => {
     const {card, type, cords} = props
     const index = cords.x
     const intl = useIntl()

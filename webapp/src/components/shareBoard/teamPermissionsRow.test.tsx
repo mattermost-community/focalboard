@@ -127,8 +127,8 @@ describe('src/components/shareBoard/teamPermissionsRow', () => {
                 boards: {},
                 templates: {
                     [board.id]: {...board, isTemplate: true},
-                }
-            }
+                },
+            },
         }
         const store = mockStateStore([thunk], testState)
         await act(async () => {

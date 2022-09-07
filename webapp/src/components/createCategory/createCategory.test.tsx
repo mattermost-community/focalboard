@@ -3,23 +3,23 @@
 
 import React from 'react'
 
-import {render} from "@testing-library/react"
+import {render} from '@testing-library/react'
 
-import userEvent from "@testing-library/user-event"
+import userEvent from '@testing-library/user-event'
 
-import thunk from "redux-thunk"
+import thunk from 'redux-thunk'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {mocked} from "jest-mock"
+import {mocked} from 'jest-mock'
 
-import {mockStateStore, wrapIntl} from "../../testUtils"
+import {mockStateStore, wrapIntl} from '../../testUtils'
 
-import {IUser} from "../../user"
+import {IUser} from '../../user'
 
-import mutator from "../../mutator"
+import mutator from '../../mutator'
 
-import CreateCategory from "./createCategory"
+import CreateCategory from './createCategory'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
@@ -59,7 +59,7 @@ describe('components/createCategory/CreateCategory', () => {
                         <span>{'title'}</span>
                     }
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -76,7 +76,7 @@ describe('components/createCategory/CreateCategory', () => {
                         <span>{'title'}</span>
                     }
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -100,7 +100,7 @@ describe('components/createCategory/CreateCategory', () => {
                         <span>{'title'}</span>
                     }
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -108,9 +108,9 @@ describe('components/createCategory/CreateCategory', () => {
         expect(inputField).toBeTruthy()
         userEvent.type(inputField as Element, 'category name{enter}')
         expect(mockedMutator.createCategory).toBeCalledWith({
-            name: "category name",
-            teamID: "team-id",
-            userID: "user-id-1",
+            name: 'category name',
+            teamID: 'team-id',
+            userID: 'user-id-1',
         })
     })
 
@@ -124,7 +124,7 @@ describe('components/createCategory/CreateCategory', () => {
                         <span>{'title'}</span>
                     }
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -143,7 +143,7 @@ describe('components/createCategory/CreateCategory', () => {
                         <span>{'title'}</span>
                     }
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
         const {container} = render(component)

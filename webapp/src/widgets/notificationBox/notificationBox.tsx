@@ -31,14 +31,16 @@ function renderClose(onClose?: () => void, closeTooltip?: string) {
                     icon={<CloseIcon/>}
                     onClick={onClose}
                 />
-            </Tooltip>)
+            </Tooltip>
+        )
     }
 
     return (
         <IconButton
             icon={<CloseIcon/>}
             onClick={onClose}
-        />)
+        />
+    )
 }
 
 function NotificationBox(props: Props): JSX.Element {

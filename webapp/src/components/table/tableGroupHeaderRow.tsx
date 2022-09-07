@@ -21,7 +21,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
-import {useColumnResize} from "./tableColumnResizeContext"
+import {useColumnResize} from './tableColumnResizeContext'
 
 type Props = {
     board: Board

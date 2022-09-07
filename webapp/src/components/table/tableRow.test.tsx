@@ -47,11 +47,14 @@ describe('components/table/TableRow', () => {
     const Wrapper: React.FC = ({children}) => {
         const store = mockStore(state)
         return wrapDNDIntl(
-            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+            <ColumnResizeProvider
+                columnWidths={{}}
+                onResizeColumn={jest.fn()}
+            >
                 <ReduxProvider store={store}>
                     {children}
                 </ReduxProvider>
-            </ColumnResizeProvider>
+            </ColumnResizeProvider>,
         )
     }
 
@@ -74,7 +77,7 @@ describe('components/table/TableRow', () => {
                     readonly={false}
                     onDrop={jest.fn()}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
         expect(container).toMatchSnapshot()
     })
@@ -98,7 +101,7 @@ describe('components/table/TableRow', () => {
                     readonly={true}
                     onDrop={jest.fn()}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
         expect(container).toMatchSnapshot()
     })
@@ -122,7 +125,7 @@ describe('components/table/TableRow', () => {
                     readonly={false}
                     onDrop={jest.fn()}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
         expect(container).toMatchSnapshot()
     })
@@ -146,7 +149,7 @@ describe('components/table/TableRow', () => {
                     readonly={false}
                     onDrop={jest.fn()}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
         expect(container).toMatchSnapshot()
     })
@@ -170,7 +173,7 @@ describe('components/table/TableRow', () => {
                     readonly={false}
                     onDrop={jest.fn()}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
         expect(container).toMatchSnapshot()
     })
@@ -194,7 +197,7 @@ describe('components/table/TableRow', () => {
                     readonly={false}
                     onDrop={jest.fn()}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
         expect(container).toMatchSnapshot()
     })

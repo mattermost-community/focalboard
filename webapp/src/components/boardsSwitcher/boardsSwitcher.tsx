@@ -28,8 +28,8 @@ import IconButton from '../../widgets/buttons/iconButton'
 import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
 
 type Props = {
-    onBoardTemplateSelectorOpen: () => void,
-    userIsGuest?: boolean,
+    onBoardTemplateSelectorOpen: () => void
+    userIsGuest?: boolean
 }
 
 const BoardsSwitcher = (props: Props): JSX.Element => {
@@ -111,7 +111,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                     <Menu>
                         <Menu.Text
                             id='create-new-board-option'
-                            icon={<CompassIcon icon='plus' />}
+                            icon={<CompassIcon icon='plus'/>}
                             onClick={props.onBoardTemplateSelectorOpen}
                             name='Create new board'
                         />
@@ -132,7 +132,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
 
             {
                 showSwitcher &&
-                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)} />
+                <BoardSwitcherDialog onClose={() => setShowSwitcher(false)}/>
             }
 
             {

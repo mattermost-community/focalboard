@@ -42,7 +42,7 @@ const KanbanCard = (props: Props) => {
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string}>()
+    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string}>()
     let className = props.isSelected ? 'KanbanCard selected' : 'KanbanCard'
     if (props.isManualSort && isOver) {
         className += ' dragover'

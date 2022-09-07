@@ -137,7 +137,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                 onMenuOpen={props.onCalculationMenuOpen}
                 cardProperties={board.cardProperties}
                 readonly={props.readonly || !canEditBoardProperties}
-                onChange={(data: {calculation: string, propertyId: string}) => {
+                onChange={(data: {calculation: string; propertyId: string}) => {
                     if (data.calculation === calculationValue && data.propertyId === calculationProperty.id) {
                         return
                     }

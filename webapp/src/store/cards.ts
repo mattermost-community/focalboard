@@ -48,7 +48,7 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
     },
 )
 
-const limitCard = (isBoardTemplate: boolean, limitTimestamp:number, card: Card): Card => {
+const limitCard = (isBoardTemplate: boolean, limitTimestamp: number, card: Card): Card => {
     if (isBoardTemplate) {
         return card
     }
@@ -79,7 +79,7 @@ const cardsSlice = createSlice({
         setCurrent: (state, action: PayloadAction<string>) => {
             state.current = action.payload
         },
-        setLimitTimestamp: (state, action: PayloadAction<{timestamp: number, templates: {[key: string]: Board}}>) => {
+        setLimitTimestamp: (state, action: PayloadAction<{timestamp: number; templates: {[key: string]: Board}}>) => {
             state.limitTimestamp = action.payload.timestamp
             for (const card of Object.values(state.cards)) {
                 state.cards[card.id] = limitCard(Boolean(action.payload.templates[card.id]), state.limitTimestamp, card)
@@ -300,8 +300,9 @@ function sortCards(cards: Card[], lastCommentByCard: {[key: string]: CommentBloc
 
                     if (template.type === 'multiPerson') {
                         aValue = Array.isArray(aValue) && aValue.length !== 0 && usersById !== {} ? aValue.map((id) => {
-                            if(usersById[id] !== undefined)
+                            if (usersById[id] !== undefined) {
                                 return usersById[id].username
+                            }
                             return ''
                         }).toString() : aValue
 

@@ -36,7 +36,7 @@ export function groupCardsByOptions(cards: Card[], optionIds: string[], groupByP
     return groups
 }
 
-export function getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
+export function getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[]; hidden: BoardGroup[]} {
     let unassignedOptionIds: string[] = []
     if (groupByProperty) {
         unassignedOptionIds = groupByProperty.options.

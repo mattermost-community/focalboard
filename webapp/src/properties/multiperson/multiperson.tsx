@@ -10,9 +10,9 @@ import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import {useAppSelector} from '../../store/hooks'
-import { getBoardUsers, getBoardUsersList } from '../../store/users'
+import {getBoardUsers, getBoardUsersList} from '../../store/users'
 
-import { PropertyProps } from '../types'
+import {PropertyProps} from '../types'
 import {ClientConfig} from '../../config/clientConfig'
 import {getClientConfig} from '../../store/clientConfig'
 
@@ -53,11 +53,10 @@ const selectStyles = {
 }
 
 const MultiPerson = (props: PropertyProps) => {
-
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
     const formatOptionLabel = (user: any) => {
@@ -67,7 +66,10 @@ const MultiPerson = (props: PropertyProps) => {
         }
 
         return (
-            <div key={user.id} className='MultiPerson-item'>
+            <div
+                key={user.id}
+                className='MultiPerson-item'
+            >
                 {profileImg && (
                     <img
                         alt='MultiPerson-avatar'
@@ -81,26 +83,25 @@ const MultiPerson = (props: PropertyProps) => {
 
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
-    let users: IUser[]  = []
+    let users: IUser[] = []
 
-    if(typeof propertyValue === 'string') {
-        users  = [boardUsersById[propertyValue as string]]
-    } else if(Array.isArray(propertyValue)) {
-        users =  propertyValue.map(id => boardUsersById[id])
+    if (typeof propertyValue === 'string') {
+        users = [boardUsersById[propertyValue as string]]
+    } else if (Array.isArray(propertyValue)) {
+        users = propertyValue.map((id) => boardUsersById[id])
     }
 
     if (readOnly) {
         return (
             <div className={`MultiPerson ${props.property.valueClassName(true)}`}>
-                {users ? users.map(user => formatOptionLabel(user)) : propertyValue}
+                {users ? users.map((user) => formatOptionLabel(user)) : propertyValue}
             </div>
         )
     }
 
-
     return (
         <Select
-            isMulti
+            isMulti={true}
             options={boardUsers}
             isSearchable={true}
             isClearable={true}
@@ -111,14 +112,14 @@ const MultiPerson = (props: PropertyProps) => {
             styles={selectStyles}
             getOptionLabel={(o: IUser) => o.username}
             getOptionValue={(a: IUser) => a.id}
-            value={users} 
-            onChange={(item, action)=> {
+            value={users}
+            onChange={(item, action) => {
                 if (action.action === 'select-option') {
-                    onChange(item.map(a => a.id) || [])
+                    onChange(item.map((a) => a.id) || [])
                 } else if (action.action === 'clear') {
                     onChange([])
                 } else if (action.action === 'remove-value') {
-                    onChange(item.filter(a => a.id !== action.removedValue.id).map(b => b.id) || [])
+                    onChange(item.filter((a) => a.id !== action.removedValue.id).map((b) => b.id) || [])
                 }
             }}
         />

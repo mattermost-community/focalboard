@@ -6,8 +6,8 @@ import {useDrag, useDrop, DragElementWrapper, DragSourceOptions, DragPreviewOpti
 import {IContentBlockWithCords} from '../blocks/contentBlock'
 import {Block} from '../blocks/block'
 interface ISortableWithGripItem {
-    block: Block | Block[],
-    cords: {x: number, y?: number, z?: number}
+    block: Block | Block[]
+    cords: {x: number; y?: number; z?: number}
 }
 
 function useSortableBase<T>(itemType: string, item: T, enabled: boolean, handler: (src: T, st: T) => void): [boolean, boolean, DragElementWrapper<DragSourceOptions>, DragElementWrapper<DragSourceOptions>, DragElementWrapper<DragPreviewOptions>] {

@@ -13,7 +13,7 @@ import {Channel} from './store/channels'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
-import {Constants} from "./constants"
+import {Constants} from './constants'
 
 import {BoardsCloudLimits} from './boardsCloudLimits'
 import {TopBoardResponse} from './insights'
@@ -112,7 +112,7 @@ class OctoClient {
         return json
     }
 
-    async register(email: string, username: string, password: string, token?: string): Promise<{code: number, json: {error?: string}}> {
+    async register(email: string, username: string, password: string, token?: string): Promise<{code: number; json: {error?: string}}> {
         const path = '/api/v2/register'
         const body = JSON.stringify({email, username, password, token})
         const response = await fetch(this.getBaseURL() + path, {
@@ -124,7 +124,7 @@ class OctoClient {
         return {code: response.status, json}
     }
 
-    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number, json: {error?: string}}> {
+    async changePassword(userId: string, oldPassword: string, newPassword: string): Promise<{code: number; json: {error?: string}}> {
         const path = `/api/v2/users/${encodeURIComponent(userId)}/changepassword`
         const body = JSON.stringify({oldPassword, newPassword})
         const response = await fetch(this.getBaseURL() + path, {
@@ -189,7 +189,7 @@ class OctoClient {
     }
 
     async getUsersList(userIds: string[]): Promise<IUser[] | []> {
-        const path = `/api/v2/users`
+        const path = '/api/v2/users'
         const body = JSON.stringify(userIds)
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
@@ -197,29 +197,28 @@ class OctoClient {
             body,
         })
 
-        if(response.status !== 200) {
+        if (response.status !== 200) {
             return []
         }
 
         return (await this.getJson(response, [])) as IUser[]
-
     }
 
-    async getMyConfig(): Promise<Array<UserPreference> | undefined> {
-        const path = `/api/v2/users/me/config`
+    async getMyConfig(): Promise<UserPreference[] | undefined> {
+        const path = '/api/v2/users/me/config'
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
-            method: 'GET'
+            method: 'GET',
         })
 
         if (response.status !== 200) {
             return undefined
         }
 
-        return (await this.getJson(response, [])) as Array<UserPreference>
+        return (await this.getJson(response, [])) as UserPreference[]
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Array<UserPreference> | undefined> {
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<UserPreference[] | undefined> {
         const path = `/api/v2/users/${encodeURIComponent(userID)}/config`
         const body = JSON.stringify(patch)
         const response = await fetch(this.getBaseURL() + path, {
@@ -232,7 +231,7 @@ class OctoClient {
             return undefined
         }
 
-        return (await this.getJson(response, {})) as Array<UserPreference>
+        return (await this.getJson(response, {})) as UserPreference[]
     }
 
     async exportBoardArchive(boardID: string): Promise<Response> {
@@ -472,7 +471,7 @@ class OctoClient {
 
         const response = await fetch(this.getBaseURL() + `/api/v2/boards/${boardId}/join`, {
             method: 'POST',
-            headers: this.headers()
+            headers: this.headers(),
         })
 
         if (response.status !== 200) {
@@ -619,14 +618,14 @@ class OctoClient {
         return this.getJson(response, null)
     }
 
-    async getTeams(): Promise<Array<Team>> {
+    async getTeams(): Promise<Team[]> {
         const path = this.teamsPath()
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
 
-        return this.getJson<Array<Team>>(response, [])
+        return this.getJson<Team[]>(response, [])
     }
 
     async getTeamUsers(): Promise<IUser[]> {
@@ -752,14 +751,14 @@ class OctoClient {
         })
     }
 
-    async getSidebarCategories(teamID: string): Promise<Array<CategoryBoards>> {
+    async getSidebarCategories(teamID: string): Promise<CategoryBoards[]> {
         const path = `/api/v2/teams/${teamID}/categories`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<CategoryBoards>
+        return (await this.getJson(response, [])) as CategoryBoards[]
     }
 
     async createSidebarCategory(category: Category): Promise<Response> {
@@ -804,7 +803,7 @@ class OctoClient {
         })
     }
 
-    async search(teamID: string, query: string): Promise<Array<Board>> {
+    async search(teamID: string, query: string): Promise<Board[]> {
         const url = `${this.teamPath(teamID)}/boards/search?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
@@ -815,10 +814,10 @@ class OctoClient {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<Board>
+        return (await this.getJson(response, [])) as Board[]
     }
 
-    async searchLinkableBoards(teamID: string, query: string): Promise<Array<Board>> {
+    async searchLinkableBoards(teamID: string, query: string): Promise<Board[]> {
         const url = `${this.teamPath(teamID)}/boards/search/linkable?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
@@ -829,10 +828,10 @@ class OctoClient {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<Board>
+        return (await this.getJson(response, [])) as Board[]
     }
 
-    async searchAll(query: string): Promise<Array<Board>> {
+    async searchAll(query: string): Promise<Board[]> {
         const url = `/api/v2/boards/search?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
@@ -843,10 +842,10 @@ class OctoClient {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<Board>
+        return (await this.getJson(response, [])) as Board[]
     }
 
-    async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
+    async getUserBlockSubscriptions(userId: string): Promise<Subscription[]> {
         const path = `/api/v2/subscriptions/${userId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {

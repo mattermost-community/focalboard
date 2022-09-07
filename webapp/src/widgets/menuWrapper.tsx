@@ -6,8 +6,8 @@ import React, {useRef, useState, useEffect, useCallback} from 'react'
 import './menuWrapper.scss'
 
 type Props = {
-    children?: React.ReactNode;
-    stopPropagationOnToggle?: boolean;
+    children?: React.ReactNode
+    stopPropagationOnToggle?: boolean
     className?: string
     disabled?: boolean
     isOpen?: boolean

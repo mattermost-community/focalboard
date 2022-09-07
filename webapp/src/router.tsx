@@ -31,7 +31,7 @@ declare let window: IAppWindow
 
 const UUID_REGEX = new RegExp(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
 
-function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
+function HomeToCurrentTeam(props: {path: string; exact: boolean}) {
     return (
         <FBRoute
             path={props.path}
@@ -70,7 +70,7 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean}) {
 }
 
 function WorkspaceToTeamRedirect() {
-    const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, workspaceId?: string}>()
+    const match = useRouteMatch<{boardId: string; viewId: string; cardId?: string; workspaceId?: string}>()
     const queryParams = new URLSearchParams(useLocation().search)
     const history = useHistory()
     useEffect(() => {

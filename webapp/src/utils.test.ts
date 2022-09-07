@@ -3,9 +3,9 @@
 
 import {createIntl} from 'react-intl'
 
-import {createMemoryHistory} from "history"
+import {createMemoryHistory} from 'history'
 
-import {match as routerMatch} from "react-router-dom"
+import {match as routerMatch} from 'react-router-dom'
 
 import {Utils, IDType, ShowFullName, ShowNicknameFullName, ShowUsername} from './utils'
 import {IUser} from './user'
@@ -178,7 +178,7 @@ describe('utils', () => {
                     teamId: 'team_id_1',
                 },
                 path: '/team/:teamId/:boardId?/:viewId?/:cardId?',
-            } as unknown as routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>
+            } as unknown as routerMatch<{boardId: string; viewId?: string; cardId?: string; teamId?: string}>
 
             const history = createMemoryHistory()
             history.push = jest.fn()

@@ -9,7 +9,7 @@ import {Constants} from '../../../constants'
 
 type OptionProps = SelectOption & {
     cardProperties: IPropertyTemplate[]
-    onChange: (data: {calculation: string, propertyId: string}) => void
+    onChange: (data: {calculation: string; propertyId: string}) => void
     activeValue: string
     activeProperty: IPropertyTemplate
 }

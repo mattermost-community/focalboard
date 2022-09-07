@@ -14,7 +14,7 @@ import {Option, OptionProps} from './kanbanOption'
 
 type Props = CommonCalculationOptionProps & {
     cardProperties: IPropertyTemplate[]
-    onChange: (data: {calculation: string, propertyId: string}) => void
+    onChange: (data: {calculation: string; propertyId: string}) => void
 }
 
 // contains mapping of property types which are effectly the same as other property type.

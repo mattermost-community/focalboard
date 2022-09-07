@@ -54,7 +54,7 @@ export const ConfirmationDialogBox = (props: Props) => {
                         title={props.dialogBox.confirmButtonText || 'Confirm'}
                         size='medium'
                         submit={true}
-                        danger={props.dialogBox.destructive ? true : false}
+                        danger={Boolean(props.dialogBox.destructive)}
                         onClick={handleOnConfirm}
                         filled={true}
                     >

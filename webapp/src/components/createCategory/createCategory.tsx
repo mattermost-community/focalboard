@@ -20,7 +20,7 @@ import Dialog from '../dialog'
 import Button from '../../widgets/buttons/button'
 
 import './createCategory.scss'
-import CloseCircle from "../../widgets/icons/closeCircle"
+import CloseCircle from '../../widgets/icons/closeCircle'
 
 type Props = {
     boardCategoryId?: string
@@ -35,10 +35,10 @@ const CreateCategory = (props: Props): JSX.Element => {
     const me = useAppSelector<IUser|null>(getMe)
     const team = useAppSelector(getCurrentTeam)
     const teamID = team?.id || ''
-    const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category' })
-    const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel' })
-    const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create' })
-    const updateText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.UpdateText', defaultMessage: 'Update' })
+    const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category'})
+    const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel'})
+    const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create'})
+    const updateText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.UpdateText', defaultMessage: 'Update'})
 
     const [name, setName] = useState(props.initialValue || '')
 
@@ -96,7 +96,10 @@ const CreateCategory = (props: Props): JSX.Element => {
                     />
                     {
                         Boolean(name) &&
-                        <div className='clearBtn' onClick={() => setName('')}>
+                        <div
+                            className='clearBtn'
+                            onClick={() => setName('')}
+                        >
                             <CloseCircle/>
                         </div>
                     }

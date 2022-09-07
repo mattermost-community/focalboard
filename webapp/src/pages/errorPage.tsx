@@ -18,7 +18,7 @@ const ErrorPage = () => {
     const errid = queryParams.get('id')
     const errorDef = errorDefFromId(errid as ErrorId)
 
-    const handleButtonClick = useCallback((path: string | ((params: URLSearchParams)=>string)) => {
+    const handleButtonClick = useCallback((path: string | ((params: URLSearchParams) => string)) => {
         let url = '/'
         if (typeof path === 'function') {
             url = path(queryParams)
@@ -32,7 +32,7 @@ const ErrorPage = () => {
         }
     }, [history])
 
-    const makeButton = ((path: string | ((params: URLSearchParams)=>string), txt: string, fill: boolean) => {
+    const makeButton = ((path: string | ((params: URLSearchParams) => string), txt: string, fill: boolean) => {
         return (
             <Button
                 filled={fill}

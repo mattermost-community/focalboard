@@ -41,8 +41,7 @@ const TourTipRenderer = (props: Props): JSX.Element | null => {
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
     const disableTour = clientConfig?.featureFlags?.disableTour || false
 
-
-    if(props.showForce) {
+    if (props.showForce) {
         isOnboardingBoard = true
     }
 
