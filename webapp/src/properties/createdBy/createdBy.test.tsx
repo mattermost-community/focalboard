@@ -85,7 +85,7 @@ describe('properties/createdBy', () => {
             </ReduxProvider>
         )
 
-        const {container} = render(component)
+        const {container} = render(wrapIntl(component))
         expect(container).toMatchSnapshot()
     })
 })

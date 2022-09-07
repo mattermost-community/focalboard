@@ -18,6 +18,12 @@ import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
 import {getBoardUsersList, getMe} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
+import {useHasPermissions} from '../../hooks/permissions'
+import {Permission} from '../../constants'
+import {BoardMember} from '../../blocks/board'
+import mutator from '../../mutator'
+import ConfirmAddUserForNotifications from '../confirmAddUserForNotifications'
+import RootPortal from '../rootPortal'
 
 import './markdownEditorInput.scss'
 
@@ -34,11 +40,13 @@ import Entry from './entryComponent/entryComponent'
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
 type MentionUser = {
+    user: IUser,
     name: string
     avatar: string
     is_bot: boolean
     is_guest: boolean
     displayName: string
+    isBoardMember: boolean
 }
 
 type Props = {
@@ -56,6 +64,8 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const board = useAppSelector(getCurrentBoard)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
+    const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
+    const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
     const me = useAppSelector<IUser|null>(getMe)
 
     const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
@@ -63,7 +73,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const loadSuggestions = async (term: string) => {
         let users: Array<IUser>
 
-        if (!me?.is_guest && (board && board.type === BoardTypeOpen)) {
+        if (!me?.is_guest && (allowAddUsers || (board && board.type === BoardTypeOpen))) {
             users = await octoClient.searchTeamUsers(term)
         } else {
             users = boardUsers
@@ -83,8 +93,10 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
                 is_bot: user.is_bot,
                 is_guest: user.is_guest,
-                displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}
-            ))
+                displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay),
+                isBoardMember: Boolean(boardUsers.find((u) => u.id === user.id)),
+                user: user,
+            }))
         setSuggestions(mentions)
     }
 
@@ -96,13 +108,45 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         loadSuggestions('')
     }, [])
 
-
     const generateEditorState = (text?: string) => {
         const state = EditorState.createWithContent(ContentState.createFromText(text || ''))
         return EditorState.moveSelectionToEnd(state)
     }
 
     const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
+
+    const addUser = useCallback(async (userId: string, role: string) => {
+        const newMember = {
+            boardId: board.id,
+            userId: userId,
+            roles: role,
+            schemeAdmin: role === 'Admin',
+            schemeEditor: role === 'Admin' || role === 'Editor',
+            schemeCommenter: role === 'Admin' || role === 'Editor' || role === 'Commenter',
+            schemeViewer: role === 'Admin' || role === 'Editor' || role === 'Commenter' || role === 'Viewer',
+        } as BoardMember
+
+        setConfirmAddUser(null)
+        setEditorState(EditorState.moveSelectionToEnd(editorState))
+        ref.current?.focus()
+        await mutator.createBoardMember(board.id, newMember.userId)
+        mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
+    }, [board, editorState])
+
+    const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
+
+    // avoiding stale closure
+    useEffect(() => {
+        // only change editor state when initialText actually changes from one defined value to another.
+        // This is needed to make the mentions plugin work. For some reason, if we don't check
+        // for this if condition here, mentions don't work. I suspect it's because without
+        // the in condition, we're changing editor state twice during component initialization
+        // and for some reason it causes mentions to not show up.
+        if (initialText && initialText !== initialTextCache) {
+            setEditorState(generateEditorState(initialText || ''))
+            setInitialTextCache(initialText)
+        }
+    }, [initialText])
 
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
     const [isEmojiPopoverOpen, setIsEmojiPopoverOpen] = useState(false)
@@ -177,6 +221,9 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [])
 
     const onEditorStateBlur = useCallback(() => {
+        if (confirmAddUser) {
+            return
+        }
         const text = editorState.getCurrentContent().getPlainText()
         onBlur && onBlur(text)
     }, [editorState, onBlur])
@@ -220,11 +267,29 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 suggestions={suggestions}
                 onSearchChange={onSearchChange}
                 entryComponent={Entry}
+                onAddMention={(mention) => {
+                    if (mention.isBoardMember) {
+                        return
+                    }
+                    setConfirmAddUser(mention.user)
+                }}
             />
             <EmojiSuggestions
                 onOpen={onEmojiPopoverOpen}
                 onClose={onEmojiPopoverClose}
             />
+            {confirmAddUser &&
+                <RootPortal>
+                    <ConfirmAddUserForNotifications
+                        user={confirmAddUser}
+                        onConfirm={addUser}
+                        onClose={() => {
+                            setConfirmAddUser(null)
+                            setEditorState(EditorState.moveSelectionToEnd(editorState))
+                            ref.current?.focus()
+                        }}
+                    />
+                </RootPortal>}
         </div>
     )
 }
