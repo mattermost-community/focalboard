@@ -84,7 +84,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
-		a.errorResponse(w, r, model.NewErrUnauthorized(""))
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
@@ -217,7 +217,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 			a.customErrorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
 			return
 		}
-		a.errorResponse(w, r, model.NewErrBadRequest(""))
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 	defer file.Close()

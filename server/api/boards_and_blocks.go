@@ -249,7 +249,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 			teamID = board.TeamID
 		}
 		if teamID != board.TeamID {
-			a.errorResponse(w, r, model.NewErrBadRequest(""))
+			a.errorResponse(w, r, model.NewErrBadRequest("mismatched team ID"))
 			return
 		}
 	}
@@ -262,7 +262,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		}
 
 		if _, ok := boardIDMap[block.BoardID]; !ok {
-			a.errorResponse(w, r, model.NewErrBadRequest(""))
+			a.errorResponse(w, r, model.NewErrBadRequest("missing BoardID=" + block.BoardID))
 			return
 		}
 
@@ -355,7 +355,7 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 			teamID = board.TeamID
 		}
 		if teamID != board.TeamID {
-			a.errorResponse(w, r, model.NewErrBadRequest(""))
+			a.errorResponse(w, r, model.NewErrBadRequest("all boards should belong to the same team"))
 			return
 		}
 
@@ -374,7 +374,7 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 
 		if _, ok := boardIDMap[block.BoardID]; !ok {
-			a.errorResponse(w, r, model.NewErrBadRequest(""))
+			a.errorResponse(w, r, model.NewErrBadRequest("missing BoardID=" + block.BoardID))
 			return
 		}
 
@@ -385,7 +385,7 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 	}
 
 	if err := dbab.IsValid(); err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest(""))
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 

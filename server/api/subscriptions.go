@@ -63,7 +63,8 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = sub.IsValid(); err != nil {
-		a.customErrorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
+		return
 	}
 
 	ctx := r.Context()

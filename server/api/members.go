@@ -216,7 +216,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	if userID == "" {
-		a.errorResponse(w, r, model.NewErrBadRequest(""))
+		a.errorResponse(w, r, model.NewErrBadRequest("missing user ID"))
 		return
 	}
 
@@ -227,7 +227,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if board.Type != model.BoardTypeOpen {
-		a.errorResponse(w, r, model.NewErrForbidden(""))
+		a.errorResponse(w, r, model.NewErrPermission("cannot join a non Open board"))
 		return
 	}
 
@@ -313,7 +313,7 @@ func (a *API) handleLeaveBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	if userID == "" {
-		a.errorResponse(w, r, model.NewErrBadRequest(""))
+		a.errorResponse(w, r, model.NewErrBadRequest("invalid session"))
 		return
 	}
 

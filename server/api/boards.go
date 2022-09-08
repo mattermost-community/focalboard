@@ -131,7 +131,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 
 	var newBoard *model.Board
 	if err = json.Unmarshal(requestBody, &newBoard); err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest(""))
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
