@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -123,7 +123,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
@@ -325,7 +325,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return

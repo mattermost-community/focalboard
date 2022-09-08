@@ -3,7 +3,7 @@ package api
 import (
 	"database/sql"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -61,7 +61,7 @@ func TestErrorResponse(t *testing.T) {
 
 			require.Equal(t, tc.ResponseCode, res.StatusCode)
 			require.Equal(t, "application/json", res.Header.Get("Content-Type"))
-			b, rErr := ioutil.ReadAll(res.Body)
+			b, rErr := io.ReadAll(res.Body)
 			require.NoError(t, rErr)
 			res.Body.Close()
 			require.Contains(t, string(b), tc.ResponseBody)

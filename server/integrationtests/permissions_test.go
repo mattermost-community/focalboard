@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -301,7 +301,7 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 				require.NoError(t, err)
 			}
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
-				body, err := ioutil.ReadAll(response.Body)
+				body, err := io.ReadAll(response.Body)
 				if err != nil {
 					require.Fail(t, err.Error())
 				}
