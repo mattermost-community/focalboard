@@ -11,8 +11,6 @@ const tsTransformer = require('@formatjs/ts-transformer');
 
 const PLUGIN_ID = require('../plugin.json').id;
 
-const packageJson = require('./package.json');
-
 const NPM_TARGET = process.env.npm_lifecycle_event; //eslint-disable-line no-process-env
 const TARGET_IS_PRODUCT = NPM_TARGET === 'start:product' || NPM_TARGET === 'build:product';
 
@@ -134,12 +132,11 @@ if (TARGET_IS_PRODUCT) {
         const sharedObject = {};
 
         for (const packageName of packageNames) {
-            const version = packageJson.dependencies[packageName];
-
+            // Set both versions to false so that the version of this module provided by the web app will be used
             sharedObject[packageName] = {
-                requiredVersion: version,
+                requiredVersion: false,
                 singleton: true,
-                version,
+                version: false,
             };
         }
 
