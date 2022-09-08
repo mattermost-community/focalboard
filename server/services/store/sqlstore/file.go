@@ -77,7 +77,7 @@ func (s *SQLStore) getFileInfo(db sq.BaseRunner, id string) (*mmModel.FileInfo, 
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, model.NewErrNotFound("file info")
+			return nil, model.NewErrNotFound("file info ID=" + id)
 		}
 
 		s.logger.Error("error scanning fileinfo row", mlog.String("id", id), mlog.Err(err))

@@ -234,7 +234,7 @@ func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string,
 	}
 
 	if len(boards) == 0 {
-		return nil, model.NewErrNotFound("board")
+		return nil, model.NewErrNotFound("boards")
 	}
 
 	return boards, nil
@@ -411,7 +411,7 @@ func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *mode
 		return nil, err
 	}
 	if existingBoard == nil {
-		return nil, model.NewErrNotFound("board")
+		return nil, model.NewErrNotFound("board ID=" + boardID)
 	}
 
 	board := boardPatch.Patch(existingBoard)
@@ -599,7 +599,8 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 	}
 
 	if len(members) == 0 {
-		return nil, model.NewErrNotFound("board member")
+		message := fmt.Sprintf("board member BoardID=%s UserID=%s", boardID, userID)
+		return nil, model.NewErrNotFound(message)
 	}
 
 	return members[0], nil

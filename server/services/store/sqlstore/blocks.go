@@ -536,7 +536,7 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, err
 	}
 
 	if len(blocks) == 0 {
-		return nil, model.NewErrNotFound("block")
+		return nil, model.NewErrNotFound("block ID=" + blockID)
 	}
 
 	return &blocks[0], nil
@@ -625,7 +625,7 @@ func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, blockID string) (board 
 	}
 
 	if len(blocks) == 0 {
-		return nil, nil, model.NewErrNotFound(blockID)
+		return nil, nil, model.NewErrNotFound("block history BlockID=" + blockID)
 	}
 
 	return s.getBoardAndCard(db, &blocks[0])
@@ -743,7 +743,8 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 		return nil, err
 	}
 	if len(blocks) == 0 {
-		return nil, model.NewErrNotFound("block")
+		message := fmt.Sprintf("block subtree BoardID=%s BlockID=%s", boardID, blockID)
+		return nil, model.NewErrNotFound(message)
 	}
 
 	var rootBlock model.Block

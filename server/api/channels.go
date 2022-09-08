@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -86,7 +87,8 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 
 	if channel.TeamId != teamID {
 		if channel.Type != mm_model.ChannelTypeDirect && channel.Type != mm_model.ChannelTypeGroup {
-			a.errorResponse(w, r, model.NewErrNotFound("channel"))
+			message := fmt.Sprintf("channel ID=%s on TeamID=%s", channel.Id, teamID)
+			a.errorResponse(w, r, model.NewErrNotFound(message))
 			return
 		}
 	}

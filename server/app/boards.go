@@ -309,7 +309,7 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 		board, err := a.store.GetBoard(boardID)
 		if model.IsErrNotFound(err) {
-			return nil, model.NewErrNotFound(boardID)
+			return nil, model.NewErrNotFound("board ID=" + boardID)
 		}
 		if err != nil {
 			return nil, err

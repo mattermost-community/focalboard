@@ -638,7 +638,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if board == nil || boardMetadata == nil {
-		a.errorResponse(w, r, model.NewErrNotFound(""))
+		a.errorResponse(w, r, model.NewErrNotFound("board metadata BoardID=" + boardID))
 		return
 	}
 

@@ -137,7 +137,8 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if block.BoardID != boardID {
-			a.errorResponse(w, r, model.NewErrNotFound("board"))
+			message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+			a.errorResponse(w, r, model.NewErrNotFound(message))
 			return
 		}
 
@@ -386,7 +387,8 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if block.BoardID != boardID {
-		a.errorResponse(w, r, model.NewErrNotFound("block"))
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
@@ -461,7 +463,8 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if board.ID != block.BoardID {
-		a.errorResponse(w, r, model.NewErrNotFound("block"))
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, board.ID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
@@ -553,7 +556,8 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if block.BoardID != boardID {
-		a.errorResponse(w, r, model.NewErrNotFound("block"))
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
@@ -735,7 +739,8 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if board.ID != block.BoardID {
-		a.errorResponse(w, r, model.NewErrNotFound("block"))
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, board.ID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 

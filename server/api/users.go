@@ -230,7 +230,7 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !canSeeUser {
-		a.errorResponse(w, r, model.NewErrNotFound(""))
+		a.errorResponse(w, r, model.NewErrNotFound("user ID=" + userID))
 		return
 	}
 
