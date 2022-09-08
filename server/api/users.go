@@ -22,7 +22,7 @@ func (a *API) registerUsersRoutes(r *mux.Router) {
 }
 
 func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /users getUser
+	// swagger:operation POST /users getUsersList
 	//
 	// Returns a user[]
 	//

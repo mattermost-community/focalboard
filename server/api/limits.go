@@ -56,6 +56,12 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:

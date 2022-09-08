@@ -579,8 +579,7 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("blockID", blockID)
 
-	err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify)
-	if err != nil {
+	if err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify); err != nil {
 		a.errorResponse(w, r, err)
 		return
 	}
