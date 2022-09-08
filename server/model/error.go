@@ -147,7 +147,8 @@ func (e *ErrInvalidCategory) Error() string {
 // - model.ErrViewsLimitReached
 // - model.ErrAuthParam
 // - model.ErrInvalidCategory
-// - model.ErrBoardMemberIsLastAdmin.
+// - model.ErrBoardMemberIsLastAdmin
+// - model.ErrBoardIDMismatch.
 func IsErrBadRequest(err error) bool {
 	if err == nil {
 		return false
@@ -176,8 +177,13 @@ func IsErrBadRequest(err error) bool {
 		return true
 	}
 
+	// check if this is a model.ErrBoardIDMismatch
+	if errors.Is(err, ErrBoardMemberIsLastAdmin) {
+		return true
+	}
+
 	// check if this is a model.ErrBoardMemberIsLastAdmin
-	return errors.Is(err, ErrBoardMemberIsLastAdmin)
+	return errors.Is(err, ErrBoardIDMismatch)
 }
 
 // IsErrUnauthorized returns true if `err` is or wraps one of:
