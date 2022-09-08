@@ -262,7 +262,7 @@ func (a *API) handlePatchBoardsAndBlocks(w http.ResponseWriter, r *http.Request)
 		}
 
 		if _, ok := boardIDMap[block.BoardID]; !ok {
-			a.errorResponse(w, r, model.NewErrBadRequest("missing BoardID=" + block.BoardID))
+			a.errorResponse(w, r, model.NewErrBadRequest("missing BoardID="+block.BoardID))
 			return
 		}
 
@@ -374,7 +374,7 @@ func (a *API) handleDeleteBoardsAndBlocks(w http.ResponseWriter, r *http.Request
 		}
 
 		if _, ok := boardIDMap[block.BoardID]; !ok {
-			a.errorResponse(w, r, model.NewErrBadRequest("missing BoardID=" + block.BoardID))
+			a.errorResponse(w, r, model.NewErrBadRequest("missing BoardID="+block.BoardID))
 			return
 		}
 

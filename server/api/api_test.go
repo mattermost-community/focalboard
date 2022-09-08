@@ -16,7 +16,7 @@ import (
 )
 
 func TestErrorResponse(t *testing.T) {
-	testApi := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
+	testAPI := API{logger: mlog.CreateConsoleTestLogger(false, mlog.LvlDebug)}
 
 	testCases := []struct {
 		Name         string
@@ -56,7 +56,7 @@ func TestErrorResponse(t *testing.T) {
 			r := httptest.NewRequest(http.MethodGet, "/test", nil)
 			w := httptest.NewRecorder()
 
-			testApi.errorResponse(w, r, tc.Error)
+			testAPI.errorResponse(w, r, tc.Error)
 			res := w.Result()
 
 			require.Equal(t, tc.ResponseCode, res.StatusCode)

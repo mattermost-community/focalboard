@@ -437,7 +437,7 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 
 	block, err := a.store.GetBlock(blockID)
 	if model.IsErrNotFound(err) {
-		a.logger.Error("Error loading the block after a successfull undelete, not propagating through websockets or notifications", mlog.String("blockID", blockID))
+		a.logger.Error("Error loading the block after a successful undelete, not propagating through websockets or notifications", mlog.String("blockID", blockID))
 		return nil, err
 	}
 	if err != nil {

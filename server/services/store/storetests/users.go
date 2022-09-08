@@ -15,6 +15,7 @@ import (
 	"github.com/mattermost/focalboard/server/utils"
 )
 
+//nolint:dupl
 func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("GetUsersByTeam", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -45,6 +46,7 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 		defer tearDown()
 		testCreateAndGetRegisteredUserCount(t, store)
 	})
+
 	t.Run("TestPatchUserProps", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()

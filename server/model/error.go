@@ -61,7 +61,7 @@ func (naf *ErrNotAllFound) Error() string {
 }
 
 // ErrBadRequest can be returned when the API handler receives a
-// malformed request
+// malformed request.
 type ErrBadRequest struct {
 	reason string
 }
@@ -78,7 +78,7 @@ func (br *ErrBadRequest) Error() string {
 }
 
 // ErrUnauthorized can be returned when requester has provided an
-// invalid authorization for a given resource or has not provided any
+// invalid authorization for a given resource or has not provided any.
 type ErrUnauthorized struct {
 	reason string
 }
@@ -95,7 +95,7 @@ func (br *ErrUnauthorized) Error() string {
 }
 
 // ErrPermission can be returned when requester lacks a permission for
-// a given resource
+// a given resource.
 type ErrPermission struct {
 	reason string
 }
@@ -112,7 +112,7 @@ func (br *ErrPermission) Error() string {
 }
 
 // ErrForbidden can be returned when requester doesn't have access to
-// a given resource
+// a given resource.
 type ErrForbidden struct {
 	reason string
 }
@@ -147,7 +147,7 @@ func (e *ErrInvalidCategory) Error() string {
 // - model.ErrViewsLimitReached
 // - model.ErrAuthParam
 // - model.ErrInvalidCategory
-// - model.ErrBoardMemberIsLastAdmin
+// - model.ErrBoardMemberIsLastAdmin.
 func IsErrBadRequest(err error) bool {
 	if err == nil {
 		return false
@@ -181,7 +181,7 @@ func IsErrBadRequest(err error) bool {
 }
 
 // IsErrUnauthorized returns true if `err` is or wraps one of:
-// - model.ErrUnauthorized
+// - model.ErrUnauthorized.
 func IsErrUnauthorized(err error) bool {
 	if err == nil {
 		return false
@@ -196,7 +196,7 @@ func IsErrUnauthorized(err error) bool {
 // - model.ErrForbidden
 // - model.ErrPermission
 // - model.ErrPatchUpdatesLimitedCards
-// - model.ErrorCategoryPermissionDenied
+// - model.ErrorCategoryPermissionDenied.
 func IsErrForbidden(err error) bool {
 	if err == nil {
 		return false
@@ -228,7 +228,7 @@ func IsErrForbidden(err error) bool {
 // - model.ErrNotAllFound
 // - sql.ErrNoRows
 // - mattermost-plugin-api/ErrNotFound.
-// - model.ErrCategoryDeleted
+// - model.ErrCategoryDeleted.
 func IsErrNotFound(err error) bool {
 	if err == nil {
 		return false
@@ -269,7 +269,7 @@ func IsErrNotFound(err error) bool {
 }
 
 // IsErrNotImplemented returns true if `err` is or wraps one of:
-// - model.ErrInsufficientLicense
+// - model.ErrInsufficientLicense.
 func IsErrNotImplemented(err error) bool {
 	if err == nil {
 		return false
