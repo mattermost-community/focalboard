@@ -62,10 +62,26 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "getUsersList", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
 
-	users, err := a.app.GetUsersList(userIDs)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
-		return
+	var users []*model.User
+	var error error
+	if userIDs[0] == model.SingleUser {
+		ws, _ := a.app.GetRootTeam()
+		now := utils.GetMillis()
+		user := &model.User{
+			ID:       model.SingleUser,
+			Username: model.SingleUser,
+			Email:    model.SingleUser,
+			CreateAt: ws.UpdateAt,
+			UpdateAt: now,
+			Props:    map[string]interface{}{},
+		}
+		users = append(users, user)
+	} else {
+		users, error = a.app.GetUsersList(userIDs)
+		if error != nil {
+			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+			return
+		}
 	}
 
 	usersList, err := json.Marshal(users)
