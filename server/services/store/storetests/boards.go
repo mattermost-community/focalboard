@@ -1037,3 +1037,29 @@ func testGetBoardHistory(t *testing.T, store store.Store) {
 		require.Len(t, boards, 0)
 	})
 }
+
+func testGetBoardCount(t *testing.T, store store.Store) {
+	userID := testUserID
+
+	t.Run("test GetBoardCount", func(t *testing.T) {
+
+		originalCount, err := store.GetBoardCount()
+		require.NoError(t, err)
+
+		title := "Board: original title"
+		boardID := utils.NewID(utils.IDTypeBoard)
+		board := &model.Board{
+			ID:     boardID,
+			Title:  title,
+			TeamID: testTeamID,
+			Type:   model.BoardTypeOpen,
+		}
+
+		_, err = store.InsertBoard(board, userID)
+		require.NoError(t, err)
+
+		newCount, err := store.GetBoardCount()
+		require.NoError(t, err)
+		require.Equal(t, originalCount+1, newCount)
+	})
+}

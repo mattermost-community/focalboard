@@ -344,6 +344,11 @@ func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Blo
 
 }
 
+func (s *SQLStore) GetBoardCount() (int64, error) {
+	return s.getBoardCount(s.db)
+
+}
+
 func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error) {
 	return s.getBoardHistory(s.db, boardID, opts)
 

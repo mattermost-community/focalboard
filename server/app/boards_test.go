@@ -364,3 +364,16 @@ func TestPatchBoard(t *testing.T) {
 		require.Equal(t, boardID, patchedBoard.ID)
 	})
 }
+
+func TestGetBoardCount(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("base case", func(t *testing.T) {
+		th.Store.EXPECT().GetBoardCount().Return(10, nil)
+
+		count, err := th.App.GetBoardCount()
+		require.NoError(t, err)
+		require.Equal(t, 10, count)
+	})
+}

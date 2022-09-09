@@ -32,6 +32,7 @@ type Store interface {
 	// @withTransaction
 	UndeleteBoard(boardID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
+	GetBoardCount() (int64, error)
 	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
