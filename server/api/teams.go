@@ -198,6 +198,11 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	//   description: string to filter users list
 	//   required: false
 	//   type: string
+	// - name: exclude_bots
+	//   in: query
+	//   description: exclude bot users
+	//   required: false
+	//   type: boolean
 	// security:
 	// - BearerAuth: []
 	// responses:
