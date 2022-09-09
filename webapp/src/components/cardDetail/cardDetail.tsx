@@ -152,7 +152,10 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
         let data: any = v?.title
         if (v?.type === 'image') {
-            data = v?.fields.fileId
+            console.log(v)
+            data = {
+                file: v?.fields.fileId,
+            }
         }
 
         if (v?.type === 'checkbox') {
@@ -161,6 +164,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 checked: v?.fields.value,
             }
         }
+
+        console.log(data)
 
         return {
             id: v?.id,
@@ -285,12 +290,16 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <BlocksEditor
                     blocks={blocks}
                     onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
+                        console.log(block)
                         if (block.contentType === 'text' && block.value === '') {
                             return null
                         }
                         let newBlock: Block
                         if (block.contentType === 'checkbox') {
                             newBlock = await addBlock(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
+                        } else if (block.contentType === 'image') {
+                            const newFileId = await octoClient.uploadFile(card.boardId, block.value.file)
+                            newBlock = await addBlock(card, intl, '', {fileId: newFileId}, block.contentType, afterBlock?.id, dispatch)
                         } else {
                             newBlock = await addBlock(card, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
                         }

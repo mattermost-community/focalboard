@@ -1,10 +1,13 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 import {BlockInputProps, ContentType} from '../types'
+import octoClient from '../../../../octoClient'
+import {useAppSelector} from '../../../../store/hooks'
+import {getCurrentBoardId} from '../../../../store/boards'
 
 import './image.scss'
 
 type FileInfo = {
-    file: string|ArrayBuffer
+    file: string|File
     width?: number
     align?: 'left'|'center'|'right'
 }
@@ -17,8 +20,23 @@ const Image: ContentType<FileInfo> = {
     runSlashCommand: (): void => {},
     editable: false,
     Display: (props: BlockInputProps<FileInfo>) => {
-        if (props.value.file) {
-            return <img className='ImageView' src={props.value.file as string}/>
+        const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
+        const boardId = useAppSelector(getCurrentBoardId)
+
+        useEffect(() => {
+            if (!imageDataUrl) {
+                const loadImage = async () => {
+                    if (props.value && props.value.file && typeof props.value.file === 'string') {
+                        const fileURL = await octoClient.getFileAsDataUrl(boardId, props.value.file)
+                        setImageDataUrl(fileURL.url || '')
+                    }
+                }
+                loadImage()
+            }
+        }, [props.value, props.value.file, boardId])
+
+        if (imageDataUrl) {
+            return <img className='ImageView' src={imageDataUrl}/>
         }
         return null
     },
@@ -42,12 +60,8 @@ const Image: ContentType<FileInfo> = {
                     type='file'
                     accept='image/*'
                     onChange={(e) => {
-                        const reader = new FileReader();
                         const file = (e.currentTarget?.files || [])[0]
-                        reader.readAsArrayBuffer(file);
-                        reader.onload = function () {
-                            props.onSave({file: reader.result as ArrayBuffer})
-                        }
+                        props.onSave({file: file})
                     }}
                 />
             </div>
