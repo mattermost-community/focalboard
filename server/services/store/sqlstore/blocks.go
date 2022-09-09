@@ -81,7 +81,7 @@ func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([
 	}
 
 	if opts.Page != 0 {
-		query = query.Offset(uint64(opts.Page))
+		query = query.Offset(uint64(opts.Page * opts.PerPage))
 	}
 
 	if opts.PerPage > 0 {

@@ -596,7 +596,7 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("blockID", blockID)
 
-	err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify)
+	_, err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify)
 	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
 		return
