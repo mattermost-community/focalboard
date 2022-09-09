@@ -351,7 +351,7 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
@@ -366,6 +366,11 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 		}).
 		OrderBy("u.username").
 		Limit(10)
+
+	if excludeBots {
+		query = query.
+			Where(sq.Eq{"b.UserId IS NOT NULL": false})
+	}
 
 	if asGuestID == "" {
 		query = query.

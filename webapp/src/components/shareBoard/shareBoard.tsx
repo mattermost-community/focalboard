@@ -364,7 +364,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             loadOptions={async (inputValue: string) => {
                                 const result = []
                                 if (Utils.isFocalboardPlugin()) {
-                                    const users = await (await client.searchTeamUsers(inputValue)).filter(user => !user.is_bot)
+                                    const excludeBots = true
+                                    const users = await client.searchTeamUsers(inputValue, excludeBots)
                                     if (users) {
                                         result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
                                     }
