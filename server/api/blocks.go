@@ -948,8 +948,8 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 				newContentOrder = append(newContentOrder, id)
 				newContentOrder = append(newContentOrder, blockID)
 			} else {
-				newContentOrder = append(newContentOrder, id)
 				newContentOrder = append(newContentOrder, blockID)
+				newContentOrder = append(newContentOrder, id)
 			}
 			continue
 		}

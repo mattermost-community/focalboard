@@ -38,7 +38,7 @@ function App() {
       <header className="App-header">
           <BlocksEditor
               blocks={data}
-              onBlockCreated={(block: BlockData<any>, afterBlock?: BlockData<any>): BlockData|null => {
+              onBlockCreated={async (block: BlockData<any>, afterBlock?: BlockData<any>): Promise<BlockData|null> => {
                   if (block.contentType === 'text' && block.value === '') {
                       return null
                   }
@@ -64,7 +64,7 @@ function App() {
                   setData(newData)
                   return newBlock
               }}
-              onBlockModified={(block: BlockData): BlockData|null => {
+              onBlockModified={async (block: BlockData): Promise<BlockData|null> => {
                   const newData: BlockData[] = []
                   if (block.contentType === 'text' && block.value === '') {
                       for (const b of data) {
@@ -85,12 +85,15 @@ function App() {
                   setData(newData)
                   return block
               }}
-              onBlockMoved={(block: BlockData, afterBlock: BlockData) => {
+              onBlockMoved={async (block: BlockData<any>, beforeBlock: BlockData|null, afterBlock: BlockData<any>|null): Promise<void> => {
                   const newData: BlockData[] = []
                   for (const b of data) {
                       if (b.id !== block.id) {
+                          if (beforeBlock && b.id === beforeBlock.id) {
+                              newData.push(block)
+                          }
                           newData.push(b)
-                          if (b.id === afterBlock.id) {
+                          if (afterBlock && b.id === afterBlock.id) {
                               newData.push(block)
                           }
                       }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useMemo} from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -8,15 +8,16 @@ import BlockContent from './blockContent'
 import * as registry from './blocks'
 
 type Props = {
-    onBlockCreated: (block: BlockData, afterBlock?: BlockData) => BlockData|null
-    onBlockModified: (block: BlockData) => BlockData|null
-    onBlockMoved: (block: BlockData, afterBlock: BlockData) => void
+    onBlockCreated: (block: BlockData, afterBlock?: BlockData) => Promise<BlockData|null>
+    onBlockModified: (block: BlockData) => Promise<BlockData|null>
+    onBlockMoved: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>
     blocks: BlockData[]
 }
 
 function BlocksEditor(props: Props) {
   const [editing, setEditing] = useState<BlockData|null>(null)
   const [afterBlock, setAfterBlock] = useState<BlockData|null>(null)
+  const contentOrder = useMemo(() => props.blocks.filter((b) => b.id).map((b) => b.id!), [props.blocks])
   return (
       <div
           className="BlocksEditor"
@@ -86,14 +87,19 @@ function BlocksEditor(props: Props) {
                               setEditing(block)
                               setAfterBlock(null)
                           }}
+                          contentOrder={contentOrder}
                           setAfterBlock={setAfterBlock}
-                          onSave={props.onBlockModified}
+                          onSave={async (b) => {
+                              const newBlock = await props.onBlockModified(b)
+                              setAfterBlock(newBlock)
+                              return newBlock
+                          }}
                           onMove={props.onBlockMoved}
                       />
                       {afterBlock && afterBlock.id === d.id && (
                           <Editor
-                              onSave={(b) => {
-                                  const newBlock = props.onBlockCreated(b, afterBlock)
+                              onSave={async (b) => {
+                                  const newBlock = await props.onBlockCreated(b, afterBlock)
                                   setAfterBlock(newBlock)
                                   return newBlock
                               }}

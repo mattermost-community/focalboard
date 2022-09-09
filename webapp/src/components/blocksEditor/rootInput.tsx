@@ -88,7 +88,19 @@ export default function RootInput(props: Props){
                     props.onChange('')
                 }
             }}
+            onFocus={(e: React.FocusEvent) => {
+                const target = e.currentTarget
+                target.scrollIntoView({block: 'center'})
+                // TODO: Fix this
+                setTimeout(() => {
+                    target.scrollIntoView({block: 'center'})
+                }, 100)
+            }}
             onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                    props.onSave('', 'text')
+                    props.onChange('')
+                }
                 if (e.key === "Enter") {
                     const [command, ..._] = props.value.trimStart().split(' ')
                     const block = registry.getBySlashCommandPrefix(command)

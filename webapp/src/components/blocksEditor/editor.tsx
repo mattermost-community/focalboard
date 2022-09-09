@@ -7,7 +7,7 @@ import RootInput from './rootInput'
 import './editor.scss'
 
 type Props = {
-    onSave: (block: BlockData) => BlockData|null
+    onSave: (block: BlockData) => Promise<BlockData|null>
     id?: string
     initialValue?: string
     initialContentType?: string
@@ -52,6 +52,7 @@ export default function Editor(props: Props) {
                     onChange={setValue}
                     value={value}
                     onCancel={() => {
+                        console.log("cancelling")
                         setValue('')
                         setCurrentBlockType(null)
                     }}

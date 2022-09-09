@@ -189,6 +189,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         }
 
         if (e.key === 'Backspace') {
+            console.log("emitting backspace")
             return 'backspace'
         }
 
@@ -225,13 +226,14 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
         if (command === 'backspace') {
             if (props.onEditorCancel && editorState.getCurrentContent().getPlainText().length === 0) {
+                console.log("handling backspace")
                 props.onEditorCancel()
                 return 'handled'
             }
         }
 
         return 'not-handled'
-    }, [props.onEditorCancel])
+    }, [props.onEditorCancel, editorState])
 
     const onEditorStateBlur = useCallback(() => {
         if (confirmAddUser) {
@@ -272,6 +274,11 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     return (
         <div
             className={className}
+            onKeyDown={(e: React.KeyboardEvent) => {
+                if (isMentionPopoverOpen || isEmojiPopoverOpen) {
+                    e.stopPropagation()
+                }
+            }}
         >
             <Editor
                 editorKey={id}

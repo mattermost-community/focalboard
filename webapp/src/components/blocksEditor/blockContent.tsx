@@ -11,42 +11,48 @@ import './blockContent.scss';
 
 type Props = {
     block: BlockData
+    contentOrder: Array<string>
     editing: BlockData|null
     setEditing: (block: BlockData|null) =>  void
     setAfterBlock: (block: BlockData|null) =>  void
-    onSave: (block: BlockData) => BlockData|null
-    onMove: (block: BlockData, afterBlock: BlockData) =>  void
+    onSave: (block: BlockData) => Promise<BlockData|null>
+    onMove: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>
 }
 
 function BlockContent(props: Props) {
-    const {block, editing, setEditing, onSave} = props
+    const {block, editing, setEditing, onSave, contentOrder} = props
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: 'block',
         item: block,
         collect: monitor => ({
             isDragging: !!monitor.isDragging(),
         }),
-    }), [block])
-    const [{ isOver }, drop] = useDrop(
+    }), [block, contentOrder])
+    const [{ isOver, draggingUp }, drop] = useDrop(
         () => ({
             accept: 'block',
             drop: (item: BlockData) => {
                 if (item.id !== block.id) {
-                    props.onMove(item, block)
+                    if (contentOrder.indexOf(item.id || '') > contentOrder.indexOf(block.id || '')) {
+                        props.onMove(item, block, null)
+                    } else {
+                        props.onMove(item, null, block)
+                    }
                 }
             },
             collect: (monitor) => ({
-                isOver: !!monitor.isOver(),
+                isOver: !!monitor.isOver() && (monitor.getItem() as BlockData).id! !== block.id,
+                draggingUp: (monitor.getItem() as BlockData)?.id && contentOrder.indexOf((monitor.getItem() as BlockData).id!) > contentOrder.indexOf(block.id || ''),
             })
         }),
-        [block, props.onMove]
+        [block, props.onMove, contentOrder]
     )
 
     if (editing && editing.id === block.id) {
         return (
             <Editor
-                onSave={(block) => {
-                    const updatedBlock = onSave(block)
+                onSave={async (block) => {
+                    const updatedBlock = await onSave(block)
                     props.setEditing(null)
                     props.setAfterBlock(updatedBlock)
                     return updatedBlock
@@ -64,7 +70,7 @@ function BlockContent(props: Props) {
         return (
             <div
                 ref={drop}
-                className={`BlockContent ${isOver ? 'over' : ''}`}
+                className={`BlockContent ${isOver && draggingUp ? 'over-up' : ''}  ${isOver && !draggingUp ? 'over-down' : ''}`}
                 key={block.id}
                 style={{
                     opacity: isDragging ? 0.5 : 1,

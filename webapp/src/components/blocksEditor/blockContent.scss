@@ -1,12 +1,12 @@
 .BlockContent {
     display: flex;
 
-    &.over-top {
-        border-top: 1px solid blue;
+    &.over-up {
+        border-top: 1px solid rgba(128, 192, 255, 0.4);
     }
 
-    &.over-bottom {
-        border-bottom: 1px solid blue;
+    &.over-down {
+        border-bottom: 1px solid rgba(128, 192, 255, 0.4);
     }
 
     &:hover {

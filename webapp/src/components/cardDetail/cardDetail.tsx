@@ -21,7 +21,8 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 import BlockIconSelector from '../blockIconSelector'
 
 import {useAppDispatch} from '../../store/hooks'
-import {setCurrent as setCurrentCard} from '../../store/cards'
+import {updateCards, setCurrent as setCurrentCard} from '../../store/cards'
+import {updateContents} from '../../store/contents'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import BlocksEditor from '../blocksEditor/blocksEditor'
@@ -50,7 +51,7 @@ type Props = {
     onClose: () => void
 }
 
-async function addBlock(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string): Promise<Block> {
+async function addBlock(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
     const block = createBlock()
     block.parentId = card.id
     block.boardId = card.boardId
@@ -73,6 +74,7 @@ async function addBlock(card: Card, intl: IntlShape, title: string, fields: any,
             contentOrder.push(newBlock.id)
         }
         await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+        dispatch(updateCards([{...card, fields: {...card.fields, contentOrder}}]))
     }
 
     const beforeUndo = async () => {
@@ -80,12 +82,14 @@ async function addBlock(card: Card, intl: IntlShape, title: string, fields: any,
         await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
     }
 
-    return mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
+    const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
+    dispatch(updateContents([newBlock]))
+    return newBlock
 }
 
-function moveBlock(boardId: string, blockId: string, dstBlockId: string): void {
+function moveBlock(boardId: string, blockId: string, dstBlockId: string, where: 'after'|'before'): void {
     // TODO: Make this a mutation
-    octoClient.moveBlockTo(boardId, blockId, "after", dstBlockId)
+    octoClient.moveBlockTo(boardId, blockId, where, dstBlockId)
 }
 
 
@@ -143,7 +147,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
         return null
     }
 
-    console.log(props.contents)
     const blocks = useMemo(() => props.contents.flatMap((value: Block | Block[]): BlockData<any> => {
         let v: Block = Array.isArray(value) ? value[0] : value
 
@@ -165,7 +168,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
             contentType: v?.type,
         }
     }), [props.contents])
-    console.log(blocks)
 
     return (
         <>
@@ -282,18 +284,19 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {!limited && <div className='CardDetail content fullwidth content-blocks'>
                 <BlocksEditor
                     blocks={blocks}
-                    onBlockCreated={(block: any, afterBlock: any): any => {
+                    onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
                         if (block.contentType === 'text' && block.value === '') {
                             return null
                         }
+                        let newBlock: Block
                         if (block.contentType === 'checkbox') {
-                            addBlock(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id)
+                            newBlock = await addBlock(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
                         } else {
-                            addBlock(card, intl, block.value, {}, block.contentType, afterBlock?.id)
+                            newBlock = await addBlock(card, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
                         }
-                        return block
+                        return {...block, id: newBlock.id}
                     }}
-                    onBlockModified={(block: any): BlockData<any>|null => {
+                    onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
                         const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
                         if (!originalContentBlock) {
                             return null
@@ -317,9 +320,16 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         mutator.updateBlock(card.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
                         return block
                     }}
-                    onBlockMoved={(block: any, afterBlock: any) => {
-                        console.log(block, afterBlock)
-                        moveBlock(card.boardId, block.id, afterBlock.id)
+                    onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
+                        if (block.id) {
+                            if (afterBlock && afterBlock.id) {
+                                moveBlock(card.boardId, block.id, afterBlock.id, "after")
+                                return
+                            }
+                            if (beforeBlock && beforeBlock.id) {
+                                moveBlock(card.boardId, block.id, beforeBlock.id, "before")
+                            }
+                        }
                     }}
                 />
             </div>}

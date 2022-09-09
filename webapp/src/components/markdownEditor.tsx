@@ -17,6 +17,7 @@ type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
+    onKeyDown?: (e: React.KeyboardEvent) => void
     onEditorCancel?: () => void
     autofocus?: boolean
     saveOnEnter?: boolean
