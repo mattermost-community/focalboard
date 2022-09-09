@@ -47,10 +47,10 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	if mmconfig.FileSettings.AmazonS3Trace != nil {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
 	}
-	if mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds == nil {
-		filesS3Config.Timeout = defaultS3Timeout
-	} else {
+	if mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds != nil && *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds > 0 {
 		filesS3Config.Timeout = *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds
+	} else {
+		filesS3Config.Timeout = defaultS3Timeout
 	}
 
 	enableTelemetry := false
