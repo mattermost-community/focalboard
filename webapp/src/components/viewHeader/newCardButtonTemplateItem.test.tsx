@@ -8,7 +8,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
@@ -31,6 +31,12 @@ describe('components/viewHeader/newCardButtonTemplateItem', () => {
             me: {
                 id: 'user-id-1',
                 username: 'username_1'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: {id: board.id},
+            },
         },
         views: {
             current: 0,
@@ -135,6 +141,6 @@ describe('components/viewHeader/newCardButtonTemplateItem', () => {
         const buttonSetAsDefault = screen.getByRole('button', {name: 'Set as default'})
         userEvent.click(buttonSetAsDefault)
         expect(mockedMutator.setDefaultTemplate).toBeCalledTimes(1)
-        expect(mockedMutator.setDefaultTemplate).toBeCalledWith(activeView.id, activeView.fields.defaultTemplateId, card.id)
+        expect(mockedMutator.setDefaultTemplate).toBeCalledWith(activeView.boardId, activeView.id, activeView.fields.defaultTemplateId, card.id)
     })
 })

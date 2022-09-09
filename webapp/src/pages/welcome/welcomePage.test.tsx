@@ -14,7 +14,7 @@ import userEvent from '@testing-library/user-event'
 
 import configureStore from 'redux-mock-store'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import thunk from 'redux-thunk'
 
@@ -39,11 +39,16 @@ const mockedOctoClient = mocked(octoClient, true)
 
 beforeEach(() => {
     jest.resetAllMocks()
-    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve({
-        welcomePageViewed: '1',
-    }))
+    mockedMutator.patchUserConfig.mockImplementation(() => Promise.resolve([
+        {
+            user_id: '',
+            category: 'focalboard',
+            name: 'welcomePageViewed',
+            value: '1',
+        },
+    ]))
     mockedOctoClient.prepareOnboarding.mockResolvedValue({
-        workspaceID: 'workspace_id_1',
+        teamID: 'team_id_1',
         boardID: 'board_id_1',
     })
 })
@@ -56,10 +61,17 @@ describe('pages/welcome', () => {
     let history = createMemoryHistory()
     const mockStore = configureStore([thunk])
     const store = mockStore({
+        teams: {
+            current: {id: 'team_id_1'},
+        },
         users: {
             me: {
                 props: {},
             },
+            myConfig: {
+                onboardingTourStep: {value: '0'},
+                tourCategory: {value: 'onboarding'},
+            }
         },
     })
 
@@ -124,21 +136,22 @@ describe('pages/welcome', () => {
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/')
+            expect(history.replace).toBeCalledWith('/team/team_id_1')
             expect(mockedMutator.patchUserConfig).toBeCalledTimes(1)
         })
     })
 
     test('Welcome Page does not render explore page the second time we visit it', async () => {
         history.replace = jest.fn()
-
         const customStore = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
-                me: {
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                    },
-                },
+                me: {},
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                }
             },
         })
 
@@ -156,7 +169,7 @@ describe('pages/welcome', () => {
 
         render(component)
         await waitFor(() => {
-            expect(history.replace).toBeCalledWith('/')
+            expect(history.replace).toBeCalledWith('/team/team_id_1')
         })
     })
 
@@ -165,12 +178,14 @@ describe('pages/welcome', () => {
         history.location.search = 'r=123'
 
         const customStore = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
-                me: {
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                    },
-                },
+                me: {},
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                }
             },
         })
         const component = (
@@ -196,6 +211,9 @@ describe('pages/welcome', () => {
         history.location.search = 'r=123'
 
         const localStore = mockStore({
+            teams: {
+                current: {id: 'team_id_1'},
+            },
             users: {
                 me: {
                     props: {},
@@ -226,13 +244,7 @@ describe('pages/welcome', () => {
 
     test('Welcome page starts tour on clicking Take a tour button', async () => {
         history.replace = jest.fn()
-        const user = {
-            props: {
-                focalboard_welcomePageViewed: '1',
-                focalboard_onboardingTourStep: '0',
-                focalboard_tourCategory: 'onboarding',
-            },
-        } as unknown as IUser
+        const user = {} as unknown as IUser
         mockedOctoClient.getMe.mockResolvedValue(user)
 
         const component = (
@@ -251,18 +263,12 @@ describe('pages/welcome', () => {
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
         await waitFor(() => expect(mockedOctoClient.prepareOnboarding).toBeCalledTimes(1))
-        await waitFor(() => expect(history.replace).toBeCalledWith('/workspace/workspace_id_1/board_id_1'))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/team/team_id_1/board_id_1'))
     })
 
     test('Welcome page skips tour on clicking no thanks option', async () => {
         history.replace = jest.fn()
-        const user = {
-            props: {
-                focalboard_welcomePageViewed: '1',
-                focalboard_onboardingTourStep: '0',
-                focalboard_tourCategory: 'onboarding',
-            },
-        } as unknown as IUser
+        const user = {} as unknown as IUser
         mockedOctoClient.getMe.mockResolvedValue(user)
 
         const component = (
@@ -280,6 +286,6 @@ describe('pages/welcome', () => {
         const exploreButton = screen.getByText('No thanks, I\'ll figure it out myself')
         expect(exploreButton).toBeDefined()
         userEvent.click(exploreButton)
-        await waitFor(() => expect(history.replace).toBeCalledWith('/'))
+        await waitFor(() => expect(history.replace).toBeCalledWith('/team/team_id_1'))
     })
 })

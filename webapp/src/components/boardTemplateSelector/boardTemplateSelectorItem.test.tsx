@@ -3,9 +3,14 @@
 import {render, within, act, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
+import {MockStoreEnhanced} from 'redux-mock-store'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {wrapDNDIntl} from '../../testUtils'
+import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+
+import {IUser} from '../../user'
+import {Team} from '../../store/teams'
 
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'
 
@@ -38,113 +43,101 @@ const groupProperty: IPropertyTemplate = {
     ],
 }
 
-jest.mock('../../octoClient', () => {
-    return {
-        getSubtree: jest.fn(() => Promise.resolve([
-            {
-                id: '1',
-                workspaceId: 'workspace',
-                title: 'Template',
-                type: 'board',
-                fields: {
-                    icon: '🚴🏻‍♂️',
-                    cardProperties: [groupProperty],
-                    dateDisplayPropertyId: 'id-5',
-                },
-            },
-            {
-                id: '2',
-                workspaceId: 'workspace',
-                title: 'View',
-                type: 'view',
-                fields: {
-                    groupById: 'group-prop-id',
-                    viewType: 'board',
-                    visibleOptionIds: ['group-prop-id'],
-                    hiddenOptionIds: [],
-                    visiblePropertyIds: ['group-prop-id'],
-                    sortOptions: [],
-                    kanbanCalculations: {},
-                },
-            },
-            {
-                id: '3',
-                workspaceId: 'workspace',
-                title: 'Card',
-                type: 'card',
-                fields: {
-                    icon: '🚴🏻‍♂️',
-                    properties: {
-                        'group-prop-id': 'test',
-                    },
-                },
-            },
-        ])),
-    }
-})
 jest.mock('../../utils')
 jest.mock('../../mutator')
 
 describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
+    const team1: Team = {
+        id: 'team-1',
+        title: 'Team 1',
+        signupToken: '',
+        updateAt: 0,
+        modifiedBy: 'user-1',
+    }
+
     const template: Board = {
         id: '1',
-        workspaceId: 'workspace_1',
+        teamId: 'team-1',
         title: 'Template 1',
         createdBy: 'user-1',
         modifiedBy: 'user-1',
         createAt: 10,
         updateAt: 20,
         deleteAt: 0,
+        description: 'test',
+        showDescription: false,
         type: 'board',
-        parentId: '123',
-        rootId: '123',
-        schema: 1,
-        fields: {
-            description: 'test',
-            icon: '🚴🏻‍♂️',
-            cardProperties: [groupProperty],
-            dateDisplayPropertyId: 'id-5',
-            columnCalculations: {},
-        },
+        minimumRole: 'editor',
+        isTemplate: true,
+        templateVersion: 0,
+        icon: '🚴🏻‍♂️',
+        cardProperties: [groupProperty],
+        properties: {},
     }
 
     const globalTemplate: Board = {
         id: 'global-1',
         title: 'Template global',
-        workspaceId: '0',
-        createdBy: 'user-1',
-        modifiedBy: 'user-1',
+        teamId: '0',
+        createdBy: 'system',
+        modifiedBy: 'system',
         createAt: 10,
         updateAt: 20,
         deleteAt: 0,
         type: 'board',
-        parentId: '123',
-        rootId: '123',
-        schema: 1,
-        fields: {
-            icon: '🚴🏻‍♂️',
-            description: 'test',
-            cardProperties: [groupProperty],
-            dateDisplayPropertyId: 'global-id-5',
-            columnCalculations: {},
-            isTemplate: true,
-            templateVer: 2,
-        },
+        minimumRole: 'editor',
+        icon: '🚴🏻‍♂️',
+        description: 'test',
+        showDescription: false,
+        cardProperties: [groupProperty],
+        isTemplate: true,
+        templateVersion: 2,
+        properties: {},
     }
 
+    const me: IUser = {
+        id: 'user-id-1',
+        username: 'username_1',
+        nickname: '',
+        firstname: '',
+        lastname: '',
+        email: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        is_guest: false,
+        roles: 'system_user',
+    }
+
+    let store:MockStoreEnhanced<unknown, unknown>
     beforeEach(() => {
         jest.clearAllMocks()
+        const state = {
+            teams: {
+                current: team1,
+            },
+            boards: {
+                current: '1',
+                myBoardMemberships: {
+                    ['1']: {userId: me.id, schemeAdmin: true},
+                },
+            }
+        }
+        store = mockStateStore([], state)
     })
 
     test('should match snapshot', async () => {
         const {container} = render(wrapDNDIntl(
-            <BoardTemplateSelectorItem
-                isActive={false}
-                template={template}
-                onSelect={jest.fn()}
-                onDelete={jest.fn()}
-                onEdit={jest.fn()}
-            />
+            <ReduxProvider store={store}>
+                <BoardTemplateSelectorItem
+                    isActive={false}
+                    template={template}
+                    onSelect={jest.fn()}
+                    onDelete={jest.fn()}
+                    onEdit={jest.fn()}
+                />
+            </ReduxProvider>
             ,
         ))
         expect(container).toMatchSnapshot()
@@ -152,13 +145,15 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
 
     test('should match snapshot when active', async () => {
         const {container} = render(wrapDNDIntl(
-            <BoardTemplateSelectorItem
-                isActive={true}
-                template={template}
-                onSelect={jest.fn()}
-                onDelete={jest.fn()}
-                onEdit={jest.fn()}
-            />
+            <ReduxProvider store={store}>
+                <BoardTemplateSelectorItem
+                    isActive={true}
+                    template={template}
+                    onSelect={jest.fn()}
+                    onDelete={jest.fn()}
+                    onEdit={jest.fn()}
+                />
+            </ReduxProvider>
             ,
         ))
         expect(container).toMatchSnapshot()
@@ -166,13 +161,15 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
 
     test('should match snapshot with global template', async () => {
         const {container} = render(wrapDNDIntl(
-            <BoardTemplateSelectorItem
-                isActive={false}
-                template={globalTemplate}
-                onSelect={jest.fn()}
-                onDelete={jest.fn()}
-                onEdit={jest.fn()}
-            />
+            <ReduxProvider store={store}>
+                <BoardTemplateSelectorItem
+                    isActive={false}
+                    template={globalTemplate}
+                    onSelect={jest.fn()}
+                    onDelete={jest.fn()}
+                    onEdit={jest.fn()}
+                />
+            </ReduxProvider>
             ,
         ))
         expect(container).toMatchSnapshot()
@@ -183,13 +180,15 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         const onDelete = jest.fn()
         const onEdit = jest.fn()
         const {container} = render(wrapDNDIntl(
-            <BoardTemplateSelectorItem
-                isActive={false}
-                template={template}
-                onSelect={onSelect}
-                onDelete={onDelete}
-                onEdit={onEdit}
-            />
+            <ReduxProvider store={store}>
+                <BoardTemplateSelectorItem
+                    isActive={false}
+                    template={template}
+                    onSelect={onSelect}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                />
+            </ReduxProvider>
             ,
         ))
         userEvent.click(container.querySelector('.BoardTemplateSelectorItem')!)
@@ -204,13 +203,15 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         const onDelete = jest.fn()
         const onEdit = jest.fn()
         const {container} = render(wrapDNDIntl(
-            <BoardTemplateSelectorItem
-                isActive={false}
-                template={template}
-                onSelect={onSelect}
-                onDelete={onDelete}
-                onEdit={onEdit}
-            />
+            <ReduxProvider store={store}>
+                <BoardTemplateSelectorItem
+                    isActive={false}
+                    template={template}
+                    onSelect={onSelect}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                />
+            </ReduxProvider>
             ,
         ))
         userEvent.click(container.querySelector('.BoardTemplateSelectorItem .EditIcon')!)
@@ -228,13 +229,15 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         const root = document.createElement('div')
         root.setAttribute('id', 'focalboard-root-portal')
         render(wrapDNDIntl(
-            <BoardTemplateSelectorItem
-                isActive={false}
-                template={template}
-                onSelect={onSelect}
-                onDelete={onDelete}
-                onEdit={onEdit}
-            />
+            <ReduxProvider store={store}>
+                <BoardTemplateSelectorItem
+                    isActive={false}
+                    template={template}
+                    onSelect={onSelect}
+                    onDelete={onDelete}
+                    onEdit={onEdit}
+                />
+            </ReduxProvider>
             ,
         ), {container: document.body.appendChild(root)})
         act(() => {

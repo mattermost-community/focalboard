@@ -22,6 +22,6 @@
     "typescript": "^4.1.5"
   },
   "dependencies": {
-    "minimist": "^1.2.5"
+    "minimist": "^1.2.6"
   }
 }

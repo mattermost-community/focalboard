@@ -16,8 +16,9 @@ import {
 } from '../../theme'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {storeLanguage} from '../../store/language'
+import {getCurrentTeam, Team} from '../../store/teams'
 import {UserSettings} from '../../userSettings'
 
 import './sidebarSettingsMenu.scss'
@@ -33,6 +34,7 @@ type Props = {
 const SidebarSettingsMenu = (props: Props) => {
     const intl = useIntl()
     const dispatch = useAppDispatch()
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
 
     // we need this as the sidebar doesn't always need to re-render
     // on theme change. This can cause props and the actual
@@ -114,8 +116,10 @@ const SidebarSettingsMenu = (props: Props) => {
                         id='export'
                         name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
                         onClick={async () => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ExportArchive)
-                            Archiver.exportFullArchive()
+                            if (currentTeam) {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ExportArchive)
+                                Archiver.exportFullArchive(currentTeam.id)
+                            }
                         }}
                     />
                     <Menu.SubMenu

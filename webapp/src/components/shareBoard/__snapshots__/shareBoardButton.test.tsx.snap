@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
+exports[`src/components/shareBoard/shareBoard should match snapshot, Open Board 1`] = `
 <div>
   <div
     class="ShareBoardButton"
@@ -11,7 +11,28 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
       type="button"
     >
       <i
-        class="CompassIcon icon-globe CompassIcon"
+        class="CompassIcon icon-globe GlobeIcon"
+      />
+      <span>
+        Share
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard should match snapshot, Private Board 1`] = `
+<div>
+  <div
+    class="ShareBoardButton"
+  >
+    <button
+      class="Button emphasis--primary size--medium"
+      title="Share board"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-lock-outline LockOutlineIcon"
       />
       <span>
         Share

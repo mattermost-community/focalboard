@@ -8,6 +8,10 @@ import {Router} from 'react-router-dom'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import {Provider as ReduxProvider} from 'react-redux'
+
+import configureStore from 'redux-mock-store'
+
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {wrapIntl} from '../../testUtils'
@@ -15,33 +19,129 @@ import {wrapIntl} from '../../testUtils'
 import SidebarBoardItem from './sidebarBoardItem'
 
 describe('components/sidebarBoardItem', () => {
-    test('sidebar call hideSidebar', () => {
-        const board = TestBlockFactory.createBoard()
-        const view = TestBlockFactory.createBoardView(board)
+    const board = TestBlockFactory.createBoard()
 
-        const view2 = TestBlockFactory.createBoardView(board)
-        view2.fields.sortOptions = []
-        const history = createMemoryHistory()
+    const view = TestBlockFactory.createBoardView(board)
+    view.fields.sortOptions = []
+    const history = createMemoryHistory()
 
-        const mockHide = jest.fn()
+    const categoryBoards1 = TestBlockFactory.createCategoryBoards()
+    categoryBoards1.name = 'Category 1'
+    categoryBoards1.boardIDs = [board.id]
+
+    const categoryBoards2 = TestBlockFactory.createCategoryBoards()
+    categoryBoards2.name = 'Category 2'
+
+    const categoryBoards3 = TestBlockFactory.createCategoryBoards()
+    categoryBoards3.name = 'Category 3'
+
+    const allCategoryBoards = [
+        categoryBoards1,
+        categoryBoards2,
+        categoryBoards3,
+    ]
+
+    const state = {
+        users: {
+            me: {
+                id: 'user_id_1',
+            },
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        views: {
+            current: view.id,
+            views: {
+                [view.id]: view,
+            },
+        },
+        teams: {
+            current: {
+                id: 'team-id',
+            },
+        },
+    }
+
+    test('sidebar board item', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
 
         const component = wrapIntl(
-            <Router history={history}>
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={board}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
+        expect(elementMenuWrapper).not.toBeNull()
+        userEvent.click(elementMenuWrapper!)
+        expect(container).toMatchSnapshot()
+    })
 
-                <SidebarBoardItem
-                    hideSidebar={mockHide}
-                    key={board.id}
-                    views={[view, view2]}
-                    board={board}
-                />
-            </Router>,
+    test('renders default icon if no custom icon set', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+        const noIconBoard = { ...board, icon: '' }
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={noIconBoard}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
+    })
 
-        const subItems = container.querySelectorAll('.subitem > .BoardIcon')
-        expect(subItems).toBeDefined()
-        userEvent.click(subItems[0] as Element)
-        expect(mockHide).toBeCalled()
+    test('sidebar board item for guest', () => {
+        const mockStore = configureStore([])
+        const store = mockStore({...state, users: { me: { is_guest: true }}})
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={board}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
+        expect(elementMenuWrapper).not.toBeNull()
+        userEvent.click(elementMenuWrapper!)
+        expect(container).toMatchSnapshot()
     })
 })

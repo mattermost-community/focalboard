@@ -1,0 +1,126 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+import React, {useState, KeyboardEvent} from 'react'
+
+import {useIntl} from 'react-intl'
+
+import {IUser} from '../../user'
+import {Category} from '../../store/sidebar'
+import {getCurrentTeam} from '../../store/teams'
+import mutator from '../../mutator'
+import {useAppSelector} from '../../store/hooks'
+import {
+    getMe,
+} from '../../store/users'
+
+import {Utils} from '../../utils'
+
+import Dialog from '../dialog'
+import Button from '../../widgets/buttons/button'
+
+import './createCategory.scss'
+import CloseCircle from "../../widgets/icons/closeCircle"
+
+type Props = {
+    boardCategoryId?: string
+    renameModal?: boolean
+    initialValue?: string
+    onClose: () => void
+    title: JSX.Element
+}
+
+const CreateCategory = (props: Props): JSX.Element => {
+    const intl = useIntl()
+    const me = useAppSelector<IUser|null>(getMe)
+    const team = useAppSelector(getCurrentTeam)
+    const teamID = team?.id || ''
+    const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category' })
+    const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel' })
+    const createText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CreateText', defaultMessage: 'Create' })
+    const updateText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.UpdateText', defaultMessage: 'Update' })
+
+    const [name, setName] = useState(props.initialValue || '')
+
+    const handleKeypress = (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            onCreate(name)
+        }
+    }
+
+    const onCreate = async (categoryName: string) => {
+        if (!me) {
+            Utils.logError('me not initialized')
+            return
+        }
+
+        if (props.renameModal) {
+            const category: Category = {
+                name: categoryName,
+                id: props.boardCategoryId,
+                userID: me.id,
+                teamID,
+            } as Category
+
+            await mutator.updateCategory(category)
+        } else {
+            const category: Category = {
+                name: categoryName,
+                userID: me.id,
+                teamID,
+            } as Category
+
+            await mutator.createCategory(category)
+        }
+
+        props.onClose()
+    }
+
+    return (
+        <Dialog
+            className='CreateCategoryModal'
+            onClose={props.onClose}
+        >
+            <div className='CreateCategory'>
+                <h3 className='dialog-title'>{props.title}</h3>
+                <div className='inputWrapper'>
+                    <input
+                        className='categoryNameInput'
+                        type='text'
+                        placeholder={placeholder}
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        autoFocus={true}
+                        maxLength={100}
+                        onKeyUp={handleKeypress}
+                    />
+                    {
+                        Boolean(name) &&
+                        <div className='clearBtn' onClick={() => setName('')}>
+                            <CloseCircle/>
+                        </div>
+                    }
+                </div>
+                <div className='createCategoryActions'>
+                    <Button
+                        size={'medium'}
+                        danger={true}
+                        onClick={props.onClose}
+                    >
+                        {cancelText}
+                    </Button>
+                    <Button
+                        size={'medium'}
+                        filled={Boolean(name.trim())}
+                        onClick={() => onCreate(name.trim())}
+                        disabled={!(name.trim())}
+                    >
+                        {props.initialValue ? updateText : createText}
+                    </Button>
+                </div>
+            </div>
+        </Dialog>
+    )
+}
+
+export default CreateCategory

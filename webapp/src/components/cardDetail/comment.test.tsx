@@ -6,7 +6,7 @@ import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import moment from 'moment'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
@@ -32,9 +32,7 @@ const userImageUrl = 'data:image/svg+xml'
 describe('components/cardDetail/comment', () => {
     const state = {
         users: {
-            workspaceUsers: [
-                {username: 'username_1'},
-            ],
+            boardUsers: {[comment.modifiedBy]: {username: 'username_1'}},
         },
     }
     const store = mockStateStore([], state)
@@ -85,6 +83,59 @@ describe('components/cardDetail/comment', () => {
     test('return comment and delete comment', () => {
         const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
+                <Comment
+                    comment={comment}
+                    userId={comment.modifiedBy}
+                    userImageUrl={userImageUrl}
+                    readonly={false}
+                />
+            </ReduxProvider>,
+        ))
+        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+        const buttonDelete = screen.getByRole('button', {name: 'Delete'})
+        userEvent.click(buttonDelete)
+        expect(mockedMutator.deleteBlock).toBeCalledTimes(1)
+        expect(mockedMutator.deleteBlock).toBeCalledWith(comment)
+    })
+
+    test('return guest comment', () => {
+        const localStore = mockStateStore([], {users: {boardUsers: {[comment.modifiedBy]: {username: 'username_1', is_guest: true}}}})
+        const {container} = render(wrapIntl(
+            <ReduxProvider store={localStore}>
+                <Comment
+                    comment={comment}
+                    userId={comment.modifiedBy}
+                    userImageUrl={userImageUrl}
+                    readonly={false}
+                />
+            </ReduxProvider>,
+        ))
+        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return guest comment readonly', () => {
+        const localStore = mockStateStore([], {users: {boardUsers: {[comment.modifiedBy]: {username: 'username_1', is_guest: true}}}})
+        const {container} = render(wrapIntl(
+            <ReduxProvider store={localStore}>
+                <Comment
+                    comment={comment}
+                    userId={comment.modifiedBy}
+                    userImageUrl={userImageUrl}
+                    readonly={true}
+                />
+            </ReduxProvider>,
+        ))
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return guest comment and delete comment', () => {
+        const localStore = mockStateStore([], {users: {boardUsers: {[comment.modifiedBy]: {username: 'username_1', is_guest: true}}}})
+        const {container} = render(wrapIntl(
+            <ReduxProvider store={localStore}>
                 <Comment
                     comment={comment}
                     userId={comment.modifiedBy}

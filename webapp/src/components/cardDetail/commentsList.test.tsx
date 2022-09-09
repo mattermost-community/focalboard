@@ -48,21 +48,32 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             boards: {
                 boards: {
                     board_id_1: {title: 'Board'},
                 },
                 current: 'board_id_1',
+                myBoardMemberships: {
+                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     card_id_1: {title: 'Card'},
                 },
                 current: 'card_id_1',
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
+            teams: {
+                current: {id: 'team_id_1'},
             },
         })
 
@@ -71,8 +82,8 @@ describe('components/cardDetail/CommentsList', () => {
                 {wrapIntl(
                     <CommentsList
                         comments={[comment1, comment2]}
-                        rootId={'root_id'}
                         cardId={'card_id'}
+                        boardId={'board_id'}
                         readonly={false}
                     />,
                 )}
@@ -100,10 +111,22 @@ describe('components/cardDetail/CommentsList', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
+            boards: {
+                boards: {
+                    board_id_1: {title: 'Board'},
+                },
+                current: 'board_id_1',
+                myBoardMemberships: {
+                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            teams: {
+                current: {id: 'team_id_1'}
+            }
         })
 
         const component = (
@@ -111,8 +134,8 @@ describe('components/cardDetail/CommentsList', () => {
                 {wrapIntl(
                     <CommentsList
                         comments={[comment1, comment2]}
-                        rootId={'root_id'}
                         cardId={'card_id'}
+                        boardId={'board_id'}
                         readonly={true}
                     />,
                 )}

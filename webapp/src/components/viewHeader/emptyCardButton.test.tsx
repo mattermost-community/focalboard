@@ -7,7 +7,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
@@ -28,6 +28,12 @@ describe('components/viewHeader/emptyCardButton', () => {
             me: {
                 id: 'user-id-1',
                 username: 'username_1'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
         },
         views: {
             current: 0,

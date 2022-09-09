@@ -56,7 +56,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                         class="version"
                         title="v1.0.0"
                       >
-                        Apr 2022
+                        v1.0.0
                       </div>
                     </div>
                   </div>
@@ -93,79 +93,92 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
         class="WorkspaceTitle"
       />
       <div
-        class="WorkspaceSwitcherWrapper"
+        class="BoardsSwitcherWrapper"
       >
         <div
-          class="WorkspaceSwitcher"
+          class="BoardsSwitcher"
         >
-          <span>
-            Workspace 1
-          </span>
           <i
-            class="CompassIcon icon-chevron-down ChevronDownIcon"
+            class="CompassIcon icon-magnify MagnifyIcon"
           />
+          <div>
+            <span>
+              Find Boards
+            </span>
+          </div>
         </div>
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </button>
       </div>
       <div
         class="octo-sidebar-list"
       >
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
-            class="octo-sidebar-item ' expanded active"
+            class="octo-sidebar-item category ' expanded active"
           >
-            <button
-              type="button"
+            <div
+              class="octo-sidebar-title category-title"
+              title="Category 1"
             >
-              <svg
-                class="DisclosureTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
+              Category 1
+              <div
+                class="sidebarCategoriesTour"
+              />
+            </div>
+            <div
+              class=""
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <polygon
-                  points="37,35 37,65 63,50"
-                />
-              </svg>
-            </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="SidebarBoardItem subitem active"
+          >
+            <div
+              class="octo-sidebar-icon"
+            >
+              i
+            </div>
             <div
               class="octo-sidebar-title"
               title="board title"
             >
-              <div
-                class="octo-icon"
-              >
-                i
-              </div>
-              <span
-                class="octo-sidebar-name"
-              >
-                board title
-              </span>
+              board title
             </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                type="button"
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper x"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
-            class="octo-sidebar-item subitem active"
+            class="SidebarBoardItem sidebar-view-item active"
           >
             <svg
               class="BoardIcon Icon"
@@ -192,6 +205,48 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             >
               view title
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarCategory"
+        >
+          <div
+            class="octo-sidebar-item category ' expanded "
+          >
+            <div
+              class="octo-sidebar-title category-title"
+              title="Boards"
+            >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
+              Boards
+              <div
+                class="sidebarCategoriesTour"
+              />
+            </div>
+            <div
+              class=""
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="octo-sidebar-item subitem no-views"
+          >
+            No boards inside
           </div>
         </div>
       </div>
@@ -237,7 +292,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -261,15 +316,9 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 <button
                   type="button"
                 >
-                  <svg
-                    class="HideIcon Icon"
-                    viewBox="0 0 640 512"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-eye-off-outline"
+                  />
                   <span>
                     hide description
                   </span>
@@ -279,7 +328,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
                     aria-label="menuwrapper"
@@ -313,53 +362,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -374,7 +376,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-globe CompassIcon"
+                    class="CompassIcon icon-lock-outline LockOutlineIcon"
                   />
                   <span>
                     Share
@@ -390,24 +392,26 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled View"
                 spellcheck="true"
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -468,13 +472,18 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 </span>
               </button>
             </div>
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
             <div
               class="ModalWrapper"
             >
@@ -580,7 +589,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable undefined"
+                  class="Editable "
                   placeholder="New Select"
                   spellcheck="true"
                   title="value 2"
@@ -821,7 +830,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -846,20 +855,14 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper"
-                    role="button"
+                    class="octo-icon size-m readonly"
                   >
-                    <div
-                      class="octo-icon size-m"
-                    >
-                      <span>
-                        i
-                      </span>
-                    </div>
+                    <span>
+                      i
+                    </span>
                   </div>
                 </div>
                 <input
@@ -881,59 +884,25 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
             <div
               class="shareButtonWrapper"
-            />
+            >
+              <div
+                class="ShareBoardLoginButton"
+              >
+                <button
+                  title="Login"
+                  type="button"
+                >
+                  <span>
+                    Login
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
           <div
             class="ViewHeader"
@@ -942,37 +911,44 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled View"
                 readonly=""
                 spellcheck="true"
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
               class="octo-spacer"
             />
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -1019,7 +995,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable readonly undefined"
+                  class="Editable readonly "
                   placeholder="New Select"
                   readonly=""
                   spellcheck="true"
@@ -1160,81 +1136,7 @@ exports[`src/components/workspace return workspace with BoardTemplateSelector co
   >
     <div
       class="mainFrame"
-    >
-      <div
-        class="BoardTemplateSelector"
-      >
-        <div
-          class="toolbar"
-        />
-        <div
-          class="header"
-        >
-          <h1
-            class="title"
-          >
-            Create a Board in Workspace 1
-          </h1>
-          <p
-            class="description"
-          >
-            Add a board to the sidebar using any of the templates defined below or start from scratch.
-            <br />
-             Members of "
-            <b>
-              Workspace 1
-            </b>
-            " will have access to boards created here.
-          </p>
-        </div>
-        <div
-          class="templates"
-        >
-          <div
-            class="templates-list"
-          >
-            <div
-              class="new-template"
-            >
-              <span
-                class="template-icon"
-              >
-                <i
-                  class="CompassIcon icon-plus AddIcon"
-                />
-              </span>
-              <span
-                class="template-name"
-              >
-                New template
-              </span>
-            </div>
-          </div>
-          <div
-            class="template-preview-box"
-          >
-            <div
-              class="buttons"
-            >
-              <button
-                type="button"
-              >
-                <span>
-                  Use this template
-                </span>
-              </button>
-              <button
-                type="button"
-              >
-                <span>
-                  Create empty board
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    />
   </div>
 </div>
 `;
@@ -1295,7 +1197,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                         class="version"
                         title="v1.0.0"
                       >
-                        Apr 2022
+                        v1.0.0
                       </div>
                     </div>
                   </div>
@@ -1332,79 +1234,92 @@ exports[`src/components/workspace should match snapshot 1`] = `
         class="WorkspaceTitle"
       />
       <div
-        class="WorkspaceSwitcherWrapper"
+        class="BoardsSwitcherWrapper"
       >
         <div
-          class="WorkspaceSwitcher"
+          class="BoardsSwitcher"
         >
-          <span>
-            Workspace 1
-          </span>
           <i
-            class="CompassIcon icon-chevron-down ChevronDownIcon"
+            class="CompassIcon icon-magnify MagnifyIcon"
           />
+          <div>
+            <span>
+              Find Boards
+            </span>
+          </div>
         </div>
-        <button
-          type="button"
-        >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </button>
       </div>
       <div
         class="octo-sidebar-list"
       >
         <div
-          class="SidebarBoardItem"
+          class="SidebarCategory"
         >
           <div
-            class="octo-sidebar-item ' expanded active"
+            class="octo-sidebar-item category ' expanded active"
           >
-            <button
-              type="button"
+            <div
+              class="octo-sidebar-title category-title"
+              title="Category 1"
             >
-              <svg
-                class="DisclosureTriangleIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
+              Category 1
+              <div
+                class="sidebarCategoriesTour"
+              />
+            </div>
+            <div
+              class=""
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
               >
-                <polygon
-                  points="37,35 37,65 63,50"
-                />
-              </svg>
-            </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="SidebarBoardItem subitem active"
+          >
+            <div
+              class="octo-sidebar-icon"
+            >
+              i
+            </div>
             <div
               class="octo-sidebar-title"
               title="board title"
             >
-              <div
-                class="octo-icon"
-              >
-                i
-              </div>
-              <span
-                class="octo-sidebar-name"
-              >
-                board title
-              </span>
+              board title
             </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                type="button"
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper x"
+                role="button"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
           </div>
           <div
-            class="octo-sidebar-item subitem active"
+            class="SidebarBoardItem sidebar-view-item active"
           >
             <svg
               class="BoardIcon Icon"
@@ -1431,6 +1346,48 @@ exports[`src/components/workspace should match snapshot 1`] = `
             >
               view title
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarCategory"
+        >
+          <div
+            class="octo-sidebar-item category ' expanded "
+          >
+            <div
+              class="octo-sidebar-title category-title"
+              title="Boards"
+            >
+              <i
+                class="CompassIcon icon-chevron-down ChevronDownIcon"
+              />
+              Boards
+              <div
+                class="sidebarCategoriesTour"
+              />
+            </div>
+            <div
+              class=""
+            >
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="octo-sidebar-item subitem no-views"
+          >
+            No boards inside
           </div>
         </div>
       </div>
@@ -1476,7 +1433,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -1500,15 +1457,9 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 <button
                   type="button"
                 >
-                  <svg
-                    class="HideIcon Icon"
-                    viewBox="0 0 640 512"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M634 471L36 3.51A16 16 0 0 0 13.51 6l-10 12.49A16 16 0 0 0 6 41l598 467.49a16 16 0 0 0 22.49-2.49l10-12.49A16 16 0 0 0 634 471zM296.79 146.47l134.79 105.38C429.36 191.91 380.48 144 320 144a112.26 112.26 0 0 0-23.21 2.47zm46.42 219.07L208.42 260.16C210.65 320.09 259.53 368 320 368a113 113 0 0 0 23.21-2.46zM320 112c98.65 0 189.09 55 237.93 144a285.53 285.53 0 0 1-44 60.2l37.74 29.5a333.7 333.7 0 0 0 52.9-75.11 32.35 32.35 0 0 0 0-29.19C550.29 135.59 442.93 64 320 64c-36.7 0-71.71 7-104.63 18.81l46.41 36.29c18.94-4.3 38.34-7.1 58.22-7.1zm0 288c-98.65 0-189.08-55-237.93-144a285.47 285.47 0 0 1 44.05-60.19l-37.74-29.5a333.6 333.6 0 0 0-52.89 75.1 32.35 32.35 0 0 0 0 29.19C89.72 376.41 197.08 448 320 448c36.7 0 71.71-7.05 104.63-18.81l-46.41-36.28C359.28 397.2 339.89 400 320 400z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-eye-off-outline"
+                  />
                   <span>
                     hide description
                   </span>
@@ -1518,7 +1469,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
                     aria-label="menuwrapper"
@@ -1552,53 +1503,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -1613,7 +1517,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-globe CompassIcon"
+                    class="CompassIcon icon-lock-outline LockOutlineIcon"
                   />
                   <span>
                     Share
@@ -1629,24 +1533,26 @@ exports[`src/components/workspace should match snapshot 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable undefined"
+                class="Editable "
                 placeholder="Untitled View"
                 spellcheck="true"
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
@@ -1707,13 +1613,18 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 </span>
               </button>
             </div>
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
             <div
               class="ModalWrapper"
             >
@@ -1819,7 +1730,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable undefined"
+                  class="Editable "
                   placeholder="New Select"
                   spellcheck="true"
                   title="value 2"
@@ -2060,7 +1971,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               rel="noreferrer"
               target="_blank"
             >
-              Give Feedback
+              Give feedback
             </a>
             <a
               href="https://www.focalboard.com/guide/user?utm_source=webapp"
@@ -2085,20 +1996,14 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="title"
               >
                 <div
-                  class="BlockIconSelector"
+                  class="IconSelector"
                 >
                   <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper"
-                    role="button"
+                    class="octo-icon size-m readonly"
                   >
-                    <div
-                      class="octo-icon size-m"
-                    >
-                      <span>
-                        i
-                      </span>
-                    </div>
+                    <span>
+                      i
+                    </span>
                   </div>
                 </div>
                 <input
@@ -2120,59 +2025,25 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
             <div
               class="shareButtonWrapper"
-            />
+            >
+              <div
+                class="ShareBoardLoginButton"
+              >
+                <button
+                  title="Login"
+                  type="button"
+                >
+                  <span>
+                    Login
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
           <div
             class="ViewHeader"
@@ -2181,37 +2052,44 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
               class="viewSelector"
             >
               <input
-                class="Editable readonly undefined"
+                class="Editable readonly "
                 placeholder="Untitled View"
                 readonly=""
                 spellcheck="true"
                 title="view title"
                 value="view title"
               />
-              <div
-                aria-label="View menu"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
+              <div>
+                <div
+                  aria-label="View menu"
+                  class="MenuWrapper"
+                  role="button"
                 >
-                  <i
-                    class="CompassIcon icon-chevron-down DropdownIcon"
-                  />
-                </button>
+                  <button
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-chevron-down DropdownIcon"
+                    />
+                  </button>
+                </div>
               </div>
             </div>
             <div
               class="octo-spacer"
             />
-            <button
-              type="button"
+            <div
+              class="board-search-field"
             >
-              <span>
-                Search
-              </span>
-            </button>
+              <i
+                class="CompassIcon icon-magnify board-search-icon"
+              />
+              <input
+                class="Editable "
+                placeholder="Search cards"
+                value=""
+              />
+            </div>
           </div>
         </div>
         <div
@@ -2258,7 +2136,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 class="Label propColorBlue "
               >
                 <input
-                  class="Editable readonly undefined"
+                  class="Editable readonly "
                   placeholder="New Select"
                   readonly=""
                   spellcheck="true"
@@ -2399,15 +2277,15 @@ exports[`src/components/workspace show add new view tooltip 1`] = `
   data-escaped=""
   data-placement="bottom-start"
   data-reference-hidden=""
-  data-state="hidden"
+  data-state="visible"
   role="tooltip"
-  style="max-width: 320px; transition-duration: 0ms;"
+  style="max-width: 320px; transition-duration: 250ms;"
   tabindex="-1"
 >
   <div
     class="tippy-content"
-    data-state="hidden"
-    style="transition-duration: 0ms;"
+    data-state="visible"
+    style="transition-duration: 250ms;"
   >
     <div>
       <div>
@@ -2533,7 +2411,7 @@ exports[`src/components/workspace show copy link tooltip 1`] = `
         <div
           class="tutorial-tour-tip__body"
         >
-          You can share your cards with teammates by copying the link and pasting it in a channel, Direct Message, or Group Message.
+          You can share your cards with teammates by copying the link and pasting it in a channel, direct message, or group message.
         </div>
         <div
           class="tutorial-tour-tip__footer"

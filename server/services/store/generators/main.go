@@ -80,9 +80,8 @@ type storeMetadata struct {
 }
 
 var blacklistedStoreMethodNames = map[string]bool{
-	"Shutdown":      true,
-	"IsErrNotFound": true,
-	"DBType":        true,
+	"Shutdown": true,
+	"DBType":   true,
 }
 
 func extractMethodMetadata(method *ast.Field, src []byte) methodData {

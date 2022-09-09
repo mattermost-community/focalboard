@@ -6,9 +6,9 @@ We're very glad you want to check it out and perhaps contribute code our reposit
 
 Our goal is to make your experience as great as possible. Follow these simple steps to contribute:
 
-1. [Clone the project from GitHub](https://github.com/mattermost/focalboard) and follow the steps in the README to build. Read the [developer tips & tricks](dev-tips.md) to get started.
+1. [Fork the Focalboard repo](https://github.com/mattermost/focalboard), clone it locally, and follow the steps in the README to build. Read the [developer tips & tricks](dev-tips.md) to get started.
 
-2. Find [help wanted tickets in GitHub](https://github.com/mattermost/focalboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22). Comment to let everyone know you’re working on it, and to allow a core contributor to assign the issue to you. If there’s no ticket for what you want to work on see [contributions without a ticket.](contributions-without-ticket.md).
+2. Find [help wanted tickets that are up for grabs in GitHub](https://github.com/mattermost/focalboard/issues?q=is%3Aopen+is%3Aissue+label%3A%22Up+for+grabs%22). Comment to let everyone know you’re working on it, and to allow a core contributor to assign the issue to you. If there’s no ticket for what you want to work on see [contributions without a ticket](contributions-without-ticket.md).
 
 3. When your changes are ready, run through our [checklist for pull requests](contribution-checklist.md). Note that if it’s your first contribution, there is a standard [CLA](https://www.mattermost.org/mattermost-contributor-agreement/) to sign.
 

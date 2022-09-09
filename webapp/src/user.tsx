@@ -5,11 +5,16 @@ interface IUser {
     id: string,
     username: string,
     email: string,
+    nickname: string,
+    firstname: string,
+    lastname: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     props: Record<string, any>,
     create_at: number,
     update_at: number,
     is_bot: boolean,
+    is_guest: boolean,
+    roles: string,
 }
 
 interface UserWorkspace {
@@ -23,6 +28,33 @@ interface UserConfigPatch {
     deletedFields?: string[]
 }
 
-const UserPropPrefix = 'focalboard_'
+function parseUserProps(props: Array<UserPreference>): Record<string, UserPreference> {
+    const processedProps: Record<string, UserPreference> = {}
 
-export {IUser, UserWorkspace, UserConfigPatch, UserPropPrefix}
+    props.forEach((prop) => {
+        const processedProp = prop
+        if (prop.name === 'hiddenBoardIDs') {
+            const hiddenBoardIDs = JSON.parse(processedProp.value)
+            processedProp.value = {}
+            hiddenBoardIDs.forEach((boardID: string) => processedProp.value[boardID] = true)
+        }
+        processedProps[processedProp.name] = processedProp
+    })
+
+    return processedProps
+}
+
+interface UserPreference {
+    user_id: string
+    category: string
+    name: string
+    value: any
+}
+
+export {
+    IUser,
+    UserWorkspace,
+    UserConfigPatch,
+    parseUserProps,
+    UserPreference,
+}

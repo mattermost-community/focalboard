@@ -2,9 +2,12 @@
 // See LICENSE.txt for license information.
 import {render} from '@testing-library/react'
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
+
+import {BoardTypeOpen} from '../../blocks/board'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {wrapDNDIntl} from '../../testUtils'
+import {wrapDNDIntl, mockStateStore} from '../../testUtils'
 
 import ShareBoardButton from './shareBoardButton'
 
@@ -15,15 +18,44 @@ const boardId = '1'
 const board = TestBlockFactory.createBoard()
 board.id = boardId
 
+
 describe('src/components/shareBoard/shareBoard', () => {
-    test('should match snapshot', async () => {
+    const state = {
+        boards: {
+            boards: {
+                [board.id]: board,
+            },
+            current: board.id,
+        },
+    }
+    
+    const store = mockStateStore([], state)
+
+    test('should match snapshot, Private Board', async () => {
+
         const result = render(
             wrapDNDIntl(
-                <ShareBoardButton
-                    boardId={board.id}
-                    enableSharedBoards={true}
-                />))
+                <ReduxProvider store={store}>
+                    <ShareBoardButton
+                        enableSharedBoards={true}
+                    />
+                </ReduxProvider>))
+                
+        const renderer = result.container
 
+        expect(renderer).toMatchSnapshot()
+    })
+
+    test('should match snapshot, Open Board', async () => {
+        board.type = BoardTypeOpen
+        const result = render(
+            wrapDNDIntl(
+                <ReduxProvider store={store}>
+                    <ShareBoardButton
+                        enableSharedBoards={true}
+                    />
+                </ReduxProvider>))
+                
         const renderer = result.container
 
         expect(renderer).toMatchSnapshot()

@@ -23,6 +23,7 @@ import {Position} from '../components/cardDetail/cardDetailContents'
 import ContentElement from './content/contentElement'
 import AddContentMenuItem from './addContentMenuItem'
 import {contentRegistry} from './content/contentRegistry'
+
 import './contentBlock.scss'
 
 type Props = {
@@ -76,7 +77,7 @@ const ContentBlock = (props: Props): JSX.Element => {
                                     icon={<SortUpIcon/>}
                                     onClick={() => {
                                         Utils.arrayMove(contentOrder, index, index - 1)
-                                        mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder)
+                                        mutator.changeCardContentOrder(props.card.boardId, card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
                             {index < (contentOrder.length - 1) &&
@@ -86,7 +87,7 @@ const ContentBlock = (props: Props): JSX.Element => {
                                     icon={<SortDownIcon/>}
                                     onClick={() => {
                                         Utils.arrayMove(contentOrder, index, index + 1)
-                                        mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder)
+                                        mutator.changeCardContentOrder(props.card.boardId, card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
                             <Menu.SubMenu
@@ -123,7 +124,7 @@ const ContentBlock = (props: Props): JSX.Element => {
 
                                     mutator.performAsUndoGroup(async () => {
                                         await mutator.deleteBlock(block, description)
-                                        await mutator.changeCardContentOrder(card.id, card.fields.contentOrder, contentOrder, description)
+                                        await mutator.changeCardContentOrder(props.card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
                                     })
                                 }}
                             />

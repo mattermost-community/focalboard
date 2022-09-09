@@ -3,23 +3,28 @@
 import React, {useCallback} from 'react'
 
 import {FormattedMessage} from 'react-intl'
-import {useDragLayer, useDrop} from 'react-dnd'
 
 import {IPropertyOption, IPropertyTemplate, Board, BoardGroup} from '../../blocks/board'
 import {createBoardView, BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
-import {Constants} from '../../constants'
+import {Constants, Permission} from '../../constants'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import {useAppDispatch} from '../../store/hooks'
 import {updateView} from '../../store/views'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+
+import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './table.scss'
+
+import HiddenCardCount from '../../components/hiddenCardCount/hiddenCardCount'
 
 import TableHeaders from './tableHeaders'
 import TableRows from './tableRows'
 import TableGroup from './tableGroup'
 import CalculationRow from './calculation/calculationRow'
+import {ColumnResizeProvider} from './tableColumnResizeContext'
 
 type Props = {
     selectedCardIds: string[]
@@ -34,48 +39,35 @@ type Props = {
     showCard: (cardId?: string) => void
     addCard: (groupByOptionId?: string) => Promise<void>
     onCardClicked: (e: React.MouseEvent, card: Card) => void
+    hiddenCardsCount: number
+    showHiddenCardCountNotification: (show: boolean) => void
 }
 
 const Table = (props: Props): JSX.Element => {
-    const {board, cards, activeView, visibleGroups, groupByProperty, views} = props
+    const {board, cards, activeView, visibleGroups, groupByProperty, views, hiddenCardsCount} = props
     const isManualSort = activeView.fields.sortOptions?.length === 0
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const dispatch = useAppDispatch()
 
-    const {offset, resizingColumn} = useDragLayer((monitor) => {
-        if (monitor.getItemType() === 'horizontalGrip') {
-            return {
-                offset: monitor.getDifferenceFromInitialOffset()?.x || 0,
-                resizingColumn: monitor.getItem()?.id,
+    const resizeColumn = useCallback(async (columnId: string, width: number) => {
+        const columnWidths = {...activeView.fields.columnWidths}
+        const newWidth = Math.max(Constants.minColumnWidth, width)
+        if (newWidth !== columnWidths[columnId]) {
+            Utils.log(`Resize of column finished: prev=${columnWidths[columnId]}, new=${newWidth}`)
+
+            columnWidths[columnId] = newWidth
+
+            const newView = createBoardView(activeView)
+            newView.fields.columnWidths = columnWidths
+            try {
+                dispatch(updateView(newView))
+                await mutator.updateBlock(board.id, newView, activeView, 'resize column')
+            } catch {
+                dispatch(updateView(activeView))
             }
         }
-        return {
-            offset: 0,
-            resizingColumn: '',
-        }
-    })
-
-    const columnRefs: Map<string, React.RefObject<HTMLDivElement>> = new Map()
-
-    const [, drop] = useDrop(() => ({
-        accept: 'horizontalGrip',
-        drop: async (item: { id: string }, monitor) => {
-            const columnWidths = {...activeView.fields.columnWidths}
-            const finalOffset = monitor.getDifferenceFromInitialOffset()?.x || 0
-            const newWidth = Math.max(Constants.minColumnWidth, (columnWidths[item.id] || 0) + (finalOffset || 0))
-            if (newWidth !== columnWidths[item.id]) {
-                columnWidths[item.id] = newWidth
-
-                const newView = createBoardView(activeView)
-                newView.fields.columnWidths = columnWidths
-                try {
-                    dispatch(updateView(newView))
-                    await mutator.updateBlock(newView, activeView, 'resize column')
-                } catch {
-                    dispatch(updateView(activeView))
-                }
-            }
-        },
-    }), [activeView])
+    }, [activeView])
 
     const hideGroup = useCallback((groupById: string): void => {
         const index: number = activeView.fields.collapsedOptionIds.indexOf(groupById)
@@ -89,7 +81,7 @@ const Table = (props: Props): JSX.Element => {
         const newView = createBoardView(activeView)
         newView.fields.collapsedOptionIds = newValue
         mutator.performAsUndoGroup(async () => {
-            await mutator.updateBlock(newView, activeView, 'hide group')
+            await mutator.updateBlock(board.id, newView, activeView, 'hide group')
         })
     }, [activeView])
 
@@ -105,14 +97,14 @@ const Table = (props: Props): JSX.Element => {
             visibleOptionIds.splice(srcIndex, 0, visibleOptionIds.splice(destIndex, 1)[0])
             Utils.log(`ondrop. updated visibleoptionids: ${visibleOptionIds}`)
 
-            await mutator.changeViewVisibleOptionIds(activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
+            await mutator.changeViewVisibleOptionIds(board.id, activeView.id, activeView.fields.visibleOptionIds, visibleOptionIds)
         }
     }, [activeView, visibleGroups])
 
     const onDropToCard = useCallback((srcCard: Card, dstCard: Card) => {
         Utils.log(`onDropToCard: ${dstCard.title}`)
         onDropToGroup(srcCard, dstCard.fields.properties[activeView.fields.groupById!] as string, dstCard.id)
-    }, [activeView])
+    }, [activeView.fields.groupById, cards])
 
     const onDropToGroup = useCallback((srcCard: Card, groupID: string, dstCardID: string) => {
         Utils.log(`onDropToGroup: ${srcCard.title}`)
@@ -138,7 +130,7 @@ const Table = (props: Props): JSX.Element => {
                     Utils.log(`ondrop. oldValue: ${oldOptionId}`)
 
                     if (groupID !== oldOptionId) {
-                        awaits.push(mutator.changePropertyValue(draggedCard, groupByProperty!.id, groupID, description))
+                        awaits.push(mutator.changePropertyValue(board.id, draggedCard, groupByProperty!.id, groupID, description))
                     }
                 }
                 await Promise.all(awaits)
@@ -169,35 +161,33 @@ const Table = (props: Props): JSX.Element => {
             }
 
             mutator.performAsUndoGroup(async () => {
-                await mutator.changeViewCardOrder(activeView, cardOrder, description)
+                await mutator.changeViewCardOrder(board.id, activeView.id, activeView.fields.cardOrder, cardOrder, description)
             })
         }
     }, [activeView, cards, props.selectedCardIds, groupByProperty])
 
     const propertyNameChanged = useCallback(async (option: IPropertyOption, text: string): Promise<void> => {
-        await mutator.changePropertyOptionValue(board, groupByProperty!, option, text)
+        await mutator.changePropertyOptionValue(board.id, board.cardProperties, groupByProperty!, option, text)
     }, [board, groupByProperty])
 
     return (
-        <div
-            className='Table'
-            ref={drop}
-        >
-            <div className='octo-table-body'>
-                <TableHeaders
-                    board={board}
-                    cards={cards}
-                    activeView={activeView}
-                    views={views}
-                    offset={offset}
-                    resizingColumn={resizingColumn}
-                    columnRefs={columnRefs}
-                    readonly={props.readonly}
-                />
+        <div className='Table'>
+            <ColumnResizeProvider
+                columnWidths={activeView.fields.columnWidths}
+                onResizeColumn={resizeColumn}
+            >
+                <div className='octo-table-body'>
+                    <TableHeaders
+                        board={board}
+                        cards={cards}
+                        activeView={activeView}
+                        views={views}
+                        readonly={props.readonly || !canEditBoardProperties}
+                    />
 
-                {/* Table rows */}
-                <div className='table-row-container'>
-                    {activeView.fields.groupById &&
+                    {/* Table rows */}
+                    <div className='table-row-container'>
+                        {activeView.fields.groupById &&
                     visibleGroups.map((group) => {
                         return (
                             <TableGroup
@@ -206,8 +196,7 @@ const Table = (props: Props): JSX.Element => {
                                 activeView={activeView}
                                 groupByProperty={groupByProperty}
                                 group={group}
-                                readonly={props.readonly}
-                                columnRefs={columnRefs}
+                                readonly={props.readonly || !canEditCards}
                                 selectedCardIds={props.selectedCardIds}
                                 cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                                 hideGroup={hideGroup}
@@ -220,52 +209,58 @@ const Table = (props: Props): JSX.Element => {
                                 onDropToGroup={onDropToGroup}
                             />)
                     })
-                    }
+                        }
 
-                    {/* No Grouping, Rows, one per card */}
-                    {!activeView.fields.groupById &&
+                        {/* No Grouping, Rows, one per card */}
+                        {!activeView.fields.groupById &&
                     <TableRows
                         board={board}
                         activeView={activeView}
-                        columnRefs={columnRefs}
                         cards={cards}
                         selectedCardIds={props.selectedCardIds}
-                        readonly={props.readonly}
+                        readonly={props.readonly || !canEditCards}
                         cardIdToFocusOnRender={props.cardIdToFocusOnRender}
                         showCard={props.showCard}
                         addCard={props.addCard}
                         onCardClicked={props.onCardClicked}
                         onDrop={onDropToCard}
                     />
-                    }
-                </div>
-
-                {/* Add New row */}
-                <div className='octo-table-footer'>
-                    {!props.readonly && !activeView.fields.groupById &&
-                    <div
-                        className='octo-table-cell'
-                        onClick={() => {
-                            props.addCard('')
-                        }}
-                    >
-                        <FormattedMessage
-                            id='TableComponent.plus-new'
-                            defaultMessage='+ New'
-                        />
+                        }
                     </div>
-                    }
-                </div>
 
-                <CalculationRow
-                    board={board}
-                    cards={cards}
-                    activeView={activeView}
-                    resizingColumn={resizingColumn}
-                    offset={offset}
-                    readonly={props.readonly}
-                />
-            </div>
+                    {/* Add New row */}
+                    <div className='octo-table-footer'>
+                        {!props.readonly && !activeView.fields.groupById &&
+                        <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                            <div
+                                className='octo-table-cell'
+                                onClick={() => {
+                                    props.addCard('')
+                                }}
+                            >
+                                <FormattedMessage
+                                    id='TableComponent.plus-new'
+                                    defaultMessage='+ New'
+                                />
+                            </div>
+                        </BoardPermissionGate>
+                        }
+                    </div>
+
+                    <CalculationRow
+                        board={board}
+                        cards={cards}
+                        activeView={activeView}
+                        readonly={props.readonly || !canEditBoardProperties}
+                    />
+                </div>
+            </ColumnResizeProvider>
+
+            {hiddenCardsCount > 0 &&
+            <HiddenCardCount
+                showHiddenCardNotification={props.showHiddenCardCountNotification}
+                hiddenCardsCount={hiddenCardsCount}
+            />}
         </div>
     )
 }

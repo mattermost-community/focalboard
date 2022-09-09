@@ -8,6 +8,18 @@ exports[`components/table/TableRow should match snapshot 1`] = `
     style="opacity: 1;"
   >
     <div
+      class="action-cell octo-table-cell-btn"
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-drag-vertical"
+        />
+      </button>
+    </div>
+    <div
       class="octo-table-cell title-cell"
       id="mainBoardHeader"
       style="width: 100px;"
@@ -21,12 +33,28 @@ exports[`components/table/TableRow should match snapshot 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
           value="title"
         />
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu ml-2 mr-2"
+        role="button"
+      >
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="open-button"
@@ -53,6 +81,18 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
     style="opacity: 1;"
   >
     <div
+      class="action-cell octo-table-cell-btn"
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-drag-vertical"
+        />
+      </button>
+    </div>
+    <div
       class="octo-table-cell title-cell"
       id="mainBoardHeader"
       style="width: 100px;"
@@ -66,12 +106,28 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
           value="title"
         />
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu ml-2 mr-2"
+        role="button"
+      >
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="open-button"
@@ -93,10 +149,22 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
 exports[`components/table/TableRow should match snapshot, display properties 1`] = `
 <div>
   <div
-    class="TableRow octo-table-row hidden"
+    class="TableRow octo-table-row"
     draggable="true"
     style="opacity: 1;"
   >
+    <div
+      class="action-cell octo-table-cell-btn"
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-drag-vertical"
+        />
+      </button>
+    </div>
     <div
       class="octo-table-cell title-cell"
       id="mainBoardHeader"
@@ -111,12 +179,28 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
           value="title"
         />
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu ml-2 mr-2"
+        role="button"
+      >
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="open-button"
@@ -181,6 +265,18 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
     style="opacity: 1;"
   >
     <div
+      class="action-cell octo-table-cell-btn"
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-drag-vertical"
+        />
+      </button>
+    </div>
+    <div
       class="octo-table-cell title-cell"
       id="mainBoardHeader"
       style="width: 100px;"
@@ -194,12 +290,28 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
           value="title"
         />
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu ml-2 mr-2"
+        role="button"
+      >
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="open-button"
@@ -239,7 +351,7 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
           i
         </div>
         <input
-          class="Editable readonly undefined"
+          class="Editable readonly "
           placeholder="Untitled"
           readonly=""
           spellcheck="true"
@@ -267,10 +379,22 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
 exports[`components/table/TableRow should match snapshot, resizing column 1`] = `
 <div>
   <div
-    class="TableRow octo-table-row hidden"
+    class="TableRow octo-table-row"
     draggable="true"
     style="opacity: 1;"
   >
+    <div
+      class="action-cell octo-table-cell-btn"
+    >
+      <button
+        class="IconButton"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-drag-vertical"
+        />
+      </button>
+    </div>
     <div
       class="octo-table-cell title-cell"
       id="mainBoardHeader"
@@ -285,12 +409,28 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
           i
         </div>
         <input
-          class="Editable undefined"
+          class="Editable "
           placeholder="Untitled"
           spellcheck="true"
           title="title"
           value="title"
         />
+      </div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper optionsMenu ml-2 mr-2"
+        role="button"
+      >
+        <button
+          aria-label="MenuBtn"
+          class="IconButton"
+          title="MenuBtn"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
+          />
+        </button>
       </div>
       <div
         class="open-button"

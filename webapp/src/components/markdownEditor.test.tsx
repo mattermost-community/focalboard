@@ -7,6 +7,8 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
 
+import {TestBlockFactory} from "../test/testBlockFactory"
+
 import {MarkdownEditor} from './markdownEditor'
 
 jest.mock('../utils')
@@ -16,15 +18,28 @@ jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 describe('components/markdownEditor', () => {
     beforeAll(mockDOM)
     beforeEach(jest.clearAllMocks)
+
+    const board1 = TestBlockFactory.createBoard()
+    board1.id = 'board-id-1'
+
     const state = {
         users: {
-            workspaceUsers: {
+            boardUsers: {
                 1: {username: 'abc'},
                 2: {username: 'd'},
                 3: {username: 'e'},
                 4: {username: 'f'},
                 5: {username: 'g'},
             },
+        },
+        boards: {
+            current: 'board-id-1',
+            boards: {
+                [board1.id]: board1,
+            }
+        },
+        clientConfig: {
+            value: {},
         },
     }
     const store = mockStateStore([], state)

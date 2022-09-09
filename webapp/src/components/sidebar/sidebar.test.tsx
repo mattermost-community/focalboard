@@ -10,9 +10,11 @@ import {Router} from 'react-router-dom'
 import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
-import {UserWorkspace} from '../../user'
+import thunk from 'redux-thunk'
 
 import {mockMatchMedia, wrapIntl} from '../../testUtils'
+
+import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import Sidebar from './sidebar'
 
@@ -21,76 +23,58 @@ beforeAll(() => {
 })
 
 describe('components/sidebarSidebar', () => {
-    const mockStore = configureStore([])
-    const workspace1: UserWorkspace = {
-        id: 'workspace_1',
-        title: 'Workspace 1',
-        boardCount: 1,
-    }
+    const mockStore = configureStore([thunk])
 
-    const workspace2: UserWorkspace = {
-        id: 'workspace_2',
-        title: 'Workspace 2',
-        boardCount: 2,
-    }
+    const board = TestBlockFactory.createBoard()
+    board.id = 'board1'
 
-    const workspace3: UserWorkspace = {
-        id: 'workspace_3',
-        title: 'Workspace 3',
-        boardCount: 0,
-    }
-
-    test('sidebar in dashboard page', () => {
-        const store = mockStore({
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
-            },
-            boards: {
-                boards: [],
-            },
-            views: {
-                views: [],
-            },
-            users: {
-                me: {},
-            },
-        })
-
-        const history = createMemoryHistory()
-
-        const component = wrapIntl(
-            <ReduxProvider store={store}>
-                <Router history={history}>
-                    <Sidebar isDashboard={true}/>
-                </Router>
-            </ReduxProvider>,
-        )
-        const {container} = render(component)
-        expect(container).toMatchSnapshot()
-    })
+    const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
+    categoryAttribute1.name = 'Category 1'
+    categoryAttribute1.boardIDs = [board.id]
 
     test('sidebar hidden', () => {
         const store = mockStore({
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
-                boards: [],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
             },
             views: {
                 views: [],
             },
             users: {
-                me: {},
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
         const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar isDashboard={true}/>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
                 </Router>
             </ReduxProvider>,
         )
@@ -113,26 +97,47 @@ describe('components/sidebarSidebar', () => {
         customGlobal.innerWidth = 500
 
         const store = mockStore({
-            workspace: {
-                userWorkspaces: new Array<UserWorkspace>(workspace1, workspace2, workspace3),
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
-                boards: [],
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                }
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
             },
             views: {
                 views: [],
             },
             users: {
-                me: {},
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
             },
         })
 
         const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
-                    <Sidebar isDashboard={true}/>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
                 </Router>
             </ReduxProvider>,
         )
@@ -147,4 +152,180 @@ describe('components/sidebarSidebar', () => {
 
         customGlobal.innerWidth = 1024
     })
+
+    test('dont show hidden boards', () => {
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                },
+                myConfig: {
+                    hiddenBoardIDs: {value: {
+                        [board.id]: true,
+                    }}
+                }
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+            },
+        })
+
+        const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container, getAllByText} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const sidebarBoards = container.getElementsByClassName('SidebarBoardItem')
+        // The only board in redux store is hidden, so there should
+        // be no boards visible in sidebar
+        expect(sidebarBoards.length).toBe(0)
+
+        const noBoardsText = getAllByText('No boards inside')
+        expect(noBoardsText.length).toBe(2) // one for custom category, one for default category
+    })
+
+    test('some categories hidden', () => {
+        const collapsedCategory = TestBlockFactory.createCategoryBoards()
+        collapsedCategory.name = 'Category 2'
+        collapsedCategory.collapsed = true
+
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board.id,
+                boards: {
+                    [board.id]: board,
+                },
+                myBoardMemberships: {
+                    [board.id]: board,
+                },
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                    collapsedCategory,
+                ],
+            },
+        })
+
+        const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        const sidebarCollapsedCategory = container.querySelectorAll('.octo-sidebar-item.category.collapsed')
+        expect(sidebarCollapsedCategory.length).toBe(1)
+    })
+
+    // TODO: Fix this later
+    // test('global templates', () => {
+    //     const store = mockStore({
+    //         teams: {
+    //             current: {id: 'team-id'},
+    //         },
+    //         boards: {
+    //             boards: [],
+    //             templates: [
+    //                 {id: '1', title: 'Template 1', fields: {icon: '🚴🏻‍♂️'}},
+    //                 {id: '2', title: 'Template 2', fields: {icon: '🚴🏻‍♂️'}},
+    //                 {id: '3', title: 'Template 3', fields: {icon: '🚴🏻‍♂️'}},
+    //                 {id: '4', title: 'Template 4', fields: {icon: '🚴🏻‍♂️'}},
+    //             ],
+    //         },
+    //         views: {
+    //             views: [],
+    //         },
+    //         users: {
+    //             me: {},
+    //         },
+    //         globalTemplates: {
+    //             value: [],
+    //         },
+    //         sidebar: {
+    //             categoryAttributes: [
+    //                 categoryAttribute1,
+    //             ],
+    //         },
+    //     })
+
+    //     const history = createMemoryHistory()
+
+    //     const component = wrapIntl(
+    //         <ReduxProvider store={store}>
+    //             <Router history={history}>
+    //                 <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
+    //             </Router>
+    //         </ReduxProvider>,
+    //     )
+    //     const {container} = render(component)
+    //     expect(container).toMatchSnapshot()
+
+    //     const addBoardButton = container.querySelector('.SidebarAddBoardMenu > .MenuWrapper')
+    //     expect(addBoardButton).toBeDefined()
+    //     userEvent.click(addBoardButton as Element)
+    //     const templates = container.querySelectorAll('.SidebarAddBoardMenu > .MenuWrapper div:not(.hideOnWidescreen).menu-options .menu-name')
+    //     expect(templates).toBeDefined()
+
+    //     console.log(templates[0].innerHTML)
+    //     console.log(templates[1].innerHTML)
+
+    //     // 4 mocked templates, one "Select a template", one "Empty Board" and one "+ New Template"
+    //     expect(templates.length).toBe(7)
+    // })
 })

@@ -3,11 +3,13 @@
 
 import {Board} from '../../src/blocks/board'
 import {UserConfigPatch} from '../../src/user'
+import {versionProperty} from '../../src/store/users'
+
 
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
         method: 'POST',
-        url: '/api/v1/register',
+        url: '/api/v2/register',
         body: {
             ...data,
             token,
@@ -22,7 +24,7 @@ Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string,
 Cypress.Commands.add('apiLoginUser', (data: Cypress.LoginData) => {
     return cy.request({
         method: 'POST',
-        url: '/api/v1/login',
+        url: '/api/v2/login',
         body: {
             ...data,
             type: 'normal',
@@ -52,32 +54,32 @@ Cypress.Commands.add('apiInitServer', () => {
     return cy.apiRegisterUser(data, '', false).apiLoginUser(data)
 })
 
-Cypress.Commands.add('apiDeleteBlock', (id: string) => {
+Cypress.Commands.add('apiDeleteBoard', (id: string) => {
     return cy.request({
         method: 'DELETE',
-        url: `/api/v1/workspaces/0/blocks/${encodeURIComponent(id)}`,
+        url: `/api/v2/boards/${encodeURIComponent(id)}`,
         ...headers(),
     })
 })
 
-const deleteBlocks = (ids: string[]) => {
+const deleteBoards = (ids: string[]) => {
     if (ids.length === 0) {
         return
     }
     const [id, ...other] = ids
-    cy.apiDeleteBlock(id).then(() => deleteBlocks(other))
+    cy.apiDeleteBoard(id).then(() => deleteBoards(other))
 }
 
 Cypress.Commands.add('apiResetBoards', () => {
     return cy.request({
         method: 'GET',
-        url: '/api/v1/workspaces/0/blocks?type=board',
+        url: '/api/v2/teams/0/boards',
         ...headers(),
     }).then((response) => {
         if (Array.isArray(response.body)) {
             const boards = response.body as Board[]
-            const toDelete = boards.filter((b) => !b.fields.isTemplate).map((b) => b.id)
-            deleteBlocks(toDelete)
+            const toDelete = boards.filter((b) => !b.isTemplate).map((b) => b.id)
+            deleteBoards(toDelete)
         }
     })
 })
@@ -85,13 +87,14 @@ Cypress.Commands.add('apiResetBoards', () => {
 Cypress.Commands.add('apiSkipTour', (userID: string) => {
     const body: UserConfigPatch = {
         updatedFields: {
-            focalboard_welcomePageViewed: '1',
+            welcomePageViewed: '1',
+            [versionProperty]: 'true',
         },
     }
 
     return cy.request({
         method: 'PUT',
-        url: `/api/v1/users/${encodeURIComponent(userID)}/config`,
+        url: `/api/v2/users/${encodeURIComponent(userID)}/config`,
         ...headers(),
         body,
     })
@@ -100,7 +103,7 @@ Cypress.Commands.add('apiSkipTour', (userID: string) => {
 Cypress.Commands.add('apiGetMe', () => {
     return cy.request({
         method: 'GET',
-        url: '/api/v1/users/me',
+        url: '/api/v2/users/me',
         ...headers(),
     }).then((response) => response.body.id)
 })
@@ -109,7 +112,7 @@ Cypress.Commands.add('apiChangePassword', (userId: string, oldPassword: string, 
     const body = {oldPassword, newPassword}
     return cy.request({
         method: 'POST',
-        url: `/api/v1/users/${encodeURIComponent(userId)}/changepassword`,
+        url: `/api/v2/users/${encodeURIComponent(userId)}/changepassword`,
         ...headers(),
         body,
     })
@@ -117,8 +120,8 @@ Cypress.Commands.add('apiChangePassword', (userId: string, oldPassword: string, 
 
 Cypress.Commands.add('uiCreateNewBoard', (title?: string) => {
     cy.log('**Create new empty board**')
-    cy.findByText('+ Add board').click()
-    cy.get('.empty-board').first().click({force: true})
+    cy.uiCreateEmptyBoard()
+
     cy.findByPlaceholderText('Untitled board').should('exist')
     cy.wait(10)
     if (title) {

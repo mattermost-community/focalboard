@@ -1,0 +1,183 @@
+.SidebarCategory {
+    margin-top: 12px;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    .octo-sidebar-item {
+        display: flex;
+        flex-direction: row;
+        font-weight: 500;
+        padding: 0 16px 0 8px;
+        height: 32px;
+        align-items: center;
+        gap: 4px;
+
+        &.category {
+            padding-left: 0;
+        }
+
+        &:hover {
+            display: flex;
+
+            .octo-sidebar-title {
+                color: rgba(var(--sidebar-text-rgb), 1);
+            }
+        }
+
+        &.subitem {
+            padding-left: 20px;
+            color: rgba(var(--sidebar-text-rgb), 0.64);
+            font-weight: 400;
+        }
+
+        &.active {
+            background: rgba(var(--sidebar-text-rgb), 0.1);
+            position: relative;
+            color: rgb(var(--sidebar-text-rgb));
+
+            &:not(.subitem) {
+                &::before {
+                    content: '';
+                    background: rgb(var(--sidebar-text-active-border-rgb));
+                    width: 2px;
+                    height: 100%;
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                }
+            }
+        }
+
+        &.no-views {
+            color: rgba(var(--sidebar-text-rgb), 0.4);
+
+            &:hover {
+                background-color: rgba(var(--sidebar-bg-rgb));
+            }
+        }
+
+        &:not(.no-views) {
+            cursor: pointer;
+        }
+
+        > .Icon {
+            height: 18px;
+            width: 18px;
+            margin-right: 8px;
+            flex-shrink: 0;
+
+            &.GalleryIcon {
+                fill: rgba(var(--sidebar-text-rgb), 0.3);
+                stroke: unset;
+            }
+        }
+
+        > .IconButton {
+            background-color: var(--sidebar-bg-rgb);
+            color: rgb(var(--sidebar-text-rgb));
+            margin-left: 4px;
+
+            &:hover {
+                background-color: rgba(var(--sidebar-text-rgb), 0.1);
+            }
+        }
+
+        .Menu.left {
+            right: -11px;
+        }
+
+        &.expanded {
+            .DisclosureTriangleIcon {
+                transform: rotate(90deg);
+            }
+        }
+
+        .DisclosureTriangleIcon {
+            transition: 200ms ease-in-out;
+            transform: rotate(0deg);
+        }
+
+        &.category {
+            .MenuWrapper {
+                display: none;
+
+                &.menuOpen {
+                    display: block;
+                }
+            }
+
+            &:hover {
+                .MenuWrapper {
+                    display: block;
+                }
+            }
+        }
+
+        &.subitem {
+            .MenuWrapper {
+                display: none;
+
+                &.menuOpen {
+                    display: block;
+                }
+            }
+
+            &:hover {
+                .MenuWrapper {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .MenuWrapper {
+        border-radius: 4px;
+
+        &:hover {
+            background: rgba(var(--sidebar-text-rgb), 0.08);
+        }
+    }
+
+    .octo-sidebar-title {
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex;
+        align-items: baseline;
+        color: rgba(var(--sidebar-text-rgb), 0.72);
+
+        &.category-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .octo-icon {
+            margin-right: 6px;
+        }
+
+        .octo-sidebar-name {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    .Menu.noselect:not(.SubMenu) {
+        position: fixed;
+
+        > .left {
+            right: calc(100% - 480px - 64px + 50px);
+            left: calc(64px + 240px - 50px);
+        }
+    }
+
+    .manageCategoriesTourStep {
+        background: rgba(var(--sidebar-text-rgb), 0.08);
+    }
+
+}

@@ -1,10 +1,8 @@
 package sqlstore
 
 import (
-	"database/sql"
-	"errors"
-
 	sq "github.com/Masterminds/squirrel"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 func (s *SQLStore) getSystemSetting(db sq.BaseRunner, key string) (string, error) {
@@ -16,7 +14,7 @@ func (s *SQLStore) getSystemSetting(db sq.BaseRunner, key string) (string, error
 
 	var result string
 	err := scanner.Scan(&result)
-	if err != nil && !errors.Is(sql.ErrNoRows, err) {
+	if err != nil && !model.IsErrNotFound(err) {
 		return "", err
 	}
 
@@ -52,7 +50,7 @@ func (s *SQLStore) getSystemSettings(db sq.BaseRunner) (map[string]string, error
 func (s *SQLStore) setSystemSetting(db sq.BaseRunner, id, value string) error {
 	query := s.getQueryBuilder(db).Insert(s.tablePrefix+"system_settings").Columns("id", "value").Values(id, value)
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE value = ?", value)
 	} else {
 		query = query.Suffix("ON CONFLICT (id) DO UPDATE SET value = EXCLUDED.value")

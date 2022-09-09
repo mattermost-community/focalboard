@@ -2,109 +2,55 @@ package sqlstore
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
+	"embed"
 	"errors"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"os"
+
 	"text/template"
 
-	mysqldriver "github.com/go-sql-driver/mysql"
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database"
-	"github.com/golang-migrate/migrate/v4/database/mysql"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	"github.com/golang-migrate/migrate/v4/database/sqlite3"
-	"github.com/golang-migrate/migrate/v4/source"
-	_ "github.com/golang-migrate/migrate/v4/source/file" // fileystem driver
-	bindata "github.com/golang-migrate/migrate/v4/source/go_bindata"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
+
+	"github.com/mattermost/morph"
+	drivers "github.com/mattermost/morph/drivers"
+	mysql "github.com/mattermost/morph/drivers/mysql"
+	postgres "github.com/mattermost/morph/drivers/postgres"
+	sqlite "github.com/mattermost/morph/drivers/sqlite"
+	embedded "github.com/mattermost/morph/sources/embedded"
+
 	_ "github.com/lib/pq" // postgres driver
 
-	"github.com/mattermost/focalboard/server/services/store/sqlstore/migrations"
-	"github.com/mattermost/mattermost-plugin-api/cluster"
+	"github.com/mattermost/focalboard/server/model"
 )
+
+//go:embed migrations
+var Assets embed.FS
 
 const (
-	uniqueIDsMigrationRequiredVersion = 14
+	uniqueIDsMigrationRequiredVersion        = 14
+	teamLessBoardsMigrationRequiredVersion   = 18
+	categoriesUUIDIDMigrationRequiredVersion = 20
+
+	tempSchemaMigrationTableName = "temp_schema_migration"
 )
 
-type PrefixedMigration struct {
-	*bindata.Bindata
-	prefix   string
-	postgres bool
-	sqlite   bool
-	mysql    bool
-	plugin   bool
-}
-
-func init() {
-	source.Register("prefixed-migrations", &PrefixedMigration{})
-}
-
-func (pm *PrefixedMigration) executeTemplate(r io.ReadCloser, identifier string) (io.ReadCloser, string, error) {
-	data, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, "", err
-	}
-	tmpl, err := template.New("sql").Parse(string(data))
-	if err != nil {
-		return nil, "", err
-	}
-	buffer := bytes.NewBufferString("")
-	params := map[string]interface{}{
-		"prefix":   pm.prefix,
-		"postgres": pm.postgres,
-		"sqlite":   pm.sqlite,
-		"mysql":    pm.mysql,
-		"plugin":   pm.plugin,
-	}
-	err = tmpl.Execute(buffer, params)
-	if err != nil {
-		return nil, "", err
-	}
-
-	return ioutil.NopCloser(bytes.NewReader(buffer.Bytes())), identifier, nil
-}
-
-func (pm *PrefixedMigration) ReadUp(version uint) (io.ReadCloser, string, error) {
-	r, identifier, err := pm.Bindata.ReadUp(version)
-	if err != nil {
-		return nil, "", err
-	}
-	return pm.executeTemplate(r, identifier)
-}
-
-func (pm *PrefixedMigration) ReadDown(version uint) (io.ReadCloser, string, error) {
-	r, identifier, err := pm.Bindata.ReadDown(version)
-	if err != nil {
-		return nil, "", err
-	}
-	return pm.executeTemplate(r, identifier)
-}
-
-func appendMultipleStatementsFlag(connectionString string) (string, error) {
-	config, err := mysqldriver.ParseDSN(connectionString)
-	if err != nil {
-		return "", err
-	}
-
-	if config.Params == nil {
-		config.Params = map[string]string{}
-	}
-
-	config.Params["multiStatements"] = "true"
-	return config.FormatDSN(), nil
-}
+var errChannelCreatorNotInTeam = errors.New("channel creator not found in user teams")
 
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
 func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = appendMultipleStatementsFlag(s.connectionString)
+		connectionString, err = sqlstore.ResetReadTimeout(connectionString)
+		if err != nil {
+			return nil, err
+		}
+
+		connectionString, err = sqlstore.AppendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
@@ -123,110 +69,208 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 }
 
 func (s *SQLStore) Migrate() error {
-	var driver database.Driver
-	var err error
-	migrationsTable := fmt.Sprintf("%sschema_migrations", s.tablePrefix)
-
-	if s.dbType == sqliteDBType {
-		driver, err = sqlite3.WithInstance(s.db, &sqlite3.Config{MigrationsTable: migrationsTable})
-		if err != nil {
-			return err
-		}
-	}
-
-	db, err := s.getMigrationConnection()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	if s.dbType == postgresDBType {
-		driver, err = postgres.WithInstance(db, &postgres.Config{MigrationsTable: migrationsTable})
-		if err != nil {
-			return err
-		}
-	}
-
-	if s.dbType == mysqlDBType {
-		driver, err = mysql.WithInstance(db, &mysql.Config{MigrationsTable: migrationsTable})
-		if err != nil {
-			return err
-		}
-	}
-
-	bresource := bindata.Resource(migrations.AssetNames(), migrations.Asset)
-
-	d, err := bindata.WithInstance(bresource)
-	if err != nil {
-		return err
-	}
-
-	prefixedData := &PrefixedMigration{
-		Bindata:  d.(*bindata.Bindata),
-		prefix:   s.tablePrefix,
-		plugin:   s.isPlugin,
-		postgres: s.dbType == postgresDBType,
-		sqlite:   s.dbType == sqliteDBType,
-		mysql:    s.dbType == mysqlDBType,
-	}
-
-	m, err := migrate.NewWithInstance("prefixed-migration", prefixedData, s.dbType, driver)
-	if err != nil {
-		return err
-	}
-
-	var mutex *cluster.Mutex
 	if s.isPlugin {
-		var mutexErr error
-		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
+		mutex, mutexErr := s.NewMutexFn("Boards_dbMutex")
 		if mutexErr != nil {
 			return fmt.Errorf("error creating database mutex: %w", mutexErr)
 		}
-	}
 
-	if err := ensureMigrationsAppliedUpToVersion(m, uniqueIDsMigrationRequiredVersion); err != nil {
-		return err
-	}
-
-	if s.isPlugin {
-		s.logger.Debug("Acquiring cluster lock for Unique IDs migration")
+		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
 		mutex.Lock()
-	}
-
-	if err := s.runUniqueIDsMigration(); err != nil {
-		if s.isPlugin {
-			s.logger.Debug("Releasing cluster lock for Unique IDs migration")
+		defer func() {
+			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
 			mutex.Unlock()
+		}()
+	}
+
+	if err := s.EnsureSchemaMigrationFormat(); err != nil {
+		return err
+	}
+	defer func() {
+		// the old schema migration table deletion happens after the
+		// migrations have run, to be able to recover its information
+		// in case there would be errors during the process.
+		if err := s.deleteOldSchemaMigrationTable(); err != nil {
+			s.logger.Error("cannot delete the old schema migration table", mlog.Err(err))
 		}
-		return fmt.Errorf("error running unique IDs migration: %w", err)
+	}()
+
+	var driver drivers.Driver
+	var err error
+
+	migrationConfig := drivers.Config{
+		StatementTimeoutInSecs: 1000000,
+		MigrationsTable:        fmt.Sprintf("%sschema_migrations", s.tablePrefix),
 	}
 
-	if s.isPlugin {
-		s.logger.Debug("Releasing cluster lock for Unique IDs migration")
-		mutex.Unlock()
+	if s.dbType == model.SqliteDBType {
+		driver, err = sqlite.WithInstance(s.db, &sqlite.Config{Config: migrationConfig})
+		if err != nil {
+			return err
+		}
 	}
 
-	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+	var db *sql.DB
+	if s.dbType != model.SqliteDBType {
+		s.logger.Debug("Getting migrations connection")
+		db, err = s.getMigrationConnection()
+		if err != nil {
+			return err
+		}
+
+		defer func() {
+			s.logger.Debug("Closing migrations connection")
+			db.Close()
+		}()
+	}
+
+	if s.dbType == model.PostgresDBType {
+		driver, err = postgres.WithInstance(db, &postgres.Config{Config: migrationConfig})
+		if err != nil {
+			return err
+		}
+	}
+
+	if s.dbType == model.MysqlDBType {
+		driver, err = mysql.WithInstance(db, &mysql.Config{Config: migrationConfig})
+		if err != nil {
+			return err
+		}
+	}
+
+	assetsList, err := Assets.ReadDir("migrations")
+	if err != nil {
+		return err
+	}
+	assetNamesForDriver := make([]string, len(assetsList))
+	for i, dirEntry := range assetsList {
+		assetNamesForDriver[i] = dirEntry.Name()
+	}
+
+	params := map[string]interface{}{
+		"prefix":     s.tablePrefix,
+		"postgres":   s.dbType == model.PostgresDBType,
+		"sqlite":     s.dbType == model.SqliteDBType,
+		"mysql":      s.dbType == model.MysqlDBType,
+		"plugin":     s.isPlugin,
+		"singleUser": s.isSingleUser,
+	}
+
+	migrationAssets := &embedded.AssetSource{
+		Names: assetNamesForDriver,
+		AssetFunc: func(name string) ([]byte, error) {
+			asset, mErr := Assets.ReadFile("migrations/" + name)
+			if mErr != nil {
+				return nil, mErr
+			}
+
+			tmpl, pErr := template.New("sql").Parse(string(asset))
+			if pErr != nil {
+				return nil, pErr
+			}
+			buffer := bytes.NewBufferString("")
+
+			err = tmpl.Execute(buffer, params)
+			if err != nil {
+				return nil, err
+			}
+
+			return buffer.Bytes(), nil
+		},
+	}
+
+	src, err := embedded.WithInstance(migrationAssets)
+	if err != nil {
 		return err
 	}
 
-	return nil
+	opts := []morph.EngineOption{
+		morph.WithLock("boards-lock-key"),
+	}
+
+	if s.dbType == model.SqliteDBType {
+		opts = opts[:0] // sqlite driver does not support locking, it doesn't need to anyway.
+	}
+
+	s.logger.Debug("Creating migration engine")
+	engine, err := morph.New(context.Background(), driver, src, opts...)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		s.logger.Debug("Closing migration engine")
+		engine.Close()
+	}()
+
+	return s.runMigrationSequence(engine, driver)
 }
 
-func ensureMigrationsAppliedUpToVersion(m *migrate.Migrate, version uint) error {
-	currentVersion, _, err := m.Version()
-	if err != nil && !errors.Is(err, migrate.ErrNilVersion) {
+// runMigrationSequence executes all the migrations in order, both
+// plain SQL and data migrations.
+func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driver) error {
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.RunUniqueIDsMigration(); mErr != nil {
+		return fmt.Errorf("error running unique IDs migration: %w", mErr)
+	}
+
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, teamLessBoardsMigrationRequiredVersion); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
+		return fmt.Errorf("error running teamless boards migration: %w", mErr)
+	}
+
+	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
+		return fmt.Errorf("error running deleted membership boards migration: %w", mErr)
+	}
+
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
+		return mErr
+	}
+
+	if mErr := s.RunCategoryUUIDIDMigration(); mErr != nil {
+		return fmt.Errorf("error running categoryID migration: %w", mErr)
+	}
+
+	appliedMigrations, err := driver.AppliedMigrations()
+	if err != nil {
 		return err
 	}
+
+	s.logger.Debug("== Applying all remaining migrations ====================",
+		mlog.Int("current_version", len(appliedMigrations)))
+
+	return engine.ApplyAll()
+}
+
+func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
+	applied, err := driver.AppliedMigrations()
+	if err != nil {
+		return err
+	}
+	currentVersion := len(applied)
+
+	s.logger.Debug("== Ensuring migrations applied up to version ====================",
+		mlog.Int("version", version),
+		mlog.Int("current_version", currentVersion))
 
 	// if the target version is below or equal to the current one, do
 	// not migrate either because is not needed (both are equal) or
 	// because it would downgrade the database (is below)
 	if version <= currentVersion {
+		s.logger.Debug("-- There is no need of applying any migration --------------------")
 		return nil
 	}
 
-	if err := m.Migrate(version); err != nil && !errors.Is(err, migrate.ErrNoChange) && !errors.Is(err, os.ErrNotExist) {
+	for _, migration := range applied {
+		s.logger.Debug("-- Found applied migration --------------------", mlog.Uint32("version", migration.Version), mlog.String("name", migration.Name))
+	}
+
+	if _, err = engine.Apply(version - currentVersion); err != nil {
 		return err
 	}
 

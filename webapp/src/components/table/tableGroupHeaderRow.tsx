@@ -13,13 +13,15 @@ import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
-import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import HideIcon from '../../widgets/icons/hide'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
+
+import {useColumnResize} from "./tableColumnResizeContext"
 
 type Props = {
     board: Board
@@ -39,6 +41,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
 
     const [isDragging, isOver, groupHeaderRef] = useSortable('groupHeader', group.option, !props.readonly, props.onDrop)
     const intl = useIntl()
+    const columnResize = useColumnResize()
 
     useEffect(() => {
         setGroupTitle(group.option.value)
@@ -51,10 +54,6 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
         className += ' expanded'
     }
 
-    const columnWidth = (templateId: string): number => {
-        return Math.max(Constants.minColumnWidth, props.activeView.fields.columnWidths[templateId] || 0)
-    }
-
     return (
         <div
             key={group.option.id + 'header'}
@@ -64,12 +63,16 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
         >
             <div
                 className='octo-table-cell'
-                style={{width: columnWidth(Constants.titleColumnId)}}
+                style={{width: columnResize.width(Constants.titleColumnId)}}
+                ref={(ref) => columnResize.updateRef(group.option.id, Constants.titleColumnId, ref)}
             >
                 <IconButton
-                    icon={<DisclosureTriangle/>}
+                    icon={
+                        <CompassIcon
+                            icon='menu-down'
+                        />}
                     onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
-                    className={props.readonly ? 'readonly' : ''}
+                    className={`octo-table-cell__expand ${props.readonly ? 'readonly' : ''}`}
                 />
 
                 {!group.option.id &&
@@ -117,7 +120,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                 id='hide'
                                 icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
-                                onClick={() => mutator.hideViewColumn(activeView, group.option.id || '')}
+                                onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
                             {group.option.id &&
                                 <>
@@ -125,7 +128,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                         id='delete'
                                         icon={<DeleteIcon/>}
                                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
-                                        onClick={() => mutator.deletePropertyOption(board, groupByProperty!, group.option)}
+                                        onClick={() => mutator.deletePropertyOption(board.id, board.cardProperties, groupByProperty!, group.option)}
                                     />
                                     <Menu.Separator/>
                                     {Object.entries(Constants.menuColors).map(([key, color]) => (
@@ -133,7 +136,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                             key={key}
                                             id={key}
                                             name={color}
-                                            onClick={() => mutator.changePropertyOptionColor(board, groupByProperty!, group.option, key)}
+                                            onClick={() => mutator.changePropertyOptionColor(board.id, board.cardProperties, groupByProperty!, group.option, key)}
                                         />
                                     ))}
                                 </>}

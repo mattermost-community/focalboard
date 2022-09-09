@@ -3,6 +3,7 @@
 import '@testing-library/jest-dom'
 import {render} from '@testing-library/react'
 import 'isomorphic-fetch'
+import userEvent from '@testing-library/user-event'
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
@@ -43,8 +44,17 @@ describe('/components/viewMenu', () => {
             },
         },
         searchText: {},
+        teams: {
+            current: {id: 'team-id'},
+        },
         boards: {
-            current: board,
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
         },
         cards: {
             templates: [card],
@@ -72,6 +82,7 @@ describe('/components/viewMenu', () => {
                         activeView={activeView}
                         views={views}
                         readonly={false}
+                        allowCreateView={() => false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -93,6 +104,7 @@ describe('/components/viewMenu', () => {
                         activeView={activeView}
                         views={views}
                         readonly={true}
+                        allowCreateView={() => false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -100,5 +112,33 @@ describe('/components/viewMenu', () => {
 
         const container = render(component)
         expect(container).toMatchSnapshot()
+    })
+
+    it('should check view limits', () => {
+        const mockStore = configureStore([])
+        const store = mockStore(state)
+
+        const mockedallowCreateView = jest.fn()
+        mockedallowCreateView.mockReturnValue(false)
+
+        const component = wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <ViewMenu
+                        board={board}
+                        activeView={activeView}
+                        views={views}
+                        readonly={false}
+                        allowCreateView={mockedallowCreateView}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+
+        const container = render(component)
+
+        const buttonElement = container.getByRole('button', {name: 'Duplicate view'})
+        userEvent.click(buttonElement)
+        expect(mockedallowCreateView).toBeCalledTimes(1)
     })
 })

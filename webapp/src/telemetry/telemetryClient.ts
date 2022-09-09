@@ -31,6 +31,7 @@ export const TelemetryActions = {
     AddTemplateFromCard: 'addTemplateFromCard',
     ViewSharedBoard: 'viewSharedBoard',
     ShareBoardOpenModal: 'shareBoard_openModal',
+    ShareBoardLogin: 'shareBoard_login',
     ShareLinkPublicCopy: 'shareLinkPublic_copy',
     ShareLinkInternalCopy: 'shareLinkInternal_copy',
     ImportArchive: 'settings_importArchive',
@@ -42,10 +43,18 @@ export const TelemetryActions = {
     ExportArchive: 'settings_exportArchive',
     StartTour: 'welcomeScreen_startTour',
     SkipTour: 'welcomeScreen_skipTour',
+    CloudMoreInfo: 'cloud_more_info',
+    ViewLimitReached: 'limit_ViewLimitReached',
+    ViewLimitCTAPerformed: 'limit_ViewLimitLinkOpen',
+    LimitCardCTAPerformed: 'limit_CardLimitCTAPerformed',
+    LimitCardLimitReached: 'limit_cardLimitReached',
+    LimitCardLimitLinkOpen: 'limit_cardLimitLinkOpen',
+    VersionMoreInfo: 'version_more_info',
 }
 
 interface IEventProps {
-    workspaceID?: string,
+    channelID?: string,
+    teamID?: string,
     board?: string,
     view?: string,
     viewType?: string,

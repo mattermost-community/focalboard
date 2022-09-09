@@ -2,6 +2,6 @@
 // See LICENSE.txt for license information.
 
 export interface PrepareOnboardingResponse {
-    workspaceID: string
+    teamID: string
     boardID: string
 }

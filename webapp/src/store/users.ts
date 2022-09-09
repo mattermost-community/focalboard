@@ -4,13 +4,17 @@
 import {createSlice, createAsyncThunk, PayloadAction, createSelector} from '@reduxjs/toolkit'
 
 import {default as client} from '../octoClient'
-import {IUser} from '../user'
+import {IUser, parseUserProps, UserPreference} from '../user'
 
 import {Utils} from '../utils'
 
 import {Subscription} from '../wsclient'
 
-import {initialLoad} from './initialLoad'
+// TODO: change this whene the initial load is complete
+// import {initialLoad} from './initialLoad'
+import {UserSettings} from '../userSettings'
+
+import {initialLoad} from "./initialLoad"
 
 import {RootState} from './index'
 
@@ -19,11 +23,14 @@ export const fetchMe = createAsyncThunk(
     async () => client.getMe(),
 )
 
+export const versionProperty = 'version72MessageCanceled'
+
 type UsersStatus = {
     me: IUser|null
-    workspaceUsers: {[key: string]: IUser}
+    boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
     blockSubscriptions: Array<Subscription>
+    myConfig: Record<string, UserPreference>
 }
 
 export const fetchUserBlockSubscriptions = createAsyncThunk(
@@ -33,24 +40,36 @@ export const fetchUserBlockSubscriptions = createAsyncThunk(
 
 const initialState = {
     me: null,
-    workspaceUsers: {},
+    boardUsers: {},
     loggedIn: null,
     userWorkspaces: [],
     blockSubscriptions: [],
+    myConfig: {},
 } as UsersStatus
 
 const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        setMe: (state, action: PayloadAction<IUser>) => {
+        setMe: (state, action: PayloadAction<IUser|null>) => {
             state.me = action.payload
+            state.loggedIn = Boolean(state.me)
         },
-        setWorkspaceUsers: (state, action: PayloadAction<IUser[]>) => {
-            state.workspaceUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        setBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            state.boardUsers = action.payload.reduce((acc: {[key: string]: IUser}, user: IUser) => {
                 acc[user.id] = user
                 return acc
             }, {})
+        },
+        addBoardUsers: (state, action: PayloadAction<IUser[]>) => {
+            action.payload.forEach((user: IUser) => {
+                state.boardUsers[user.id] = user
+            })
+        },
+        removeBoardUsersById: (state, action: PayloadAction<string[]>) => {
+            action.payload.forEach((userId: string) => {
+                delete state.boardUsers[userId]
+            })
         },
         followBlock: (state, action: PayloadAction<Subscription>) => {
             state.blockSubscriptions.push(action.payload)
@@ -59,10 +78,8 @@ const usersSlice = createSlice({
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
-        patchProps: (state, action: PayloadAction<Record<string, string>>) => {
-            if (state.me) {
-                state.me.props = action.payload
-            }
+        patchProps: (state, action: PayloadAction<Array<UserPreference>>) => {
+            state.myConfig = parseUserProps(action.payload)
         },
     },
     extraReducers: (builder) => {
@@ -74,60 +91,131 @@ const usersSlice = createSlice({
             state.me = null
             state.loggedIn = false
         })
-        builder.addCase(initialLoad.fulfilled, (state, action) => {
-            state.workspaceUsers = action.payload.workspaceUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
-                acc[user.id] = user
-                return acc
-            }, {})
-        })
+
+        // TODO: change this when the initial load is complete
+        // builder.addCase(initialLoad.fulfilled, (state, action) => {
+        //     state.boardUsers = action.payload.boardUsers.reduce((acc: {[key: string]: IUser}, user: IUser) => {
+        //         acc[user.id] = user
+        //         return acc
+        //     }, {})
+        // })
+
         builder.addCase(fetchUserBlockSubscriptions.fulfilled, (state, action) => {
             state.blockSubscriptions = action.payload
+        })
+
+        builder.addCase(initialLoad.fulfilled, (state, action) => {
+            if (action.payload.myConfig) {
+                state.myConfig = parseUserProps(action.payload.myConfig)
+            }
         })
     },
 })
 
-export const {setMe, setWorkspaceUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
+export const {setMe, setBoardUsers, removeBoardUsersById, addBoardUsers, followBlock, unfollowBlock, patchProps} = usersSlice.actions
 export const {reducer} = usersSlice
 
 export const getMe = (state: RootState): IUser|null => state.users.me
 export const getLoggedIn = (state: RootState): boolean|null => state.users.loggedIn
-export const getWorkspaceUsers = (state: RootState): {[key: string]: IUser} => state.users.workspaceUsers
+export const getBoardUsers = (state: RootState): {[key: string]: IUser} => state.users.boardUsers
+export const getMyConfig = (state: RootState): Record<string, UserPreference> => state.users.myConfig || {} as Record<string, UserPreference>
 
-export const getWorkspaceUsersList = createSelector(
-    getWorkspaceUsers,
-    (workspaceUsers) => Object.values(workspaceUsers).sort((a, b) => a.username.localeCompare(b.username)),
+export const getBoardUsersList = createSelector(
+    getBoardUsers,
+    (boardUsers) => Object.values(boardUsers).sort((a, b) => a.username.localeCompare(b.username)),
 )
 
 export const getUser = (userId: string): (state: RootState) => IUser|undefined => {
     return (state: RootState): IUser|undefined => {
-        const users = getWorkspaceUsers(state)
+        const users = getBoardUsers(state)
         return users[userId]
     }
 }
 
 export const getOnboardingTourStarted = createSelector(
-    getMe,
-    (me): boolean => {
-        if (!me) {
+    getMyConfig,
+    (myConfig): boolean => {
+        console.log(`getOnboardingTourStarted myConfig: ${JSON.stringify(myConfig || 'NULL')}`)
+        if (!myConfig) {
+            console.log('getOnboardingTourStarted AAA')
             return false
         }
 
-        return Boolean(me.props?.focalboard_onboardingTourStarted)
+        console.log('getOnboardingTourStarted BBB')
+        console.log('getOnboardingTourStarted BBB')
+
+        return Boolean(myConfig.onboardingTourStarted?.value)
     },
 )
 
 export const getOnboardingTourStep = createSelector(
-    getMe,
-    (me): string => {
-        if (!me) {
+    getMyConfig,
+    (myConfig): string => {
+        if (!myConfig) {
             return ''
         }
 
-        return me.props?.focalboard_onboardingTourStep
+        return myConfig.onboardingTourStep?.value
     },
 )
 
 export const getOnboardingTourCategory = createSelector(
+    getMyConfig,
+    (myConfig): string => (myConfig.tourCategory ? myConfig.tourCategory.value : ''),
+)
+
+export const getCloudMessageCanceled = createSelector(
     getMe,
-    (me): string => (me ? me.props?.focalboard_tourCategory : ''),
+    getMyConfig,
+    (me, myConfig): boolean => {
+        if (!me) {
+            return false
+        }
+        if (me.id === 'single-user') {
+            return UserSettings.hideCloudMessage
+        }
+        return Boolean(myConfig.cloudMessageCanceled?.value)
+    },
+)
+
+export const getVersionMessageCanceled = createSelector(
+    getMe,
+    getMyConfig,
+    (me, myConfig): boolean => {
+        if (versionProperty && me){
+            if (me.id === 'single-user') {
+                return true
+            }
+            return Boolean(myConfig[versionProperty]?.value)
+        }
+        return true
+    },
+)
+
+export const getCardLimitSnoozeUntil = createSelector(
+    getMyConfig,
+    (myConfig): number => {
+        if (!myConfig) {
+            return 0
+        }
+        try {
+            return parseInt(myConfig.cardLimitSnoozeUntil?.value || '0', 10)
+        } catch (_) {
+            return 0
+        }
+    },
+)
+
+export const getCardHiddenWarningSnoozeUntil = createSelector(
+    getMyConfig,
+    (myConfig): number => {
+        if (!myConfig) {
+            return 0
+        }
+        try {
+            return parseInt(myConfig.cardHiddenWarningSnoozeUntil?.value || 0, 10)
+        } catch (_) {
+            return 0
+        }
+    },
 )

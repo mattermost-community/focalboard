@@ -21,7 +21,7 @@ import (
 const (
 	// card change notifications.
 	defAddCardNotify    = "{{.Authors | printAuthors \"unknown_user\" }} has added the card {{. | makeLink}}\n"
-	defModifyCardNotify = "###### {{.Authors | printAuthors \"unknown_user\" }} has modified the card {{. | makeLink}}\n"
+	defModifyCardNotify = "###### {{.Authors | printAuthors \"unknown_user\" }} has modified the card {{. | makeLink}} on the board {{. | makeBoardLink}}\n"
 	defDeleteCardNotify = "{{.Authors | printAuthors \"unknown_user\" }} has deleted the card {{. | makeLink}}\n"
 )
 
@@ -33,9 +33,10 @@ var (
 
 // DiffConvOpts provides options when converting diffs to slack attachments.
 type DiffConvOpts struct {
-	Language     string
-	MakeCardLink func(block *model.Block, board *model.Block, card *model.Block) string
-	Logger       *mlog.Logger
+	Language      string
+	MakeCardLink  func(block *model.Block, board *model.Board, card *model.Block) string
+	MakeBoardLink func(board *model.Board) string
+	Logger        mlog.LoggerIFace
 }
 
 // getTemplate returns a new or cached named template based on the language specified.
@@ -49,14 +50,23 @@ func getTemplate(name string, opts DiffConvOpts, def string) (*template.Template
 		t = template.New(key)
 
 		if opts.MakeCardLink == nil {
-			opts.MakeCardLink = func(block *model.Block, _ *model.Block, _ *model.Block) string {
+			opts.MakeCardLink = func(block *model.Block, _ *model.Board, _ *model.Block) string {
 				return fmt.Sprintf("`%s`", block.Title)
+			}
+		}
+
+		if opts.MakeBoardLink == nil {
+			opts.MakeBoardLink = func(board *model.Board) string {
+				return fmt.Sprintf("`%s`", board.Title)
 			}
 		}
 		myFuncs := template.FuncMap{
 			"getBoardDescription": getBoardDescription,
 			"makeLink": func(diff *Diff) string {
 				return opts.MakeCardLink(diff.NewBlock, diff.Board, diff.Card)
+			},
+			"makeBoardLink": func(diff *Diff) string {
+				return opts.MakeBoardLink(diff.Board)
 			},
 			"stripNewlines": func(s string) string {
 				return strings.TrimSpace(strings.ReplaceAll(s, "\n", "¶ "))
@@ -160,6 +170,7 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 		mlog.String("card_id", cardDiff.Card.ID),
 		mlog.String("new_block_id", cardDiff.NewBlock.ID),
 		mlog.String("old_block_id", cardDiff.OldBlock.ID),
+		mlog.Int("childDiffs", len(cardDiff.Diffs)),
 	)
 
 	buf.Reset()

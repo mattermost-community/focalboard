@@ -10,7 +10,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {FetchMock} from '../../test/fetchMock'
 import {TestBlockFactory} from '../../test/testBlockFactory'
@@ -68,21 +68,32 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [board.id]: board,
                 },
                 current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [card.id]: card,
                 },
                 current: card.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -98,6 +109,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -124,10 +136,22 @@ describe('components/cardDetail/CardDetail', () => {
     test('should show comments in readonly view', async () => {
         const mockStore = configureStore([])
         const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
             users: {
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
         })
 
@@ -143,6 +167,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={true}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -179,28 +204,39 @@ describe('components/cardDetail/CardDetail', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'card',
-                        focalboard_onboardingTourStep: '0',
-                    },
                 },
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '0'},
+                },
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -222,6 +258,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -242,7 +279,7 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip[1]).toMatchSnapshot()
 
         // moving to next step
-        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
         const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
@@ -254,7 +291,7 @@ describe('components/cardDetail/CardDetail', () => {
             'user_id_1',
             {
                 updatedFields: {
-                    focalboard_onboardingTourStep: '1',
+                    onboardingTourStep: '1',
                 },
             },
         )
@@ -273,28 +310,39 @@ describe('components/cardDetail/CardDetail', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'card',
-                        focalboard_onboardingTourStep: '1',
-                    },
                 },
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '1'},
+                },
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -316,6 +364,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -336,7 +385,7 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip[1]).toMatchSnapshot()
 
         // moving to next step
-        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
         const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
@@ -348,7 +397,7 @@ describe('components/cardDetail/CardDetail', () => {
             'user_id_1',
             {
                 updatedFields: {
-                    focalboard_onboardingTourStep: '2',
+                    onboardingTourStep: '2',
                 },
             },
         )
@@ -365,28 +414,39 @@ describe('components/cardDetail/CardDetail', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'card',
-                        focalboard_onboardingTourStep: '2',
-                    },
                 },
-                workspaceUsers: [
-                    {username: 'username_1'},
-                ],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '2'},
+                },
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
+            },
+            teams: {
+                current: {id: 'team-id'},
             },
             boards: {
                 boards: {
                     [welcomeBoard.id]: welcomeBoard,
                 },
                 current: welcomeBoard.id,
+                myBoardMemberships: {
+                    [welcomeBoard.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
             },
             cards: {
                 cards: {
                     [welcomeCard.id]: welcomeCard,
                 },
                 current: welcomeCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         }
         const store = mockStore(state)
@@ -414,6 +474,7 @@ describe('components/cardDetail/CardDetail', () => {
                         comments={[comment1, comment2]}
                         contents={[text]}
                         readonly={false}
+                        onClose={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -434,7 +495,7 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip[1]).toMatchSnapshot()
 
         // moving to next step
-        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
         const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
@@ -446,9 +507,66 @@ describe('components/cardDetail/CardDetail', () => {
             'user_id_1',
             {
                 updatedFields: {
-                    focalboard_onboardingTourStep: '999',
+                    onboardingTourStep: '999',
                 },
             },
         )
+    })
+
+    test('should render hidden view if limited', async () => {
+        const limitedCard = {...card, limited: true}
+        const mockStore = configureStore([])
+        const store = mockStore({
+            users: {
+                workspaceUsers: [
+                    {username: 'username_1'},
+                ],
+            },
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                boards: {
+                    [board.id]: board,
+                },
+                current: board.id,
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            },
+            cards: {
+                cards: {
+                    [limitedCard.id]: limitedCard,
+                },
+                current: limitedCard.id,
+            },
+        })
+
+        const component = (
+            <ReduxProvider store={store}>
+                {wrapIntl(
+                    <CardDetail
+                        board={board}
+                        activeView={view}
+                        views={[view]}
+                        cards={[limitedCard]}
+                        card={limitedCard}
+                        comments={[comment1, comment2]}
+                        contents={[]}
+                        readonly={false}
+                        onClose={jest.fn()}
+                    />,
+                )}
+            </ReduxProvider>
+        )
+
+        let container: Element | DocumentFragment | null = null
+
+        await act(async () => {
+            const result = render(component)
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
     })
 })

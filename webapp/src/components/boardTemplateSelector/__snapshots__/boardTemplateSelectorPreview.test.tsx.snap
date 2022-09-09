@@ -20,20 +20,14 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="title"
         >
           <div
-            class="BlockIconSelector"
+            class="IconSelector"
           >
             <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
+              class="octo-icon size-m readonly"
             >
-              <div
-                class="octo-icon size-m"
-              >
-                <span>
-                  🚴🏻‍♂️
-                </span>
-              </div>
+              <span>
+                🚴🏻‍♂️
+              </span>
             </div>
           </div>
           <input
@@ -53,24 +47,26 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
           class="viewSelector"
         >
           <input
-            class="Editable undefined"
+            class="Editable "
             placeholder="Untitled View"
             spellcheck="true"
             title="View"
             value="View"
           />
-          <div
-            aria-label="View menu"
-            class="MenuWrapper"
-            role="button"
-          >
-            <button
-              type="button"
+          <div>
+            <div
+              aria-label="View menu"
+              class="MenuWrapper"
+              role="button"
             >
-              <i
-                class="CompassIcon icon-chevron-down DropdownIcon"
-              />
-            </button>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-chevron-down DropdownIcon"
+                />
+              </button>
+            </div>
           </div>
         </div>
         <div
@@ -131,13 +127,19 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             </span>
           </button>
         </div>
-        <button
-          type="button"
+        <div
+          class="board-search-field"
         >
-          <span>
-            Search
-          </span>
-        </button>
+          <i
+            class="CompassIcon icon-magnify board-search-icon"
+          />
+          <input
+            class="Editable "
+            placeholder="Search cards"
+            title=""
+            value=""
+          />
+        </div>
         <div
           class="ModalWrapper"
         >
@@ -243,7 +245,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="Label propColorOrange "
           >
             <input
-              class="Editable undefined"
+              class="Editable "
               placeholder="New Select"
               spellcheck="true"
               title="Q1"
@@ -295,7 +297,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             class="Label propColorBlue "
           >
             <input
-              class="Editable undefined"
+              class="Editable "
               placeholder="New Select"
               spellcheck="true"
               title="Q2"

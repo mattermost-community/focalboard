@@ -16,42 +16,37 @@ import (
 )
 
 func StoreTestNotificationHintsStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
-	container := store.Container{
-		WorkspaceID: "0",
-	}
-
 	t.Run("UpsertNotificationHint", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testUpsertNotificationHint(t, store, container)
+		testUpsertNotificationHint(t, store)
 	})
 
 	t.Run("DeleteNotificationHint", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testDeleteNotificationHint(t, store, container)
+		testDeleteNotificationHint(t, store)
 	})
 
 	t.Run("GetNotificationHint", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetNotificationHint(t, store, container)
+		testGetNotificationHint(t, store)
 	})
 
 	t.Run("GetNextNotificationHint", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testGetNextNotificationHint(t, store, container)
+		testGetNextNotificationHint(t, store)
 	})
 }
 
-func testUpsertNotificationHint(t *testing.T, store store.Store, container store.Container) {
+func testUpsertNotificationHint(t *testing.T, store store.Store) {
 	t.Run("create notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
 			ModifiedByID: utils.NewID(utils.IDTypeUser),
-			WorkspaceID:  container.WorkspaceID,
 		}
 
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
@@ -65,7 +60,6 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
 			ModifiedByID: utils.NewID(utils.IDTypeUser),
-			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "upsert notification hint should not error")
@@ -77,7 +71,6 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 			BlockType:    model.TypeCard,
 			BlockID:      hintNew.BlockID,
 			ModifiedByID: hintNew.ModifiedByID,
-			WorkspaceID:  container.WorkspaceID,
 		}
 		hintDup, err := store.UpsertNotificationHint(hint, time.Second*15)
 
@@ -92,11 +85,10 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 		_, err := store.UpsertNotificationHint(hint, time.Second*15)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
-		hint.BlockType = model.TypeBoard
+		hint.BlockType = "board"
 		_, err = store.UpsertNotificationHint(hint, time.Second*15)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
-		hint.WorkspaceID = container.WorkspaceID
 		_, err = store.UpsertNotificationHint(hint, time.Second*15)
 		assert.ErrorAs(t, err, &model.ErrInvalidNotificationHint{}, "invalid notification hint should error")
 
@@ -111,63 +103,61 @@ func testUpsertNotificationHint(t *testing.T, store store.Store, container store
 	})
 }
 
-func testDeleteNotificationHint(t *testing.T, store store.Store, container store.Container) {
+func testDeleteNotificationHint(t *testing.T, store store.Store) {
 	t.Run("delete notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
 			ModifiedByID: utils.NewID(utils.IDTypeUser),
-			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "create notification hint should not error")
 
 		// check the notification hint exists
-		hint, err = store.GetNotificationHint(container, hintNew.BlockID)
+		hint, err = store.GetNotificationHint(hintNew.BlockID)
 		require.NoError(t, err, "get notification hint should not error")
 		assert.Equal(t, hintNew.BlockID, hint.BlockID)
 		assert.Equal(t, hintNew.CreateAt, hint.CreateAt)
 
-		err = store.DeleteNotificationHint(container, hintNew.BlockID)
+		err = store.DeleteNotificationHint(hintNew.BlockID)
 		require.NoError(t, err, "delete notification hint should not error")
 
 		// check the notification hint was deleted
-		hint, err = store.GetNotificationHint(container, hintNew.BlockID)
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		hint, err = store.GetNotificationHint(hintNew.BlockID)
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 		assert.Nil(t, hint)
 	})
 
 	t.Run("delete non-existent notification hint", func(t *testing.T) {
-		err := store.DeleteNotificationHint(container, "bogus")
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		err := store.DeleteNotificationHint("bogus")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 	})
 }
 
-func testGetNotificationHint(t *testing.T, store store.Store, container store.Container) {
+func testGetNotificationHint(t *testing.T, store store.Store) {
 	t.Run("get notification hint", func(t *testing.T) {
 		hint := &model.NotificationHint{
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
 			ModifiedByID: utils.NewID(utils.IDTypeUser),
-			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 		require.NoError(t, err, "create notification hint should not error")
 
 		// make sure notification hint can be fetched
-		hint, err = store.GetNotificationHint(container, hintNew.BlockID)
+		hint, err = store.GetNotificationHint(hintNew.BlockID)
 		require.NoError(t, err, "get notification hint should not error")
 		assert.Equal(t, hintNew, hint)
 	})
 
 	t.Run("get non-existent notification hint", func(t *testing.T) {
-		hint, err := store.GetNotificationHint(container, "bogus")
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		hint, err := store.GetNotificationHint("bogus")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 		assert.Nil(t, hint, "hint should be nil")
 	})
 }
 
-func testGetNextNotificationHint(t *testing.T, store store.Store, container store.Container) {
+func testGetNextNotificationHint(t *testing.T, store store.Store) {
 	t.Run("get next notification hint", func(t *testing.T) {
 		const loops = 5
 		ids := [5]string{}
@@ -179,7 +169,6 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 				BlockType:    model.TypeCard,
 				BlockID:      utils.NewID(utils.IDTypeBlock),
 				ModifiedByID: modifiedBy,
-				WorkspaceID:  container.WorkspaceID,
 			}
 			hintNew, err := store.UpsertNotificationHint(hint, time.Second*15)
 			require.NoError(t, err, "create notification hint should not error")
@@ -198,7 +187,7 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 			assert.Less(t, notifyAt, hint.NotifyAt)
 			notifyAt = hint.NotifyAt
 
-			err = store.DeleteNotificationHint(container, hint.BlockID)
+			err = store.DeleteNotificationHint(hint.BlockID)
 			require.NoError(t, err, "delete notification hint should not error")
 		}
 	})
@@ -210,17 +199,17 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 
 		for {
 			hint, err2 := store.GetNextNotificationHint(false)
-			if store.IsErrNotFound(err2) {
+			if model.IsErrNotFound(err2) {
 				break
 			}
 			require.NoError(t, err2, "get next notification hint should not error")
 
-			err2 = store.DeleteNotificationHint(container, hint.BlockID)
+			err2 = store.DeleteNotificationHint(hint.BlockID)
 			require.NoError(t, err2, "delete notification hint should not error")
 		}
 
 		_, err = store.GetNextNotificationHint(false)
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 	})
 
 	t.Run("get next notification hint and remove", func(t *testing.T) {
@@ -232,7 +221,6 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 			BlockType:    model.TypeCard,
 			BlockID:      utils.NewID(utils.IDTypeBlock),
 			ModifiedByID: utils.NewID(utils.IDTypeUser),
-			WorkspaceID:  container.WorkspaceID,
 		}
 		hintNew, err := store.UpsertNotificationHint(hint, time.Second*1)
 		require.NoError(t, err, "create notification hint should not error")
@@ -244,14 +232,14 @@ func testGetNextNotificationHint(t *testing.T, store store.Store, container stor
 
 		// should be no hint left
 		_, err = store.GetNextNotificationHint(false)
-		require.True(t, store.IsErrNotFound(err), "error should be of type store.ErrNotFound")
+		require.True(t, model.IsErrNotFound(err), "error should be of type store.ErrNotFound")
 	})
 }
 
 func emptyNotificationHintTable(store store.Store) error {
 	for {
 		hint, err := store.GetNextNotificationHint(false)
-		if store.IsErrNotFound(err) {
+		if model.IsErrNotFound(err) {
 			break
 		}
 
@@ -259,9 +247,7 @@ func emptyNotificationHintTable(store store.Store) error {
 			return err
 		}
 
-		c := containerForWorkspace(hint.WorkspaceID)
-
-		err = store.DeleteNotificationHint(c, hint.BlockID)
+		err = store.DeleteNotificationHint(hint.BlockID)
 		if err != nil {
 			return err
 		}

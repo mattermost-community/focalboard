@@ -22,16 +22,12 @@ const (
 
 type BlockChangeEvent struct {
 	Action       Action
-	Workspace    string
-	Board        *model.Block
+	TeamID       string
+	Board        *model.Board
 	Card         *model.Block
 	BlockChanged *model.Block
 	BlockOld     *model.Block
-	ModifiedByID string
-}
-
-type SubscriptionChangeNotifier interface {
-	BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription)
+	ModifiedBy   *model.BoardMember
 }
 
 // Backend provides an interface for sending notifications.
@@ -46,11 +42,11 @@ type Backend interface {
 type Service struct {
 	mux      sync.RWMutex
 	backends []Backend
-	logger   *mlog.Logger
+	logger   mlog.LoggerIFace
 }
 
 // New creates a notification service with one or more Backends capable of sending notifications.
-func New(logger *mlog.Logger, backends ...Backend) (*Service, error) {
+func New(logger mlog.LoggerIFace, backends ...Backend) (*Service, error) {
 	notify := &Service{
 		backends: make([]Backend, 0, len(backends)),
 		logger:   logger,
@@ -107,26 +103,6 @@ func (s *Service) BlockChanged(evt BlockChangeEvent) {
 				mlog.String("block_id", evt.BlockChanged.ID),
 				mlog.Err(err),
 			)
-		}
-	}
-}
-
-// BroadcastSubscriptionChange sends a websocket message with details of the changed subscription to all
-// connected users in the workspace.
-func (s *Service) BroadcastSubscriptionChange(workspaceID string, subscription *model.Subscription) {
-	s.mux.RLock()
-	backends := make([]Backend, len(s.backends))
-	copy(backends, s.backends)
-	s.mux.RUnlock()
-
-	for _, backend := range backends {
-		if scn, ok := backend.(SubscriptionChangeNotifier); ok {
-			s.logger.Debug("Delivering subscription change notification",
-				mlog.String("workspace_id", workspaceID),
-				mlog.String("block_id", subscription.BlockID),
-				mlog.String("subscriber_id", subscription.SubscriberID),
-			)
-			scn.BroadcastSubscriptionChange(workspaceID, subscription)
 		}
 	}
 }

@@ -9,25 +9,27 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
       class="viewSelector"
     >
       <input
-        class="Editable undefined"
+        class="Editable "
         placeholder="Untitled View"
         spellcheck="true"
         title="view title"
         value="view title"
       />
-      <div
-        aria-label="View menu"
-        class="MenuWrapper"
-        role="button"
-      >
-        <button
-          class="IconButton"
-          type="button"
+      <div>
+        <div
+          aria-label="View menu"
+          class="MenuWrapper"
+          role="button"
         >
-          <i
-            class="CompassIcon icon-chevron-down DropdownIcon"
-          />
-        </button>
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
+        </div>
       </div>
     </div>
     <div
@@ -92,14 +94,18 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         </span>
       </button>
     </div>
-    <button
-      class="Button"
-      type="button"
+    <div
+      class="board-search-field"
     >
-      <span>
-        Search
-      </span>
-    </button>
+      <i
+        class="CompassIcon icon-magnify board-search-icon"
+      />
+      <input
+        class="Editable "
+        placeholder="Search cards"
+        value=""
+      />
+    </div>
     <div
       class="ModalWrapper"
     >
@@ -153,15 +159,102 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
       class="viewSelector"
     >
       <input
-        class="Editable readonly undefined"
+        class="Editable readonly "
         placeholder="Untitled View"
         readonly=""
         spellcheck="true"
         title="view title"
         value="view title"
       />
+      <div>
+        <div
+          aria-label="View menu"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <div
+      class="board-search-field"
+    >
+      <i
+        class="CompassIcon icon-magnify board-search-icon"
+      />
+      <input
+        class="Editable "
+        placeholder="Search cards"
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/viewHeader return viewHeader without permissions 1`] = `
+<div>
+  <div
+    class="ViewHeader"
+  >
+    <div
+      class="viewSelector"
+    >
+      <input
+        class="Editable readonly "
+        placeholder="Untitled View"
+        readonly=""
+        spellcheck="true"
+        title="view title"
+        value="view title"
+      />
+      <div>
+        <div
+          aria-label="View menu"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-chevron-down DropdownIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <div
+      class="board-search-field"
+    >
+      <i
+        class="CompassIcon icon-magnify board-search-icon"
+      />
+      <input
+        class="Editable "
+        placeholder="Search cards"
+        value=""
+      />
+    </div>
+    <div
+      class="ModalWrapper"
+    >
       <div
-        aria-label="View menu"
+        aria-label="View header menu"
         class="MenuWrapper"
         role="button"
       >
@@ -170,22 +263,11 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
           type="button"
         >
           <i
-            class="CompassIcon icon-chevron-down DropdownIcon"
+            class="CompassIcon icon-dots-horizontal OptionsIcon"
           />
         </button>
       </div>
     </div>
-    <div
-      class="octo-spacer"
-    />
-    <button
-      class="Button"
-      type="button"
-    >
-      <span>
-        Search
-      </span>
-    </button>
   </div>
 </div>
 `;

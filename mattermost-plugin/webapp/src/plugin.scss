@@ -13,9 +13,18 @@
                 background: rgba(var(--center-channel-color-rgb), 0.08);
 
                 div {
-                    color: var(--link-color-rgb);
+                    color: rgb(var(--link-color-rgb));
                 }
             }
         }
     }
+}
+
+img.boards-rhs-header-logo {
+    color: white;
+    background: var(--button-bg);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
 }

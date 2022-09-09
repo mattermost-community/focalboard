@@ -8,14 +8,22 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class="d-flex"
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-option__content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
     </div>
     <div
       aria-label="menuwrapper"
@@ -31,7 +39,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -39,62 +47,92 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <div
+                  class="d-flex"
+                >
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -109,12 +147,20 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
+                class="d-flex"
               >
-                Cancel
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                class="menu-option__content"
+              >
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -136,14 +182,22 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class="d-flex"
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-option__content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
     </div>
     <div
       aria-label="menuwrapper"
@@ -159,7 +213,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -167,62 +221,92 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <div
+                  class="d-flex"
+                >
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -237,12 +321,20 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
+                class="d-flex"
               >
-                Cancel
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                class="menu-option__content"
+              >
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -264,14 +356,22 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class="d-flex"
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-option__content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
     </div>
     <div
       aria-label="menuwrapper"
@@ -299,14 +399,22 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class="d-flex"
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-option__content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
     </div>
     <div
       aria-label="menuwrapper"
@@ -322,7 +430,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -330,62 +438,92 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <div
+                  class="d-flex"
+                >
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -400,12 +538,20 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
+                class="d-flex"
               >
-                Cancel
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                class="menu-option__content"
+              >
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -427,14 +573,22 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     role="button"
   >
     <div
-      class="Icon"
+      class="d-flex"
     >
-      i
+      <div
+        class="Icon"
+      >
+        i
+      </div>
     </div>
     <div
-      class="menu-name"
+      class="menu-option__content"
     >
-      title
+      <div
+        class="menu-name"
+      >
+        title
+      </div>
     </div>
     <div
       aria-label="menuwrapper"
@@ -450,7 +604,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
         />
       </button>
       <div
-        class="Menu noselect left"
+        class="Menu noselect left "
       >
         <div
           class="menu-contents"
@@ -458,62 +612,92 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
           <div
             class="menu-options"
           >
-            <div
-              aria-label="Set as default"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <svg
-                class="CheckIcon Icon"
-                viewBox="0 0 100 100"
-                xmlns="http://www.w3.org/2000/svg"
+            <div>
+              <div
+                aria-label="Set as default"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                <polyline
-                  points="20,60 40,80 80,40"
+                <div
+                  class="d-flex"
+                >
+                  <svg
+                    class="CheckIcon Icon"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="20,60 40,80 80,40"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Set as default
+                  </div>
+                </div>
+                <div
+                  class="noicon"
                 />
-              </svg>
-              <div
-                class="menu-name"
-              >
-                Set as default
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Edit"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-pencil-outline EditIcon"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Edit"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Edit
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Edit
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
-            <div
-              aria-label="Delete"
-              class="MenuOption TextOption menu-option"
-              role="button"
-            >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+            <div>
               <div
-                class="menu-name"
+                aria-label="Delete"
+                class="MenuOption TextOption menu-option"
+                role="button"
               >
-                Delete
+                <div
+                  class="d-flex"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
               </div>
-              <div
-                class="noicon"
-              />
             </div>
           </div>
           <div
@@ -528,12 +712,20 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
               role="button"
             >
               <div
-                class="noicon"
-              />
-              <div
-                class="menu-name"
+                class="d-flex"
               >
-                Cancel
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                class="menu-option__content"
+              >
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"

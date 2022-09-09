@@ -11,11 +11,11 @@ declare let window: IAppWindow
 
 class Archiver {
     static async exportBoardArchive(board: Board): Promise<void> {
-        this.exportArchive(mutator.exportArchive(board.id))
+        this.exportArchive(mutator.exportBoardArchive(board.id))
     }
 
-    static async exportFullArchive(): Promise<void> {
-        this.exportArchive(mutator.exportArchive())
+    static async exportFullArchive(teamID: string): Promise<void> {
+        this.exportArchive(mutator.exportFullArchive(teamID))
     }
 
     private static exportArchive(prom: Promise<Response>): void {
@@ -54,7 +54,7 @@ class Archiver {
     }
 
     static isValidBlock(block: Block): boolean {
-        if (!block.id || !block.rootId) {
+        if (!block.id || !block.boardId) {
             return false
         }
 

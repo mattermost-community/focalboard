@@ -19,12 +19,12 @@ describe('components/onboardingTour/addComments/AddCommentTourStep', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: true,
-                    focalboard_tourCategory: 'card',
-                    focalboard_onboardingTourStep: '1',
-                },
             },
+            myConfig: {
+                onboardingTourStarted: {value: true},
+                tourCategory: {value: 'card'},
+                onboardingTourStep: {value: '1'},
+            }
         },
         boards: {
             boards: {
@@ -37,6 +37,11 @@ describe('components/onboardingTour/addComments/AddCommentTourStep', () => {
                 card_id_1: {title: 'Create a new card'},
             },
             current: 'card_id_1',
+        },
+        clientConfig: {
+            value: {
+                featureFlags: {},
+            },
         },
     }
     let store = mockStore(state)

@@ -146,6 +146,9 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
       class="Dialog dialog-back DeleteBoardDialog"
     >
       <div
+        class="backdrop"
+      />
+      <div
         class="wrapper"
       >
         <div
@@ -164,6 +167,9 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
                 class="CompassIcon icon-close CloseIcon"
               />
             </button>
+            <div
+              class="toolbar--right"
+            />
           </div>
           <div
             class="container"
@@ -171,7 +177,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
             <h2
               class="header text-heading5"
             >
-              Confirm Delete Board Template
+              Confirm delete board template
             </h2>
             <p
               class="body"

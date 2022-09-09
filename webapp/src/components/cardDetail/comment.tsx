@@ -14,6 +14,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {getUser} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import Tooltip from '../../widgets/tooltip'
+import GuestBadge from '../../widgets/guestBadge'
 
 import './comment.scss'
 
@@ -42,6 +43,8 @@ const Comment: FC<Props> = (props: Props) => {
                     src={userImageUrl}
                 />
                 <div className='comment-username'>{user?.username}</div>
+                <GuestBadge show={user?.is_guest}/>
+
                 <Tooltip title={Utils.displayDateTime(date, intl)}>
                     <div className='comment-date'>
                         {Utils.relativeDisplayDateTime(date, intl)}

@@ -1,6 +1,10 @@
+@import '../../styles/z-index';
+
 .CardDetail {
     .title {
         width: 100%;
+        font-size: 32px;
+        line-height: 40px;
     }
 
     .add-buttons {
@@ -28,11 +32,66 @@
         width: 100%;
     }
 
-    .octo-propertyrow {
+
+
+    .octo-propertyvalue {
+        font-size: 14px;
+        padding: 4px 8px;
+        min-height: 32px;
         display: flex;
-        align-items: center;
+
+        &:not(.URLProperty) {
+            flex-wrap: wrap;
+        }
+
+        &.octo-propertyvalue--readonly {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &:not(.octo-propertyvalue--readonly) {
+            min-width: 180px;
+            transition: background 100ms ease-out 0s;
+            cursor: pointer;
+            border-radius: 4px;
+
+            &:hover {
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+        }
+
+        .MenuWrapper {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .ValueSelector {
+        padding: 4px 0;
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+        width: auto;
+    }
+
+    .ValueSelector__menu {
+        @include z-index(card-value-selector-menu);
+        max-width: 100%;
+
+        .value-menu-option {
+            justify-content: space-between;
+        }
+
+        .label-container {
+            max-width: 90%;
+        }
+    }
+
+    .octo-propertyrow {
+        max-width: 595px;
+        display: flex;
+        align-items: flex-start;
         margin: 6px 0;
-        height: 32px;
+        min-height: 32px;
 
         .Switch {
             margin-left: 8px;
@@ -53,40 +112,12 @@
             }
         }
 
-        .octo-propertyvalue {
-            font-size: 14px;
-            padding: 4px 8px;
-            height: 32px;
-
-            &.octo-propertyvalue--readonly {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            &:not(.readonly) {
-                min-width: 180px;
-                transition: background 100ms ease-out 0s;
-                cursor: pointer;
-                border-radius: 4px;
-
-                &:hover {
-                    background-color: rgba(var(--center-channel-color-rgb), 0.08);
-                }
-            }
-
-            .MenuWrapper {
-                display: flex;
-                align-items: center;
-            }
-        }
-
         .Label {
             margin: 0 4px 0 0;
         }
     }
 
-    .UserProperty {
+    .Person {
         .react-select__value-container {
             padding: 0;
         }
@@ -142,5 +173,56 @@
                 color: rgba(var(--center-channel-color-rgb), 0.6);
             }
         }
+    }
+
+    &.content.is-limited {
+        flex: 1;
+    }
+
+    &__limited-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 14px;
+        position: relative;
+
+        > :not(.CardDetail__limited-bg) {
+            position: relative;
+        }
+    }
+
+    &__limited-bg {
+        filter: blur(12px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+
+        > svg {
+            width: 100%;
+            height: auto;
+
+            > rect {
+                fill: rgba(var(--center-channel-color-rgb));
+            }
+        }
+    }
+
+    &__limited-title {
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    &__limited-link {
+        color: var(--link-color);
+    }
+
+    &__limited-button {
+        margin-top: 24px;
     }
 }

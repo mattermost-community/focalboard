@@ -6,7 +6,7 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
-import {Constants} from '../constants'
+import {Constants, Permission} from '../constants'
 import mutator from '../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Block} from '../blocks/block'
@@ -20,12 +20,16 @@ import GalleryIcon from '../widgets/icons/gallery'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
 
+import BoardPermissionGate from './permissions/boardPermissionGate'
+import './viewMenu.scss'
+
 type Props = {
     board: Board,
     activeView: BoardView,
     views: BoardView[],
     intl: IntlShape
     readonly: boolean
+    allowCreateView: () => boolean
 }
 
 const ViewMenu = (props: Props) => {
@@ -33,7 +37,7 @@ const ViewMenu = (props: Props) => {
     const match = useRouteMatch()
 
     const showView = useCallback((viewId) => {
-        let newPath = generatePath(match.path, {...match.params, viewId: viewId || ''})
+        let newPath = generatePath(Utils.getBoardPagePath(match.path), {...match.params, viewId: viewId || ''})
         if (props.readonly) {
             newPath += `?r=${Utils.getReadToken()}`
         }
@@ -43,12 +47,18 @@ const ViewMenu = (props: Props) => {
     const handleDuplicateView = useCallback(() => {
         const {board, activeView} = props
         Utils.log('duplicateView')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateBoardView, {board: board.id, view: activeView.id})
         const currentViewId = activeView.id
         const newView = createBoardView(activeView)
         newView.title = `${activeView.title} copy`
         newView.id = Utils.createGuid(IDType.View)
         mutator.insertBlock(
+            newView.boardId,
             newView,
             'duplicate view',
             async (block: Block) => {
@@ -68,7 +78,7 @@ const ViewMenu = (props: Props) => {
         Utils.log('deleteView')
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteBoardView, {board: board.id, view: activeView.id})
         const view = activeView
-        const nextView = views.find((o) => o !== view)
+        const nextView = views.find((o) => o.id !== view.id)
         mutator.deleteBlock(view, 'delete view')
         if (nextView) {
             showView(nextView.id)
@@ -88,16 +98,21 @@ const ViewMenu = (props: Props) => {
     const handleAddViewBoard = useCallback(() => {
         const {board, activeView, intl} = props
         Utils.log('addview-board')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoardView, {board: board.id, view: activeView.id})
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewBoardTitle', defaultMessage: 'Board view'})
         view.fields.viewType = 'board'
-        view.parentId = board.id
-        view.rootId = board.rootId
+        view.boardId = board.id
 
         const oldViewId = activeView.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -115,18 +130,23 @@ const ViewMenu = (props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-table')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewTableTitle', defaultMessage: 'Table view'})
         view.fields.viewType = 'table'
-        view.parentId = board.id
-        view.rootId = board.rootId
-        view.fields.visiblePropertyIds = board.fields.cardProperties.map((o: IPropertyTemplate) => o.id)
+        view.boardId = board.id
+        view.fields.visiblePropertyIds = board.cardProperties.map((o: IPropertyTemplate) => o.id)
         view.fields.columnWidths = {}
         view.fields.columnWidths[Constants.titleColumnId] = Constants.defaultTitleColumnWidth
 
         const oldViewId = activeView.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -145,16 +165,21 @@ const ViewMenu = (props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-gallery')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewGalleryTitle', defaultMessage: 'Gallery view'})
         view.fields.viewType = 'gallery'
-        view.parentId = board.id
-        view.rootId = board.rootId
+        view.boardId = board.id
         view.fields.visiblePropertyIds = [Constants.titleColumnId]
 
         const oldViewId = activeView.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -173,19 +198,26 @@ const ViewMenu = (props: Props) => {
         const {board, activeView, intl} = props
 
         Utils.log('addview-calendar')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
+
         const view = createBoardView()
         view.title = intl.formatMessage({id: 'View.NewCalendarTitle', defaultMessage: 'Calendar view'})
         view.fields.viewType = 'calendar'
         view.parentId = board.id
-        view.rootId = board.rootId
+        view.boardId = board.id
         view.fields.visiblePropertyIds = [Constants.titleColumnId]
 
         const oldViewId = activeView.id
 
         // Find first date property
-        view.fields.dateDisplayPropertyId = board.fields.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
+        view.fields.dateDisplayPropertyId = board.cardProperties.find((o: IPropertyTemplate) => o.type === 'date')?.id
 
         mutator.insertBlock(
+            view.boardId,
             view,
             'add view',
             async (block: Block) => {
@@ -238,65 +270,79 @@ const ViewMenu = (props: Props) => {
     }
 
     return (
-        <Menu>
-            {views.map((view: BoardView) => (
-                <Menu.Text
-                    key={view.id}
-                    id={view.id}
-                    name={view.title}
-                    icon={iconForViewType(view.fields.viewType)}
-                    onClick={handleViewClick}
-                />))}
-            <Menu.Separator/>
-            {!props.readonly &&
-                <Menu.Text
-                    id='__duplicateView'
-                    name={duplicateViewText}
-                    icon={<DuplicateIcon/>}
-                    onClick={handleDuplicateView}
-                />
-            }
-            {!props.readonly && views.length > 1 &&
-                <Menu.Text
-                    id='__deleteView'
-                    name={deleteViewText}
-                    icon={<DeleteIcon/>}
-                    onClick={handleDeleteView}
-                />
-            }
-            {!props.readonly &&
-                <Menu.SubMenu
-                    id='__addView'
-                    name={addViewText}
-                    icon={<AddIcon/>}
-                >
-                    <Menu.Text
-                        id='board'
-                        name={boardText}
-                        icon={<BoardIcon/>}
-                        onClick={handleAddViewBoard}
-                    />
-                    <Menu.Text
-                        id='table'
-                        name={tableText}
-                        icon={<TableIcon/>}
-                        onClick={handleAddViewTable}
-                    />
-                    <Menu.Text
-                        id='gallery'
-                        name={galleryText}
-                        icon={<GalleryIcon/>}
-                        onClick={handleAddViewGallery}
-                    />
-                    <Menu.Text
-                        id='calendar'
-                        name='Calendar'
-                        icon={<CalendarIcon/>}
-                        onClick={handleAddViewCalendar}
-                    />
-                </Menu.SubMenu>
-            }
-        </Menu>
+        <div className='ViewMenu'>
+            <Menu>
+                <div className='view-list'>
+                    {views.map((view: BoardView) => (
+                        <Menu.Text
+                            key={view.id}
+                            id={view.id}
+                            name={view.title}
+                            icon={iconForViewType(view.fields.viewType)}
+                            onClick={handleViewClick}
+                        />))}
+                </div>
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                    <Menu.Separator/>
+                </BoardPermissionGate>
+                {!props.readonly &&
+                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                     <Menu.Text
+                         id='__duplicateView'
+                         name={duplicateViewText}
+                         icon={<DuplicateIcon/>}
+                         onClick={handleDuplicateView}
+                     />
+                 </BoardPermissionGate>
+                }
+                {!props.readonly && views.length > 1 &&
+                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                     <Menu.Text
+                         id='__deleteView'
+                         name={deleteViewText}
+                         icon={<DeleteIcon/>}
+                         onClick={handleDeleteView}
+                     />
+                 </BoardPermissionGate>
+                }
+                {!props.readonly &&
+                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                     <Menu.SubMenu
+                         id='__addView'
+                         name={addViewText}
+                         icon={<AddIcon/>}
+                     >
+                         <div className='subMenu'>
+                             <Menu.Text
+                                 id='board'
+                                 name={boardText}
+                                 icon={<BoardIcon/>}
+                                 onClick={handleAddViewBoard}
+                             />
+                             <Menu.Text
+                                 id='table'
+                                 name={tableText}
+                                 icon={<TableIcon/>}
+                                 onClick={handleAddViewTable}
+                             />
+                             <Menu.Text
+                                 id='gallery'
+                                 name={galleryText}
+                                 icon={<GalleryIcon/>}
+                                 onClick={handleAddViewGallery}
+                             />
+                             <Menu.Text
+                                 id='calendar'
+                                 name='Calendar'
+                                 icon={<CalendarIcon/>}
+                                 onClick={handleAddViewCalendar}
+                             />
+                         </div>
+                     </Menu.SubMenu>
+                 </BoardPermissionGate>
+                }
+            </Menu>
+        </div>
     )
 }
 

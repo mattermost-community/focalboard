@@ -1,7 +1,9 @@
+@import '../../styles/z-index';
+
 .BoardTemplateSelector {
+    @include z-index(board-template-selector);
     position: absolute;
     background-color: rgb(var(--center-channel-bg-rgb));
-    z-index: 1000;
     top: 0;
     left: 0;
     width: 100%;
@@ -70,6 +72,7 @@
     }
 
     .template-preview-box {
+        padding-bottom: 32px;
         position: relative;
         background-color: rgb(var(--center-channel-bg-rgb));
         box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
@@ -78,6 +81,7 @@
         overflow: hidden;
         width: 100%;
         max-width: 1000px;
+        height: 512px;
 
         .buttons {
             display: flex;
@@ -104,6 +108,10 @@
                 @media (min-width: 1024px) {
                     margin: 0 16px 0 0;
                 }
+            }
+
+            > .buttons:first-child {
+                padding-top: 32px;
             }
         }
     }

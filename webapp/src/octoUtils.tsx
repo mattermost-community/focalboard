@@ -3,10 +3,7 @@
 
 import {IntlShape} from 'react-intl'
 
-import {DateUtils} from 'react-day-picker'
-
 import {Block, createBlock} from './blocks/block'
-import {IPropertyTemplate, createBoard} from './blocks/board'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
@@ -18,70 +15,8 @@ import {FilterCondition} from './blocks/filterClause'
 import {Utils} from './utils'
 
 class OctoUtils {
-    static propertyDisplayValue(block: Block, propertyValue: string | string[] | undefined, propertyTemplate: IPropertyTemplate, intl: IntlShape): string | string[] | undefined {
-        let displayValue: string | string[] | undefined
-        switch (propertyTemplate.type) {
-        case 'select': {
-            // The property value is the id of the template
-            if (propertyValue) {
-                const option = propertyTemplate.options.find((o) => o.id === propertyValue)
-                if (!option) {
-                    Utils.assertFailure(`Invalid select option ID ${propertyValue}, block.title: ${block.title}`)
-                }
-                displayValue = option?.value || '(Unknown)'
-            }
-            break
-        }
-        case 'multiSelect': {
-            if (propertyValue?.length) {
-                const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))
-                if (!options.length) {
-                    Utils.assertFailure(`Invalid multiSelect option IDs ${propertyValue}, block.title: ${block.title}`)
-                }
-                displayValue = options.map((o) => o.value)
-            }
-            break
-        }
-        case 'createdTime': {
-            displayValue = Utils.displayDateTime(new Date(block.createAt), intl)
-            break
-        }
-        case 'updatedTime': {
-            displayValue = Utils.displayDateTime(new Date(block.updateAt), intl)
-            break
-        }
-        case 'date': {
-            if (propertyValue) {
-                const singleDate = new Date(parseInt(propertyValue as string, 10))
-                if (singleDate && DateUtils.isDate(singleDate)) {
-                    displayValue = Utils.displayDate(new Date(parseInt(propertyValue as string, 10)), intl)
-                } else {
-                    try {
-                        const dateValue = JSON.parse(propertyValue as string)
-                        if (dateValue.from) {
-                            displayValue = Utils.displayDate(new Date(dateValue.from), intl)
-                        }
-                        if (dateValue.to) {
-                            displayValue += ' -> '
-                            displayValue += Utils.displayDate(new Date(dateValue.to), intl)
-                        }
-                    } catch {
-                        // do nothing
-                    }
-                }
-            }
-            break
-        }
-        default:
-            displayValue = propertyValue
-        }
-
-        return displayValue
-    }
-
     static hydrateBlock(block: Block): Block {
         switch (block.type) {
-        case 'board': { return createBoard(block) }
         case 'view': { return createBoardView(block) }
         case 'card': { return createCard(block) }
         case 'text': { return createTextBlock(block) }
@@ -123,13 +58,13 @@ class OctoUtils {
 
         const newSourceBlockId = idMap[sourceBlockId]
 
-        // Determine the new rootId if needed
-        let newRootId: string
+        // Determine the new boardId if needed
+        let newBoardId: string
         const sourceBlock = blocks.find((block) => block.id === sourceBlockId)!
-        if (sourceBlock.rootId === sourceBlock.id) {
-            // Special case: when duplicating a tree from root, remap all the descendant rootIds
+        if (sourceBlock.boardId === sourceBlock.id) {
+            // Special case: when duplicating a tree from root, remap all the descendant boardIds
             const newSourceRootBlock = newBlocks.find((block) => block.id === newSourceBlockId)!
-            newRootId = newSourceRootBlock.id
+            newBoardId = newSourceRootBlock.id
         }
 
         newBlocks.forEach((newBlock) => {
@@ -139,9 +74,9 @@ class OctoUtils {
                 Utils.assert(newBlock.parentId, `Block ${newBlock.id} (${newBlock.type} ${newBlock.title}) has no parent`)
             }
 
-            // Remap the rootIds if we are duplicating a tree from root
-            if (newRootId) {
-                newBlock.rootId = newRootId
+            // Remap the boardIds if we are duplicating a tree from root
+            if (newBoardId) {
+                newBlock.boardId = newBoardId
             }
 
             // Remap manual card order
@@ -167,6 +102,16 @@ class OctoUtils {
         case 'notIncludes': return intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})
         case 'isEmpty': return intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})
         case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
+        case 'isSet': return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
+        case 'isNotSet': return intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})
+        case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
+        case 'is': return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
+        case 'contains': return intl.formatMessage({id: 'Filter.contains', defaultMessage: 'contains'})
+        case 'notContains': return intl.formatMessage({id: 'Filter.not-contains', defaultMessage: 'doesn\'t contain'})
+        case 'startsWith': return intl.formatMessage({id: 'Filter.starts-with', defaultMessage: 'starts with'})
+        case 'notStartsWith': return intl.formatMessage({id: 'Filter.not-starts-with', defaultMessage: 'doesn\'t start with'})
+        case 'endsWith': return intl.formatMessage({id: 'Filter.ends-with', defaultMessage: 'ends with'})
+        case 'notEndsWith': return intl.formatMessage({id: 'Filter.not-ends-with', defaultMessage: 'doesn\'t end with'})
         default: {
             Utils.assertFailure()
             return '(unknown)'

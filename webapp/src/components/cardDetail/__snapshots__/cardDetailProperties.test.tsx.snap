@@ -1,99 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/cardDetail/CardDetailProperties cancel button in TypeorNameChange dialog should do nothing 1`] = `
-<div>
-  <div
-    class="octo-propertylist CardDetailProperties"
-  >
-    <div
-      class="octo-propertyrow"
-    >
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper"
-        role="button"
-      >
-        <div
-          class="octo-propertyname"
-        >
-          <button
-            class="Button"
-            type="button"
-          >
-            <span>
-              Owner
-            </span>
-          </button>
-        </div>
-      </div>
-      <div
-        class="octo-propertyvalue"
-        data-testid="select-non-editable"
-        tabindex="0"
-      >
-        <span
-          class="Label propColorDefault "
-        >
-          <span
-            class="Label-text"
-          >
-            Jean-Luc Picard
-          </span>
-        </span>
-      </div>
-    </div>
-    <div
-      class="octo-propertyrow"
-    >
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper"
-        role="button"
-      >
-        <div
-          class="octo-propertyname"
-        >
-          <button
-            class="Button"
-            type="button"
-          >
-            <span>
-              MockStatus
-            </span>
-          </button>
-        </div>
-      </div>
-      <input
-        class="Editable octo-propertyvalue"
-        placeholder="Empty"
-        spellcheck="false"
-        style="width: 5px;"
-        title="1234"
-        value="1234"
-      />
-    </div>
-    <div
-      class="octo-propertyname add-property"
-    >
-      <div
-        aria-label="menuwrapper"
-        class="MenuWrapper"
-        role="button"
-      >
-        <button
-          class="Button"
-          type="button"
-        >
-          <span>
-            + Add a property
-          </span>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`components/cardDetail/CardDetailProperties cancel on delete dialog should do nothing 1`] = `
 <div>
   <div
@@ -160,7 +66,6 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
       <input
         class="Editable octo-propertyvalue"
         placeholder="Empty"
-        spellcheck="false"
         style="width: 5px;"
         title="1234"
         value="1234"
@@ -254,7 +159,6 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       <input
         class="Editable octo-propertyvalue"
         placeholder="Empty"
-        spellcheck="false"
         style="width: 5px;"
         title="1234"
         value="1234"
@@ -348,7 +252,6 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
       <input
         class="Editable octo-propertyvalue"
         placeholder="Empty"
-        spellcheck="false"
         style="width: 5px;"
         title="1234"
         value="1234"
@@ -371,7 +274,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
           </span>
         </button>
         <div
-          class="Menu noselect bottom"
+          class="Menu noselect bottom "
         >
           <div
             class="menu-contents"
@@ -379,263 +282,402 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
             <div
               class="menu-options"
             >
-              <div
-                class="MenuOption LabelOption menu-option"
-              >
+              <div>
                 <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  class="MenuOption LabelOption menu-option"
                 >
-                  <b>
-                    Select property type
-                  </b>
+                  <div
+                    class="noicon"
+                  />
+                  <div
+                    class="menu-name"
+                  >
+                    <b>
+                      Select property type
+                    </b>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                class="MenuOption MenuSeparator menu-separator"
-              />
-              <div
-                aria-label="Text"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
+                  class="MenuOption MenuSeparator menu-separator"
                 />
                 <div
-                  class="menu-name"
+                  aria-label="Text"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Text
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Text
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Number"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Number"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Number
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Number
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Email"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Email"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Email
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Email
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Phone"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Phone"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Phone
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Phone
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="URL"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="URL"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  URL
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      URL
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Select"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Select"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Select
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Select
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Multi Select"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Multi select"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Multi Select
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Multi select
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Date"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Date"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Date
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Date
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Person"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Person"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Person
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Person
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Checkbox"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Multi person"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Checkbox
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Multi person
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Created time"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Checkbox"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Created time
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Checkbox
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Created by"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Created time"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Created by
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Created time
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Last updated time"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Created by"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Last updated time
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Created by
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
-              </div>
-              <div
-                aria-label="Last updated by"
-                class="MenuOption TextOption menu-option"
-                role="button"
-              >
-                <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  aria-label="Last updated time"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
                 >
-                  Last updated by
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Last updated time
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
                 </div>
                 <div
-                  class="noicon"
-                />
+                  aria-label="Last updated by"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Last updated by
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
               </div>
             </div>
             <div
@@ -650,12 +692,20 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
                 role="button"
               >
                 <div
-                  class="noicon"
-                />
-                <div
-                  class="menu-name"
+                  class="d-flex"
                 >
-                  Cancel
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    Cancel
+                  </div>
                 </div>
                 <div
                   class="noicon"

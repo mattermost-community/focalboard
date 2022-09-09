@@ -6,14 +6,6 @@ h3,
     font-weight: 600;
 }
 
-.focalboard-body {
-    .title {
-        font-size: 40px;
-        line-height: 40px;
-        margin: 0 0 10px;
-    }
-}
-
 .font-semibold {
     font-weight: 600;
 }
@@ -60,6 +52,15 @@ h3,
 
 .text-base {
     font-size: 16px;
+}
+
+.text-75 {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.text-danger {
+    color: var(--error-text);
 }
 
 // Metropolis font definitions

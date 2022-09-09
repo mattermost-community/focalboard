@@ -10,7 +10,8 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {storeLanguage} from '../../store/language'
 import {patchProps, getMe} from '../../store/users'
-import {IUser, UserConfigPatch, UserPropPrefix} from '../../user'
+import {getCurrentTeam, Team} from '../../store/teams'
+import {IUser, UserConfigPatch} from '../../user'
 import octoClient from '../../octoClient'
 import {UserSettings} from '../../userSettings'
 import CheckIcon from '../../widgets/icons/check'
@@ -28,6 +29,7 @@ type Props = {
 const GlobalHeaderSettingsMenu = (props: Props) => {
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
 
     const [randomIcons, setRandomIcons] = useState(UserSettings.prefillRandomIcons)
@@ -70,14 +72,6 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                             ))
                         }
                     </Menu.SubMenu>
-                    <Menu.Text
-                        id='export'
-                        name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
-                        onClick={async () => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ExportArchive)
-                            Archiver.exportFullArchive()
-                        }}
-                    />
                     <Menu.SubMenu
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
@@ -101,35 +95,41 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                         isOn={randomIcons}
                         onClick={async () => toggleRandomIcons()}
                     />
-                    <Menu.Text
-                        id='product-tour'
-                        name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}
-                        onClick={async () => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
+                    {me?.is_guest !== true &&
+                        <Menu.Text
+                            id='product-tour'
+                            className='product-tour'
+                            name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}
+                            onClick={async () => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.StartTour)
 
-                            if (!me) {
-                                return
-                            }
+                                if (!me) {
+                                    return
+                                }
+                                if (!currentTeam) {
+                                    return
+                                }
 
-                            const patch: UserConfigPatch = {
-                                updatedFields: {
-                                    [UserPropPrefix + 'onboardingTourStep']: '0',
-                                    [UserPropPrefix + 'tourCategory']: 'onboarding',
-                                },
-                            }
+                                const patch: UserConfigPatch = {
+                                    updatedFields: {
+                                        onboardingTourStarted: '1',
+                                        onboardingTourStep: '0',
+                                        tourCategory: 'onboarding',
+                                    },
+                                }
 
-                            const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-                            if (patchedProps) {
-                                await dispatch(patchProps(patchedProps))
-                            }
+                                const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+                                if (patchedProps) {
+                                    await dispatch(patchProps(patchedProps))
+                                }
 
-                            const onboardingData = await octoClient.prepareOnboarding()
+                                const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
 
-                            const newPath = `/workspace/${onboardingData?.workspaceID}/${onboardingData?.boardID}`
+                                const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
 
-                            props.history.push(newPath)
-                        }}
-                    />
+                                props.history.push(newPath)
+                            }}
+                        />}
                 </Menu>
             </MenuWrapper>
         </div>

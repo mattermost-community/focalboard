@@ -4,7 +4,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper filterValue"
     role="button"
   >
     <button
@@ -16,7 +16,7 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
       </span>
     </button>
     <div
-      class="Menu noselect bottom"
+      class="Menu noselect bottom "
     >
       <div
         class="menu-contents"
@@ -24,25 +24,27 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
         <div
           class="menu-options"
         >
-          <div
-            aria-label="Status"
-            class="MenuOption SwitchOption menu-option"
-            role="button"
-          >
+          <div>
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
-            >
-              Status
-            </div>
-            <div
-              class="Switch override-main size--small on"
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
             >
               <div
-                class="octo-switch-inner"
+                class="noicon"
               />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -58,12 +60,20 @@ exports[`components/viewHeader/filterValue return filterValue 1`] = `
             role="button"
           >
             <div
-              class="noicon"
-            />
-            <div
-              class="menu-name"
+              class="d-flex"
             >
-              Cancel
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="menu-option__content"
+            >
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
             </div>
             <div
               class="noicon"
@@ -80,7 +90,7 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper filterValue"
     role="button"
   >
     <button
@@ -91,6 +101,73 @@ exports[`components/viewHeader/filterValue return filterValue and click Status 1
         Status
       </span>
     </button>
+    <div
+      class="Menu noselect bottom "
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div>
+            <div
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small on"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="d-flex"
+            >
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="menu-option__content"
+            >
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
@@ -99,7 +176,7 @@ exports[`components/viewHeader/filterValue return filterValue and click Status w
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper filterValue"
     role="button"
   >
     <button
@@ -110,6 +187,73 @@ exports[`components/viewHeader/filterValue return filterValue and click Status w
         (Unknown)
       </span>
     </button>
+    <div
+      class="Menu noselect bottom "
+    >
+      <div
+        class="menu-contents"
+      >
+        <div
+          class="menu-options"
+        >
+          <div>
+            <div
+              aria-label="Status"
+              class="MenuOption SwitchOption menu-option"
+              role="button"
+            >
+              <div
+                class="noicon"
+              />
+              <div
+                class="menu-name"
+              >
+                Status
+              </div>
+              <div
+                class="Switch override-main size--small"
+              >
+                <div
+                  class="octo-switch-inner"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="menu-spacer hideOnWidescreen"
+        />
+        <div
+          class="menu-options hideOnWidescreen"
+        >
+          <div
+            aria-label="Cancel"
+            class="MenuOption TextOption menu-option menu-cancel"
+            role="button"
+          >
+            <div
+              class="d-flex"
+            >
+              <div
+                class="noicon"
+              />
+            </div>
+            <div
+              class="menu-option__content"
+            >
+              <div
+                class="menu-name"
+              >
+                Cancel
+              </div>
+            </div>
+            <div
+              class="noicon"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

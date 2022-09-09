@@ -5,7 +5,7 @@ import {render, screen, within} from '@testing-library/react'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 import {createIntl} from 'react-intl'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapDNDIntl} from '../../testUtils'
 import Mutator from '../../mutator'
@@ -22,6 +22,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
     const board = TestBlockFactory.createBoard()
     const activeView = TestBlockFactory.createBoardView(board)
     const card = TestBlockFactory.createCard(board)
+    const card2 = TestBlockFactory.createCard(board)
     const option:IPropertyOption = {
         id: 'id1',
         value: 'propOption',
@@ -97,6 +98,26 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
         expect(container).toMatchSnapshot()
         const buttonShow = within(buttonMenuWrapper).getByRole('button', {name: 'Show'})
         userEvent.click(buttonShow)
-        expect(mockedMutator.unhideViewColumn).toBeCalledWith(activeView, option.id)
+        expect(mockedMutator.unhideViewColumn).toBeCalledWith(activeView.boardId, activeView, option.id)
+    })
+
+    test('limited card check', () => {
+        card.limited = true
+        card2.limited = true
+        option.id = 'hidden-card-group-id'
+        const {container, getByTitle} = render(wrapDNDIntl(
+            <KanbanHiddenColumnItem
+                activeView={activeView}
+                group={{
+                    option,
+                    cards: [card, card2],
+                }}
+                readonly={false}
+                onDrop={jest.fn()}
+                intl={intl}
+            />,
+        ))
+        expect(getByTitle('hidden-card-count')).toHaveTextContent('2')
+        expect(container).toMatchSnapshot()
     })
 })

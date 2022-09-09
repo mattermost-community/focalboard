@@ -3,13 +3,22 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"log"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	"github.com/mattermost/mattermost-server/v6/store"
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
-	sq "github.com/Masterminds/squirrel"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+)
+
+var (
+	errUnsupportedOperation = errors.New("unsupported operation")
 )
 
 type UserNotFoundError struct {
@@ -37,7 +46,7 @@ func (s *SQLStore) getRegisteredUserCount(db sq.BaseRunner) (int, error) {
 }
 
 func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model.User, error) {
-	users, err := s.getUsersByCondition(db, condition)
+	users, err := s.getUsersByCondition(db, condition, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +58,7 @@ func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model
 	return users[0], nil
 }
 
-func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*model.User, error) {
+func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, limit uint64) ([]*model.User, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",
@@ -67,9 +76,14 @@ func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*mo
 		From(s.tablePrefix + "users").
 		Where(sq.Eq{"delete_at": 0}).
 		Where(condition)
+
+	if limit != 0 {
+		query = query.Limit(limit)
+	}
+
 	rows, err := query.Query()
 	if err != nil {
-		log.Printf("getUsersByCondition ERROR: %v", err)
+		s.logger.Error(`getUsersByCondition ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -88,6 +102,10 @@ func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition sq.Eq) ([]*mo
 
 func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, error) {
 	return s.getUserByCondition(db, sq.Eq{"id": userID})
+}
+
+func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
 }
 
 func (s *SQLStore) getUserByEmail(db sq.BaseRunner, email string) (*model.User, error) {
@@ -196,8 +214,12 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 	return nil
 }
 
-func (s *SQLStore) getUsersByWorkspace(db sq.BaseRunner, _ string) ([]*model.User, error) {
-	return s.getUsersByCondition(db, nil)
+func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, nil, 0)
+}
+
+func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string) ([]*model.User, error) {
+	return s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
 }
 
 func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
@@ -236,22 +258,137 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 }
 
 func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.UserPropPatch) error {
-	user, err := s.getUserByID(db, userID)
+	if len(patch.UpdatedFields) > 0 {
+		for key, value := range patch.UpdatedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: model.PreferencesCategoryFocalboard,
+				Name:     key,
+				Value:    value,
+			}
+
+			if err := s.updateUserProps(db, preference); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(patch.DeletedFields) > 0 {
+		for _, key := range patch.DeletedFields {
+			preference := mmModel.Preference{
+				UserId:   userID,
+				Category: model.PreferencesCategoryFocalboard,
+				Name:     key,
+			}
+
+			if err := s.deleteUserProps(db, preference); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+	query := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"preferences").
+		Columns("UserId", "Category", "Name", "Value").
+		Values(preference.UserId, preference.Category, preference.Name, preference.Value)
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		query = query.SuffixExpr(sq.Expr("ON DUPLICATE KEY UPDATE Value = ?", preference.Value))
+	case model.PostgresDBType:
+		query = query.SuffixExpr(sq.Expr("ON CONFLICT (userid, category, name) DO UPDATE SET Value = ?", preference.Value))
+	case model.SqliteDBType:
+		query = query.SuffixExpr(sq.Expr(" on conflict(userid, category, name) do update set value = excluded.value"))
+	default:
+		return store.NewErrNotImplemented("failed to update preference because of missing driver")
+	}
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to upsert user preference in database: userID: %s name: %s value: %s error: %w", preference.UserId, preference.Name, preference.Value, err)
+	}
+
+	return nil
+}
+
+func (s *SQLStore) deleteUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+	query := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + "preferences").
+		Where(sq.Eq{"UserId": preference.UserId}).
+		Where(sq.Eq{"Category": preference.Category}).
+		Where(sq.Eq{"Name": preference.Name})
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf("failed to delete user preference from database: %w", err)
+	}
+
+	return nil
+}
+
+func (s *SQLStore) canSeeUser(db sq.BaseRunner, seerID string, seenID string) (bool, error) {
+	return true, nil
+}
+
+func (s *SQLStore) sendMessage(db sq.BaseRunner, message, postType string, receipts []string) error {
+	return errUnsupportedOperation
+}
+
+func (s *SQLStore) postMessage(db sq.BaseRunner, message, postType string, channel string) error {
+	return errUnsupportedOperation
+}
+
+func (s *SQLStore) getUserTimezone(_ sq.BaseRunner, _ string) (string, error) {
+	return "", errUnsupportedOperation
+}
+
+func (s *SQLStore) getUserPreferences(db sq.BaseRunner, userID string) (mmModel.Preferences, error) {
+	query := s.getQueryBuilder(db).
+		Select("userid", "category", "name", "value").
+		From(s.tablePrefix + "preferences").
+		Where(sq.Eq{
+			"userid":   userID,
+			"category": model.PreferencesCategoryFocalboard,
+		})
+
+	rows, err := query.Query()
 	if err != nil {
-		return err
+		s.logger.Error("failed to fetch user preferences", mlog.String("user_id", userID), mlog.Err(err))
+		return nil, err
 	}
 
-	if user.Props == nil {
-		user.Props = map[string]interface{}{}
+	defer rows.Close()
+
+	preferences, err := s.preferencesFromRows(rows)
+	if err != nil {
+		return nil, err
 	}
 
-	for _, key := range patch.DeletedFields {
-		delete(user.Props, key)
+	return preferences, nil
+}
+
+func (s *SQLStore) preferencesFromRows(rows *sql.Rows) ([]mmModel.Preference, error) {
+	preferences := []mmModel.Preference{}
+
+	for rows.Next() {
+		var preference mmModel.Preference
+
+		err := rows.Scan(
+			&preference.UserId,
+			&preference.Category,
+			&preference.Name,
+			&preference.Value,
+		)
+
+		if err != nil {
+			s.logger.Error("failed to scan row for user preference", mlog.Err(err))
+			return nil, err
+		}
+
+		preferences = append(preferences, preference)
 	}
 
-	for key, value := range patch.UpdatedFields {
-		user.Props[key] = value
-	}
-
-	return s.updateUser(db, user)
+	return preferences, nil
 }

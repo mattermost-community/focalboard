@@ -3,7 +3,6 @@ package app
 import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/auth"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -25,8 +24,8 @@ func (a *App) GetSession(token string) (*model.Session, error) {
 }
 
 // IsValidReadToken validates the read token for a block.
-func (a *App) IsValidReadToken(c store.Container, blockID string, readToken string) (bool, error) {
-	return a.auth.IsValidReadToken(c, blockID, readToken)
+func (a *App) IsValidReadToken(boardID string, readToken string) (bool, error) {
+	return a.auth.IsValidReadToken(boardID, readToken)
 }
 
 // GetRegisteredUserCount returns the number of registered users.
@@ -63,6 +62,18 @@ func (a *App) GetUser(id string) (*model.User, error) {
 		return nil, errors.Wrap(err, "unable to find user")
 	}
 	return user, nil
+}
+
+func (a *App) GetUsersList(userIDs []string) ([]*model.User, error) {
+	if len(userIDs) == 0 {
+		return nil, errors.New("No User IDs")
+	}
+
+	users, err := a.store.GetUsersList(userIDs)
+	if err != nil {
+		return nil, errors.Wrap(err, "unable to find users")
+	}
+	return users, nil
 }
 
 // Login create a new user session if the authentication data is valid.

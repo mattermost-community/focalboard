@@ -4,7 +4,8 @@
 import {configureStore} from '@reduxjs/toolkit'
 
 import {reducer as usersReducer} from './users'
-import {reducer as workspaceReducer} from './workspace'
+import {reducer as teamsReducer} from './teams'
+import {reducer as channelsReducer} from './channels'
 import {reducer as languageReducer} from './language'
 import {reducer as globalTemplatesReducer} from './globalTemplates'
 import {reducer as boardsReducer} from './boards'
@@ -15,11 +16,14 @@ import {reducer as commentsReducer} from './comments'
 import {reducer as searchTextReducer} from './searchText'
 import {reducer as globalErrorReducer} from './globalError'
 import {reducer as clientConfigReducer} from './clientConfig'
+import {reducer as sidebarReducer} from './sidebar'
+import {reducer as limitsReducer} from './limits'
 
 const store = configureStore({
     reducer: {
         users: usersReducer,
-        workspace: workspaceReducer,
+        teams: teamsReducer,
+        channels: channelsReducer,
         language: languageReducer,
         globalTemplates: globalTemplatesReducer,
         boards: boardsReducer,
@@ -30,6 +34,8 @@ const store = configureStore({
         searchText: searchTextReducer,
         globalError: globalErrorReducer,
         clientConfig: clientConfigReducer,
+        sidebar: sidebarReducer,
+        limits: limitsReducer,
     },
 })
 

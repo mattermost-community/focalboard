@@ -4,12 +4,21 @@ import {marked} from 'marked'
 import {IntlShape} from 'react-intl'
 import moment from 'moment'
 
+import {generatePath, match as routerMatch} from "react-router-dom"
+
+import {History} from "history"
+
+import {IUser} from './user'
+
 import {Block} from './blocks/block'
-import {createBoard} from './blocks/board'
+import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
 import {createCard} from './blocks/card'
 import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
+import {ChangeHandlerType, WSMessage} from './wsclient'
+import {BoardCategoryWebsocketData, Category} from './store/sidebar'
+import {UserSettings} from './userSettings'
 
 declare let window: IAppWindow
 
@@ -19,6 +28,11 @@ const OpenButtonClass = 'open-button'
 const SpacerClass = 'octo-spacer'
 const HorizontalGripClass = 'HorizontalGrip'
 const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
+
+export const SYSTEM_ADMIN_ROLE = 'system_admin'
+export const TEAM_ADMIN_ROLE = 'team_admin'
+
+export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData | BoardType | BoardMember | null
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -37,6 +51,10 @@ export const KeyCodes: Record<string, [string, number]> = {
     ENTER: ['Enter', 13],
     COMPOSING: ['Composing', 229],
 }
+
+export const ShowUsername = 'username'
+export const ShowNicknameFullName = 'nickname_full_name'
+export const ShowFullName         = 'full_name'
 
 class Utils {
     static createGuid(idType: IDType): string {
@@ -67,6 +85,45 @@ class Utils {
         const defaultImageUrl = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" style="fill: rgb(192, 192, 192);"><rect width="100" height="100" /></svg>'
 
         return imageURLForUser && userId ? imageURLForUser(userId) : defaultImageUrl
+    }
+
+    static getUserDisplayName(user: IUser, configNameFormat: string): string {
+        let nameFormat = configNameFormat    
+        if(UserSettings.nameFormat){
+            nameFormat=UserSettings.nameFormat
+        }
+    
+        // default nameFormat = 'username'
+        let displayName = user.username
+    
+        if (nameFormat === ShowNicknameFullName) {
+            if( user.nickname != '') {
+                displayName = user.nickname
+            } else {
+                const fullName = Utils.getFullName(user)
+                if(fullName != ''){
+                    displayName = fullName
+                }
+            }
+        } else if (nameFormat == ShowFullName) {
+            const fullName = Utils.getFullName(user)
+            if(fullName != ''){
+                displayName = fullName
+            }
+        }
+        return displayName
+    }
+
+    static getFullName(user: IUser): string {
+        if (user.firstname != '' && user.lastname != '') {
+            return user.firstname + ' ' + user.lastname
+        } else if (user.firstname != '') {
+            return user.firstname
+        } else if (user.lastname != '') {
+            return user.lastname
+        } else {
+            return ''
+        }
     }
 
     static randomArray(size: number): Uint8Array {
@@ -505,7 +562,7 @@ class Utils {
     }
 
     static getFrontendBaseURL(absolute?: boolean): string {
-        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL(absolute)
+        let frontendBaseURL = window.frontendBaseURL || Utils.getBaseURL()
         frontendBaseURL = frontendBaseURL.replace(/\/+$/, '')
         if (frontendBaseURL.indexOf('/') === 0) {
             frontendBaseURL = frontendBaseURL.slice(1)
@@ -550,10 +607,23 @@ class Utils {
         return window.location.pathname.includes('/plugins/focalboard')
     }
 
+    static fixWSData(message: WSMessage): [WSMessagePayloads, ChangeHandlerType] {
+        if (message.block) {
+            return [this.fixBlock(message.block), 'block']
+        } else if (message.board) {
+            return [this.fixBoard(message.board), 'board']
+        } else if (message.category) {
+            return [message.category, 'category']
+        } else if (message.blockCategories) {
+            return [message.blockCategories, 'blockCategories']
+        } else if (message.member) {
+            return [message.member, 'boardMembers']
+        }
+        return [null, 'block']
+    }
+
     static fixBlock(block: Block): Block {
         switch (block.type) {
-        case 'board':
-            return createBoard(block)
         case 'view':
             return createBoardView(block)
         case 'card':
@@ -563,6 +633,10 @@ class Utils {
         default:
             return block
         }
+    }
+
+    static fixBoard(board: BoardType): BoardType {
+        return createBoard(board)
     }
 
     static userAgent(): string {
@@ -626,11 +700,11 @@ class Utils {
         return Object.entries(conditions).map(([className, condition]) => (condition ? className : '')).filter((className) => className !== '').join(' ')
     }
 
-    static buildOriginalPath(workspaceId = '', boardId = '', viewId = '', cardId = ''): string {
+    static buildOriginalPath(teamID = '', boardId = '', viewId = '', cardId = ''): string {
         let originalPath = ''
 
-        if (workspaceId) {
-            originalPath += `${workspaceId}/`
+        if (teamID) {
+            originalPath += `${teamID}/`
         }
 
         if (boardId) {
@@ -648,11 +722,14 @@ class Utils {
         return originalPath
     }
 
+    static uuid(): string {
+        return (window as any).URL.createObjectURL(new Blob([])).substr(-36)
+    }
+
     static isKeyPressed(event: KeyboardEvent, key: [string, number]): boolean {
         // There are two types of keyboards
         // 1. English with different layouts(Ex: Dvorak)
         // 2. Different language keyboards(Ex: Russian)
-
         if (event.keyCode === KeyCodes.COMPOSING[1]) {
             return false
         }
@@ -667,6 +744,80 @@ class Utils {
 
         // used for different language keyboards to detect the position of keys
         return event.keyCode === key[1]
+    }
+
+    static isMac() {
+        return navigator.platform.toUpperCase().indexOf('MAC') >= 0
+    }
+
+    static cmdOrCtrlPressed(e: KeyboardEvent, allowAlt = false) {
+        if (allowAlt) {
+            return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey)
+        }
+        return (Utils.isMac() && e.metaKey) || (!Utils.isMac() && e.ctrlKey && !e.altKey)
+    }
+
+    static getBoardPagePath(currentPath: string) {
+        if (currentPath == "/team/:teamId/new/:channelId") {
+            return "/team/:teamId/:boardId?/:viewId?/:cardId?"
+        }
+        return currentPath
+    }
+
+    static showBoard(
+        boardId: string,
+        match: routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>,
+        history: History,
+    ) {
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || ''}
+        if (boardId !== match.params.boardId) {
+            params.viewId = undefined
+            params.cardId = undefined
+        }
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
+        history.push(newPath)
+    }
+
+    static humanFileSize(bytesParam: number, si = false, dp = 1): string {
+        let bytes = bytesParam
+        const thresh = si ? 1000 : 1024
+
+        if (Math.abs(bytes) < thresh) {
+            return bytes + ' B'
+        }
+
+        const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+        let u = -1
+        const r = 10 ** dp
+
+        do {
+            bytes /= thresh
+            ++u
+        } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1)
+
+        return bytes.toFixed(dp) + ' ' + units[u]
+    }
+
+    static spaceSeparatedStringIncludes(item: string, spaceSeparated?: string): boolean {
+        if (spaceSeparated) {
+            const items = spaceSeparated?.split(' ')
+            return items.includes(item)
+        }
+        return false
+    }
+
+    static isSystemAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(SYSTEM_ADMIN_ROLE, roles)
+    }
+
+    static isTeamAdmin(roles: string): boolean {
+        return Utils.spaceSeparatedStringIncludes(TEAM_ADMIN_ROLE, roles)
+    }
+
+    static isAdmin(roles: string): boolean {
+        return Utils.isSystemAdmin(roles) || Utils.isTeamAdmin(roles)
     }
 }
 

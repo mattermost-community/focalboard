@@ -19,6 +19,7 @@ type Props = {
     danger?: boolean
     className?: string
     rightIcon?: boolean
+    disabled?: boolean
 }
 
 function Button(props: Props): JSX.Element {
@@ -39,6 +40,7 @@ function Button(props: Props): JSX.Element {
             className={Utils.generateClassName(classNames)}
             title={props.title}
             onBlur={props.onBlur}
+            disabled={props?.disabled}
         >
             {!props.rightIcon && props.icon}
             <span>{props.children}</span>

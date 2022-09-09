@@ -17,6 +17,7 @@ import HorizontalGrip from './horizontalGrip'
 
 import './table.scss'
 import TableHeaderMenu from './tableHeaderMenu'
+import {useColumnResize} from './tableColumnResizeContext'
 
 type Props = {
     readonly: boolean
@@ -27,7 +28,6 @@ type Props = {
     cards: Card[]
     views: BoardView[]
     template: IPropertyTemplate
-    offset: number
     onDrop: (template: IPropertyTemplate, container: IPropertyTemplate) => void
     onAutoSizeColumn: (columnID: string, headerWidth: number) => void
 }
@@ -35,9 +35,7 @@ type Props = {
 const TableHeader = (props: Props): JSX.Element => {
     const [isDragging, isOver, columnRef] = useSortable('column', props.template, !props.readonly, props.onDrop)
 
-    const columnWidth = (templateId: string): number => {
-        return Math.max(Constants.minColumnWidth, (props.activeView.fields.columnWidths[templateId] || 0) + props.offset)
-    }
+    const columnResize = useColumnResize()
 
     const onAutoSizeColumn = (templateId: string) => {
         let width = Constants.minColumnWidth
@@ -54,11 +52,22 @@ const TableHeader = (props: Props): JSX.Element => {
         className += ' dragover'
     }
 
+    const templateId = props.template.id
+
     return (
         <div
             className={className}
-            style={{overflow: 'unset', width: columnWidth(props.template.id), opacity: isDragging ? 0.5 : 1}}
-            ref={props.template.id === Constants.titleColumnId ? () => null : columnRef}
+            style={{
+                overflow: 'unset',
+                opacity: isDragging ? 0.5 : 1,
+                width: columnResize.width(templateId),
+            }}
+            ref={(ref) => {
+                if (ref && templateId !== Constants.titleColumnId) {
+                    (columnRef as React.MutableRefObject<HTMLDivElement>).current = ref
+                }
+                columnResize.updateRef(Constants.tableHeaderId, templateId, ref)
+            }}
         >
             <MenuWrapper disabled={props.readonly}>
                 <Label>
@@ -71,7 +80,7 @@ const TableHeader = (props: Props): JSX.Element => {
                     activeView={props.activeView}
                     views={props.views}
                     cards={props.cards}
-                    templateId={props.template.id}
+                    templateId={templateId}
                 />
             </MenuWrapper>
 
@@ -79,7 +88,8 @@ const TableHeader = (props: Props): JSX.Element => {
 
             {!props.readonly &&
                 <HorizontalGrip
-                    templateId={props.template.id}
+                    templateId={templateId}
+                    columnWidth={props.activeView.fields.columnWidths[templateId] || 0}
                     onAutoSizeColumn={onAutoSizeColumn}
                 />
             }

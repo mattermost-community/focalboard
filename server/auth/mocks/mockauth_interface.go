@@ -9,7 +9,6 @@ import (
 
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/mattermost/focalboard/server/model"
-	store "github.com/mattermost/focalboard/server/services/store"
 )
 
 // MockAuthInterface is a mock of AuthInterface interface.
@@ -35,18 +34,18 @@ func (m *MockAuthInterface) EXPECT() *MockAuthInterfaceMockRecorder {
 	return m.recorder
 }
 
-// DoesUserHaveWorkspaceAccess mocks base method.
-func (m *MockAuthInterface) DoesUserHaveWorkspaceAccess(arg0, arg1 string) bool {
+// DoesUserHaveTeamAccess mocks base method.
+func (m *MockAuthInterface) DoesUserHaveTeamAccess(arg0, arg1 string) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DoesUserHaveWorkspaceAccess", arg0, arg1)
+	ret := m.ctrl.Call(m, "DoesUserHaveTeamAccess", arg0, arg1)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
-// DoesUserHaveWorkspaceAccess indicates an expected call of DoesUserHaveWorkspaceAccess.
-func (mr *MockAuthInterfaceMockRecorder) DoesUserHaveWorkspaceAccess(arg0, arg1 interface{}) *gomock.Call {
+// DoesUserHaveTeamAccess indicates an expected call of DoesUserHaveTeamAccess.
+func (mr *MockAuthInterfaceMockRecorder) DoesUserHaveTeamAccess(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DoesUserHaveWorkspaceAccess", reflect.TypeOf((*MockAuthInterface)(nil).DoesUserHaveWorkspaceAccess), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DoesUserHaveTeamAccess", reflect.TypeOf((*MockAuthInterface)(nil).DoesUserHaveTeamAccess), arg0, arg1)
 }
 
 // GetSession mocks base method.
@@ -65,16 +64,16 @@ func (mr *MockAuthInterfaceMockRecorder) GetSession(arg0 interface{}) *gomock.Ca
 }
 
 // IsValidReadToken mocks base method.
-func (m *MockAuthInterface) IsValidReadToken(arg0 store.Container, arg1, arg2 string) (bool, error) {
+func (m *MockAuthInterface) IsValidReadToken(arg0, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "IsValidReadToken", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "IsValidReadToken", arg0, arg1)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // IsValidReadToken indicates an expected call of IsValidReadToken.
-func (mr *MockAuthInterfaceMockRecorder) IsValidReadToken(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockAuthInterfaceMockRecorder) IsValidReadToken(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsValidReadToken", reflect.TypeOf((*MockAuthInterface)(nil).IsValidReadToken), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IsValidReadToken", reflect.TypeOf((*MockAuthInterface)(nil).IsValidReadToken), arg0, arg1)
 }

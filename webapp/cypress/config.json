@@ -2,7 +2,7 @@
     "serverRoot": "http://localhost:8088",
     "port": 8088,
     "dbtype": "sqlite3",
-    "dbconfig": "file::memory:?cache=shared",
+    "dbconfig": "file::memory:?cache=shared&_busy_timeout=5000",
     "useSSL": false,
     "webpath": "../pack",
     "filespath": "../../files",

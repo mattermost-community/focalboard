@@ -6,6 +6,9 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
     class="Dialog dialog-back confirmation-dialog-box"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -17,7 +20,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >
@@ -25,6 +28,9 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          />
         </div>
         <div
           class="box-area"
@@ -53,7 +59,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               </span>
             </button>
             <button
-              class="Button emphasis--danger size--medium"
+              class="Button filled size--medium"
               title="test-btn-text"
               type="submit"
             >
@@ -75,6 +81,9 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
     class="Dialog dialog-back confirmation-dialog-box"
   >
     <div
+      class="backdrop"
+    />
+    <div
       class="wrapper"
     >
       <div
@@ -86,7 +95,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
         >
           <button
             aria-label="Close dialog"
-            class="IconButton size--medium"
+            class="IconButton dialog__close size--medium"
             title="Close dialog"
             type="button"
           >
@@ -94,6 +103,9 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               class="CompassIcon icon-close CloseIcon"
             />
           </button>
+          <div
+            class="toolbar--right"
+          />
         </div>
         <div
           class="box-area"
@@ -122,7 +134,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               </span>
             </button>
             <button
-              class="Button emphasis--danger size--medium"
+              class="Button filled size--medium"
               title="test-btn-text"
               type="submit"
             >

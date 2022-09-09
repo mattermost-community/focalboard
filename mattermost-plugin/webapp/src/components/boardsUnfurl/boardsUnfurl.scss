@@ -71,6 +71,12 @@
         }
     }
 
+    .limited {
+        font-size: 14px;
+        color: rgba(var(--center-channel-color-rgb), 0.6);
+        margin-top: 12px;
+    }
+
     .footer {
         display: flex;
         align-items: center;

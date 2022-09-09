@@ -5,7 +5,7 @@ import React from 'react'
 import {render, screen} from '@testing-library/react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
 
 import userEvent from '@testing-library/user-event'
@@ -21,14 +21,21 @@ import FilterComponenet from './filterComponent'
 
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
-const filter: FilterClause = {
-    propertyId: '1',
-    condition: 'includes',
-    values: ['Status'],
-}
 
 const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
+
+const filter: FilterClause = {
+    propertyId: board.cardProperties[0].id,
+    condition: 'includes',
+    values: ['Status'],
+}
+const unknownFilter: FilterClause = {
+    propertyId: 'unknown',
+    condition: 'includes',
+    values: [],
+}
+
 const state = {
     users: {
         me: {
@@ -41,7 +48,7 @@ const store = mockStateStore([], state)
 describe('components/viewHeader/filterComponent', () => {
     beforeEach(() => {
         jest.clearAllMocks()
-        board.fields.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
+        board.cardProperties[0].options = [{id: 'Status', value: 'Status', color: ''}]
         activeView.fields.filter.filters = [filter]
     })
     test('return filterComponent', () => {
@@ -81,6 +88,7 @@ describe('components/viewHeader/filterComponent', () => {
     })
 
     test('return filterComponent and filter by status', () => {
+        activeView.fields.filter.filters = [unknownFilter]
         const {container} = render(
             wrapIntl(
                 <ReduxProvider store={store}>

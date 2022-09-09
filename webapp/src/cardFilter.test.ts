@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {createFilterClause} from './blocks/filterClause'
 
@@ -15,7 +15,7 @@ const mockedUtils = mocked(Utils, true)
 describe('src/cardFilter', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
-    board.rootId = '1'
+
     const card1 = TestBlockFactory.createCard(board)
     card1.id = '1'
     card1.title = 'card1'

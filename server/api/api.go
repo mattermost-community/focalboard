@@ -2,22 +2,16 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
-	"io"
-	"io/ioutil"
 	"net/http"
-	"path/filepath"
 	"runtime/debug"
-	"strconv"
-	"strings"
-	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
-	"github.com/mattermost/focalboard/server/services/store"
-	"github.com/mattermost/focalboard/server/utils"
+	"github.com/mattermost/focalboard/server/services/permissions"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -26,12 +20,15 @@ const (
 	HeaderRequestedWith    = "X-Requested-With"
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	UploadFormFileKey      = "file"
+	True                   = "true"
 )
 
 const (
-	ErrorNoWorkspaceCode    = 1000
-	ErrorNoWorkspaceMessage = "No workspace"
+	ErrorNoTeamCode    = 1000
+	ErrorNoTeamMessage = "No team"
 )
+
+var errAPINotSupportedInStandaloneMode = errors.New("API not supported in standalone mode")
 
 type PermissionError struct {
 	msg string
@@ -47,77 +44,84 @@ func (pe PermissionError) Error() string {
 type API struct {
 	app             *app.App
 	authService     string
+	permissions     permissions.PermissionsService
 	singleUserToken string
 	MattermostAuth  bool
-	logger          *mlog.Logger
+	logger          mlog.LoggerIFace
 	audit           *audit.Audit
+	isPlugin        bool
 }
 
-func NewAPI(app *app.App, singleUserToken string, authService string, logger *mlog.Logger, audit *audit.Audit) *API {
+func NewAPI(
+	app *app.App,
+	singleUserToken string,
+	authService string,
+	permissions permissions.PermissionsService,
+	logger mlog.LoggerIFace,
+	audit *audit.Audit,
+	isPlugin bool,
+) *API {
 	return &API{
 		app:             app,
 		singleUserToken: singleUserToken,
 		authService:     authService,
+		permissions:     permissions,
 		logger:          logger,
 		audit:           audit,
+		isPlugin:        isPlugin,
 	}
 }
 
 func (a *API) RegisterRoutes(r *mux.Router) {
-	apiv1 := r.PathPrefix("/api/v1").Subrouter()
-	apiv1.Use(a.panicHandler)
-	apiv1.Use(a.requireCSRFToken)
+	apiv2 := r.PathPrefix("/api/v2").Subrouter()
+	apiv2.Use(a.panicHandler)
+	apiv2.Use(a.requireCSRFToken)
 
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handleGetBlocks)).Methods("GET")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePostBlocks)).Methods("POST")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks", a.sessionRequired(a.handlePatchBlocks)).Methods("PATCH")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handleDeleteBlock)).Methods("DELETE")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/undelete", a.sessionRequired(a.handleUndeleteBlock)).Methods("POST")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}", a.sessionRequired(a.handlePatchBlock)).Methods("PATCH")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/blocks/{blockID}/subtree", a.attachSession(a.handleGetSubTree, false)).Methods("GET")
+	/* ToDo:
+	apiv3 := r.PathPrefix("/api/v3").Subrouter()
+	apiv3.Use(a.panicHandler)
+	apiv3.Use(a.requireCSRFToken)
+	*/
 
-	apiv1.HandleFunc("/workspaces/{workspaceID}/sharing/{rootID}", a.sessionRequired(a.handlePostSharing)).Methods("POST")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/sharing/{rootID}", a.sessionRequired(a.handleGetSharing)).Methods("GET")
+	// V2 routes (ToDo: migrate these to V3 when ready to ship V3)
+	a.registerUsersRoutes(apiv2)
+	a.registerAuthRoutes(apiv2)
+	a.registerMembersRoutes(apiv2)
+	a.registerCategoriesRoutes(apiv2)
+	a.registerSharingRoutes(apiv2)
+	a.registerTeamsRoutes(apiv2)
+	a.registerAchivesRoutes(apiv2)
+	a.registerSubscriptionsRoutes(apiv2)
+	a.registerFilesRoutes(apiv2)
+	a.registerLimitsRoutes(apiv2)
+	a.registerInsightsRoutes(apiv2)
+	a.registerOnboardingRoutes(apiv2)
+	a.registerSearchRoutes(apiv2)
+	a.registerConfigRoutes(apiv2)
+	a.registerBoardsAndBlocksRoutes(apiv2)
+	a.registerChannelsRoutes(apiv2)
+	a.registerTemplatesRoutes(apiv2)
+	a.registerBoardsRoutes(apiv2)
+	a.registerBlocksRoutes(apiv2)
 
-	apiv1.HandleFunc("/workspaces/{workspaceID}", a.sessionRequired(a.handleGetWorkspace)).Methods("GET")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/regenerate_signup_token", a.sessionRequired(a.handlePostWorkspaceRegenerateSignupToken)).Methods("POST")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/users", a.sessionRequired(a.getWorkspaceUsers)).Methods("GET")
+	// V3 routes
+	a.registerCardsRoutes(apiv2)
 
-	// User APIs
-	apiv1.HandleFunc("/users/me", a.sessionRequired(a.handleGetMe)).Methods("GET")
-	apiv1.HandleFunc("/users/{userID}", a.sessionRequired(a.handleGetUser)).Methods("GET")
-	apiv1.HandleFunc("/users/{userID}/changepassword", a.sessionRequired(a.handleChangePassword)).Methods("POST")
-	apiv1.HandleFunc("/users/{userID}/config", a.sessionRequired(a.handleUpdateUserConfig)).Methods(http.MethodPut)
-
-	apiv1.HandleFunc("/login", a.handleLogin).Methods("POST")
-	apiv1.HandleFunc("/logout", a.sessionRequired(a.handleLogout)).Methods("POST")
-	apiv1.HandleFunc("/register", a.handleRegister).Methods("POST")
-	apiv1.HandleFunc("/clientConfig", a.getClientConfig).Methods("GET")
-
-	apiv1.HandleFunc("/workspaces/{workspaceID}/{rootID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
-
-	apiv1.HandleFunc("/workspaces", a.sessionRequired(a.handleGetUserWorkspaces)).Methods("GET")
-
-	// Get Files API
-
-	files := r.PathPrefix("/files").Subrouter()
-	files.HandleFunc("/workspaces/{workspaceID}/{rootID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
-
-	// Subscriptions
-	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions", a.sessionRequired(a.handleCreateSubscription)).Methods("POST")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID}", a.sessionRequired(a.handleDeleteSubscription)).Methods("DELETE")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/subscriptions/{subscriberID}", a.sessionRequired(a.handleGetSubscriptions)).Methods("GET")
-
-	// onboarding tour endpoints
-	apiv1.HandleFunc("/onboard", a.sessionRequired(a.handleOnboard)).Methods(http.MethodPost)
-
-	// archives
-	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/export", a.sessionRequired(a.handleArchiveExport)).Methods("GET")
-	apiv1.HandleFunc("/workspaces/{workspaceID}/archive/import", a.sessionRequired(a.handleArchiveImport)).Methods("POST")
+	// System routes are outside the /api/v2 path
+	a.registerSystemRoutes(r)
 }
 
 func (a *API) RegisterAdminRoutes(r *mux.Router) {
-	r.HandleFunc("/api/v1/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+	r.HandleFunc("/api/v2/admin/users/{username}/password", a.adminRequired(a.handleAdminSetPassword)).Methods("POST")
+}
+
+func getUserID(r *http.Request) string {
+	ctx := r.Context()
+	session, ok := ctx.Value(sessionContextKey).(*model.Session)
+	if !ok {
+		return ""
+	}
+	return session.UserID
 }
 
 func (a *API) panicHandler(next http.Handler) http.Handler {
@@ -149,23 +153,12 @@ func (a *API) requireCSRFToken(next http.Handler) http.Handler {
 	})
 }
 
-func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
-	clientConfig := a.app.GetClientConfig()
-
-	configData, err := json.Marshal(clientConfig)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	jsonBytesResponse(w, http.StatusOK, configData)
-}
-
 func (a *API) checkCSRFToken(r *http.Request) bool {
 	token := r.Header.Get(HeaderRequestedWith)
 	return token == HeaderRequestedWithXML
 }
 
-func (a *API) hasValidReadTokenForBlock(r *http.Request, container store.Container, blockID string) bool {
+func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 	query := r.URL.Query()
 	readToken := query.Get("read_token")
 
@@ -173,1639 +166,47 @@ func (a *API) hasValidReadTokenForBlock(r *http.Request, container store.Contain
 		return false
 	}
 
-	isValid, err := a.app.IsValidReadToken(container, blockID, readToken)
+	isValid, err := a.app.IsValidReadToken(boardID, readToken)
 	if err != nil {
-		a.logger.Error("IsValidReadToken ERROR", mlog.Err(err))
+		a.logger.Error("IsValidReadTokenForBoard ERROR", mlog.Err(err))
 		return false
 	}
 
 	return isValid
 }
 
-func (a *API) getContainerAllowingReadTokenForBlock(r *http.Request, blockID string) (*store.Container, error) {
-	ctx := r.Context()
-	session, _ := ctx.Value(sessionContextKey).(*model.Session)
-
-	if a.MattermostAuth {
-		// Workspace auth
-		vars := mux.Vars(r)
-		workspaceID := vars["workspaceID"]
-
-		container := store.Container{
-			WorkspaceID: workspaceID,
-		}
-
-		if workspaceID == "0" {
-			return &container, nil
-		}
-
-		// Has session and access to workspace
-		if session != nil && a.app.DoesUserHaveWorkspaceAccess(session.UserID, container.WorkspaceID) {
-			return &container, nil
-		}
-
-		// No session, but has valid read token (read-only mode)
-		if len(blockID) > 0 &&
-			a.hasValidReadTokenForBlock(r, container, blockID) &&
-			a.app.GetClientConfig().EnablePublicSharedBoards {
-			return &container, nil
-		}
-
-		return nil, PermissionError{"access denied to workspace"}
-	}
-
-	// Native auth: always use root workspace
-	container := store.Container{
-		WorkspaceID: "0",
-	}
-
-	// Has session
-	if session != nil {
-		return &container, nil
-	}
-
-	// No session, but has valid read token (read-only mode)
-	if len(blockID) > 0 && a.hasValidReadTokenForBlock(r, container, blockID) {
-		return &container, nil
-	}
-
-	return nil, PermissionError{"access denied to workspace"}
-}
-
-func (a *API) getContainer(r *http.Request) (*store.Container, error) {
-	return a.getContainerAllowingReadTokenForBlock(r, "")
-}
-
-func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/blocks getBlocks
-	//
-	// Returns blocks
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: parent_id
-	//   in: query
-	//   description: ID of parent block, omit to specify all blocks
-	//   required: false
-	//   type: string
-	// - name: type
-	//   in: query
-	//   description: Type of blocks to return, omit to specify all types
-	//   required: false
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/Block"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	query := r.URL.Query()
-	parentID := query.Get("parent_id")
-	blockType := query.Get("type")
-	all := query.Get("all")
-	blockID := query.Get("block_id")
-	container, err := a.getContainerAllowingReadTokenForBlock(r, blockID)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getBlocks", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("parentID", parentID)
-	auditRec.AddMeta("blockType", blockType)
-	auditRec.AddMeta("all", all)
-	auditRec.AddMeta("blockID", blockID)
-
-	var blocks []model.Block
-	var block *model.Block
-	switch {
-	case all != "":
-		blocks, err = a.app.GetAllBlocks(*container)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-	case blockID != "":
-		block, err = a.app.GetBlockByID(*container, blockID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-		if block != nil {
-			blocks = append(blocks, *block)
-		}
-	default:
-		blocks, err = a.app.GetBlocks(*container, parentID, blockType)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-	}
-
-	a.logger.Debug("GetBlocks",
-		mlog.String("parentID", parentID),
-		mlog.String("blockType", blockType),
-		mlog.String("blockID", blockID),
-		mlog.Int("block_count", len(blocks)),
-	)
-
-	json, err := json.Marshal(blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-
-	auditRec.AddMeta("blockCount", len(blocks))
-	auditRec.Success()
-}
-
-func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks updateBlocks
-	//
-	// Insert blocks. The specified IDs will only be used to link
-	// blocks with existing ones, the rest will be replaced by server
-	// generated IDs
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: array of blocks to insert or update
-	//   required: true
-	//   schema:
-	//     type: array
-	//     items:
-	//       "$ref": "#/definitions/Block"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       items:
-	//         $ref: '#/definitions/Block'
-	//       type: array
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var blocks []model.Block
-
-	err = json.Unmarshal(requestBody, &blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	for _, block := range blocks {
-		// Error checking
-		if len(block.Type) < 1 {
-			message := fmt.Sprintf("missing type for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
-			return
-		}
-
-		if block.CreateAt < 1 {
-			message := fmt.Sprintf("invalid createAt for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
-			return
-		}
-
-		if block.UpdateAt < 1 {
-			message := fmt.Sprintf("invalid UpdateAt for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
-			return
-		}
-	}
-
-	blocks = model.GenerateBlockIDs(blocks, a.logger)
-
-	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-
-	model.StampModificationMetadata(userID, blocks, auditRec)
-
-	// this query param exists when creating template from board, or board from template
-	sourceBoardID := r.URL.Query().Get("sourceBoardID")
-	if sourceBoardID != "" {
-		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, container.WorkspaceID, blocks); updateFileIDsErr != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", updateFileIDsErr)
-			return
-		}
-	}
-
-	newBlocks, err := a.app.InsertBlocks(*container, blocks, session.UserID, true)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("POST Blocks", mlog.Int("block_count", len(blocks)))
-
-	json, err := json.Marshal(newBlocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-
-	auditRec.AddMeta("blockCount", len(blocks))
-	auditRec.Success()
-}
-
-func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/users/{userID}/config updateUserConfig
-	//
-	// Updates user config
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: userID
-	//   in: path
-	//   description: User ID
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: User config patch to apply
-	//   required: true
-	//   schema:
-	//     "$ref": "#/definitions/UserPropPatch"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var patch *model.UserPropPatch
-	err = json.Unmarshal(requestBody, &patch)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	vars := mux.Vars(r)
-	userID := vars["userID"]
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-
-	auditRec := a.makeAuditRecord(r, "updateUserConfig", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-
-	// a user can update only own config
-	if userID != session.UserID {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	updatedConfig, err := a.app.UpdateUserConfig(userID, *patch)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	data, err := json.Marshal(updatedConfig)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, data)
-	auditRec.Success()
-}
-
-func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/users/{userID} getUser
-	//
-	// Returns a user
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: userID
-	//   in: path
-	//   description: User ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       "$ref": "#/definitions/User"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	userID := vars["userID"]
-
-	auditRec := a.makeAuditRecord(r, "postBlocks", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("userID", userID)
-
-	user, err := a.app.GetUser(userID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	userData, err := json.Marshal(user)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, userData)
-	auditRec.Success()
-}
-
-func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/users/me getMe
-	//
-	// Returns the currently logged-in user
-	//
-	// ---
-	// produces:
-	// - application/json
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       "$ref": "#/definitions/User"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	var user *model.User
-	var err error
-
-	auditRec := a.makeAuditRecord(r, "getMe", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-
-	if session.UserID == model.SingleUser {
-		now := utils.GetMillis()
-		user = &model.User{
-			ID:       model.SingleUser,
-			Username: model.SingleUser,
-			Email:    model.SingleUser,
-			CreateAt: now,
-			UpdateAt: now,
-		}
-	} else {
-		user, err = a.app.GetUser(session.UserID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-	}
-
-	userData, err := json.Marshal(user)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, userData)
-
-	auditRec.AddMeta("userID", user.ID)
-	auditRec.Success()
-}
-
-func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/workspaces/{workspaceID}/blocks/{blockID} deleteBlock
-	//
-	// Deletes a block
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: blockID
-	//   in: path
-	//   description: ID of block to delete
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-
-	vars := mux.Vars(r)
-	blockID := vars["blockID"]
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "deleteBlock", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("blockID", blockID)
-
-	err = a.app.DeleteBlock(*container, blockID, userID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("DELETE Block", mlog.String("blockID", blockID))
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	auditRec.Success()
-}
-
-func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/blocks/{blockID}/undelete undeleteBlock
-	//
-	// Undeletes a block
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: blockID
-	//   in: path
-	//   description: ID of block to undelete
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-
-	vars := mux.Vars(r)
-	blockID := vars["blockID"]
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "undeleteBlock", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("blockID", blockID)
-
-	err = a.app.UndeleteBlock(*container, blockID, userID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("UNDELETE Block", mlog.String("blockID", blockID))
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	auditRec.Success()
-}
-
-func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/workspaces/{workspaceID}/blocks/{blockID} patchBlock
-	//
-	// Partially updates a block
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: blockID
-	//   in: path
-	//   description: ID of block to patch
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: block patch to apply
-	//   required: true
-	//   schema:
-	//     "$ref": "#/definitions/BlockPatch"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-
-	vars := mux.Vars(r)
-	blockID := vars["blockID"]
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var patch *model.BlockPatch
-	err = json.Unmarshal(requestBody, &patch)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "patchBlock", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("blockID", blockID)
-
-	err = a.app.PatchBlock(*container, blockID, patch, userID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("PATCH Block", mlog.String("blockID", blockID))
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	auditRec.Success()
-}
-
-func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation PATCH /api/v1/workspaces/{workspaceID}/blocks/ patchBlocks
-	//
-	// Partially updates batch of blocks
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: block Ids and block patches to apply
-	//   required: true
-	//   schema:
-	//     "$ref": "#/definitions/BlockPatchBatch"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var patches *model.BlockPatchBatch
-	err = json.Unmarshal(requestBody, &patches)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "patchBlocks", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	for i := range patches.BlockIDs {
-		auditRec.AddMeta("block_"+strconv.FormatInt(int64(i), 10), patches.BlockIDs[i])
-	}
-
-	err = a.app.PatchBlocks(*container, patches, userID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("PATCH Blocks", mlog.String("patches", strconv.Itoa(len(patches.BlockIDs))))
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	auditRec.Success()
-}
-
-func (a *API) handleGetSubTree(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/blocks/{blockID}/subtree getSubTree
-	//
-	// Returns the blocks of a subtree
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: blockID
-	//   in: path
-	//   description: The ID of the root block of the subtree
-	//   required: true
-	//   type: string
-	// - name: l
-	//   in: query
-	//   description: The number of levels to return. 2 or 3. Defaults to 2.
-	//   required: false
-	//   type: integer
-	//   minimum: 2
-	//   maximum: 3
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/Block"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	blockID := vars["blockID"]
-
-	container, err := a.getContainerAllowingReadTokenForBlock(r, blockID)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	query := r.URL.Query()
-	levels, err := strconv.ParseInt(query.Get("l"), 10, 32)
-	if err != nil {
-		levels = 2
-	}
-
-	if levels != 2 && levels != 3 {
-		a.logger.Error("Invalid levels", mlog.Int64("levels", levels))
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid levels", nil)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getSubTree", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("blockID", blockID)
-
-	blocks, err := a.app.GetSubTree(*container, blockID, int(levels))
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("GetSubTree",
-		mlog.Int64("levels", levels),
-		mlog.String("blockID", blockID),
-		mlog.Int("block_count", len(blocks)),
-	)
-	json, err := json.Marshal(blocks)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-
-	auditRec.AddMeta("blockCount", len(blocks))
-	auditRec.Success()
-}
-
-// Sharing
-
-func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/sharing/{rootID} getSharing
-	//
-	// Returns sharing information for a root block
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: rootID
-	//   in: path
-	//   description: ID of the root block
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       "$ref": "#/definitions/Sharing"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	rootID := vars["rootID"]
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getSharing", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("rootID", rootID)
-
-	sharing, err := a.app.GetSharing(*container, rootID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	sharingData, err := json.Marshal(sharing)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, sharingData)
-
-	if sharing == nil {
-		sharing = &model.Sharing{}
-	}
-	a.logger.Debug("GET sharing",
-		mlog.String("rootID", rootID),
-		mlog.String("shareID", sharing.ID),
-		mlog.Bool("enabled", sharing.Enabled),
-	)
-	auditRec.AddMeta("shareID", sharing.ID)
-	auditRec.AddMeta("enabled", sharing.Enabled)
-	auditRec.Success()
-}
-
-func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/sharing/{rootID} postSharing
-	//
-	// Sets sharing information for a root block
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: rootID
-	//   in: path
-	//   description: ID of the root block
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: sharing information for a root block
-	//   required: true
-	//   schema:
-	//     "$ref": "#/definitions/Sharing"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var sharing model.Sharing
-
-	err = json.Unmarshal(requestBody, &sharing)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "postSharing", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("shareID", sharing.ID)
-	auditRec.AddMeta("enabled", sharing.Enabled)
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userID := session.UserID
-	if userID == model.SingleUser {
-		userID = ""
-	}
-
-	if !a.app.GetClientConfig().EnablePublicSharedBoards {
-		a.logger.Info(
-			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
-			mlog.String("boardID", sharing.ID),
-			mlog.String("userID", userID))
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Turning on sharing for board failed, see log for details.", nil)
-		return
-	}
-
-	sharing.ModifiedBy = userID
-
-	err = a.app.UpsertSharing(*container, sharing)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	a.logger.Debug("POST sharing", mlog.String("sharingID", sharing.ID))
-	auditRec.Success()
-}
-
-// Workspace
-
-func (a *API) handleGetWorkspace(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID} getWorkspace
-	//
-	// Returns information of the root workspace
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       "$ref": "#/definitions/Workspace"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	var workspace *model.Workspace
-	var err error
-
-	if a.MattermostAuth {
-		vars := mux.Vars(r)
-		workspaceID := vars["workspaceID"]
-
-		ctx := r.Context()
-		session := ctx.Value(sessionContextKey).(*model.Session)
-		if !a.app.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
-			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "user does not have workspace access", nil)
-			return
-		}
-
-		workspace, err = a.app.GetWorkspace(workspaceID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		}
-		if workspace == nil {
-			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid workspace", nil)
-			return
-		}
-	} else {
-		workspace, err = a.app.GetRootWorkspace()
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-			return
-		}
-	}
-
-	auditRec := a.makeAuditRecord(r, "getWorkspace", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("resultWorkspaceID", workspace.ID)
-
-	workspaceData, err := json.Marshal(workspace)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, workspaceData)
-	auditRec.Success()
-}
-
-func (a *API) handlePostWorkspaceRegenerateSignupToken(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/regenerate_signup_token regenerateSignupToken
-	//
-	// Regenerates the signup token for the root workspace
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	workspace, err := a.app.GetRootWorkspace()
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "regenerateSignupToken", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-
-	workspace.SignupToken = utils.NewID(utils.IDTypeToken)
-
-	err = a.app.UpsertWorkspaceSignupToken(*workspace)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonStringResponse(w, http.StatusOK, "{}")
-	auditRec.Success()
-}
-
-// File upload
-
-func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /workspaces/{workspaceID}/{rootID}/{fileID} getFile
-	//
-	// Returns the contents of an uploaded file
-	//
-	// ---
-	// produces:
-	// - application/json
-	// - image/jpg
-	// - image/png
-	// - image/gif
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: rootID
-	//   in: path
-	//   description: ID of the root block
-	//   required: true
-	//   type: string
-	// - name: fileID
-	//   in: path
-	//   description: ID of the file
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	workspaceID := vars["workspaceID"]
-	rootID := vars["rootID"]
-	filename := vars["filename"]
-
-	// Caller must have access to the root block's container
-	_, err := a.getContainerAllowingReadTokenForBlock(r, rootID)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getFile", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("rootID", rootID)
-	auditRec.AddMeta("filename", filename)
-
-	contentType := "image/jpg"
-
-	fileExtension := strings.ToLower(filepath.Ext(filename))
-	if fileExtension == "png" {
-		contentType = "image/png"
-	}
-
-	if fileExtension == "gif" {
-		contentType = "image/gif"
-	}
-
-	w.Header().Set("Content-Type", contentType)
-
-	fileReader, err := a.app.GetFileReader(workspaceID, rootID, filename)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	defer fileReader.Close()
-	http.ServeContent(w, r, filename, time.Now(), fileReader)
-	auditRec.Success()
-}
-
-// FileUploadResponse is the response to a file upload
-// swagger:model
-type FileUploadResponse struct {
-	// The FileID to retrieve the uploaded file
-	// required: true
-	FileID string `json:"fileId"`
-}
-
-func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
-	var fileUploadResponse FileUploadResponse
-
-	if err := json.NewDecoder(data).Decode(&fileUploadResponse); err != nil {
-		return nil, err
-	}
-	return &fileUploadResponse, nil
-}
-
-func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/{rootID}/files uploadFile
-	//
-	// Upload a binary file, attached to a root block
-	//
-	// ---
-	// consumes:
-	// - multipart/form-data
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: rootID
-	//   in: path
-	//   description: ID of the root block
-	//   required: true
-	//   type: string
-	// - name: uploaded file
-	//   in: formData
-	//   type: file
-	//   description: The file to upload
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       "$ref": "#/definitions/FileUploadResponse"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	workspaceID := vars["workspaceID"]
-	rootID := vars["rootID"]
-
-	// Caller must have access to the root block's container
-	_, err := a.getContainerAllowingReadTokenForBlock(r, rootID)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	file, handle, err := r.FormFile(UploadFormFileKey)
-	if err != nil {
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-	defer file.Close()
-
-	auditRec := a.makeAuditRecord(r, "uploadFile", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("rootID", rootID)
-	auditRec.AddMeta("filename", handle.Filename)
-
-	fileID, err := a.app.SaveFile(file, workspaceID, rootID, handle.Filename)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("uploadFile",
-		mlog.String("filename", handle.Filename),
-		mlog.String("fileID", fileID),
-	)
-	data, err := json.Marshal(FileUploadResponse{FileID: fileID})
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, data)
-
-	auditRec.AddMeta("fileID", fileID)
-	auditRec.Success()
-}
-
-func (a *API) getWorkspaceUsers(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/users getWorkspaceUsers
-	//
-	// Returns workspace users
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/User"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	vars := mux.Vars(r)
-	workspaceID := vars["workspaceID"]
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	if !a.app.DoesUserHaveWorkspaceAccess(session.UserID, workspaceID) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to workspace", PermissionError{"access denied to workspace"})
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getUsers", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-
-	users, err := a.app.GetWorkspaceUsers(workspaceID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	data, err := json.Marshal(users)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, data)
-
-	auditRec.AddMeta("userCount", len(users))
-	auditRec.Success()
-}
-
-// subscriptions
-
-func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/workspaces/{workspaceID}/subscriptions createSubscription
-	//
-	// Creates a subscription to a block for a user. The user will receive change notifications for the block.
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: Body
-	//   in: body
-	//   description: subscription definition
-	//   required: true
-	//   schema:
-	//     "$ref": "#/definitions/Subscription"
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//         "$ref": "#/definitions/User"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	requestBody, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	var sub model.Subscription
-
-	err = json.Unmarshal(requestBody, &sub)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	if err = sub.IsValid(); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
-	}
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-
-	auditRec := a.makeAuditRecord(r, "createSubscription", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("subscriber_id", sub.SubscriberID)
-	auditRec.AddMeta("block_id", sub.BlockID)
-
-	// User can only create subscriptions for themselves (for now)
-	if session.UserID != sub.SubscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
-		return
-	}
-
-	// check for valid block
-	block, err := a.app.GetBlockByID(*container, sub.BlockID)
-	if err != nil || block == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid blockID", err)
-		return
-	}
-
-	subNew, err := a.app.CreateSubscription(*container, &sub)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("CREATE subscription",
-		mlog.String("subscriber_id", subNew.SubscriberID),
-		mlog.String("block_id", subNew.BlockID),
-	)
-
-	json, err := json.Marshal(subNew)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-	auditRec.Success()
-}
-
-func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation DELETE /api/v1/workspaces/{workspaceID}/subscriptions/{blockID}/{subscriberID} deleteSubscription
-	//
-	// Deletes a subscription a user has for a a block. The user will no longer receive change notifications for the block.
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: blockID
-	//   in: path
-	//   description: Block ID
-	//   required: true
-	//   type: string
-	// - name: subscriberID
-	//   in: path
-	//   description: Subscriber ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-
-	vars := mux.Vars(r)
-	blockID := vars["blockID"]
-	subscriberID := vars["subscriberID"]
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "deleteSubscription", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelModify, auditRec)
-	auditRec.AddMeta("block_id", blockID)
-	auditRec.AddMeta("subscriber_id", subscriberID)
-
-	// User can only delete subscriptions for themselves
-	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
-		return
-	}
-
-	_, err = a.app.DeleteSubscription(*container, blockID, subscriberID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("DELETE subscription",
-		mlog.String("blockID", blockID),
-		mlog.String("subscriberID", subscriberID),
-	)
-	jsonStringResponse(w, http.StatusOK, "{}")
-
-	auditRec.Success()
-}
-
-func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /api/v1/workspaces/{workspaceID}/subscriptions/{subscriberID} getSubscriptions
-	//
-	// Gets subscriptions for a user.
-	//
-	// ---
-	// produces:
-	// - application/json
-	// parameters:
-	// - name: workspaceID
-	//   in: path
-	//   description: Workspace ID
-	//   required: true
-	//   type: string
-	// - name: subscriberID
-	//   in: path
-	//   description: Subscriber ID
-	//   required: true
-	//   type: string
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//       type: array
-	//       items:
-	//         "$ref": "#/definitions/User"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-
-	vars := mux.Vars(r)
-	subscriberID := vars["subscriberID"]
-
-	container, err := a.getContainer(r)
-	if err != nil {
-		a.noContainerErrorResponse(w, r.URL.Path, err)
-		return
-	}
-
-	auditRec := a.makeAuditRecord(r, "getSubscriptions", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelRead, auditRec)
-	auditRec.AddMeta("subscriber_id", subscriberID)
-
-	// User can only get subscriptions for themselves (for now)
-	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
-		return
-	}
-
-	subs, err := a.app.GetSubscriptions(*container, subscriberID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	a.logger.Debug("GET subscriptions",
-		mlog.String("subscriberID", subscriberID),
-		mlog.Int("count", len(subs)),
-	)
-
-	json, err := json.Marshal(subs)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, json)
-
-	auditRec.AddMeta("subscription_count", len(subs))
-	auditRec.Success()
-}
-
-func (a *API) handleOnboard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /api/v1/onboard onboard
-	//
-	// Onboards a user on Boards.
-	//
-	// ---
-	// produces:
-	// - application/json
-	// security:
-	// - BearerAuth: []
-	// responses:
-	//   '200':
-	//     description: success
-	//     schema:
-	//         "$ref": "#/definitions/OnboardingResponse"
-	//   default:
-	//     description: internal error
-	//     schema:
-	//       "$ref": "#/definitions/ErrorResponse"
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-
-	workspaceID, boardID, err := a.app.PrepareOnboardingTour(session.UserID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	response := map[string]string{
-		"workspaceID": workspaceID,
-		"boardID":     boardID,
-	}
-	data, err := json.Marshal(response)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, data)
+func (a *API) userIsGuest(userID string) (bool, error) {
+	if a.singleUserToken != "" {
+		return false, nil
+	}
+	return a.app.UserIsGuest(userID)
 }
 
 // Response helpers
 
 func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("code", code),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
-	w.Header().Set("Content-Type", "application/json")
+	if code == http.StatusUnauthorized || code == http.StatusForbidden {
+		a.logger.Debug("API DEBUG",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	} else {
+		a.logger.Error("API ERROR",
+			mlog.Int("code", code),
+			mlog.Err(sourceError),
+			mlog.String("msg", message),
+			mlog.String("api", api),
+		)
+	}
+
+	setResponseHeader(w, "Content-Type", "application/json")
+
+	if sourceError != nil && message != sourceError.Error() {
+		message += "; " + sourceError.Error()
+	}
+
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {
 		data = []byte("{}")
@@ -1814,53 +215,27 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 	_, _ = w.Write(data)
 }
 
-func (a *API) errorResponseWithCode(w http.ResponseWriter, api string, statusCode int, errorCode int, message string, sourceError error) {
-	a.logger.Error("API ERROR",
-		mlog.Int("status", statusCode),
-		mlog.Int("code", errorCode),
-		mlog.Err(sourceError),
-		mlog.String("msg", message),
-		mlog.String("api", api),
-	)
-	w.Header().Set("Content-Type", "application/json")
-	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: errorCode})
-	if err != nil {
-		data = []byte("{}")
-	}
-	w.WriteHeader(statusCode)
-	_, _ = w.Write(data)
+func stringResponse(w http.ResponseWriter, message string) {
+	setResponseHeader(w, "Content-Type", "text/plain")
+	_, _ = fmt.Fprint(w, message)
 }
 
-func (a *API) noContainerErrorResponse(w http.ResponseWriter, api string, sourceError error) {
-	a.errorResponseWithCode(w, api, http.StatusBadRequest, ErrorNoWorkspaceCode, ErrorNoWorkspaceMessage, sourceError)
-}
-
-func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam
-	w.Header().Set("Content-Type", "application/json")
+func jsonStringResponse(w http.ResponseWriter, code int, message string) {
+	setResponseHeader(w, "Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
 }
 
-func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) { //nolint:unparam
-	w.Header().Set("Content-Type", "application/json")
+func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
+	setResponseHeader(w, "Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, _ = w.Write(json)
 }
 
-func (a *API) handleGetUserWorkspaces(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	session := ctx.Value(sessionContextKey).(*model.Session)
-	userWorkspaces, err := a.app.GetUserWorkspaces(session.UserID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+func setResponseHeader(w http.ResponseWriter, key string, value string) {
+	header := w.Header()
+	if header == nil {
 		return
 	}
-
-	data, err := json.Marshal(userWorkspaces)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-
-	jsonBytesResponse(w, http.StatusOK, data)
+	header.Set(key, value)
 }

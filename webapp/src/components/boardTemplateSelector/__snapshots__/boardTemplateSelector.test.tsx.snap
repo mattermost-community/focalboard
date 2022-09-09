@@ -24,12 +24,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
       >
-        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
       </p>
     </div>
     <div
@@ -87,6 +87,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               />
             </button>
           </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
         </div>
         <div
           class="new-template"
@@ -214,6 +228,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
+        </div>
+        <div
           class="new-template"
         >
           <span
@@ -274,12 +302,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
       >
-        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
       </p>
     </div>
     <div
@@ -337,6 +365,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               />
             </button>
           </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
         </div>
         <div
           class="new-template"
@@ -409,12 +451,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
       <h1
         class="title"
       >
-        Create a Board
+        Create a board
       </h1>
       <p
         class="description"
       >
-        Choose a template to help you get started. Easily customize the template to fit your needs, or create an empty board to start from scratch.
+        Add a board to the sidebar using any of the templates defined below or start from scratch.
       </p>
     </div>
     <div
@@ -472,6 +514,20 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
               />
             </button>
           </div>
+        </div>
+        <div
+          class="BoardTemplateSelectorItem"
+        >
+          <span
+            class="template-icon"
+          >
+            ❄️
+          </span>
+          <span
+            class="template-name"
+          >
+            Welcome to Boards!
+          </span>
         </div>
         <div
           class="new-template"

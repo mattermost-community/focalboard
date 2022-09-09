@@ -15,7 +15,7 @@ declare namespace Cypress {
         apiGetMe: () => Chainable<string>
         apiChangePassword: (userId: string, oldPassword: string, newPassword: string) => Chainable
         apiInitServer: () => Chainable
-        apiDeleteBlock: (id: string) => Chainable
+        apiDeleteBoard: (id: string) => Chainable
         apiResetBoards: () => Chainable
         apiSkipTour: (userID: string) => Chainable
 

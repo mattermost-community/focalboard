@@ -3,7 +3,13 @@
 
 import {createIntl} from 'react-intl'
 
-import {Utils, IDType} from './utils'
+import {createMemoryHistory} from "history"
+
+import {match as routerMatch} from "react-router-dom"
+
+import {Utils, IDType, ShowFullName, ShowNicknameFullName, ShowUsername} from './utils'
+import {IUser} from './user'
+
 import {IAppWindow} from './types'
 
 declare let window: IAppWindow
@@ -159,6 +165,73 @@ describe('utils', () => {
 
         it('should return minus one if b < a', () => {
             expect(Utils.compareVersions('10.9.4', '10.9.2')).toBe(-1)
+        })
+    })
+
+    describe('showBoard test', () => {
+        it('should switch boards', () => {
+            const match = {
+                params: {
+                    boardId: 'board_id_1',
+                    viewId: 'view_id_1',
+                    cardId: 'card_id_1',
+                    teamId: 'team_id_1',
+                },
+                path: '/team/:teamId/:boardId?/:viewId?/:cardId?',
+            } as unknown as routerMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>
+
+            const history = createMemoryHistory()
+            history.push = jest.fn()
+
+            Utils.showBoard('board_id_2', match, history)
+
+            expect(history.push).toBeCalledWith('/team/team_id_1/board_id_2')
+        })
+    })
+
+    describe('getUserDisplayName test', () => {
+        const user: IUser = {
+            id: 'user-id-1',
+            username: 'username_1',
+            email: 'test@email.com',
+            nickname: 'nickname',
+            firstname: 'firstname',
+            lastname: 'lastname',
+            props: {},
+            create_at: 0,
+            update_at: 0,
+            is_bot: false,
+            is_guest: false,
+            roles: 'system_user',
+        }
+
+        it('should display username, by default', () => {
+            const displayName = Utils.getUserDisplayName(user, '')
+            expect(displayName).toEqual('username_1')
+        })
+        it('should display nickname', () => {
+            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName)
+            expect(displayName).toEqual('nickname')
+        })
+        it('should display fullname', () => {
+            const displayName = Utils.getUserDisplayName(user, ShowFullName)
+            expect(displayName).toEqual('firstname lastname')
+        })
+        it('should display username', () => {
+            const displayName = Utils.getUserDisplayName(user, ShowUsername)
+            expect(displayName).toEqual('username_1')
+        })
+        it('should display full name, no nickname', () => {
+            user.nickname = ''
+            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName)
+            expect(displayName).toEqual('firstname lastname')
+        })
+        it('should display username, no nickname, no full name', () => {
+            user.nickname = ''
+            user.firstname = ''
+            user.lastname = ''
+            const displayName = Utils.getUserDisplayName(user, ShowNicknameFullName)
+            expect(displayName).toEqual('username_1')
         })
     })
 })

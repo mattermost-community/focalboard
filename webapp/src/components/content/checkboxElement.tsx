@@ -10,9 +10,9 @@ import mutator from '../../mutator'
 import Editable, {Focusable} from '../../widgets/editable'
 import {useCardDetailContext} from '../cardDetail/cardDetailContext'
 
-import {contentRegistry} from './contentRegistry'
-
 import './checkboxElement.scss'
+
+import {contentRegistry} from './contentRegistry'
 
 type Props = {
     block: ContentBlock
@@ -55,7 +55,7 @@ const CheckboxElement = (props: Props) => {
                     newBlock.fields.value = !active
                     newBlock.title = title
                     setActive(newBlock.fields.value)
-                    mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
+                    mutator.updateBlock(block.boardId, newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckbox', defaultMessage: 'toggled-checkbox'}))
                 }}
             />
             <Editable
@@ -68,14 +68,20 @@ const CheckboxElement = (props: Props) => {
                     const {lastAddedBlock} = cardDetail
                     if (title === '' && block.id === lastAddedBlock.id && lastAddedBlock.autoAdded && props.onDeleteElement) {
                         props.onDeleteElement()
-                    } else {
-                        const newBlock = createCheckboxBlock(block)
-                        newBlock.title = title
-                        newBlock.fields.value = active
-                        await mutator.updateBlock(newBlock, block, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
+                        return
+                    }
+
+                    if (block.title !== title) {
+                        await mutator.changeBlockTitle(block.boardId, block.id, block.title, title, intl.formatMessage({id: 'ContentBlock.editCardCheckboxText', defaultMessage: 'edit card text'}))
                         if (saveType === 'onEnter' && title !== '' && props.onAddElement) {
-                            props.onAddElement()
+                            // Wait for the change to happen
+                            setTimeout(props.onAddElement, 100)
                         }
+                        return
+                    }
+
+                    if (saveType === 'onEnter' && title !== '' && props.onAddElement) {
+                        props.onAddElement()
                     }
                 }}
                 readonly={readonly}

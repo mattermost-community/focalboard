@@ -18,10 +18,10 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
-                property={board.fields.cardProperties[1]}
+                property={board.cardProperties[1]}
                 menuOpen={false}
                 onChange={() => {}}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
             />,
         )
 
@@ -33,10 +33,10 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
-                property={board.fields.cardProperties[1]}
+                property={board.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
             />,
         )
 
@@ -48,10 +48,10 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
-                property={board.fields.cardProperties[1]}
+                property={board.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
-                cardProperties={board.fields.cardProperties}
+                cardProperties={board.cardProperties}
             />,
         )
 
@@ -64,13 +64,13 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
 
     test('duplicate property types', () => {
         const boardWithProps = TestBlockFactory.createBoard()
-        boardWithProps.fields.cardProperties.push({
+        boardWithProps.cardProperties.push({
             id: 'number-property-1',
             name: 'A Number Property - 1',
             type: 'number',
             options: [],
         })
-        boardWithProps.fields.cardProperties.push({
+        boardWithProps.cardProperties.push({
             id: 'number-property-2',
             name: 'A Number Propert - 2y',
             type: 'number',
@@ -80,10 +80,10 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
-                property={boardWithProps.fields.cardProperties[1]}
+                property={boardWithProps.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
-                cardProperties={boardWithProps.fields.cardProperties}
+                cardProperties={boardWithProps.cardProperties}
             />,
         )
 
@@ -98,19 +98,19 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         // Only one set of date related menus should show up for all of them.
 
         const boardWithProps = TestBlockFactory.createBoard()
-        boardWithProps.fields.cardProperties.push({
+        boardWithProps.cardProperties.push({
             id: 'date',
             name: 'Date',
             type: 'date',
             options: [],
         })
-        boardWithProps.fields.cardProperties.push({
+        boardWithProps.cardProperties.push({
             id: 'created-time',
             name: 'Created Time',
             type: 'createdTime',
             options: [],
         })
-        boardWithProps.fields.cardProperties.push({
+        boardWithProps.cardProperties.push({
             id: 'updated-time',
             name: 'Updated Time',
             type: 'updatedTime',
@@ -120,10 +120,10 @@ describe('components/kanban/calculations/KanbanCalculationOptions', () => {
         const component = wrapIntl(
             <KanbanCalculationOptions
                 value={'count'}
-                property={boardWithProps.fields.cardProperties[1]}
+                property={boardWithProps.cardProperties[1]}
                 menuOpen={true}
                 onChange={() => {}}
-                cardProperties={boardWithProps.fields.cardProperties}
+                cardProperties={boardWithProps.cardProperties}
             />,
         )
 

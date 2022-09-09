@@ -16,6 +16,7 @@ import ShowIcon from '../../widgets/icons/show'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../../store/cards'
 import {getVisibleAndHiddenGroups} from '../../boardUtils'
+import propsRegistry from '../../properties'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -39,10 +40,10 @@ const ViewHeaderGroupByMenu = (props: Props) => {
 
         if (show) {
             const columnsToShow = getColumnIds(hiddenGroups)
-            mutator.unhideViewColumns(activeView, columnsToShow)
+            mutator.unhideViewColumns(activeView.boardId, activeView, columnsToShow)
         } else {
             const columnsToHide = getColumnIds(emptyVisibleGroups)
-            mutator.hideViewColumns(activeView, columnsToHide)
+            mutator.hideViewColumns(activeView.boardId, activeView, columnsToHide)
         }
     }
 
@@ -92,12 +93,12 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                                 if (activeView.fields.groupById === id) {
                                     return
                                 }
-                                mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
+                                mutator.changeViewGroupById(activeView.boardId, activeView.id, activeView.fields.groupById, id)
                             }}
                         />
                         <Menu.Separator/>
                     </>}
-                {properties?.filter((o: IPropertyTemplate) => o.type === 'select').map((option: IPropertyTemplate) => (
+                {properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).canGroup).map((option: IPropertyTemplate) => (
                     <Menu.Text
                         key={option.id}
                         id={option.id}
@@ -108,7 +109,7 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                                 return
                             }
 
-                            mutator.changeViewGroupById(activeView.id, activeView.fields.groupById, id)
+                            mutator.changeViewGroupById(activeView.boardId, activeView.id, activeView.fields.groupById, id)
                         }}
                     />
                 ))}

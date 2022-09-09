@@ -1,12 +1,12 @@
 {
   "extends": [
-    "plugin:mattermost/react",
+    "plugin:react/recommended",
     "plugin:cypress/recommended",
     "plugin:jquery/deprecated"
   ],
   "plugins": [
+    "react",
     "babel",
-    "mattermost",
     "import",
     "cypress",
     "jquery",
@@ -25,6 +25,12 @@
     }
   },
   "rules": {
+    "react/display-name": [
+      0,
+      {
+        "ignoreTranspilerName": false
+      }
+    ],
     "max-lines": "off",
     "no-unused-expressions": 0,
     "babel/no-unused-expressions": [2, {"allowShortCircuit": true}],
@@ -71,6 +77,7 @@
         "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
+        "mattermost/no-dispatch-getstate": 0, // Failing in eslint 8
         "import/no-unresolved": 0, // ts handles this better
 		"camelcase": 0,
 		"semi": "off",

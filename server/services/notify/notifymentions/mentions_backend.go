@@ -4,11 +4,13 @@
 package notifymentions
 
 import (
+	"errors"
 	"fmt"
 	"sync"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
+	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -18,23 +20,38 @@ const (
 	backendName = "notifyMentions"
 )
 
+var (
+	ErrMentionPermission = errors.New("mention not permitted")
+)
+
 type MentionListener interface {
 	OnMention(userID string, evt notify.BlockChangeEvent)
 }
 
+type BackendParams struct {
+	AppAPI      AppAPI
+	Permissions permissions.PermissionsService
+	Delivery    MentionDelivery
+	Logger      mlog.LoggerIFace
+}
+
 // Backend provides the notification backend for @mentions.
 type Backend struct {
-	delivery MentionDelivery
-	logger   *mlog.Logger
+	appAPI      AppAPI
+	permissions permissions.PermissionsService
+	delivery    MentionDelivery
+	logger      mlog.LoggerIFace
 
 	mux       sync.RWMutex
 	listeners []MentionListener
 }
 
-func New(delivery MentionDelivery, logger *mlog.Logger) *Backend {
+func New(params BackendParams) *Backend {
 	return &Backend{
-		delivery: delivery,
-		logger:   logger,
+		appAPI:      params.AppAPI,
+		permissions: params.Permissions,
+		delivery:    params.Delivery,
+		logger:      params.Logger,
 	}
 }
 
@@ -80,7 +97,9 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 		return nil
 	}
 
-	if evt.BlockChanged.Type != model.TypeText && evt.BlockChanged.Type != model.TypeComment {
+	switch evt.BlockChanged.Type {
+	case model.TypeText, model.TypeComment, model.TypeImage:
+	default:
 		return nil
 	}
 
@@ -105,9 +124,18 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 
 		extract := extractText(evt.BlockChanged.Title, username, newLimits())
 
-		userID, err := b.delivery.MentionDeliver(username, extract, evt)
+		userID, err := b.deliverMentionNotification(username, extract, evt)
 		if err != nil {
-			merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+			if errors.Is(err, ErrMentionPermission) {
+				b.logger.Debug("Cannot deliver notification", mlog.String("user", username), mlog.Err(err))
+			} else {
+				merr.Append(fmt.Errorf("cannot deliver notification for @%s: %w", username, err))
+			}
+		}
+
+		if userID == "" {
+			// was a `@` followed by something other than a username.
+			continue
 		}
 
 		b.logger.Debug("Mention notification delivered",
@@ -122,7 +150,7 @@ func (b *Backend) BlockChanged(evt notify.BlockChangeEvent) error {
 	return merr.ErrorOrNil()
 }
 
-func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger *mlog.Logger) {
+func safeCallListener(listener MentionListener, userID string, evt notify.BlockChangeEvent, logger mlog.LoggerIFace) {
 	// don't let panicky listeners stop notifications
 	defer func() {
 		if r := recover(); r != nil {
@@ -130,4 +158,79 @@ func safeCallListener(listener MentionListener, userID string, evt notify.BlockC
 		}
 	}()
 	listener.OnMention(userID, evt)
+}
+
+func (b *Backend) deliverMentionNotification(username string, extract string, evt notify.BlockChangeEvent) (string, error) {
+	mentionedUser, err := b.delivery.UserByUsername(username)
+	if err != nil {
+		if model.IsErrNotFound(err) {
+			// not really an error; could just be someone typed "@sometext"
+			return "", nil
+		} else {
+			return "", fmt.Errorf("cannot lookup mentioned user: %w", err)
+		}
+	}
+
+	if evt.ModifiedBy == nil {
+		return "", fmt.Errorf("invalid user cannot mention: %w", ErrMentionPermission)
+	}
+
+	if evt.Board.Type == model.BoardTypeOpen {
+		// public board rules:
+		//    - admin, editor, commenter: can mention anyone on team (mentioned users are automatically added to board)
+		//    - guest: can mention board members
+		switch {
+		case evt.ModifiedBy.SchemeAdmin, evt.ModifiedBy.SchemeEditor, evt.ModifiedBy.SchemeCommenter:
+			if !b.permissions.HasPermissionToTeam(mentionedUser.Id, evt.TeamID, model.PermissionViewTeam) {
+				return "", fmt.Errorf("%s cannot mention non-team member %s : %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
+			}
+			// add mentioned user to board (if not already a member)
+			member, err := b.appAPI.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
+			if member == nil || model.IsErrNotFound(err) {
+				// currently all memberships are created as editors by default
+				newBoardMember := &model.BoardMember{
+					UserID:       mentionedUser.Id,
+					BoardID:      evt.Board.ID,
+					SchemeEditor: true,
+				}
+				if _, err = b.appAPI.AddMemberToBoard(newBoardMember); err != nil {
+					return "", fmt.Errorf("cannot add mentioned user %s to board %s: %w", mentionedUser.Id, evt.Board.ID, err)
+				}
+				b.logger.Debug("auto-added mentioned user to board",
+					mlog.String("user_id", mentionedUser.Id),
+					mlog.String("board_id", evt.Board.ID),
+					mlog.String("board_type", string(evt.Board.Type)),
+				)
+			} else {
+				b.logger.Debug("skipping auto-add mentioned user to board; already a member",
+					mlog.String("user_id", mentionedUser.Id),
+					mlog.String("board_id", evt.Board.ID),
+					mlog.String("board_type", string(evt.Board.Type)),
+				)
+			}
+		case evt.ModifiedBy.SchemeViewer:
+			// viewer should not have gotten this far since they cannot add text to a card
+			return "", fmt.Errorf("%s (viewer) cannot mention user %s: %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
+		default:
+			// this is a guest
+			if !b.permissions.HasPermissionToBoard(mentionedUser.Id, evt.Board.ID, model.PermissionViewBoard) {
+				return "", fmt.Errorf("%s cannot mention non-board member %s : %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
+			}
+		}
+	} else {
+		// private board rules:
+		//    - admin, editor, commenter, guest: can mention board members
+		switch {
+		case evt.ModifiedBy.SchemeViewer:
+			// viewer should not have gotten this far since they cannot add text to a card
+			return "", fmt.Errorf("%s (viewer) cannot mention user %s: %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
+		default:
+			// everyone else can mention board members
+			if !b.permissions.HasPermissionToBoard(mentionedUser.Id, evt.Board.ID, model.PermissionViewBoard) {
+				return "", fmt.Errorf("%s cannot mention non-board member %s : %w", evt.ModifiedBy.UserID, mentionedUser.Id, ErrMentionPermission)
+			}
+		}
+	}
+
+	return b.delivery.MentionDeliver(mentionedUser, extract, evt)
 }

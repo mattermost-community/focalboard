@@ -5,7 +5,7 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
   <div
     class="octo-table-cell header-cell"
     draggable="true"
-    style="overflow: unset; width: 100px; opacity: 1;"
+    style="overflow: unset; opacity: 1; width: 100px;"
   >
     <div
       aria-label="menuwrapper"
@@ -23,7 +23,6 @@ exports[`components/table/TableHeaderMenu should match snapshot, title column 1`
     />
     <div
       class="HorizontalGrip"
-      draggable="true"
     />
   </div>
 </div>

@@ -4,10 +4,7 @@
     align-items: center;
     justify-content: center;
     margin-left: auto;
-
-    &-clickable {
-        cursor: pointer;
-    }
+    cursor: pointer;
 
     &,
     &::before,

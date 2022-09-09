@@ -11,7 +11,7 @@ exports[`components/content/contentElement should match snapshot for checkbox ty
       value="off"
     />
     <input
-      class="Editable undefined"
+      class="Editable "
       placeholder="Edit text..."
       spellcheck="true"
       title="test-title"

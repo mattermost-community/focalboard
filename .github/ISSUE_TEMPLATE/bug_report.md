@@ -18,21 +18,19 @@ assignees: ''
 
 A clear and concise description of what you expected to happen.
 
-## Screenshots
+## Screenshots (optional)
 
-If applicable, add screenshots to elaborate on the problem.
+If applicable, add screenshots or a screen recording to elaborate on the problem.
 
 ## Edition and Platform
 
- - Edition: Personal Desktop / Personal Server / Mattermost plugin
- - Version: [e.g. v0.9.0]
- - Browser and OS: [e.g. Chrome 91 on macOS, Edge 93 on Windows]
+ - Edition: Personal Desktop / Personal Server / Mattermost Boards (plugin)
+ - Version: [e.g. v0.15.0]
+ - Browser and OS: [e.g. Chrome on Mac, Edge on Windows]
 
-## Additional context
+## Additional context (optional)
 
-Add any other context about the problem here.
-
-Also set the Severity using the *Sev/1*, *Sev/2* or *Sev/3* labels as best you can:
-* Sev/1: Issue affects critical functionality without a workaround
-* Sev/2: Issue affects major functionality with a difficult or non-obvious workaround
-* Sev/3: Issue affects minor, non-critical functionality
+Add any other context about the problem here, and any notes about the severity:
+* Sev 1: Affects critical functionality without a workaround
+* Sev 2: Affects major functionality with a difficult or non-obvious workaround
+* Sev 3: Affects minor, non-critical functionality

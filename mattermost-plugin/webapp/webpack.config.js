@@ -61,6 +61,7 @@ module.exports = {
         ],
         alias: {
             moment: path.resolve(__dirname, '../../webapp/node_modules/moment/'),
+            'react-intl': path.resolve(__dirname, '../../webapp/node_modules/react-intl/'),
         },
         extensions: ['*', '.js', '.jsx', '.ts', '.tsx'],
     },
@@ -112,20 +113,10 @@ module.exports = {
             },
             {
                 test: /\.(png|eot|tiff|svg|woff2|woff|ttf|jpg|gif)$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'static',
-                            publicPath: '/static/',
-                        },
-                    },
-                    {
-                        loader: 'image-webpack-loader',
-                        options: {},
-                    },
-                ],
+                type: 'asset/resource',
+                generator: {
+                    filename: 'static/[name].[ext]',
+                }
             },
         ],
     },
@@ -136,6 +127,7 @@ module.exports = {
         'mm-react-router-dom': 'ReactRouterDom',
         'prop-types': 'PropTypes',
         'react-bootstrap': 'ReactBootstrap',
+
     },
     output: {
         devtoolNamespace: PLUGIN_ID,

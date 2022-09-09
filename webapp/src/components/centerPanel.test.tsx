@@ -1,15 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {fireEvent, render, screen, within} from '@testing-library/react'
+import {fireEvent, render, screen, within, act} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
 
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../testUtils'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {IPropertyTemplate} from '../blocks/board'
 import {Utils} from '../utils'
+import {IUser} from '../user'
+import octoClient from '../octoClient'
 import Mutator from '../mutator'
 import {Constants} from '../constants'
 
@@ -26,21 +28,25 @@ jest.mock('react-router-dom', () => {
     }
 })
 jest.mock('../utils')
+jest.mock('../octoClient')
 jest.mock('../mutator')
 jest.mock('../telemetry/telemetryClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
+const mockedOctoClient= mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
+mockedUtils.generateClassName = jest.requireActual('../utils').Utils.generateClassName
 describe('components/centerPanel', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
-    board.rootId = '1'
+    board.teamId = 'team-id'
     const activeView = TestBlockFactory.createBoardView(board)
     activeView.id = '1'
     const card1 = TestBlockFactory.createCard(board)
     card1.id = '1'
     card1.title = 'card1'
+    card1.fields.isTemplate = true
     card1.fields.properties = {id: 'property_value_id_1'}
     const card2 = TestBlockFactory.createCard(board)
     card2.id = '2'
@@ -79,14 +85,17 @@ describe('components/centerPanel', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {
-                    focalboard_onboardingTourStarted: false,
-                },
             },
-            workspaceUsers: [
-                {username: 'username_1'},
-            ],
+            myConfig: {
+                onboardingTourStarted: {value: false},
+            },
+            boardUsers: {
+                'user-id-1': {username: 'username_1'},
+            },
             blockSubscriptions: [],
+        },
+        teams: {
+            current: {id: 'team-id'},
         },
         boards: {
             current: board.id,
@@ -94,10 +103,22 @@ describe('components/centerPanel', () => {
                 [board.id]: board,
             },
             templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        limits: {
+            limits: {
+                cards: 0,
+                used_cards: 0,
+                card_limit_timestamp: 0,
+                views: 0,
+            },
         },
         cards: {
             templates: [card1, card2],
             cards: [card1, card2],
+            current: card1.id,
         },
         views: {
             views: {
@@ -105,11 +126,24 @@ describe('components/centerPanel', () => {
             },
             current: 'boardView',
         },
-        contents: {},
+        contents: {
+            contents: [],
+            contentsByCard: {},
+        },
         comments: {
             comments: [comment1, comment2],
+            commentsByCard: {
+                [card1.id]: [comment1],
+                [card2.id]: [comment2],
+            },
+        },
+        imits: {
+            limits: {
+                views: 0,
+            },
         },
     }
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers) as IUser[])
     const store = mockStateStore([], state)
     beforeAll(() => {
         mockDOM()
@@ -129,9 +163,9 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={false}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -147,9 +181,9 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -166,9 +200,9 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -185,9 +219,9 @@ describe('components/centerPanel', () => {
                     activeView={activeView}
                     readonly={false}
                     showCard={jest.fn()}
-                    showShared={true}
                     groupByProperty={groupProperty}
                     shownCardId={card1.id}
+                    hiddenCardsCount={0}
                 />
             </ReduxProvider>,
         ))
@@ -205,9 +239,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -236,9 +270,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={true}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -259,16 +293,18 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
 
-            const cardElement = screen.getByRole('textbox', {name: 'card1'})
-            expect(cardElement).not.toBeNull()
-            userEvent.click(cardElement, {shiftKey: true})
+            act(() => {
+                const cardElement = screen.getByRole('textbox', {name: 'card1'})
+                expect(cardElement.parentNode).not.toBeNull()
+                userEvent.click(cardElement as HTMLElement, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //escape
@@ -286,23 +322,27 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
 
-            //select card1
-            const card1Element = screen.getByRole('textbox', {name: 'card1'})
-            expect(card1Element).not.toBeNull()
-            userEvent.click(card1Element, {shiftKey: true})
+            act(() => {
+                //select card1
+                const card1Element = screen.getByRole('textbox', {name: 'card1'})
+                expect(card1Element).not.toBeNull()
+                userEvent.click(card1Element, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
-            //select card2
-            const card2Element = screen.getByRole('textbox', {name: 'card2'})
-            expect(card2Element).not.toBeNull()
-            userEvent.click(card2Element, {shiftKey: true, ctrlKey: true})
+            act(() => {
+                //select card2
+                const card2Element = screen.getByRole('textbox', {name: 'card2'})
+                expect(card2Element).not.toBeNull()
+                userEvent.click(card2Element, {shiftKey: true, ctrlKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //escape
@@ -320,15 +360,17 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
-            const cardElement = screen.getByRole('textbox', {name: 'card1'})
-            expect(cardElement).not.toBeNull()
-            userEvent.click(cardElement, {shiftKey: true})
+            act(() => {
+                const cardElement = screen.getByRole('textbox', {name: 'card1'})
+                expect(cardElement).not.toBeNull()
+                userEvent.click(cardElement, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //delete
@@ -346,15 +388,17 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
-            const cardElement = screen.getByRole('textbox', {name: 'card1'})
-            expect(cardElement).not.toBeNull()
-            userEvent.click(cardElement, {shiftKey: true})
+            act(() => {
+                const cardElement = screen.getByRole('textbox', {name: 'card1'})
+                expect(cardElement).not.toBeNull()
+                userEvent.click(cardElement, {shiftKey: true})
+            })
             expect(container).toMatchSnapshot()
 
             //ctrl+d
@@ -373,9 +417,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={mockedShowCard}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -398,9 +442,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -420,9 +464,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -433,6 +477,7 @@ describe('components/centerPanel', () => {
             userEvent.click(buttonNewTemplate)
             expect(mockedMutator.insertBlock).toBeCalledTimes(1)
         })
+
         test('click on new card to add card from template', () => {
             activeView.fields.viewType = 'table'
             activeView.fields.defaultTemplateId = '1'
@@ -445,9 +490,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -459,6 +504,7 @@ describe('components/centerPanel', () => {
             userEvent.click(elementCard1)
             expect(mockedMutator.performAsUndoGroup).toBeCalledTimes(1)
         })
+
         test('click on new card to edit template', () => {
             activeView.fields.viewType = 'table'
             activeView.fields.defaultTemplateId = '1'
@@ -471,9 +517,9 @@ describe('components/centerPanel', () => {
                         activeView={activeView}
                         readonly={false}
                         showCard={jest.fn()}
-                        showShared={true}
                         groupByProperty={groupProperty}
                         shownCardId={card1.id}
+                        hiddenCardsCount={0}
                     />
                 </ReduxProvider>,
             ))
@@ -490,5 +536,133 @@ describe('components/centerPanel', () => {
             userEvent.click(elementEditMenuTemplate)
             expect(container).toMatchSnapshot()
         })
+    })
+})
+
+describe('components/centerPanel', () => {
+    const board = TestBlockFactory.createBoard()
+    board.id = '1'
+    const activeView = TestBlockFactory.createBoardView(board)
+    activeView.id = '1'
+    const card1 = TestBlockFactory.createCard(board)
+    card1.id = '1'
+    card1.title = 'card1'
+    card1.fields.properties = {id: 'property_value_id_1'}
+    card1.limited = true
+    const card2 = TestBlockFactory.createCard(board)
+    card2.id = '2'
+    card2.title = 'card2'
+    card2.fields.properties = {id: 'property_value_id_1'}
+    card2.limited = true
+    const comment1 = TestBlockFactory.createComment(card1)
+    comment1.id = '1'
+    const comment2 = TestBlockFactory.createComment(card2)
+    comment2.id = '2'
+    const groupProperty: IPropertyTemplate = {
+        id: 'id',
+        name: 'name',
+        type: 'text',
+        options: [
+            {
+                color: 'propColorOrange',
+                id: 'property_value_id_1',
+                value: 'Q1',
+            },
+            {
+                color: 'propColorBlue',
+                id: 'property_value_id_2',
+                value: 'Q2',
+            },
+        ],
+    }
+    const state = {
+        clientConfig: {
+            value: {
+                featureFlags: {
+                    subscriptions: true,
+                },
+            },
+        },
+        searchText: '',
+        users: {
+            me: {
+                id: 'user_id_1',
+            },
+            myConfig: {
+                onboardingTourStarted: {value: false},
+            },
+            workspaceUsers: [
+                {username: 'username_1'},
+            ],
+            boardUsers: [
+                {username: 'username_1'},
+            ],
+            blockSubscriptions: [],
+        },
+        teams: {
+            current: {id: 'team-id'},
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
+            myBoardMemberships: {
+                [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+            },
+        },
+        cards: {
+            templates: [card1, card2],
+            cards: [card1, card2],
+            current: card1.id,
+        },
+        views: {
+            views: {
+                boardView: activeView,
+            },
+            current: 'boardView',
+        },
+        contents: {},
+        comments: {
+            comments: [comment1, comment2],
+        },
+        limits: {
+            limits: {
+                views: 0,
+            },
+        },
+    }
+    const store = mockStateStore([], state)
+    beforeAll(() => {
+        mockDOM()
+        console.error = jest.fn()
+    })
+    beforeEach(() => {
+        activeView.fields.viewType = 'board'
+        jest.clearAllMocks()
+    })
+
+    test('Clicking on the Hidden card count should open a dailog', () => {
+        activeView.fields.viewType = 'table'
+        activeView.fields.defaultTemplateId = '1'
+        const {container, getByTitle, getByText} = render(wrapDNDIntl(
+            <ReduxProvider store={store}>
+                <CenterPanel
+                    cards={[card1, card2]}
+                    views={[activeView]}
+                    board={board}
+                    activeView={activeView}
+                    readonly={false}
+                    showCard={jest.fn()}
+                    groupByProperty={groupProperty}
+                    shownCardId={card1.id}
+                    hiddenCardsCount={2}
+                />
+            </ReduxProvider>,
+        ))
+        fireEvent.click(getByTitle('hidden-card-count'))
+        expect(getByText('2 cards hidden from board')).not.toBeNull()
+        expect(container).toMatchSnapshot()
     })
 })

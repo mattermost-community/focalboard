@@ -7,7 +7,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
@@ -43,7 +43,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -59,7 +59,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -78,7 +78,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -89,7 +89,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
         userEvent.click(buttonRevert)
         expect(container).toMatchSnapshot()
         expect(mockedMutator.changeViewSortOptions).toBeCalledTimes(1)
-        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.id, activeView.fields.sortOptions, [])
+        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.boardId, activeView.id, activeView.fields.sortOptions, [])
     })
     test('return sort menu and do Name sort', () => {
         const {container} = render(
@@ -98,7 +98,7 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
                     <ViewHeaderSortMenu
                         activeView={activeView}
                         orderedCards={cards}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -109,6 +109,6 @@ describe('components/viewHeader/viewHeaderSortMenu', () => {
         userEvent.click(buttonName)
         expect(container).toMatchSnapshot()
         expect(mockedMutator.changeViewSortOptions).toBeCalledTimes(1)
-        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.id, activeView.fields.sortOptions, [{propertyId: '__title', reversed: false}])
+        expect(mockedMutator.changeViewSortOptions).toBeCalledWith(activeView.boardId, activeView.id, activeView.fields.sortOptions, [{propertyId: '__title', reversed: false}])
     })
 })

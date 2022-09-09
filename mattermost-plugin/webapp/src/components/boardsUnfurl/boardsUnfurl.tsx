@@ -1,22 +1,30 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
-import {IntlProvider, FormattedMessage} from 'react-intl'
-import {connect} from 'react-redux'
+import {IntlProvider, FormattedMessage, useIntl} from 'react-intl'
 
-import {GlobalState} from 'mattermost-redux/types/store'
-import {getCurrentUserLocale} from 'mattermost-redux/selectors/entities/i18n'
+import WithWebSockets from '../../../../../webapp/src/components/withWebSockets'
+import {useWebsockets} from '../../../../../webapp/src/hooks/websockets'
+
+import {getLanguage} from '../../../../../webapp/src/store/language'
+import {useAppSelector} from '../../../../../webapp/src/store/hooks'
+import {getCurrentTeamId} from '../../../../../webapp/src/store/teams'
+
+import {WSClient, MMWebSocketClient} from '../../../../../webapp/src/wsclient'
+import manifest from '../../manifest'
 
 import {getMessages} from './../../../../../webapp/src/i18n'
 import {Utils} from './../../../../../webapp/src/utils'
+import {Block} from './../../../../../webapp/src/blocks/block'
 import {Card} from './../../../../../webapp/src/blocks/card'
 import {Board} from './../../../../../webapp/src/blocks/board'
 import {ContentBlock} from './../../../../../webapp/src/blocks/contentBlock'
+
 import octoClient from './../../../../../webapp/src/octoClient'
 
-const Avatar = (window as any).Components.Avatar
-const Timestamp = (window as any).Components.Timestamp
-const imageURLForUser = (window as any).Components.imageURLForUser
+const noop = () => ''
+const Avatar = (window as any).Components?.Avatar || noop
+const imageURLForUser = (window as any).Components?.imageURLForUser || noop
 
 import './boardsUnfurl.scss'
 import '../../../../../webapp/src/styles/labels.scss'
@@ -25,28 +33,40 @@ type Props = {
     embed: {
         data: string,
     },
-    locale: string,
+    webSocketClient?: MMWebSocketClient,
 }
 
-function mapStateToProps(state: GlobalState) {
-    const locale = getCurrentUserLocale(state)
+class FocalboardEmbeddedData {
+    teamID: string
+    cardID: string
+    boardID: string
+    readToken: string
+    originalPath: string
 
-    return {
-        locale,
+    constructor(rawData: string) {
+        const parsed = JSON.parse(rawData)
+        this.teamID = parsed.teamID || parsed.workspaceID
+        this.cardID = parsed.cardID
+        this.boardID = parsed.boardID
+        this.readToken = parsed.readToken
+        this.originalPath = parsed.originalPath
     }
 }
 
-const BoardsUnfurl = (props: Props): JSX.Element => {
+export const BoardsUnfurl = (props: Props): JSX.Element => {
     if (!props.embed || !props.embed.data) {
         return <></>
     }
 
-    const {embed, locale} = props
-    const focalboardInformation = JSON.parse(embed.data)
-    const {workspaceID, cardID, boardID, readToken, originalPath} = focalboardInformation
+    const intl = useIntl()
+
+    const {embed, webSocketClient} = props
+    const focalboardInformation: FocalboardEmbeddedData = new FocalboardEmbeddedData(embed.data)
+    const currentTeamId = useAppSelector(getCurrentTeamId)
+    const {teamID, cardID, boardID, readToken, originalPath} = focalboardInformation
     const baseURL = window.location.origin
 
-    if (!workspaceID || !cardID || !boardID) {
+    if (!teamID || !cardID || !boardID) {
         return <></>
     }
 
@@ -57,20 +77,19 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const [cards, boards] = await Promise.all(
+            const [cards, fetchedBoard] = await Promise.all(
                 [
-                    octoClient.getBlocksWithBlockID(cardID, workspaceID, readToken),
-                    octoClient.getBlocksWithBlockID(boardID, workspaceID, readToken),
+                    octoClient.getBlocksWithBlockID(cardID, boardID, readToken),
+                    octoClient.getBoard(boardID),
                 ],
             )
             const [firstCard] = cards as Card[]
-            const [firstBoard] = boards as Board[]
-            if (!firstCard || !firstBoard) {
+            if (!firstCard || !fetchedBoard) {
                 setLoading(false)
                 return null
             }
             setCard(firstCard)
-            setBoard(firstBoard)
+            setBoard(fetchedBoard)
 
             if (firstCard.fields.contentOrder.length) {
                 let [firstContentBlockID] = firstCard.fields?.contentOrder
@@ -79,7 +98,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                     [firstContentBlockID] = firstContentBlockID
                 }
 
-                const contentBlock = await octoClient.getBlocksWithBlockID(firstContentBlockID, workspaceID, readToken) as ContentBlock[]
+                const contentBlock = await octoClient.getBlocksWithBlockID(firstContentBlockID, boardID, readToken) as ContentBlock[]
                 const [firstContentBlock] = contentBlock
                 if (!firstContentBlock) {
                     setLoading(false)
@@ -94,6 +113,26 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         fetchData()
     }, [originalPath])
 
+    useWebsockets(currentTeamId, (wsClient: WSClient) => {
+        const onChangeHandler = (_: WSClient, blocks: Block[]): void => {
+            const cardBlock: Block|undefined = blocks.find(b => b.id === cardID)
+            if (cardBlock && !cardBlock.deleteAt) {
+                setCard(cardBlock as Card)
+            }
+
+            const contentBlock: Block|undefined = blocks.find(b => b.id === content?.id)
+            if (contentBlock && !contentBlock.deleteAt) {
+                setContent(contentBlock)
+            }
+        }
+
+        wsClient.addOnChange(onChangeHandler, 'block')
+
+        return () => {
+            wsClient.removeOnChange(onChangeHandler, 'block')
+        }
+    }, [cardID, content?.id])
+
     let remainder = 0
     let html = ''
     const propertiesToDisplay: Array<Record<string, string>> = []
@@ -103,8 +142,8 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
         let totalNumberOfCheckBoxes = 0
 
         // We will just display the first 3 or less select/multi-select properties and do a +n for remainder if any remainder
-        for (let i = 0; i < board.fields.cardProperties.length; i++) {
-            const optionInBoard = board.fields.cardProperties[i]
+        for (let i = 0; i < board.cardProperties.length; i++) {
+            const optionInBoard = board.cardProperties[i]
             let valueToLookUp = card.fields.properties[optionInBoard.id]
 
             // Since these are always set and not included in the card properties
@@ -132,17 +171,18 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                 continue
             }
 
-            propertiesToDisplay.push({optionName: optionInBoard.name, optionValue: optionSelected.value, optionValueColour: optionSelected.color})
+            propertiesToDisplay.push({
+                optionName: optionInBoard.name,
+                optionValue: optionSelected.value,
+                optionValueColour: optionSelected.color,
+            })
         }
         remainder += (Object.keys(card.fields.properties).length - propertiesToDisplay.length - totalNumberOfCheckBoxes)
         html = Utils.htmlFromMarkdown(content?.title || '')
     }
 
     return (
-        <IntlProvider
-            messages={getMessages(locale)}
-            locale={locale}
-        >
+        <WithWebSockets manifest={manifest} webSocketClient={webSocketClient}>
             {!loading && (!card || !board) && <></>}
             {!loading && card && board &&
                 <a
@@ -162,7 +202,7 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                     </div>
 
                     {/* Body of the Card*/}
-                    {html !== '' &&
+                    {!card.limited && html !== '' &&
                         <div className='body'>
                             <div
                                 dangerouslySetInnerHTML={{__html: html}}
@@ -170,69 +210,79 @@ const BoardsUnfurl = (props: Props): JSX.Element => {
                         </div>
                     }
 
-                    {/* Footer of the Card*/}
-                    <div className='footer'>
-                        <div className='avatar'>
-                            <Avatar
-                                size={'md'}
-                                url={imageURLForUser(card.createdBy)}
-                                className={'avatar-post-preview'}
+                    {card.limited &&
+                        <p className='limited'>
+                            <FormattedMessage
+                                id='BoardsUnfurl.Limited'
+                                defaultMessage={'Additional details are hidden due to the card being archived'}
                             />
-                        </div>
-                        <div className='timestamp_properties'>
-                            <div className='properties'>
-                                {propertiesToDisplay.map((property) => (
-                                    <div
-                                        key={property.optionValue}
-                                        className={`property ${property.optionValueColour}`}
-                                        title={`${property.optionName}`}
-                                        style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
-                                    >
-                                        {property.optionValue}
-                                    </div>
-                                ))}
-                                {remainder > 0 &&
-                                    <span className='remainder'>
-                                        <FormattedMessage
-                                            id='BoardsUnfurl.Remainder'
-                                            defaultMessage='+{remainder} more'
-                                            values={{
-                                                remainder,
-                                            }}
-                                        />
-                                    </span>
-                                }
-                            </div>
-                            <span className='post-preview__time'>
-                                <FormattedMessage
-                                    id='BoardsUnfurl.Updated'
-                                    defaultMessage='Updated {time}'
-                                    values={{
-                                        time: (
-                                            <Timestamp
-                                                value={card.updateAt}
-                                                units={[
-                                                    'now',
-                                                    'minute',
-                                                    'hour',
-                                                    'day',
-                                                ]}
-                                                useTime={false}
-                                                day={'numeric'}
-                                            />
-                                        ),
-                                    }}
+                        </p>}
+
+                    {/* Footer of the Card*/}
+                    {!card.limited &&
+                        <div className='footer'>
+                            <div className='avatar'>
+                                <Avatar
+                                    size={'md'}
+                                    url={imageURLForUser(card.createdBy)}
+                                    className={'avatar-post-preview'}
                                 />
-                            </span>
-                        </div>
-                    </div>
+                            </div>
+                            <div className='timestamp_properties'>
+                                <div className='properties'>
+                                    {propertiesToDisplay.map((property) => (
+                                        <div
+                                            key={property.optionValue}
+                                            className={`property ${property.optionValueColour}`}
+                                            title={`${property.optionName}`}
+                                            style={{maxWidth: `${(1 / propertiesToDisplay.length) * 100}%`}}
+                                        >
+                                            {property.optionValue}
+                                        </div>
+                                    ))}
+                                    {remainder > 0 &&
+                                        <span className='remainder'>
+                                            <FormattedMessage
+                                                id='BoardsUnfurl.Remainder'
+                                                defaultMessage='+{remainder} more'
+                                                values={{
+                                                    remainder,
+                                                }}
+                                            />
+                                        </span>
+                                    }
+                                </div>
+                                <span className='post-preview__time'>
+                                    <FormattedMessage
+                                        id='BoardsUnfurl.Updated'
+                                        defaultMessage='Updated {time}'
+                                        values={{
+                                            time: Utils.displayDateTime(new Date(card.updateAt), intl)
+                                        }}
+                                    />
+                                </span>
+                            </div>
+                        </div>}
                 </a>
             }
             {loading &&
                 <div style={{height: '302px'}}/>
             }
+        </WithWebSockets>
+    )
+}
+
+const IntlBoardsUnfurl = (props: Props) => {
+    const language = useAppSelector<string>(getLanguage)
+
+    return (
+        <IntlProvider
+            locale={language.split(/[_]/)[0]}
+            messages={getMessages(language)}
+        >
+            <BoardsUnfurl {...props}/>
         </IntlProvider>
     )
 }
 
-export default connect(mapStateToProps)(BoardsUnfurl)
+export default IntlBoardsUnfurl

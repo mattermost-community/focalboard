@@ -18,7 +18,6 @@ type Props = {
     groupByProperty?: IPropertyTemplate
     group: BoardGroup
     readonly: boolean
-    columnRefs: Map<string, React.RefObject<HTMLDivElement>>
     selectedCardIds: string[]
     cardIdToFocusOnRender: string
     hideGroup: (groupByOptionId: string) => void
@@ -74,7 +73,6 @@ const TableGroup = (props: Props): JSX.Element => {
             <TableRows
                 board={board}
                 activeView={activeView}
-                columnRefs={props.columnRefs}
                 cards={group.cards}
                 selectedCardIds={props.selectedCardIds}
                 readonly={props.readonly}

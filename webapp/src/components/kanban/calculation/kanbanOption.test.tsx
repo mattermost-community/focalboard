@@ -18,10 +18,10 @@ describe('components/kanban/calculations/Option', () => {
                     label: 'Count Unique Values',
                     displayName: 'Unique',
                     value: 'countUniqueValue',
-                    cardProperties: board.fields.cardProperties,
+                    cardProperties: board.cardProperties,
                     onChange: () => {},
                     activeValue: 'count',
-                    activeProperty: board.fields.cardProperties[1],
+                    activeProperty: board.cardProperties[1],
                 }}
             />
         )

@@ -13,6 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
+	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/webview/webview"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -60,11 +61,14 @@ func runServer(port int) (*server.Server, error) {
 		AuthMode:                "native",
 	}
 
-	db, err := server.NewStore(config, logger)
+	singleUser := len(sessionToken) > 0
+	db, err := server.NewStore(config, singleUser, logger)
 	if err != nil {
 		fmt.Println("ERROR INITIALIZING THE SERVER STORE", err)
 		return nil, err
 	}
+
+	permissionsService := localpermissions.New(db, logger)
 
 	params := server.Params{
 		Cfg:             config,
@@ -74,6 +78,7 @@ func runServer(port int) (*server.Server, error) {
 		ServerID:        "",
 		WSAdapter:       nil,
 		NotifyBackends:  nil,
+		PermissionsService: permissionsService,
 	}
 
 	server, err := server.New(params)

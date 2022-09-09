@@ -6,19 +6,18 @@
 {{ else }}
 <header>
 {{ end }}
-    <a href="/"><img src="img/logo.svg" class="logo__colored" alt="Logo" width="212px"></a>
-    <a href="/"><img src="img/logo-white.svg" class="logo__white" alt="Logo" width="212px"></a>
-    <div class="header__menu-toggle">
-        <i class="fa fa-bars"></i>
-    </div>
-    <ul class="header__links--right">
-        <li><a href="https://github.com/mattermost/focalboard" target='_blank'>View Source</a></li>
-        {{ range .Site.Menus.postpend }}
-            {{ $drafts := index $.Site.Params.navigation.drafts 0}}
-            {{ $draft := index $drafts .Name }}
-            {{ if or (eq $.Site.BuildDrafts true) (eq $draft false) }}
-            <li><a class="external" rel="noopener" href="{{ .URL }}">{{ .Name }}</a></li>
+    <div class="container">
+        <a href="/"><img src="img/logo.svg?version=v2" class="logo__colored" alt="Logo" width="212px"></a>
+        <a href="/"><img src="img/logo-white.svg?version=v2" class="logo__white" alt="Logo" width="212px"></a>
+        <div class="header__menu-toggle">
+            <div class="menu-bar"></div>
+            <div class="menu-bar"></div>
+            <div class="menu-bar"></div>
+        </div>
+        <ul class="header__links--right">
+            {{ range .Site.Menus.postpend }}
+                <li><a class="external" rel="noopener" href="{{ .URL }}">{{ .Name }}</a></li>
             {{ end }}
-        {{ end }}
-    </ul>
+        </ul>
+    </div>
 </header>

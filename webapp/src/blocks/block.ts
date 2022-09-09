@@ -6,14 +6,14 @@ import difference from 'lodash/difference'
 import {Utils} from '../utils'
 
 const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as const
+
+// ToDo: remove type board
 const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'unknown'] as const
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 
 interface BlockPatch {
-    workspaceId?: string
     parentId?: string
-    rootId?: string
     schema?: number
     type?: BlockTypes
     title?: string
@@ -25,9 +25,8 @@ interface BlockPatch {
 
 interface Block {
     id: string
-    workspaceId: string
+    boardId: string
     parentId: string
-    rootId: string
     createdBy: string
     modifiedBy: string
 
@@ -40,6 +39,16 @@ interface Block {
     createAt: number
     updateAt: number
     deleteAt: number
+
+    limited?: boolean
+}
+
+interface FileInfo {
+    url?: string
+    archived?: boolean
+    extension?: string
+    name?: string
+    size?: number
 }
 
 function createBlock(block?: Block): Block {
@@ -47,9 +56,8 @@ function createBlock(block?: Block): Block {
     return {
         id: block?.id || Utils.createGuid(Utils.blockTypeToIDType(block?.type)),
         schema: 1,
-        workspaceId: block?.workspaceId || '',
+        boardId: block?.boardId || '',
         parentId: block?.parentId || '',
-        rootId: block?.rootId || '',
         createdBy: block?.createdBy || '',
         modifiedBy: block?.modifiedBy || '',
         type: block?.type || 'unknown',
@@ -58,10 +66,11 @@ function createBlock(block?: Block): Block {
         createAt: block?.createAt || now,
         updateAt: block?.updateAt || now,
         deleteAt: block?.deleteAt || 0,
+        limited: Boolean(block?.limited),
     }
 }
 
-// createPatchesFromBlock creates two BlockPatch instances, one that
+// createPatchesFromBlocks creates two BlockPatch instances, one that
 // contains the delta to update the block and another one for the undo
 // action, in case it happens
 function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[] {
@@ -107,5 +116,5 @@ function createPatchesFromBlocks(newBlock: Block, oldBlock: Block): BlockPatch[]
     ]
 }
 
-export type {ContentBlockTypes, BlockTypes}
+export type {ContentBlockTypes, BlockTypes, FileInfo}
 export {blockTypes, contentBlockTypes, Block, BlockPatch, createBlock, createPatchesFromBlocks}

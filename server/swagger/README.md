@@ -19,6 +19,37 @@ brew install openapi-generator
 
 See the generated [server API documentation here](https://htmlpreview.github.io/?https://github.com/mattermost/focalboard/blob/main/server/swagger/docs/html/index.html).
 
+# How to authenticate
+
+To auth against Personal Server, first call login with your credentials to get a token, e.g.
+```
+curl -X POST \
+ -H "Accept: application/json" \
+ -H "X-Requested-With: XMLHttpRequest" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8000/api/v2/login" \
+ -d '{
+  "type" : "normal",
+  "username" : "testuser",
+  "password" : "testpass"
+}'
+```
+
+This should return a token in the form:
+```
+{"token":"abcdefghijklmnopqrstuvwxyz1"}
+```
+
+Pass this as the bearer auth to subsequent calls, e.g.
+```
+curl -X GET \
+ -H "Accept: application/json" \
+ -H "Authorization: Bearer abcdefghijklmnopqrstuvwxyz1" \
+ -H "X-Requested-With: XMLHttpRequest" \
+ -H "Content-Type: application/json" \
+ "http://localhost:8000/api/v2/teams/0/boards"
+```
+
 # Differences for Mattermost Boards
 
 The auto-generated Swagger API documentation is for Focalboard Personal Server. If you are calling the API on Mattermost Boards, the additional changes are:
@@ -34,7 +65,7 @@ Refer to the [Mattermost API documentation here](https://api.mattermost.com/#tag
 Pass this token as a bearer token to the Boards APIs, e.g.
 
 ```
-curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://community.mattermost.com/plugins/focalboard/api/v1/workspaces
+curl -i -H "X-Requested-With: XMLHttpRequest" -H 'Authorization: Bearer abcdefghijklmnopqrstuvwxyz' https://community.mattermost.com/plugins/focalboard/api/v2/workspaces
 ```
 
 Note that the `X-Requested-With: XMLHttpRequest` header is required to pass the CSRF check.

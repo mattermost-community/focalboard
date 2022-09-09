@@ -11,7 +11,7 @@ exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = 
       rel="noreferrer"
       target="_blank"
     >
-      Give Feedback
+      Give feedback
     </a>
     <div
       class="versionFrame"
@@ -20,7 +20,7 @@ exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = 
         class="version"
         title="v1.0.0"
       >
-        Apr 2022
+        v1.0.0
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@ exports[`src/components/topBar should match snapshot for none focalboardPlugin 1
       rel="noreferrer"
       target="_blank"
     >
-      Give Feedback
+      Give feedback
     </a>
     <a
       href="https://www.focalboard.com/guide/user?utm_source=webapp"

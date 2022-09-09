@@ -4,6 +4,7 @@ exports[`components/calculations/Calculation should match snapshot - count 1`] =
 <div>
   <div
     class="Calculation count fooClass  hovered"
+    style="width: 100px;"
     tabindex="0"
   >
     <span
@@ -24,6 +25,7 @@ exports[`components/calculations/Calculation should match snapshot - countUnique
 <div>
   <div
     class="Calculation countUniqueValue fooClass  hovered"
+    style="width: 100px;"
     tabindex="0"
   >
     <span
@@ -44,6 +46,7 @@ exports[`components/calculations/Calculation should match snapshot - countValue 
 <div>
   <div
     class="Calculation countValue fooClass  hovered"
+    style="width: 100px;"
     tabindex="0"
   >
     <span
@@ -64,6 +67,7 @@ exports[`components/calculations/Calculation should match snapshot - none 1`] = 
 <div>
   <div
     class="Calculation none fooClass  hovered"
+    style="width: 100px;"
     tabindex="0"
   >
     <span
@@ -82,12 +86,17 @@ exports[`components/calculations/Calculation should match snapshot - option chan
 <div>
   <div
     class="Calculation none fooClass menuOpen hovered"
+    style="width: 100px;"
     tabindex="0"
   >
     <div>
       <div
-        class="CalculationOptions css-2b097c-container"
+        class="CalculationOptions css-b62m3t-container"
       >
+        <span
+          class="css-1f43avz-a11yText-A11yText"
+          id="react-select-2-live-region"
+        />
         <span
           aria-atomic="false"
           aria-live="polite"
@@ -101,15 +110,19 @@ exports[`components/calculations/Calculation should match snapshot - option chan
             class="CalculationOptions__value-container CalculationOptions__value-container--has-value css-1mxrbau-ValueContainer"
           >
             <div
-              class="CalculationOptions__single-value css-1brck82-singleValue"
+              class="CalculationOptions__single-value css-1qlwihv-singleValue"
             >
               Calculate
             </div>
             <input
               aria-autocomplete="list"
-              class="css-wmatm6-dummyInput-DummyInput"
+              aria-expanded="false"
+              aria-haspopup="true"
+              aria-readonly="true"
+              class="css-mohuvp-dummyInput-DummyInput"
               id="react-select-2-input"
-              readonly=""
+              inputmode="none"
+              role="combobox"
               tabindex="0"
               value=""
             />

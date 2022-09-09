@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
@@ -21,8 +21,7 @@ type Props = {
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu} = props
-    const {toolbar, title} = props
+    const {toolsMenu, toolbar, title} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -32,14 +31,25 @@ const Dialog = (props: Props) => {
 
     useHotkeys('esc', () => props.onClose())
 
+    const isBackdropClickedRef = useRef(false)
+
     return (
         <div className={`Dialog dialog-back ${props.className}`}>
+            <div className='backdrop'/>
             <div
                 className='wrapper'
                 onClick={(e) => {
                     e.stopPropagation()
-                    if (e.target === e.currentTarget) {
-                        props.onClose()
+                    if(!isBackdropClickedRef.current){
+                        return
+                    }
+                    isBackdropClickedRef.current = false
+                    props.onClose()
+
+                }}
+                onMouseDown={(e) => {
+                    if(e.target === e.currentTarget){
+                        isBackdropClickedRef.current = true
                     }
                 }}
             >
@@ -48,25 +58,28 @@ const Dialog = (props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
-                        {title && <h1 className='text-heading5 mt-2'>{title}</h1>}
+                        {title && <h1 className='dialog-title'>{title}</h1>}
                         {
                             !props.hideCloseButton &&
                             <IconButton
+                                className='dialog__close'
                                 onClick={props.onClose}
                                 icon={<CloseIcon/>}
                                 title={closeDialogText}
                                 size='medium'
                             />
                         }
-                        {toolbar && <div className='cardToolbar'>{toolbar}</div>}
-                        {toolsMenu && <MenuWrapper>
-                            <IconButton
-                                size='medium'
-                                icon={<OptionsIcon/>}
-                            />
-                            {toolsMenu}
-                        </MenuWrapper>
-                        }
+                        <div className='toolbar--right'>
+                            {toolbar && <div>{toolbar}</div>}
+                            {toolsMenu && <MenuWrapper>
+                                <IconButton
+                                    size='medium'
+                                    icon={<OptionsIcon/>}
+                                />
+                                {toolsMenu}
+                            </MenuWrapper>
+                            }
+                        </div>
                     </div>
                     {props.children}
                 </div>

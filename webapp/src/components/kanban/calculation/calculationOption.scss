@@ -1,11 +1,14 @@
+@import '../../../styles/z-index';
+
 .KanbanCalculationOptions_CustomOption {
     color: rgba(var(--center-channel-color-rgb), 1);
-    min-height: 24px;
+    min-height: 36px;
     max-width: 220px;
-    width: 200px;
-    padding: 2px 12px;
+    width: 240px;
+    padding: 2px 20px;
     cursor: pointer;
     position: relative;
+    display: flex;
 
     &:hover {
         background: rgba(var(--center-channel-color-rgb), 0.1);
@@ -13,44 +16,54 @@
 
     span {
         overflow: hidden;
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
     }
 
     .drops {
-        padding: 2px 14px;
-        width: 200px;
+        max-width: 220px;
+        width: 240px;
+        padding: 2px 20px;
+        height: 36px;
+        display: flex;
+        align-items: center;
 
         &.active,
         &.active:hover {
-            background-color: rgb(var(--sidebar-bg-rgb));
-            color: rgb(var(--sidebar-text-rgb));
+            background-color: rgba(var(--button-bg-rgb), 0.08);
+            color: rgb(var(--button-text-rgb));
         }
     }
 
     .customs:hover,
     .drops:hover {
-        background: rgba(var(--center-channel-color-rgb), 0.1);
+        background: rgba(var(--center-channel-color-rgb), 0.08);
     }
 
     .dropdown-submenu {
+        @include z-index(calculation-dropdown);
         position: fixed;
         overflow: auto;
         background: rgb(var(--center-channel-bg-rgb));
         border: 0;
         box-shadow: 0 0 0 1px hsla(0, 0%, 0%, 0.1), 0 4px 11px hsla(0, 0%, 0%, 0.1);
-        z-index: 999;
-        padding: 6px 0;
+        padding: 8px 0;
         border-radius: 4px;
     }
 
     .CompassIcon.icon-chevron-right {
         float: right;
+        font-size: 18px;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
     }
 
     &.active {
-        background-color: rgb(var(--sidebar-bg-rgb));
+        background-color: rgba(var(--button-bg-rgb), 0.08);
 
         > span {
-            color: rgb(var(--sidebar-text-rgb));
+            color: rgb(var(--button-text-rgb));
         }
     }
 }

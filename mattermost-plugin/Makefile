@@ -60,6 +60,9 @@ all: check-style test dist
 apply:
 	./build/bin/manifest apply
 
+setup-go-work: ## Sets up a go.work file
+	cd ..; go run ./build/gowork/main.go
+
 ## Runs eslint and golangci-lint
 .PHONY: check-style
 check-style: webapp/node_modules
@@ -72,7 +75,7 @@ endif
 
 ifneq ($(HAS_SERVER),)
 	@if ! [ -x "$$(command -v golangci-lint)" ]; then \
-		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install for installation instructions."; \
+		echo "golangci-lint is not installed. Please see https://github.com/golangci/golangci-lint#install-golangci-lint for installation instructions."; \
 		exit 1; \
 	fi; \
 
@@ -80,9 +83,12 @@ ifneq ($(HAS_SERVER),)
 	golangci-lint run ./...
 endif
 
+templates-archive: setup-go-work ## Build templates archive file
+	cd ../server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive" 
+
 ## Builds the server, if it exists, for all supported architectures.
 .PHONY: server
-server:
+server: templates-archive
 ifneq ($(HAS_SERVER),)
 	mkdir -p server/dist;
 ifeq ($(MM_DEBUG),)
@@ -131,7 +137,7 @@ ifneq ($(wildcard $(ASSETS_DIR)/.),)
 	cp -r $(ASSETS_DIR) dist/$(PLUGIN_ID)/
 endif
 ifneq ($(HAS_PUBLIC),)
-	cp -r public dist/$(PLUGIN_ID)/
+	cp -r public dist/$(PLUGIN_ID)/public/
 endif
 ifneq ($(HAS_SERVER),)
 	mkdir -p dist/$(PLUGIN_ID)/server
@@ -211,6 +217,7 @@ detach: setup-attach
 
 ## Runs any lints and unit tests defined for the server and webapp, if they exist.
 .PHONY: test
+test: export FOCALBOARD_UNIT_TESTING=1
 test: webapp/node_modules
 ifneq ($(HAS_SERVER),)
 	$(GO) test -v $(GO_TEST_FLAGS) ./server/...

@@ -8,11 +8,11 @@ import {Board} from '../blocks/board'
 import mutator from '../mutator'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
-import EmojiIcon from '../widgets/icons/emoji'
-import HideIcon from '../widgets/icons/hide'
-import ShowIcon from '../widgets/icons/show'
+import CompassIcon from '../widgets/icons/compassIcon'
+import {Permission} from '../constants'
+import {useHasCurrentBoardPermissions} from '../hooks/permissions'
 
-import BlockIconSelector from './blockIconSelector'
+import BoardIconSelector from './boardIconSelector'
 import {MarkdownEditor} from './markdownEditor'
 import './viewTitle.scss'
 
@@ -25,25 +25,33 @@ const ViewTitle = (props: Props) => {
     const {board} = props
 
     const [title, setTitle] = useState(board.title)
-    const onEditTitleSave = useCallback(() => mutator.changeTitle(board.id, board.title, title), [board.id, board.title, title])
+    const onEditTitleSave = useCallback(() => mutator.changeBoardTitle(board.id, board.title, title), [board.id, board.title, title])
     const onEditTitleCancel = useCallback(() => setTitle(board.title), [board.title])
-    const onDescriptionBlur = useCallback((text) => mutator.changeDescription(board.id, board.fields.description, text), [board.id, board.fields.description])
+    const onDescriptionBlur = useCallback((text) => mutator.changeBoardDescription(board.id, board.id, board.description, text), [board.id, board.description])
     const onAddRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeIcon(board.id, board.fields.icon, newIcon)
-    }, [board.id, board.fields.icon])
-    const onShowDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), true), [board.id, board.fields.showDescription])
-    const onHideDescription = useCallback(() => mutator.showDescription(board.id, Boolean(board.fields.showDescription), false), [board.id, board.fields.showDescription])
+        mutator.changeBoardIcon(board.id, board.icon, newIcon)
+    }, [board.id, board.icon])
+    const onShowDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), true), [board.id, board.showDescription])
+    const onHideDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), false), [board.id, board.showDescription])
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+
+    const readonly = props.readonly || !canEditBoardProperties
 
     const intl = useIntl()
 
     return (
         <div className='ViewTitle'>
             <div className='add-buttons add-visible'>
-                {!props.readonly && !board.fields.icon &&
+                {!readonly && !board.icon &&
                     <Button
+                        emphasis='default'
+                        size='xsmall'
                         onClick={onAddRandomIcon}
-                        icon={<EmojiIcon/>}
+                        icon={
+                            <CompassIcon
+                                icon='emoticon-outline'
+                            />}
                     >
                         <FormattedMessage
                             id='TableComponent.add-icon'
@@ -51,10 +59,15 @@ const ViewTitle = (props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && board.fields.showDescription &&
+                {!readonly && board.showDescription &&
                     <Button
+                        emphasis='default'
+                        size='xsmall'
                         onClick={onHideDescription}
-                        icon={<HideIcon/>}
+                        icon={
+                            <CompassIcon
+                                icon='eye-off-outline'
+                            />}
                     >
                         <FormattedMessage
                             id='ViewTitle.hide-description'
@@ -62,10 +75,15 @@ const ViewTitle = (props: Props) => {
                         />
                     </Button>
                 }
-                {!props.readonly && !board.fields.showDescription &&
+                {!readonly && !board.showDescription &&
                     <Button
+                        emphasis='default'
+                        size='xsmall'
                         onClick={onShowDescription}
-                        icon={<ShowIcon/>}
+                        icon={
+                            <CompassIcon
+                                icon='eye-outline'
+                            />}
                     >
                         <FormattedMessage
                             id='ViewTitle.show-description'
@@ -76,7 +94,10 @@ const ViewTitle = (props: Props) => {
             </div>
 
             <div className='title'>
-                <BlockIconSelector block={board}/>
+                <BoardIconSelector
+                    board={board}
+                    readonly={readonly}
+                />
                 <Editable
                     className='title'
                     value={title}
@@ -85,18 +106,18 @@ const ViewTitle = (props: Props) => {
                     saveOnEsc={true}
                     onSave={onEditTitleSave}
                     onCancel={onEditTitleCancel}
-                    readonly={props.readonly}
+                    readonly={readonly}
                     spellCheck={true}
                 />
             </div>
 
-            {board.fields.showDescription &&
+            {board.showDescription &&
                 <div className='description'>
                     <MarkdownEditor
-                        text={board.fields.description}
+                        text={board.description}
                         placeholderText='Add a description...'
                         onBlur={onDescriptionBlur}
-                        readonly={props.readonly}
+                        readonly={readonly}
                     />
                 </div>
             }

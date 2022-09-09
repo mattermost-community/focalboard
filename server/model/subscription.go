@@ -31,10 +31,6 @@ type Subscription struct {
 	// required: true
 	BlockID string `json:"blockId"`
 
-	// WorkspaceID is id of the workspace the block belongs to
-	// required: true
-	WorkspaceID string `json:"workspaceId"`
-
 	// SubscriberType is the type of the entity (e.g. user, channel) that is subscribing
 	// required: true
 	SubscriberType SubscriberType `json:"subscriberType"`
@@ -47,11 +43,11 @@ type Subscription struct {
 	// required: true
 	NotifiedAt int64 `json:"notifiedAt,omitempty"`
 
-	// CreatedAt is the timestamp this subscription was created
+	// CreatedAt is the timestamp this subscription was created in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"createAt"`
 
-	// DeleteAt is the timestamp this subscription was deleted, or zero if not deleted
+	// DeleteAt is the timestamp this subscription was deleted in miliseconds since the current epoch, or zero if not deleted
 	// required: true
 	DeleteAt int64 `json:"deleteAt"`
 }
@@ -62,9 +58,6 @@ func (s *Subscription) IsValid() error {
 	}
 	if s.BlockID == "" {
 		return ErrInvalidSubscription{"missing block id"}
-	}
-	if s.WorkspaceID == "" {
-		return ErrInvalidSubscription{"missing workspace id"}
 	}
 	if s.BlockType == "" {
 		return ErrInvalidSubscription{"missing block type"}

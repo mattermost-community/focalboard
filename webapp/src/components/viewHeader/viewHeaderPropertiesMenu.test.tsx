@@ -7,7 +7,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {BoardView} from '../../blocks/boardView'
 
@@ -46,7 +46,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -62,7 +62,7 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
@@ -77,19 +77,44 @@ describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
                 <ReduxProvider store={store}>
                     <ViewHeaderPropertiesMenu
                         activeView={activeView}
-                        properties={board.fields.cardProperties}
+                        properties={board.cardProperties}
                     />
                 </ReduxProvider>,
             ),
         )
         const menuButton = screen.getByRole('button', {name: 'Properties menu'})
         userEvent.click(menuButton)
-        const badgesButton = screen.getByRole('button', {name: 'Comments and Description'})
+        const badgesButton = screen.getByRole('button', {name: 'Comments and description'})
         userEvent.click(badgesButton)
         expect(mockedMutator.changeViewVisibleProperties).toHaveBeenCalledWith(
+            activeView.boardId,
             activeView.id,
             activeView.fields.visiblePropertyIds,
             [...activeView.fields.visiblePropertyIds, Constants.badgesColumnId],
         )
+    })
+    test('show menu and verify that it is not closed after clicking on the item', () => {
+        render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <ViewHeaderPropertiesMenu
+                        activeView={activeView}
+                        properties={board.cardProperties}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        const menuButton = screen.getByRole('button', {name: 'Properties menu'})
+        userEvent.click(menuButton)
+
+        const property1Button = screen.getByRole('button', {name: 'Property 1'})
+        userEvent.click(property1Button)
+        expect(property1Button).toBeInTheDocument()
+
+        const property2Button = screen.getByRole('button', {name: 'Property 2'})
+        userEvent.click(property2Button)
+        expect(property2Button).toBeInTheDocument()
+
+        expect(mockedMutator.changeViewVisibleProperties).toHaveBeenCalledTimes(2)
     })
 })

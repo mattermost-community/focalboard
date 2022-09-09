@@ -11,6 +11,7 @@ describe('Create and delete board / card', () => {
         cy.apiResetBoards()
         cy.apiGetMe().then((userID) => cy.apiSkipTour(userID))
         localStorage.setItem('welcomePageViewed', 'true')
+        localStorage.setItem('language', 'en')
     })
 
     it('MM-T4274 Create an Empty Board', () => {
@@ -72,6 +73,11 @@ describe('Create and delete board / card', () => {
         cy.get('.ViewHeader').contains('New').click()
         cy.get('.CardDetail').should('exist')
 
+        //Check title has focus when card is created
+        cy.log('**Check title has focus when card is created**')
+        cy.get('.CardDetail .EditableArea.title').
+            should('have.focus')
+
         // Change card title
         cy.log('**Change card title**')
         // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -98,8 +104,7 @@ describe('Create and delete board / card', () => {
         // Create table view
         cy.log('**Create table view**')
         cy.get('.ViewHeader').get('.DropdownIcon').first().parent().click()
-        cy.get('.ViewHeader').contains('Add view').click()
-        cy.get('.ViewHeader').contains('Add view').click()
+        cy.get('.ViewHeader').contains('Add view').realHover()
         cy.get('.ViewHeader').
             contains('Add view').
             parent().
@@ -131,7 +136,6 @@ describe('Create and delete board / card', () => {
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
-            parent().
             find('.MenuWrapper').
             find('button.IconButton').
             click({force: true})
@@ -143,6 +147,7 @@ describe('Create and delete board / card', () => {
     it('MM-T4433 Scrolls the kanban board when dragging card to edge', () => {
         // Visit a page and create new empty board
         cy.visit('/')
+        cy.wait(500)
         cy.uiCreateEmptyBoard()
 
         // Create 10 empty groups
@@ -173,9 +178,47 @@ describe('Create and delete board / card', () => {
         // eslint-disable-next-line cypress/no-unnecessary-waiting
         cy.get('.Kanban').
             trigger('dragover', {clientX: 400, clientY: Cypress.config().viewportHeight / 2}).
-            wait(3500).
+            wait(4500).
             trigger('dragend')
 
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
+    })
+
+    it('GH-2520 make cut/undo/redo work in comments', () => {
+        const isMAC = navigator.userAgent.indexOf("Mac") !== -1
+        const ctrlKey = isMAC ? 'meta' : 'ctrl'
+        // Visit a page and create new empty board
+        cy.visit('/')
+        cy.uiCreateEmptyBoard()
+
+        // Create card
+        cy.log('**Create card**')
+        cy.get('.ViewHeader').contains('New').click()
+        cy.get('.CardDetail').should('exist')
+
+        cy.wait(1000)
+
+        cy.log('**Add comment**')
+        cy.get('.CommentsList').
+            findAllByTestId('preview-element').
+            click().
+            get('.CommentsList .MarkdownEditorInput').
+            type('Test Text')
+            
+        cy.log('**Cut comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type('{selectAll}').
+            trigger('cut').
+            should('have.text', '')
+            
+        cy.log('**Undo comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type(`{${ctrlKey}+z}`).
+            should('have.text', 'Test Text')
+            
+        cy.log('**Redo comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type(`{shift+${ctrlKey}+z}`).
+            should('have.text', '')
     })
 })

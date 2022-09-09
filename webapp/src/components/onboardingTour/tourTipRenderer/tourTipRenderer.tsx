@@ -11,6 +11,8 @@ import {OnboardingBoardTitle, OnboardingCardTitle} from '../../cardDetail/cardDe
 import {getOnboardingTourCategory, getOnboardingTourStarted, getOnboardingTourStep} from '../../../store/users'
 import TourTip from '../../tutorial_tour_tip/tutorial_tour_tip'
 import {TutorialTourTipPunchout} from '../../tutorial_tour_tip/tutorial_tour_tip_backdrop'
+import {ClientConfig} from '../../../config/clientConfig'
+import {getClientConfig} from '../../../store/clientConfig'
 
 type Props = {
     requireCard: boolean
@@ -26,16 +28,25 @@ type Props = {
     imageURL?: string
     singleTip?: boolean
     hideNavButtons?: boolean
+    showForce?: boolean
 }
 
 const TourTipRenderer = (props: Props): JSX.Element | null => {
     const board = useAppSelector(getCurrentBoard)
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
-    const isOnboardingBoard = board ? board.title === OnboardingBoardTitle : false
+    let isOnboardingBoard = board ? board.title === OnboardingBoardTitle : false
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
-    const showTour = isOnboardingBoard && onboardingTourStarted && onboardingTourCategory === props.category
+    const disableTour = clientConfig?.featureFlags?.disableTour || false
+
+
+    if(props.showForce) {
+        isOnboardingBoard = true
+    }
+
+    const showTour = !disableTour && isOnboardingBoard && onboardingTourStarted && onboardingTourCategory === props.category
     let showTourTip = showTour && onboardingTourStep === props.step.toString()
 
     if (props.requireCard) {

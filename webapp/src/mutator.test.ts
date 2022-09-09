@@ -19,27 +19,28 @@ beforeAll(() => {
 
 describe('Mutator', () => {
     test('changePropertyValue', async () => {
+        const board = TestBlockFactory.createBoard()
         const card = TestBlockFactory.createCard()
+        card.boardId = board.id
         card.fields.properties.property_1 = 'hello'
 
-        await mutator.changePropertyValue(card, 'property_1', 'hello')
+        await mutator.changePropertyValue(board.id, card, 'property_1', 'hello')
 
         // No API call should be made as property value DIDN'T CHANGE
         expect(FetchMock.fn).toBeCalledTimes(0)
 
-        await mutator.changePropertyValue(card, 'property_1', 'hello world')
+        await mutator.changePropertyValue(board.id, card, 'property_1', 'hello world')
 
         // 1 API call should be made as property value DID CHANGE
         expect(FetchMock.fn).toBeCalledTimes(1)
     })
 
     test('duplicateCard', async () => {
-        const card = TestBlockFactory.createCard()
         const board = TestBlockFactory.createBoard()
+        const card = TestBlockFactory.createCard(board)
 
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([card])))
-        FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([])))
-        const [newBlocks, newCardID] = await mutator.duplicateCard(card.id, board)
+        const [newBlocks, newCardID] = await mutator.duplicateCard(card.id, board.id)
 
         expect(newBlocks).toHaveLength(1)
 
@@ -48,7 +49,6 @@ describe('Mutator', () => {
         expect(duplicatedCard.id).toBe(newCardID)
         expect(duplicatedCard.fields.icon).toBe(card.fields.icon)
         expect(duplicatedCard.fields.contentOrder).toHaveLength(card.fields.contentOrder.length)
-        expect(duplicatedCard.parentId).toBe(board.id)
-        expect(duplicatedCard.rootId).toBe(board.id)
+        expect(duplicatedCard.boardId).toBe(board.id)
     })
 })

@@ -19,9 +19,8 @@ const board = TestBlockFactory.createBoard()
 const card = TestBlockFactory.createCard(board)
 const contentBlock: ContentBlock = {
     id: 'test-id',
-    workspaceId: '',
+    boardId: card.boardId,
     parentId: card.id,
-    rootId: card.rootId,
     modifiedBy: 'test-user-id',
     schema: 0,
     type: 'checkbox',
@@ -31,6 +30,7 @@ const contentBlock: ContentBlock = {
     createAt: 0,
     updateAt: 0,
     deleteAt: 0,
+    limited: false,
 }
 
 const wrap = (child: ReactNode): ReactElement => (

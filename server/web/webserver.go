@@ -27,16 +27,22 @@ type RoutedService interface {
 type Server struct {
 	http.Server
 
-	baseURL  string
-	rootPath string
-	port     int
-	ssl      bool
-	logger   *mlog.Logger
+	baseURL    string
+	rootPath   string
+	basePrefix string
+	port       int
+	ssl        bool
+	logger     mlog.LoggerIFace
 }
 
 // NewServer creates a new instance of the webserver.
-func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool, logger *mlog.Logger) *Server {
+func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool, logger mlog.LoggerIFace) *Server {
 	r := mux.NewRouter()
+
+	basePrefix := os.Getenv("FOCALBOARD_HTTP_SERVER_BASEPATH")
+	if basePrefix != "" {
+		r = r.PathPrefix(basePrefix).Subrouter()
+	}
 
 	var addr string
 	if localOnly {
@@ -57,11 +63,12 @@ func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool
 			Addr:    addr,
 			Handler: r,
 		},
-		baseURL:  baseURL,
-		rootPath: rootPath,
-		port:     port,
-		ssl:      ssl,
-		logger:   logger,
+		baseURL:    baseURL,
+		rootPath:   rootPath,
+		port:       port,
+		ssl:        ssl,
+		logger:     logger,
+		basePrefix: basePrefix,
 	}
 
 	return ws
@@ -77,7 +84,7 @@ func (ws *Server) AddRoutes(rs RoutedService) {
 }
 
 func (ws *Server) registerRoutes() {
-	ws.Router().PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
+	ws.Router().PathPrefix("/static").Handler(http.StripPrefix(ws.basePrefix+"/static/", http.FileServer(http.Dir(filepath.Join(ws.rootPath, "static")))))
 	ws.Router().PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		indexTemplate, err := template.New("index").ParseFiles(path.Join(ws.rootPath, "index.html"))
@@ -140,7 +147,7 @@ func fileExists(path string) bool {
 
 // errorOrWarn returns a `warn` level if this server instance is running unit tests, otherwise `error`.
 func errorOrWarn() mlog.Level {
-	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("FB_UNIT_TESTING")))
+	unitTesting := strings.ToLower(strings.TrimSpace(os.Getenv("FOCALBOARD_UNIT_TESTING")))
 	if unitTesting == "1" || unitTesting == "y" || unitTesting == "t" {
 		return mlog.LvlWarn
 	}

@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import Select, {components, IndicatorProps} from 'react-select'
+import Select, {components, DropdownIndicatorProps} from 'react-select'
 
 import {CSSObject} from '@emotion/serialize'
 
@@ -12,7 +12,7 @@ import {getSelectBaseStyle} from '../../theme'
 import ChevronUp from '../../widgets/icons/chevronUp'
 import {IPropertyTemplate} from '../../blocks/board'
 
-type Option = {
+export type Option = {
     label: string
     value: string
     displayName: string
@@ -46,12 +46,12 @@ export const optionLabelString = (option: Option, intl: IntlShape): string => {
     switch (option.value) {
     case 'none': return intl.formatMessage({id: 'Calculations.Options.none.label', defaultMessage: 'None'})
     case 'count': return intl.formatMessage({id: 'Calculations.Options.count.label', defaultMessage: 'Count'})
-    case 'countValue': return intl.formatMessage({id: 'Calculations.Options.countValue.label', defaultMessage: 'Count Value'})
-    case 'countChecked': return intl.formatMessage({id: 'Calculations.Options.countChecked.label', defaultMessage: 'Count Checked'})
-    case 'percentChecked': return intl.formatMessage({id: 'Calculations.Options.percentChecked.label', defaultMessage: 'Percent Checked'})
-    case 'percentUnchecked': return intl.formatMessage({id: 'Calculations.Options.percentUnchecked.label', defaultMessage: 'Percent Unchecked'})
-    case 'countUnchecked': return intl.formatMessage({id: 'Calculations.Options.countUnchecked.label', defaultMessage: 'Count Unchecked'})
-    case 'countUniqueValue': return intl.formatMessage({id: 'Calculations.Options.countUniqueValue.label', defaultMessage: 'Count Unique Values'})
+    case 'countValue': return intl.formatMessage({id: 'Calculations.Options.countValue.label', defaultMessage: 'Count value'})
+    case 'countChecked': return intl.formatMessage({id: 'Calculations.Options.countChecked.label', defaultMessage: 'Count checked'})
+    case 'percentChecked': return intl.formatMessage({id: 'Calculations.Options.percentChecked.label', defaultMessage: 'Percent checked'})
+    case 'percentUnchecked': return intl.formatMessage({id: 'Calculations.Options.percentUnchecked.label', defaultMessage: 'Percent unchecked'})
+    case 'countUnchecked': return intl.formatMessage({id: 'Calculations.Options.countUnchecked.label', defaultMessage: 'Count unchecked'})
+    case 'countUniqueValue': return intl.formatMessage({id: 'Calculations.Options.countUniqueValue.label', defaultMessage: 'Count unique values'})
     case 'sum': return intl.formatMessage({id: 'Calculations.Options.sum.label', defaultMessage: 'Sum'})
     case 'average': return intl.formatMessage({id: 'Calculations.Options.average.label', defaultMessage: 'Average'})
     case 'median': return intl.formatMessage({id: 'Calculations.Options.median.label', defaultMessage: 'Median'})
@@ -151,7 +151,7 @@ const styles = {
     }),
 }
 
-const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
+const DropdownIndicator = (props: DropdownIndicatorProps<Option, false>) => {
     return (
         <components.DropdownIndicator {...props}>
             <ChevronUp/>
@@ -160,7 +160,7 @@ const DropdownIndicator = (props: IndicatorProps<Option, false>) => {
 }
 
 // Calculation option props shared by all implementations of calculation options
-type CommonCalculationOptionProps = {
+export type CommonCalculationOptionProps = {
     value: string,
     menuOpen: boolean
     onClose?: () => void
@@ -174,7 +174,7 @@ type BaseCalculationOptionProps = CommonCalculationOptionProps & {
     options: Option[]
 }
 
-const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
+export const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
     const intl = useIntl()
 
     return (
@@ -191,7 +191,7 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             isSearchable={false}
             components={{DropdownIndicator, ...(props.components || {})}}
             defaultMenuIsOpen={props.menuOpen}
-            autoFocus={true}
+            autoFocus={false}
             formatOptionLabel={(option: Option, meta) => {
                 return meta.context === 'menu' ? optionLabelString(option, intl) : optionDisplayNameString(option, intl)
             }}
@@ -207,10 +207,4 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             }}
         />
     )
-}
-
-export {
-    CalculationOptions,
-    Option,
-    CommonCalculationOptionProps,
 }

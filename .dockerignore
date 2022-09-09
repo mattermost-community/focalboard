@@ -8,3 +8,5 @@ win-wpf/
 mattermost-plugin/
 website/
 linux/
+go.work
+go.work.sum

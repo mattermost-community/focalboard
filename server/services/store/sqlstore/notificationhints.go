@@ -10,7 +10,6 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -19,7 +18,6 @@ import (
 var notificationHintFields = []string{
 	"block_type",
 	"block_id",
-	"workspace_id",
 	"modified_by_id",
 	"create_at",
 	"notify_at",
@@ -29,7 +27,6 @@ func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
 	return []interface{}{
 		hint.BlockType,
 		hint.BlockID,
-		hint.WorkspaceID,
 		hint.ModifiedByID,
 		hint.CreateAt,
 		hint.NotifyAt,
@@ -44,7 +41,6 @@ func (s *SQLStore) notificationHintFromRows(rows *sql.Rows) ([]*model.Notificati
 		err := rows.Scan(
 			&hint.BlockType,
 			&hint.BlockID,
-			&hint.WorkspaceID,
 			&hint.ModifiedByID,
 			&hint.CreateAt,
 			&hint.NotifyAt,
@@ -73,7 +69,7 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 		Columns(notificationHintFields...).
 		Values(valuesForNotificationHint(hint)...)
 
-	if s.dbType == mysqlDBType {
+	if s.dbType == model.MysqlDBType {
 		query = query.Suffix("ON DUPLICATE KEY UPDATE notify_at = ?", notifyAt)
 	} else {
 		query = query.Suffix("ON CONFLICT (block_id) DO UPDATE SET notify_at = ?", notifyAt)
@@ -82,7 +78,6 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error("Cannot upsert notification hint",
 			mlog.String("block_id", hint.BlockID),
-			mlog.String("workspace_id", hint.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -91,11 +86,10 @@ func (s *SQLStore) upsertNotificationHint(db sq.BaseRunner, hint *model.Notifica
 }
 
 // deleteNotificationHint deletes the notification hint for the specified block.
-func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, c store.Container, blockID string) error {
+func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, blockID string) error {
 	query := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + "notification_hints").
-		Where(sq.Eq{"block_id": blockID}).
-		Where(sq.Eq{"workspace_id": c.WorkspaceID})
+		Where(sq.Eq{"block_id": blockID})
 
 	result, err := query.Exec()
 	if err != nil {
@@ -108,25 +102,23 @@ func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, c store.Container, b
 	}
 
 	if count == 0 {
-		return store.NewErrNotFound(blockID)
+		return model.NewErrNotFound(blockID)
 	}
 
 	return nil
 }
 
 // getNotificationHint fetches the notification hint for the specified block.
-func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, blockID string) (*model.NotificationHint, error) {
+func (s *SQLStore) getNotificationHint(db sq.BaseRunner, blockID string) (*model.NotificationHint, error) {
 	query := s.getQueryBuilder(db).
 		Select(notificationHintFields...).
 		From(s.tablePrefix + "notification_hints").
-		Where(sq.Eq{"block_id": blockID}).
-		Where(sq.Eq{"workspace_id": c.WorkspaceID})
+		Where(sq.Eq{"block_id": blockID})
 
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("Cannot fetch notification hint",
 			mlog.String("block_id", blockID),
-			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
@@ -137,13 +129,12 @@ func (s *SQLStore) getNotificationHint(db sq.BaseRunner, c store.Container, bloc
 	if err != nil {
 		s.logger.Error("Cannot get notification hint",
 			mlog.String("block_id", blockID),
-			mlog.String("workspace_id", c.WorkspaceID),
 			mlog.Err(err),
 		)
 		return nil, err
 	}
 	if len(hint) == 0 {
-		return nil, store.NewErrNotFound(blockID)
+		return nil, model.NewErrNotFound(blockID)
 	}
 	return hint[0], nil
 }
@@ -174,7 +165,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		return nil, err
 	}
 	if len(hints) == 0 {
-		return nil, store.NewErrNotFound("")
+		return nil, model.NewErrNotFound("")
 	}
 
 	hint := hints[0]
@@ -195,7 +186,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		if rows == 0 {
 			// another node likely has grabbed this hint for processing concurrently; let that node handle it
 			// and we'll return an error here so we try again.
-			return nil, store.NewErrNotFound(hint.BlockID)
+			return nil, model.NewErrNotFound(hint.BlockID)
 		}
 	}
 

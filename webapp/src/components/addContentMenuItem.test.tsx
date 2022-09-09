@@ -6,7 +6,7 @@ import {render, screen, waitFor} from '@testing-library/react'
 
 import '@testing-library/jest-dom'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import userEvent from '@testing-library/user-event'
 
@@ -67,7 +67,7 @@ describe('components/addContentMenuItem', () => {
         expect(container).toMatchSnapshot()
         const buttonElement = screen.getByRole('button', {name: 'text'})
         userEvent.click(buttonElement)
-        await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
+        await waitFor(() => expect(mockedMutator.insertBlock).toBeCalled())
     })
 
     test('return a checkbox menu item', async () => {
@@ -83,7 +83,7 @@ describe('components/addContentMenuItem', () => {
         expect(container).toMatchSnapshot()
         const buttonElement = screen.getByRole('button', {name: 'checkbox'})
         userEvent.click(buttonElement)
-        await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
+        await waitFor(() => expect(mockedMutator.insertBlock).toBeCalled())
     })
 
     test('return a divider menu item', async () => {
@@ -99,7 +99,7 @@ describe('components/addContentMenuItem', () => {
         expect(container).toMatchSnapshot()
         const buttonElement = screen.getByRole('button', {name: 'divider'})
         userEvent.click(buttonElement)
-        await waitFor(() => expect(mockedMutator.performAsUndoGroup).toBeCalled())
+        await waitFor(() => expect(mockedMutator.insertBlock).toBeCalled())
     })
 
     test('return an error and empty element from unknown type', () => {

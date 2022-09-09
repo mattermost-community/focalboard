@@ -6,7 +6,7 @@ import {render} from '@testing-library/react'
 
 import {act} from 'react-dom/test-utils'
 
-import {mocked} from 'ts-jest/utils'
+import {mocked} from 'jest-mock'
 
 import {ImageBlock} from '../../blocks/imageBlock'
 
@@ -18,14 +18,13 @@ import ImageElement from './imageElement'
 
 jest.mock('../../octoClient')
 const mockedOcto = mocked(octoClient, true)
-mockedOcto.getFileAsDataUrl.mockResolvedValue('test.jpg')
+mockedOcto.getFileAsDataUrl.mockResolvedValue({url: 'test.jpg'})
 
 describe('components/content/ImageElement', () => {
     const defaultBlock: ImageBlock = {
         id: 'test-id',
-        workspaceId: '',
+        boardId: '1',
         parentId: '',
-        rootId: '1',
         modifiedBy: 'test-user-id',
         schema: 0,
         type: 'image',
@@ -37,9 +36,31 @@ describe('components/content/ImageElement', () => {
         createAt: 0,
         updateAt: 0,
         deleteAt: 0,
+        limited: false,
     }
 
     test('should match snapshot', async () => {
+        const component = wrapIntl(
+            <ImageElement
+                block={defaultBlock}
+            />,
+        )
+        let imageContainer: Element | undefined
+        await act(async () => {
+            const {container} = render(component)
+            imageContainer = container
+        })
+        expect(imageContainer).toMatchSnapshot()
+    })
+
+    test('archived file', async () => {
+        mockedOcto.getFileAsDataUrl.mockResolvedValue({
+            archived: true,
+            name: 'Filename',
+            extension: '.txt',
+            size: 165002,
+        })
+
         const component = wrapIntl(
             <ImageElement
                 block={defaultBlock}

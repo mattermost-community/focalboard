@@ -1,4 +1,6 @@
 @import 'typography';
+@import 'modifiers';
+@import 'z-index';
 
 html {
     height: 100%;
@@ -38,6 +40,10 @@ html {
         user-select: none;
     }
 
+    .TeamIcon {
+        box-sizing: content-box;
+    }
+
     input,
     textarea,
     select,
@@ -49,13 +55,13 @@ html {
     textarea {
         background: rgb(var(--center-channel-bg-rgb));
         color: rgb(var(--center-channel-color-rgb));
-
+        border-radius: 4px;
         user-select: text;
     }
 
     a {
         text-decoration: none;
-        color: var(--link-color-rgb);
+        color: rgb(var(--link-color-rgb));
     }
 
     hr {
@@ -135,6 +141,7 @@ html {
     /*-- Property list --*/
 
     .octo-propertyvalue {
+        max-width: 100%;
         font-size: 12px;
         color: rgb(var(--center-channel-color-rgb));
 
@@ -203,8 +210,8 @@ html {
         width: 100%;
 
         &:hover {
+            @include z-index(block-hover);
             position: relative;
-            z-index: 1;
         }
 
         > * {
