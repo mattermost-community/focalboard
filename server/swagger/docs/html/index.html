@@ -14909,7 +14909,7 @@ Team ID
                             <pre class="prettyprint"><code class="language-bsh">curl -X GET \
 -H "Authorization: [[apiKey]]" \
  -H "Accept: application/json" \
- "http://localhost/api/v2/teams/{teamID}/users?search=search_example"
+ "http://localhost/api/v2/teams/{teamID}/users?search=search_example&exclude_bots=true"
 </code></pre>
                           </div>
                           <div class="tab-pane" id="examples-Default-getTeamUsers-0-java">
@@ -14935,9 +14935,10 @@ public class DefaultApiExample {
         DefaultApi apiInstance = new DefaultApi();
         String teamID = teamID_example; // String | Team ID
         String search = search_example; // String | string to filter users list
+        Boolean excludeBots = true; // Boolean | exclude bot users
 
         try {
-            array[Object] result = apiInstance.getTeamUsers(teamID, search);
+            array[Object] result = apiInstance.getTeamUsers(teamID, search, excludeBots);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getTeamUsers");
@@ -14956,9 +14957,10 @@ public class DefaultApiExample {
         DefaultApi apiInstance = new DefaultApi();
         String teamID = teamID_example; // String | Team ID
         String search = search_example; // String | string to filter users list
+        Boolean excludeBots = true; // Boolean | exclude bot users
 
         try {
-            array[Object] result = apiInstance.getTeamUsers(teamID, search);
+            array[Object] result = apiInstance.getTeamUsers(teamID, search, excludeBots);
             System.out.println(result);
         } catch (ApiException e) {
             System.err.println("Exception when calling DefaultApi#getTeamUsers");
@@ -14984,9 +14986,11 @@ public class DefaultApiExample {
 DefaultApi *apiInstance = [[DefaultApi alloc] init];
 String *teamID = teamID_example; // Team ID (default to null)
 String *search = search_example; // string to filter users list (optional) (default to null)
+Boolean *excludeBots = true; // exclude bot users (optional) (default to null)
 
 [apiInstance getTeamUsersWith:teamID
     search:search
+    excludeBots:excludeBots
               completionHandler: ^(array[Object] output, NSError* error) {
     if (output) {
         NSLog(@"%@", output);
@@ -15012,7 +15016,8 @@ BearerAuth.apiKey = "YOUR API KEY";
 var api = new FocalboardServer.DefaultApi()
 var teamID = teamID_example; // {String} Team ID
 var opts = {
-  'search': search_example // {String} string to filter users list
+  'search': search_example, // {String} string to filter users list
+  'excludeBots': true // {Boolean} exclude bot users
 };
 
 var callback = function(error, data, response) {
@@ -15051,9 +15056,10 @@ namespace Example
             var apiInstance = new DefaultApi();
             var teamID = teamID_example;  // String | Team ID (default to null)
             var search = search_example;  // String | string to filter users list (optional)  (default to null)
+            var excludeBots = true;  // Boolean | exclude bot users (optional)  (default to null)
 
             try {
-                array[Object] result = apiInstance.getTeamUsers(teamID, search);
+                array[Object] result = apiInstance.getTeamUsers(teamID, search, excludeBots);
                 Debug.WriteLine(result);
             } catch (Exception e) {
                 Debug.Print("Exception when calling DefaultApi.getTeamUsers: " + e.Message );
@@ -15077,9 +15083,10 @@ OpenAPITools\Client\Configuration::getDefaultConfiguration()->setApiKey('Authori
 $api_instance = new OpenAPITools\Client\Api\DefaultApi();
 $teamID = teamID_example; // String | Team ID
 $search = search_example; // String | string to filter users list
+$excludeBots = true; // Boolean | exclude bot users
 
 try {
-    $result = $api_instance->getTeamUsers($teamID, $search);
+    $result = $api_instance->getTeamUsers($teamID, $search, $excludeBots);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling DefaultApi->getTeamUsers: ', $e->getMessage(), PHP_EOL;
@@ -15101,9 +15108,10 @@ $WWW::OPenAPIClient::Configuration::api_key->{'Authorization'} = 'YOUR_API_KEY';
 my $api_instance = WWW::OPenAPIClient::DefaultApi->new();
 my $teamID = teamID_example; # String | Team ID
 my $search = search_example; # String | string to filter users list
+my $excludeBots = true; # Boolean | exclude bot users
 
 eval {
-    my $result = $api_instance->getTeamUsers(teamID => $teamID, search => $search);
+    my $result = $api_instance->getTeamUsers(teamID => $teamID, search => $search, excludeBots => $excludeBots);
     print Dumper($result);
 };
 if ($@) {
@@ -15127,9 +15135,10 @@ openapi_client.configuration.api_key['Authorization'] = 'YOUR_API_KEY'
 api_instance = openapi_client.DefaultApi()
 teamID = teamID_example # String | Team ID (default to null)
 search = search_example # String | string to filter users list (optional) (default to null)
+excludeBots = true # Boolean | exclude bot users (optional) (default to null)
 
 try:
-    api_response = api_instance.get_team_users(teamID, search=search)
+    api_response = api_instance.get_team_users(teamID, search=search, excludeBots=excludeBots)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling DefaultApi->getTeamUsers: %s\n" % e)</code></pre>
@@ -15141,9 +15150,10 @@ except ApiException as e:
 pub fn main() {
     let teamID = teamID_example; // String
     let search = search_example; // String
+    let excludeBots = true; // Boolean
 
     let mut context = DefaultApi::Context::default();
-    let result = client.getTeamUsers(teamID, search, &context).wait();
+    let result = client.getTeamUsers(teamID, search, excludeBots, &context).wait();
 
     println!("{:?}", result);
 }
@@ -15211,6 +15221,26 @@ Team ID
 
                     <div class="inner description marked">
 string to filter users list
+                    </div>
+            </div>
+        </div>
+    </div>
+</td>
+</tr>
+
+                                <tr><td style="width:150px;">exclude_bots</td>
+<td>
+
+
+    <div id="d2e199_getTeamUsers_excludeBots">
+        <div class="json-schema-view">
+            <div class="primitive">
+                <span class="type">
+                    Boolean
+                </span>
+
+                    <div class="inner description marked">
+exclude bot users
                     </div>
             </div>
         </div>
