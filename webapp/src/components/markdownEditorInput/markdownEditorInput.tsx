@@ -148,7 +148,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             setEditorState(generateEditorState(initialText || ''))
             setInitialTextCache(initialText)
         }
-        console.log("EDITORS STATE TEXT", editorState.getCurrentContent().getPlainText())
     }, [initialText])
 
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
@@ -190,7 +189,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         }
 
         if (e.key === 'Backspace') {
-            console.log("emitting backspace")
             return 'backspace'
         }
 
@@ -227,7 +225,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
         if (command === 'backspace') {
             if (props.onEditorCancel && editorState.getCurrentContent().getPlainText().length === 0) {
-                console.log("handling backspace")
                 props.onEditorCancel()
                 return 'handled'
             }
@@ -241,7 +238,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return
         }
         const text = editorState.getCurrentContent().getPlainText()
-        console.log("GETTING TEXT ON EDIT", text)
         onBlur && onBlur(text)
     }, [editorState.getCurrentContent().getPlainText(), onBlur, confirmAddUser])
 

@@ -324,7 +324,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
                             return {...block, id: newBlock.id}
                         }}
                         onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
-                            console.log(block)
                             const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
                             if (!originalContentBlock) {
                                 return null

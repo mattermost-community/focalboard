@@ -31,8 +31,6 @@ export default function Editor(props: Props) {
 
     const CurrentBlockInput = currentBlockType?.Input
 
-    console.log(value)
-
     return (
         <div className='Editor'>
             {currentBlockType === null &&

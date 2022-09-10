@@ -1,5 +1,8 @@
-import React, {useRef, useEffect} from 'react'
+import React, {useRef, useEffect, useState} from 'react'
 import {BlockInputProps, ContentType} from '../types'
+import octoClient from '../../../../octoClient'
+import {useAppSelector} from '../../../../store/hooks'
+import {getCurrentBoardId} from '../../../../store/boards'
 
 import './attachment.scss'
 
@@ -15,7 +18,34 @@ const Attachment: ContentType<FileInfo> = {
     prefix: '',
     runSlashCommand: (): void => {},
     editable: false,
-    Display: (props: BlockInputProps<FileInfo>) => <div className='AttachmentView'>📎 {props.value.filename}</div>,
+    Display: (props: BlockInputProps<FileInfo>) => {
+        const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
+        const boardId = useAppSelector(getCurrentBoardId)
+
+        useEffect(() => {
+            if (!fileDataUrl) {
+                const loadFile = async () => {
+                    if (props.value && props.value.file && typeof props.value.file === 'string') {
+                        const fileURL = await octoClient.getFileAsDataUrl(boardId, props.value.file)
+                        setFileDataUrl(fileURL.url || '')
+                    }
+                }
+                loadFile()
+            }
+        }, [props.value, props.value.file, boardId])
+
+        return (
+            <div className='AttachmentView'>
+                <a
+                    href={fileDataUrl || '#'}
+                    onClick={(e) => e.stopPropagation()}
+                    download={props.value.filename}
+                >
+                    📎 {props.value.filename}
+                </a>
+            </div>
+        )
+    },
     Input: (props: BlockInputProps<FileInfo>) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {
