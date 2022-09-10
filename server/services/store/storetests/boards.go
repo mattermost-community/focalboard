@@ -77,6 +77,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		defer tearDown()
 		testGetBoardHistory(t, store)
 	})
+	t.Run("GetBoardCount", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBoardCount(t, store)
+	})
 }
 
 func testGetBoard(t *testing.T, store store.Store) {
@@ -1042,7 +1047,6 @@ func testGetBoardCount(t *testing.T, store store.Store) {
 	userID := testUserID
 
 	t.Run("test GetBoardCount", func(t *testing.T) {
-
 		originalCount, err := store.GetBoardCount()
 		require.NoError(t, err)
 
