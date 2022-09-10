@@ -20,17 +20,22 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import BlockIconSelector from '../blockIconSelector'
 
-import {useAppDispatch} from '../../store/hooks'
+import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {updateCards, setCurrent as setCurrentCard} from '../../store/cards'
 import {updateContents} from '../../store/contents'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import BlocksEditor from '../blocksEditor/blocksEditor'
 import {BlockData} from '../blocksEditor/blocks/types'
+import {ClientConfig} from '../../config/clientConfig'
+import {getClientConfig} from '../../store/clientConfig'
 
 import CardSkeleton from '../../svg/card-skeleton'
 
 import CommentsList from './commentsList'
+import {CardDetailProvider} from './cardDetailContext'
+import CardDetailContents from './cardDetailContents'
+import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
 
@@ -51,7 +56,7 @@ type Props = {
     onClose: () => void
 }
 
-async function addBlock(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
+async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
     const block = createBlock()
     block.parentId = card.id
     block.boardId = card.boardId
@@ -87,11 +92,10 @@ async function addBlock(card: Card, intl: IntlShape, title: string, fields: any,
     return newBlock
 }
 
-function moveBlock(boardId: string, blockId: string, dstBlockId: string, where: 'after'|'before'): void {
+function moveBlockNewEditor(boardId: string, blockId: string, dstBlockId: string, where: 'after'|'before'): void {
     // TODO: Make this a mutation
     octoClient.moveBlockTo(boardId, blockId, where, dstBlockId)
 }
-
 
 const CardDetail = (props: Props): JSX.Element|null => {
     const {card, comments} = props
@@ -110,6 +114,9 @@ const CardDetail = (props: Props): JSX.Element|null => {
     const saveTitleRef = useRef<() => void>(saveTitle)
     saveTitleRef.current = saveTitle
     const intl = useIntl()
+
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
+    const newBoardsEditor = clientConfig?.featureFlags?.newBoardsEditor || false
 
     useImagePaste(props.board.id, card.id, card.fields.contentOrder)
 
@@ -298,71 +305,73 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {/* Content blocks */}
 
             {!limited && <div className='CardDetail content fullwidth content-blocks'>
-                <BlocksEditor
-                    blocks={blocks}
-                    onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
-                        if (block.contentType === 'text' && block.value === '') {
-                            return null
-                        }
-                        let newBlock: Block
-                        if (block.contentType === 'checkbox') {
-                            newBlock = await addBlock(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
-                        } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
-                            const newFileId = await octoClient.uploadFile(card.boardId, block.value.file)
-                            newBlock = await addBlock(card, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
-                        } else {
-                            newBlock = await addBlock(card, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
-                        }
-                        return {...block, id: newBlock.id}
-                    }}
-                    onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
-                        console.log(block)
-                        const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
-                        if (!originalContentBlock) {
-                            return null
-                        }
-
-                        if (block.contentType === 'text' && block.value === '') {
-                            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
-
-                            mutator.deleteBlock(originalContentBlock, description)
-                            return null
-                        }
-                        const newBlock = {
-                            ...originalContentBlock,
-                            title: block.value,
-                        }
-
-                        if (block.contentType === 'checkbox') {
-                            newBlock.title = block.value.value
-                            newBlock.fields = {...newBlock.fields, value: block.value.checked}
-                        }
-                        mutator.updateBlock(card.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
-                        return block
-                    }}
-                    onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
-                        if (block.id) {
-                            if (afterBlock && afterBlock.id) {
-                                moveBlock(card.boardId, block.id, afterBlock.id, "after")
-                                return
+                {newBoardsEditor && (
+                    <BlocksEditor
+                        blocks={blocks}
+                        onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
+                            if (block.contentType === 'text' && block.value === '') {
+                                return null
                             }
-                            if (beforeBlock && beforeBlock.id) {
-                                moveBlock(card.boardId, block.id, beforeBlock.id, "before")
+                            let newBlock: Block
+                            if (block.contentType === 'checkbox') {
+                                newBlock = await addBlockNewEditor(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
+                            } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
+                                const newFileId = await octoClient.uploadFile(card.boardId, block.value.file)
+                                newBlock = await addBlockNewEditor(card, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
+                            } else {
+                                newBlock = await addBlockNewEditor(card, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
                             }
-                        }
-                    }}
-                />
+                            return {...block, id: newBlock.id}
+                        }}
+                        onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
+                            console.log(block)
+                            const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
+                            if (!originalContentBlock) {
+                                return null
+                            }
+
+                            if (block.contentType === 'text' && block.value === '') {
+                                const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+
+                                mutator.deleteBlock(originalContentBlock, description)
+                                return null
+                            }
+                            const newBlock = {
+                                ...originalContentBlock,
+                                title: block.value,
+                            }
+
+                            if (block.contentType === 'checkbox') {
+                                newBlock.title = block.value.value
+                                newBlock.fields = {...newBlock.fields, value: block.value.checked}
+                            }
+                            mutator.updateBlock(card.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
+                            return block
+                        }}
+                        onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
+                            if (block.id) {
+                                if (afterBlock && afterBlock.id) {
+                                    moveBlockNewEditor(card.boardId, block.id, afterBlock.id, "after")
+                                    return
+                                }
+                                if (beforeBlock && beforeBlock.id) {
+                                    moveBlockNewEditor(card.boardId, block.id, beforeBlock.id, "before")
+                                }
+                            }
+                        }}
+                    />)}
+                {!newBoardsEditor && (
+                    <CardDetailProvider card={card}>
+                        <CardDetailContents
+                            card={props.card}
+                            contents={props.contents}
+                            readonly={props.readonly || !canEditBoardCards}
+                        />
+                        {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
+                    </CardDetailProvider>)}
             </div>}
         </>
     )
 }
-                // <CardDetailProvider card={card}>
-                //     <CardDetailContents
-                //         card={props.card}
-                //         contents={props.contents}
-                //         readonly={props.readonly || !canEditBoardCards}
-                //     />
-                //     {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}
-                // </CardDetailProvider>
 
 export default CardDetail
