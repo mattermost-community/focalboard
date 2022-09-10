@@ -15,6 +15,7 @@ type Props = {
 }
 
 function BlocksEditor(props: Props) {
+  const [nextType, setNextType] = useState<string>('')
   const [editing, setEditing] = useState<BlockData|null>(null)
   const [afterBlock, setAfterBlock] = useState<BlockData|null>(null)
   const contentOrder = useMemo(() => props.blocks.filter((b) => b.id).map((b) => b.id!), [props.blocks])
@@ -91,6 +92,7 @@ function BlocksEditor(props: Props) {
                           setAfterBlock={setAfterBlock}
                           onSave={async (b) => {
                               const newBlock = await props.onBlockModified(b)
+                              setNextType(registry.get(b.contentType).nextType || '')
                               setAfterBlock(newBlock)
                               return newBlock
                           }}
@@ -98,8 +100,11 @@ function BlocksEditor(props: Props) {
                       />
                       {afterBlock && afterBlock.id === d.id && (
                           <Editor
+                              initialValue=''
+                              initialContentType={nextType}
                               onSave={async (b) => {
                                   const newBlock = await props.onBlockCreated(b, afterBlock)
+                                  setNextType(registry.get(b.contentType).nextType || '')
                                   setAfterBlock(newBlock)
                                   return newBlock
                               }}

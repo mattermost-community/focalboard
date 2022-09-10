@@ -31,6 +31,8 @@ export default function Editor(props: Props) {
 
     const CurrentBlockInput = currentBlockType?.Input
 
+    console.log(value)
+
     return (
         <div className='Editor'>
             {currentBlockType === null &&
@@ -52,15 +54,11 @@ export default function Editor(props: Props) {
                     onChange={setValue}
                     value={value}
                     onCancel={() => {
-                        console.log("cancelling")
                         setValue('')
                         setCurrentBlockType(null)
                     }}
                     onSave={(val: string) => {
                         props.onSave({value: val, contentType: currentBlockType.name, id: props.id})
-                        const nextType = contentBlocks.get(currentBlockType.nextType || '')
-                        setValue('')
-                        setCurrentBlockType(nextType || null)
                     }}
                 />}
         </div>

@@ -3,15 +3,20 @@ import {BlockInputProps, ContentType} from '../types'
 
 import './attachment.scss'
 
-const Attachment: ContentType = {
+type FileInfo = {
+    file: string|File
+    filename: string
+}
+
+const Attachment: ContentType<FileInfo> = {
     name: 'attachment',
     displayName: 'Attachment',
     slashCommand: '/attachment',
     prefix: '',
     runSlashCommand: (): void => {},
     editable: false,
-    Display: (props: BlockInputProps) => <div className='AttachmentView'>📎 {props.value}</div>,
-    Input: (props: BlockInputProps) => {
+    Display: (props: BlockInputProps<FileInfo>) => <div className='AttachmentView'>📎 {props.value.filename}</div>,
+    Input: (props: BlockInputProps<FileInfo>) => {
         const ref = useRef<HTMLInputElement|null>(null)
         useEffect(() => {
             ref.current?.click()
@@ -28,7 +33,8 @@ const Attachment: ContentType = {
                         for (let i = 0; i < files.length; i++) {
                             const file = files.item(i)
                             if (file) {
-                                props.onSave(file.name as string)
+                                const file = (e.currentTarget?.files || [])[0]
+                                props.onSave({file: file, filename: file.name})
                             }
                         }
                     }
@@ -38,9 +44,9 @@ const Attachment: ContentType = {
     }
 }
 
-Attachment.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void): void => {
+Attachment.runSlashCommand = (changeType: (contentType: ContentType<FileInfo>) => void, changeValue: (value: FileInfo) => void): void => {
     changeType(Attachment)
-    changeValue('')
+    changeValue({} as any)
 }
 
 export default Attachment

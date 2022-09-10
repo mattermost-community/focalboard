@@ -152,9 +152,22 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
         let data: any = v?.title
         if (v?.type === 'image') {
-            console.log(v)
             data = {
                 file: v?.fields.fileId,
+            }
+        }
+
+        if (v?.type === 'attachment') {
+            data = {
+                file: v?.fields.fileId,
+                filename: v?.fields.filename,
+            }
+        }
+
+        if (v?.type === 'video') {
+            data = {
+                file: v?.fields.fileId,
+                filename: v?.fields.filename,
             }
         }
 
@@ -164,8 +177,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 checked: v?.fields.value,
             }
         }
-
-        console.log(data)
 
         return {
             id: v?.id,
@@ -290,22 +301,22 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <BlocksEditor
                     blocks={blocks}
                     onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
-                        console.log(block)
                         if (block.contentType === 'text' && block.value === '') {
                             return null
                         }
                         let newBlock: Block
                         if (block.contentType === 'checkbox') {
                             newBlock = await addBlock(card, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
-                        } else if (block.contentType === 'image') {
+                        } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
                             const newFileId = await octoClient.uploadFile(card.boardId, block.value.file)
-                            newBlock = await addBlock(card, intl, '', {fileId: newFileId}, block.contentType, afterBlock?.id, dispatch)
+                            newBlock = await addBlock(card, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
                         } else {
                             newBlock = await addBlock(card, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
                         }
                         return {...block, id: newBlock.id}
                     }}
                     onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
+                        console.log(block)
                         const originalContentBlock = props.contents.flatMap((b) => b).find((b) => b.id === block.id)
                         if (!originalContentBlock) {
                             return null

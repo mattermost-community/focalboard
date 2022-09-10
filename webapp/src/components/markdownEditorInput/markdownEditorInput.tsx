@@ -148,6 +148,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             setEditorState(generateEditorState(initialText || ''))
             setInitialTextCache(initialText)
         }
+        console.log("EDITORS STATE TEXT", editorState.getCurrentContent().getPlainText())
     }, [initialText])
 
     const [isMentionPopoverOpen, setIsMentionPopoverOpen] = useState(false)
@@ -240,8 +241,9 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return
         }
         const text = editorState.getCurrentContent().getPlainText()
+        console.log("GETTING TEXT ON EDIT", text)
         onBlur && onBlur(text)
-    }, [editorState, onBlur])
+    }, [editorState.getCurrentContent().getPlainText(), onBlur, confirmAddUser])
 
     const onMentionPopoverOpenChange = useCallback((open: boolean) => {
         setIsMentionPopoverOpen(open)
