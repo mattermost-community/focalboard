@@ -10,9 +10,6 @@
 }
 
 .cardFollowBtn {
-    float: right;
-    height: 100%;
-
     &.follow {
         color: rgba(var(--center-channel-color-rgb), 0.64);
         background-color: rgba(var(--center-channel-color-rgb), 0.08);
