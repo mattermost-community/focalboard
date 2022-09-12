@@ -18,19 +18,23 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton dialog__close size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="box-area"
@@ -93,19 +97,23 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton dialog__close size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="box-area"

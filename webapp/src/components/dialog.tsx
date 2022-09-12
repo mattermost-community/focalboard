@@ -16,7 +16,7 @@ type Props = {
     toolbar?: React.ReactNode
     hideCloseButton?: boolean
     className?: string
-    title?: string
+    title?: JSX.Element
     onClose: () => void,
 }
 
@@ -58,17 +58,7 @@ const Dialog = (props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
-                        {title && <h1 className='dialog-title'>{title}</h1>}
-                        {
-                            !props.hideCloseButton &&
-                            <IconButton
-                                className='dialog__close'
-                                onClick={props.onClose}
-                                icon={<CloseIcon/>}
-                                title={closeDialogText}
-                                size='medium'
-                            />
-                        }
+                        {<h1 className='dialog-title'>{title || ''}</h1>}
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}
                             {toolsMenu && <MenuWrapper>
@@ -78,6 +68,16 @@ const Dialog = (props: Props) => {
                                 />
                                 {toolsMenu}
                             </MenuWrapper>
+                            }
+                            {
+                                !props.hideCloseButton &&
+                                <IconButton
+                                    className='dialog__close'
+                                    onClick={props.onClose}
+                                    icon={<CloseIcon/>}
+                                    title={closeDialogText}
+                                    size='medium'
+                                />
                             }
                         </div>
                     </div>
