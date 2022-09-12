@@ -64,7 +64,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 
@@ -89,7 +89,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if page < 0 {
-		a.customErrorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("Invalid page parameter"))
 	}
 
 	perPage, err := strconv.Atoi(query.Get("per_page"))
@@ -180,7 +180,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 

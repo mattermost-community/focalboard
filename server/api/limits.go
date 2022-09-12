@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 func (a *API) registerLimitsRoutes(r *mux.Router) {
@@ -73,7 +74,7 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "", errAPINotSupportedInStandaloneMode)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 

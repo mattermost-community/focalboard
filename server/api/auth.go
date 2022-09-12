@@ -57,17 +57,13 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
-	}
-
-	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
 		return
 	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		a.errorResponse(w, r, model.NewErrUnauthorized("not permitted in single-user mode"))
 		return
 	}
 
@@ -92,7 +88,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 	if loginData.Type == "normal" {
 		token, err := a.app.Login(loginData.Username, loginData.Email, loginData.Password, loginData.MfaToken)
 		if err != nil {
-			a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
+			a.errorResponse(w, r, model.NewErrUnauthorized("incorrect login"))
 			return
 		}
 		json, err := json.Marshal(model.LoginResponse{Token: token})
@@ -106,7 +102,7 @@ func (a *API) handleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.customErrorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid login type", nil)
+	a.errorResponse(w, r, model.NewErrBadRequest("invalid login type"))
 }
 
 func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
@@ -127,17 +123,13 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
-	}
-
-	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
 		return
 	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		a.errorResponse(w, r, model.NewErrUnauthorized("not permitted in single-user mode"))
 		return
 	}
 
@@ -150,7 +142,7 @@ func (a *API) handleLogout(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("userID", session.UserID)
 
 	if err := a.app.Logout(session.ID); err != nil {
-		a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "incorrect login", err)
+		a.errorResponse(w, r, model.NewErrUnauthorized("incorrect logout"))
 		return
 	}
 
@@ -185,17 +177,13 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
-	}
-
-	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
 		return
 	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		a.errorResponse(w, r, model.NewErrUnauthorized("not permitted in single-user mode"))
 		return
 	}
 
@@ -223,7 +211,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if registerData.Token != team.SignupToken {
-			a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid token", nil)
+			a.errorResponse(w, r, model.NewErrUnauthorized("invalid token"))
 			return
 		}
 	} else {
@@ -234,7 +222,7 @@ func (a *API) handleRegister(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if userCount > 0 {
-			a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "no sign-up token and user(s) already exist", nil)
+			a.errorResponse(w, r, model.NewErrUnauthorized("no sign-up token and user(s) already exist"))
 			return
 		}
 	}
@@ -292,17 +280,13 @@ func (a *API) handleChangePassword(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
-	}
-
-	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
 		return
 	}
 
 	if len(a.singleUserToken) > 0 {
 		// Not permitted in single-user mode
-		a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "not permitted in single-user mode", nil)
+		a.errorResponse(w, r, model.NewErrUnauthorized("not permitted in single-user mode"))
 		return
 	}
 
@@ -349,7 +333,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		a.logger.Debug(`attachSession`, mlog.Bool("single_user", len(a.singleUserToken) > 0))
 		if len(a.singleUserToken) > 0 {
 			if required && (token != a.singleUserToken) {
-				a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid single user token", nil)
+				a.errorResponse(w, r, model.NewErrUnauthorized("invalid single user token"))
 				return
 			}
 
@@ -389,7 +373,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 		session, err := a.app.GetSession(token)
 		if err != nil {
 			if required {
-				a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+				a.errorResponse(w, r, model.NewErrUnauthorized(err.Error()))
 				return
 			}
 
@@ -404,7 +388,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				mlog.String("want", a.authService),
 				mlog.String("got", authService),
 			)
-			a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "", err)
+			a.errorResponse(w, r, model.NewErrUnauthorized(err.Error()))
 			return
 		}
 
@@ -418,7 +402,7 @@ func (a *API) adminRequired(handler func(w http.ResponseWriter, r *http.Request)
 		// Currently, admin APIs require local unix connections
 		conn := GetContextConn(r)
 		if _, isUnix := conn.(*net.UnixConn); !isUnix {
-			a.customErrorResponse(w, r.URL.Path, http.StatusUnauthorized, "not a local unix connection", nil)
+			a.errorResponse(w, r, model.NewErrUnauthorized("not a local unix connection"))
 			return
 		}
 

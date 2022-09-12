@@ -298,7 +298,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 
 	// a user can update only own config
 	if userID != session.UserID {
-		a.customErrorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+		a.errorResponse(w, r, model.NewErrForbidden(""))
 		return
 	}
 

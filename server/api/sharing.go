@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 
@@ -158,7 +159,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
 			mlog.String("boardID", sharing.ID),
 			mlog.String("userID", userID))
-		a.customErrorResponse(w, r.URL.Path, http.StatusInternalServerError, "Turning on sharing for board failed, see log for details.", nil)
+		a.errorResponse(w, r, errors.New("Turning on sharing for board failed, see log for details."))
 		return
 	}
 

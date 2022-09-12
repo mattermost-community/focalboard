@@ -660,7 +660,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boardMetadata)
 	if err != nil {
-		a.customErrorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

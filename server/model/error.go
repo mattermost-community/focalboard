@@ -142,6 +142,20 @@ func (e *ErrInvalidCategory) Error() string {
 	return e.msg
 }
 
+type ErrNotImplemented struct {
+	msg string
+}
+
+func NewErrNotImplemented(msg string) *ErrNotImplemented {
+	return &ErrNotImplemented{
+		msg: msg,
+	}
+}
+
+func (ni *ErrNotImplemented) Error() string {
+	return ni.msg
+}
+
 // IsErrBadRequest returns true if `err` is or wraps one of:
 // - model.ErrBadRequest
 // - model.ErrViewsLimitReached
@@ -275,12 +289,19 @@ func IsErrNotFound(err error) bool {
 }
 
 // IsErrNotImplemented returns true if `err` is or wraps one of:
+// - model.ErrNotImplemented
 // - model.ErrInsufficientLicense.
 func IsErrNotImplemented(err error) bool {
 	if err == nil {
 		return false
 	}
 
-	// check if this is a sql.ErrInsufficientLicense
+	// check if this is a model.ErrNotImplemented
+	var eni *ErrNotImplemented
+	if errors.As(err, &eni) {
+		return true
+	}
+
+	// check if this is a model.ErrInsufficientLicense
 	return errors.Is(err, ErrInsufficientLicense)
 }

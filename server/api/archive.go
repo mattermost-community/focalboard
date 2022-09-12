@@ -198,7 +198,8 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.customErrorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
+		return
 	}
 
 	vars := mux.Vars(r)
