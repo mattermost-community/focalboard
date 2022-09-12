@@ -18,15 +18,9 @@ exports[`components/cardDialog already following card 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
           >
@@ -52,6 +46,15 @@ exports[`components/cardDialog already following card 1`] = `
                 />
               </button>
             </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -211,18 +214,22 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="CardDetail content is-limited"
@@ -435,15 +442,9 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
           >
@@ -456,6 +457,15 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
                 </span>
               </button>
             </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -547,15 +557,9 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
           >
@@ -706,6 +710,15 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                 </div>
               </div>
             </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -865,15 +878,9 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
           >
@@ -899,6 +906,15 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
                 />
               </button>
             </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1058,15 +1074,9 @@ exports[`components/cardDialog should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
           >
@@ -1092,6 +1102,15 @@ exports[`components/cardDialog should match snapshot 1`] = `
                 />
               </button>
             </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1251,15 +1270,9 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
           >
@@ -1285,6 +1298,15 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
                 />
               </button>
             </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
