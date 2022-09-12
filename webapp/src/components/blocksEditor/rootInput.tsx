@@ -75,13 +75,13 @@ export default function RootInput(props: Props){
                 }
             }}
             onChange={(ct: ContentType|null) => {
-                const [_, ...args] = props.value.split(' ')
                 if (ct) {
+                    const args = props.value.split(' ').slice(1)
                     ct.runSlashCommand(props.onChangeType, props.onChange, ...args)
                 }
             }}
             onBlur={() => {
-                const [command, ..._] = props.value.trimStart().split(' ')
+                const command = props.value.trimStart().split(' ')[0]
                 const block = registry.getBySlashCommandPrefix(command)
                 if (command === '' || !block) {
                     props.onSave(props.value, 'text')
@@ -102,7 +102,7 @@ export default function RootInput(props: Props){
                     props.onChange('')
                 }
                 if (e.key === "Enter") {
-                    const [command, ..._] = props.value.trimStart().split(' ')
+                    const command = props.value.trimStart().split(' ')[0]
                     const block = registry.getBySlashCommandPrefix(command)
                     if (command === '' || !block) {
                         e.preventDefault()

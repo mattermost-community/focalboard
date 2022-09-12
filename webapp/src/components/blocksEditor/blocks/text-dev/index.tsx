@@ -1,4 +1,5 @@
 import React, {useRef, useEffect} from 'react'
+
 import {BlockInputProps, ContentType} from '../types'
 import {Utils} from '../../../../utils'
 

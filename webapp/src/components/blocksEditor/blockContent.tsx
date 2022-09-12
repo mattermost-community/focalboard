@@ -1,13 +1,15 @@
-import React from 'react';
-import {useDrag, useDrop} from 'react-dnd';
+import React from 'react'
+import {useDrag, useDrop} from 'react-dnd'
 
-import Editor from './editor';
-import * as registry from './blocks';
-import {BlockData} from './blocks/types';
-import GripIcon from '../../widgets/icons/grip';
-import AddIcon from '../../widgets/icons/add';
+import GripIcon from '../../widgets/icons/grip'
 
-import './blockContent.scss';
+import AddIcon from '../../widgets/icons/add'
+
+import Editor from './editor'
+import * as registry from './blocks'
+import {BlockData} from './blocks/types'
+
+import './blockContent.scss'
 
 type Props = {
     block: BlockData
@@ -51,8 +53,8 @@ function BlockContent(props: Props) {
     if (editing && editing.id === block.id) {
         return (
             <Editor
-                onSave={async (block) => {
-                    const updatedBlock = await onSave(block)
+                onSave={async (b) => {
+                    const updatedBlock = await onSave(b)
                     props.setEditing(null)
                     props.setAfterBlock(updatedBlock)
                     return updatedBlock

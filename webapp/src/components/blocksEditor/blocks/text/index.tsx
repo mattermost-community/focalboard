@@ -1,5 +1,6 @@
 import React from 'react'
-import {MarkdownEditor} from '../../../markdownEditor';
+
+import {MarkdownEditor} from '../../../markdownEditor'
 import {Utils} from '../../../../utils'
 
 import {BlockInputProps, ContentType} from '../types'

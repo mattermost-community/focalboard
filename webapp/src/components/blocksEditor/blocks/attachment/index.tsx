@@ -1,4 +1,5 @@
 import React, {useRef, useEffect, useState} from 'react'
+
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
 import {useAppSelector} from '../../../../store/hooks'
@@ -63,7 +64,6 @@ const Attachment: ContentType<FileInfo> = {
                         for (let i = 0; i < files.length; i++) {
                             const file = files.item(i)
                             if (file) {
-                                const file = (e.currentTarget?.files || [])[0]
                                 props.onSave({file: file, filename: file.name})
                             }
                         }

@@ -155,7 +155,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
     }
 
     const blocks = useMemo(() => props.contents.flatMap((value: Block | Block[]): BlockData<any> => {
-        let v: Block = Array.isArray(value) ? value[0] : value
+        const v: Block = Array.isArray(value) ? value[0] : value
 
         let data: any = v?.title
         if (v?.type === 'image') {
