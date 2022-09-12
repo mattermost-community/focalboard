@@ -196,6 +196,11 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	//   description: string to filter users list
 	//   required: false
 	//   type: string
+	// - name: exclude_bots
+	//   in: query
+	//   description: exclude bot users
+	//   required: false
+	//   type: boolean
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -215,6 +220,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	query := r.URL.Query()
 	searchQuery := query.Get("search")
+	excludeBots := r.URL.Query().Get("exclude_bots") == True
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
 		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
@@ -234,7 +240,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 		asGuestUser = userID
 	}
 
-	users, err := a.app.SearchTeamUsers(teamID, searchQuery, asGuestUser)
+	users, err := a.app.SearchTeamUsers(teamID, searchQuery, asGuestUser, excludeBots)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return

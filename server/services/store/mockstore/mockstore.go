@@ -1413,18 +1413,18 @@ func (mr *MockStoreMockRecorder) SearchUserChannels(arg0, arg1, arg2 interface{}
 }
 
 // SearchUsersByTeam mocks base method.
-func (m *MockStore) SearchUsersByTeam(arg0, arg1, arg2 string) ([]*model.User, error) {
+func (m *MockStore) SearchUsersByTeam(arg0, arg1, arg2 string, arg3 bool) ([]*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchUsersByTeam indicates an expected call of SearchUsersByTeam.
-func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1, arg2, arg3)
 }
 
 // SendMessage mocks base method.
