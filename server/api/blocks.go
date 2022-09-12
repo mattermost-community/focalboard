@@ -979,7 +979,7 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	err = a.app.PatchBlockAndNotify(block.ParentID, patch, userID, false)
+	_, err = a.app.PatchBlock(block.ParentID, patch, userID)
 	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
 		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
 		return
