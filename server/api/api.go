@@ -77,6 +77,13 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	apiv2.Use(a.panicHandler)
 	apiv2.Use(a.requireCSRFToken)
 
+	/* ToDo:
+	apiv3 := r.PathPrefix("/api/v3").Subrouter()
+	apiv3.Use(a.panicHandler)
+	apiv3.Use(a.requireCSRFToken)
+	*/
+
+	// V2 routes (ToDo: migrate these to V3 when ready to ship V3)
 	a.registerUsersRoutes(apiv2)
 	a.registerAuthRoutes(apiv2)
 	a.registerMembersRoutes(apiv2)
@@ -96,6 +103,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerTemplatesRoutes(apiv2)
 	a.registerBoardsRoutes(apiv2)
 	a.registerBlocksRoutes(apiv2)
+
+	// V3 routes
+	a.registerCardsRoutes(apiv2)
 
 	// System routes are outside the /api/v2 path
 	a.registerSystemRoutes(r)
@@ -192,6 +202,11 @@ func (a *API) errorResponse(w http.ResponseWriter, api string, code int, message
 	}
 
 	setResponseHeader(w, "Content-Type", "application/json")
+
+	if sourceError != nil && message != sourceError.Error() {
+		message += "; " + sourceError.Error()
+	}
+
 	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
 	if err != nil {
 		data = []byte("{}")

@@ -61,6 +61,9 @@ const MultiPerson = (props: PropertyProps) => {
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
     const formatOptionLabel = (user: any) => {
+        if(!user) {
+            return
+        }
         let profileImg
         if (imageURLForUser) {
             profileImg = imageURLForUser(user.id)
@@ -83,9 +86,9 @@ const MultiPerson = (props: PropertyProps) => {
 
     let users: IUser[]  = []
 
-    if(typeof propertyValue === 'string') {
+    if(typeof propertyValue === 'string' && propertyValue !== '') {
         users  = [boardUsersById[propertyValue as string]]
-    } else if(Array.isArray(propertyValue)) {
+    } else if(Array.isArray(propertyValue) && propertyValue.length > 0) {
         users =  propertyValue.map(id => boardUsersById[id])
     }
 
