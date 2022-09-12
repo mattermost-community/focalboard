@@ -11,16 +11,14 @@
     }
 
     .dialog-title {
-        margin-top: 24px;
+        margin: 0;
         font-weight: 600;
         font-size: 22px;
         line-height: 28px;
     }
 
     .dialog__close {
-        top: 18px;
-        right: 18px;
-        position: absolute;
+        margin: 0 -14px 0 0;
     }
 
     .backdrop {
@@ -71,18 +69,18 @@
             bottom: 0;
         }
 
-        >* {
+        > * {
             flex-shrink: 0;
         }
 
-        >.banner {
+        > .banner {
             background-color: rgba(230, 220, 192, 0.9);
             text-align: center;
             padding: 10px;
             color: #222;
         }
 
-        >.banner.error {
+        > .banner.error {
             background-color: rgba(230, 192, 192, 0.9);
         }
 
@@ -100,19 +98,22 @@
             }
         }
 
-        >.toolbar {
+        > .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px;
+            padding: 24px 32px;
             justify-content: space-between;
+            align-items: center;
         }
 
         .toolbar--right {
             display: flex;
             gap: 8px;
+            align-items: center;
+            height: 28px;
         }
 
-        >.content {
+        > .content {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -126,7 +127,7 @@
             }
         }
 
-        >.content.fullwidth {
+        > .content.fullwidth {
             padding-left: 78px;
         }
     }
