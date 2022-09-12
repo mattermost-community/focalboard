@@ -1637,6 +1637,10 @@ paths:
                   in: query
                   name: search
                   type: string
+                - description: exclude bot users
+                  in: query
+                  name: exclude_bots
+                  type: boolean
             produces:
                 - application/json
             responses:
