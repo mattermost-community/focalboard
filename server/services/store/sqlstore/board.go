@@ -412,9 +412,6 @@ func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *mode
 	if err != nil {
 		return nil, err
 	}
-	if existingBoard == nil {
-		return nil, BoardNotFoundErr{boardID}
-	}
 
 	board := boardPatch.Patch(existingBoard)
 	return s.insertBoard(db, board, userID)
