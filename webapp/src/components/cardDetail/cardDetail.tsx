@@ -12,6 +12,7 @@ import {ContentBlock} from '../../blocks/contentBlock'
 import {Block, ContentBlockTypes, createBlock} from '../../blocks/block'
 import mutator from '../../mutator'
 import octoClient from '../../octoClient'
+import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 import {Focusable} from '../../widgets/editable'
 import EditableArea from '../../widgets/editableArea'
@@ -90,11 +91,6 @@ async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fie
     const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
     dispatch(updateContents([newBlock]))
     return newBlock
-}
-
-function moveBlockNewEditor(boardId: string, blockId: string, dstBlockId: string, where: 'after'|'before'): void {
-    // TODO: Make this a mutation
-    octoClient.moveBlockTo(boardId, blockId, where, dstBlockId)
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
@@ -349,12 +345,27 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         }}
                         onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
                             if (block.id) {
+                                const idx = card.fields.contentOrder.indexOf(block.id)
+                                let sourceBlockId: string
+                                let sourceWhere: 'after'|'before'
+                                if (idx === -1) {
+                                    Utils.logError("Unable to find the block id in the order of the current block")
+                                    return
+                                }
+                                if (idx === 0) {
+                                    sourceBlockId = card.fields.contentOrder[1] as string
+                                    sourceWhere = 'before'
+                                } else {
+                                    sourceBlockId = card.fields.contentOrder[idx-1] as string
+                                    sourceWhere = 'after'
+                                }
                                 if (afterBlock && afterBlock.id) {
-                                    moveBlockNewEditor(card.boardId, block.id, afterBlock.id, "after")
+                                    mutator.moveContentBlock(card.boardId, block.id, afterBlock.id, "after", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
                                     return
                                 }
                                 if (beforeBlock && beforeBlock.id) {
                                     moveBlockNewEditor(card.boardId, block.id, beforeBlock.id, "before")
+                                    mutator.moveContentBlock(card.boardId, block.id, beforeBlock.id, "before", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
                                 }
                             }
                         }}

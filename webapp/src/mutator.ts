@@ -1061,6 +1061,19 @@ class Mutator {
         )
     }
 
+    async moveContentBlock(boardId: string, blockId: string, dstBlockId: string, where: 'after'|'before', srcBlockId: string, srcWhere: 'after'|'before', description: string): Promise<void> {
+        return undoManager.perform(
+            async () => {
+                await octoClient.moveBlockTo(boardId, blockId, where, dstBlockId)
+            },
+            async () => {
+                await octoClient.moveBlockTo(boardId, blockId, srcWhere, srcBlockId)
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async addBoardFromTemplate(
         teamId: string,
         intl: IntlShape,
