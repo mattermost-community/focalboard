@@ -752,8 +752,9 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
 	// Explicit membership not found
 	if model.IsErrNotFound(err) {
+		var user *model.User
 		// No synthetic memberships for guests
-		user, err := s.GetUserByID(userID)
+		user, err = s.GetUserByID(userID)
 		if err != nil {
 			return nil, err
 		}
