@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -836,66 +837,59 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if where != "after" && where != "before" {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid where parameter, use before or after", nil)
+		message := fmt.Sprintf("invalid where parameter, use before or after")
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
 	}
 
 	if userID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
 	block, err := a.app.GetBlockByID(blockID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if block == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if board.ID != block.BoardID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
 	dstBlock, err := a.app.GetBlockByID(dstBlockID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if dstBlock == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if board.ID != block.BoardID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
 	if block.ParentID != dstBlock.ParentID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+		message := fmt.Sprintf("invalid dstBlockId")
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board cards"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board cards"))
 		return
 	}
 
 	card, err := a.app.GetBlockByID(block.ParentID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -930,8 +924,15 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 		newContentOrder = append(newContentOrder, id)
 	}
 
-	if !foundDst || !foundSrc {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", nil)
+	if !foundSrc {
+		message := fmt.Sprintf("source block not found")
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
+		return
+	}
+
+	if !foundDst {
+		message := fmt.Sprintf("destination block not found")
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
@@ -948,12 +949,12 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, err = a.app.PatchBlock(block.ParentID, patch, userID)
-	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
+	if errors.Is(err, model.ErrPatchUpdatesLimitedCards) {
+		a.errorResponse(w, r, err)
 		return
 	}
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
