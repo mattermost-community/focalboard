@@ -340,13 +340,15 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		Columns(boardFields("")...)
 
 	now := utils.GetMillis()
+	board.ModifiedBy = userID
+	board.UpdateAt = now
 
 	insertQueryValues := map[string]interface{}{
 		"id":               board.ID,
 		"team_id":          board.TeamID,
 		"channel_id":       board.ChannelID,
 		"created_by":       board.CreatedBy,
-		"modified_by":      userID,
+		"modified_by":      board.ModifiedBy,
 		"type":             board.Type,
 		"title":            board.Title,
 		"minimum_role":     board.MinimumRole,
@@ -358,14 +360,14 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"properties":       propertiesBytes,
 		"card_properties":  cardPropertiesBytes,
 		"create_at":        board.CreateAt,
-		"update_at":        now,
+		"update_at":        board.UpdateAt,
 		"delete_at":        board.DeleteAt,
 	}
 
 	if existingBoard != nil {
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"boards").
 			Where(sq.Eq{"id": board.ID}).
-			Set("modified_by", userID).
+			Set("modified_by", board.ModifiedBy).
 			Set("type", board.Type).
 			Set("channel_id", board.ChannelID).
 			Set("minimum_role", board.MinimumRole).
@@ -377,7 +379,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("template_version", board.TemplateVersion).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
-			Set("update_at", now).
+			Set("update_at", board.UpdateAt).
 			Set("delete_at", board.DeleteAt)
 
 		if _, err := query.Exec(); err != nil {
@@ -385,9 +387,10 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			return nil, fmt.Errorf("insertBoard error occurred while updating existing board %s: %w", board.ID, err)
 		}
 	} else {
-		insertQueryValues["created_by"] = userID
-		insertQueryValues["create_at"] = now
-		insertQueryValues["update_at"] = now
+		board.CreatedBy = userID
+		board.CreateAt = now
+		insertQueryValues["created_by"] = board.CreatedBy
+		insertQueryValues["create_at"] = board.CreateAt
 
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards")
 		if _, err := query.Exec(); err != nil {
@@ -402,16 +405,13 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		return nil, fmt.Errorf("failed to insert board %s history: %w", board.ID, err)
 	}
 
-	return s.getBoard(db, board.ID)
+	return board, nil
 }
 
 func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error) {
 	existingBoard, err := s.getBoard(db, boardID)
 	if err != nil {
 		return nil, err
-	}
-	if existingBoard == nil {
-		return nil, model.NewErrNotFound("board ID=" + boardID)
 	}
 
 	board := boardPatch.Patch(existingBoard)
