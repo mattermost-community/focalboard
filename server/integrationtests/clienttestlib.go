@@ -2,6 +2,7 @@ package integrationtests
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"testing"
@@ -16,6 +17,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -449,6 +451,31 @@ func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *mod
 	board, resp := th.Client.CreateBoard(newBoard)
 	th.CheckOK(resp)
 	return board
+}
+
+func (th *TestHelper) CreateBoardAndCards(teamdID string, boardType model.BoardType, numCards int) (*model.Board, []*model.Card) {
+	board := th.CreateBoard(teamdID, boardType)
+	cards := make([]*model.Card, 0, numCards)
+	for i := 0; i < numCards; i++ {
+		card := &model.Card{
+			Title:        fmt.Sprintf("test card %d", i+1),
+			ContentOrder: []string{utils.NewID(utils.IDTypeBlock), utils.NewID(utils.IDTypeBlock), utils.NewID(utils.IDTypeBlock)},
+			Icon:         "😱",
+			Properties:   th.MakeCardProps(5),
+		}
+		newCard, resp := th.Client.CreateCard(board.ID, card, true)
+		th.CheckOK(resp)
+		cards = append(cards, newCard)
+	}
+	return board, cards
+}
+
+func (th *TestHelper) MakeCardProps(count int) map[string]any {
+	props := make(map[string]any)
+	for i := 0; i < count; i++ {
+		props[utils.NewID(utils.IDTypeBlock)] = utils.NewID(utils.IDTypeBlock)
+	}
+	return props
 }
 
 func (th *TestHelper) GetUser1() *model.User {

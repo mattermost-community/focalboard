@@ -21,19 +21,23 @@ exports[`components/boardSelector renders with no results 1`] = `
           <div
             class="toolbar"
           >
-            <button
-              aria-label="Close dialog"
-              class="IconButton dialog__close size--medium"
-              title="Close dialog"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-close CloseIcon"
-              />
-            </button>
+            <h1
+              class="dialog-title"
+            />
             <div
               class="toolbar--right"
-            />
+            >
+              <button
+                aria-label="Close dialog"
+                class="IconButton dialog__close size--medium"
+                title="Close dialog"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="BoardSelectorBody"
@@ -124,19 +128,23 @@ exports[`components/boardSelector renders with some results 1`] = `
           <div
             class="toolbar"
           >
-            <button
-              aria-label="Close dialog"
-              class="IconButton dialog__close size--medium"
-              title="Close dialog"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-close CloseIcon"
-              />
-            </button>
+            <h1
+              class="dialog-title"
+            />
             <div
               class="toolbar--right"
-            />
+            >
+              <button
+                aria-label="Close dialog"
+                class="IconButton dialog__close size--medium"
+                title="Close dialog"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="BoardSelectorBody"
@@ -325,19 +333,23 @@ exports[`components/boardSelector renders without start searching 1`] = `
           <div
             class="toolbar"
           >
-            <button
-              aria-label="Close dialog"
-              class="IconButton dialog__close size--medium"
-              title="Close dialog"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-close CloseIcon"
-              />
-            </button>
+            <h1
+              class="dialog-title"
+            />
             <div
               class="toolbar--right"
-            />
+            >
+              <button
+                aria-label="Close dialog"
+                class="IconButton dialog__close size--medium"
+                title="Close dialog"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="BoardSelectorBody"

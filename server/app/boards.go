@@ -15,9 +15,7 @@ import (
 )
 
 var (
-	ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
-	ErrNewBoardCannotHaveID   = errors.New("new board cannot have an ID")
-	ErrInsufficientLicense    = errors.New("appropriate license required")
+	ErrNewBoardCannotHaveID = errors.New("new board cannot have an ID")
 )
 
 const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
@@ -25,9 +23,6 @@ const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
-	if model.IsErrNotFound(err) {
-		return nil, nil
-	}
 	if err != nil {
 		return nil, err
 	}
@@ -37,24 +32,19 @@ func (a *App) GetBoard(boardID string) (*model.Board, error) {
 func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
 	license := a.store.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
-		return nil, nil, ErrInsufficientLicense
+		return nil, nil, model.ErrInsufficientLicense
 	}
 
 	board, err := a.GetBoard(boardID)
-	if err != nil {
-		return nil, nil, err
-	}
-	if board == nil {
+	if model.IsErrNotFound(err) {
 		// Board may have been deleted, retrieve most recent history instead
 		board, err = a.getBoardHistory(boardID, true)
 		if err != nil {
 			return nil, nil, err
 		}
 	}
-
-	if board == nil {
-		// Board not found
-		return nil, nil, nil
+	if err != nil {
+		return nil, nil, err
 	}
 
 	earliestTime, _, err := a.getBoardDescendantModifiedInfo(boardID, false)
@@ -319,7 +309,7 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 
 		board, err := a.store.GetBoard(boardID)
 		if model.IsErrNotFound(err) {
-			return nil, model.NewErrNotFound(boardID)
+			return nil, model.NewErrNotFound("board ID=" + boardID)
 		}
 		if err != nil {
 			return nil, err
@@ -519,7 +509,7 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 			return nil, err2
 		}
 		if isLastAdmin {
-			return nil, ErrBoardMemberIsLastAdmin
+			return nil, model.ErrBoardMemberIsLastAdmin
 		}
 	}
 
@@ -575,7 +565,7 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 			return err
 		}
 		if isLastAdmin {
-			return ErrBoardMemberIsLastAdmin
+			return model.ErrBoardMemberIsLastAdmin
 		}
 	}
 

@@ -38,14 +38,13 @@ func TestSharing(t *testing.T) {
 		boardID = board.ID
 
 		s, err := th.Server.App().GetSharing(boardID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, s)
 
 		sharing, resp := th.Client.GetSharing(boardID)
-		require.NoError(t, resp.Error)
-		require.NotNil(t, sharing)
-		require.False(t, sharing.Enabled)
-		require.Empty(t, sharing.ID)
+		th.CheckNotFound(resp)
+		require.Nil(t, sharing)
 	})
 
 	t.Run("POST sharing, config = false", func(t *testing.T) {
@@ -64,11 +63,8 @@ func TestSharing(t *testing.T) {
 		t.Run("GET sharing", func(t *testing.T) {
 			sharing, resp := th.Client.GetSharing(boardID)
 			// Expect empty sharing object
-			require.NoError(t, resp.Error)
-			require.NotNil(t, sharing)
-			require.False(t, sharing.Enabled)
-			require.Empty(t, sharing.ID)
-			require.Empty(t, sharing.Token)
+			th.CheckNotFound(resp)
+			require.Nil(t, sharing)
 		})
 	})
 

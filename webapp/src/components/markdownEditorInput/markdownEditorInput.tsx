@@ -73,7 +73,8 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         let users: IUser[]
 
         if (!me?.is_guest && (allowAddUsers || (board && board.type === BoardTypeOpen))) {
-            users = await octoClient.searchTeamUsers(term)
+            const excludeBots = true
+            users = await octoClient.searchTeamUsers(term, excludeBots)
         } else {
             users = boardUsers.
                 filter((user) => {

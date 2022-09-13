@@ -85,7 +85,7 @@ describe('components/createCategory/CreateCategory', () => {
         userEvent.click(cancelBtn as Element)
         expect(onCloseHandler).toBeCalledTimes(1)
 
-        const closeBtn = container.querySelector('.toolbar > .IconButton')
+        const closeBtn = container.querySelector('.toolbar .dialog__close')
         expect(closeBtn).toBeTruthy()
         userEvent.click(closeBtn as Element)
         expect(onCloseHandler).toBeCalledTimes(2)

@@ -127,7 +127,8 @@ const Person = (props: PropertyProps): JSX.Element => {
         if (!allowAddUsers) {
             return boardUsers.filter((u) => u.username.toLowerCase().includes(value.toLowerCase()))
         }
-        const allUsers = await client.searchTeamUsers(value)
+        const excludeBots = true
+        const allUsers = await client.searchTeamUsers(value, excludeBots)
         const usersInsideBoard: IUser[] = []
         const usersOutsideBoard: IUser[] = []
         for (const u of allUsers) {
