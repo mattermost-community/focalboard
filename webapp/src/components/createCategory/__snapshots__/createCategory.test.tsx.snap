@@ -20,7 +20,7 @@ exports[`components/createCategory/CreateCategory base case should match snapsho
         >
           <div>
             <h1
-              class="dialog-title "
+              class="dialog-title"
             >
               <span>
                 title

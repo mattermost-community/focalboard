@@ -20,7 +20,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
         >
           <div>
             <h1
-              class="dialog-title "
+              class="dialog-title"
             />
             <h5
               class="dialog-subtitle"
@@ -105,7 +105,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
         >
           <div>
             <h1
-              class="dialog-title "
+              class="dialog-title"
             />
             <h5
               class="dialog-subtitle"

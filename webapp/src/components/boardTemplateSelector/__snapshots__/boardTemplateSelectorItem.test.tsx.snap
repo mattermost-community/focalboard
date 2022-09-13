@@ -160,7 +160,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
           >
             <div>
               <h1
-                class="dialog-title "
+                class="dialog-title"
               />
               <h5
                 class="dialog-subtitle"

@@ -20,7 +20,7 @@ exports[`components/dialog should match snapshot 1`] = `
         >
           <div>
             <h1
-              class="dialog-title "
+              class="dialog-title"
             />
             <h5
               class="dialog-subtitle"
@@ -70,7 +70,7 @@ exports[`components/dialog should return dialog and click on cancel button 1`] =
         >
           <div>
             <h1
-              class="dialog-title "
+              class="dialog-title"
             />
             <h5
               class="dialog-subtitle"
