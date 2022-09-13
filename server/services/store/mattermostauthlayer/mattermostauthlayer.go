@@ -878,8 +878,11 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Join("Users as U on CM.userID = U.id").
 		Where(sq.Eq{"B.id": boardID}).
-		Where(sq.NotEq{"B.channel_id": ""})
+		Where(sq.NotEq{"B.channel_id": ""}).
+		// Filter out guests as they don't have synthetic membership
+		Where(sq.NotEq{"U.roles": "system_guest"})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -899,12 +902,7 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		existingMembers[m.UserID] = true
 	}
 	for _, m := range implicitMembers {
-		// No synthetic memberships for guests
-		user, err := s.GetUserByID(m.UserID)
-		if err != nil {
-			return nil, err
-		}
-		if !user.IsGuest && !existingMembers[m.UserID] {
+		if !existingMembers[m.UserID] {
 			members = append(members, m)
 		}
 	}
