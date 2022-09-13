@@ -573,7 +573,7 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
-        if (!Utils.isFocalboardPlugin()) {
+        if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
             return path
         }
 
