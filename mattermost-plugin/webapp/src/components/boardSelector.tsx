@@ -155,7 +155,7 @@ const BoardSelector = () => {
                 <div className='BoardSelectorBody'>
                     <div className='head'>
                         <div className='heading'>
-                            <h3 className='text-heading4'>
+                            <h3 className='text-heading4 col'>
                                 <FormattedMessage
                                     id='boardSelector.title'
                                     defaultMessage='Link boards'

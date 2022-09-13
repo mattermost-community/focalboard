@@ -16,7 +16,7 @@ exports[`components/createCategory/CreateCategory base case should match snapsho
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"

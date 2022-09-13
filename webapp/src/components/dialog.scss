@@ -104,6 +104,17 @@
             padding: 24px 32px;
             justify-content: space-between;
             align-items: center;
+
+            &.toolbar--invisible {
+                height: 0;
+                padding: 0;
+
+                .dialog__close {
+                    position: absolute;
+                    right: 32px;
+                    top: 18px;
+                }
+            }
         }
 
         .toolbar--right {

@@ -14,6 +14,7 @@ import DeleteIcon from '../../../../webapp/src/widgets/icons/delete'
 import Menu from '../../../../webapp/src/widgets/menu'
 import MenuWrapper from '../../../../webapp/src/widgets/menuWrapper'
 import {SuiteWindow} from '../../../../webapp/src/types/index'
+import CompassIcon from '../../../../webapp/src/widgets/icons/compassIcon'
 
 import {Permission} from '../../../../webapp/src/constants'
 
@@ -69,7 +70,7 @@ const RHSChannelBoardItem = (props: Props) => {
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
                                 name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
-                                icon={<DeleteIcon/>}
+                                icon={<CompassIcon icon='link-variant-off'/>}
                                 onClick={() => {
                                     onUnlinkBoard(board)
                                 }}

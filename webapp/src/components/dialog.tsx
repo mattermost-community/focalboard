@@ -57,7 +57,7 @@ const Dialog = (props: Props) => {
                     role='dialog'
                     className='dialog'
                 >
-                    <div className='toolbar'>
+                    <div className={`toolbar ${title ? '' : 'toolbar--invisible'}`}>
                         {<h1 className='dialog-title'>{title || ''}</h1>}
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}

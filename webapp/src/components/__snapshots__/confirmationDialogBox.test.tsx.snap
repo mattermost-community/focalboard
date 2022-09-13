@@ -16,7 +16,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"
@@ -95,7 +95,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"

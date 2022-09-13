@@ -10,20 +10,24 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton 1`] = `
     <div
       class="d-flex"
     >
-      <svg
-        class="CardIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="menu-option__icon"
       >
-        <rect
-          height="40"
-          rx="3"
-          ry="3"
-          width="60"
-          x="20"
-          y="30"
-        />
-      </svg>
+        <svg
+          class="CardIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="40"
+            rx="3"
+            ry="3"
+            width="60"
+            x="20"
+            y="30"
+          />
+        </svg>
+      </div>
     </div>
     <div
       class="menu-option__content"
@@ -62,20 +66,24 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
     <div
       class="d-flex"
     >
-      <svg
-        class="CardIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="menu-option__icon"
       >
-        <rect
-          height="40"
-          rx="3"
-          ry="3"
-          width="60"
-          x="20"
-          y="30"
-        />
-      </svg>
+        <svg
+          class="CardIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="40"
+            rx="3"
+            ry="3"
+            width="60"
+            x="20"
+            y="30"
+          />
+        </svg>
+      </div>
     </div>
     <div
       class="menu-option__content"
@@ -117,15 +125,19 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CheckIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <polyline
-                      points="20,60 40,80 80,40"
-                    />
-                  </svg>
+                    <svg
+                      class="CheckIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="20,60 40,80 80,40"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -191,20 +203,24 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and addCar
     <div
       class="d-flex"
     >
-      <svg
-        class="CardIcon Icon"
-        viewBox="0 0 100 100"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="menu-option__icon"
       >
-        <rect
-          height="40"
-          rx="3"
-          ry="3"
-          width="60"
-          x="20"
-          y="30"
-        />
-      </svg>
+        <svg
+          class="CardIcon Icon"
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="40"
+            rx="3"
+            ry="3"
+            width="60"
+            x="20"
+            y="30"
+          />
+        </svg>
+      </div>
     </div>
     <div
       class="menu-option__content"

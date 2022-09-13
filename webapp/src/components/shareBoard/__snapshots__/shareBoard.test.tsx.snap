@@ -16,21 +16,16 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -269,21 +264,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -481,21 +471,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -693,21 +678,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -928,21 +908,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -1167,21 +1142,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -1638,21 +1608,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -1877,21 +1842,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -2348,21 +2308,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Template
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Template
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -2536,21 +2491,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Template
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Template
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -2860,21 +2810,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -3095,21 +3040,16 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -3330,21 +3270,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -3542,21 +3477,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -3754,21 +3684,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -3966,21 +3891,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Board
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"
@@ -4178,21 +4098,16 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar "
         >
           <h1
             class="dialog-title"
-          />
+          >
+            Share Template
+          </h1>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Template
-              </span>
-            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"

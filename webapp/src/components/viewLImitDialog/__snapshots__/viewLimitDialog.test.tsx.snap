@@ -16,7 +16,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"
@@ -96,7 +96,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"

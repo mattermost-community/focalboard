@@ -16,7 +16,7 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"

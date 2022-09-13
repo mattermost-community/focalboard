@@ -16,7 +16,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmat
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"
@@ -130,7 +130,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show view limit dialog 1`] 
         role="dialog"
       >
         <div
-          class="toolbar"
+          class="toolbar toolbar--invisible"
         >
           <h1
             class="dialog-title"

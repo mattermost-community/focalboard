@@ -2,18 +2,6 @@
 .BoardSwitcherDialog {
     color: rgba(var(--center-channel-color-rgb));
 
-    .dialog {
-        .toolbar {
-            padding: 0;
-        }
-
-        .dialog__close {
-            position: absolute;
-            right: 32px;
-            top: 18px;
-        }
-    }
-
     .wrapper {
         .dialog {
             position: relative;
