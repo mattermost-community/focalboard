@@ -11,30 +11,6 @@
     overflow: auto;
     padding-bottom: 48px;
 
-    .toolbar {
-        display: flex;
-        width: 100%;
-        justify-content: flex-end;
-        padding: 24px;
-    }
-
-    .header {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-
-        .title {
-            font-size: 25px;
-        }
-
-        .description {
-            max-width: 640px;
-            text-align: center;
-            margin: 0 0 32px;
-        }
-    }
-
     .templates {
         display: flex;
         width: 100%;

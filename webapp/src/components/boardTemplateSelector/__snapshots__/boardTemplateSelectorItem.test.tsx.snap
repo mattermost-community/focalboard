@@ -156,11 +156,16 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
           role="dialog"
         >
           <div
-            class="toolbar toolbar--invisible"
+            class="toolbar"
           >
-            <h1
-              class="dialog-title"
-            />
+            <div>
+              <h1
+                class="dialog-title "
+              />
+              <h5
+                class="dialog-subtitle"
+              />
+            </div>
             <div
               class="toolbar--right"
             >

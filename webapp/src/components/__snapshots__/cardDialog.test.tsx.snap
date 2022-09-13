@@ -16,13 +16,18 @@ exports[`components/cardDialog already following card 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -214,13 +219,18 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -444,13 +454,18 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -561,13 +576,18 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -896,13 +916,18 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -1094,13 +1119,18 @@ exports[`components/cardDialog should match snapshot 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -1292,13 +1322,18 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
         role="dialog"
       >
         <div
-          class="toolbar "
+          class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          >
-            <div />
-          </h1>
+          <div>
+            <h1
+              class="dialog-title "
+            >
+              <div />
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            />
+          </div>
           <div
             class="toolbar--right"
           >

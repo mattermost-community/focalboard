@@ -17,6 +17,16 @@
         line-height: 28px;
     }
 
+    .dialog-title--with-subtitle {
+        margin-bottom: 8px;
+        font-size: 20px;
+    }
+
+    .dialog-subtitle {
+        font-size: 12px;
+        margin: 0;
+    }
+
     .dialog__close {
         margin: 0 -14px 0 0;
     }
@@ -103,18 +113,7 @@
             flex-direction: row;
             padding: 24px 32px;
             justify-content: space-between;
-            align-items: center;
-
-            &.toolbar--invisible {
-                height: 0;
-                padding: 0;
-
-                .dialog__close {
-                    position: absolute;
-                    right: 32px;
-                    top: 18px;
-                }
-            }
+            align-items: flex-start;
         }
 
         .toolbar--right {
