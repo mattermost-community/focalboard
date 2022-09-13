@@ -142,7 +142,7 @@ func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* eta
 
 	if rp.StatusCode >= http.StatusMultipleChoices {
 		defer closeBody(rp)
-		b, err := ioutil.ReadAll(rp.Body)
+		b, err := io.ReadAll(rp.Body)
 		if err != nil {
 			return rp, fmt.Errorf("error when parsing response with code %d: %w", rp.StatusCode, err)
 		}
@@ -856,7 +856,7 @@ func (c *Client) ExportBoardArchive(boardID string) ([]byte, *Response) {
 	}
 	defer closeBody(r)
 
-	buf, err := ioutil.ReadAll(r.Body)
+	buf, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}

@@ -67,29 +67,6 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID, 
 	return s.addUserCategoryBoard(db, userID, categoryID, boardID)
 }
 
-/*
-func (s *SQLStore) userCategoryBoardExists(db sq.BaseRunner, userID, teamID, categoryID, boardID string) (bool, error) {
-	query := s.getQueryBuilder(db).
-		Select("blocks.id").
-		From(s.tablePrefix + "categories AS categories").
-		Join(s.tablePrefix + "category_boards AS blocks ON blocks.category_id = categories.id").
-		Where(sq.Eq{
-			"user_id":       userID,
-			"team_id":       teamID,
-			"categories.id": categoryID,
-			"board_id":      boardID,
-		})
-
-	rows, err := query.Query()
-	if err != nil {
-		s.logger.Error("getCategoryBoard error", mlog.Err(err))
-		return false, err
-	}
-
-	return rows.Next(), nil
-}
-*/
-
 func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID, categoryID, boardID string) error {
 	_, err := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"category_boards").

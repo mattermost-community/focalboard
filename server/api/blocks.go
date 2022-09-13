@@ -2,14 +2,12 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 
@@ -78,29 +76,25 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "Board not found", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if !hasValidReadToken {
 		if board.IsTemplate && board.Type == model.BoardTypeOpen {
 			if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board template"})
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board template"))
 				return
 			}
 		} else {
 			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 				return
 			}
 		}
@@ -108,12 +102,12 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			var isGuest bool
 			isGuest, err = a.userIsGuest(userID)
 			if err != nil {
-				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				a.errorResponse(w, r, err)
 				return
 			}
 
 			if isGuest {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"guest are not allowed to get board templates"})
+				a.errorResponse(w, r, model.NewErrPermission("guest are not allowed to get board templates"))
 				return
 			}
 		}
@@ -133,27 +127,26 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	case all != "":
 		blocks, err = a.app.GetBlocksForBoard(boardID)
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, r, err)
 			return
 		}
 	case blockID != "":
 		block, err = a.app.GetBlockByID(blockID)
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, r, err)
 			return
 		}
-		if block != nil {
-			if block.BoardID != boardID {
-				a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
-				return
-			}
-
-			blocks = append(blocks, *block)
+		if block.BoardID != boardID {
+			message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+			a.errorResponse(w, r, model.NewErrNotFound(message))
+			return
 		}
+
+		blocks = append(blocks, *block)
 	default:
 		blocks, err = a.app.GetBlocks(boardID, parentID, blockType)
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, r, err)
 			return
 		}
 	}
@@ -169,13 +162,13 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	var bErr error
 	blocks, bErr = a.app.ApplyCloudLimits(blocks)
 	if bErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", bErr)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	json, err := json.Marshal(blocks)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -234,9 +227,9 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	val := r.URL.Query().Get("disable_notify")
 	disableNotify := val == True
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -244,7 +237,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(requestBody, &blocks)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -254,7 +247,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		// Error checking
 		if len(block.Type) < 1 {
 			message := fmt.Sprintf("missing type for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			a.errorResponse(w, r, model.NewErrBadRequest(message))
 			return
 		}
 
@@ -266,32 +259,32 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 		if block.CreateAt < 1 {
 			message := fmt.Sprintf("invalid createAt for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			a.errorResponse(w, r, model.NewErrBadRequest(message))
 			return
 		}
 
 		if block.UpdateAt < 1 {
 			message := fmt.Sprintf("invalid UpdateAt for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			a.errorResponse(w, r, model.NewErrBadRequest(message))
 			return
 		}
 
 		if block.BoardID != boardID {
 			message := fmt.Sprintf("invalid BoardID for block id %s", block.ID)
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, message, nil)
+			a.errorResponse(w, r, model.NewErrBadRequest(message))
 			return
 		}
 	}
 
 	if hasContents {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 			return
 		}
 	}
 	if hasComments {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to post card comments"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to post card comments"))
 			return
 		}
 	}
@@ -311,19 +304,14 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 	sourceBoardID := r.URL.Query().Get("sourceBoardID")
 	if sourceBoardID != "" {
 		if updateFileIDsErr := a.app.CopyCardFiles(sourceBoardID, blocks); updateFileIDsErr != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", updateFileIDsErr)
+			a.errorResponse(w, r, updateFileIDsErr)
 			return
 		}
 	}
 
 	newBlocks, err := a.app.InsertBlocksAndNotify(blocks, session.UserID, disableNotify)
 	if err != nil {
-		if errors.Is(err, app.ErrViewsLimitReached) {
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
-		} else {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		}
-
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -334,7 +322,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(newBlocks)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -389,17 +377,18 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 	disableNotify := val == True
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 		return
 	}
 
 	block, err := a.app.GetBlockByID(blockID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
-	if block == nil || block.BoardID != boardID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+	if block.BoardID != boardID {
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
@@ -410,7 +399,7 @@ func (a *API) handleDeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app.DeleteBlockAndNotify(blockID, userID, disableNotify)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -463,31 +452,24 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	block, err := a.app.GetLastBlockHistoryEntry(blockID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if block == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if board.ID != block.BoardID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, board.ID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board members"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
 
@@ -497,13 +479,13 @@ func (a *API) handleUndeleteBlock(w http.ResponseWriter, r *http.Request) {
 
 	undeletedBlock, err := a.app.UndeleteBlock(blockID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	undeletedBlockData, err := json.Marshal(undeletedBlock)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -564,30 +546,31 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	disableNotify := val == True
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 		return
 	}
 
 	block, err := a.app.GetBlockByID(blockID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
-	if block == nil || block.BoardID != boardID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+	if block.BoardID != boardID {
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, boardID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var patch *model.BlockPatch
 	err = json.Unmarshal(requestBody, &patch)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -596,13 +579,8 @@ func (a *API) handlePatchBlock(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("blockID", blockID)
 
-	_, err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify)
-	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		return
-	}
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	if _, err = a.app.PatchBlockAndNotify(blockID, patch, userID, disableNotify); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -657,16 +635,16 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 	val := r.URL.Query().Get("disable_notify")
 	disableNotify := val == True
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var patches *model.BlockPatchBatch
 	err = json.Unmarshal(requestBody, &patches)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -680,22 +658,18 @@ func (a *API) handlePatchBlocks(w http.ResponseWriter, r *http.Request) {
 		var block *model.Block
 		block, err = a.app.GetBlockByID(blockID)
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			a.errorResponse(w, r, model.NewErrForbidden("access denied to make board changes"))
 			return
 		}
 		if !a.permissions.HasPermissionToBoard(userID, block.BoardID, model.PermissionManageBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to make board changesa"))
 			return
 		}
 	}
 
 	err = a.app.PatchBlocksAndNotify(teamID, patches, userID, disableNotify)
-	if errors.Is(err, app.ErrPatchUpdatesLimitedCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		return
-	}
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -748,41 +722,35 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
 	}
 
 	if userID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
 	block, err := a.app.GetBlockByID(blockID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if block == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if board.ID != block.BoardID {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		message := fmt.Sprintf("block ID=%s on BoardID=%s", block.ID, board.ID)
+		a.errorResponse(w, r, model.NewErrNotFound(message))
 		return
 	}
 
 	if block.Type == model.TypeComment {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionCommentBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to comment on board cards"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to comment on board cards"))
 			return
 		}
 	} else {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modify board cards"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modify board cards"))
 			return
 		}
 	}
@@ -799,13 +767,13 @@ func (a *API) handleDuplicateBlock(w http.ResponseWriter, r *http.Request) {
 
 	blocks, err := a.app.DuplicateBlock(boardID, blockID, userID, asTemplate == True)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(blocks)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

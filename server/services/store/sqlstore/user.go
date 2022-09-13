@@ -52,7 +52,7 @@ func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model
 	}
 
 	if len(users) == 0 {
-		return nil, nil
+		return nil, model.NewErrNotFound("user")
 	}
 
 	return users[0], nil
@@ -94,7 +94,7 @@ func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, 
 	}
 
 	if len(users) == 0 {
-		return nil, sql.ErrNoRows
+		return nil, model.NewErrNotFound("user")
 	}
 
 	return users, nil
@@ -105,7 +105,16 @@ func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, er
 }
 
 func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string) ([]*model.User, error) {
-	return s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
+	users, err := s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(users) != len(userIDs) {
+		return users, model.NewErrNotAllFound("user", userIDs)
+	}
+
+	return users, nil
 }
 
 func (s *SQLStore) getUserByEmail(db sq.BaseRunner, email string) (*model.User, error) {
@@ -215,11 +224,21 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 }
 
 func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string) ([]*model.User, error) {
-	return s.getUsersByCondition(db, nil, 0)
+	users, err := s.getUsersByCondition(db, nil, 0)
+	if model.IsErrNotFound(err) {
+		return []*model.User{}, nil
+	}
+
+	return users, err
 }
 
 func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string, _ bool) ([]*model.User, error) {
-	return s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
+	users, err := s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
+	if model.IsErrNotFound(err) {
+		return []*model.User{}, nil
+	}
+
+	return users, err
 }
 
 func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {

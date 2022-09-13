@@ -26,14 +26,6 @@ func (re BoardIDNilError) Error() string {
 	return "boardID is nil"
 }
 
-type BlockNotFoundErr struct {
-	blockID string
-}
-
-func (be BlockNotFoundErr) Error() string {
-	return fmt.Sprintf("block not found (block id: %s", be.blockID)
-}
-
 func (s *SQLStore) timestampToCharField(name string, as string) string {
 	switch s.dbType {
 	case model.MysqlDBType:
@@ -136,7 +128,7 @@ func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block
 	}
 
 	if len(blocks) != len(ids) {
-		return nil, model.NewErrNotAllFound(ids)
+		return blocks, model.NewErrNotAllFound("block", ids)
 	}
 
 	return blocks, nil
@@ -248,7 +240,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 	}
 
 	existingBlock, err := s.getBlock(db, block.ID)
-	if err != nil {
+	if err != nil && !model.IsErrNotFound(err) {
 		return err
 	}
 
@@ -329,9 +321,6 @@ func (s *SQLStore) patchBlock(db sq.BaseRunner, blockID string, blockPatch *mode
 	if err != nil {
 		return err
 	}
-	if existingBlock == nil {
-		return BlockNotFoundErr{blockID}
-	}
 
 	block := blockPatch.Patch(existingBlock)
 	return s.insertBlock(db, block, userID)
@@ -364,13 +353,12 @@ func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []model.Block, userID s
 
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy string) error {
 	block, err := s.getBlock(db, blockID)
-	if err != nil {
-		return err
-	}
-
-	if block == nil {
+	if model.IsErrNotFound(err) {
 		s.logger.Warn("deleteBlock block not found", mlog.String("block_id", blockID))
 		return nil // deleting non-exiting block is not considered an error (for now)
+	}
+	if err != nil {
+		return err
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
@@ -432,7 +420,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 
 	if len(blocks) == 0 {
 		s.logger.Warn("undeleteBlock block not found", mlog.String("block_id", blockID))
-		return nil // deleting non-exiting block is not considered an error (for now)
+		return nil // undeleting non-exiting block is not considered an error (for now)
 	}
 	block := blocks[0]
 
@@ -548,7 +536,7 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, err
 	}
 
 	if len(blocks) == 0 {
-		return nil, nil
+		return nil, model.NewErrNotFound("block ID=" + blockID)
 	}
 
 	return &blocks[0], nil
@@ -637,7 +625,7 @@ func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, blockID string) (board 
 	}
 
 	if len(blocks) == 0 {
-		return nil, nil, model.NewErrNotFound(blockID)
+		return nil, nil, model.NewErrNotFound("block history BlockID=" + blockID)
 	}
 
 	return s.getBoardAndCard(db, &blocks[0])
@@ -755,7 +743,8 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 		return nil, err
 	}
 	if len(blocks) == 0 {
-		return nil, BlockNotFoundErr{blockID}
+		message := fmt.Sprintf("block subtree BoardID=%s BlockID=%s", boardID, blockID)
+		return nil, model.NewErrNotFound(message)
 	}
 
 	var rootBlock model.Block
