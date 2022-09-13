@@ -63,7 +63,7 @@ type Store interface {
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error)
 	PatchUserProps(userID string, patch model.UserPropPatch) error
 	GetUserPreferences(userID string) (mmModel.Preferences, error)
 

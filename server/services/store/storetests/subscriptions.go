@@ -13,6 +13,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 )
 
+//nolint:dupl
 func StoreTestSubscriptionsStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
 	t.Run("CreateSubscription", func(t *testing.T) {
 		store, tearDown := setup(t)

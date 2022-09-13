@@ -29,7 +29,7 @@ func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, er
 	}
 
 	if len(categories) == 0 {
-		return nil, model.NewErrNotFound(id)
+		return nil, model.NewErrNotFound("category ID=" + id)
 	}
 
 	return &categories[0], nil

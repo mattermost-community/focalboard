@@ -5,6 +5,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
@@ -113,7 +114,8 @@ func (s *SQLStore) deleteSubscription(db sq.BaseRunner, blockID string, subscrib
 	}
 
 	if count == 0 {
-		return model.NewErrNotFound(blockID + "," + subscriberID)
+		message := fmt.Sprintf("subscription BlockID=%s SubscriberID=%s", blockID, subscriberID)
+		return model.NewErrNotFound(message)
 	}
 
 	return nil
@@ -149,7 +151,8 @@ func (s *SQLStore) getSubscription(db sq.BaseRunner, blockID string, subscriberI
 		return nil, err
 	}
 	if len(subscriptions) == 0 {
-		return nil, model.NewErrNotFound(blockID + "," + subscriberID)
+		message := fmt.Sprintf("subscription BlockID=%s SubscriberID=%s", blockID, subscriberID)
+		return nil, model.NewErrNotFound(message)
 	}
 	return subscriptions[0], nil
 }

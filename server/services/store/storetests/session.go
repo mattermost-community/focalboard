@@ -45,6 +45,12 @@ func testCreateAndGetAndDeleteSession(t *testing.T, store store.Store) {
 		require.Equal(t, session, got)
 	})
 
+	t.Run("Get nonexistent session", func(t *testing.T) {
+		got, err := store.GetSession("nonexistent-token", 60*60)
+		require.True(t, model.IsErrNotFound(err))
+		require.Nil(t, got)
+	})
+
 	t.Run("DeleteAndGetSession", func(t *testing.T) {
 		err := store.DeleteSession(session.ID)
 		require.NoError(t, err)

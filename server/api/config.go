@@ -34,7 +34,7 @@ func (a *API) getClientConfig(w http.ResponseWriter, r *http.Request) {
 
 	configData, err := json.Marshal(clientConfig)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	jsonBytesResponse(w, http.StatusOK, configData)

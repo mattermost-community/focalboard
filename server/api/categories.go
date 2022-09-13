@@ -2,13 +2,11 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 )
@@ -54,9 +52,9 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -64,7 +62,7 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(requestBody, &category)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -76,13 +74,8 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 
 	// user can only create category for themselves
 	if category.UserID != session.UserID {
-		a.errorResponse(
-			w,
-			r.URL.Path,
-			http.StatusBadRequest,
-			fmt.Sprintf("userID %s and category userID %s mismatch", session.UserID, category.UserID),
-			nil,
-		)
+		message := fmt.Sprintf("userID %s and category userID %s mismatch", session.UserID, category.UserID)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
@@ -90,25 +83,19 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 	teamID := vars["teamID"]
 
 	if category.TeamID != teamID {
-		a.errorResponse(
-			w,
-			r.URL.Path,
-			http.StatusBadRequest,
-			"teamID mismatch",
-			nil,
-		)
+		a.errorResponse(w, r, model.NewErrBadRequest("teamID mismatch"))
 		return
 	}
 
 	createdCategory, err := a.app.CreateCategory(&category)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(createdCategory)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -157,16 +144,16 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	categoryID := vars["categoryID"]
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var category model.Category
 	err = json.Unmarshal(requestBody, &category)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -174,7 +161,7 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
 	if categoryID != category.ID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "categoryID mismatch in patch and body", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("categoryID mismatch in patch and body"))
 		return
 	}
 
@@ -183,40 +170,25 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	// user can only update category for themselves
 	if category.UserID != session.UserID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "user ID mismatch in session and category", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("user ID mismatch in session and category"))
 		return
 	}
 
 	teamID := vars["teamID"]
 	if category.TeamID != teamID {
-		a.errorResponse(
-			w,
-			r.URL.Path,
-			http.StatusBadRequest,
-			"teamID mismatch",
-			nil,
-		)
+		a.errorResponse(w, r, model.NewErrBadRequest("teamID mismatch"))
 		return
 	}
 
 	updatedCategory, err := a.app.UpdateCategory(&category)
 	if err != nil {
-		switch {
-		case errors.Is(err, app.ErrorCategoryDeleted):
-			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", err)
-		case errors.Is(err, app.ErrorCategoryPermissionDenied):
-			// TODO: The permissions should be handled as much as possible at
-			// the API level, this needs to be changed
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		default:
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		}
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(updatedCategory)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -266,22 +238,13 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 
 	deletedCategory, err := a.app.DeleteCategory(categoryID, userID, teamID)
 	if err != nil {
-		switch {
-		case errors.Is(err, app.ErrorInvalidCategory):
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
-		case errors.Is(err, app.ErrorCategoryPermissionDenied):
-			// TODO: The permissions should be handled as much as possible at
-			// the API level, this needs to be changed
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", err)
-		default:
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		}
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(deletedCategory)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -329,13 +292,13 @@ func (a *API) handleGetUserCategoryBoards(w http.ResponseWriter, r *http.Request
 
 	categoryBlocks, err := a.app.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(categoryBlocks)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -392,7 +355,7 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 	// TODO: Check the category and the team matches
 	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

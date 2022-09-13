@@ -6,9 +6,6 @@ import (
 
 func (a *App) GetSharing(boardID string) (*model.Sharing, error) {
 	sharing, err := a.store.GetSharing(boardID)
-	if model.IsErrNotFound(err) {
-		return nil, nil
-	}
 	if err != nil {
 		return nil, err
 	}

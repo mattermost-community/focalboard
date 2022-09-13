@@ -27,11 +27,11 @@ import Button from '../../../../webapp/src/widgets/buttons/button'
 
 import {WSClient} from '../../../../webapp/src/wsclient'
 
+import boardsScreenshots from '../../../../webapp/static/boards-screenshots.png'
+
 import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 import './rhsChannelBoards.scss'
-
-const boardsScreenshots = (window as any).baseURL + '/public/boards-screenshots.png'
 
 const RHSChannelBoards = () => {
     const boards = useAppSelector(getMySortedBoards)

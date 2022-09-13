@@ -52,7 +52,7 @@ func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 
@@ -63,7 +63,7 @@ func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -73,7 +73,7 @@ func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
 
 	channels, err := a.app.SearchUserChannels(teamID, userID, searchQuery)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func (a *API) handleSearchMyChannels(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(channels)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -133,7 +133,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -148,14 +148,14 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	// retrieve boards list
 	boards, err := a.app.SearchBoardsForUser(term, userID, !isGuest)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -166,7 +166,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -212,7 +212,7 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 
@@ -221,7 +221,7 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -237,7 +237,7 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 	// retrieve boards list
 	boards, err := a.app.SearchBoardsForUserInTeam(teamID, term, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -255,7 +255,7 @@ func (a *API) handleSearchLinkableBoards(w http.ResponseWriter, r *http.Request)
 
 	data, err := json.Marshal(linkableBoards)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -307,14 +307,14 @@ func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	// retrieve boards list
 	boards, err := a.app.SearchBoardsForUser(term, userID, !isGuest)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -324,7 +324,7 @@ func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
