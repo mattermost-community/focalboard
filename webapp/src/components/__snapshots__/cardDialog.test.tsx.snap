@@ -24,9 +24,6 @@ exports[`components/cardDialog already following card 1`] = `
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -227,9 +224,6 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -462,9 +456,6 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -584,9 +575,6 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -924,9 +912,6 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -1127,9 +1112,6 @@ exports[`components/cardDialog should match snapshot 1`] = `
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -1330,9 +1312,6 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
             >
               <div />
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"

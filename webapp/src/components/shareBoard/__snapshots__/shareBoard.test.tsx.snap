@@ -24,9 +24,6 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -277,9 +274,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -489,9 +483,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -701,9 +692,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -936,9 +924,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -1175,9 +1160,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -1646,9 +1628,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -1885,9 +1864,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -2356,9 +2332,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
             >
               Share Template
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -2544,9 +2517,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
             >
               Share Template
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -2868,9 +2838,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -3103,9 +3070,6 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -3338,9 +3302,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -3550,9 +3511,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -3762,9 +3720,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -3974,9 +3929,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
             >
               Share Board
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -4186,9 +4138,6 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
             >
               Share Template
             </h1>
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"

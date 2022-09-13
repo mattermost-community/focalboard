@@ -61,7 +61,7 @@ const Dialog = (props: Props) => {
                     <div className='toolbar'>
                         <div>
                             {<h1 className='dialog-title'>{title || ''}</h1>}
-                            <h5 className='dialog-subtitle'>{subtitle}</h5>
+                            {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
                         </div>
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}

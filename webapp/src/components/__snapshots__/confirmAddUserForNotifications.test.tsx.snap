@@ -22,9 +22,6 @@ exports[`/components/confirmAddUserForNotifications should match snapshot 1`] = 
             <h1
               class="dialog-title"
             />
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"

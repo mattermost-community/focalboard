@@ -22,9 +22,6 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
             <h1
               class="dialog-title"
             />
-            <h5
-              class="dialog-subtitle"
-            />
           </div>
           <div
             class="toolbar--right"
@@ -105,9 +102,6 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
           <div>
             <h1
               class="dialog-title"
-            />
-            <h5
-              class="dialog-subtitle"
             />
           </div>
           <div
