@@ -2,7 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -48,22 +49,22 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var sub model.Subscription
 
-	err = json.Unmarshal(requestBody, &sub)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	if err = json.Unmarshal(requestBody, &sub); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if err = sub.IsValid(); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
+		return
 	}
 
 	ctx := r.Context()
@@ -76,20 +77,21 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 
 	// User can only create subscriptions for themselves (for now)
 	if session.UserID != sub.SubscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "userID and subscriberID mismatch", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("userID and subscriberID mismatch"))
 		return
 	}
 
 	// check for valid block
-	block, err := a.app.GetBlockByID(sub.BlockID)
-	if err != nil || block == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid blockID", err)
+	_, bErr := a.app.GetBlockByID(sub.BlockID)
+	if bErr != nil {
+		message := fmt.Sprintf("invalid blockID: %s", bErr)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
 	subNew, err := a.app.CreateSubscription(&sub)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -100,7 +102,7 @@ func (a *API) handleCreateSubscription(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(subNew)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -151,13 +153,12 @@ func (a *API) handleDeleteSubscription(w http.ResponseWriter, r *http.Request) {
 
 	// User can only delete subscriptions for themselves
 	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "access denied", nil)
+		a.errorResponse(w, r, model.NewErrPermission("access denied"))
 		return
 	}
 
-	_, err := a.app.DeleteSubscription(blockID, subscriberID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	if _, err := a.app.DeleteSubscription(blockID, subscriberID); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -209,13 +210,13 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 
 	// User can only get subscriptions for themselves (for now)
 	if session.UserID != subscriberID {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "access denied", nil)
+		a.errorResponse(w, r, model.NewErrPermission("access denied"))
 		return
 	}
 
 	subs, err := a.app.GetSubscriptions(subscriberID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -226,7 +227,7 @@ func (a *API) handleGetSubscriptions(w http.ResponseWriter, r *http.Request) {
 
 	json, err := json.Marshal(subs)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	jsonBytesResponse(w, http.StatusOK, json)

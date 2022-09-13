@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -63,7 +64,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 
@@ -74,7 +75,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	timeRange := query.Get("time_range")
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -83,25 +84,28 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
+		message := fmt.Sprintf("error converting page parameter to integer: %s", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 	if page < 0 {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("Invalid page parameter"))
 	}
 
 	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
+		message := fmt.Sprintf("error converting per_page parameter to integer: %s", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 	if perPage < 0 {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("Invalid page parameter"))
 	}
 
 	userTimezone, aErr := a.app.GetUserTimezone(userID)
 	if aErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error getting time zone of user", aErr)
+		message := fmt.Sprintf("Error getting time zone of user: %s", aErr)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 	userLocation, _ := time.LoadLocation(userTimezone)
@@ -116,13 +120,13 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		PerPage:        perPage,
 	})
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "time_range="+timeRange, err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(boardsInsights)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -176,7 +180,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 
@@ -186,7 +190,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	timeRange := query.Get("time_range")
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -194,25 +198,27 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 	page, err := strconv.Atoi(query.Get("page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting page parameter to integer", err)
+		a.errorResponse(w, r, model.NewErrBadRequest("error converting page parameter to integer"))
 		return
 	}
 
 	if page < 0 {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("Invalid page parameter"))
 	}
 	perPage, err := strconv.Atoi(query.Get("per_page"))
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "error converting per_page parameter to integer", err)
+		message := fmt.Sprintf("error converting per_page parameter to integer: %s", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
 	if perPage < 0 {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Invalid page parameter", nil)
+		a.errorResponse(w, r, model.NewErrBadRequest("Invalid page parameter"))
 	}
 	userTimezone, aErr := a.app.GetUserTimezone(userID)
 	if aErr != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "Error getting time zone of user", aErr)
+		message := fmt.Sprintf("Error getting time zone of user: %s", aErr)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 	userLocation, _ := time.LoadLocation(userTimezone)
@@ -227,12 +233,12 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 		PerPage:        perPage,
 	})
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "time_range="+timeRange, err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	data, err := json.Marshal(boardsInsights)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	jsonBytesResponse(w, http.StatusOK, data)

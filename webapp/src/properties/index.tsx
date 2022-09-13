@@ -13,6 +13,7 @@ import SelectProperty from './select/property'
 import MultiSelectProperty from './multiselect/property'
 import DateProperty from './date/property'
 import PersonProperty from './person/property'
+import MultiPersonProperty from './multiperson/property'
 import CheckboxProperty from './checkbox/property'
 import UnknownProperty from './unknown/property'
 
@@ -52,6 +53,7 @@ registry.register(new SelectProperty())
 registry.register(new MultiSelectProperty())
 registry.register(new DateProperty())
 registry.register(new PersonProperty())
+registry.register(new MultiPersonProperty())
 registry.register(new CheckboxProperty())
 registry.register(new CreatedTimeProperty())
 registry.register(new CreatedByProperty())

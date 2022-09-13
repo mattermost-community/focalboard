@@ -22,6 +22,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		defer tearDown()
 		testGetBoardsForUserAndTeam(t, store)
 	})
+	t.Run("GetBoardsInTeamByIds", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBoardsInTeamByIds(t, store)
+	})
 	t.Run("InsertBoard", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -62,6 +67,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		defer tearDown()
 		testGetMembersForBoard(t, store)
 	})
+	t.Run("GetMembersForUser", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetMembersForUser(t, store)
+	})
 	t.Run("DeleteMember", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
@@ -71,6 +81,11 @@ func StoreTestBoardStore(t *testing.T, setup func(t *testing.T) (store.Store, fu
 		store, tearDown := setup(t)
 		defer tearDown()
 		testSearchBoardsForUser(t, store)
+	})
+	t.Run("SearchBoardsForUserInTeam", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testSearchBoardsForUserInTeam(t, store)
 	})
 	t.Run("GetBoardHistory", func(t *testing.T) {
 		store, tearDown := setup(t)
@@ -105,6 +120,8 @@ func testGetBoard(t *testing.T, store store.Store) {
 
 	t.Run("nonexisting board", func(t *testing.T) {
 		rBoard, err := store.GetBoard("nonexistent-id")
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, rBoard)
 	})
@@ -112,6 +129,12 @@ func testGetBoard(t *testing.T, store store.Store) {
 
 func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 	userID := "user-id-1"
+
+	t.Run("should return empty list if no results are found", func(t *testing.T) {
+		boards, err := store.GetBoardsForUserAndTeam(testUserID, testTeamID, true)
+		require.NoError(t, err)
+		require.Empty(t, boards)
+	})
 
 	t.Run("should return only the boards of the team that the user is a member of", func(t *testing.T) {
 		teamID1 := "team-id-1"
@@ -192,6 +215,61 @@ func testGetBoardsForUserAndTeam(t *testing.T, store store.Store) {
 			require.Len(t, boards, 1)
 			require.Equal(t, board5.ID, boards[0].ID)
 		})
+	})
+}
+
+func testGetBoardsInTeamByIds(t *testing.T, store store.Store) {
+	t.Run("should return err not all found if one or more of the ids are not found", func(t *testing.T) {
+		for _, boardID := range []string{"board-id-1", "board-id-2"} {
+			board := &model.Board{
+				ID:     boardID,
+				TeamID: testTeamID,
+				Type:   model.BoardTypeOpen,
+			}
+			rBoard, _, err := store.InsertBoardWithAdmin(board, testUserID)
+			require.NoError(t, err)
+			require.NotNil(t, rBoard)
+		}
+
+		testCases := []struct {
+			Name          string
+			BoardIDs      []string
+			ExpectedError bool
+			ExpectedLen   int
+		}{
+			{
+				Name:          "if none of the IDs are found",
+				BoardIDs:      []string{"nonexistent-1", "nonexistent-2"},
+				ExpectedError: true,
+				ExpectedLen:   0,
+			},
+			{
+				Name:          "if not all of the IDs are found",
+				BoardIDs:      []string{"nonexistent-1", "board-id-1"},
+				ExpectedError: true,
+				ExpectedLen:   1,
+			},
+			{
+				Name:          "if all of the IDs are found",
+				BoardIDs:      []string{"board-id-1", "board-id-2"},
+				ExpectedError: false,
+				ExpectedLen:   2,
+			},
+		}
+
+		for _, tc := range testCases {
+			t.Run(tc.Name, func(t *testing.T) {
+				boards, err := store.GetBoardsInTeamByIds(tc.BoardIDs, testTeamID)
+				if tc.ExpectedError {
+					var naf *model.ErrNotAllFound
+					require.ErrorAs(t, err, &naf)
+					require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
+				} else {
+					require.NoError(t, err)
+				}
+				require.Len(t, boards, tc.ExpectedLen)
+			})
+		}
 	})
 }
 
@@ -569,14 +647,22 @@ func testSaveMember(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Len(t, memberHistory, initialMemberHistory)
 	})
+
+	t.Run("should return empty list if no results are found", func(t *testing.T) {
+		memberHistory, err := store.GetBoardMemberHistory(boardID, "nonexistent-user", 0)
+		require.NoError(t, err)
+		require.Empty(t, memberHistory)
+	})
 }
 
 func testGetMemberForBoard(t *testing.T, store store.Store) {
 	userID := testUserID
 	boardID := testBoardID
 
-	t.Run("should return a no rows error for nonexisting membership", func(t *testing.T) {
+	t.Run("should return an error not found for nonexisting membership", func(t *testing.T) {
 		bm, err := store.GetMemberForBoard(boardID, userID)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 		require.Nil(t, bm)
 	})
@@ -602,7 +688,7 @@ func testGetMemberForBoard(t *testing.T, store store.Store) {
 }
 
 func testGetMembersForBoard(t *testing.T, store store.Store) {
-	t.Run("should return empty if there are no members on a board", func(t *testing.T) {
+	t.Run("should return empty list if there are no members on a board", func(t *testing.T) {
 		members, err := store.GetMembersForBoard(testBoardID)
 		require.NoError(t, err)
 		require.Empty(t, members)
@@ -645,6 +731,14 @@ func testGetMembersForBoard(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Len(t, board2Members, 1)
 		require.ElementsMatch(t, []string{userID3}, getMemberIDs(board2Members))
+	})
+}
+
+func testGetMembersForUser(t *testing.T, store store.Store) {
+	t.Run("should return empty list if there are no memberships for a user", func(t *testing.T) {
+		members, err := store.GetMembersForUser(testUserID)
+		require.NoError(t, err)
+		require.Empty(t, members)
 	})
 }
 
@@ -817,6 +911,14 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			require.ElementsMatch(t, tc.ExpectedBoardIDs, boardIDs)
 		})
 	}
+}
+
+func testSearchBoardsForUserInTeam(t *testing.T, store store.Store) {
+	t.Run("should return empty list if there are no resutls", func(t *testing.T) {
+		boards, err := store.SearchBoardsForUserInTeam("nonexistent-team-id", "", testUserID)
+		require.NoError(t, err)
+		require.Empty(t, boards)
+	})
 }
 
 func testUndeleteBoard(t *testing.T, store store.Store) {

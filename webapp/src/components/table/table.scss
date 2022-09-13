@@ -289,6 +289,23 @@
         }
     }
 
+    .MultiPerson .react-select__value-container--is-multi {
+        display: block;
+        white-space: nowrap;
+
+        .react-select__multi-value {
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+            border-radius: 24px;
+            display: inline-flex;
+            color: rgb(var(--center-channel-color-rgb));
+
+            .MultiPerson-item,
+            .react-select__multi-value__label {
+                color: inherit;
+            }
+        }
+    }
+
     @media screen and (max-width: 768px) {
         margin-left: 0 !important;
     }

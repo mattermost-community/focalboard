@@ -102,7 +102,7 @@ func (s *SQLStore) deleteNotificationHint(db sq.BaseRunner, blockID string) erro
 	}
 
 	if count == 0 {
-		return model.NewErrNotFound(blockID)
+		return model.NewErrNotFound("notification hint BlockID=" + blockID)
 	}
 
 	return nil
@@ -134,7 +134,7 @@ func (s *SQLStore) getNotificationHint(db sq.BaseRunner, blockID string) (*model
 		return nil, err
 	}
 	if len(hint) == 0 {
-		return nil, model.NewErrNotFound(blockID)
+		return nil, model.NewErrNotFound("notification hint BlockID=" + blockID)
 	}
 	return hint[0], nil
 }
@@ -165,7 +165,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		return nil, err
 	}
 	if len(hints) == 0 {
-		return nil, model.NewErrNotFound("")
+		return nil, model.NewErrNotFound("next notification hint")
 	}
 
 	hint := hints[0]
@@ -186,7 +186,7 @@ func (s *SQLStore) getNextNotificationHint(db sq.BaseRunner, remove bool) (*mode
 		if rows == 0 {
 			// another node likely has grabbed this hint for processing concurrently; let that node handle it
 			// and we'll return an error here so we try again.
-			return nil, model.NewErrNotFound(hint.BlockID)
+			return nil, model.NewErrNotFound("notification hint")
 		}
 	}
 

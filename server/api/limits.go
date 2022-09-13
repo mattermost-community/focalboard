@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/mattermost/focalboard/server/model"
 )
 
 func (a *API) registerLimitsRoutes(r *mux.Router) {
@@ -35,13 +36,13 @@ func (a *API) handleCloudLimits(w http.ResponseWriter, r *http.Request) {
 
 	boardsCloudLimits, err := a.app.GetBoardsCloudLimits()
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(boardsCloudLimits)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -56,6 +57,12 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -67,7 +74,7 @@ func (a *API) handleNotifyAdminUpgrade(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", errAPINotSupportedInStandaloneMode)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 

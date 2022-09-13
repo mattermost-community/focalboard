@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -348,10 +349,14 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 		return nil, err
 	}
 
+	if len(users) != len(userIDs) {
+		return users, model.NewErrNotAllFound("user", userIDs)
+	}
+
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
 	query := s.getQueryBuilder().
 		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
@@ -366,6 +371,11 @@ func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery strin
 		}).
 		OrderBy("u.username").
 		Limit(10)
+
+	if excludeBots {
+		query = query.
+			Where(sq.Eq{"b.UserId IS NOT NULL": false})
+	}
 
 	if asGuestID == "" {
 		query = query.
@@ -492,7 +502,7 @@ func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) 
 		var appErr *mmModel.AppError
 		if errors.As(err, &appErr) {
 			if appErr.StatusCode == http.StatusNotFound {
-				return nil, nil
+				return nil, model.NewErrNotFound("file info ID=" + id)
 			}
 		}
 
@@ -760,7 +770,8 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					// Plugin API returns error if channel member doesn't exist.
 					// We're fine if it doesn't exist, so its not an error for us.
-					return nil, model.NewErrNotFound(userID)
+					message := fmt.Sprintf("member BoardID=%s UserID=%s", boardID, userID)
+					return nil, model.NewErrNotFound(message)
 				}
 
 				return nil, memberErr

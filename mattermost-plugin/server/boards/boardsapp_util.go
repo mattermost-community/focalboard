@@ -13,6 +13,8 @@ import (
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
+const defaultS3Timeout = 60 * 1000 // 60 seconds
+
 func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
@@ -44,6 +46,11 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 	if mmconfig.FileSettings.AmazonS3Trace != nil {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
+	}
+	if mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds != nil && *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds > 0 {
+		filesS3Config.Timeout = *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds
+	} else {
+		filesS3Config.Timeout = defaultS3Timeout
 	}
 
 	enableTelemetry := false

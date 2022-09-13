@@ -1,7 +1,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"fmt"
 	"testing"
 	"time"
@@ -399,7 +398,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		time.Sleep(10 * time.Millisecond)
 
-		require.ErrorIs(t, store.DeleteBoardsAndBlocks(dbab, userID), sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(store.DeleteBoardsAndBlocks(dbab, userID)))
 
 		// all the entities should still exist
 		rBoard1, err := store.GetBoard(board1.ID)
@@ -475,7 +474,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		time.Sleep(10 * time.Millisecond)
 
-		require.ErrorIs(t, store.DeleteBoardsAndBlocks(dbab, userID), sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(store.DeleteBoardsAndBlocks(dbab, userID)))
 
 		// all the entities should still exist
 		rBoard1, err := store.GetBoard(board1.ID)
@@ -499,7 +498,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 		require.NotNil(t, rBlock4)
 	})
 
-	t.Run("should not work properly if all the entities are related", func(t *testing.T) {
+	t.Run("should work properly if all the entities are related", func(t *testing.T) {
 		newBoard1 := &model.Board{
 			ID:     utils.NewID(utils.IDTypeBoard),
 			TeamID: teamID,
@@ -551,22 +550,28 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		rBoard1, err := store.GetBoard(board1.ID)
 		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBoard1)
 		rBlock1, err := store.GetBlock(block1.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock1)
 		rBlock2, err := store.GetBlock(block2.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock2)
 
 		rBoard2, err := store.GetBoard(board2.ID)
 		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBoard2)
 		rBlock3, err := store.GetBlock(block3.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock3)
 		rBlock4, err := store.GetBlock(block4.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock4)
 	})
 }

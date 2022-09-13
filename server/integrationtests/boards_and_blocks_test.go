@@ -303,7 +303,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 				BoardPatches: []*model.BoardPatch{
 					{Title: &newTitle},
 				},
-				BlockIDs: []string{block1.ID, "board-id-2"},
+				BlockIDs: []string{block1.ID, block2.ID},
 				BlockPatches: []*model.BlockPatch{
 					{Title: &newTitle},
 					{Title: &newTitle},
@@ -674,7 +674,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		// a board is required for the permission checks
+		// a board and a block are required for the permission checks
 		newBoard := &model.Board{
 			TeamID: teamID,
 			Type:   model.BoardTypeOpen,
@@ -683,9 +683,19 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board)
 
+		newBlock := model.Block{
+			ID:      "block-id-1",
+			BoardID: board.ID,
+			Title:   "title",
+		}
+		require.NoError(t, th.Server.App().InsertBlock(newBlock, th.GetUser1().ID))
+		block, err := th.Server.App().GetBlockByID(newBlock.ID)
+		require.NoError(t, err)
+		require.NotNil(t, block)
+
 		t.Run("no boards", func(t *testing.T) {
 			dbab := &model.DeleteBoardsAndBlocks{
-				Blocks: []string{"block-id-1"},
+				Blocks: []string{block.ID},
 			}
 
 			success, resp := th.Client.DeleteBoardsAndBlocks(dbab)
@@ -790,17 +800,21 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		// ensure that the entities have been successfully deleted
 		board1, err = th.Server.App().GetBoard("board-id-1")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, board1)
 		block1, err = th.Server.App().GetBlockByID("block-id-1")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, block1)
 
 		board2, err = th.Server.App().GetBoard("board-id-2")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, board2)
 		block2, err = th.Server.App().GetBlockByID("block-id-2")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, block2)
 	})
 }
