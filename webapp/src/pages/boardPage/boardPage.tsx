@@ -122,7 +122,15 @@ const BoardPage = (props: Props): JSX.Element => {
         const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
             // only takes into account the entities that belong to the team or the user boards
             const teamBoards = boards.filter((b: Board) => b.teamId === Constants.globalTeamId || b.teamId === teamId)
+            const activeBoard = teamBoards.find((b: Board) => b.id === activeBoardId)
             dispatch(updateBoards(teamBoards))
+
+            if (activeBoard) {
+                dispatch(fetchBoardMembers({
+                    teamId: teamId,
+                    boardId: activeBoardId,
+                }))
+            }
         }
 
         const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
@@ -158,7 +166,7 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
             wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
         }
-    }, [me?.id])
+    }, [me?.id, activeBoardId])
 
     const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
         // and fetch its data
