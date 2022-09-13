@@ -70,7 +70,7 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 			return nil, cErr
 		}
 		if containsLimitedBlocks {
-			return nil, ErrPatchUpdatesLimitedCards
+			return nil, model.ErrPatchUpdatesLimitedCards
 		}
 	}
 

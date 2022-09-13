@@ -2,12 +2,10 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 
@@ -57,7 +55,7 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -67,14 +65,14 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	// retrieve boards list
 	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID, !isGuest)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -85,7 +83,7 @@ func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boards)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -125,42 +123,42 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var newBoard *model.Board
 	if err = json.Unmarshal(requestBody, &newBoard); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
 	if newBoard.Type == model.BoardTypeOpen {
 		if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePublicChannel) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create public boards"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to create public boards"))
 			return
 		}
 	} else {
 		if !a.permissions.HasPermissionToTeam(userID, newBoard.TeamID, model.PermissionCreatePrivateChannel) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create private boards"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to create private boards"))
 			return
 		}
 	}
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if isGuest {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create board"))
 		return
 	}
 
 	if err = newBoard.IsValid(); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
@@ -172,7 +170,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 	// create board
 	board, err := a.app.CreateBoard(newBoard, userID, true)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -185,7 +183,7 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(board)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -228,42 +226,38 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if !hasValidReadToken {
 		if board.Type == model.BoardTypePrivate {
 			if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 				return
 			}
 		} else {
 			var isGuest bool
 			isGuest, err = a.userIsGuest(userID)
 			if err != nil {
-				a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+				a.errorResponse(w, r, err)
 				return
 			}
 			if isGuest {
 				if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-					a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+					a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 					return
 				}
 			}
 
 			if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-				a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+				a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 				return
 			}
 		}
@@ -279,7 +273,7 @@ func (a *API) handleGetBoard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(board)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -324,49 +318,44 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	boardID := mux.Vars(r)["boardID"]
-	board, err := a.app.GetBoard(boardID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+	if _, err := a.app.GetBoard(boardID); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	userID := getUserID(r)
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var patch *model.BoardPatch
 	if err = json.Unmarshal(requestBody, &patch); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
 	if err = patch.IsValid(); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board properties"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board properties"))
 		return
 	}
 
 	if patch.Type != nil || patch.MinimumRole != nil {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardType) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board type"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board type"))
 			return
 		}
 	}
 	if patch.ChannelID != nil {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to modifying board access"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to modifying board access"))
 			return
 		}
 	}
@@ -379,7 +368,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 	// patch board
 	updatedBoard, err := a.app.PatchBoard(patch, boardID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -390,7 +379,7 @@ func (a *API) handlePatchBoard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(updatedBoard)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -430,18 +419,13 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	// Check if board exists
-	board, err := a.app.GetBoard(boardID)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+	if _, err := a.app.GetBoard(boardID); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to delete board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to delete board"))
 		return
 	}
 
@@ -450,7 +434,7 @@ func (a *API) handleDeleteBoard(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 
 	if err := a.app.DeleteBoard(boardID, userID); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -495,49 +479,45 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 	toTeam := query.Get("toTeam")
 
 	if userID == "" {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	if toTeam == "" && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
 	if toTeam != "" && !a.permissions.HasPermissionToTeam(userID, toTeam, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
 	if board.IsTemplate && board.Type == model.BoardTypeOpen {
 		if board.TeamID != model.GlobalTeamID && !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	} else {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	}
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if isGuest {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create board"))
 		return
 	}
 
@@ -551,13 +531,13 @@ func (a *API) handleDuplicateBoard(w http.ResponseWriter, r *http.Request) {
 
 	boardsAndBlocks, _, err := a.app.DuplicateBoard(boardID, userID, toTeam, asTemplate == True)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, err.Error(), err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(boardsAndBlocks)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -603,13 +583,13 @@ func (a *API) handleUndeleteBoard(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionDeleteBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to undelete board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to undelete board"))
 		return
 	}
 
 	err := a.app.UndeleteBoard(boardID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -653,27 +633,23 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	board, boardMetadata, err := a.app.GetBoardMetadata(boardID)
-	if errors.Is(err, app.ErrInsufficientLicense) {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "", err)
-		return
-	}
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if board == nil || boardMetadata == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, model.NewErrNotFound("board metadata BoardID="+boardID))
 		return
 	}
 
 	if board.Type == model.BoardTypePrivate {
 		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	} else {
 		if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-			a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
 	}
@@ -684,7 +660,7 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(boardMetadata)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

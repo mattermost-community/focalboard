@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -348,6 +349,10 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 		return nil, err
 	}
 
+	if len(users) != len(userIDs) {
+		return users, model.NewErrNotAllFound("user", userIDs)
+	}
+
 	return users, nil
 }
 
@@ -497,7 +502,7 @@ func (s *MattermostAuthLayer) GetFileInfo(id string) (*mmModel.FileInfo, error) 
 		var appErr *mmModel.AppError
 		if errors.As(err, &appErr) {
 			if appErr.StatusCode == http.StatusNotFound {
-				return nil, nil
+				return nil, model.NewErrNotFound("file info ID=" + id)
 			}
 		}
 
@@ -757,7 +762,8 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 				if errors.As(memberErr, &appErr) && appErr.StatusCode == http.StatusNotFound {
 					// Plugin API returns error if channel member doesn't exist.
 					// We're fine if it doesn't exist, so its not an error for us.
-					return nil, model.NewErrNotFound(userID)
+					message := fmt.Sprintf("member BoardID=%s UserID=%s", boardID, userID)
+					return nil, model.NewErrNotFound(message)
 				}
 
 				return nil, memberErr

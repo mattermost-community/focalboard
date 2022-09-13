@@ -82,7 +82,7 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	if username != "" {
 		var err error
 		user, err = a.store.GetUserByUsername(username)
-		if err != nil {
+		if err != nil && !model.IsErrNotFound(err) {
 			a.metrics.IncrementLoginFailCount(1)
 			return "", errors.Wrap(err, "invalid username or password")
 		}
@@ -91,11 +91,12 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 	if user == nil && email != "" {
 		var err error
 		user, err = a.store.GetUserByEmail(email)
-		if err != nil {
+		if err != nil && model.IsErrNotFound(err) {
 			a.metrics.IncrementLoginFailCount(1)
 			return "", errors.Wrap(err, "invalid username or password")
 		}
 	}
+
 	if user == nil {
 		a.metrics.IncrementLoginFailCount(1)
 		return "", errors.New("invalid username or password")
@@ -148,7 +149,10 @@ func (a *App) RegisterUser(username, email, password string) error {
 	if username != "" {
 		var err error
 		user, err = a.store.GetUserByUsername(username)
-		if err == nil && user != nil {
+		if err != nil && !model.IsErrNotFound(err) {
+			return err
+		}
+		if user != nil {
 			return errors.New("The username already exists")
 		}
 	}
@@ -156,7 +160,10 @@ func (a *App) RegisterUser(username, email, password string) error {
 	if user == nil && email != "" {
 		var err error
 		user, err = a.store.GetUserByEmail(email)
-		if err == nil && user != nil {
+		if err != nil && !model.IsErrNotFound(err) {
+			return err
+		}
+		if user != nil {
 			return errors.New("The email already exists")
 		}
 	}

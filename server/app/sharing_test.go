@@ -43,15 +43,15 @@ func TestGetSharing(t *testing.T) {
 		require.Equal(t, "sharing not found", err.Error())
 	})
 
-	t.Run("should return a tuple of nil", func(t *testing.T) {
+	t.Run("should return a not found error", func(t *testing.T) {
 		th.Store.EXPECT().GetSharing("test-id").Return(
 			nil,
 			sql.ErrNoRows,
 		)
 		result, err := th.App.GetSharing("test-id")
-
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, result)
-		require.NoError(t, err)
 	})
 }
 

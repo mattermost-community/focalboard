@@ -5,11 +5,14 @@ import (
 	"errors"
 
 	sq "github.com/Masterminds/squirrel"
-	"github.com/mattermost/mattermost-server/v6/model"
+
+	"github.com/mattermost/focalboard/server/model"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *model.FileInfo) error {
+func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *mmModel.FileInfo) error {
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"file_info").
 		Columns(
@@ -44,7 +47,7 @@ func (s *SQLStore) saveFileInfo(db sq.BaseRunner, fileInfo *model.FileInfo) erro
 	return nil
 }
 
-func (s *SQLStore) getFileInfo(db sq.BaseRunner, id string) (*model.FileInfo, error) {
+func (s *SQLStore) getFileInfo(db sq.BaseRunner, id string) (*mmModel.FileInfo, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",
@@ -60,7 +63,7 @@ func (s *SQLStore) getFileInfo(db sq.BaseRunner, id string) (*model.FileInfo, er
 
 	row := query.QueryRow()
 
-	fileInfo := model.FileInfo{}
+	fileInfo := mmModel.FileInfo{}
 
 	err := row.Scan(
 		&fileInfo.Id,
@@ -74,7 +77,7 @@ func (s *SQLStore) getFileInfo(db sq.BaseRunner, id string) (*model.FileInfo, er
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+			return nil, model.NewErrNotFound("file info ID=" + id)
 		}
 
 		s.logger.Error("error scanning fileinfo row", mlog.String("id", id), mlog.Err(err))

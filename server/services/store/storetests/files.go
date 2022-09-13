@@ -3,10 +3,12 @@ package storetests
 import (
 	"testing"
 
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-	"github.com/stretchr/testify/assert"
+
+	"github.com/stretchr/testify/require"
 )
 
 func StoreTestFileStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
@@ -24,15 +26,23 @@ func StoreTestFileStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 		}
 
 		err := sqlStore.SaveFileInfo(fileInfo)
-		assert.NoError(t, err)
+		require.NoError(t, err)
 
 		retrievedFileInfo, err := sqlStore.GetFileInfo("file_info_1")
-		assert.NoError(t, err)
-		assert.Equal(t, "file_info_1", retrievedFileInfo.Id)
-		assert.Equal(t, "Dunder Mifflin Sales Report 2022", retrievedFileInfo.Name)
-		assert.Equal(t, ".sales", retrievedFileInfo.Extension)
-		assert.Equal(t, int64(112233), retrievedFileInfo.Size)
-		assert.Equal(t, int64(0), retrievedFileInfo.DeleteAt)
-		assert.False(t, retrievedFileInfo.Archived)
+		require.NoError(t, err)
+		require.Equal(t, "file_info_1", retrievedFileInfo.Id)
+		require.Equal(t, "Dunder Mifflin Sales Report 2022", retrievedFileInfo.Name)
+		require.Equal(t, ".sales", retrievedFileInfo.Extension)
+		require.Equal(t, int64(112233), retrievedFileInfo.Size)
+		require.Equal(t, int64(0), retrievedFileInfo.DeleteAt)
+		require.False(t, retrievedFileInfo.Archived)
+	})
+
+	t.Run("should return an error on not found", func(t *testing.T) {
+		fileInfo, err := sqlStore.GetFileInfo("nonexistent")
+		require.Error(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
+		require.Nil(t, fileInfo)
 	})
 }
