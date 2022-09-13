@@ -2,7 +2,6 @@ package api
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -57,7 +56,7 @@ func TestErrorResponse(t *testing.T) {
 		{"ErrNotImplemented", model.NewErrNotImplemented("not implemented in plugin mode"), http.StatusNotImplemented, "plugin mode"},
 
 		// internal server error
-		{"Any other error", errors.New("any error"), http.StatusInternalServerError, "internal server error"},
+		{"Any other error", ErrHandlerPanic, http.StatusInternalServerError, "internal server error"},
 	}
 
 	for _, tc := range testCases {

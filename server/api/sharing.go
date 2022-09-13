@@ -13,6 +13,8 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
+var ErrTurningOnSharing = errors.New("turning on sharing for board failed, see log for details")
+
 func (a *API) registerSharingRoutes(r *mux.Router) {
 	// Sharing APIs
 	r.HandleFunc("/boards/{boardID}/sharing", a.sessionRequired(a.handlePostSharing)).Methods("POST")
@@ -159,7 +161,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
 			mlog.String("boardID", sharing.ID),
 			mlog.String("userID", userID))
-		a.errorResponse(w, r, errors.New("Turning on sharing for board failed, see log for details."))
+		a.errorResponse(w, r, ErrTurningOnSharing)
 		return
 	}
 

@@ -291,7 +291,7 @@ func IsErrNotFound(err error) bool {
 }
 
 // IsErrRequestEntityTooLarge returns true if `err` is or wraps one of:
-// - model.ErrRequestEntityTooLarge
+// - model.ErrRequestEntityTooLarge.
 func IsErrRequestEntityTooLarge(err error) bool {
 	// check if this is a model.ErrRequestEntityTooLarge
 	return errors.Is(err, ErrRequestEntityTooLarge)

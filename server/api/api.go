@@ -21,11 +21,13 @@ const (
 	HeaderRequestedWithXML = "XMLHttpRequest"
 	UploadFormFileKey      = "file"
 	True                   = "true"
-)
 
-const (
 	ErrorNoTeamCode    = 1000
 	ErrorNoTeamMessage = "No team"
+)
+
+var (
+	ErrHandlerPanic = errors.New("http handler panic")
 )
 
 // ----------------------------------------------------------------------------------------------------
@@ -123,7 +125,7 @@ func (a *API) panicHandler(next http.Handler) http.Handler {
 					mlog.String("stack", string(debug.Stack())),
 					mlog.String("uri", r.URL.Path),
 				)
-				a.errorResponse(w, r, errors.New("http handler panic"))
+				a.errorResponse(w, r, ErrHandlerPanic)
 			}
 		}()
 
