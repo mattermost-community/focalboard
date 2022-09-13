@@ -370,10 +370,11 @@ func TestGetBoardCount(t *testing.T) {
 	defer tearDown()
 
 	t.Run("base case", func(t *testing.T) {
-		th.Store.EXPECT().GetBoardCount().Return(10, nil)
+		boardCount := int64(100)
+		th.Store.EXPECT().GetBoardCount().Return(boardCount, nil)
 
 		count, err := th.App.GetBoardCount()
 		require.NoError(t, err)
-		require.Equal(t, 10, count)
+		require.Equal(t, boardCount, count)
 	})
 }
