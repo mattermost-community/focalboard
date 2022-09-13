@@ -1061,13 +1061,13 @@ class Mutator {
         )
     }
 
-    async moveContentBlock(boardId: string, blockId: string, dstBlockId: string, where: 'after'|'before', srcBlockId: string, srcWhere: 'after'|'before', description: string): Promise<void> {
+    async moveContentBlock(blockId: string, dstBlockId: string, where: 'after'|'before', srcBlockId: string, srcWhere: 'after'|'before', description: string): Promise<void> {
         return undoManager.perform(
             async () => {
-                await octoClient.moveBlockTo(boardId, blockId, where, dstBlockId)
+                await octoClient.moveBlockTo(blockId, where, dstBlockId)
             },
             async () => {
-                await octoClient.moveBlockTo(boardId, blockId, srcWhere, srcBlockId)
+                await octoClient.moveBlockTo(blockId, srcWhere, srcBlockId)
             },
             description,
             this.undoGroupId,
