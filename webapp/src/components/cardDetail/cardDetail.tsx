@@ -360,12 +360,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
                                     sourceWhere = 'after'
                                 }
                                 if (afterBlock && afterBlock.id) {
-                                    mutator.moveContentBlock(card.boardId, block.id, afterBlock.id, "after", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
+                                    await mutator.moveContentBlock(card.boardId, block.id, afterBlock.id, "after", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
                                     return
                                 }
                                 if (beforeBlock && beforeBlock.id) {
-                                    moveBlockNewEditor(card.boardId, block.id, beforeBlock.id, "before")
-                                    mutator.moveContentBlock(card.boardId, block.id, beforeBlock.id, "before", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
+                                    await mutator.moveContentBlock(card.boardId, block.id, beforeBlock.id, "before", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
                                 }
                             }
                         }}
