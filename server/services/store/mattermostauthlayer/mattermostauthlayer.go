@@ -749,16 +749,18 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 }
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
-	// No synthetic memberships for guests
-	user, err := s.GetUserByID(userID)
-	if err != nil {
-		return nil, err
-	}
-	if user.IsGuest {
-		return nil, nil
-	}
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	// Explicit membership not found
 	if model.IsErrNotFound(err) {
+		// No synthetic memberships for guests
+		user, err := s.GetUserByID(userID)
+		if err != nil {
+			return nil, err
+		}
+		if user.IsGuest {
+			return nil, model.NewErrNotFound("user is a guest")
+		}
+
 		b, boardErr := s.Store.GetBoard(boardID)
 		if boardErr != nil {
 			return nil, boardErr
