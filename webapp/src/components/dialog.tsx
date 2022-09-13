@@ -17,7 +17,7 @@ type Props = {
     hideCloseButton?: boolean
     className?: string
     title?: JSX.Element
-    onClose: () => void,
+    onClose: () => void
 }
 
 const Dialog = (props: Props) => {

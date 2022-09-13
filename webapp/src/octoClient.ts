@@ -630,8 +630,9 @@ class OctoClient {
 
     async getTeamUsers(excludeBots?: boolean): Promise<IUser[]> {
         let path = this.teamPath() + '/users'
-        if (excludeBots)
+        if (excludeBots) {
             path += '?exclude_bots=true'
+        }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
@@ -641,8 +642,9 @@ class OctoClient {
 
     async searchTeamUsers(searchQuery: string, excludeBots?: boolean): Promise<IUser[]> {
         let path = this.teamPath() + `/users?search=${searchQuery}`
-        if (excludeBots)
+        if (excludeBots) {
             path += '&exclude_bots=true'
+        }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []

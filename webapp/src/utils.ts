@@ -573,6 +573,7 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
+        //eslint-disable-no-process-env
         if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
             return path
         }
