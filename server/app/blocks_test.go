@@ -109,7 +109,7 @@ func TestPatchBlocks(t *testing.T) {
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(150), nil)
 		err := th.App.PatchBlocks("team-id", &blockPatches, "user-id-1")
-		require.ErrorIs(t, err, ErrPatchUpdatesLimitedCards)
+		require.ErrorIs(t, err, model.ErrPatchUpdatesLimitedCards)
 	})
 }
 

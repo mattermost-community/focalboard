@@ -13,8 +13,6 @@ import (
 )
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
-var ErrViewsLimitReached = errors.New("views limit reached for board")
-var ErrPatchUpdatesLimitedCards = errors.New("patch updates cards that are limited")
 
 func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
 	if boardID == "" {
@@ -81,7 +79,7 @@ func (a *App) PatchBlockAndNotify(blockID string, blockPatch *model.BlockPatch, 
 			return nil, lErr
 		}
 		if containsLimitedBlocks {
-			return nil, ErrPatchUpdatesLimitedCards
+			return nil, model.ErrPatchUpdatesLimitedCards
 		}
 	}
 
@@ -132,7 +130,7 @@ func (a *App) PatchBlocksAndNotify(teamID string, blockPatches *model.BlockPatch
 			return err
 		}
 		if containsLimitedBlocks {
-			return ErrPatchUpdatesLimitedCards
+			return model.ErrPatchUpdatesLimitedCards
 		}
 	}
 
@@ -249,7 +247,7 @@ func (a *App) InsertBlocksAndNotify(blocks []model.Block, modifiedByID string, d
 
 			if !withinLimit {
 				a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID), mlog.String("team_id", board.TeamID))
-				return nil, ErrViewsLimitReached
+				return nil, model.ErrViewsLimitReached
 			}
 		}
 
@@ -438,13 +436,12 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 	}
 
 	block, err := a.store.GetBlock(blockID)
-	if err != nil {
+	if model.IsErrNotFound(err) {
+		a.logger.Error("Error loading the block after a successful undelete, not propagating through websockets or notifications", mlog.String("blockID", blockID))
 		return nil, err
 	}
-
-	if block == nil {
-		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
-		return nil, nil
+	if err != nil {
+		return nil, err
 	}
 
 	board, err := a.store.GetBoard(block.BoardID)
@@ -540,7 +537,10 @@ func (a *App) getBoardAndCard(block *model.Block) (board *model.Board, card *mod
 		}
 
 		iter, err = a.store.GetBlock(iter.ParentID)
-		if err != nil || iter == nil {
+		if model.IsErrNotFound(err) {
+			return board, card, nil
+		}
+		if err != nil {
 			return board, card, err
 		}
 	}

@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -71,29 +72,29 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "invalid request body", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var newCard *model.Card
 	if err = json.Unmarshal(requestBody, &newCard); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create card"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create card"))
 		return
 	}
 
 	if newCard.BoardID != "" && newCard.BoardID != boardID {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", model.ErrBoardIDMismatch)
+		a.errorResponse(w, r, model.ErrBoardIDMismatch)
 		return
 	}
 
 	newCard.PopulateWithBoardID(boardID)
 	if err = newCard.CheckValid(); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
@@ -104,7 +105,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	// create card
 	card, err := a.app.CreateCard(newCard, boardID, userID, disableNotify)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -116,7 +117,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(card)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -171,7 +172,7 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 	strPerPage := query.Get("per_page")
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to fetch cards"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to fetch cards"))
 		return
 	}
 
@@ -184,12 +185,14 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 
 	page, err := strconv.Atoi(strPage)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid `page` parameter", err)
+		message := fmt.Sprintf("invalid `page` parameter: %s", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 	}
 
 	perPage, err := strconv.Atoi(strPerPage)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "invalid `per_page` parameter", err)
+		message := fmt.Sprintf("invalid `per_page` parameter: %s", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 	}
 
 	auditRec := a.makeAuditRecord(r, "getCards", audit.Fail)
@@ -200,7 +203,7 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 
 	cards, err := a.app.GetCardsForBoard(boardID, page, perPage)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -214,7 +217,7 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(cards)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -269,24 +272,25 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	card, err := a.app.GetCardByID(cardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "could not fetch card "+cardID, err)
+		message := fmt.Sprintf("could not fetch card %s: %s", cardID, err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, card.BoardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to patch card"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to patch card"))
 		return
 	}
 
 	var patch *model.CardPatch
 	if err = json.Unmarshal(requestBody, &patch); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
@@ -298,7 +302,7 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 	// patch card
 	cardPatched, err := a.app.PatchCard(patch, card.ID, userID, disableNotify)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -310,7 +314,7 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(cardPatched)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -351,12 +355,13 @@ func (a *API) handleGetCard(w http.ResponseWriter, r *http.Request) {
 
 	card, err := a.app.GetCardByID(cardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "could not fetch card "+cardID, err)
+		message := fmt.Sprintf("could not fetch card %s: %s", cardID, err)
+		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
 	if !a.permissions.HasPermissionToBoard(userID, card.BoardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to fetch card"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to fetch card"))
 		return
 	}
 
@@ -373,7 +378,7 @@ func (a *API) handleGetCard(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(card)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

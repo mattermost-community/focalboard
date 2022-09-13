@@ -201,9 +201,5 @@ func (s *SQLStore) getAllTeams(db sq.BaseRunner) ([]*model.Team, error) {
 		return nil, err
 	}
 
-	if len(teams) == 0 {
-		return nil, sql.ErrNoRows
-	}
-
 	return teams, nil
 }
