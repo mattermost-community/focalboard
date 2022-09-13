@@ -22,6 +22,8 @@ var (
 	ErrCategoryDeleted          = errors.New("category is deleted")
 
 	ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
+
+	ErrRequestEntityTooLarge = errors.New("request entity too large")
 )
 
 // ErrNotFound is an error type that can be returned by store APIs
@@ -286,6 +288,13 @@ func IsErrNotFound(err error) bool {
 
 	// check if this is a model.ErrCategoryDeleted
 	return errors.Is(err, ErrCategoryDeleted)
+}
+
+// IsErrRequestEntityTooLarge returns true if `err` is or wraps one of:
+// - model.ErrRequestEntityTooLarge
+func IsErrRequestEntityTooLarge(err error) bool {
+	// check if this is a model.ErrRequestEntityTooLarge
+	return errors.Is(err, ErrRequestEntityTooLarge)
 }
 
 // IsErrNotImplemented returns true if `err` is or wraps one of:

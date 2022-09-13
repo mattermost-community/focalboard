@@ -186,6 +186,8 @@ func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {
 		errorResponse.ErrorCode = http.StatusForbidden
 	case model.IsErrNotFound(err):
 		errorResponse.ErrorCode = http.StatusNotFound
+	case model.IsErrRequestEntityTooLarge(err):
+		errorResponse.ErrorCode = http.StatusRequestEntityTooLarge
 	case model.IsErrNotImplemented(err):
 		errorResponse.ErrorCode = http.StatusNotImplemented
 	default:
@@ -205,37 +207,6 @@ func (a *API) errorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	}
 
 	w.WriteHeader(errorResponse.ErrorCode)
-	_, _ = w.Write(data)
-}
-
-func (a *API) customErrorResponse(w http.ResponseWriter, api string, code int, message string, sourceError error) {
-	if code == http.StatusUnauthorized || code == http.StatusForbidden {
-		a.logger.Debug("API DEBUG",
-			mlog.Int("code", code),
-			mlog.Err(sourceError),
-			mlog.String("msg", message),
-			mlog.String("api", api),
-		)
-	} else {
-		a.logger.Error("API ERROR",
-			mlog.Int("code", code),
-			mlog.Err(sourceError),
-			mlog.String("msg", message),
-			mlog.String("api", api),
-		)
-	}
-
-	setResponseHeader(w, "Content-Type", "application/json")
-
-	if sourceError != nil && message != sourceError.Error() {
-		message += "; " + sourceError.Error()
-	}
-
-	data, err := json.Marshal(model.ErrorResponse{Error: message, ErrorCode: code})
-	if err != nil {
-		data = []byte("{}")
-	}
-	w.WriteHeader(code)
 	_, _ = w.Write(data)
 }
 

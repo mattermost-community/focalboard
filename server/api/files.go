@@ -214,7 +214,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
 		if strings.HasSuffix(err.Error(), "http: request body too large") {
-			a.customErrorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
+			a.errorResponse(w, r, model.ErrRequestEntityTooLarge)
 			return
 		}
 		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))

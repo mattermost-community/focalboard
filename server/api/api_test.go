@@ -49,6 +49,9 @@ func TestErrorResponse(t *testing.T) {
 		{"mattermost-plugin-api/ErrNotFound", pluginapi.ErrNotFound, http.StatusNotFound, "not found"},
 		{"ErrNotFound", model.ErrCategoryDeleted, http.StatusNotFound, "category is deleted"},
 
+		// request entity too large
+		{"ErrRequestEntityTooLarge", model.ErrRequestEntityTooLarge, http.StatusRequestEntityTooLarge, "entity too large"},
+
 		// not implemented
 		{"ErrNotFound", model.ErrInsufficientLicense, http.StatusNotImplemented, "appropriate license required"},
 		{"ErrNotImplemented", model.NewErrNotImplemented("not implemented in plugin mode"), http.StatusNotImplemented, "plugin mode"},
