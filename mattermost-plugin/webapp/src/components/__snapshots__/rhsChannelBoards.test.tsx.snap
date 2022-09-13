@@ -129,7 +129,7 @@ exports[`components/rhsChannelBoards renders with empty list of boards 1`] = `
         class="boards-screenshots"
       >
         <img
-          src="undefined/public/boards-screenshots.png"
+          src="test-file-stub"
         />
       </div>
       <button

@@ -88,14 +88,14 @@ class Utils {
     }
 
     static getUserDisplayName(user: IUser, configNameFormat: string): string {
-        let nameFormat = configNameFormat    
+        let nameFormat = configNameFormat
         if(UserSettings.nameFormat){
             nameFormat=UserSettings.nameFormat
         }
-    
+
         // default nameFormat = 'username'
         let displayName = user.username
-    
+
         if (nameFormat === ShowNicknameFullName) {
             if( user.nickname != '') {
                 displayName = user.nickname
@@ -574,7 +574,7 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
-        if (!Utils.isFocalboardPlugin()) {
+        if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
             return path
         }
 
