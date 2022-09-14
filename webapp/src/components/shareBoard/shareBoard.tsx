@@ -362,8 +362,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             cacheOptions={true}
                             filterOption={(o) => {
                                 // render non-explicit members
-                                if (members[o.value])
+                                if (members[o.value]) {
                                     return members[o.value].synthetic
+                                }
                                 // not a member, definitely render
                                 return true
                             }}
