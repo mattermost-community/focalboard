@@ -203,7 +203,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('should match snapshot', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
@@ -232,7 +232,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('should match snapshot with sharing', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: boardId,
             enabled: true,
             token: 'oneToken',
@@ -260,7 +260,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('return shareBoard and click Copy link', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: boardId,
             enabled: true,
             token: 'oneToken',
@@ -302,7 +302,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         window.confirm = jest.fn(() => {
             return true
         })
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: boardId,
             enabled: true,
             token: 'oneToken',
@@ -347,7 +347,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('return shareBoard, and click switch', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: boardId,
             enabled: true,
             token: 'oneToken',
@@ -387,7 +387,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('return shareBoardComponent and click Switch without sharing', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
@@ -440,7 +440,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
     test('should match snapshot with sharing and without workspaceId and subpath', async () => {
         w.baseURL = '/test-subpath/plugins/boards'
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: boardId,
             enabled: true,
             token: 'oneToken',
@@ -467,7 +467,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
     test('should match snapshot with sharing and subpath', async () => {
         w.baseURL = '/test-subpath/plugins/boards'
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: boardId,
             enabled: true,
             token: 'oneToken',
@@ -489,7 +489,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('return shareBoard and click Select', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
@@ -498,13 +498,13 @@ describe('src/components/shareBoard/shareBoard', () => {
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
-        const users:IUser[] = [
+        const users: IUser[] = [
             {id: 'userid1', username: 'username_1'} as IUser,
             {id: 'userid2', username: 'username_2'} as IUser,
             {id: 'userid3', username: 'username_3'} as IUser,
             {id: 'userid4', username: 'username_4'} as IUser,
         ]
-        const channels:Channel[] = [
+        const channels: Channel[] = [
             {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
             {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
             {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
@@ -541,19 +541,19 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('return shareBoard and click Select, non-plugin mode', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        const users:IUser[] = [
+        const users: IUser[] = [
             {id: 'userid1', username: 'username_1'} as IUser,
             {id: 'userid2', username: 'username_2'} as IUser,
             {id: 'userid3', username: 'username_3'} as IUser,
             {id: 'userid4', username: 'username_4'} as IUser,
         ]
-        const channels:Channel[] = [
+        const channels: Channel[] = [
             {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
             {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
             {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
@@ -590,7 +590,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('confirm unlinking linked channel', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
@@ -634,7 +634,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('should match snapshot, with template', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
@@ -665,7 +665,7 @@ describe('src/components/shareBoard/shareBoard', () => {
     })
 
     test('return shareBoard template and click Select', async () => {
-        const sharing:ISharing = {
+        const sharing: ISharing = {
             id: '',
             enabled: false,
             token: '',
@@ -674,13 +674,13 @@ describe('src/components/shareBoard/shareBoard', () => {
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
-        const users:IUser[] = [
+        const users: IUser[] = [
             {id: 'userid1', username: 'username_1'} as IUser,
             {id: 'userid2', username: 'username_2'} as IUser,
             {id: 'userid3', username: 'username_3'} as IUser,
             {id: 'userid4', username: 'username_4'} as IUser,
         ]
-        const channels:Channel[] = [
+        const channels: Channel[] = [
             {id: 'channel1', type: 'P', display_name: 'Channel 1'} as Channel,
             {id: 'channel2', type: 'P', display_name: 'Channel 2'} as Channel,
             {id: 'channel3', type: 'O', display_name: 'Channel 3'} as Channel,
@@ -719,5 +719,4 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(mockedOctoClient.searchUserChannels).not.toBeCalled()
         expect(container).toMatchSnapshot()
     })
-
 })

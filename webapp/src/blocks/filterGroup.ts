@@ -7,7 +7,7 @@ type FilterGroupOperation = 'and' | 'or'
 // A FilterGroup has 2 forms: (A or B or C) OR (A and B and C)
 type FilterGroup = {
     operation: FilterGroupOperation
-    filters: (FilterClause | FilterGroup)[]
+    filters: Array<FilterClause | FilterGroup>
 }
 
 function isAFilterGroupInstance(object: (FilterClause | FilterGroup)): object is FilterGroup {
@@ -15,7 +15,7 @@ function isAFilterGroupInstance(object: (FilterClause | FilterGroup)): object is
 }
 
 function createFilterGroup(o?: FilterGroup): FilterGroup {
-    let filters: (FilterClause | FilterGroup)[] = []
+    let filters: Array<FilterClause | FilterGroup> = []
     if (o?.filters) {
         filters = o.filters.map((p: (FilterClause | FilterGroup)) => {
             if (isAFilterGroupInstance(p)) {

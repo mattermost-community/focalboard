@@ -6,14 +6,14 @@ import {MenuOptionProps} from './menuItem'
 
 type TextOptionProps = MenuOptionProps & {
     check?: boolean
-    icon?: React.ReactNode,
-    rightIcon?: React.ReactNode,
+    icon?: React.ReactNode
+    rightIcon?: React.ReactNode
     className?: string
     subText?: string
     disabled?: boolean
 }
 
-function TextOption(props:TextOptionProps): JSX.Element {
+function TextOption(props: TextOptionProps): JSX.Element {
     const {name, icon, rightIcon, check, subText, disabled} = props
     let className = 'MenuOption TextOption menu-option'
     if (props.className) {

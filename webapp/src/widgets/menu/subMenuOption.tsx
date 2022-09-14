@@ -8,7 +8,6 @@ import MenuUtil from './menuUtil'
 
 import Menu from '.'
 
-
 import './subMenuOption.scss'
 
 export const HoveringContext = React.createContext(false)

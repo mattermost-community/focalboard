@@ -6,13 +6,13 @@ import './pulsating_dot.scss'
 import {Coords} from '../tutorial_tour_tip/tutorial_tour_tip_backdrop'
 
 type Props = {
-    targetRef?: React.RefObject<HTMLImageElement>;
-    className?: string;
-    onClick?: (e: React.MouseEvent) => void;
-    coords?: Coords;
+    targetRef?: React.RefObject<HTMLImageElement>
+    className?: string
+    onClick?: (e: React.MouseEvent) => void
+    coords?: Coords
 }
 
-const PulsatingDot = (props: Props):JSX.Element => {
+const PulsatingDot = (props: Props): JSX.Element => {
     let customStyles = {}
     if (props?.coords) {
         customStyles = {

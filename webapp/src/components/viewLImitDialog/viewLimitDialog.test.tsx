@@ -2,25 +2,25 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {render, waitFor} from "@testing-library/react"
+import {render, waitFor} from '@testing-library/react'
 
-import {Provider as ReduxProvider} from "react-redux"
+import {Provider as ReduxProvider} from 'react-redux'
 
-import {MemoryRouter} from "react-router-dom"
+import {MemoryRouter} from 'react-router-dom'
 
-import userEvent from "@testing-library/user-event"
+import userEvent from '@testing-library/user-event'
 
-import {mocked} from "jest-mock"
+import {mocked} from 'jest-mock'
 
-import {mockStateStore, wrapDNDIntl} from "../../testUtils"
-import {TestBlockFactory} from "../../test/testBlockFactory"
-import {Board} from "../../blocks/board"
+import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {TestBlockFactory} from '../../test/testBlockFactory'
+import {Board} from '../../blocks/board'
 
-import client from "../../octoClient"
+import client from '../../octoClient'
 
-import {IAppWindow} from "../../types"
+import {IAppWindow} from '../../types'
 
-import {ViewLimitModal} from "./viewLimitDialog"
+import {ViewLimitModal} from './viewLimitDialog'
 
 jest.mock('../../octoClient')
 const mockedOctoClient = mocked(client, true)
@@ -46,7 +46,7 @@ describe('components/viewLimitDialog/ViewLiimitDialog', () => {
                 [board.id]: board,
             },
             current: board.id,
-        }
+        },
     }
 
     const store = mockStateStore([], state)
@@ -65,7 +65,7 @@ describe('components/viewLimitDialog/ViewLiimitDialog', () => {
                     onClose={handleOnClose}
                     showNotifyAdminSuccess={handleShowNotifyAdminSuccess}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
 
@@ -109,7 +109,7 @@ describe('components/viewLimitDialog/ViewLiimitDialog', () => {
                     onClose={handleOnClose}
                     showNotifyAdminSuccess={handleShowNotifyAdminSuccess}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
 

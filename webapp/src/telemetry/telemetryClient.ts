@@ -53,15 +53,15 @@ export const TelemetryActions = {
 }
 
 interface IEventProps {
-    channelID?: string,
-    teamID?: string,
-    board?: string,
-    view?: string,
-    viewType?: string,
-    card?: string,
-    cardTemplateId?: string,
-    boardTemplateId?: string,
-    shareBoardEnabled?: boolean,
+    channelID?: string
+    teamID?: string
+    board?: string
+    view?: string
+    viewType?: string
+    card?: string
+    cardTemplateId?: string
+    boardTemplateId?: string
+    shareBoardEnabled?: boolean
 }
 
 class TelemetryClient {

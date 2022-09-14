@@ -83,12 +83,12 @@ function moveBlock(card: Card, srcBlock: IContentBlockWithCords, dstBlock: ICont
 }
 
 type ContentBlockWithDragAndDropProps = {
-    block: ContentBlockType | ContentBlockType[],
-    x: number,
-    card: Card,
-    contents: Array<ContentBlockType|ContentBlockType[]>,
-    intl: IntlShape,
-    readonly: boolean,
+    block: ContentBlockType | ContentBlockType[]
+    x: number
+    card: Card
+    contents: Array<ContentBlockType|ContentBlockType[]>
+    intl: IntlShape
+    readonly: boolean
 }
 
 const ContentBlockWithDragAndDrop = (props: ContentBlockWithDragAndDropProps) => {

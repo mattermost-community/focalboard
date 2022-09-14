@@ -16,9 +16,8 @@ import {SuiteWindow} from '../../../webapp/src/types/index'
 import {UserSettings} from '../../../webapp/src/userSettings'
 import {getMessages, getCurrentLanguage} from '../../../webapp/src/i18n'
 
-
 const windowAny = (window as SuiteWindow)
-windowAny.baseURL = '/plugins/focalboard'
+windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
@@ -40,6 +39,8 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 import {Constants} from '../../../webapp/src/constants'
+
+import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSChannelBoards from './components/rhsChannelBoards'
@@ -319,8 +320,7 @@ export default class Plugin {
             }
 
             if (this.registry.registerAppBarComponent) {
-                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(
@@ -343,7 +343,7 @@ export default class Plugin {
                         const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
 
                         return data
-                    } 
+                    }
 
                     const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
 
@@ -417,11 +417,3 @@ export default class Plugin {
         this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
-
-declare global {
-    interface Window {
-        registerPlugin(id: string, plugin: Plugin): void
-    }
-}
-
-window.registerPlugin(manifest.id, new Plugin())

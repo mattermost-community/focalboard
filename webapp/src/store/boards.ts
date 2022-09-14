@@ -15,8 +15,8 @@ import {RootState} from './index'
 
 type BoardsState = {
     current: string
-    loadingBoard: boolean,
-    linkToChannel: string,
+    loadingBoard: boolean
+    linkToChannel: string
     boards: {[key: string]: Board}
     templates: {[key: string]: Board}
     membersInBoards: {[key: string]: {[key: string]: BoardMember}}
@@ -218,8 +218,8 @@ export const getMySortedBoards = createSelector(
     getBoards,
     (state: RootState): {[key: string]: BoardMember} => state.boards?.myBoardMemberships || {},
     (boards, myBoardMemberships: {[key: string]: BoardMember}) => {
-        return Object.values(boards).filter((b) => myBoardMemberships[b.id])
-            .sort((a, b) => a.title.localeCompare(b.title))
+        return Object.values(boards).filter((b) => myBoardMemberships[b.id]).
+            sort((a, b) => a.title.localeCompare(b.title))
     },
 )
 

@@ -58,14 +58,17 @@ describe('components/table/calculation/CalculationRow', () => {
         FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify([board, view, card])))
 
         const component = wrapDNDIntl(
-            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+            <ColumnResizeProvider
+                columnWidths={{}}
+                onResizeColumn={jest.fn()}
+            >
                 <CalculationRow
                     board={board}
                     cards={[card, card2]}
                     activeView={view}
                     readonly={false}
                 />
-            </ColumnResizeProvider>
+            </ColumnResizeProvider>,
         )
 
         const {container} = render(component)
@@ -80,14 +83,17 @@ describe('components/table/calculation/CalculationRow', () => {
         }
 
         const component = wrapDNDIntl(
-            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+            <ColumnResizeProvider
+                columnWidths={{}}
+                onResizeColumn={jest.fn()}
+            >
                 <CalculationRow
                     board={board}
                     cards={[card, card2]}
                     activeView={view}
                     readonly={false}
                 />
-            </ColumnResizeProvider>
+            </ColumnResizeProvider>,
         )
 
         const {container} = render(component)

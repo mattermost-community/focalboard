@@ -34,9 +34,9 @@ import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
-import {getLimits} from "../../store/limits"
-import {LimitUnlimited} from "../../boardCloudLimits"
-import ViewLimitModalWrapper from "../viewLImitDialog/viewLimitDialogWrapper"
+import {getLimits} from '../../store/limits'
+import {LimitUnlimited} from '../../boardCloudLimits'
+import ViewLimitModalWrapper from '../viewLImitDialog/viewLimitDialogWrapper'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'

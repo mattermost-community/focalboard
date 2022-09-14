@@ -24,7 +24,7 @@ type Props = {
     user: IUser
     member: BoardMember
     isMe: boolean
-    teammateNameDisplay: string,
+    teammateNameDisplay: string
     onDeleteBoardMember: (member: BoardMember) => void
     onUpdateBoardMember: (member: BoardMember, permission: string) => void
 }

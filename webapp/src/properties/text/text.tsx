@@ -3,7 +3,6 @@
 
 import React from 'react'
 
-
 import {PropertyProps} from '../types'
 import BaseTextEditor from '../baseTextEditor'
 

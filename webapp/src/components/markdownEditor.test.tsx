@@ -7,7 +7,7 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import {mockDOM, wrapDNDIntl, mockStateStore} from '../testUtils'
 
-import {TestBlockFactory} from "../test/testBlockFactory"
+import {TestBlockFactory} from '../test/testBlockFactory'
 
 import {MarkdownEditor} from './markdownEditor'
 
@@ -36,7 +36,7 @@ describe('components/markdownEditor', () => {
             current: 'board-id-1',
             boards: {
                 [board1.id]: board1,
-            }
+            },
         },
         clientConfig: {
             value: {},

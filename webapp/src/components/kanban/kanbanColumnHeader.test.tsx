@@ -28,7 +28,7 @@ describe('src/components/kanban/kanbanColumnHeader', () => {
 
         },
     }
-    const option:IPropertyOption = {
+    const option: IPropertyOption = {
         id: 'id1',
         value: 'Title',
         color: 'propColorDefault',
