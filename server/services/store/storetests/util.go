@@ -21,8 +21,9 @@ func createTestUsers(t *testing.T, store store.Store, num int) []*model.User {
 			Username: fmt.Sprintf("mooncake.%d", i),
 			Email:    fmt.Sprintf("mooncake.%d@example.com", i),
 		}
-		err := store.CreateUser(user)
+		newUser, err := store.CreateUser(user)
 		require.NoError(t, err)
+		require.NotNil(t, newUser)
 
 		users = append(users, user)
 	}

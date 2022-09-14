@@ -46,10 +46,6 @@ type User struct {
 	// swagger:ignore
 	AuthData string `json:"-"`
 
-	// User settings
-	// required: true
-	Props map[string]interface{} `json:"props"`
-
 	// Created time in miliseconds since the current epoch
 	// required: true
 	CreateAt int64 `json:"create_at,omitempty"`
@@ -73,14 +69,14 @@ type User struct {
 	Roles string `json:"roles"`
 }
 
-// UserPropPatch is a user property patch
+// UserPreferencesPatch is a user property patch
 // swagger:model
-type UserPropPatch struct {
-	// The user prop updated fields
+type UserPreferencesPatch struct {
+	// The user preference updated fields
 	// required: false
 	UpdatedFields map[string]string `json:"updatedFields"`
 
-	// The user prop removed fields
+	// The user preference removed fields
 	// required: false
 	DeletedFields []string `json:"deletedFields"`
 }
