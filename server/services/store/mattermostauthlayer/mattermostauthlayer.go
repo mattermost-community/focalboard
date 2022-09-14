@@ -910,6 +910,15 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 	}
 
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
+	// ToDo: check if the query is being used appropriately from the
+	//       interface, as we're getting ID sets on request that
+	//       return partial results that seem to be valid
+	if model.IsErrNotFound(err) {
+		if boards == nil {
+			boards = []*model.Board{}
+		}
+		return boards, nil
+	}
 	if err != nil {
 		return nil, err
 	}

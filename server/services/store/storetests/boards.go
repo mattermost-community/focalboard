@@ -242,7 +242,6 @@ func testGetBoardsInTeamByIds(t *testing.T, store store.Store) {
 			ExpectedError bool
 			ExpectedLen   int
 		}{
-			/*  ToDo: uncomment when getBoardsinTeamsByIds is fixed
 			{
 				Name:          "if none of the IDs are found",
 				BoardIDs:      []string{"nonexistent-1", "nonexistent-2"},
@@ -255,7 +254,6 @@ func testGetBoardsInTeamByIds(t *testing.T, store store.Store) {
 				ExpectedError: true,
 				ExpectedLen:   1,
 			},
-			*/
 			{
 				Name:          "if all of the IDs are found",
 				BoardIDs:      []string{"board-id-1", "board-id-2"},
