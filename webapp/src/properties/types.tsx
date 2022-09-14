@@ -1,8 +1,10 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React from 'react'
 import {IntlShape} from 'react-intl'
 
 import {Card} from '../blocks/card'
-import {Board, IPropertyTemplate, PropertyTypeEnum} from '../blocks/board'
+import {Board, IPropertyTemplate, PropertyTypeEnum as BoardPropertyTypeEnum} from '../blocks/board'
 import {Options} from '../components/calculations/options'
 import {Utils} from '../utils'
 
@@ -11,7 +13,7 @@ function encodeText(text: string): string {
     return text.replace(/"/g, '""').replace(/#/g, hashSignToken)
 }
 
-export type {PropertyTypeEnum} from '../blocks/board'
+export type PropertyTypeEnum = BoardPropertyTypeEnum
 
 export type FilterValueType = 'none'|'options'|'boolean'|'text'
 
@@ -21,20 +23,20 @@ export type FilterCondition = {
 }
 
 export type PropertyProps = {
-    property: PropertyType,
-    card: Card,
-    board: Board,
-    readOnly: boolean,
-    propertyValue: string | string[],
-    propertyTemplate: IPropertyTemplate,
-    showEmptyPlaceholder: boolean,
+    property: PropertyType
+    card: Card
+    board: Board
+    readOnly: boolean
+    propertyValue: string | string[]
+    propertyTemplate: IPropertyTemplate
+    showEmptyPlaceholder: boolean
 }
 
 export abstract class PropertyType {
     isDate = false
     canGroup = false
     canFilter = false
-    filterValueType: FilterValueType = "none"
+    filterValueType: FilterValueType = 'none'
     isReadOnly = false
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
@@ -58,7 +60,6 @@ export abstract class PropertyType {
         const displayValue = this.displayValue(value, card, template, intl)
         return `"${encodeText(displayValue as string)}"`
     }
-
 
     valueClassName = (readonly: boolean): string => {
         return `octo-propertyvalue${readonly ? ' octo-propertyvalue--readonly' : ''}`

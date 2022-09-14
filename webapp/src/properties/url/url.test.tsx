@@ -72,7 +72,14 @@ describe('properties/link', () => {
     })
 
     it('should change to link after entering url', () => {
-        render(wrapIntl(<Url {...baseData} propertyValue=''/>))
+        render(
+            wrapIntl(
+                <Url
+                    {...baseData}
+                    propertyValue=''
+                />,
+            ),
+        )
 
         const url = 'https://mattermost.com'
         const input = screen.getByRole('textbox')
@@ -82,7 +89,14 @@ describe('properties/link', () => {
     })
 
     it('should allow to edit link url', () => {
-        render(wrapIntl(<Url {...baseData} propertyValue='https://mattermost.com'/>))
+        render(
+            wrapIntl(
+                <Url
+                    {...baseData}
+                    propertyValue='https://mattermost.com'
+                />,
+            ),
+        )
 
         screen.getByRole('button', {name: 'Edit'}).click()
         const newURL = 'https://github.com/mattermost'
@@ -94,7 +108,14 @@ describe('properties/link', () => {
 
     it('should allow to copy url', () => {
         const url = 'https://mattermost.com'
-        render(wrapIntl(<Url {...baseData} propertyValue={url}/>))
+        render(
+            wrapIntl(
+                <Url
+                    {...baseData}
+                    propertyValue={url}
+                />,
+            ),
+        )
         screen.getByRole('button', {name: 'Copy'}).click()
         expect(mockedCopy).toHaveBeenCalledWith(url)
         expect(mockedSendFlashMessage).toHaveBeenCalledWith({content: 'Copied!', severity: 'high'})

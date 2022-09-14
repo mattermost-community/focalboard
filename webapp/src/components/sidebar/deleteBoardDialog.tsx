@@ -12,10 +12,10 @@ import RootPortal from '../rootPortal'
 import './deleteBoardDialog.scss'
 
 type Props = {
-    boardTitle: string;
-    onClose: () => void;
+    boardTitle: string
+    onClose: () => void
     onDelete: () => Promise<void>
-    isTemplate?: boolean;
+    isTemplate?: boolean
 }
 
 export default function DeleteBoardDialog(props: Props): JSX.Element {

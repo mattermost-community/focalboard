@@ -22,6 +22,7 @@ type AmazonS3Config struct {
 	SignV2          bool
 	SSE             bool
 	Trace           bool
+	Timeout         int64
 }
 
 // Configuration is the app configuration stored in a json file.

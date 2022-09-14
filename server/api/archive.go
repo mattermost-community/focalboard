@@ -56,7 +56,7 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 		return
 	}
 
@@ -66,11 +66,7 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -85,7 +81,7 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Transfer-Encoding", "binary")
 
 	if err := a.app.ExportArchive(w, opts); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 	}
 
 	auditRec.Success()
@@ -130,17 +126,17 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 	teamID := vars["teamID"]
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create board"))
 		return
 	}
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if isGuest {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to create board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to create board"))
 		return
 	}
 
@@ -166,7 +162,7 @@ func (a *API) handleArchiveImport(w http.ResponseWriter, r *http.Request) {
 			mlog.String("team_id", teamID),
 			mlog.Err(err),
 		)
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -202,7 +198,8 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
+		return
 	}
 
 	vars := mux.Vars(r)
@@ -218,13 +215,13 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	boards, err := a.app.GetBoardsForUserAndTeam(userID, teamID, !isGuest)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	ids := []string{}
@@ -243,7 +240,7 @@ func (a *API) handleArchiveExportTeam(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Transfer-Encoding", "binary")
 
 	if err := a.app.ExportArchive(w, opts); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 	}
 
 	auditRec.Success()

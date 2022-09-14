@@ -101,7 +101,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
         board.id = '2'
         board.title = boardTitle
         board.teamId = 'team-id'
-        board.icon =  '🚴🏻‍♂️'
+        board.icon = '🚴🏻‍♂️'
         board.cardProperties = [groupProperty]
         const activeView = TestBlockFactory.createBoardView(board)
         activeView.fields.defaultTemplateId = 'defaultTemplateId'
@@ -114,7 +114,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
                 },
                 myConfig: {
                     onboardingTourStarted: {value: false},
-                }
+                },
             },
             cards: {
                 templates: [],
@@ -125,9 +125,9 @@ describe('components/boardTemplateSelector/boardTemplateSelectorPreview', () => 
             },
             views: {
                 views: {
-                    boardView: activeView
+                    boardView: activeView,
                 },
-                current: 'boardView'
+                current: 'boardView',
             },
             contents: {contents: []},
             comments: {comments: []},

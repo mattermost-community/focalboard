@@ -2,13 +2,13 @@
 // See LICENSE.txt for license information.
 import React, {useCallback, useEffect, useRef} from 'react'
 
-import {useColumnResize} from "./tableColumnResizeContext"
+import {useColumnResize} from './tableColumnResizeContext'
 import './horizontalGrip.scss'
 
 type Props = {
     templateId: string
     columnWidth: number
-    onAutoSizeColumn: (columnID: string) => void;
+    onAutoSizeColumn: (columnID: string) => void
 }
 
 type OffsetCallback = (offset: number) => void
@@ -17,7 +17,7 @@ function useResizable(liveOffset: OffsetCallback, finalOffset: OffsetCallback) {
     const state = useRef({
         initialX: 0,
         lastOffset: 0,
-        isResizing: false
+        isResizing: false,
     })
 
     const updateOffset = useCallback((event: MouseEvent) => {
@@ -41,7 +41,7 @@ function useResizable(liveOffset: OffsetCallback, finalOffset: OffsetCallback) {
         state.current = {
             initialX: event.clientX,
             lastOffset: 0,
-            isResizing: true
+            isResizing: true,
         }
         document.addEventListener('mousemove', updateOffset)
         document.addEventListener('mouseup', stopResizing)
@@ -56,12 +56,12 @@ const HorizontalGrip = (props: Props): JSX.Element => {
 
     const liveOffset = useCallback((offset: number) => {
         columnResize.updateOffset(templateId, offset)
-    },[columnResize, templateId])
+    }, [columnResize, templateId])
 
     const finalOffset = useCallback((offset: number) => {
         const width = columnResize.width(templateId) + offset
         columnResize.updateWidth(templateId, width)
-    },[columnResize, templateId])
+    }, [columnResize, templateId])
 
     const startResize = useResizable(liveOffset, finalOffset)
 

@@ -6,7 +6,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import {default as client} from '../octoClient'
 import {Board} from '../blocks/board'
 
-import {Constants} from "../constants"
+import {Constants} from '../constants'
 
 import {RootState} from './index'
 

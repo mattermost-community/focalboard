@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import {PropertyTypeEnum} from '../blocks/board'
 
 import CreatedTimeProperty from './createdTime/property'
@@ -20,7 +22,7 @@ import UnknownProperty from './unknown/property'
 import {PropertyType} from './types'
 
 class PropertiesRegistry {
-    properties: {[key:string]: PropertyType} = {}
+    properties: {[key: string]: PropertyType} = {}
     propertiesList: PropertyType[] = []
     unknownProperty: PropertyType = new UnknownProperty()
 
@@ -31,7 +33,7 @@ class PropertiesRegistry {
 
     unregister(prop: PropertyType) {
         delete this.properties[prop.type]
-        this.propertiesList = this.propertiesList.filter((p) => p.type == prop.type)
+        this.propertiesList = this.propertiesList.filter((p) => p.type === prop.type)
     }
 
     list() {

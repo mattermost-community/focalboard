@@ -37,7 +37,7 @@ const CalculationRow = (props: Props): JSX.Element => {
 
     const visiblePropertyTemplates = useMemo(() => ([
         titleTemplate,
-        ...activeView.fields.visiblePropertyIds.map((id) => board.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[]
+        ...activeView.fields.visiblePropertyIds.map((id) => board.cardProperties.find((t) => t.id === id)).filter((i) => i) as IPropertyTemplate[],
     ]), [board.cardProperties, activeView.fields.visiblePropertyIds])
 
     const selectedCalculations = activeView.fields.columnCalculations || []
@@ -66,7 +66,7 @@ const CalculationRow = (props: Props): JSX.Element => {
                             onChange={(v: string) => {
                                 const calculations = {...selectedCalculations}
                                 calculations[template.id] = v
-                                mutator.changeViewColumnCalculations(board.id, activeView.id, selectedCalculations, calculations, "change column calculation")
+                                mutator.changeViewColumnCalculations(board.id, activeView.id, selectedCalculations, calculations, 'change column calculation')
                                 setHovered(false)
                             }}
                             cards={cards}

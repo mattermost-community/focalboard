@@ -18,19 +18,23 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmat
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton dialog__close size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="ViewLimitDialog_body"
@@ -128,19 +132,23 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show view limit dialog 1`] 
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton dialog__close size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <h1
+            class="dialog-title"
+          />
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="ViewLimitDialog_body"

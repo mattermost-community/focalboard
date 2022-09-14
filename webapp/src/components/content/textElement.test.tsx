@@ -15,7 +15,7 @@ import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
 
 import {Utils} from '../../utils'
 
-import {TestBlockFactory} from "../../test/testBlockFactory"
+import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import TextElement from './textElement'
 
@@ -61,7 +61,7 @@ describe('components/content/TextElement', () => {
             current: 'board-id-1',
             boards: {
                 [board1.id]: board1,
-            }
+            },
         },
         clientConfig: {
             value: {},

@@ -11,7 +11,7 @@ import LabelOption from './labelOption'
 
 import './menu.scss'
 import textInputOption from './textInputOption'
-import MenuUtil from "./menuUtil"
+import MenuUtil from './menuUtil'
 
 type Props = {
     children: React.ReactNode
@@ -19,7 +19,6 @@ type Props = {
     fixed?: boolean
     parentRef?: React.RefObject<any>
 }
-
 
 export default class Menu extends React.PureComponent<Props> {
     static Color = ColorOption
@@ -63,7 +62,7 @@ export default class Menu extends React.PureComponent<Props> {
                             <div
                                 onMouseEnter={() => this.setState({hovering: child})}
                             >
-                                <HoveringContext.Provider value={child == this.state.hovering}>
+                                <HoveringContext.Provider value={child === this.state.hovering}>
                                     {child}
                                 </HoveringContext.Provider>
                             </div>))}

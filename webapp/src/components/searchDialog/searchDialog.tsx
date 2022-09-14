@@ -10,15 +10,14 @@ import {debounce} from 'lodash'
 import Dialog from '../dialog'
 import {Utils} from '../../utils'
 import Search from '../../widgets/icons/search'
-import { Constants } from '../../constants'
-
+import {Constants} from '../../constants'
 
 type Props = {
     onClose: () => void
     title: string
     subTitle?: string | ReactNode
-    searchHandler: (query: string) => Promise<Array<ReactNode>>
-    initialData?: Array<ReactNode>
+    searchHandler: (query: string) => Promise<ReactNode[]>
+    initialData?: ReactNode[]
     selected: number
     setSelected: (n: number) => void
 }
@@ -62,7 +61,7 @@ export const EmptyResults = (props: {query: string}): JSX.Element => (
 
 const SearchDialog = (props: Props): JSX.Element => {
     const {selected, setSelected} = props
-    const [results, setResults] = useState<Array<ReactNode>>(props.initialData || [])
+    const [results, setResults] = useState<ReactNode[]>(props.initialData || [])
     const [isSearching, setIsSearching] = useState<boolean>(false)
     const [searchQuery, setSearchQuery] = useState<string>('')
 
@@ -82,14 +81,16 @@ const SearchDialog = (props: Props): JSX.Element => {
     const handleUpDownKeyPress = (e: KeyboardEvent) => {
         if (Utils.isKeyPressed(e, Constants.keyCodes.DOWN)) {
             e.preventDefault()
-            if (results.length > 0)
+            if (results.length > 0) {
                 setSelected(((selected + 1) < results.length) ? (selected + 1) : selected)
+            }
         }
 
         if (Utils.isKeyPressed(e, Constants.keyCodes.UP)) {
             e.preventDefault()
-            if (results.length > 0)
+            if (results.length > 0) {
                 setSelected(((selected - 1) > -1) ? (selected - 1) : selected)
+            }
         }
     }
 

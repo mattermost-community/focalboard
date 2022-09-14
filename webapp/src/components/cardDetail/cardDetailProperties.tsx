@@ -50,7 +50,7 @@ const CardDetailProperties = (props: Props) => {
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
-    function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate:IPropertyTemplate) {
+    function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate: IPropertyTemplate) {
         const oldType = propRegistry.get(propertyTemplate.type)
 
         // do nothing if no change
@@ -58,7 +58,7 @@ const CardDetailProperties = (props: Props) => {
             return
         }
 
-        const affectsNumOfCards:string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
+        const affectsNumOfCards: string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
 
         // if only the name has changed, set the property without warning
         if (affectsNumOfCards === '0' || oldType === newType) {
@@ -88,7 +88,7 @@ const CardDetailProperties = (props: Props) => {
                 setShowConfirmationDialog(false)
                 try {
                     await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
-                } catch (err:any) {
+                } catch (err: any) {
                     Utils.logError(`Error Changing Property And Name:${propertyTemplate.name}: ${err?.toString()}`)
                 }
                 sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-changed', defaultMessage: 'Changed property successfully!'}), severity: 'high'})
@@ -100,7 +100,7 @@ const CardDetailProperties = (props: Props) => {
         setShowConfirmationDialog(true)
     }
 
-    function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate:IPropertyTemplate) {
+    function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate: IPropertyTemplate) {
         // set ConfirmationDialogBox Props
         setConfirmationDialogBox({
             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-delete-heading', defaultMessage: 'Confirm delete property'}),
@@ -116,7 +116,7 @@ const CardDetailProperties = (props: Props) => {
                 try {
                     await mutator.deleteProperty(board, views, cards, propertyTemplate.id)
                     sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
-                } catch (err:any) {
+                } catch (err: any) {
                     Utils.logError(`Error Deleting Property!: Could Not delete Property -" + ${deletingPropName} ${err?.toString()}`)
                 }
             },

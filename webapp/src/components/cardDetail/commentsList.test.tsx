@@ -4,7 +4,6 @@ import React from 'react'
 import 'isomorphic-fetch'
 
 import {render} from '@testing-library/react'
-
 import {act} from 'react-dom/test-utils'
 
 import {Provider as ReduxProvider} from 'react-redux'
@@ -13,12 +12,15 @@ import configureStore from 'redux-mock-store'
 import {CommentBlock} from '../../blocks/commentBlock'
 
 import {mockDOM, wrapIntl} from '../../testUtils'
+import {Utils} from '../../utils'
 
 import {FetchMock} from '../../test/fetchMock'
 
 import CommentsList from './commentsList'
 
 global.fetch = FetchMock.fn
+jest.spyOn(Utils, 'displayDateTime').mockReturnValue('a long time ago')
+jest.spyOn(Utils, 'relativeDisplayDateTime').mockReturnValue('a long time ago')
 
 beforeEach(() => {
     FetchMock.fn.mockReset()
@@ -58,7 +60,7 @@ describe('components/cardDetail/CommentsList', () => {
                 },
                 current: 'board_id_1',
                 myBoardMemberships: {
-                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                    board_id_1: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
             cards: {
@@ -97,6 +99,7 @@ describe('components/cardDetail/CommentsList', () => {
         })
 
         expect(container).toBeDefined()
+        expect(container).toMatchSnapshot()
 
         // Comments show up
         const comments = container!.querySelectorAll('.comment-text')
@@ -121,12 +124,12 @@ describe('components/cardDetail/CommentsList', () => {
                 },
                 current: 'board_id_1',
                 myBoardMemberships: {
-                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                    board_id_1: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
             teams: {
-                current: {id: 'team_id_1'}
-            }
+                current: {id: 'team_id_1'},
+            },
         })
 
         const component = (
@@ -149,6 +152,7 @@ describe('components/cardDetail/CommentsList', () => {
         })
 
         expect(container).toBeDefined()
+        expect(container).toMatchSnapshot()
 
         // Comments show up
         const comments = container!.querySelectorAll('.comment-text')

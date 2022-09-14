@@ -6,7 +6,7 @@ import {CategoryBoards, DefaultCategory} from '../../store/sidebar'
 import {Block} from '../../blocks/block'
 import {Board} from '../../blocks/board'
 
-export function addMissingItems(sidebarCategories: Array<CategoryBoards>, allItems: Array<Block | Board>): Array<CategoryBoards> {
+export function addMissingItems(sidebarCategories: CategoryBoards[], allItems: Array<Block | Board>): CategoryBoards[] {
     const blocksInCategories = new Map<string, boolean>()
     sidebarCategories.forEach(
         (category) => category.boardIDs.forEach(

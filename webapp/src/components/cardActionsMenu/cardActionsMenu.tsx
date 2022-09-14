@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, { ReactNode } from 'react'
+import React, {ReactNode} from 'react'
 import {useIntl} from 'react-intl'
 
 import DeleteIcon from '../../widgets/icons/delete'
@@ -18,7 +18,7 @@ import {useAppSelector} from '../../store/hooks'
 
 type Props = {
     cardId: string
-    onClickDelete: () => void,
+    onClickDelete: () => void
     onClickDuplicate?: () => void
     children?: ReactNode
 }

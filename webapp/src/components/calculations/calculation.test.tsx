@@ -30,9 +30,12 @@ describe('components/calculations/Calculation', () => {
 
     const Wrapper: React.FC = ({children}) => {
         return wrapIntl(
-            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+            <ColumnResizeProvider
+                columnWidths={{}}
+                onResizeColumn={jest.fn()}
+            >
                 {children}
-            </ColumnResizeProvider>
+            </ColumnResizeProvider>,
         )
     }
 
@@ -56,7 +59,7 @@ describe('components/calculations/Calculation', () => {
                     }}
                     optionsComponent={TableCalculationOptions}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
 
         expect(container).toMatchSnapshot()
@@ -82,7 +85,7 @@ describe('components/calculations/Calculation', () => {
                     }}
                     optionsComponent={TableCalculationOptions}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
 
         expect(container).toMatchSnapshot()
@@ -108,7 +111,7 @@ describe('components/calculations/Calculation', () => {
                     }}
                     optionsComponent={TableCalculationOptions}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
 
         expect(container).toMatchSnapshot()
@@ -134,7 +137,7 @@ describe('components/calculations/Calculation', () => {
                     }}
                     optionsComponent={TableCalculationOptions}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
 
         expect(container).toMatchSnapshot()
@@ -164,7 +167,7 @@ describe('components/calculations/Calculation', () => {
                     }}
                     optionsComponent={TableCalculationOptions}
                 />
-            </Wrapper>
+            </Wrapper>,
         )
 
         const countMenuOption = container.querySelector('#react-select-2-option-1')

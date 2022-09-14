@@ -12,7 +12,7 @@ import ConfirmationDialog from './confirmationDialogBox'
 import './confirmAddUserForNotifications.scss'
 
 type Props = {
-    user: IUser,
+    user: IUser
     onConfirm: (userId: string, role: string) => void
     onClose: () => void
 }
@@ -25,10 +25,10 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
     const intl = useIntl()
 
     const roleOptions = [
-        {id: 'Admin', label: intl.formatMessage({id:'PersonProperty.add-user-admin-role', defaultMessage:'Admin'})},
-        {id: 'Editor', label: intl.formatMessage({id:'PersonProperty.add-user-editor-role', defaultMessage:'Editor'})},
-        {id: 'Commenter', label: intl.formatMessage({id:'PersonProperty.add-user-commenter-role', defaultMessage:'Commenter'})},
-        {id: 'Viewer', label: intl.formatMessage({id:'PersonProperty.add-user-viewer-role', defaultMessage:'Viewer'})},
+        {id: 'Admin', label: intl.formatMessage({id: 'PersonProperty.add-user-admin-role', defaultMessage: 'Admin'})},
+        {id: 'Editor', label: intl.formatMessage({id: 'PersonProperty.add-user-editor-role', defaultMessage: 'Editor'})},
+        {id: 'Commenter', label: intl.formatMessage({id: 'PersonProperty.add-user-commenter-role', defaultMessage: 'Commenter'})},
+        {id: 'Viewer', label: intl.formatMessage({id: 'PersonProperty.add-user-viewer-role', defaultMessage: 'Viewer'})},
     ]
 
     const subText = (
@@ -59,7 +59,7 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
                 className='select'
                 getOptionLabel={(o: {id: string, label: string}) => o.label}
                 getOptionValue={(o: {id: string, label: string}) => o.id}
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
+                styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
                 menuPortalTarget={document.body}
                 options={roleOptions}
                 onChange={(option) => {

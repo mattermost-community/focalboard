@@ -676,7 +676,7 @@ describe('components/table/Table extended', () => {
         const dailogDeleteBtn = screen.getByRole('button', {name: 'Delete'})
         userEvents.click(dailogDeleteBtn)
         await waitFor(() => {
-            expect(global.fetch).toHaveBeenCalledWith(`http://localhost/api/v2/boards/${board.id}/blocks/${card1.id}`, {"headers": {"Accept": "application/json", "Authorization": "", "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest"}, "method": "DELETE"})
+            expect(global.fetch).toHaveBeenCalledWith(`http://localhost/api/v2/boards/${board.id}/blocks/${card1.id}`, {headers: {Accept: 'application/json', Authorization: '', 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}, method: 'DELETE'})
         })
     })
 })

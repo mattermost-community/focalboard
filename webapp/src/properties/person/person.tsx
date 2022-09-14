@@ -63,7 +63,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
     const me: IUser = boardUsersById[propertyValue as string]
@@ -94,7 +94,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     const addUser = useCallback(async (userId: string, role: string) => {
         const newMember = {
             boardId: board.id,
-            userId: userId,
+            userId,
             roles: role,
             schemeAdmin: role === 'Admin',
             schemeEditor: role === 'Admin' || role === 'Editor',
@@ -127,7 +127,8 @@ const Person = (props: PropertyProps): JSX.Element => {
         if (!allowAddUsers) {
             return boardUsers.filter((u) => u.username.toLowerCase().includes(value.toLowerCase()))
         }
-        const allUsers = await client.searchTeamUsers(value)
+        const excludeBots = true
+        const allUsers = await client.searchTeamUsers(value, excludeBots)
         const usersInsideBoard: IUser[] = []
         const usersOutsideBoard: IUser[] = []
         for (const u of allUsers) {
@@ -167,10 +168,10 @@ const Person = (props: PropertyProps): JSX.Element => {
                 value={boardUsersById[propertyValue as string] || null}
                 onChange={(item, action) => {
                     if (action.action === 'select-option') {
-                        if (!boardUsersById[item?.id || '']) {
-                            setConfirmAddUser(item)
-                        } else {
+                        if (boardUsersById[item?.id || '']) {
                             onChange(item?.id || '')
+                        } else {
+                            setConfirmAddUser(item)
                         }
                     } else if (action.action === 'clear') {
                         onChange('')

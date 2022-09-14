@@ -3,14 +3,14 @@
 import {Position} from './cardDetailContents'
 
 type DragAndDropRearrangeData = {
-    contentOrder: Array<string|string[]>,
-    srcBlockId: string,
-    srcBlockX: number,
-    srcBlockY: number,
-    dstBlockX: number,
-    dstBlockY: number,
-    dstBlockId: string,
-    moveTo: Position,
+    contentOrder: Array<string|string[]>
+    srcBlockId: string
+    srcBlockX: number
+    srcBlockY: number
+    dstBlockX: number
+    dstBlockY: number
+    dstBlockId: string
+    moveTo: Position
 }
 
 export const dragAndDropRearrange =

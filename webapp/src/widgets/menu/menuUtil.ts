@@ -10,7 +10,7 @@ import React, {CSSProperties} from 'react'
  * @param menuMargin a safe margin value to be ensured around the menu in the calculations.
  *  this ensures the menu stick to the edges of the screen ans has some space around for ease of use.
  */
-function openUp(anchorRef: React.RefObject<HTMLElement>, menuMargin = 40): {openUp: boolean , style: CSSProperties} {
+function openUp(anchorRef: React.RefObject<HTMLElement>, menuMargin = 40): {openUp: boolean, style: CSSProperties} {
     const ret = {
         openUp: false,
         style: {} as CSSProperties,

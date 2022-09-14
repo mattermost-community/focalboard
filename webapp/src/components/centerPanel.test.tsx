@@ -34,7 +34,7 @@ jest.mock('../telemetry/telemetryClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
 const mockedMutator = mocked(Mutator, true)
-const mockedOctoClient= mocked(octoClient, true)
+const mockedOctoClient = mocked(octoClient, true)
 mockedUtils.createGuid.mockReturnValue('test-id')
 mockedUtils.generateClassName = jest.requireActual('../utils').Utils.generateClassName
 describe('components/centerPanel', () => {

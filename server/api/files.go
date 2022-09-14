@@ -84,22 +84,18 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
 	if userID == "" && !hasValidReadToken {
-		a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "", nil)
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
 		return
 	}
 
 	if !hasValidReadToken && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 		return
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -124,7 +120,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	fileInfo, err := a.app.GetFileInfo(filename)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -139,7 +135,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 		data, jsonErr := json.Marshal(fileMetadata)
 		if jsonErr != nil {
 			a.logger.Error("failed to marshal archived file metadata", mlog.String("filename", filename), mlog.Err(jsonErr))
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", jsonErr)
+			a.errorResponse(w, r, jsonErr)
 			return
 		}
 
@@ -149,7 +145,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	fileReader, err := a.app.GetFileReader(board.TeamID, boardID, filename)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	defer fileReader.Close()
@@ -201,17 +197,13 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardCards) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to make board changes"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to make board changes"))
 		return
 	}
 
 	board, err := a.app.GetBoard(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if board == nil {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -222,10 +214,10 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	file, handle, err := r.FormFile(UploadFormFileKey)
 	if err != nil {
 		if strings.HasSuffix(err.Error(), "http: request body too large") {
-			a.errorResponse(w, r.URL.Path, http.StatusRequestEntityTooLarge, "", err)
+			a.errorResponse(w, r, model.ErrRequestEntityTooLarge)
 			return
 		}
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 	defer file.Close()
@@ -238,7 +230,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 
 	fileID, err := a.app.SaveFile(file, board.TeamID, boardID, handle.Filename)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -248,7 +240,7 @@ func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
 	)
 	data, err := json.Marshal(FileUploadResponse{FileID: fileID})
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

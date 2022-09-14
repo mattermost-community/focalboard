@@ -19,7 +19,7 @@ import {Card} from '../../blocks/card'
 import MultiPersonProperty from './property'
 import MultiPerson from './multiperson'
 
-describe('properties/multiperson', ()=> {
+describe('properties/multiperson', () => {
     const mockStore = configureStore([])
 
     const state = {
@@ -86,7 +86,6 @@ describe('properties/multiperson', ()=> {
             return Promise.resolve(renderResult.container)
         })
         expect(container).toMatchSnapshot()
-
     })
 
     test('not readonly', async () => {
@@ -141,7 +140,6 @@ describe('properties/multiperson', ()=> {
         expect(container).toMatchSnapshot()
     })
 
-
     test('user dropdown open', async () => {
         const store = mockStore(state)
         const component = wrapIntl(
@@ -180,6 +178,4 @@ describe('properties/multiperson', ()=> {
             throw new Error('container should have been initialized')
         }
     })
-
-
 })

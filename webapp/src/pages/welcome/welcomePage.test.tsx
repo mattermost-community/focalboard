@@ -71,7 +71,7 @@ describe('pages/welcome', () => {
             myConfig: {
                 onboardingTourStep: {value: '0'},
                 tourCategory: {value: 'onboarding'},
-            }
+            },
         },
     })
 
@@ -151,7 +151,7 @@ describe('pages/welcome', () => {
                 me: {},
                 myConfig: {
                     welcomePageViewed: {value: '1'},
-                }
+                },
             },
         })
 
@@ -185,7 +185,7 @@ describe('pages/welcome', () => {
                 me: {},
                 myConfig: {
                     welcomePageViewed: {value: '1'},
-                }
+                },
             },
         })
         const component = (
