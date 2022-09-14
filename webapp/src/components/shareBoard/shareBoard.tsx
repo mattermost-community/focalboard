@@ -365,6 +365,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                 if (members[o.value]) {
                                     return members[o.value].synthetic
                                 }
+
                                 // not a member, definitely render
                                 return true
                             }}
