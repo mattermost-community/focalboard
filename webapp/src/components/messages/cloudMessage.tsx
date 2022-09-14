@@ -43,8 +43,8 @@ const CloudMessage = React.memo(() => {
                         user_id: me.id,
                         category: 'focalboard',
                         name: 'cloudMessageCanceled',
-                        value: 'true'
-                    }
+                        value: 'true',
+                    },
                 ]))
                 return
             }

@@ -121,7 +121,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
 
     const loadData = async () => {
-        if( hasSharePermissions ){
+        if (hasSharePermissions) {
             const newSharing = await client.getSharing(boardId)
             setSharing(newSharing)
             setWasCopiedPublic(false)
@@ -153,7 +153,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         }
         setShowLinkChannelConfirmation(null)
         const newBoard = createBoard(board)
-        newBoard.channelId = channel.id  // This is a channel ID hardcoded here as an example
+        newBoard.channelId = channel.id // This is a channel ID hardcoded here as an example
         mutator.updateBoard(newBoard, board, 'linked channel')
     }
 
@@ -289,7 +289,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const formatOptionLabel = (userOrChannel: IUser | Channel) => {
         if ((userOrChannel as IUser).username) {
             const user = userOrChannel as IUser
-            return(
+            return (
                 <div className='user-item'>
                     {Utils.isFocalboardPlugin() &&
                         <img
@@ -311,7 +311,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         }
 
         const channel = userOrChannel as Channel
-        return(
+        return (
             <div className='user-item'>
                 {channel.type === ChannelTypePrivate && <PrivateIcon/>}
                 {channel.type === ChannelTypeOpen && <PublicIcon/>}
@@ -326,7 +326,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     let confirmSubtext
     let confirmButtonText
-    if (board.channelId == '') {
+    if (board.channelId === '') {
         confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.'})
         confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Link channel'})
     } else {
@@ -345,8 +345,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     dialogBox={{
                         heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
                         subText: confirmSubtext,
-                        confirmButtonText: confirmButtonText,
-                        destructive: board.channelId != '',
+                        confirmButtonText,
+                        destructive: board.channelId !== '',
                         onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
                         onClose: () => setShowLinkChannelConfirmation(null),
                     }}
@@ -373,7 +373,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                         const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
                                         if (channels) {
                                             result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
-                                        }    
+                                        }
                                     }
                                 } else {
                                     const users = await client.searchTeamUsers(inputValue) || []

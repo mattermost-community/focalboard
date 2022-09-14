@@ -20,7 +20,10 @@ describe('components/table/TableHeaders', () => {
 
     test('should match snapshot', async () => {
         const component = wrapDNDIntl(
-            <ColumnResizeProvider columnWidths={{}} onResizeColumn={() => {}}>
+            <ColumnResizeProvider
+                columnWidths={{}}
+                onResizeColumn={() => {}}
+            >
                 <TableHeaders
                     board={board}
                     cards={[card]}
@@ -28,7 +31,7 @@ describe('components/table/TableHeaders', () => {
                     views={[view]}
                     readonly={false}
                 />
-            </ColumnResizeProvider>
+            </ColumnResizeProvider>,
         )
 
         const {container} = render(component)

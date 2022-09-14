@@ -3,7 +3,7 @@
 import React, {useState, useRef, useEffect} from 'react'
 
 type TextInputOptionProps = {
-    initialValue: string,
+    initialValue: string
     onConfirmValue: (value: string) => void
     onValueChanged: (value: string) => void
 }
@@ -40,7 +40,8 @@ function TextInputOption(props: TextInputOptionProps): JSX.Element {
                 }
             }}
             spellCheck={true}
-        />)
+        />
+    )
 }
 
 export default React.memo(TextInputOption)

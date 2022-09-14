@@ -23,7 +23,10 @@ describe('components/table/TableHeaderMenu', () => {
     test('should match snapshot, title column', async () => {
         const onAutoSizeColumn = jest.fn()
         const component = wrapDNDIntl(
-            <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+            <ColumnResizeProvider
+                columnWidths={{}}
+                onResizeColumn={jest.fn()}
+            >
                 <TableHeader
                     readonly={false}
                     sorted={'none'}
@@ -36,7 +39,7 @@ describe('components/table/TableHeaderMenu', () => {
                     onDrop={jest.fn()}
                     onAutoSizeColumn={onAutoSizeColumn}
                 />
-            </ColumnResizeProvider>
+            </ColumnResizeProvider>,
         )
 
         const {container} = render(component)

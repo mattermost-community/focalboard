@@ -82,7 +82,7 @@ describe('components/contentBlock', () => {
             current: 'board-id-1',
             boards: {
                 [board1.id]: board1,
-            }
+            },
         },
         clientConfig: {
             value: {},

@@ -12,28 +12,28 @@ let activeThemeName: string
 import {UserSettings} from './userSettings'
 
 export type Theme = {
-    mainBg: string,
-    mainFg: string,
-    buttonBg: string,
-    buttonFg: string,
-    sidebarBg: string,
-    sidebarFg: string,
-    sidebarTextActiveBorder: string,
-    sidebarWhiteLogo: string,
+    mainBg: string
+    mainFg: string
+    buttonBg: string
+    buttonFg: string
+    sidebarBg: string
+    sidebarFg: string
+    sidebarTextActiveBorder: string
+    sidebarWhiteLogo: string
 
-    link: string,
-    linkVisited: string,
+    link: string
+    linkVisited: string
 
-    propDefault: string,
-    propGray: string,
-    propBrown: string,
-    propOrange: string,
-    propYellow: string,
-    propGreen: string,
-    propBlue: string,
-    propPurple: string,
-    propPink: string,
-    propRed: string,
+    propDefault: string
+    propGray: string
+    propBrown: string
+    propOrange: string
+    propYellow: string
+    propGreen: string
+    propBlue: string
+    propPurple: string
+    propPink: string
+    propRed: string
 }
 
 export const systemThemeName = 'system-theme'
@@ -124,18 +124,7 @@ export function setTheme(theme: Theme | null): Theme {
 
     setActiveThemeName(consolidatedTheme, theme)
 
-    if (!Utils.isFocalboardPlugin()) {
-        // for personal server and desktop, Focalboard is responsible for managing the theme,
-        // so we set all the color variables here.
-        document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
-        document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
-        document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
-        document.documentElement.style.setProperty('--button-color-rgb', consolidatedTheme.buttonFg)
-        document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
-        document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
-        document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
-        document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
-    } else {
+    if (Utils.isFocalboardPlugin()) {
         // in plugin mode, Focalbaord reuses Mattermost's color pallet, so we don't really need to
         // set the color variables here because in the app, Mattermost webapp would have already
         // declared them.
@@ -161,6 +150,17 @@ export function setTheme(theme: Theme | null): Theme {
         style.setProperty('--sidebar-text-rgb', style.getPropertyValue('--sidebar-text-rgb') || consolidatedTheme.mainBg)
         style.setProperty('--link-color-rgb', style.getPropertyValue('--link-color-rgb') || consolidatedTheme.mainBg)
         style.setProperty('--sidebar-text-active-border-rgb', style.getPropertyValue('--sidebar-text-active-border-rgb') || consolidatedTheme.mainBg)
+    } else {
+        // for personal server and desktop, Focalboard is responsible for managing the theme,
+        // so we set all the color variables here.
+        document.documentElement.style.setProperty('--center-channel-bg-rgb', consolidatedTheme.mainBg)
+        document.documentElement.style.setProperty('--center-channel-color-rgb', consolidatedTheme.mainFg)
+        document.documentElement.style.setProperty('--button-bg-rgb', consolidatedTheme.buttonBg)
+        document.documentElement.style.setProperty('--button-color-rgb', consolidatedTheme.buttonFg)
+        document.documentElement.style.setProperty('--sidebar-bg-rgb', consolidatedTheme.sidebarBg)
+        document.documentElement.style.setProperty('--sidebar-text-rgb', consolidatedTheme.sidebarFg)
+        document.documentElement.style.setProperty('--link-color-rgb', consolidatedTheme.link)
+        document.documentElement.style.setProperty('--sidebar-text-active-border-rgb', consolidatedTheme.sidebarTextActiveBorder)
     }
 
     document.documentElement.style.setProperty('--sidebar-white-logo', consolidatedTheme.sidebarWhiteLogo)

@@ -7,7 +7,7 @@ import wsClient, {WSClient} from '../wsclient'
 export const useWebsockets = (teamId: string, fn: (wsClient: WSClient) => () => void, deps: any[] = []): void => {
     useEffect(() => {
         if (!teamId) {
-            return
+            return () => {}
         }
 
         wsClient.subscribeToTeam(teamId)

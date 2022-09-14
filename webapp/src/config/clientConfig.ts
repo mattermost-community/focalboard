@@ -2,9 +2,9 @@
 // See LICENSE.txt for license information.
 
 export type ClientConfig = {
-    telemetry: boolean,
-    telemetryid: string,
-    enablePublicSharedBoards: boolean,
-    featureFlags: Record<string, string>,
-    teammateNameDisplay: string,
+    telemetry: boolean
+    telemetryid: string
+    enablePublicSharedBoards: boolean
+    featureFlags: Record<string, string>
+    teammateNameDisplay: string
 }

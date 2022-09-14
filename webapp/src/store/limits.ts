@@ -10,7 +10,7 @@ import {initialLoad} from './initialLoad'
 import {RootState} from './index'
 
 type LimitsState = {
-    limits: BoardsCloudLimits,
+    limits: BoardsCloudLimits
 }
 
 const defaultLimits = {

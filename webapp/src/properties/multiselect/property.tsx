@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import {IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
@@ -14,7 +16,7 @@ export default class MultiSelectProperty extends PropertyType {
     type = 'multiSelect' as PropertyTypeEnum
     canFilter = true
     filterValueType = 'options' as FilterValueType
-    displayName = (intl:IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
+    displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
     displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
         if (propertyValue?.length) {
             const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))

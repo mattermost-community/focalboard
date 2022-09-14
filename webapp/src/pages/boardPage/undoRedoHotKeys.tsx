@@ -17,8 +17,8 @@ const UndoRedoHotKeys = (): null => {
             mutator.undo().then(() => {
                 if (description) {
                     sendFlashMessage({
-                        content: intl.formatMessage({id: 'UndoRedoHotKeys.canUndo-with-description', defaultMessage: 'Undo {description}'}, {description: description}),
-                        severity: 'low'
+                        content: intl.formatMessage({id: 'UndoRedoHotKeys.canUndo-with-description', defaultMessage: 'Undo {description}'}, {description}),
+                        severity: 'low',
                     })
                 } else {
                     sendFlashMessage({
@@ -29,7 +29,7 @@ const UndoRedoHotKeys = (): null => {
         } else {
             sendFlashMessage({
                 content: intl.formatMessage({id: 'UndoRedoHotKeys.cannotUndo', defaultMessage: 'Nothing to Undo'}),
-                severity: 'low'
+                severity: 'low',
             })
         }
     })
@@ -41,20 +41,20 @@ const UndoRedoHotKeys = (): null => {
             mutator.redo().then(() => {
                 if (description) {
                     sendFlashMessage({
-                        content: intl.formatMessage({id: 'UndoRedoHotKeys.canRedo-with-description', defaultMessage: 'Redo {description}'}, {description: description}),
-                        severity: 'low'
+                        content: intl.formatMessage({id: 'UndoRedoHotKeys.canRedo-with-description', defaultMessage: 'Redo {description}'}, {description}),
+                        severity: 'low',
                     })
                 } else {
                     sendFlashMessage({
                         content: intl.formatMessage({id: 'UndoRedoHotKeys.canRedo', defaultMessage: 'Redo'}),
-                        severity: 'low'
+                        severity: 'low',
                     })
                 }
             })
         } else {
             sendFlashMessage({
                 content: intl.formatMessage({id: 'UndoRedoHotKeys.cannotRedo', defaultMessage: 'Nothing to Redo'}),
-                severity: 'low'
+                severity: 'low',
             })
         }
     })

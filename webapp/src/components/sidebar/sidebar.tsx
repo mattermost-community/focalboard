@@ -11,7 +11,7 @@ import ShowSidebarIcon from '../../widgets/icons/showSidebar'
 import {getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
-import {IUser} from "../../user"
+import {IUser} from '../../user'
 
 import './sidebar.scss'
 
@@ -30,9 +30,9 @@ import wsClient, {WSClient} from '../../wsclient'
 
 import {getCurrentTeam} from '../../store/teams'
 
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
-import {getMe} from "../../store/users"
+import {getMe} from '../../store/users'
 import {getCurrentViewId} from '../../store/views'
 
 import SidebarCategory from './sidebarCategory'
@@ -60,7 +60,7 @@ const Sidebar = (props: Props) => {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
-    const partialCategories = useAppSelector<Array<CategoryBoards>>(getSidebarCategories)
+    const partialCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
     const sidebarCategories = addMissingItems(partialCategories, boards)
     const activeViewID = useAppSelector(getCurrentViewId)
@@ -70,7 +70,7 @@ const Sidebar = (props: Props) => {
             dispatch(updateCategories(categories))
         }, 'category')
 
-        wsClient.addOnChange((_: WSClient, blockCategories: Array<BoardCategoryWebsocketData>) => {
+        wsClient.addOnChange((_: WSClient, blockCategories: BoardCategoryWebsocketData[]) => {
             dispatch(updateBoardCategories(blockCategories))
         }, 'blockCategories')
     }, [])

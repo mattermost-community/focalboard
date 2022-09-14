@@ -39,13 +39,13 @@ const VersionMessage = React.memo(() => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    [versionProperty]: 'true'
+                    [versionProperty]: 'true',
                 },
             }
             const patchedProps = await octoClient.patchUserConfig(me.id, patch)
             if (patchedProps) {
                 dispatch(patchProps(patchedProps))
-            }    
+            }
         }
     }
 

@@ -60,7 +60,7 @@ describe('components/cardDetail/CommentsList', () => {
                 },
                 current: 'board_id_1',
                 myBoardMemberships: {
-                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                    board_id_1: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
             cards: {
@@ -124,12 +124,12 @@ describe('components/cardDetail/CommentsList', () => {
                 },
                 current: 'board_id_1',
                 myBoardMemberships: {
-                    ['board_id_1']: {userId: 'user_id_1', schemeAdmin: true},
+                    board_id_1: {userId: 'user_id_1', schemeAdmin: true},
                 },
             },
             teams: {
-                current: {id: 'team_id_1'}
-            }
+                current: {id: 'team_id_1'},
+            },
         })
 
         const component = (

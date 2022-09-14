@@ -17,7 +17,7 @@ type Props = {
     hideCloseButton?: boolean
     className?: string
     title?: JSX.Element
-    onClose: () => void,
+    onClose: () => void
 }
 
 const Dialog = (props: Props) => {
@@ -40,15 +40,14 @@ const Dialog = (props: Props) => {
                 className='wrapper'
                 onClick={(e) => {
                     e.stopPropagation()
-                    if(!isBackdropClickedRef.current){
+                    if (!isBackdropClickedRef.current) {
                         return
                     }
                     isBackdropClickedRef.current = false
                     props.onClose()
-
                 }}
                 onMouseDown={(e) => {
-                    if(e.target === e.currentTarget){
+                    if (e.target === e.currentTarget) {
                         isBackdropClickedRef.current = true
                     }
                 }}
