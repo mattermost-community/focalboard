@@ -360,7 +360,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            filterOption={(o) => !members[o.value]}
+                            filterOption={(o) => {
+                                // render non-explicit members
+                                if (members[o.value]) {
+                                    return members[o.value].synthetic
+                                }
+                                // not a member, definitely render
+                                return true
+                            }}
                             loadOptions={async (inputValue: string) => {
                                 const result = []
                                 if (Utils.isFocalboardPlugin()) {
