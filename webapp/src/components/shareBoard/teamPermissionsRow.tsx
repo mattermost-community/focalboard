@@ -79,7 +79,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                                 <Menu.Text
                                     id='Editor'
                                     check={board.minimumRole === '' || board.minimumRole === 'editor'}
-                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'editor' ? <CheckIcon/> : null}
+                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'editor' ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                                     onClick={() => updateBoardType(board, BoardTypeOpen, 'editor')}
                                 />}
@@ -87,21 +87,21 @@ const TeamPermissionsRow = (): JSX.Element => {
                                 <Menu.Text
                                     id='Commenter'
                                     check={board.minimumRole === 'commenter'}
-                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'commenter' ? <CheckIcon/> : null}
+                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'commenter' ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
                                     onClick={() => updateBoardType(board, BoardTypeOpen, 'commenter')}
                                 />}
                             <Menu.Text
                                 id='Viewer'
                                 check={board.minimumRole === 'viewer'}
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : null}
+                                icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
                                 onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
                             />
                             <Menu.Text
                                 id='None'
                                 check={true}
-                                icon={board.type === BoardTypePrivate ? <CheckIcon/> : null}
+                                icon={board.type === BoardTypePrivate ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
                                 onClick={() => updateBoardType(board, BoardTypePrivate, 'editor')}
                             />
