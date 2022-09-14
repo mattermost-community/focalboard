@@ -279,7 +279,6 @@ func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, tea
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"b.id": boardIDs})
 
 	rows, err := query.Query()
