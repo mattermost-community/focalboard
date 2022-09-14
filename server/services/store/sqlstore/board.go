@@ -299,10 +299,7 @@ func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, tea
 			mlog.Int("len(boards)", len(boards)),
 			mlog.Int("len(boardIDs)", len(boardIDs)),
 		)
-		// ToDo: Don't return an error until the query above is fixed to return exactly the same
-		//       number of boards as the ids passed in.
-		//       Wiggin77 thinks the ids list includes templates and this query does not.
-		// return boards, model.NewErrNotAllFound("board", boardIDs)
+		return boards, model.NewErrNotAllFound("board", boardIDs)
 	}
 
 	return boards, nil
