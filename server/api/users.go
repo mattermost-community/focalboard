@@ -2,9 +2,9 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
-	"fmt"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
