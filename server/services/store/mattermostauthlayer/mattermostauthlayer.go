@@ -114,12 +114,12 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 	return &user, nil
 }
 
-func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
-	return store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
+func (s *MattermostAuthLayer) CreateUser(user *model.User) (*model.User, error) {
+	return nil, store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
 }
 
-func (s *MattermostAuthLayer) UpdateUser(user *model.User) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+func (s *MattermostAuthLayer) UpdateUser(user *model.User) (*model.User, error) {
+	return nil, store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
@@ -130,7 +130,12 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
-func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
+func (s *MattermostAuthLayer) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+	preferences, err := s.GetUserPreferences(userID)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(patch.UpdatedFields) > 0 {
 		updatedPreferences := mmModel.Preferences{}
 		for key, value := range patch.UpdatedFields {
@@ -146,8 +151,27 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 
 		if err := s.servicesAPI.UpdatePreferencesForUser(userID, updatedPreferences); err != nil {
 			s.logger.Error("failed to update user preferences", mlog.String("user_id", userID), mlog.Err(err))
-			return err
+			return nil, err
 		}
+
+		// we update the preferences list replacing or adding those
+		// that were updated
+		newPreferences := mmModel.Preferences{}
+		for _, existingPreference := range preferences {
+			hasBeenUpdated := false
+			for _, updatedPreference := range updatedPreferences {
+				if updatedPreference.Name == existingPreference.Name {
+					hasBeenUpdated = true
+					break
+				}
+			}
+
+			if !hasBeenUpdated {
+				newPreferences = append(newPreferences, existingPreference)
+			}
+		}
+		newPreferences = append(newPreferences, updatedPreferences...)
+		preferences = newPreferences
 	}
 
 	if len(patch.DeletedFields) > 0 {
@@ -164,11 +188,29 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 
 		if err := s.servicesAPI.DeletePreferencesForUser(userID, deletedPreferences); err != nil {
 			s.logger.Error("failed to delete user preferences", mlog.String("user_id", userID), mlog.Err(err))
-			return err
+			return nil, err
 		}
+
+		// we update the preferences removing those that have been
+		// deleted
+		newPreferences := mmModel.Preferences{}
+		for _, existingPreference := range preferences {
+			hasBeenDeleted := false
+			for _, deletedPreference := range deletedPreferences {
+				if deletedPreference.Name == existingPreference.Name {
+					hasBeenDeleted = true
+					break
+				}
+			}
+
+			if !hasBeenDeleted {
+				newPreferences = append(newPreferences, existingPreference)
+			}
+		}
+		preferences = newPreferences
 	}
 
-	return nil
+	return preferences, nil
 }
 
 func (s *MattermostAuthLayer) GetUserPreferences(userID string) (mmModel.Preferences, error) {

@@ -116,52 +116,56 @@ func (s *SQLStore) getUserByUsername(db sq.BaseRunner, username string) (*model.
 	return s.getUserByCondition(db, sq.Eq{"username": username})
 }
 
-func (s *SQLStore) createUser(db sq.BaseRunner, user *model.User) error {
+func (s *SQLStore) createUser(db sq.BaseRunner, user *model.User) (*model.User, error) {
 	now := utils.GetMillis()
+	user.CreateAt = now
+	user.UpdateAt = now
+	user.DeleteAt = 0
 
 	propsBytes, err := json.Marshal(user.Props)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	query := s.getQueryBuilder(db).Insert(s.tablePrefix+"users").
 		Columns("id", "username", "email", "password", "mfa_secret", "auth_service", "auth_data", "props", "create_at", "update_at", "delete_at").
-		Values(user.ID, user.Username, user.Email, user.Password, user.MfaSecret, user.AuthService, user.AuthData, propsBytes, now, now, 0)
+		Values(user.ID, user.Username, user.Email, user.Password, user.MfaSecret, user.AuthService, user.AuthData, propsBytes, user.CreateAt, user.UpdateAt, user.DeleteAt)
 
 	_, err = query.Exec()
-	return err
+	return user, err
 }
 
-func (s *SQLStore) updateUser(db sq.BaseRunner, user *model.User) error {
+func (s *SQLStore) updateUser(db sq.BaseRunner, user *model.User) (*model.User, error) {
 	now := utils.GetMillis()
+	user.UpdateAt = now
 
 	propsBytes, err := json.Marshal(user.Props)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	query := s.getQueryBuilder(db).Update(s.tablePrefix+"users").
 		Set("username", user.Username).
 		Set("email", user.Email).
 		Set("props", propsBytes).
-		Set("update_at", now).
+		Set("update_at", user.UpdateAt).
 		Where(sq.Eq{"id": user.ID})
 
 	result, err := query.Exec()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	rowCount, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if rowCount < 1 {
-		return UserNotFoundError{user.ID}
+		return nil, UserNotFoundError{user.ID}
 	}
 
-	return nil
+	return user, nil
 }
 
 func (s *SQLStore) updateUserPassword(db sq.BaseRunner, username, password string) error {
@@ -257,7 +261,12 @@ func (s *SQLStore) usersFromRows(rows *sql.Rows) ([]*model.User, error) {
 	return users, nil
 }
 
-func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.UserPropPatch) error {
+func (s *SQLStore) patchUserPreferences(db sq.BaseRunner, userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+	preferences, err := s.getUserPreferences(db, userID)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(patch.UpdatedFields) > 0 {
 		for key, value := range patch.UpdatedFields {
 			preference := mmModel.Preference{
@@ -267,9 +276,18 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 				Value:    value,
 			}
 
-			if err := s.updateUserProps(db, preference); err != nil {
-				return err
+			if err := s.updateUserPreference(db, preference); err != nil {
+				return nil, err
 			}
+
+			newPreferences := mmModel.Preferences{}
+			for _, existingPreference := range preferences {
+				if preference.Name != existingPreference.Name {
+					newPreferences = append(newPreferences, existingPreference)
+				}
+			}
+			newPreferences = append(newPreferences, preference)
+			preferences = newPreferences
 		}
 	}
 
@@ -281,16 +299,24 @@ func (s *SQLStore) patchUserProps(db sq.BaseRunner, userID string, patch model.U
 				Name:     key,
 			}
 
-			if err := s.deleteUserProps(db, preference); err != nil {
-				return err
+			if err := s.deleteUserPreference(db, preference); err != nil {
+				return nil, err
 			}
+
+			newPreferences := mmModel.Preferences{}
+			for _, existingPreference := range preferences {
+				if preference.Name != existingPreference.Name {
+					newPreferences = append(newPreferences, existingPreference)
+				}
+			}
+			preferences = newPreferences
 		}
 	}
 
-	return nil
+	return preferences, nil
 }
 
-func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+func (s *SQLStore) updateUserPreference(db sq.BaseRunner, preference mmModel.Preference) error {
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"preferences").
 		Columns("UserId", "Category", "Name", "Value").
@@ -314,7 +340,7 @@ func (s *SQLStore) updateUserProps(db sq.BaseRunner, preference mmModel.Preferen
 	return nil
 }
 
-func (s *SQLStore) deleteUserProps(db sq.BaseRunner, preference mmModel.Preference) error {
+func (s *SQLStore) deleteUserPreference(db sq.BaseRunner, preference mmModel.Preference) error {
 	query := s.getQueryBuilder(db).
 		Delete(s.tablePrefix + "preferences").
 		Where(sq.Eq{"UserId": preference.UserId}).

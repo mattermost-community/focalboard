@@ -150,7 +150,7 @@ func (s *PluginTestStore) GetUserByUsername(username string) (*model.User, error
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
+func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPreferencesPatch) error {
 	user, err := s.GetUserByID(userID)
 	if err != nil {
 		return err

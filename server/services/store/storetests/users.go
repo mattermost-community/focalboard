@@ -53,14 +53,17 @@ func testGetTeamUsers(t *testing.T, store store.Store) {
 
 		userID := utils.NewID(utils.IDTypeUser)
 
-		err = store.CreateUser(&model.User{
+		user, err := store.CreateUser(&model.User{
 			ID:       userID,
 			Username: "darth.vader",
 		})
 		require.NoError(t, err)
+		require.NotNil(t, user)
+		require.Equal(t, userID, user.ID)
+		require.Equal(t, "darth.vader", user.Username)
 
 		defer func() {
-			_ = store.UpdateUser(&model.User{
+			_, _ = store.UpdateUser(&model.User{
 				ID:       userID,
 				DeleteAt: utils.GetMillis(),
 			})
@@ -81,8 +84,9 @@ func testCreateAndGetUser(t *testing.T, store store.Store) {
 	}
 
 	t.Run("CreateUser", func(t *testing.T) {
-		err := store.CreateUser(user)
+		newUser, err := store.CreateUser(user)
 		require.NoError(t, err)
+		require.NotNil(t, newUser)
 	})
 
 	t.Run("GetUserByID", func(t *testing.T) {
@@ -114,15 +118,19 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 	user := &model.User{
 		ID: utils.NewID(utils.IDTypeUser),
 	}
-	err := store.CreateUser(user)
+	newUser, err := store.CreateUser(user)
 	require.NoError(t, err)
+	require.NotNil(t, newUser)
 
 	t.Run("UpdateUser", func(t *testing.T) {
 		user.Username = "damao"
 		user.Email = "mock@email.com"
 		user.Props = map[string]interface{}{"a": "b"}
-		err := store.UpdateUser(user)
+		uUser, err := store.UpdateUser(user)
 		require.NoError(t, err)
+		require.NotNil(t, uUser)
+		require.Equal(t, user.Username, uUser.Username)
+		require.Equal(t, user.Email, uUser.Email)
 
 		got, err := store.GetUserByID(user.ID)
 		require.NoError(t, err)
@@ -158,10 +166,11 @@ func testCreateAndUpdateUser(t *testing.T, store store.Store) {
 func testCreateAndGetRegisteredUserCount(t *testing.T, store store.Store) {
 	randomN := int(time.Now().Unix() % 10)
 	for i := 0; i < randomN; i++ {
-		err := store.CreateUser(&model.User{
+		user, err := store.CreateUser(&model.User{
 			ID: utils.NewID(utils.IDTypeUser),
 		})
 		require.NoError(t, err)
+		require.NotNil(t, user)
 	}
 
 	got, err := store.GetRegisteredUserCount()
@@ -173,15 +182,16 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	user := &model.User{
 		ID: utils.NewID(utils.IDTypeUser),
 	}
-	err := store.CreateUser(user)
+	newUser, err := store.CreateUser(user)
 	require.NoError(t, err)
+	require.NotNil(t, newUser)
 
 	key1 := "new_key_1"
 	key2 := "new_key_2"
 	key3 := "new_key_3"
 
 	// Only update props
-	patch := model.UserPropPatch{
+	patch := model.UserPreferencesPatch{
 		UpdatedFields: map[string]string{
 			key1: "new_value_1",
 			key2: "new_value_2",
@@ -189,9 +199,7 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 		},
 	}
 
-	err = store.PatchUserProps(user.ID, patch)
-	require.NoError(t, err)
-	userPreferences, err := store.GetUserPreferences(user.ID)
+	userPreferences, err := store.PatchUserPreferences(user.ID, patch)
 	require.NoError(t, err)
 	require.Equal(t, 3, len(userPreferences))
 
@@ -207,15 +215,13 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	}
 
 	// Delete a prop
-	patch = model.UserPropPatch{
+	patch = model.UserPreferencesPatch{
 		DeletedFields: []string{
 			key1,
 		},
 	}
 
-	err = store.PatchUserProps(user.ID, patch)
-	require.NoError(t, err)
-	userPreferences, err = store.GetUserPreferences(user.ID)
+	userPreferences, err = store.PatchUserPreferences(user.ID, patch)
 	require.NoError(t, err)
 
 	for _, preference := range userPreferences {
@@ -230,7 +236,7 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 	}
 
 	// update and delete together
-	patch = model.UserPropPatch{
+	patch = model.UserPreferencesPatch{
 		UpdatedFields: map[string]string{
 			key3: "new_value_3_new_again",
 		},
@@ -238,9 +244,7 @@ func testPatchUserProps(t *testing.T, store store.Store) {
 			key2,
 		},
 	}
-	err = store.PatchUserProps(user.ID, patch)
-	require.NoError(t, err)
-	userPreferences, err = store.GetUserPreferences(user.ID)
+	userPreferences, err = store.PatchUserPreferences(user.ID, patch)
 	require.NoError(t, err)
 
 	for _, preference := range userPreferences {
