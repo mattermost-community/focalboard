@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {useState, useMemo, useCallback} from 'react'
 import {IntlProvider, useIntl, FormattedMessage} from 'react-intl'
-import {useHotkeys} from 'react-hotkeys-hook'
 import debounce from 'lodash/debounce'
 
 import {getMessages} from '../../../../webapp/src/i18n'
