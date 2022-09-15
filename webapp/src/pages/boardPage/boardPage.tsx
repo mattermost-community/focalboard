@@ -127,7 +127,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
             if (activeBoard) {
                 dispatch(fetchBoardMembers({
-                    teamId: teamId,
+                    teamId,
                     boardId: activeBoardId,
                 }))
             }

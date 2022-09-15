@@ -123,7 +123,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
                     ['1']: {userId: me.id, schemeAdmin: true},
                 },
                 templates: {
-                    ['1']: template,
+                    [template.id]: template,
                 }
             }
         }
