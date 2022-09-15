@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -67,7 +66,7 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 	var error error
 
 	if len(userIDs) == 0 {
-		a.errorResponse(w, r, new Error('User IDs are empty'))
+		a.errorResponse(w, r, model.NewErrBadRequest("User IDs are empty"))
 		return
 	}
 
