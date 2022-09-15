@@ -67,7 +67,7 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 	var error error
 
 	if len(userIDs) == 0 {
-		a.errorResponse(w, r, fmt.Errorf("User IDs are empty"))
+		a.errorResponse(w, r, new Error('User IDs are empty'))
 		return
 	}
 
