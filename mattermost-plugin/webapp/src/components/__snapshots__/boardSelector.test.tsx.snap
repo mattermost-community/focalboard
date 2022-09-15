@@ -21,12 +21,26 @@ exports[`components/boardSelector renders with no results 1`] = `
           <div
             class="toolbar"
           >
-            <h1
-              class="dialog-title"
-            />
+            <div>
+              <h1
+                class="dialog-title"
+              >
+                Link boards
+              </h1>
+            </div>
             <div
               class="toolbar--right"
             >
+              <div>
+                <button
+                  class="Button emphasis--secondary"
+                  type="button"
+                >
+                  <span>
+                    Create a board
+                  </span>
+                </button>
+              </div>
               <button
                 aria-label="Close dialog"
                 class="IconButton dialog__close size--medium"
@@ -45,23 +59,6 @@ exports[`components/boardSelector renders with no results 1`] = `
             <div
               class="head"
             >
-              <div
-                class="heading"
-              >
-                <h3
-                  class="text-heading4"
-                >
-                  Link boards
-                </h3>
-                <button
-                  class="Button emphasis--secondary"
-                  type="button"
-                >
-                  <span>
-                    Create a board
-                  </span>
-                </button>
-              </div>
               <div
                 class="queryWrapper"
               >
@@ -128,12 +125,26 @@ exports[`components/boardSelector renders with some results 1`] = `
           <div
             class="toolbar"
           >
-            <h1
-              class="dialog-title"
-            />
+            <div>
+              <h1
+                class="dialog-title"
+              >
+                Link boards
+              </h1>
+            </div>
             <div
               class="toolbar--right"
             >
+              <div>
+                <button
+                  class="Button emphasis--secondary"
+                  type="button"
+                >
+                  <span>
+                    Create a board
+                  </span>
+                </button>
+              </div>
               <button
                 aria-label="Close dialog"
                 class="IconButton dialog__close size--medium"
@@ -152,23 +163,6 @@ exports[`components/boardSelector renders with some results 1`] = `
             <div
               class="head"
             >
-              <div
-                class="heading"
-              >
-                <h3
-                  class="text-heading4"
-                >
-                  Link boards
-                </h3>
-                <button
-                  class="Button emphasis--secondary"
-                  type="button"
-                >
-                  <span>
-                    Create a board
-                  </span>
-                </button>
-              </div>
               <div
                 class="queryWrapper"
               >
@@ -333,12 +327,26 @@ exports[`components/boardSelector renders without start searching 1`] = `
           <div
             class="toolbar"
           >
-            <h1
-              class="dialog-title"
-            />
+            <div>
+              <h1
+                class="dialog-title"
+              >
+                Link boards
+              </h1>
+            </div>
             <div
               class="toolbar--right"
             >
+              <div>
+                <button
+                  class="Button emphasis--secondary"
+                  type="button"
+                >
+                  <span>
+                    Create a board
+                  </span>
+                </button>
+              </div>
               <button
                 aria-label="Close dialog"
                 class="IconButton dialog__close size--medium"
@@ -357,23 +365,6 @@ exports[`components/boardSelector renders without start searching 1`] = `
             <div
               class="head"
             >
-              <div
-                class="heading"
-              >
-                <h3
-                  class="text-heading4"
-                >
-                  Link boards
-                </h3>
-                <button
-                  class="Button emphasis--secondary"
-                  type="button"
-                >
-                  <span>
-                    Create a board
-                  </span>
-                </button>
-              </div>
               <div
                 class="queryWrapper"
               >

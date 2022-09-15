@@ -18,9 +18,34 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div>
+                Find Boards
+              </div>
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            >
+              <div>
+                Type to find a board. Use 
+                <b>
+                  UP/DOWN
+                </b>
+                 to browse. 
+                <b>
+                  ENTER
+                </b>
+                 to select, 
+                <b>
+                  ESC
+                </b>
+                 to dismiss
+              </div>
+            </h5>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -42,26 +67,6 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
           <div
             class="head"
           >
-            <h3
-              class="text-heading4"
-            >
-              Find Boards
-            </h3>
-            <h5>
-              Type to find a board. Use 
-              <b>
-                UP/DOWN
-              </b>
-               to browse. 
-              <b>
-                ENTER
-              </b>
-               to select, 
-              <b>
-                ESC
-              </b>
-               to dismiss
-            </h5>
             <div
               class="queryWrapper"
             >
