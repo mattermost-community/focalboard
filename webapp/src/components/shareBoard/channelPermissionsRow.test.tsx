@@ -182,57 +182,57 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
         expect(container).toMatchSnapshot()
     })
 
-    // test('should match snapshot in plugin mode', async () => {
-    //     let container: Element | undefined
-    //     mockedUtils.isFocalboardPlugin.mockReturnValue(true)
-    //     const store = mockStateStore([thunk], state)
-    //     await act(async () => {
-    //         const result = render(
-    //             wrapDNDIntl(
-    //                 <ReduxProvider store={store}>
-    //                     <ChannelPermissionsRow/>
-    //                 </ReduxProvider>),
-    //             {wrapper: MemoryRouter},
-    //         )
-    //         container = result.container
-    //     })
+    test('should match snapshot in plugin mode', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        const store = mockStateStore([thunk], state)
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ChannelPermissionsRow/>
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
 
-    //     const buttonElement = container?.querySelector('.user-item__button')
-    //     expect(buttonElement).toBeDefined()
-    //     userEvent.click(buttonElement!)
+        const buttonElement = container?.querySelector('.user-item__button')
+        expect(buttonElement).toBeDefined()
+        userEvent.click(buttonElement!)
 
-    //     expect(container).toMatchSnapshot()
-    // })
+        expect(container).toMatchSnapshot()
+    })
 
-    // test('should match snapshot in template', async () => {
-    //     let container: Element | undefined
-    //     mockedUtils.isFocalboardPlugin.mockReturnValue(true)
-    //     const testState = {
-    //         ...state,
-    //         boards: {
-    //             ...state.boards,
-    //             boards: {},
-    //             templates: {
-    //                 [board.id]: {...board, isTemplate: true},
-    //             }
-    //         }
-    //     }
-    //     const store = mockStateStore([thunk], testState)
-    //     await act(async () => {
-    //         const result = render(
-    //             wrapDNDIntl(
-    //                 <ReduxProvider store={store}>
-    //                     <ChannelPermissionsRow/>
-    //                 </ReduxProvider>),
-    //             {wrapper: MemoryRouter},
-    //         )
-    //         container = result.container
-    //     })
+    test('should match snapshot in template', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        const testState = {
+            ...state,
+            boards: {
+                ...state.boards,
+                boards: {},
+                templates: {
+                    [board.id]: {...board, isTemplate: true},
+                },
+            },
+        }
+        const store = mockStateStore([thunk], testState)
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ChannelPermissionsRow/>
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
 
-    //     const buttonElement = container?.querySelector('.user-item__button')
-    //     expect(buttonElement).toBeDefined()
-    //     userEvent.click(buttonElement!)
+        const buttonElement = container?.querySelector('.user-item__button')
+        expect(buttonElement).toBeDefined()
+        userEvent.click(buttonElement!)
 
-    //     expect(container).toMatchSnapshot()
-    // })
+        expect(container).toMatchSnapshot()
+    })
 })
