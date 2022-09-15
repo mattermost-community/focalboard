@@ -103,7 +103,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                                 check={true}
                                 icon={board.type === BoardTypePrivate ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
-                                onClick={() => updateBoardType(board, BoardTypePrivate, 'editor')}
+                                onClick={() => updateBoardType(board, BoardTypePrivate, '')}
                             />
                         </Menu>
                     </MenuWrapper>

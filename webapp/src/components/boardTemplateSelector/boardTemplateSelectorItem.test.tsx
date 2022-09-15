@@ -122,6 +122,9 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
                 myBoardMemberships: {
                     1: {userId: me.id, schemeAdmin: true},
                 },
+                templates: {
+                    [template.id]: template,
+                },
             },
         }
         store = mockStateStore([], state)
