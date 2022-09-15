@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"fmt"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
@@ -64,7 +65,13 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 
 	var users []*model.User
 	var error error
-	if len(userIDs) > 0 && userIDs[0] == model.SingleUser {
+
+	if len(userIDs) == 0 {
+		a.errorResponse(w, r, fmt.Errorf("User IDs are empty"))
+		return
+	}
+
+	if userIDs[0] == model.SingleUser {
 		ws, _ := a.app.GetRootTeam()
 		now := utils.GetMillis()
 		user := &model.User{
@@ -79,7 +86,7 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 	} else {
 		users, error = a.app.GetUsersList(userIDs)
 		if error != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+			a.errorResponse(w, r, error)
 			return
 		}
 	}
