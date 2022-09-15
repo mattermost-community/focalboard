@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, useMemo, useCallback} from 'react'
 import {IntlProvider, useIntl, FormattedMessage} from 'react-intl'
+import {useHotkeys} from 'react-hotkeys-hook'
 import debounce from 'lodash/debounce'
 
 import {getMessages} from '../../../../webapp/src/i18n'
@@ -129,17 +130,30 @@ const BoardSelector = () => {
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
+    const closeDialog = () => {
+        dispatch(setLinkToChannel(''))
+        setResults([])
+        setIsSearching(false)
+        setSearchQuery('')
+        setShowLinkBoardConfirmation(null)
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log(event.key)
+        if(event.key == 'Escape') {
+            closeDialog()
+        }
+    }
+
+
     return (
-        <div className='focalboard-body'>
+        <div
+            className='focalboard-body'
+            onKeyDown={handleKeyDown}
+        >
             <Dialog
                 className='BoardSelector'
-                onClose={() => {
-                    dispatch(setLinkToChannel(''))
-                    setResults([])
-                    setIsSearching(false)
-                    setSearchQuery('')
-                    setShowLinkBoardConfirmation(null)
-                }}
+                onClose={closeDialog}
             >
                 {showLinkBoardConfirmation &&
                     <ConfirmationDialog
