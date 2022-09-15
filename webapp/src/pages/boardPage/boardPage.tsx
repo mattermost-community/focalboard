@@ -27,11 +27,10 @@ import {
     fetchBoardMembers,
     addMyBoardMemberships,
 } from '../../store/boards'
-import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
+import {getCurrentViewId, setCurrent as setCurrentView, updateViews} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {setTeam} from '../../store/teams'
-import {updateViews} from '../../store/views'
 import {updateCards} from '../../store/cards'
 import {updateComments} from '../../store/comments'
 import {updateContents} from '../../store/contents'
@@ -49,7 +48,7 @@ import CloseIcon from '../../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
@@ -142,7 +141,7 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }
 
-        console.log('useWEbsocket adding onChange handler')
+        Utils.log('useWEbsocket adding onChange handler')
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
@@ -160,7 +159,7 @@ const BoardPage = (props: Props): JSX.Element => {
         })
 
         return () => {
-            console.log('useWebsocket cleanup')
+            Utils.log('useWebsocket cleanup')
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
@@ -210,20 +209,21 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
-        console.log(`handleUnhideBoard called`)
+        Utils.log('handleUnhideBoard called')
         if (!me) {
             return
         }
 
         const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
+
         // const index = hiddenBoards.indexOf(boardID)
         // hiddenBoards.splice(index, 1)
         delete hiddenBoards[boardID]
         const hiddenBoardsArray = Object.keys(hiddenBoards)
         const patch: UserConfigPatch = {
             updatedFields: {
-                'hiddenBoardIDs': JSON.stringify(hiddenBoardsArray),
-            }
+                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
+            },
         }
         const patchedProps = await octoClient.patchUserConfig(me.id, patch)
         if (!patchedProps) {
@@ -287,6 +287,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 </div>}
 
             {
+
                 // Don't display Templates page
                 // if readonly mode and no board defined.
                 (!props.readonly || activeBoardId !== undefined) &&

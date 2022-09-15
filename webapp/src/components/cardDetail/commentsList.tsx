@@ -92,7 +92,6 @@ const CommentsList = (props: Props) => {
             {!props.readonly && newCommentComponent}
 
             {comments.slice(0).reverse().map((comment) => {
-
                 // Only modify _own_ comments, EXCEPT for Admins, which can delete _any_ comment
                 // NOTE: editing comments will exist in the future (in addition to deleting)
                 const canDeleteComment: boolean = canDeleteOthersComments || me?.id === comment.modifiedBy
@@ -104,7 +103,8 @@ const CommentsList = (props: Props) => {
                         userId={comment.modifiedBy}
                         readonly={props.readonly || !canDeleteComment}
                     />
-                )})}
+                )
+            })}
 
             {/* horizontal divider below comments */}
             {!(comments.length === 0 && props.readonly) && <hr className='CommentsList__divider'/>}

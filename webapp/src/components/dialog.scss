@@ -17,6 +17,11 @@
         line-height: 28px;
     }
 
+    .dialog-subtitle {
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
     .dialog__close {
         margin: 0 -14px 0 0;
     }
@@ -98,12 +103,12 @@
             }
         }
 
-        > .toolbar {
+        .toolbar {
             display: flex;
             flex-direction: row;
             padding: 24px 32px;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .toolbar--right {

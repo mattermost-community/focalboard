@@ -35,7 +35,7 @@ const contentsSlice = createSlice({
                             break
                         }
                     }
-                    if( !existsInParent ){
+                    if (!existsInParent) {
                         state.contentsByCard[content.parentId].push(content)
                     }
                 } else {

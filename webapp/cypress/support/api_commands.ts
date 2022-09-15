@@ -5,7 +5,6 @@ import {Board} from '../../src/blocks/board'
 import {UserConfigPatch} from '../../src/user'
 import {versionProperty} from '../../src/store/users'
 
-
 Cypress.Commands.add('apiRegisterUser', (data: Cypress.UserData, token?: string, failOnError?: boolean) => {
     return cy.request({
         method: 'POST',

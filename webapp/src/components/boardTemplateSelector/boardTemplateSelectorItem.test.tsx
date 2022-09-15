@@ -110,7 +110,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         roles: 'system_user',
     }
 
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     beforeEach(() => {
         jest.clearAllMocks()
         const state = {
@@ -120,12 +120,12 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
             boards: {
                 current: '1',
                 myBoardMemberships: {
-                    ['1']: {userId: me.id, schemeAdmin: true},
+                    1: {userId: me.id, schemeAdmin: true},
                 },
                 templates: {
                     [template.id]: template,
-                }
-            }
+                },
+            },
         }
         store = mockStateStore([], state)
     })

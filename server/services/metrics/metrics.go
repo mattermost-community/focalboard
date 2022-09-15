@@ -10,6 +10,7 @@ import (
 const (
 	MetricsNamespace       = "focalboard"
 	MetricsSubsystemBlocks = "blocks"
+	MetricsSubsystemBoards = "boards"
 	MetricsSubsystemTeams  = "teams"
 	MetricsSubsystemSystem = "system"
 
@@ -39,6 +40,7 @@ type Metrics struct {
 	blocksDeletedCount  prometheus.Counter
 
 	blockCount *prometheus.GaugeVec
+	boardCount prometheus.Gauge
 	teamCount  prometheus.Gauge
 
 	blockLastActivity prometheus.Gauge
@@ -143,6 +145,15 @@ func NewMetrics(info InstanceInfo) *Metrics {
 	}, []string{"BlockType"})
 	m.registry.MustRegister(m.blockCount)
 
+	m.boardCount = prometheus.NewGauge(prometheus.GaugeOpts{
+		Namespace:   MetricsNamespace,
+		Subsystem:   MetricsSubsystemBoards,
+		Name:        "boards_total",
+		Help:        "Total number of boards.",
+		ConstLabels: additionalLabels,
+	})
+	m.registry.MustRegister(m.boardCount)
+
 	m.teamCount = prometheus.NewGauge(prometheus.GaugeOpts{
 		Namespace:   MetricsNamespace,
 		Subsystem:   MetricsSubsystemTeams,
@@ -206,6 +217,12 @@ func (m *Metrics) IncrementBlocksDeleted(num int) {
 func (m *Metrics) ObserveBlockCount(blockType string, count int64) {
 	if m != nil {
 		m.blockCount.WithLabelValues(blockType).Set(float64(count))
+	}
+}
+
+func (m *Metrics) ObserveBoardCount(count int64) {
+	if m != nil {
+		m.boardCount.Set(float64(count))
 	}
 }
 

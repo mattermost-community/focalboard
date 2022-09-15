@@ -42,7 +42,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		newType := model.BoardTypePrivate
 		th.Store.EXPECT().PatchBoard("board_id_1", &model.BoardPatch{Type: &newType}, "user_id_1").Return(&privateWelcomeBoard, nil)
 
-		userPropPatch := model.UserPropPatch{
+		userPreferencesPatch := model.UserPreferencesPatch{
 			UpdatedFields: map[string]string{
 				KeyOnboardingTourStarted:  "1",
 				KeyOnboardingTourStep:     ValueOnboardingFirstStep,
@@ -50,7 +50,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 			},
 		}
 
-		th.Store.EXPECT().PatchUserProps(userID, userPropPatch).Return(nil)
+		th.Store.EXPECT().PatchUserPreferences(userID, userPreferencesPatch).Return(nil, nil)
 		th.Store.EXPECT().GetUserCategoryBoards(userID, "0").Return([]model.CategoryBoards{}, nil)
 
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)

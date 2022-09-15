@@ -21,7 +21,7 @@ import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
 import client from '../../octoClient'
 
-import TelemetryClient from "../../telemetry/telemetryClient"
+import TelemetryClient from '../../telemetry/telemetryClient'
 
 import BoardTemplateSelector from './boardTemplateSelector'
 
@@ -75,7 +75,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
     const boardTitle = 'Board 1'
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
@@ -127,12 +127,12 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                     },
                 ],
                 membersInBoards: {
-                    ['1']: {userId: me.id, schemeAdmin: true},
-                    ['2']: {userId: me.id, schemeAdmin: true},
+                    1: {userId: me.id, schemeAdmin: true},
+                    2: {userId: me.id, schemeAdmin: true},
                 },
                 myBoardMemberships: {
-                    ['1']: {userId: me.id, schemeAdmin: true},
-                    ['2']: {userId: me.id, schemeAdmin: true},
+                    1: {userId: me.id, schemeAdmin: true},
+                    2: {userId: me.id, schemeAdmin: true},
                 },
                 cards: [],
                 views: [],

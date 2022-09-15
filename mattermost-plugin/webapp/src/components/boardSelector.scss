@@ -1,23 +1,5 @@
 .BoardSelector {
     color: rgba(var(--center-channel-color-rgb));
-
-    .dialog {
-        .toolbar {
-            flex-direction: row-reverse;
-        }
-    }
-
-    .heading {
-        display: flex;
-        align-items: center;
-        margin-right: 35px;
-        margin-top: 5px;
-
-        .text-heading4 {
-            flex-grow: 1;
-        }
-    }
-
     .wrapper {
         .dialog {
             position: relative;
@@ -37,11 +19,8 @@
     .BoardSelectorBody {
         display: flex;
         flex-direction: column;
-        height: 100%;
-
-        .head {
-            margin-top: 6px;
-        }
+        flex: 1;
+        overflow: hidden;
 
         .head,
         .searchResults {
@@ -52,8 +31,7 @@
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
-            padding: 0;
-            margin-bottom: 18px;
+            padding: 16px 0;
             border-top: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
 
             .searchResult {
@@ -113,20 +91,10 @@
             }
         }
 
-        .text-heading1 {
-            font-size: 12px !important;
-        }
-
-        h5 {
-            font-size: 12px;
-            margin-top: 0;
-        }
-
         .queryWrapper {
             position: relative;
             display: flex;
             flex-direction: row;
-            margin-top: 24px;
 
             .MagnifyIcon {
                 position: absolute;

@@ -27,16 +27,16 @@ export type Focusable = {
 export type ElementType = HTMLInputElement | HTMLTextAreaElement
 
 export type ElementProps = {
-    className: string,
-    placeholder?: string,
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) => void,
-    value?: string,
-    title?: string,
-    onBlur: () => void,
-    onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement|HTMLInputElement>) => void,
-    readOnly?: boolean,
-    spellCheck?: boolean,
-    onFocus?: () => void,
+    className: string
+    placeholder?: string
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement>) => void
+    value?: string
+    title?: string
+    onBlur: () => void
+    onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement|HTMLInputElement>) => void
+    readOnly?: boolean
+    spellCheck?: boolean
+    onFocus?: () => void
 }
 
 export function useEditable(
@@ -87,7 +87,7 @@ export function useEditable(
         error = !props.validator(value || '')
     }
     return {
-        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + (className? className : ''),
+        className: 'Editable ' + (error ? 'error ' : '') + (readonly ? 'readonly ' : '') + (className || ''),
         placeholder: placeholderText,
         onChange: (e: React.ChangeEvent<ElementType>) => {
             onChange(e.target.value)

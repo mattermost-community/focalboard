@@ -115,7 +115,6 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 			Email:    model.SingleUser,
 			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
-			Props:    map[string]interface{}{},
 		}
 	} else {
 		user, err = a.app.GetUser(userID)
@@ -280,7 +279,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var patch *model.UserPropPatch
+	var patch *model.UserPreferencesPatch
 	err = json.Unmarshal(requestBody, &patch)
 	if err != nil {
 		a.errorResponse(w, r, err)

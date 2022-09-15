@@ -21,12 +21,12 @@ import PrivateIcon from '../../widgets/icons/lockOutline'
 import PublicIcon from '../../widgets/icons/globe'
 import DeleteIcon from '../../widgets/icons/delete'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import ConfirmationDialogBox from "../confirmationDialogBox"
+import ConfirmationDialogBox from '../confirmationDialogBox'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 type Props = {
-    teammateNameDisplay: string,
+    teammateNameDisplay: string
 }
 
 const ChannelPermissionsRow = (props: Props): JSX.Element => {
@@ -77,12 +77,12 @@ const ChannelPermissionsRow = (props: Props): JSX.Element => {
     )
 
     const getDMName = () => {
-        const userIds = linkedChannel.name.split("__")
+        const userIds = linkedChannel.name.split('__')
         if (userIds.length !== 2) {
             Utils.logError('Invalid DM channel name, unable to get user ids')
         }
         let result = Utils.getUserDisplayName(users[userIds[0]], props.teammateNameDisplay)
-        result += ", "
+        result += ', '
         result += Utils.getUserDisplayName(users[userIds[1]], props.teammateNameDisplay)
         return result
     }

@@ -229,7 +229,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(container).toMatchSnapshot()
     })
 
-    function openDeleteConfirmationDialog(container:HTMLElement) {
+    function openDeleteConfirmationDialog(container: HTMLElement) {
         const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)
@@ -242,7 +242,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmDialog).toBeDefined()
     }
 
-    function onPropertyRenameNoConfirmationDialog(container:HTMLElement) {
+    function onPropertyRenameNoConfirmationDialog(container: HTMLElement) {
         const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)

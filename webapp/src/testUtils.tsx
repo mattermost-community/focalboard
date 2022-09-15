@@ -49,14 +49,14 @@ export function mockMatchMedia(result: {matches: boolean}): void {
     })
 }
 
-export function mockStateStore(middleware:Middleware[], state:unknown): MockStoreEnhanced<unknown, unknown> {
+export function mockStateStore(middleware: Middleware[], state: unknown): MockStoreEnhanced<unknown, unknown> {
     const mockStore = configureStore(middleware)
     return mockStore(state)
 }
 
 export type BlocksById<BlockType> = {[key: string]: BlockType}
 
-export function blocksById<BlockType extends Block>(blocks: Array<BlockType>): BlocksById<BlockType> {
+export function blocksById<BlockType extends Block>(blocks: BlockType[]): BlocksById<BlockType> {
     return blocks.reduce((res, block) => {
         res[block.id] = block
         return res

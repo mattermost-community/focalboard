@@ -27,7 +27,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 		users: map[string]*model.User{
 			"no-team-member": {
 				ID:       "no-team-member",
-				Props:    map[string]interface{}{},
 				Username: "no-team-member",
 				Email:    "no-team-member@sample.com",
 				CreateAt: model.GetMillis(),
@@ -35,7 +34,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			},
 			"team-member": {
 				ID:       "team-member",
-				Props:    map[string]interface{}{},
 				Username: "team-member",
 				Email:    "team-member@sample.com",
 				CreateAt: model.GetMillis(),
@@ -43,7 +41,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			},
 			"viewer": {
 				ID:       "viewer",
-				Props:    map[string]interface{}{},
 				Username: "viewer",
 				Email:    "viewer@sample.com",
 				CreateAt: model.GetMillis(),
@@ -51,7 +48,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			},
 			"commenter": {
 				ID:       "commenter",
-				Props:    map[string]interface{}{},
 				Username: "commenter",
 				Email:    "commenter@sample.com",
 				CreateAt: model.GetMillis(),
@@ -59,7 +55,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			},
 			"editor": {
 				ID:       "editor",
-				Props:    map[string]interface{}{},
 				Username: "editor",
 				Email:    "editor@sample.com",
 				CreateAt: model.GetMillis(),
@@ -67,7 +62,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			},
 			"admin": {
 				ID:       "admin",
-				Props:    map[string]interface{}{},
 				Username: "admin",
 				Email:    "admin@sample.com",
 				CreateAt: model.GetMillis(),
@@ -75,7 +69,6 @@ func NewPluginTestStore(innerStore store.Store) *PluginTestStore {
 			},
 			"guest": {
 				ID:       "guest",
-				Props:    map[string]interface{}{},
 				Username: "guest",
 				Email:    "guest@sample.com",
 				CreateAt: model.GetMillis(),
@@ -148,27 +141,6 @@ func (s *PluginTestStore) GetUserByUsername(username string) (*model.User, error
 		}
 	}
 	return nil, errTestStore
-}
-
-func (s *PluginTestStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	user, err := s.GetUserByID(userID)
-	if err != nil {
-		return err
-	}
-
-	props := user.Props
-
-	for _, key := range patch.DeletedFields {
-		delete(props, key)
-	}
-
-	for key, value := range patch.UpdatedFields {
-		props[key] = value
-	}
-
-	user.Props = props
-
-	return nil
 }
 
 func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences, error) {
