@@ -158,9 +158,11 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
           <div
             class="toolbar"
           >
-            <h1
-              class="dialog-title"
-            />
+            <div>
+              <h1
+                class="dialog-title"
+              />
+            </div>
             <div
               class="toolbar--right"
             >

@@ -17,11 +17,12 @@ type Props = {
     hideCloseButton?: boolean
     className?: string
     title?: JSX.Element
+    subtitle?: JSX.Element
     onClose: () => void
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu, toolbar, title} = props
+    const {toolsMenu, toolbar, title, subtitle} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -57,7 +58,10 @@ const Dialog = (props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
-                        {<h1 className='dialog-title'>{title || ''}</h1>}
+                        <div>
+                            {<h1 className='dialog-title'>{title || ''}</h1>}
+                            {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
+                        </div>
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}
                             {toolsMenu && <MenuWrapper>

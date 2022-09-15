@@ -37,9 +37,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -62,9 +66,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -89,9 +97,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -207,9 +219,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -232,9 +248,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -259,9 +279,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -377,9 +401,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -402,9 +430,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -429,9 +461,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"

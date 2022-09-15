@@ -269,21 +269,17 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     const shareBoardTitle = (
-        <span className='text-heading5'>
-            <FormattedMessage
-                id={'ShareBoard.Title'}
-                defaultMessage={'Share Board'}
-            />
-        </span>
+        <FormattedMessage
+            id={'ShareBoard.Title'}
+            defaultMessage={'Share Board'}
+        />
     )
 
     const shareTemplateTitle = (
-        <span className='text-heading5'>
-            <FormattedMessage
-                id={'ShareTemplate.Title'}
-                defaultMessage={'Share Template'}
-            />
-        </span>
+        <FormattedMessage
+            id={'ShareTemplate.Title'}
+            defaultMessage={'Share Template'}
+        />
     )
 
     const formatOptionLabel = (userOrChannel: IUser | Channel) => {
@@ -322,8 +318,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         )
     }
 
-    const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
-
     let confirmSubtext
     let confirmButtonText
     if (board.channelId === '') {
@@ -337,8 +331,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     return (
         <Dialog
             onClose={props.onClose}
+            title={board.isTemplate ? shareTemplateTitle : shareBoardTitle}
             className='ShareBoardDialog'
-            toolbar={toolbar}
         >
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
