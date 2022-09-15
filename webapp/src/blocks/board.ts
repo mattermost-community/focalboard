@@ -13,6 +13,8 @@ const BoardTypePrivate = 'P'
 const boardTypes = [BoardTypeOpen, BoardTypePrivate]
 type BoardTypes = typeof boardTypes[number]
 
+type MemberRole = ''|'viewer'|'commenter'|'editor'|'admin'
+
 type Board = {
     id: string
     teamId: string
@@ -55,6 +57,7 @@ type BoardMember = {
     boardId: string
     userId: string
     roles?: string
+    minimumRole: MemberRole
     schemeAdmin: boolean
     schemeEditor: boolean
     schemeCommenter: boolean

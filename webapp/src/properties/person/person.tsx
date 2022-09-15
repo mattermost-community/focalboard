@@ -108,14 +108,6 @@ const Person = (props: PropertyProps): JSX.Element => {
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
     }, [board, card, propertyTemplate])
 
-    if (readOnly) {
-        return (
-            <div className={`Person ${props.property.valueClassName(true)}`}>
-                {me ? formatOptionLabel(me) : propertyValue}
-            </div>
-        )
-    }
-
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
     const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
@@ -143,6 +135,14 @@ const Person = (props: PropertyProps): JSX.Element => {
             {label: intl.formatMessage({id: 'PersonProperty.non-board-members', defaultMessage: 'Not board members'}), options: usersOutsideBoard},
         ]
     }, [boardUsers, allowAddUsers, boardUsersById])
+
+    if (readOnly) {
+        return (
+            <div className={`Person ${props.property.valueClassName(true)}`}>
+                {me ? formatOptionLabel(me) : propertyValue}
+            </div>
+        )
+    }
 
     return (
         <>
