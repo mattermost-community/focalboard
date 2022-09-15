@@ -50,7 +50,7 @@ describe('src/components/gallery/GalleryCard', () => {
     const contentComment = TestBlockFactory.createComment(card)
     contentComment.id = 'contentId-Comment'
 
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
 
     beforeEach(() => {
         jest.clearAllMocks()

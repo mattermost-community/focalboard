@@ -6,13 +6,13 @@ import wsClient, {MMWebSocketClient} from '../wsclient'
 import {Utils} from '../utils'
 
 type Props = {
-    userId?: string,
+    userId?: string
     manifest?: {
-        id: string,
-        version: string,
-    },
-    webSocketClient?: MMWebSocketClient,
-    children: React.ReactNode,
+        id: string
+        version: string
+    }
+    webSocketClient?: MMWebSocketClient
+    children: React.ReactNode
 }
 
 // WithWebSockets component initialises the websocket connection if

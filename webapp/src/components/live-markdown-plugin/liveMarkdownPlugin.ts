@@ -27,8 +27,8 @@ import createHeadingBlockStrategy from './block-types/headingBlockStrategy'
 import {BlockStrategy, InlineStrategy} from './pluginStrategy'
 
 export interface LiveMarkdownPluginConfig {
-    inlineStyleStrategies?: InlineStrategy[],
-    blockTypeStrategies?: BlockStrategy[],
+    inlineStyleStrategies?: InlineStrategy[]
+    blockTypeStrategies?: BlockStrategy[]
 }
 
 function createLiveMarkdownPlugin(config: LiveMarkdownPluginConfig = {}): EditorPlugin {

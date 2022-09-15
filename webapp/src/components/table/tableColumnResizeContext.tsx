@@ -77,7 +77,7 @@ export const ColumnResizeProvider = (props: ColumnResizeProviderProps): ReactEle
         },
         updateWidth: (columnId, width) => {
             onResizeColumn(columnId, width)
-        }
+        },
     }), [columnWidths, onResizeColumn])
 
     return (

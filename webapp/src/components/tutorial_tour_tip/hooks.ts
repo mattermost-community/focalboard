@@ -8,10 +8,10 @@ import useElementAvailable from './useElementAvailable'
 import {TutorialTourTipPunchout} from './tutorial_tour_tip_backdrop'
 
 type PunchoutOffset = {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
+    x: number
+    y: number
+    width: number
+    height: number
 }
 
 export function useMeasurePunchouts(elementIds: string[], additionalDeps: any[], offset?: PunchoutOffset): TutorialTourTipPunchout | null | undefined {

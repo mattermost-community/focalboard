@@ -9,7 +9,7 @@ import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {UserSettings} from '../../userSettings'
 import {Utils} from '../../utils'
 import {getSidebarCategories} from '../../store/sidebar'
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
 const TeamToBoardAndViewRedirect = (): null => {
     const boardId = useAppSelector(getCurrentBoardId)

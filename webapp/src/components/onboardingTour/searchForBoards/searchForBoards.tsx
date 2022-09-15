@@ -5,14 +5,14 @@ import React from 'react'
 import {FormattedMessage} from 'react-intl'
 import {right} from '@popperjs/core'
 
-import { SidebarTourSteps, TOUR_SIDEBAR } from '..'
+import {SidebarTourSteps, TOUR_SIDEBAR} from '..'
 
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 import TourTipRenderer from '../tourTipRenderer/tourTipRenderer'
 
 import './searchForBoards.scss'
 
-const SearchForBoardsTourStep = (): JSX.Element | null  => {
+const SearchForBoardsTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
             id='SidebarTour.SearchForBoards.Title'

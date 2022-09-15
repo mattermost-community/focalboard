@@ -3,23 +3,22 @@
 
 import React from 'react'
 
-import {MockStoreEnhanced} from "redux-mock-store"
+import {MockStoreEnhanced} from 'redux-mock-store'
 
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {render} from "@testing-library/react"
+import {render} from '@testing-library/react'
 
-import {createMemoryHistory, History} from "history"
+import {createMemoryHistory, History} from 'history'
 
-import {Router} from "react-router-dom"
+import {Router} from 'react-router-dom'
 
-import {Team} from "../../store/teams"
-import {TestBlockFactory} from "../../test/testBlockFactory"
+import {Team} from '../../store/teams'
+import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {mockStateStore, wrapDNDIntl} from "../../testUtils"
+import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 
-import BoardSwitcherDialog from "./boardSwitcherDialog"
-
+import BoardSwitcherDialog from './boardSwitcherDialog'
 
 describe('component/BoardSwitcherDialog', () => {
     const team1: Team = {
@@ -42,23 +41,21 @@ describe('component/BoardSwitcherDialog', () => {
 
     const state = {
         users: {
-            me: me,
+            me,
         },
         teams: {
             allTeams: [team1, team2],
             current: team1,
-        }
+        },
     }
 
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     let history: History
-
 
     beforeEach(() => {
         store = mockStateStore([], state)
         history = createMemoryHistory()
     })
-
 
     test('base case', () => {
         const onCloseHandler = jest.fn()
@@ -67,7 +64,7 @@ describe('component/BoardSwitcherDialog', () => {
                 <ReduxProvider store={store}>
                     <BoardSwitcherDialog onClose={onCloseHandler}/>
                 </ReduxProvider>
-            </Router>
+            </Router>,
         )
 
         const {container} = render(component)

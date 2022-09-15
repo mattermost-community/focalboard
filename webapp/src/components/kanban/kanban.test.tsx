@@ -43,17 +43,17 @@ describe('src/component/kanban/kanban', () => {
 
         },
     }
-    const optionQ1:IPropertyOption = {
+    const optionQ1: IPropertyOption = {
         color: 'propColorOrange',
         id: 'property_value_id_1',
         value: 'Q1',
     }
-    const optionQ2:IPropertyOption = {
+    const optionQ2: IPropertyOption = {
         color: 'propColorBlue',
         id: 'property_value_id_2',
         value: 'Q2',
     }
-    const optionQ3:IPropertyOption = {
+    const optionQ3: IPropertyOption = {
         color: 'propColorDefault',
         id: 'property_value_id_3',
         value: 'Q3',
@@ -553,17 +553,17 @@ describe('src/component/kanban/kanban', () => {
         },
     }
     activeView.fields.defaultTemplateId = card3.id
-    const optionQ1:IPropertyOption = {
+    const optionQ1: IPropertyOption = {
         color: 'propColorOrange',
         id: 'property_value_id_1',
         value: 'Q1',
     }
-    const optionQ2:IPropertyOption = {
+    const optionQ2: IPropertyOption = {
         color: 'propColorBlue',
         id: 'property_value_id_2',
         value: 'Q2',
     }
-    const optionQ3:IPropertyOption = {
+    const optionQ3: IPropertyOption = {
         color: 'propColorDefault',
         id: 'property_value_id_3',
         value: 'Q3',
@@ -656,5 +656,4 @@ describe('src/component/kanban/kanban', () => {
         userEvent.click(allButtonsNew[0])
         expect(mockedAddCard).toBeCalledTimes(1)
     })
-
 })

@@ -276,6 +276,13 @@ func (s *Server) Start() error {
 		for blockType, count := range blockCounts {
 			s.metricsService.ObserveBlockCount(blockType, count)
 		}
+		boardCount, err := s.store.GetBoardCount()
+		if err != nil {
+			s.logger.Error("Error updating metrics", mlog.String("group", "boards"), mlog.Err(err))
+			return
+		}
+		s.logger.Log(mlog.LvlFBMetrics, "Board metrics collected", mlog.Int64("board_count", boardCount))
+		s.metricsService.ObserveBoardCount(boardCount)
 		teamCount, err := s.store.GetTeamCount()
 		if err != nil {
 			s.logger.Error("Error updating metrics", mlog.String("group", "teams"), mlog.Err(err))
@@ -479,6 +486,16 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		m := make(map[string]interface{})
 		for k, v := range blockCounts {
 			m[k] = v
+		}
+		return m, nil
+	})
+	telemetryService.RegisterTracker("boards", func() (telemetry.Tracker, error) {
+		boardCount, err := opts.app.GetBoardCount()
+		if err != nil {
+			return nil, err
+		}
+		m := map[string]interface{}{
+			"boards": boardCount,
 		}
 		return m, nil
 	})

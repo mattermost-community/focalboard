@@ -24,11 +24,10 @@ const ShareBoardButton = (props: Props) => {
     const board = useAppSelector(getCurrentBoard)
 
     const iconForBoardType = () => {
-        if(board.type == BoardTypeOpen) {
+        if (board.type === BoardTypeOpen) {
             return <Globe/>
-        } else {
-            return <LockOutline/>
         }
+        return <LockOutline/>
     }
 
     return (

@@ -5,9 +5,9 @@ import React from 'react'
 
 import {render} from '@testing-library/react'
 
-import {FileInfo} from "../../../blocks/block"
+import {FileInfo} from '../../../blocks/block'
 
-import ArchivedFile from "./archivedFile"
+import ArchivedFile from './archivedFile'
 
 describe('components/content/archivedFile', () => {
     it('should match snapshot', () => {

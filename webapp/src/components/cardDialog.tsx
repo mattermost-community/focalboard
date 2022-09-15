@@ -160,6 +160,7 @@ const CardDialog = (props: Props): JSX.Element => {
     return (
         <>
             <Dialog
+                title={<div/>}
                 className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}

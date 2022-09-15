@@ -3,9 +3,9 @@
 
 import {createIntl} from 'react-intl'
 
-import {createMemoryHistory} from "history"
+import {createMemoryHistory} from 'history'
 
-import {match as routerMatch} from "react-router-dom"
+import {match as routerMatch} from 'react-router-dom'
 
 import {Utils, IDType, ShowFullName, ShowNicknameFullName, ShowUsername} from './utils'
 import {IUser} from './user'

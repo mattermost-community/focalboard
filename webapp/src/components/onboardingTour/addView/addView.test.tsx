@@ -24,7 +24,7 @@ describe('components/onboardingTour/addComments/AddViewTourStep', () => {
                 onboardingTourStarted: {value: true},
                 tourCategory: {value: 'board'},
                 onboardingTourStep: {value: '0'},
-            }
+            },
         },
         boards: {
             boards: {

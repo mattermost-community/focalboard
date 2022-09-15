@@ -86,9 +86,13 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-link-variant-off"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"

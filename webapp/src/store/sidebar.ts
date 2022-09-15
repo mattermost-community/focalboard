@@ -19,7 +19,7 @@ interface Category {
 }
 
 interface CategoryBoards extends Category {
-    boardIDs: Array<string>
+    boardIDs: string[]
 }
 
 interface BoardCategoryWebsocketData {
@@ -41,14 +41,14 @@ export const fetchSidebarCategories = createAsyncThunk(
 )
 
 type Sidebar = {
-    categoryAttributes: Array<CategoryBoards>
+    categoryAttributes: CategoryBoards[]
 }
 
 const sidebarSlice = createSlice({
     name: 'sidebar',
     initialState: {categoryAttributes: []} as Sidebar,
     reducers: {
-        updateCategories: (state, action: PayloadAction<Array<Category>>) => {
+        updateCategories: (state, action: PayloadAction<Category[]>) => {
             action.payload.forEach((updatedCategory) => {
                 const index = state.categoryAttributes.findIndex((c) => c.id === updatedCategory.id)
 
@@ -74,7 +74,7 @@ const sidebarSlice = createSlice({
             // sort categories alphabetically
             state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
         },
-        updateBoardCategories: (state, action: PayloadAction<Array<BoardCategoryWebsocketData>>) => {
+        updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
             action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
@@ -98,7 +98,7 @@ const sidebarSlice = createSlice({
 })
 
 export const getSidebarCategories = createSelector(
-    (state: RootState): Array<CategoryBoards> => state.sidebar.categoryAttributes,
+    (state: RootState): CategoryBoards[] => state.sidebar.categoryAttributes,
     (sidebarCategories) => sidebarCategories,
 )
 

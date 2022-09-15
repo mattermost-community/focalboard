@@ -2561,7 +2561,7 @@ func TestPermissionsUserChangePassword(t *testing.T) {
 }
 
 func TestPermissionsUpdateUserConfig(t *testing.T) {
-	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
+	patch := toJSON(t, model.UserPreferencesPatch{UpdatedFields: map[string]string{"test": "test"}})
 
 	ttCases := []TestCase{
 		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},

@@ -24,7 +24,7 @@ type Props = {
     user: IUser
     member: BoardMember
     isMe: boolean
-    teammateNameDisplay: string,
+    teammateNameDisplay: string
     onDeleteBoardMember: (member: BoardMember) => void
     onUpdateBoardMember: (member: BoardMember, permission: string) => void
 }
@@ -81,14 +81,14 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 <Menu.Text
                                     id='Commenter'
                                     check={true}
-                                    icon={currentRole === 'Commenter' ? <CheckIcon/> : null}
+                                    icon={currentRole === 'Commenter' ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
                                     onClick={() => props.onUpdateBoardMember(member, 'Commenter')}
                                 />}
                             <Menu.Text
                                 id='Editor'
                                 check={true}
-                                icon={currentRole === 'Editor' ? <CheckIcon/> : null}
+                                icon={currentRole === 'Editor' ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
                                 onClick={() => props.onUpdateBoardMember(member, 'Editor')}
                             />
@@ -96,7 +96,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 <Menu.Text
                                     id='Admin'
                                     check={true}
-                                    icon={currentRole === 'Admin' ? <CheckIcon/> : null}
+                                    icon={currentRole === 'Admin' ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
                                     onClick={() => props.onUpdateBoardMember(member, 'Admin')}
                                 />}

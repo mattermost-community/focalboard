@@ -25,7 +25,7 @@ jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
 
 const board = TestBlockFactory.createBoard()
-let activeView:BoardView
+let activeView: BoardView
 
 describe('components/viewHeader/viewHeaderPropertiesMenu', () => {
     const state = {
