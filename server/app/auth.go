@@ -178,7 +178,7 @@ func (a *App) RegisterUser(username, email, password string) error {
 		return errors.Wrap(err, "Invalid password")
 	}
 
-	err = a.store.CreateUser(&model.User{
+	_, err = a.store.CreateUser(&model.User{
 		ID:          utils.NewID(utils.IDTypeUser),
 		Username:    username,
 		Email:       email,
@@ -186,7 +186,6 @@ func (a *App) RegisterUser(username, email, password string) error {
 		MfaSecret:   "",
 		AuthService: a.config.AuthMode,
 		AuthData:    "",
-		Props:       map[string]interface{}{},
 	})
 	if err != nil {
 		return errors.Wrap(err, "Unable to create the new user")
