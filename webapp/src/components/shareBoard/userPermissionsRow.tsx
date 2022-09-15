@@ -36,9 +36,9 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
     let currentRole = 'Viewer'
     if (member.schemeAdmin) {
         currentRole = 'Admin'
-    } else if (member.schemeEditor) {
+    } else if (member.schemeEditor || member.minimumRole === 'editor') {
         currentRole = 'Editor'
-    } else if (member.schemeCommenter) {
+    } else if (member.schemeCommenter || member.minimumRole === 'commenter') {
         currentRole = 'Commenter'
     }
 
@@ -69,14 +69,15 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                             />
                         </button>
                         <Menu position='left'>
-                            <Menu.Text
-                                id='Viewer'
-                                check={true}
-                                icon={currentRole === 'Viewer' ? <CheckIcon/> : <div className='empty-icon'/>}
-                                name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
-                            />
-                            {!board.isTemplate &&
+                            {(board.minimumRole === 'viewer' || board.minimumRole === '') &&
+                                <Menu.Text
+                                    id='Viewer'
+                                    check={true}
+                                    icon={currentRole === 'Viewer' ? <CheckIcon/> : null}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
+                                    onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
+                                />}
+                            {!board.isTemplate && (board.minimumRole === '' || board.minimumRole === 'commenter' || board.minimumRole === 'viewer') &&
                                 <Menu.Text
                                     id='Commenter'
                                     check={true}

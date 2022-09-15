@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import {useAppSelector} from '../store/hooks'
-import {getMyBoardMembership, getCurrentBoardId} from '../store/boards'
+import {getMyBoardMembership, getCurrentBoardId, getBoard} from '../store/boards'
 import {getCurrentTeam} from '../store/teams'
 import {Utils} from '../utils'
 import {Permission} from '../constants'
@@ -13,6 +13,11 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
     }
 
     const member = useAppSelector(getMyBoardMembership(boardId))
+    const board = useAppSelector(getBoard(boardId))
+
+    if (!board) {
+        return false
+    }
 
     if (!member) {
         return false
@@ -31,13 +36,13 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
         if (adminPermissions.includes(permission) && member.schemeAdmin) {
             return true
         }
-        if (editorPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor)) {
+        if (editorPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || board.minimumRole === 'editor')) {
             return true
         }
-        if (commenterPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter)) {
+        if (commenterPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || board.minimumRole === 'commenter')) {
             return true
         }
-        if (viewerPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer)) {
+        if (viewerPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer || board.minimumRole === 'viewer')) {
             return true
         }
     }
