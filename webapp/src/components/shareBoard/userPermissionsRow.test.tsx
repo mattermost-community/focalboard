@@ -118,7 +118,8 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
                             member={state.boards.myBoardMemberships[board.id] as BoardMember}
                             teammateNameDisplay={'test'}
                             onDeleteBoardMember={() => {}}
-                            onUpdateBoardMember={() => {}}/>
+                            onUpdateBoardMember={() => {}}
+                        />
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
@@ -142,8 +143,8 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
                 boards: {},
                 templates: {
                     [board.id]: {...board, isTemplate: true},
-                }
-            }
+                },
+            },
         }
         const store = mockStateStore([thunk], testState)
         await act(async () => {

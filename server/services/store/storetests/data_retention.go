@@ -3,7 +3,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -124,13 +123,13 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 		// GetMemberForBoard throws error on now rows found
 		member, err := store.GetMemberForBoard(boardID, testUserID)
 		require.Error(t, err)
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), err)
 		require.Nil(t, member)
 
 		// GetSharing throws error on now rows found
 		sharing, err := store.GetSharing(boardID)
 		require.Error(t, err)
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), err)
 		require.Nil(t, sharing)
 
 		category, err := store.GetUserCategoryBoards(boardID, testTeamID)

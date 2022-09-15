@@ -7,9 +7,11 @@ import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {useAppSelector} from '../../../../webapp/src/store/hooks'
+import {Utils} from '../../../../webapp/src/utils'
+
+import appBarIcon from '../../../../webapp/static/app-bar-icon.png'
 
 const RHSChannelBoardsHeader = () => {
-    const appBarIconURL = (window as any).baseURL + '/public/app-bar-icon.png'
     const currentChannel = useAppSelector(getCurrentChannel)
     const language = useAppSelector<string>(getLanguage)
 
@@ -25,7 +27,7 @@ const RHSChannelBoardsHeader = () => {
             <div>
                 <img
                     className='boards-rhs-header-logo'
-                    src={appBarIconURL}
+                    src={Utils.buildURL(appBarIcon, true)}
                 />
                 <span>
                     <FormattedMessage

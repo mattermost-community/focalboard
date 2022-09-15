@@ -16,8 +16,8 @@ type Props = {
     toolbar?: React.ReactNode
     hideCloseButton?: boolean
     className?: string
-    title?: string
-    onClose: () => void,
+    title?: JSX.Element
+    onClose: () => void
 }
 
 const Dialog = (props: Props) => {
@@ -40,15 +40,14 @@ const Dialog = (props: Props) => {
                 className='wrapper'
                 onClick={(e) => {
                     e.stopPropagation()
-                    if(!isBackdropClickedRef.current){
+                    if (!isBackdropClickedRef.current) {
                         return
                     }
                     isBackdropClickedRef.current = false
                     props.onClose()
-
                 }}
                 onMouseDown={(e) => {
-                    if(e.target === e.currentTarget){
+                    if (e.target === e.currentTarget) {
                         isBackdropClickedRef.current = true
                     }
                 }}
@@ -58,17 +57,7 @@ const Dialog = (props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
-                        {title && <h1 className='dialog-title'>{title}</h1>}
-                        {
-                            !props.hideCloseButton &&
-                            <IconButton
-                                className='dialog__close'
-                                onClick={props.onClose}
-                                icon={<CloseIcon/>}
-                                title={closeDialogText}
-                                size='medium'
-                            />
-                        }
+                        {<h1 className='dialog-title'>{title || ''}</h1>}
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}
                             {toolsMenu && <MenuWrapper>
@@ -78,6 +67,16 @@ const Dialog = (props: Props) => {
                                 />
                                 {toolsMenu}
                             </MenuWrapper>
+                            }
+                            {
+                                !props.hideCloseButton &&
+                                <IconButton
+                                    className='dialog__close'
+                                    onClick={props.onClose}
+                                    icon={<CloseIcon/>}
+                                    title={closeDialogText}
+                                    size='medium'
+                                />
                             }
                         </div>
                     </div>

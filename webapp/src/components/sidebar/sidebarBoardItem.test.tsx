@@ -98,7 +98,7 @@ describe('components/sidebarBoardItem', () => {
     test('renders default icon if no custom icon set', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
-        const noIconBoard = { ...board, icon: '' }
+        const noIconBoard = {...board, icon: ''}
 
         const component = wrapIntl(
             <ReduxProvider store={store}>
@@ -121,7 +121,7 @@ describe('components/sidebarBoardItem', () => {
 
     test('sidebar board item for guest', () => {
         const mockStore = configureStore([])
-        const store = mockStore({...state, users: { me: { is_guest: true }}})
+        const store = mockStore({...state, users: {me: {is_guest: true}}})
 
         const component = wrapIntl(
             <ReduxProvider store={store}>

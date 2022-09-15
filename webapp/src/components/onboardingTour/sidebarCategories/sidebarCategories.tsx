@@ -22,7 +22,6 @@ import {Constants} from '../../../constants'
 
 import './sidebarCategories.scss'
 
-
 const SidebarCategoriesTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
@@ -33,17 +32,17 @@ const SidebarCategoriesTourStep = (): JSX.Element | null => {
     const screen = (
         <div>
             <FormattedMessage
-                id="SidebarTour.SidebarCategories.Body"
+                id='SidebarTour.SidebarCategories.Body'
                 defaultMessage='All your boards are now organized under your new sidebar. No more switching between workspaces. One-time custom categories based on your prior workspaces may have automatically been created for you as part of your v7.2 upgrade. These can be removed or edited to your preference. '
             />
             <a
-                href="https://docs.mattermost.com/welcome/whats-new-in-v72.html"
+                href='https://docs.mattermost.com/welcome/whats-new-in-v72.html'
                 target='_blank'
                 rel='noopener noreferrer'
             >
                 <FormattedMessage
-                    id="SidebarTour.SidebarCategories.Link"
-                    defaultMessage="Learn more"
+                    id='SidebarTour.SidebarCategories.Link'
+                    defaultMessage='Learn more'
                 />
             </a>
         </div>

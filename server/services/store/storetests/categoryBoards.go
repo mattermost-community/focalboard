@@ -101,4 +101,10 @@ func testGetUserCategoryBoards(t *testing.T, store store.Store) {
 
 	assert.NotEmpty(t, category1BoardCategory)
 	assert.Equal(t, 0, len(category3BoardCategory.BoardIDs))
+
+	t.Run("get empty category boards", func(t *testing.T) {
+		userCategoryBoards, err := store.GetUserCategoryBoards("nonexistent-user-id", "nonexistent-team-id")
+		assert.NoError(t, err)
+		assert.Empty(t, userCategoryBoards)
+	})
 }

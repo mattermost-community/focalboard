@@ -28,7 +28,6 @@ const ShareBoardLoginButton = () => {
         } else {
             history.push(loginPath)
         }
-
     }, [])
 
     return (

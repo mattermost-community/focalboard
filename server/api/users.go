@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -22,7 +22,7 @@ func (a *API) registerUsersRoutes(r *mux.Router) {
 }
 
 func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /users getUser
+	// swagger:operation POST /users getUsersList
 	//
 	// Returns a user[]
 	//
@@ -47,15 +47,15 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var userIDs []string
 	if err = json.Unmarshal(requestBody, &userIDs); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -86,7 +86,7 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 
 	usersList, err := json.Marshal(users)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -136,14 +136,15 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	} else {
 		user, err = a.app.GetUser(userID)
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			// ToDo: wrap with an invalid token error
+			a.errorResponse(w, r, err)
 			return
 		}
 	}
 
 	userData, err := json.Marshal(user)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	jsonBytesResponse(w, http.StatusOK, userData)
@@ -182,13 +183,13 @@ func (a *API) handleGetMyMemberships(w http.ResponseWriter, r *http.Request) {
 
 	members, err := a.app.GetMembersForUser(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	membersData, err := json.Marshal(members)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -232,7 +233,7 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := a.app.GetUser(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -241,17 +242,17 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 
 	canSeeUser, err := a.app.CanSeeUser(session.UserID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if !canSeeUser {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, model.NewErrNotFound("user ID="+userID))
 		return
 	}
 
 	userData, err := json.Marshal(user)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -289,16 +290,16 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var patch *model.UserPropPatch
 	err = json.Unmarshal(requestBody, &patch)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -313,19 +314,19 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 
 	// a user can update only own config
 	if userID != session.UserID {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+		a.errorResponse(w, r, model.NewErrForbidden(""))
 		return
 	}
 
 	updatedConfig, err := a.app.UpdateUserConfig(userID, *patch)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(updatedConfig)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -360,13 +361,13 @@ func (a *API) handleGetUserPreferences(w http.ResponseWriter, r *http.Request) {
 
 	preferences, err := a.app.GetUserPreferences(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(preferences)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

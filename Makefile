@@ -100,7 +100,7 @@ server-linux-package-docker:
 	rm -rf package
 
 generate: ## Install and run code generators.
-	cd server; go get github.com/golang/mock/mockgen
+	cd server; go install github.com/golang/mock/mockgen@v1.6.0
 	cd server; go generate ./...
 
 server-lint: templates-archive ## Run linters on server code.
@@ -185,6 +185,10 @@ watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 
 live-watch-plugin: modd-precheck ## Run and update locally the plugin in the development server
 	cd mattermost-plugin; make live-watch
+
+.PHONY: watch-product
+watch-product: ## Run the product as something the Mattermost web app will watch for
+	cd mattermost-plugin; make watch-product
 
 mac-app: server-mac webapp ## Build Mac application.
 	rm -rf mac/temp

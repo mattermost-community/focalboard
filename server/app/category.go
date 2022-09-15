@@ -1,16 +1,8 @@
 package app
 
 import (
-	"errors"
-
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
-)
-
-var (
-	ErrorCategoryPermissionDenied = errors.New("category doesn't belong to user")
-	ErrorCategoryDeleted          = errors.New("category is deleted")
-	ErrorInvalidCategory          = errors.New("invalid category")
 )
 
 func (a *App) CreateCategory(category *model.Category) (*model.Category, error) {
@@ -43,11 +35,11 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 	}
 
 	if existingCategory.DeleteAt != 0 {
-		return nil, ErrorCategoryDeleted
+		return nil, model.ErrCategoryDeleted
 	}
 
 	if existingCategory.UserID != category.UserID {
-		return nil, ErrorCategoryPermissionDenied
+		return nil, model.ErrCategoryPermissionDenied
 	}
 
 	category.UpdateAt = utils.GetMillis()
@@ -84,12 +76,12 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 
 	// verify if category belongs to the user
 	if existingCategory.UserID != userID {
-		return nil, ErrorCategoryPermissionDenied
+		return nil, model.ErrCategoryPermissionDenied
 	}
 
 	// verify if category belongs to the team
 	if existingCategory.TeamID != teamID {
-		return nil, ErrorInvalidCategory
+		return nil, model.NewErrInvalidCategory("category doesn't belong to the team")
 	}
 
 	if err = a.store.DeleteCategory(categoryID, userID, teamID); err != nil {

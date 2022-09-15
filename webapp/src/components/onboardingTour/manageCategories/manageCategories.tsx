@@ -6,7 +6,7 @@ import {right} from '@popperjs/core'
 
 import {FormattedMessage} from 'react-intl'
 
-import { SidebarTourSteps, TOUR_SIDEBAR } from '..'
+import {SidebarTourSteps, TOUR_SIDEBAR} from '..'
 
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 
@@ -19,14 +19,14 @@ import './manageCategories.scss'
 const ManageCategoriesTourStep = (): JSX.Element | null => {
     const title = (
         <FormattedMessage
-            id="SidebarTour.ManageCategories.Title"
+            id='SidebarTour.ManageCategories.Title'
             defaultMessage='Manage categories'
         />
     )
 
     const screen = (
         <FormattedMessage
-            id="SidebarTour.ManageCategories.Body"
+            id='SidebarTour.ManageCategories.Body'
             defaultMessage='Create and manage custom categories. Categories are user-specific, so moving a board to your category won’t impact other members using the same board.'
         />
     )
@@ -35,7 +35,7 @@ const ManageCategoriesTourStep = (): JSX.Element | null => {
 
     return (
         <TourTipRenderer
-            key="ManageCatergoriesTourStep"
+            key='ManageCatergoriesTourStep'
             requireCard={false}
             category={TOUR_SIDEBAR}
             step={SidebarTourSteps.MANAGE_CATEGORIES}

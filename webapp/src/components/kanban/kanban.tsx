@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
-import React, { useCallback, useState, useMemo, useEffect } from 'react'
+import React, {useCallback, useState, useMemo, useEffect} from 'react'
 import {FormattedMessage, injectIntl, IntlShape} from 'react-intl'
 
 import withScrolling, {createHorizontalStrength, createVerticalStrength} from 'react-dnd-scrolling'
@@ -42,7 +42,7 @@ type Props = {
     intl: IntlShape
     readonly: boolean
     onCardClicked: (e: React.MouseEvent, card: Card) => void
-    addCard: (groupByOptionId?: string, show?:boolean) => Promise<void>
+    addCard: (groupByOptionId?: string, show?: boolean) => Promise<void>
     addCardFromTemplate: (cardTemplateId: string, groupByOptionId?: string) => void
     showCard: (cardId?: string) => void
     hiddenCardsCount: number
@@ -59,8 +59,8 @@ const Kanban = (props: Props) => {
     const [defaultTemplateID, setDefaultTemplateID] = useState<string>()
 
     useEffect(() => {
-        if(activeView.fields.defaultTemplateId) {
-            if(cardTemplates.find(ct => ct.id === activeView.fields.defaultTemplateId)) {
+        if (activeView.fields.defaultTemplateId) {
+            if (cardTemplates.find((ct) => ct.id === activeView.fields.defaultTemplateId)) {
                 setDefaultTemplateID(activeView.fields.defaultTemplateId)
             }
         }
@@ -306,7 +306,7 @@ const Kanban = (props: Props) => {
                             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                                 <Button
                                     onClick={() => {
-                                        if(defaultTemplateID) {
+                                        if (defaultTemplateID) {
                                             props.addCardFromTemplate(defaultTemplateID, group.option.id)
                                         } else {
                                             props.addCard(group.option.id, true)

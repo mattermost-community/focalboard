@@ -551,6 +551,21 @@ func (mr *MockStoreMockRecorder) GetBoardAndCardByID(arg0 interface{}) *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardAndCardByID", reflect.TypeOf((*MockStore)(nil).GetBoardAndCardByID), arg0)
 }
 
+// GetBoardCount mocks base method.
+func (m *MockStore) GetBoardCount() (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBoardCount")
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBoardCount indicates an expected call of GetBoardCount.
+func (mr *MockStoreMockRecorder) GetBoardCount() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBoardCount", reflect.TypeOf((*MockStore)(nil).GetBoardCount))
+}
+
 // GetBoardHistory mocks base method.
 func (m *MockStore) GetBoardHistory(arg0 string, arg1 model.QueryBoardHistoryOptions) ([]*model.Board, error) {
 	m.ctrl.T.Helper()
@@ -1413,18 +1428,18 @@ func (mr *MockStoreMockRecorder) SearchUserChannels(arg0, arg1, arg2 interface{}
 }
 
 // SearchUsersByTeam mocks base method.
-func (m *MockStore) SearchUsersByTeam(arg0, arg1, arg2 string) ([]*model.User, error) {
+func (m *MockStore) SearchUsersByTeam(arg0, arg1, arg2 string, arg3 bool) ([]*model.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "SearchUsersByTeam", arg0, arg1, arg2, arg3)
 	ret0, _ := ret[0].([]*model.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchUsersByTeam indicates an expected call of SearchUsersByTeam.
-func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) SearchUsersByTeam(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUsersByTeam", reflect.TypeOf((*MockStore)(nil).SearchUsersByTeam), arg0, arg1, arg2, arg3)
 }
 
 // SendMessage mocks base method.

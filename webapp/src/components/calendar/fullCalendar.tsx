@@ -42,26 +42,26 @@ type Props = {
     addCard: (properties: Record<string, string>) => void
 }
 
-function createDatePropertyFromCalendarDates(start: Date, end: Date) : DateProperty {
+function createDatePropertyFromCalendarDates(start: Date, end: Date): DateProperty {
     // save as noon local, expected from the date picker
     start.setHours(12)
     const dateFrom = start.getTime() - timeZoneOffset(start.getTime())
     end.setHours(12)
     const dateTo = end.getTime() - timeZoneOffset(end.getTime()) - oneDay // subtract one day. Calendar is date exclusive
 
-    const dateProperty : DateProperty = {from: dateFrom}
+    const dateProperty: DateProperty = {from: dateFrom}
     if (dateTo !== dateFrom) {
         dateProperty.to = dateTo
     }
     return dateProperty
 }
 
-function createDatePropertyFromCalendarDate(start: Date) : DateProperty {
+function createDatePropertyFromCalendarDate(start: Date): DateProperty {
     // save as noon local, expected from the date picker
     start.setHours(12)
     const dateFrom = start.getTime() - timeZoneOffset(start.getTime())
 
-    const dateProperty : DateProperty = {from: dateFrom}
+    const dateProperty: DateProperty = {from: dateFrom}
     return dateProperty
 }
 
@@ -84,7 +84,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         initialDate = new Date()
     }
 
-    const isEditable = useCallback(() : boolean => {
+    const isEditable = useCallback((): boolean => {
         if (readonly || !dateDisplayProperty || propsRegistry.get(dateDisplayProperty.type).isReadOnly) {
             return false
         }

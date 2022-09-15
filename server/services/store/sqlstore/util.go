@@ -24,10 +24,6 @@ func (s *SQLStore) IsErrNotFound(err error) bool {
 	return model.IsErrNotFound(err)
 }
 
-func (s *SQLStore) IsErrNotAllFound(err error) bool {
-	return model.IsErrNotAllFound(err)
-}
-
 func (s *SQLStore) MarshalJSONB(data interface{}) ([]byte, error) {
 	b, err := json.Marshal(data)
 	if err != nil {

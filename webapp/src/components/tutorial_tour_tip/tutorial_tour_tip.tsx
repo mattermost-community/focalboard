@@ -29,7 +29,7 @@ const TourTipOverlay = ({
     children,
     show,
     onClick,
-}: { children: React.ReactNode; show: boolean; onClick: (e: React.MouseEvent) => void }) =>
+}: { children: React.ReactNode, show: boolean, onClick: (e: React.MouseEvent) => void }) =>
     (show ? ReactDOM.createPortal(
         <div
             className='tutorial-tour-tip__overlay'

@@ -4,8 +4,13 @@
 
     .dialog {
         .toolbar {
-            flex-direction: row-reverse;
             padding: 0;
+        }
+
+        .dialog__close {
+            position: absolute;
+            right: 32px;
+            top: 18px;
         }
     }
 

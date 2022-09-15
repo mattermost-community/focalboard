@@ -55,5 +55,6 @@ func testUpsertSharingAndGetSharing(t *testing.T, store store.Store) {
 	t.Run("Get not existing sharing", func(t *testing.T) {
 		_, err := store.GetSharing("not-existing")
 		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 	})
 }

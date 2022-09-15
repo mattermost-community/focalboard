@@ -104,7 +104,6 @@ class OctoUtils {
         case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
         case 'isSet': return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
         case 'isNotSet': return intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})
-        case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
         case 'is': return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
         case 'contains': return intl.formatMessage({id: 'Filter.contains', defaultMessage: 'contains'})
         case 'notContains': return intl.formatMessage({id: 'Filter.not-contains', defaultMessage: 'doesn\'t contain'})
