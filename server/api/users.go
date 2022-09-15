@@ -279,7 +279,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var patch *model.UserPropPatch
+	var patch *model.UserPreferencesPatch
 	err = json.Unmarshal(requestBody, &patch)
 	if err != nil {
 		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)

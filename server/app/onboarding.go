@@ -30,14 +30,14 @@ func (a *App) PrepareOnboardingTour(userID string, teamID string) (string, strin
 	}
 
 	// set user's tour state to initial state
-	userPropPatch := model.UserPropPatch{
+	userPreferencesPatch := model.UserPreferencesPatch{
 		UpdatedFields: map[string]string{
 			KeyOnboardingTourStarted:  "1",
 			KeyOnboardingTourStep:     ValueOnboardingFirstStep,
 			KeyOnboardingTourCategory: ValueTourCategoryOnboarding,
 		},
 	}
-	if err := a.store.PatchUserProps(userID, userPropPatch); err != nil {
+	if _, err := a.store.PatchUserPreferences(userID, userPreferencesPatch); err != nil {
 		return "", "", err
 	}
 

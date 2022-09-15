@@ -171,7 +171,7 @@ func (a *App) RegisterUser(username, email, password string) error {
 		return errors.Wrap(err, "Invalid password")
 	}
 
-	err = a.store.CreateUser(&model.User{
+	_, err = a.store.CreateUser(&model.User{
 		ID:          utils.NewID(utils.IDTypeUser),
 		Username:    username,
 		Email:       email,
