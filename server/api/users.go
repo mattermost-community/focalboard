@@ -64,7 +64,7 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 
 	var users []*model.User
 	var error error
-	if userIDs[0] == model.SingleUser {
+	if len(userIDs) > 0 && userIDs[0] == model.SingleUser {
 		ws, _ := a.app.GetRootTeam()
 		now := utils.GetMillis()
 		user := &model.User{
