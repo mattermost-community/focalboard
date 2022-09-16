@@ -172,13 +172,17 @@ class WSClient {
     }
 
     sendCommand(command: WSCommand): void {
-        if (this.client !== null) {
-            const {action, ...data} = command
-            this.client.sendMessage(this.clientPrefix + action, data)
-            return
-        }
+        try {
+            if (this.client !== null) {
+                const {action, ...data} = command
+                this.client.sendMessage(this.clientPrefix + action, data)
+                return
+            }
 
-        this.ws?.send(JSON.stringify(command))
+            this.ws?.send(JSON.stringify(command))
+        } catch (e) {
+            Utils.logError(`WSClient failed to send command ${command.action}: ${e}`)
+        }
     }
 
     sendAuthenticationCommand(token: string): void {
