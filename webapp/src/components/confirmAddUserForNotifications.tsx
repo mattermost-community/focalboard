@@ -13,14 +13,16 @@ import './confirmAddUserForNotifications.scss'
 
 type Props = {
     user: IUser
+    defaultRole: string
+    allowManageBoardRoles: boolean
     onConfirm: (userId: string, role: string) => void
     onClose: () => void
 }
 
 const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
-    const {user} = props
+    const {user, allowManageBoardRoles} = props
     const [newUserRole, setNewUserRole] = useState('Editor')
-    const userRole = useRef<string>('Editor')
+    const userRole = useRef<string>(props.defaultRole)
 
     const intl = useIntl()
 
@@ -55,19 +57,24 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
                     />
                 </label>
             </div>
-            <Select
-                className='select'
-                getOptionLabel={(o: {id: string, label: string}) => o.label}
-                getOptionValue={(o: {id: string, label: string}) => o.id}
-                styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
-                menuPortalTarget={document.body}
-                options={roleOptions}
-                onChange={(option) => {
-                    setNewUserRole(option?.id || 'Editor')
-                    userRole.current = option?.id || 'Editor'
-                }}
-                value={roleOptions.find((o) => o.id === newUserRole)}
-            />
+            {!allowManageBoardRoles &&
+                <label>{props.defaultRole}</label>
+            }
+            {allowManageBoardRoles &&
+                <Select
+                    className='select'
+                    getOptionLabel={(o: {id: string, label: string}) => o.label}
+                    getOptionValue={(o: {id: string, label: string}) => o.id}
+                    styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
+                    menuPortalTarget={document.body}
+                    options={roleOptions}
+                    onChange={(option) => {
+                        setNewUserRole(option?.id || props.defaultRole)
+                        userRole.current = option?.id || props.defaultRole
+                    }}
+                    value={roleOptions.find((o) => o.id === newUserRole)}
+                />
+            }
         </div>
     )
 
