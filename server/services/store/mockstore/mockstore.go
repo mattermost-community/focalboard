@@ -325,6 +325,21 @@ func (mr *MockStoreMockRecorder) DuplicateBoard(arg0, arg1, arg2, arg3 interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DuplicateBoard", reflect.TypeOf((*MockStore)(nil).DuplicateBoard), arg0, arg1, arg2, arg3)
 }
 
+// FindOrphansForBlocks mocks base method.
+func (m *MockStore) FindOrphansForBlocks() ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FindOrphansForBlocks")
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FindOrphansForBlocks indicates an expected call of FindOrphansForBlocks.
+func (mr *MockStoreMockRecorder) FindOrphansForBlocks() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FindOrphansForBlocks", reflect.TypeOf((*MockStore)(nil).FindOrphansForBlocks))
+}
+
 // FindOrphansForBoards mocks base method.
 func (m *MockStore) FindOrphansForBoards() ([]string, error) {
 	m.ctrl.T.Helper()

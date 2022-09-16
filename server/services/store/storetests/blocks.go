@@ -74,10 +74,10 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlockMetadata(t, store)
 	})
-	t.Run("FindOrphansForBoards", func(t *testing.T) {
+	t.Run("FindOrphans", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
-		testFindOrphansForBoards(t, store)
+		testFindOrphans(t, store)
 	})
 }
 
@@ -1067,24 +1067,49 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 	})
 }
 
-func testFindOrphansForBoards(t *testing.T, store store.Store) {
+func testFindOrphans(t *testing.T, store store.Store) {
 	boards := createTestBoards(t, store, testUserID, 2)
 	boardDelete := boards[0]
 	boardKeep := boards[1]
+
+	// create some cards and content blocks to be orphaned.
 	blocksOrphaned := createTestCards(t, store, testUserID, boardDelete.ID, 3)
-	_ = createTestCards(t, store, testUserID, boardKeep.ID, 5)
+	cardOrphaned := blocksOrphaned[0]
+	contentOrphaned := createTestBlocksForCard(t, store, cardOrphaned.ID, 3)
+	blocksOrphaned = append(blocksOrphaned, contentOrphaned...)
+
+	// create some cards and content blocks to keep.
+	blocksKeep := createTestCards(t, store, testUserID, boardKeep.ID, 5)
+	cardKeep := blocksKeep[0]
+	blocksKeep = append(blocksKeep, createTestBlocksForCard(t, store, cardKeep.ID, 5)...)
 
 	blockIDsOrphaned := extractBlockIds(blocksOrphaned)
+	contentBlockIDsOrphaned := extractBlockIds(contentOrphaned)
 
-	// orphan some blocks
+	// orphan some blocks by deleting a board
 	err := store.DeleteBoard(boardDelete.ID, testUserID)
 	require.NoError(t, err)
 
-	t.Run("find multiple orphans", func(t *testing.T) {
+	t.Run("find board orphans", func(t *testing.T) {
 		ids, err := store.FindOrphansForBoards()
 		require.NoError(t, err)
+
+		// make sure only the orphaned blocks were found
 		require.Len(t, ids, len(blocksOrphaned))
 		assert.ElementsMatch(t, blockIDsOrphaned, ids)
+	})
+
+	t.Run("find card orphans", func(t *testing.T) {
+		// delete card
+		err := store.DeleteBlock(cardOrphaned.ID, testUserID)
+		require.NoError(t, err)
+
+		ids, err := store.FindOrphansForBlocks()
+		require.NoError(t, err)
+
+		// make sure only the orphaned content blocks for the deleted card were found
+		require.Len(t, ids, len(contentOrphaned))
+		assert.ElementsMatch(t, contentBlockIDsOrphaned, ids)
 	})
 }
 

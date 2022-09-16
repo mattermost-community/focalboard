@@ -3,7 +3,6 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -791,37 +790,19 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 }
 
 func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner) ([]string, error) {
-	/*
-		--  find all orphaned child blocks for deleted boards
-		select * from focalboard_blocks fb where fb.board_id in
+	// Find all orphaned child blocks for deleted boards.
+	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
+	sql := `
+		SELECT fb.id from %sblocks AS fb WHERE fb.board_id IN
 		(
-			select bh1.id from focalboard_boards_history bh1,
-				(select id, max(insert_at) as max_insert_at from focalboard_boards_history group by id) sub
-			where bh1.id = sub.id and bh1.insert_at=sub.max_insert_at and bh1.delete_at > 0
+			SELECT bh.id FROM %sboards_history AS bh,
+				(SELECT id, max(insert_at) AS max_insert_at FROM %sboards_history GROUP BY id) AS sub
+			WHERE bh.id = sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		);
-	*/
+	`
+	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
 
-	queryMax := s.getQueryBuilder(db).
-		Select("id", "max(insert_at) as max_insert_at").
-		From(s.tablePrefix + "boards_history").
-		GroupBy("id")
-
-	querySub := s.getQueryBuilder(db).
-		Select("bh1.id").
-		From(s.tablePrefix+"boards_history bh1").
-		FromSelect(queryMax, "sub").
-		Where(
-			sq.Eq{"bh1.id": "sub.id"},
-			sq.Eq{"bh1.insert_at": "sub.max_insert_at"},
-			sq.Gt{"bh1.delete_at": 0},
-		)
-
-	query := s.getQueryBuilder(db).
-		Select("fb.id").
-		From(s.tablePrefix + "focalboard_blocks fb").
-		Where(querySub.Prefix("fb.board_id in (").Suffix(")"))
-
-	rows, err := query.Query()
+	rows, err := db.Query(sql, nil)
 	if err != nil {
 		s.logger.Error("findOrphansForBoards ERROR", mlog.Err(err))
 		return nil, err
@@ -843,15 +824,35 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner) ([]string, error) {
 }
 
 func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner) ([]string, error) {
-	/*
-		-- find all child blocks for deleted card
-		select * from focalboard_blocks fb where fb.parent_id in
+	// Find all orphaned child blocks for deleted blocks/cards.
+	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
+	sql := `
+		SELECT fb.id from %sblocks AS fb WHERE fb.parent_id IN
 		(
-			select bh1.id from focalboard_blocks_history bh1,
-				(select id, max(insert_at) as max_insert_at from focalboard_blocks_history where type='card' group by id) sub
-			where bh1.id = sub.id and bh1.insert_at=sub.max_insert_at and bh1.delete_at > 0
+			SELECT bh.id FROM %sblocks_history AS bh,
+				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history GROUP BY id) AS sub
+			WHERE bh.id = sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		);
-	*/
+	`
+	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
 
-	return nil, errors.New("not implemented yet")
+	rows, err := db.Query(sql, nil)
+	if err != nil {
+		s.logger.Error("findOrphansForBlocks ERROR", mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	results := []string{}
+	for rows.Next() {
+		var id string
+		err := rows.Scan(&id)
+		if err != nil {
+			s.logger.Error("findOrphansForBlocks cannot scan id", mlog.Err(err))
+			return nil, err
+		}
+		results = append(results, id)
+	}
+
+	return results, nil
 }

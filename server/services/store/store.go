@@ -48,6 +48,7 @@ type Store interface {
 	// @withTransaction
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
 	FindOrphansForBoards() ([]string, error)
+	FindOrphansForBlocks() ([]string, error)
 
 	Shutdown() error
 
