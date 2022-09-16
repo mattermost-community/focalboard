@@ -9,6 +9,7 @@ import MenuUtil from './menuUtil'
 import Menu from '.'
 
 import './subMenuOption.scss'
+import CompassIcon from '../../widgets/icons/compassIcon'
 
 export const HoveringContext = React.createContext(false)
 
@@ -62,10 +63,9 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
             }}
             ref={ref}
         >
-            {(props.position === 'left' || props.position === 'left-bottom') && <SubmenuTriangleIcon/>}
             {props.icon ? <div className='menu-option__icon'>{props.icon}</div> : <div className='noicon'/>}
             <div className='menu-name'>{props.name}</div>
-            {props.position !== 'left' && props.position !== 'left-bottom' && <SubmenuTriangleIcon/>}
+            <CompassIcon icon='chevron-right' />
             {isOpen &&
                 <div
                     className={'SubMenu Menu noselect ' + (props.position || 'bottom')}
