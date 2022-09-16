@@ -174,13 +174,13 @@ class WSClient {
     sendCommand(command: WSCommand): void {
         try {
             if (this.client !== null) {
-                const { action, ...data } = command
+                const {action, ...data} = command
                 this.client.sendMessage(this.clientPrefix + action, data)
                 return
             }
 
             this.ws?.send(JSON.stringify(command))
-        } catch(e) {
+        } catch (e) {
             Utils.logError(`WSClient failed to send command ${command.action}: ${e}`)
         }
     }
