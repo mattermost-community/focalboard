@@ -3,8 +3,8 @@
 import React, {useEffect, useState, useContext, CSSProperties, useRef} from 'react'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
-import MenuUtil from './menuUtil'
 
+import MenuUtil from './menuUtil'
 import Menu from '.'
 
 import './subMenuOption.scss'
