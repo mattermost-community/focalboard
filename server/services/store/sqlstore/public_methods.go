@@ -269,6 +269,11 @@ func (s *SQLStore) DuplicateBoard(boardID string, userID string, toTeam string, 
 
 }
 
+func (s *SQLStore) FindOrphansForBoards() ([]string, error) {
+	return s.findOrphansForBoards(s.db)
+
+}
+
 func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	return s.getActiveUserCount(s.db, updatedSecondsAgo)
 

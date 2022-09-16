@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -787,4 +788,70 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 		return nil, err
 	}
 	return allBlocks, nil
+}
+
+func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner) ([]string, error) {
+	/*
+		--  find all orphaned child blocks for deleted boards
+		select * from focalboard_blocks fb where fb.board_id in
+		(
+			select bh1.id from focalboard_boards_history bh1,
+				(select id, max(insert_at) as max_insert_at from focalboard_boards_history group by id) sub
+			where bh1.id = sub.id and bh1.insert_at=sub.max_insert_at and bh1.delete_at > 0
+		);
+	*/
+
+	queryMax := s.getQueryBuilder(db).
+		Select("id", "max(insert_at) as max_insert_at").
+		From(s.tablePrefix + "boards_history").
+		GroupBy("id")
+
+	querySub := s.getQueryBuilder(db).
+		Select("bh1.id").
+		From(s.tablePrefix+"boards_history bh1").
+		FromSelect(queryMax, "sub").
+		Where(
+			sq.Eq{"bh1.id": "sub.id"},
+			sq.Eq{"bh1.insert_at": "sub.max_insert_at"},
+			sq.Gt{"bh1.delete_at": 0},
+		)
+
+	query := s.getQueryBuilder(db).
+		Select("fb.id").
+		From(s.tablePrefix + "focalboard_blocks fb").
+		Where(querySub.Prefix("fb.board_id in (").Suffix(")"))
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("findOrphansForBoards ERROR", mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	results := []string{}
+	for rows.Next() {
+		var id string
+		err := rows.Scan(&id)
+		if err != nil {
+			s.logger.Error("findOrphansForBoards cannot scan id", mlog.Err(err))
+			return nil, err
+		}
+		results = append(results, id)
+	}
+
+	return results, nil
+}
+
+func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner) ([]string, error) {
+	/*
+		-- find all child blocks for deleted card
+		select * from focalboard_blocks fb where fb.parent_id in
+		(
+			select bh1.id from focalboard_blocks_history bh1,
+				(select id, max(insert_at) as max_insert_at from focalboard_blocks_history where type='card' group by id) sub
+			where bh1.id = sub.id and bh1.insert_at=sub.max_insert_at and bh1.delete_at > 0
+		);
+	*/
+
+	return nil, errors.New("not implemented yet")
 }

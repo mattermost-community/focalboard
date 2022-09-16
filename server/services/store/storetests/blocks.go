@@ -74,6 +74,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlockMetadata(t, store)
 	})
+	t.Run("FindOrphansForBoards", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testFindOrphansForBoards(t, store)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store) {
@@ -1060,4 +1065,33 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Empty(t, blocks)
 	})
+}
+
+func testFindOrphansForBoards(t *testing.T, store store.Store) {
+	boards := createTestBoards(t, store, testUserID, 2)
+	boardDelete := boards[0]
+	boardKeep := boards[1]
+	blocksOrphaned := createTestCards(t, store, testUserID, boardDelete.ID, 3)
+	_ = createTestCards(t, store, testUserID, boardKeep.ID, 5)
+
+	blockIDsOrphaned := extractBlockIds(blocksOrphaned)
+
+	// orphan some blocks
+	err := store.DeleteBoard(boardDelete.ID, testUserID)
+	require.NoError(t, err)
+
+	t.Run("find multiple orphans", func(t *testing.T) {
+		ids, err := store.FindOrphansForBoards()
+		require.NoError(t, err)
+		require.Len(t, ids, len(blocksOrphaned))
+		assert.ElementsMatch(t, blockIDsOrphaned, ids)
+	})
+}
+
+func extractBlockIds(blocks []*model.Block) []string {
+	ids := make([]string, 0, len(blocks))
+	for _, block := range blocks {
+		ids = append(ids, block.ID)
+	}
+	return ids
 }

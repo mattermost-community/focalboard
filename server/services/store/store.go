@@ -47,6 +47,7 @@ type Store interface {
 	DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error)
 	// @withTransaction
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
+	FindOrphansForBoards() ([]string, error)
 
 	Shutdown() error
 
