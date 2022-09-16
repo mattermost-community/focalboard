@@ -63,7 +63,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const board = useAppSelector(getCurrentBoard)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
-    const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
+    const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -72,7 +72,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const loadSuggestions = async (term: string) => {
         let users: IUser[]
 
-        if (!me?.is_guest && (allowAddUsers || (board && board.type === BoardTypeOpen))) {
+        if (!me?.is_guest && (allowManageBoardRoles || (board && board.type === BoardTypeOpen))) {
             const excludeBots = true
             users = await octoClient.searchTeamUsers(term, excludeBots)
         } else {
@@ -285,6 +285,8 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             {confirmAddUser &&
                 <RootPortal>
                     <ConfirmAddUserForNotifications
+                        allowManageBoardRoles={allowManageBoardRoles}
+                        defaultRole={board.minimumRole}
                         user={confirmAddUser}
                         onConfirm={addUser}
                         onClose={() => {

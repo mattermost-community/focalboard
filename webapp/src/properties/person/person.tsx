@@ -110,12 +110,10 @@ const Person = (props: PropertyProps): JSX.Element => {
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
-    const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
+    const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
+    const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.AddBoardUsers])
 
     const loadOptions = useCallback(async (value: string) => {
-        if (value === '') {
-            return boardUsers
-        }
         if (!allowAddUsers) {
             return boardUsers.filter((u) => u.username.toLowerCase().includes(value.toLowerCase()))
         }
@@ -148,13 +146,15 @@ const Person = (props: PropertyProps): JSX.Element => {
         <>
             {confirmAddUser &&
             <ConfirmAddUserForNotifications
+                allowManageBoardRoles={allowManageBoardRoles}
+                defaultRole={board.minimumRole}
                 user={confirmAddUser}
                 onConfirm={addUser}
                 onClose={() => setConfirmAddUser(null)}
             />}
             <Select
                 loadOptions={loadOptions}
-                defaultOptions={boardUsers}
+                defaultOptions={true}
                 isSearchable={true}
                 isClearable={true}
                 backspaceRemovesValue={true}

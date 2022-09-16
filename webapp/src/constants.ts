@@ -8,6 +8,7 @@ enum Permission {
     DeleteBoard = 'delete_board',
     ShareBoard = 'share_board',
     ManageBoardRoles = 'manage_board_roles',
+    AddBoardUsers = 'add_board-users',
     ManageBoardCards = 'manage_board_cards',
     ManageBoardProperties = 'manage_board_properties',
     CommentBoardCards = 'comment_board_cards',

@@ -27,8 +27,8 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
         return true
     }
 
-    const adminPermissions = [Permission.ManageBoardType, Permission.DeleteBoard, Permission.ShareBoard, Permission.ManageBoardRoles, Permission.DeleteOthersComments]
-    const editorPermissions = [Permission.ManageBoardCards, Permission.ManageBoardProperties]
+    const adminPermissions = [Permission.ManageBoardType, Permission.DeleteBoard, Permission.ShareBoard, Permission.ManageBoardRoles, Permission.DeleteOthersComments, Permission.AddBoardUsers]
+    const editorPermissions = [Permission.ManageBoardCards, Permission.ManageBoardProperties, Permission.AddBoardUsers]
     const commenterPermissions = [Permission.CommentBoardCards]
     const viewerPermissions = [Permission.ViewBoard]
 
