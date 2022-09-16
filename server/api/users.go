@@ -79,7 +79,6 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 			Email:    model.SingleUser,
 			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
-			Props:    map[string]interface{}{},
 		}
 		users = append(users, user)
 	} else {
