@@ -98,9 +98,13 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -212,9 +216,13 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -330,9 +338,13 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot w
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
