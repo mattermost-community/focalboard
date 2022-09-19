@@ -34,12 +34,16 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
     const board = useAppSelector(getCurrentBoard)
     const {user, member, isMe, teammateNameDisplay} = props
     let currentRole = MemberRole.Viewer
+    let displayRole = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
     if (member.schemeAdmin) {
         currentRole = MemberRole.Admin
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
     } else if (member.schemeEditor || member.minimumRole === MemberRole.Editor) {
         currentRole = MemberRole.Editor
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Editor'})
     } else if (member.schemeCommenter || member.minimumRole === MemberRole.Commenter) {
         currentRole = MemberRole.Commenter
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Commenter'})
     }
 
     return (
@@ -62,7 +66,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                 <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                     <MenuWrapper>
                         <button className='user-item__button'>
-                            {intl.formatMessage({id: `BoardMember.scheme${currentRole}`, defaultMessage: currentRole})}
+                            {displayRole}
                             <CompassIcon
                                 icon='chevron-down'
                                 className='CompassIcon'
@@ -113,10 +117,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     permissions={[Permission.ManageBoardRoles]}
                     invert={true}
                 >
-                    <FormattedMessage
-                        id={`BoardMember.scheme${currentRole}`}
-                        defaultMessage={currentRole}
-                    />
+                    {displayRole}
                 </BoardPermissionGate>
             </div>
         </div>

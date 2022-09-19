@@ -95,7 +95,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                                 id={MemberRole.Viewer}
                                 check={board.minimumRole === MemberRole.Viewer}
                                 icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Viewer ? <CheckIcon/> : <div className='empty-icon'/>}
-                                name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
+                                name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
                                 onClick={() => updateBoardType(board, BoardTypeOpen, MemberRole.Viewer)}
                             />
                             <Menu.Text
