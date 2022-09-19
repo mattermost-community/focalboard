@@ -1405,14 +1405,15 @@ func TestAddMember(t *testing.T) {
 			require.Len(t, members, 2)
 		})
 
-		t.Run("should always add a new member as an editor", func(t *testing.T) {
+		t.Run("should always add a new member as board minimum role", func(t *testing.T) {
 			th := SetupTestHelper(t).InitBasic()
 			defer th.TearDown()
 
 			newBoard := &model.Board{
-				Title:  "title",
-				Type:   model.BoardTypePrivate,
-				TeamID: teamID,
+				Title:       "title",
+				Type:        model.BoardTypePrivate,
+				TeamID:      teamID,
+				MinimumRole: model.BoardRoleEditor,
 			}
 			board, err := th.Server.App().CreateBoard(newBoard, th.GetUser1().ID, true)
 			require.NoError(t, err)
