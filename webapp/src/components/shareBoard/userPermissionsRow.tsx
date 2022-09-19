@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {useIntl, FormattedMessage} from 'react-intl'
+import {useIntl} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
 import Menu from '../../widgets/menu'
