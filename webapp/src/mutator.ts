@@ -353,9 +353,7 @@ class Mutator {
 
     // Board Members
 
-    async createBoardMember(boardId: string, userId: string, description = 'create board member'): Promise<void> {
-        const member = {boardId, userId, schemeEditor: true} as BoardMember
-
+    async createBoardMember(member: BoardMember, description = 'create board member'): Promise<void> {
         await undoManager.perform(
             async () => {
                 await octoClient.createBoardMember(member)
