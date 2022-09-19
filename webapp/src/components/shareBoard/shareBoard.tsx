@@ -21,7 +21,7 @@ import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
 
 import {ISharing} from '../../blocks/sharing'
-import {BoardMember, createBoard} from '../../blocks/board'
+import {BoardMember, createBoard, MemberRole} from '../../blocks/board'
 
 import client from '../../octoClient'
 import Dialog from '../dialog'
@@ -184,21 +184,21 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         } as BoardMember
 
         switch (newPermission) {
-        case 'Admin':
+        case MemberRole.Admin:
             if (member.schemeAdmin) {
                 return
             }
             newMember.schemeAdmin = true
             newMember.schemeEditor = true
             break
-        case 'Editor':
+        case MemberRole.Editor:
             if (!member.schemeAdmin && member.schemeEditor) {
                 return
             }
             newMember.schemeAdmin = false
             newMember.schemeEditor = true
             break
-        case 'Commenter':
+        case MemberRole.Commenter:
             if (!member.schemeAdmin && !member.schemeEditor && member.schemeCommenter) {
                 return
             }
@@ -206,7 +206,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             newMember.schemeEditor = false
             newMember.schemeCommenter = true
             break
-        case 'Viewer':
+        case MemberRole.Viewer:
             if (!member.schemeAdmin && !member.schemeEditor && !member.schemeCommenter && member.schemeViewer) {
                 return
             }
@@ -392,7 +392,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})}
                             onChange={(newValue) => {
                                 if (newValue && (newValue as IUser).username) {
-                                    mutator.createBoardMember(boardId, newValue.id)
+                                    mutator.createBoardMember({boardId, userId: newValue.id, schemeEditor: true} as BoardMember)
                                     setSelectedUser(null)
                                 } else if (newValue) {
                                     onLinkBoard(newValue as Channel)

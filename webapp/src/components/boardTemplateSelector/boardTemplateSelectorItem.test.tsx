@@ -6,7 +6,7 @@ import React from 'react'
 import {MockStoreEnhanced} from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {Board, MemberRole, IPropertyTemplate} from '../../blocks/board'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 
 import {IUser} from '../../user'
@@ -67,7 +67,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         description: 'test',
         showDescription: false,
         type: 'board',
-        minimumRole: 'editor',
+        minimumRole: MemberRole.Editor,
         isTemplate: true,
         templateVersion: 0,
         icon: '🚴🏻‍♂️',
@@ -85,7 +85,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         updateAt: 20,
         deleteAt: 0,
         type: 'board',
-        minimumRole: 'editor',
+        minimumRole: MemberRole.Editor,
         icon: '🚴🏻‍♂️',
         description: 'test',
         showDescription: false,

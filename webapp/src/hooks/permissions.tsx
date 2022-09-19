@@ -6,6 +6,7 @@ import {getMyBoardMembership, getCurrentBoardId, getBoard} from '../store/boards
 import {getCurrentTeam} from '../store/teams'
 import {Utils} from '../utils'
 import {Permission} from '../constants'
+import {MemberRole} from '../blocks/board'
 
 export const useHasPermissions = (teamId: string, boardId: string, permissions: Permission[]): boolean => {
     if (!boardId || !teamId) {
@@ -36,13 +37,13 @@ export const useHasPermissions = (teamId: string, boardId: string, permissions: 
         if (adminPermissions.includes(permission) && member.schemeAdmin) {
             return true
         }
-        if (editorPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || board.minimumRole === 'editor')) {
+        if (editorPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || board.minimumRole === MemberRole.Editor)) {
             return true
         }
-        if (commenterPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || board.minimumRole === 'commenter')) {
+        if (commenterPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || board.minimumRole === MemberRole.Commenter)) {
             return true
         }
-        if (viewerPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer || board.minimumRole === 'viewer')) {
+        if (viewerPermissions.includes(permission) && (member.schemeAdmin || member.schemeEditor || member.schemeCommenter || member.schemeViewer || board.minimumRole === MemberRole.Viewer)) {
             return true
         }
     }

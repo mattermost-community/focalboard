@@ -10,7 +10,7 @@ import Menu from '../../widgets/menu'
 import CheckIcon from '../../widgets/icons/check'
 import CompassIcon from '../../widgets/icons/compassIcon'
 
-import {BoardMember} from '../../blocks/board'
+import {BoardMember, MemberRole} from '../../blocks/board'
 import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import {Permission} from '../../constants'
@@ -33,13 +33,13 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
     const board = useAppSelector(getCurrentBoard)
     const {user, member, isMe, teammateNameDisplay} = props
-    let currentRole = 'Viewer'
+    let currentRole = MemberRole.Viewer
     if (member.schemeAdmin) {
-        currentRole = 'Admin'
-    } else if (member.schemeEditor || member.minimumRole === 'editor') {
-        currentRole = 'Editor'
-    } else if (member.schemeCommenter || member.minimumRole === 'commenter') {
-        currentRole = 'Commenter'
+        currentRole = MemberRole.Admin
+    } else if (member.schemeEditor || member.minimumRole === MemberRole.Editor) {
+        currentRole = MemberRole.Editor
+    } else if (member.schemeCommenter || member.minimumRole === MemberRole.Commenter) {
+        currentRole = MemberRole.Commenter
     }
 
     return (
@@ -69,36 +69,36 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                             />
                         </button>
                         <Menu position='left'>
-                            {(board.minimumRole === 'viewer' || board.minimumRole === '') &&
+                            {(board.minimumRole === MemberRole.Viewer || board.minimumRole === MemberRole.None) &&
                                 <Menu.Text
-                                    id='Viewer'
+                                    id={MemberRole.Viewer}
                                     check={true}
-                                    icon={currentRole === 'Viewer' ? <CheckIcon/> : null}
+                                    icon={currentRole === MemberRole.Viewer ? <CheckIcon/> : null}
                                     name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
-                                    onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
+                                    onClick={() => props.onUpdateBoardMember(member, MemberRole.Viewer)}
                                 />}
-                            {!board.isTemplate && (board.minimumRole === '' || board.minimumRole === 'commenter' || board.minimumRole === 'viewer') &&
+                            {!board.isTemplate && (board.minimumRole === MemberRole.None || board.minimumRole === MemberRole.Commenter || board.minimumRole === MemberRole.Viewer) &&
                                 <Menu.Text
-                                    id='Commenter'
+                                    id={MemberRole.Commenter}
                                     check={true}
-                                    icon={currentRole === 'Commenter' ? <CheckIcon/> : <div className='empty-icon'/>}
+                                    icon={currentRole === MemberRole.Commenter ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
-                                    onClick={() => props.onUpdateBoardMember(member, 'Commenter')}
+                                    onClick={() => props.onUpdateBoardMember(member, MemberRole.Commenter)}
                                 />}
                             <Menu.Text
-                                id='Editor'
+                                id={MemberRole.Editor}
                                 check={true}
-                                icon={currentRole === 'Editor' ? <CheckIcon/> : <div className='empty-icon'/>}
+                                icon={currentRole === MemberRole.Editor ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Editor')}
+                                onClick={() => props.onUpdateBoardMember(member, MemberRole.Editor)}
                             />
                             {user.is_guest !== true &&
                                 <Menu.Text
-                                    id='Admin'
+                                    id={MemberRole.Admin}
                                     check={true}
-                                    icon={currentRole === 'Admin' ? <CheckIcon/> : <div className='empty-icon'/>}
+                                    icon={currentRole === MemberRole.Admin ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
-                                    onClick={() => props.onUpdateBoardMember(member, 'Admin')}
+                                    onClick={() => props.onUpdateBoardMember(member, MemberRole.Admin)}
                                 />}
                             <Menu.Separator/>
                             <Menu.Text

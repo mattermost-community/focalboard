@@ -5,6 +5,8 @@ import {render} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import React from 'react'
 
+import {MemberRole} from '../blocks/board'
+
 import {wrapDNDIntl} from '../testUtils'
 import {IUser} from '../user'
 
@@ -16,7 +18,7 @@ describe('/components/confirmAddUserForNotifications', () => {
             wrapDNDIntl(
                 <ConfirmAddUserForNotifications
                     allowManageBoardRoles={true}
-                    defaultRole='Editor'
+                    defaultRole={MemberRole.Editor}
                     user={{id: 'fake-user-id', username: 'fake-username'} as IUser}
                     onConfirm={jest.fn()}
                     onClose={jest.fn()}
@@ -33,7 +35,7 @@ describe('/components/confirmAddUserForNotifications', () => {
             wrapDNDIntl(
                 <ConfirmAddUserForNotifications
                     allowManageBoardRoles={true}
-                    defaultRole='Editor'
+                    defaultRole={MemberRole.Editor}
                     user={{id: 'fake-user-id', username: 'fake-username'} as IUser}
                     onConfirm={onConfirm}
                     onClose={jest.fn()}
@@ -51,7 +53,7 @@ describe('/components/confirmAddUserForNotifications', () => {
             wrapDNDIntl(
                 <ConfirmAddUserForNotifications
                     allowManageBoardRoles={true}
-                    defaultRole='Editor'
+                    defaultRole={MemberRole.Editor}
                     user={{id: 'fake-user-id', username: 'fake-username'} as IUser}
                     onConfirm={jest.fn()}
                     onClose={onClose}

@@ -5,6 +5,8 @@ import React, {useState, useRef} from 'react'
 import Select from 'react-select'
 import {useIntl, FormattedMessage} from 'react-intl'
 
+import {MemberRole} from '../blocks/board'
+
 import {IUser} from '../user'
 
 import ConfirmationDialog from './confirmationDialogBox'
@@ -13,7 +15,7 @@ import './confirmAddUserForNotifications.scss'
 
 type Props = {
     user: IUser
-    defaultRole: string
+    defaultRole: MemberRole
     allowManageBoardRoles: boolean
     onConfirm: (userId: string, role: string) => void
     onClose: () => void
@@ -21,17 +23,28 @@ type Props = {
 
 const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
     const {user, allowManageBoardRoles} = props
-    const [newUserRole, setNewUserRole] = useState('Editor')
+    const [newUserRole, setNewUserRole] = useState(props.defaultRole)
     const userRole = useRef<string>(props.defaultRole)
 
     const intl = useIntl()
 
     const roleOptions = [
-        {id: 'Admin', label: intl.formatMessage({id: 'PersonProperty.add-user-admin-role', defaultMessage: 'Admin'})},
-        {id: 'Editor', label: intl.formatMessage({id: 'PersonProperty.add-user-editor-role', defaultMessage: 'Editor'})},
-        {id: 'Commenter', label: intl.formatMessage({id: 'PersonProperty.add-user-commenter-role', defaultMessage: 'Commenter'})},
-        {id: 'Viewer', label: intl.formatMessage({id: 'PersonProperty.add-user-viewer-role', defaultMessage: 'Viewer'})},
+        {id: MemberRole.Admin, label: intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})},
+        {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
+        {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
+        {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
     ]
+
+    let currentRoleName = intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})
+    if (props.defaultRole === MemberRole.Admin) {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
+    } else if (props.defaultRole === MemberRole.Editor) {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
+    } else if (props.defaultRole === MemberRole.Commenter) {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
+    } else if (props.defaultRole === MemberRole.Viewer) {
+        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
+    }
 
     const subText = (
         <div className='ConfirmAddUserForNotifications'>
@@ -58,7 +71,7 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
                 </label>
             </div>
             {!allowManageBoardRoles &&
-                <label>{props.defaultRole}</label>
+                <label>{currentRoleName}</label>
             }
             {allowManageBoardRoles &&
                 <Select

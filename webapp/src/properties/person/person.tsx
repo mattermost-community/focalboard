@@ -9,7 +9,7 @@ import {CSSObject} from '@emotion/serialize'
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
 import {getBoardUsersList, getBoardUsers} from '../../store/users'
-import {BoardMember} from '../../blocks/board'
+import {BoardMember, MemberRole} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import mutator from '../../mutator'
 import {getSelectBaseStyle} from '../../theme'
@@ -96,14 +96,14 @@ const Person = (props: PropertyProps): JSX.Element => {
             boardId: board.id,
             userId,
             roles: role,
-            schemeAdmin: role === 'Admin',
-            schemeEditor: role === 'Admin' || role === 'Editor',
-            schemeCommenter: role === 'Admin' || role === 'Editor' || role === 'Commenter',
-            schemeViewer: role === 'Admin' || role === 'Editor' || role === 'Commenter' || role === 'Viewer',
+            schemeAdmin: role === MemberRole.Admin,
+            schemeEditor: role === MemberRole.Admin || role === MemberRole.Editor,
+            schemeCommenter: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter,
+            schemeViewer: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter || role === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
-        await mutator.createBoardMember(board.id, newMember.userId)
+        await mutator.createBoardMember(newMember)
         await mutator.changePropertyValue(board.id, card, propertyTemplate.id, newMember.userId)
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
     }, [board, card, propertyTemplate])

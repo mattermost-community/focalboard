@@ -20,7 +20,7 @@ import {getBoardUsersList, getMe} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
 import {useHasPermissions} from '../../hooks/permissions'
 import {Permission} from '../../constants'
-import {BoardMember, BoardTypeOpen} from '../../blocks/board'
+import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 import mutator from '../../mutator'
 import ConfirmAddUserForNotifications from '../confirmAddUserForNotifications'
 import RootPortal from '../rootPortal'
@@ -124,17 +124,16 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             boardId: board.id,
             userId,
             roles: role,
-            schemeAdmin: role === 'Admin',
-            schemeEditor: role === 'Admin' || role === 'Editor',
-            schemeCommenter: role === 'Admin' || role === 'Editor' || role === 'Commenter',
-            schemeViewer: role === 'Admin' || role === 'Editor' || role === 'Commenter' || role === 'Viewer',
+            schemeAdmin: role === MemberRole.Admin,
+            schemeEditor: role === MemberRole.Admin || role === MemberRole.Editor,
+            schemeCommenter: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter,
+            schemeViewer: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter || role === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
         setEditorState(EditorState.moveSelectionToEnd(editorState))
         ref.current?.focus()
-        await mutator.createBoardMember(board.id, newMember.userId)
-        mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
+        await mutator.createBoardMember(newMember)
     }, [board, editorState])
 
     const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
