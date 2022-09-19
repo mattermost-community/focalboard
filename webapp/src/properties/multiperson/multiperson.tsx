@@ -59,9 +59,9 @@ const MultiPerson = (props: PropertyProps) => {
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
-    const formatOptionLabel = (user: any) => {
+    const formatOptionLabel = (user: any): JSX.Element => {
         if (!user) {
-            return {}
+            return <div/>
         }
         let profileImg
         if (imageURLForUser) {
