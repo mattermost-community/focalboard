@@ -1,10 +1,12 @@
 .MultiPerson {
-    padding: 4px 8px;
     margin-right: 20px;
     min-width: 180px;
     display: flex;
     align-items: center;
     border-radius: 4px;
+    flex-wrap: wrap;
+    padding: 8px 0 0;
+    gap: 8px;
 
     &.readonly {
         overflow: hidden;

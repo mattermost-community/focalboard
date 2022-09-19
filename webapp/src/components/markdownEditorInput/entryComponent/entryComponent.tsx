@@ -22,21 +22,23 @@ const Entry = (props: EntryComponentProps): ReactElement => {
             {...parentProps}
         >
             <div className={`${theme?.mentionSuggestionsEntryContainer} EntryComponent`}>
-                <img
-                    src={mention.avatar}
-                    className={theme?.mentionSuggestionsEntryAvatar}
-                    role='presentation'
-                />
-                <div className={theme?.mentionSuggestionsEntryText}>
-                    {mention.name}
-                    {BotBadge && <BotBadge show={mention.is_bot}/>}
-                    <GuestBadge show={mention.is_guest}/>
-                </div>
-                <div className={theme?.mentionSuggestionsEntryText}>
-                    {mention.displayName}
+                <div className='EntryComponent__left'>
+                    <img
+                        src={mention.avatar}
+                        className={theme?.mentionSuggestionsEntryAvatar}
+                        role='presentation'
+                    />
+                    <div className={theme?.mentionSuggestionsEntryText}>
+                        {mention.name}
+                        {BotBadge && <BotBadge show={mention.is_bot}/>}
+                        <GuestBadge show={mention.is_guest}/>
+                    </div>
+                    <div className={theme?.mentionSuggestionsEntryText}>
+                        {mention.displayName}
+                    </div>
                 </div>
                 {!mention.isBoardMember &&
-                    <div className={theme?.mentionSuggestionsEntryText}>
+                    <div className={`EntryComponent__hint ${theme?.mentionSuggestionsEntryText}`}>
                         <FormattedMessage
                             id='MentionSuggestion.is-not-board-member'
                             defaultMessage='(not board member)'
