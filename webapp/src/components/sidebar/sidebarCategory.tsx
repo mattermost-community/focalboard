@@ -6,6 +6,8 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {debounce} from 'lodash'
 
+import {Draggable} from 'react-beautiful-dnd'
+
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -216,154 +218,167 @@ const SidebarCategory = (props: Props) => {
     }
 
     return (
-        <div
-            className='SidebarCategory'
-            ref={menuWrapperRef}
+        <Draggable
+            draggableId={props.categoryBoards.id || 'boards'}
+            index={props.index}
         >
-            <div
-                className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
-            >
+            {(provided) => (
                 <div
-                    className='octo-sidebar-title category-title'
-                    title={props.categoryBoards.name}
-                    onClick={toggleCollapse}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
                 >
-                    {collapsed ? <ChevronRight/> : <ChevronDown/>}
-                    {props.categoryBoards.name}
-                    <div className='sidebarCategoriesTour'>
-                        {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
+                    <div
+                        className='SidebarCategory'
+                        ref={menuWrapperRef}
+                    >
+                        <div
+                            className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
+                        >
+                            <div
+                                className='octo-sidebar-title category-title'
+                                title={props.categoryBoards.name}
+                                onClick={toggleCollapse}
+                                {...provided.dragHandleProps}
+                            >
+                                {collapsed ? <ChevronRight/> : <ChevronDown/>}
+                                {props.categoryBoards.name}
+                                <div className='sidebarCategoriesTour'>
+                                    {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
+                                </div>
+                            </div>
+                            <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
+                                {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
+                                <MenuWrapper
+                                    className={categoryMenuOpen ? 'menuOpen' : ''}
+                                    stopPropagationOnToggle={true}
+                                    onToggle={(open) => setCategoryMenuOpen(open)}
+                                >
+                                    <IconButton icon={<OptionsIcon/>}/>
+                                    <Menu
+                                        position='auto'
+                                        parentRef={menuWrapperRef}
+                                    >
+                                        <Menu.Text
+                                            id='createNewCategory'
+                                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                            icon={<CreateNewFolder/>}
+                                            onClick={handleCreateNewCategory}
+                                        />
+                                        {
+                                            props.categoryBoards.id !== '' &&
+                                            <React.Fragment>
+                                                <Menu.Text
+                                                    id='updateCategory'
+                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
+                                                    icon={<CompassIcon icon='pencil-outline'/>}
+                                                    onClick={handleUpdateCategory}
+                                                />
+                                                <Menu.Text
+                                                    id='deleteCategory'
+                                                    className='text-danger'
+                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
+                                                    icon={<DeleteIcon/>}
+                                                    onClick={() => setShowDeleteCategoryDialog(true)}
+                                                />
+                                                <Menu.Separator/>
+                                                <Menu.Text
+                                                    id='createNewCategory'
+                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                                    icon={<CreateNewFolder/>}
+                                                    onClick={handleCreateNewCategory}
+                                                />
+                                            </React.Fragment>
+                                        }
+                                    </Menu>
+                                </MenuWrapper>
+                            </div>
+                        </div>
+                        {!collapsed && visibleBlocks.length === 0 &&
+                        <div className='octo-sidebar-item subitem no-views'>
+                            <FormattedMessage
+                                id='Sidebar.no-boards-in-category'
+                                defaultMessage='No boards inside'
+                            />
+                        </div>}
+                        {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
+                            if (!isBoardVisible(board.id)) {
+                                return null
+                            }
+                            return (
+                                <SidebarBoardItem
+                                    key={board.id}
+                                    board={board}
+                                    categoryBoards={props.categoryBoards}
+                                    allCategories={props.allCategories}
+                                    isActive={board.id === props.activeBoardID}
+                                    showBoard={showBoard}
+                                    showView={showView}
+                                    onDeleteRequest={setDeleteBoard}
+                                />
+                            )
+                        })}
+                        {!collapsed && props.boards.map((board: Board) => {
+                            if (!isBoardVisible(board.id)) {
+                                return null
+                            }
+                            return (
+                                <SidebarBoardItem
+                                    key={board.id}
+                                    board={board}
+                                    categoryBoards={props.categoryBoards}
+                                    allCategories={props.allCategories}
+                                    isActive={board.id === props.activeBoardID}
+                                    showBoard={showBoard}
+                                    showView={showView}
+                                    onDeleteRequest={setDeleteBoard}
+                                />
+                            )
+                        })}
+
+                        {
+                            showCreateCategoryModal && (
+                                <CreateCategory
+                                    onClose={() => setShowCreateCategoryModal(false)}
+                                    title={(
+                                        <FormattedMessage
+                                            id='SidebarCategories.CategoryMenu.CreateNew'
+                                            defaultMessage='Create New Category'
+                                        />
+                                    )}
+                                />
+                            )
+                        }
+
+                        {
+                            showUpdateCategoryModal && (
+                                <CreateCategory
+                                    initialValue={props.categoryBoards.name}
+                                    title={(
+                                        <FormattedMessage
+                                            id='SidebarCategories.CategoryMenu.Update'
+                                            defaultMessage='Rename Category'
+                                        />
+                                    )}
+                                    onClose={() => setShowUpdateCategoryModal(false)}
+                                />
+                            )
+                        }
+
+                        { deleteBoard &&
+                        <DeleteBoardDialog
+                            boardTitle={deleteBoard.title}
+                            onClose={() => setDeleteBoard(null)}
+                            onDelete={onDeleteBoard}
+                        />
+                        }
+
+                        {
+                            showDeleteCategoryDialog && <ConfirmationDialogBox dialogBox={deleteCategoryProps}/>
+                        }
                     </div>
                 </div>
-                <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
-                    {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
-                    <MenuWrapper
-                        className={categoryMenuOpen ? 'menuOpen' : ''}
-                        stopPropagationOnToggle={true}
-                        onToggle={(open) => setCategoryMenuOpen(open)}
-                    >
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu
-                            position='auto'
-                            parentRef={menuWrapperRef}
-                        >
-                            <Menu.Text
-                                id='createNewCategory'
-                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                icon={<CreateNewFolder/>}
-                                onClick={handleCreateNewCategory}
-                            />
-                            {
-                                props.categoryBoards.id !== '' &&
-                                <React.Fragment>
-                                    <Menu.Text
-                                        id='updateCategory'
-                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
-                                        icon={<CompassIcon icon='pencil-outline'/>}
-                                        onClick={handleUpdateCategory}
-                                    />
-                                    <Menu.Text
-                                        id='deleteCategory'
-                                        className='text-danger'
-                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
-                                        icon={<DeleteIcon/>}
-                                        onClick={() => setShowDeleteCategoryDialog(true)}
-                                    />
-                                    <Menu.Separator/>
-                                    <Menu.Text
-                                        id='createNewCategory'
-                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                        icon={<CreateNewFolder/>}
-                                        onClick={handleCreateNewCategory}
-                                    />
-                                </React.Fragment>
-                            }
-                        </Menu>
-                    </MenuWrapper>
-                </div>
-            </div>
-            {!collapsed && visibleBlocks.length === 0 &&
-                <div className='octo-sidebar-item subitem no-views'>
-                    <FormattedMessage
-                        id='Sidebar.no-boards-in-category'
-                        defaultMessage='No boards inside'
-                    />
-                </div>}
-            {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
-                if (!isBoardVisible(board.id)) {
-                    return null
-                }
-                return (
-                    <SidebarBoardItem
-                        key={board.id}
-                        board={board}
-                        categoryBoards={props.categoryBoards}
-                        allCategories={props.allCategories}
-                        isActive={board.id === props.activeBoardID}
-                        showBoard={showBoard}
-                        showView={showView}
-                        onDeleteRequest={setDeleteBoard}
-                    />
-                )
-            })}
-            {!collapsed && props.boards.map((board: Board) => {
-                if (!isBoardVisible(board.id)) {
-                    return null
-                }
-                return (
-                    <SidebarBoardItem
-                        key={board.id}
-                        board={board}
-                        categoryBoards={props.categoryBoards}
-                        allCategories={props.allCategories}
-                        isActive={board.id === props.activeBoardID}
-                        showBoard={showBoard}
-                        showView={showView}
-                        onDeleteRequest={setDeleteBoard}
-                    />
-                )
-            })}
-
-            {
-                showCreateCategoryModal && (
-                    <CreateCategory
-                        onClose={() => setShowCreateCategoryModal(false)}
-                        title={(
-                            <FormattedMessage
-                                id='SidebarCategories.CategoryMenu.CreateNew'
-                                defaultMessage='Create New Category'
-                            />
-                        )}
-                    />
-                )
-            }
-
-            {
-                showUpdateCategoryModal && (
-                    <CreateCategory
-                        initialValue={props.categoryBoards.name}
-                        title={(
-                            <FormattedMessage
-                                id='SidebarCategories.CategoryMenu.Update'
-                                defaultMessage='Rename Category'
-                            />
-                        )}
-                        onClose={() => setShowUpdateCategoryModal(false)}
-                    />
-                )
-            }
-
-            { deleteBoard &&
-                <DeleteBoardDialog
-                    boardTitle={deleteBoard.title}
-                    onClose={() => setDeleteBoard(null)}
-                    onDelete={onDeleteBoard}
-                />
-            }
-
-            {
-                showDeleteCategoryDialog && <ConfirmationDialogBox dialogBox={deleteCategoryProps}/>
-            }
-        </div>
+            )}
+        </Draggable>
     )
 }
 

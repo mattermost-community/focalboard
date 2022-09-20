@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
+import {DragDropContext, Droppable} from 'react-beautiful-dnd'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -143,6 +144,10 @@ const Sidebar = (props: Props) => {
         )
     }
 
+    const onDragEnd = () => {
+
+    }
+
     return (
         <div className='Sidebar octo-sidebar'>
             {!Utils.isFocalboardPlugin() &&
@@ -187,23 +192,34 @@ const Sidebar = (props: Props) => {
                 userIsGuest={me?.is_guest}
             />
 
-            <div className='octo-sidebar-list'>
-                {
-                    sidebarCategories.map((category, index) => (
-                        <SidebarCategory
-                            hideSidebar={hideSidebar}
-                            key={category.id}
-                            activeBoardID={props.activeBoardId}
-                            activeViewID={activeViewID}
-                            categoryBoards={category}
-                            boards={boards}
-                            allCategories={sidebarCategories}
-                            index={index}
-                            onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
-                        />
-                    ))
-                }
-            </div>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId='lhs-categories'>
+                    {(provided) => (
+                        <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className='octo-sidebar-list'
+                        >
+                            {
+                                sidebarCategories.map((category, index) => (
+                                    <SidebarCategory
+                                        hideSidebar={hideSidebar}
+                                        key={category.id}
+                                        activeBoardID={props.activeBoardId}
+                                        activeViewID={activeViewID}
+                                        categoryBoards={category}
+                                        boards={boards}
+                                        allCategories={sidebarCategories}
+                                        index={index}
+                                        onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
+                                    />
+                                ))
+                            }
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
 
             <div className='octo-spacer'/>
 
