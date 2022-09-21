@@ -16,6 +16,7 @@ interface Category {
     updateAt: number
     deleteAt: number
     collapsed: boolean
+    sortOrder: number
 }
 
 interface CategoryBoards extends Category {

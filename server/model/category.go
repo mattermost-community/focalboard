@@ -42,6 +42,10 @@ type Category struct {
 	// Category's state in client side
 	// required: true
 	Collapsed bool `json:"collapsed"`
+
+	// Inter-category sort order per user
+	// required: true
+	SortOrder int `json:"sortOrder"`
 }
 
 func (c *Category) Hydrate() {
