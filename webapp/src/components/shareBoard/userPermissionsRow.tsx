@@ -40,10 +40,10 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
         displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
     } else if (member.schemeEditor || member.minimumRole === MemberRole.Editor) {
         currentRole = MemberRole.Editor
-        displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Editor'})
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
     } else if (member.schemeCommenter || member.minimumRole === MemberRole.Commenter) {
         currentRole = MemberRole.Commenter
-        displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Commenter'})
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
     }
 
     return (
