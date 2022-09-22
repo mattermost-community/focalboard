@@ -796,7 +796,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 	userID := "user-id-1"
 
 	t.Run("should return empty if user is not a member of any board and there are no public boards on the team", func(t *testing.T) {
-		boards, err := store.SearchBoardsForUser("", userID, true)
+		boards, err := store.SearchBoardsForUser("", model.BoardSearchFieldTitle, userID, true)
 		require.NoError(t, err)
 		require.Empty(t, boards)
 	})
@@ -906,7 +906,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID, tc.IncludePublic)
+			boards, err := store.SearchBoardsForUser(tc.Term, model.BoardSearchFieldTitle, tc.UserID, tc.IncludePublic)
 			require.NoError(t, err)
 
 			boardIDs := []string{}
