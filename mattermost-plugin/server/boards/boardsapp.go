@@ -15,6 +15,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
+	"github.com/mattermost/focalboard/server/services/store/playbooksstorelayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
@@ -97,7 +98,8 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 		if err2 != nil {
 			return nil, fmt.Errorf("error initializing the DB: %w", err2)
 		}
-		db = layeredStore
+
+		db = playbooksstorelayer.New(layeredStore, logger, "/tmp/localserver.socket")
 	}
 
 	permissionsService := mmpermissions.New(db, api, logger)

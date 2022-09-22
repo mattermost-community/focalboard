@@ -37,6 +37,8 @@ func boardFields(prefix string) []string {
 		"create_at",
 		"update_at",
 		"delete_at",
+		"virtual_driver",
+		"virtual_link",
 	}
 
 	if prefix == "" {
@@ -74,6 +76,8 @@ func boardHistoryFields() []string {
 		"COALESCE(create_at, 0)",
 		"COALESCE(update_at, 0)",
 		"COALESCE(delete_at, 0)",
+		"virtual_driver",
+		"virtual_link",
 	}
 
 	return fields
@@ -117,6 +121,8 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.CreateAt,
 			&board.UpdateAt,
 			&board.DeleteAt,
+			&board.VirtualDriver,
+			&board.VirtualLink,
 		)
 		if err != nil {
 			s.logger.Error("boardsFromRows scan error", mlog.Err(err))
@@ -365,6 +371,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"create_at":        board.CreateAt,
 		"update_at":        board.UpdateAt,
 		"delete_at":        board.DeleteAt,
+		"virtual_driver":   board.VirtualDriver,
+		"virtual_link":     board.VirtualLink,
 	}
 
 	if existingBoard != nil {
@@ -383,7 +391,8 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
 			Set("update_at", board.UpdateAt).
-			Set("delete_at", board.DeleteAt)
+			Set("delete_at", board.DeleteAt).
+			Set("virtual_link", board.VirtualLink)
 
 		if _, err := query.Exec(); err != nil {
 			s.logger.Error(`InsertBoard error occurred while updating existing board`, mlog.String("boardID", board.ID), mlog.Err(err))
@@ -457,6 +466,9 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		"create_at":        board.CreateAt,
 		"update_at":        now,
 		"delete_at":        now,
+		"virtual_driver":   board.VirtualDriver,
+		"virtual_link":     board.VirtualLink,
+
 	}
 
 	// writing board history
@@ -824,6 +836,8 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"create_at",
 		"update_at",
 		"delete_at",
+		"virtual_driver",
+		"virtual_link",
 	}
 
 	values := []interface{}{
@@ -845,6 +859,8 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.CreateAt,
 		now,
 		0,
+		board.VirtualDriver,
+		board.VirtualLink,
 	}
 	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "boards_history").
 		Columns(columns...).

@@ -96,6 +96,14 @@ type Board struct {
 	// The deleted time in miliseconds since the current epoch. Set to indicate this block is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
+
+	// The virtual driver that the board uses to integrate with a third party
+	// required: false
+	VirtualDriver string `json:"virtualDriver"`
+
+	// The link of the board with the external integration
+	// required: false
+	VirtualLink string `json:"virtualLink"`
 }
 
 // BoardPatch is a patch for modify boards
@@ -144,6 +152,10 @@ type BoardPatch struct {
 	// The board removed card properties
 	// required: false
 	DeletedCardProperties []string `json:"deletedCardProperties"`
+
+	// The link with the external integration
+	// required: false
+	VirtualLink *string `json:"virtualLink"`
 }
 
 // BoardMember stores the information of the membership of a user on a board
@@ -324,6 +336,10 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		}
 
 		board.CardProperties = newCardProperties
+	}
+
+	if board.VirtualDriver != "" && p.VirtualLink != nil && *p.VirtualLink != "" {
+		board.VirtualLink = *p.VirtualLink
 	}
 
 	return board

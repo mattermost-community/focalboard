@@ -36,6 +36,9 @@ type Board = {
     createAt: number
     updateAt: number
     deleteAt: number
+
+    virtualDriver: string
+    virtualLink: string
 }
 
 type BoardPatch = {
@@ -51,6 +54,7 @@ type BoardPatch = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updatedCardProperties?: IPropertyTemplate[]
     deletedCardProperties?: string[]
+    virtualLink?: string
 }
 
 type BoardMember = {
@@ -138,6 +142,8 @@ function createBoard(board?: Board): Board {
         createAt: board?.createAt || now,
         updateAt: board?.updateAt || now,
         deleteAt: board?.deleteAt || 0,
+        virtualDriver: board?.virtualDriver || '',
+        virtualLink: board?.virtualLink || '',
     }
 }
 
