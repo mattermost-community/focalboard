@@ -191,6 +191,12 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		}
 	}
 
+	if !asTemplate && toTeam != "" {
+		if err := a.addBoardsToDefaultCategory(userID, toTeam, bab.Boards); err != nil {
+			return nil, nil, err
+		}
+	}
+
 	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.
 	blockIDs := make([]string, 0)
 	blockPatches := make([]model.BlockPatch, 0)
@@ -296,42 +302,40 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil
 	})
 
-	a.logger.Error("AAAA")
-	if err := a.addBoardToDefaultCategory(userID, newBoard); err != nil {
-		return nil, err
+	if board.TeamID != "0" {
+		if err := a.addBoardsToDefaultCategory(userID, newBoard.TeamID, []*model.Board{newBoard}); err != nil {
+			return nil, err
+		}
 	}
 
 	return newBoard, nil
 }
 
-func (a *App) addBoardToDefaultCategory(userID string, board *model.Board) error {
-	a.logger.Error("BBB")
-	userCategoryBoards, err := a.GetUserCategoryBoards(userID, board.TeamID)
+func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.Board) error {
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
-		a.logger.Error("CCC")
 		return err
 	}
 
-	a.logger.Error("DDD")
 	defaultCategoryId := ""
 	for _, categoryBoard := range userCategoryBoards {
-		a.logger.Error("EEE")
 		if categoryBoard.Name == defaultCategoryBoards {
-			a.logger.Error("FFF")
 			defaultCategoryId = categoryBoard.ID
 			break
 		}
-
-		a.logger.Error("GGG")
 	}
 
 	if defaultCategoryId == "" {
-		a.logger.Error("HHH")
 		return fmt.Errorf("%e userID: %s", errNoDefaultCategoryFound, userID)
 	}
 
-	a.logger.Error("III")
-	return a.AddUpdateUserCategoryBoard(board.TeamID, userID, defaultCategoryId, board.ID)
+	for _, board := range boards {
+		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryId, board.ID); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
