@@ -21,6 +21,8 @@ var (
 const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
 const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
 
+var errNoDefaultCategoryFound = errors.New("no default category found for user")
+
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
 	if err != nil {
@@ -294,7 +296,42 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil
 	})
 
+	a.logger.Error("AAAA")
+	if err := a.addBoardToDefaultCategory(userID, newBoard); err != nil {
+		return nil, err
+	}
+
 	return newBoard, nil
+}
+
+func (a *App) addBoardToDefaultCategory(userID string, board *model.Board) error {
+	a.logger.Error("BBB")
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, board.TeamID)
+	if err != nil {
+		a.logger.Error("CCC")
+		return err
+	}
+
+	a.logger.Error("DDD")
+	defaultCategoryId := ""
+	for _, categoryBoard := range userCategoryBoards {
+		a.logger.Error("EEE")
+		if categoryBoard.Name == defaultCategoryBoards {
+			a.logger.Error("FFF")
+			defaultCategoryId = categoryBoard.ID
+			break
+		}
+
+		a.logger.Error("GGG")
+	}
+
+	if defaultCategoryId == "" {
+		a.logger.Error("HHH")
+		return fmt.Errorf("%e userID: %s", errNoDefaultCategoryFound, userID)
+	}
+
+	a.logger.Error("III")
+	return a.AddUpdateUserCategoryBoard(board.TeamID, userID, defaultCategoryId, board.ID)
 }
 
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
