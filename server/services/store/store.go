@@ -104,7 +104,7 @@ type Store interface {
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	CanSeeUser(seerID string, seenID string) (bool, error)
-	SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error)
+	SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error)
 	SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
