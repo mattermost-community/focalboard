@@ -144,7 +144,7 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	return timestamp, modifiedBy, nil
 }
 
-func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, userID, teamID string) error {
+func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, userID, teamID string, asTemplate bool) error {
 	// find source board's category ID for the user
 	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
@@ -163,10 +163,16 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 		}
 	}
 
-	// if source board is not mapped to a category for this user,
-	// then we have nothing more to do.
 	if destinationCategoryID == "" {
-		return nil
+		// if source board is not mapped to a category for this user,
+		// then move new board to default category
+		if !asTemplate && teamID != "" {
+			if err := a.addBoardsToDefaultCategory(userID, teamID, []*model.Board{{ID: destinationBoardID}}); err != nil {
+				return err
+			}
+		} else {
+			return nil
+		}
 	}
 
 	// now that we have source board's category,
@@ -186,14 +192,8 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	}
 
 	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID); categoryErr != nil {
+		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID, asTemplate); categoryErr != nil {
 			return nil, nil, categoryErr
-		}
-	}
-
-	if !asTemplate && toTeam != "" {
-		if err := a.addBoardsToDefaultCategory(userID, toTeam, bab.Boards); err != nil {
-			return nil, nil, err
 		}
 	}
 
