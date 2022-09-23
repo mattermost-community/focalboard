@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/mattermost/focalboard/server/utils"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -402,8 +403,8 @@ func TestBoardCategory(t *testing.T) {
 				},
 			}, nil)
 
-			th.Store.EXPECT().CreateCategory(mock.MatchedBy(func(interface{}) bool { return true })).Return(nil)
-			th.Store.EXPECT().GetCategory(mock.MatchedBy(func(interface{}) bool { return true })).Return(&model.Category{
+			th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+			th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
 				ID:   "default_category_id",
 				Name: "Boards",
 			}, nil)

@@ -1,11 +1,11 @@
 package app
 
 import (
+	"github.com/mattermost/focalboard/server/utils"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 )
 
 func TestGetUserCategoryBoards(t *testing.T) {
@@ -14,8 +14,8 @@ func TestGetUserCategoryBoards(t *testing.T) {
 
 	t.Run("user had no default category and had boards", func(t *testing.T) {
 		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{}, nil)
-		th.Store.EXPECT().CreateCategory(mock.MatchedBy(func(interface{}) bool { return true })).Return(nil)
-		th.Store.EXPECT().GetCategory(mock.MatchedBy(func(interface{}) bool { return true })).Return(&model.Category{
+		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
 			ID:   "boards_category_id",
 			Name: "Boards",
 		}, nil)
@@ -49,8 +49,8 @@ func TestGetUserCategoryBoards(t *testing.T) {
 
 	t.Run("user had no default category BUT had no boards", func(t *testing.T) {
 		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{}, nil)
-		th.Store.EXPECT().CreateCategory(mock.MatchedBy(func(interface{}) bool { return true })).Return(nil)
-		th.Store.EXPECT().GetCategory(mock.MatchedBy(func(interface{}) bool { return true })).Return(&model.Category{
+		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
 			ID:   "boards_category_id",
 			Name: "Boards",
 		}, nil)

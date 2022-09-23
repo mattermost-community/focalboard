@@ -14,12 +14,14 @@ func (a *App) GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoar
 		return nil, err
 	}
 
-	createdCategoryBoards, err := a.createDefaultCategoriesIfRequired(categoryBoards, userID, teamID)
-	if err != nil {
-		return nil, err
-	}
+	if teamID != "0" {
+		createdCategoryBoards, err := a.createDefaultCategoriesIfRequired(categoryBoards, userID, teamID)
+		if err != nil {
+			return nil, err
+		}
 
-	categoryBoards = append(categoryBoards, createdCategoryBoards...)
+		categoryBoards = append(categoryBoards, createdCategoryBoards...)
+	}
 	return categoryBoards, nil
 }
 

@@ -53,6 +53,13 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		th.Store.EXPECT().PatchUserPreferences(userID, userPreferencesPatch).Return(nil, nil)
 		th.Store.EXPECT().GetUserCategoryBoards(userID, "0").Return([]model.CategoryBoards{}, nil)
 
+		//th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+		//th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+		//	ID:   "boards_category",
+		//	Name: "Boards",
+		//}, nil)
+		//th.Store.EXPECT().GetBoardsForUserAndTeam("user_id_1", teamID, false).Return([]*model.Board{}, nil)
+
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
 		assert.NoError(t, err)
 		assert.Equal(t, testTeamID, teamID)
