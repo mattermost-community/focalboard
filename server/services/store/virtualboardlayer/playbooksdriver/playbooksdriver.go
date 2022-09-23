@@ -1,4 +1,4 @@
-package playbooksstorelayer
+package playbooksdriver
 
 import (
 	"io"
@@ -12,29 +12,32 @@ import (
 
 const baseURL = "http://_"
 
-type PlaybooksStoreLayer struct {
-	store.Store
+type PlaybooksDriver struct {
+	store store.Store
 	client *http.Client
 	socketPath string
 	logger mlog.LoggerIFace
 }
 
-func New(store store.Store, logger mlog.LoggerIFace, socketPath string) *PlaybooksStoreLayer {
+func New(logger mlog.LoggerIFace, socketPath string) *PlaybooksDriver {
 	tr := &http.Transport{
 		Dial: func(network, addr string) (net.Conn, error) {
 			return net.Dial("unix", socketPath)
 		},
 	}
 
-	return &PlaybooksStoreLayer{
-		Store: store,
+	return &PlaybooksDriver{
 		logger: logger,
 		socketPath: socketPath,
 		client: &http.Client{Transport: tr},
 	}
 }
 
-func (s *PlaybooksStoreLayer) doRequest(method, url string, data io.Reader) (*http.Response, error) {
+func (pd *PlaybooksDriver) SetStore(store store.Store) {
+	pd.store = store
+}
+
+func (pd *PlaybooksDriver) doRequest(method, url string, data io.Reader) (*http.Response, error) {
 	rq, err := http.NewRequest(method, baseURL + url, data)
 	if err != nil {
 		return nil, err
@@ -42,7 +45,7 @@ func (s *PlaybooksStoreLayer) doRequest(method, url string, data io.Reader) (*ht
 
 	// ToDo: add headers if necessary
 
-	rp, err := s.client.Do(rq)
+	rp, err := pd.client.Do(rq)
 	if err != nil {
 		return nil, err
 	}
@@ -54,25 +57,11 @@ func (s *PlaybooksStoreLayer) doRequest(method, url string, data io.Reader) (*ht
 	return rp, nil
 }
 
-func (s *PlaybooksStoreLayer) isPlaybooksVirtualBoardID(boardID string) bool {
-	board, err := s.GetBoard(boardID)
-	if err != nil {
-		s.logger.Error("isPlabooksVirtualBoardID error getting board", mlog.String("boardID", boardID), mlog.Err(err))
-		return false
-	}
-
-	return isPlaybooksVirtualBoard(board)
-}
-
-func (s *PlaybooksStoreLayer) GetBlocksForBoard(boardID string) ([]model.Block, error) {
-	if !s.isPlaybooksVirtualBoardID(boardID) {
-		return s.Store.GetBlocksForBoard(boardID)
-	}
-
+func (pd *PlaybooksDriver) GetBlocksForBoard(boardID string) ([]model.Block, error) {
 	/*
 
 	url := fmt.Sprintf("/blocks?boardID=%s", boardID)
-	rp, err := s.doRequest(http.MethodGet, url, strings.NewReader(""))
+	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
 	if model.IsErrNotFound(err) {
 		return []model.Block{}, nil
 	}
@@ -140,15 +129,11 @@ func (s *PlaybooksStoreLayer) GetBlocksForBoard(boardID string) ([]model.Block, 
 	return blocks, nil
 }
 
-func (s *PlaybooksStoreLayer) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
-	if !s.isPlaybooksVirtualBoardID(boardID) {
-		return s.Store.GetMembersForBoard(boardID)
-	}
-
+func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
 	/*
 
 	url := fmt.Sprintf("/members?boardID=%s", boardID)
-	rp, err := s.doRequest(http.MethodGet, url, strings.NewReader(""))
+	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
 	if model.IsErrNotFound(err) {
 		return []*model.BoardMember{}, nil
 	}

@@ -26,6 +26,8 @@ import (
 	"github.com/mattermost/focalboard/server/services/scheduler"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/services/store/virtualboardlayer"
+	"github.com/mattermost/focalboard/server/services/store/virtualboardlayer/playbooksdriver"
 	"github.com/mattermost/focalboard/server/services/telemetry"
 	"github.com/mattermost/focalboard/server/services/webhook"
 	"github.com/mattermost/focalboard/server/utils"
@@ -233,6 +235,14 @@ func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.Logge
 
 	var db store.Store
 	db, err = sqlstore.New(storeParams)
+	if err != nil {
+		return nil, err
+	}
+
+	drivers := map[string]virtualboardlayer.VirtualBoardDriver{
+		"playbooks": playbooksdriver.New(logger, "/tmp/localserver.socket"),
+	}
+	db, err = virtualboardlayer.New(db, logger, drivers)
 	if err != nil {
 		return nil, err
 	}
