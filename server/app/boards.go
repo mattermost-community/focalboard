@@ -166,10 +166,8 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 	if destinationCategoryID == "" {
 		// if source board is not mapped to a category for this user,
 		// then move new board to default category
-		if !asTemplate && teamID != "" {
-			if err := a.addBoardsToDefaultCategory(userID, teamID, []*model.Board{{ID: destinationBoardID}}); err != nil {
-				return err
-			}
+		if !asTemplate && teamID != "0" {
+			return a.addBoardsToDefaultCategory(userID, teamID, []*model.Board{{ID: destinationBoardID}})
 		} else {
 			return nil
 		}
@@ -192,7 +190,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	}
 
 	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID, asTemplate); categoryErr != nil {
+		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
 			return nil, nil, categoryErr
 		}
 	}
