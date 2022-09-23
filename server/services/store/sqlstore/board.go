@@ -673,9 +673,13 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchFiel
 
 	if term != "" {
 		if searchField == model.BoardSearchFieldPropertyName {
-			like := fmt.Sprintf("%%\"%s\"%%", term)
-			query = query.Where(sq.Like{"b.properties": like})
-
+			if s.dbType == model.PostgresDBType {
+				where := fmt.Sprintf("b.properties->>'%s' is not null", term)
+				query = query.Where(where)
+			} else {
+				like := fmt.Sprintf("%%\"%s\"%%", term)
+				query = query.Where(sq.Like{"b.properties": like})
+			}
 		} else { // model.BoardSearchFieldTitle
 			// break search query into space separated words
 			// and search for all words.
