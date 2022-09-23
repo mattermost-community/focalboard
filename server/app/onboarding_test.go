@@ -1,8 +1,9 @@
 package app
 
 import (
-	"github.com/mattermost/focalboard/server/utils"
 	"testing"
+
+	"github.com/mattermost/focalboard/server/utils"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/assert"
@@ -63,7 +64,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		th.Store.EXPECT().PatchUserPreferences(userID, userPreferencesPatch).Return(nil, nil)
 		th.Store.EXPECT().GetUserCategoryBoards(userID, "team_id").Return([]model.CategoryBoards{}, nil).Times(1)
 
-		// when this is called the second time, the defualt category is created so we need to include that in the response list
+		// when this is called the second time, the default category is created so we need to include that in the response list
 		th.Store.EXPECT().GetUserCategoryBoards(userID, "team_id").Return([]model.CategoryBoards{
 			{
 				Category: model.Category{ID: "boards_category_id", Name: "Boards"},
@@ -77,9 +78,6 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		}, nil)
 		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id_1", teamID, false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "boards_category_id", "board_id_2").Return(nil)
-
-		// the newly created board would be added in the current team's default category
-		//th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "board_id_2").Return(nil)
 
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
 		assert.NoError(t, err)
