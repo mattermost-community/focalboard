@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+
 	"github.com/mattermost/focalboard/server/model"
 )
 
@@ -54,7 +55,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	}
 	createdCategory, err := a.CreateCategory(&category)
 	if err != nil {
-		return nil, fmt.Errorf("createBoardsCategory default category creation failed: %e", err)
+		return nil, fmt.Errorf("createBoardsCategory default category creation failed: %w", err)
 	}
 
 	// once the category is created, we need to move all boards which do not
@@ -62,7 +63,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 
 	userBoards, err := a.GetBoardsForUserAndTeam(userID, teamID, false)
 	if err != nil {
-		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %e", err)
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
 	}
 
 	createdCategoryBoards := &model.CategoryBoards{
@@ -82,7 +83,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 			}
 
 			// stop looking into other categories if
-			//the board was found in a category
+			// the board was found in a category
 			if belongsToCategory {
 				break
 			}
@@ -90,14 +91,13 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 
 		if !belongsToCategory {
 			if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, board.ID); err != nil {
-				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %e", createdCategory.ID, err)
+				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
 			}
 
 			createdCategoryBoards.BoardIDs = append(createdCategoryBoards.BoardIDs, board.ID)
 		}
 	}
 
-	existingCategoryBoards = append(existingCategoryBoards, *createdCategoryBoards)
 	return createdCategoryBoards, nil
 }
 

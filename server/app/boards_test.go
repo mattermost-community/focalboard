@@ -1,8 +1,9 @@
 package app
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/mock"

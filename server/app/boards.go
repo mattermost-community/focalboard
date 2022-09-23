@@ -317,20 +317,20 @@ func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.
 		return err
 	}
 
-	defaultCategoryId := ""
+	defaultCategoryID := ""
 	for _, categoryBoard := range userCategoryBoards {
 		if categoryBoard.Name == defaultCategoryBoards {
-			defaultCategoryId = categoryBoard.ID
+			defaultCategoryID = categoryBoard.ID
 			break
 		}
 	}
 
-	if defaultCategoryId == "" {
-		return fmt.Errorf("%e userID: %s", errNoDefaultCategoryFound, userID)
+	if defaultCategoryID == "" {
+		return fmt.Errorf("%w userID: %s", errNoDefaultCategoryFound, userID)
 	}
 
 	for _, board := range boards {
-		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryId, board.ID); err != nil {
+		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, board.ID); err != nil {
 			return err
 		}
 	}

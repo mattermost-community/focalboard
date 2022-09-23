@@ -1,10 +1,11 @@
 package app
 
 import (
+	"testing"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
 func TestGetUserCategoryBoards(t *testing.T) {
