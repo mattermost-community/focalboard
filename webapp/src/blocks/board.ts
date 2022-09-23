@@ -18,7 +18,7 @@ enum MemberRole {
     Commenter = 'commenter',
     Editor = 'editor',
     Admin = 'admin',
-    None = 'none',
+    None = '',
 }
 
 type Board = {

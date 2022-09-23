@@ -15,7 +15,7 @@ const (
 )
 
 const (
-	BoardRoleNone      BoardRole = "none"
+	BoardRoleNone      BoardRole = ""
 	BoardRoleViewer    BoardRole = "viewer"
 	BoardRoleCommenter BoardRole = "commenter"
 	BoardRoleEditor    BoardRole = "editor"
