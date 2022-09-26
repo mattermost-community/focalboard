@@ -2876,14 +2876,14 @@ func TestPermissionsClientConfig(t *testing.T) {
 
 func TestPermissionsGetCategories(t *testing.T) {
 	ttCases := []TestCase{
-		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userTeamMember, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userViewer, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userCommenter, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userEditor, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userAdmin, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userGuest, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 1},
+		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userGuest, http.StatusOK, 1},
 	}
 
 	t.Run("plugin", func(t *testing.T) {
