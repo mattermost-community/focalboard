@@ -188,3 +188,40 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 
 	return categories, nil
 }
+
+func (s *SQLStore) reorderCategories(db sq.BaseRunner, userID, teamID string, newCategoryOrder []string) ([]string, error) {
+	if len(newCategoryOrder) == 0 {
+		return nil, nil
+	}
+
+	updateCase := sq.Case("id")
+	for i, categoryID := range newCategoryOrder {
+		updateCase = updateCase.When("'"+categoryID+"'", sq.Expr(fmt.Sprintf("%d", i+categorySortOrderGap)))
+	}
+	updateCase = updateCase.Else("sort_order")
+
+	query := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"categories").
+		Set("sort_order", updateCase).
+		Where(sq.Eq{
+			"user_id": userID,
+			"team_id": teamID,
+		})
+
+	q, arg, _ := query.ToSql()
+	s.logger.Error(q)
+	s.logger.Error(fmt.Sprintf("%v", arg))
+
+	if _, err := query.Exec(); err != nil {
+		s.logger.Error(
+			"reorderCategories failed to update category order",
+			mlog.String("user_id", userID),
+			mlog.String("team_id", teamID),
+			mlog.Err(err),
+		)
+
+		return nil, err
+	}
+
+	return newCategoryOrder, nil
+}

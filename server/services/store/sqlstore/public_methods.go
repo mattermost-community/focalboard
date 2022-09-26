@@ -105,7 +105,26 @@ func (s *SQLStore) CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, us
 }
 
 func (s *SQLStore) CreateCategory(category model.Category) error {
-	return s.createCategory(s.db, category)
+	if s.dbType == model.SqliteDBType {
+		return s.createCategory(s.db, category)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.createCategory(tx, category)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "CreateCategory"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
@@ -524,6 +543,11 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUserCategories(userID string, teamID string) ([]model.Category, error) {
+	return s.getUserCategories(s.db, userID, teamID)
+
+}
+
 func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.CategoryBoards, error) {
 	return s.getUserCategoryBoards(s.db, userID, teamID)
 
@@ -739,6 +763,11 @@ func (s *SQLStore) RefreshSession(session *model.Session) error {
 
 func (s *SQLStore) RemoveDefaultTemplates(boards []*model.Board) error {
 	return s.removeDefaultTemplates(s.db, boards)
+
+}
+
+func (s *SQLStore) ReorderCategories(userID string, teamID string, newCategoryOrder []string) ([]string, error) {
+	return s.reorderCategories(s.db, userID, teamID, newCategoryOrder)
 
 }
 

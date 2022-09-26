@@ -589,6 +589,32 @@ func (ws *Server) BroadcastCategoryChange(category model.Category) {
 	}
 }
 
+func (ws *Server) BroadcastCategoryReorder(teamID, userID string, categoryOrder []string) {
+	message := CategoryReorderMessage{
+		Order:  categoryOrder,
+		TeamID: teamID,
+	}
+
+	listeners := ws.getListenersForTeam(teamID)
+	ws.logger.Debug("listener(s) for teamID",
+		mlog.Int("listener_count", len(listeners)),
+		mlog.String("teamID", teamID),
+	)
+
+	for _, listener := range listeners {
+		ws.logger.Debug("Broadcast category order change",
+			mlog.Int("listener_count", len(listeners)),
+			mlog.String("teamID", teamID),
+			mlog.Stringer("remoteAddr", listener.conn.RemoteAddr()),
+		)
+
+		if err := listener.WriteJSON(message); err != nil {
+			ws.logger.Error("broadcast category order change error", mlog.Err(err))
+			listener.conn.Close()
+		}
+	}
+}
+
 func (ws *Server) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
 	message := UpdateCategoryMessage{
 		Action:          websocketActionUpdateCategoryBoard,

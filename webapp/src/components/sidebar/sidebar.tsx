@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
-import {DragDropContext, Droppable} from 'react-beautiful-dnd'
+import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -35,6 +35,8 @@ import {Constants} from '../../constants'
 
 import {getMe} from '../../store/users'
 import {getCurrentViewId} from '../../store/views'
+
+import octoClient from '../../octoClient'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -144,9 +146,34 @@ const Sidebar = (props: Props) => {
         )
     }
 
-    const onDragEnd = () => {
+    const onDragEnd = useCallback(async (result: DropResult) => {
+        const {destination, source} = result
 
-    }
+        if (!team || !destination) {
+            return
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return
+        }
+
+        const categories = sidebarCategories
+
+        // creating a mutable copy
+        const newCategories = Array.from(categories)
+
+        // remove category from old index
+        newCategories.splice(source.index, 1)
+
+        // add it to new index
+        newCategories.splice(destination.index, 0, categories[source.index])
+
+        const newCategoryOrder = newCategories.map((category) => category.id)
+        await octoClient.reorderSidebarCategories(team.id, newCategoryOrder)
+    }, [team])
 
     return (
         <div className='Sidebar octo-sidebar'>

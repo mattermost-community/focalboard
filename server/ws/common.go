@@ -59,3 +59,9 @@ type WebsocketCommand struct {
 	ReadToken string   `json:"readToken"`
 	BlockIDs  []string `json:"blockIds"`
 }
+
+type CategoryReorderMessage struct {
+	Action string   `json:"action"`
+	Order  []string `json:"order"`
+	TeamID string   `json:"teamId"`
+}

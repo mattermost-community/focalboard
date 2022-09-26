@@ -1091,6 +1091,21 @@ func (mr *MockStoreMockRecorder) GetUserByUsername(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByUsername", reflect.TypeOf((*MockStore)(nil).GetUserByUsername), arg0)
 }
 
+// GetUserCategories mocks base method.
+func (m *MockStore) GetUserCategories(arg0, arg1 string) ([]model.Category, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserCategories", arg0, arg1)
+	ret0, _ := ret[0].([]model.Category)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserCategories indicates an expected call of GetUserCategories.
+func (mr *MockStoreMockRecorder) GetUserCategories(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserCategories", reflect.TypeOf((*MockStore)(nil).GetUserCategories), arg0, arg1)
+}
+
 // GetUserCategoryBoards mocks base method.
 func (m *MockStore) GetUserCategoryBoards(arg0, arg1 string) ([]model.CategoryBoards, error) {
 	m.ctrl.T.Helper()
@@ -1338,6 +1353,21 @@ func (m *MockStore) RemoveDefaultTemplates(arg0 []*model.Board) error {
 func (mr *MockStoreMockRecorder) RemoveDefaultTemplates(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveDefaultTemplates", reflect.TypeOf((*MockStore)(nil).RemoveDefaultTemplates), arg0)
+}
+
+// ReorderCategories mocks base method.
+func (m *MockStore) ReorderCategories(arg0, arg1 string, arg2 []string) ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReorderCategories", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReorderCategories indicates an expected call of ReorderCategories.
+func (mr *MockStoreMockRecorder) ReorderCategories(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderCategories", reflect.TypeOf((*MockStore)(nil).ReorderCategories), arg0, arg1, arg2)
 }
 
 // RunDataRetention mocks base method.

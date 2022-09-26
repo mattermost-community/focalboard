@@ -20,6 +20,7 @@ const (
 	websocketActionUpdateCategoryBoard      = "UPDATE_BOARD_CATEGORY"
 	websocketActionUpdateSubscription       = "UPDATE_SUBSCRIPTION"
 	websocketActionUpdateCardLimitTimestamp = "UPDATE_CARD_LIMIT_TIMESTAMP"
+	websocketActionReorderCategories        = "REORDER_CATEGORIES"
 )
 
 type Store interface {
@@ -39,4 +40,5 @@ type Adapter interface {
 	BroadcastCategoryBoardChange(teamID, userID string, blockCategory model.BoardCategoryWebsocketData)
 	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
+	BroadcastCategoryReorder(teamID, userID string, categoryOrder []string)
 }
