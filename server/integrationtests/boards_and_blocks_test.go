@@ -729,7 +729,8 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		// the user is an admin of the first board
 		newBoard1 := &model.Board{
-			Type: model.BoardTypeOpen,
+			Type:   model.BoardTypeOpen,
+			TeamID: "team_id_1",
 		}
 		board1, err := th.Server.App().CreateBoard(newBoard1, th.GetUser1().ID, true)
 		require.NoError(t, err)
@@ -737,7 +738,8 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		// but not of the second
 		newBoard2 := &model.Board{
-			Type: model.BoardTypeOpen,
+			Type:   model.BoardTypeOpen,
+			TeamID: "team_id_1",
 		}
 		board2, err := th.Server.App().CreateBoard(newBoard2, th.GetUser1().ID, false)
 		require.NoError(t, err)
