@@ -115,7 +115,7 @@ func (a *API) handleTeamBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// get unix time for duration
 	startTime, appErr := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
 	if appErr != nil {
-		a.errorResponse(w, r, appErr)
+		a.errorResponse(w, r, model.NewErrBadRequest(appErr.Message))
 		return
 	}
 
@@ -233,7 +233,7 @@ func (a *API) handleUserBoardsInsights(w http.ResponseWriter, r *http.Request) {
 	// get unix time for duration
 	startTime, appErr := mmModel.StartOfDayForTimeRange(timeRange, userLocation)
 	if appErr != nil {
-		a.errorResponse(w, r, appErr)
+		a.errorResponse(w, r, model.NewErrBadRequest(appErr.Message))
 		return
 	}
 
