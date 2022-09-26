@@ -152,49 +152,6 @@ exports[`components/sidebarSidebar dont show hidden boards 1`] = `
           No boards inside
         </div>
       </div>
-      <div
-        class="SidebarCategory"
-      >
-        <div
-          class="octo-sidebar-item category ' expanded "
-        >
-          <div
-            class="octo-sidebar-title category-title"
-            title="Boards"
-          >
-            <i
-              class="CompassIcon icon-chevron-down ChevronDownIcon"
-            />
-            Boards
-            <div
-              class="sidebarCategoriesTour"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                class="IconButton"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="octo-sidebar-item subitem no-views"
-        >
-          No boards inside
-        </div>
-      </div>
     </div>
     <div
       class="octo-spacer"
@@ -457,49 +414,6 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
               </button>
             </div>
           </div>
-        </div>
-      </div>
-      <div
-        class="SidebarCategory"
-      >
-        <div
-          class="octo-sidebar-item category ' expanded "
-        >
-          <div
-            class="octo-sidebar-title category-title"
-            title="Boards"
-          >
-            <i
-              class="CompassIcon icon-chevron-down ChevronDownIcon"
-            />
-            Boards
-            <div
-              class="sidebarCategoriesTour"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                class="IconButton"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="octo-sidebar-item subitem no-views"
-        >
-          No boards inside
         </div>
       </div>
     </div>
@@ -802,49 +716,6 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
               </button>
             </div>
           </div>
-        </div>
-      </div>
-      <div
-        class="SidebarCategory"
-      >
-        <div
-          class="octo-sidebar-item category ' expanded "
-        >
-          <div
-            class="octo-sidebar-title category-title"
-            title="Boards"
-          >
-            <i
-              class="CompassIcon icon-chevron-down ChevronDownIcon"
-            />
-            Boards
-            <div
-              class="sidebarCategoriesTour"
-            />
-          </div>
-          <div
-            class=""
-          >
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                class="IconButton"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          class="octo-sidebar-item subitem no-views"
-        >
-          No boards inside
         </div>
       </div>
     </div>
