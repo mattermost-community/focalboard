@@ -36,8 +36,7 @@ export const DefaultCategory: CategoryBoards = {
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
     async (teamID: string) => {
-        const categories = await client.getSidebarCategories(teamID)
-        return categories.sort((a, b) => a.name.localeCompare(b.name))
+        return client.getSidebarCategories(teamID)
     },
 )
 
@@ -53,9 +52,10 @@ const sidebarSlice = createSlice({
             action.payload.forEach((updatedCategory) => {
                 const index = state.categoryAttributes.findIndex((c) => c.id === updatedCategory.id)
 
-                // when new category got created
+                // when new category got created,
                 if (index === -1) {
-                    state.categoryAttributes.push({
+                    // new categories should always show up on the top
+                    state.categoryAttributes.unshift({
                         ...updatedCategory,
                         boardIDs: [],
                     })
@@ -71,9 +71,6 @@ const sidebarSlice = createSlice({
                     }
                 }
             })
-
-            // sort categories alphabetically
-            state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
             action.payload.forEach((boardCategory) => {

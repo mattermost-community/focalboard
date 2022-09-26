@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
@@ -9,6 +10,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+const categorySortOrderGap = 10
 
 func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, error) {
 	query := s.getQueryBuilder(db).
@@ -36,6 +39,11 @@ func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, er
 }
 
 func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) error {
+	// A new category should always end up at the top.
+	// So we first insert the provided category, then bump up
+	// existing user-team categories' order
+
+	// creating provided category
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"categories").
 		Columns(
@@ -47,6 +55,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			"update_at",
 			"delete_at",
 			"collapsed",
+			"sort_order",
 		).
 		Values(
 			category.ID,
@@ -57,6 +66,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			category.UpdateAt,
 			category.DeleteAt,
 			category.Collapsed,
+			category.SortOrder,
 		)
 
 	_, err := query.Exec()
@@ -64,6 +74,30 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 		s.logger.Error("Error creating category", mlog.String("category name", category.Name), mlog.Err(err))
 		return err
 	}
+
+	// bumping up order of existing categories
+	updateQuery := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"categories").
+		Set("sort_order", sq.Expr(fmt.Sprintf("sort_order + %d", categorySortOrderGap))).
+		Where(
+			sq.Eq{
+				"user_id":   category.UserID,
+				"team_id":   category.TeamID,
+				"delete_at": 0,
+			},
+		)
+
+	if _, err := updateQuery.Exec(); err != nil {
+		s.logger.Error(
+			"createCategory failed to update sort order of existing user-team categories",
+			mlog.String("user_id", category.UserID),
+			mlog.String("team_id", category.TeamID),
+			mlog.Err(err),
+		)
+
+		return err
+	}
+
 	return nil
 }
 
@@ -110,12 +144,13 @@ func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID s
 func (s *SQLStore) getUserCategories(db sq.BaseRunner, userID, teamID string) ([]model.Category, error) {
 	query := s.getQueryBuilder(db).
 		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "sort_order").
-		From(s.tablePrefix + "categories").
+		From(s.tablePrefix+"categories").
 		Where(sq.Eq{
 			"user_id":   userID,
 			"team_id":   teamID,
 			"delete_at": 0,
-		})
+		}).
+		OrderBy("sort_order", "name")
 
 	rows, err := query.Query()
 	if err != nil {
