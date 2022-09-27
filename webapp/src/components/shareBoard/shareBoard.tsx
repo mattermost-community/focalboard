@@ -171,6 +171,19 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         }
     }
 
+    const addUser = (user: IUser) => {
+        // minimum role is never admin, don't allow direct creation of admin
+        const newMember = {
+            boardId,
+            userId: user.id,
+            roles: board.minimumRole,
+            schemeEditor: board.minimumRole === MemberRole.Editor,
+            schemeCommenter: board.minimumRole === MemberRole.Editor || board.minimumRole === MemberRole.Commenter,
+            schemeViewer: board.minimumRole === MemberRole.Editor || board.minimumRole === MemberRole.Commenter || board.minimumRole === MemberRole.Viewer,
+        } as BoardMember
+        mutator.createBoardMember(newMember)
+    }
+
     const onUpdateBoardMember = (member: BoardMember, newPermission: string) => {
         if (member.userId === me?.id && isLastAdmin(Object.values(members))) {
             sendFlashMessage({content: intl.formatMessage({id: 'shareBoard.lastAdmin', defaultMessage: 'Boards must have at least one Administrator'}), severity: 'low'})
@@ -392,7 +405,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})}
                             onChange={(newValue) => {
                                 if (newValue && (newValue as IUser).username) {
-                                    mutator.createBoardMember({boardId, userId: newValue.id, schemeEditor: true} as BoardMember)
+                                    addUser(newValue as IUser)
                                     setSelectedUser(null)
                                 } else if (newValue) {
                                     onLinkBoard(newValue as Channel)
