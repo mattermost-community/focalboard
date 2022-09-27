@@ -28,22 +28,28 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
 
     const intl = useIntl()
 
-    const roleOptions = [
+    let roleOptions = [
         {id: MemberRole.Admin, label: intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})},
         {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
         {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
         {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
     ]
 
-    let currentRoleName = intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})
-    if (props.defaultRole === MemberRole.Admin) {
-        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
-    } else if (props.defaultRole === MemberRole.Editor) {
-        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
-    } else if (props.defaultRole === MemberRole.Commenter) {
-        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
-    } else if (props.defaultRole === MemberRole.Viewer) {
-        currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
+    if (!allowManageBoardRoles) {
+        roleOptions = [
+            {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
+        ]
+
+        if (props.defaultRole === MemberRole.Editor) {
+            roleOptions.push(
+                {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
+                {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
+            )
+        } else if (props.defaultRole === MemberRole.Commenter) {
+            roleOptions.push(
+                {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
+            )
+        }
     }
 
     const subText = (
@@ -71,7 +77,16 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
                 </label>
             </div>
             {!allowManageBoardRoles &&
-                <label>{currentRoleName}</label>
+                <Select
+                    className='select'
+                    getOptionLabel={(o: {id: string, label: string}) => o.label}
+                    getOptionValue={(o: {id: string, label: string}) => o.id}
+                    styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
+                    menuPortalTarget={document.body}
+                    options={roleOptions}
+                    isDisabled={true}
+                    value={roleOptions.find((o) => o.id === newUserRole)}
+                />
             }
             {allowManageBoardRoles &&
                 <Select

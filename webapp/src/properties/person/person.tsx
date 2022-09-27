@@ -9,7 +9,7 @@ import {CSSObject} from '@emotion/serialize'
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
 import {getBoardUsersList, getBoardUsers} from '../../store/users'
-import {BoardMember, MemberRole} from '../../blocks/board'
+import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import mutator from '../../mutator'
 import {getSelectBaseStyle} from '../../theme'
@@ -111,7 +111,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
-    const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.AddBoardUsers])
+    const allowAddUsers = board.type === BoardTypeOpen
 
     const loadOptions = useCallback(async (value: string) => {
         if (!allowAddUsers) {
