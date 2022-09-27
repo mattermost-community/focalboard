@@ -37,15 +37,9 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                 >
                   Import
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
                 <div
                   class="SubMenu Menu noselect top"
                 >
@@ -282,15 +276,9 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                 >
                   Set language
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -306,15 +294,9 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
                 >
                   Set theme
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -417,15 +399,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                 >
                   Import
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -468,15 +444,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                 >
                   Set language
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
                 <div
                   class="SubMenu Menu noselect top"
                 >
@@ -967,15 +937,9 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
                 >
                   Set theme
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1098,15 +1062,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 >
                   Import
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1149,15 +1107,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 >
                   Set language
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1173,15 +1125,9 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
                 >
                   Set theme
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1284,15 +1230,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                 >
                   Import
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1335,15 +1275,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                 >
                   Set language
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1359,15 +1293,9 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
                 >
                   Set theme
                 </div>
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
                 <div
                   class="SubMenu Menu noselect top"
                 >
