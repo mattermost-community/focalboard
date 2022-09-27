@@ -3,7 +3,7 @@
 
 import {ClientConfig} from './config/clientConfig'
 
-import {Utils, WSMessagePayloads} from './utils'
+import {CategoryOrder, Utils, WSMessagePayloads} from './utils'
 import {Block} from './blocks/block'
 import {Board, BoardMember} from './blocks/board'
 import {OctoUtils} from './octoUtils'
@@ -28,6 +28,7 @@ export type WSMessage = {
     teamId?: string
     member?: BoardMember
     timestamp?: number
+    categoryOrder?: string[]
 }
 
 export const ACTION_UPDATE_BOARD = 'UPDATE_BOARD'
@@ -80,7 +81,7 @@ type OnConfigChangeHandler = (client: WSClient, clientConfig: ClientConfig) => v
 type OnCardLimitTimestampChangeHandler = (client: WSClient, timestamp: number) => void
 type FollowChangeHandler = (client: WSClient, subscription: Subscription) => void
 
-export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'board' | 'boardMembers'
+export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'board' | 'boardMembers' | 'categoryOrder'
 
 type UpdatedData = {
     Blocks: Block[]
@@ -88,6 +89,7 @@ type UpdatedData = {
     BoardCategories: BoardCategoryWebsocketData[]
     Boards: Board[]
     BoardMembers: BoardMember[]
+    CategoryOrder: string[]
 }
 
 type ChangeHandlers = {
@@ -96,6 +98,7 @@ type ChangeHandlers = {
     BoardCategory: OnChangeHandler[]
     Board: OnChangeHandler[]
     BoardMember: OnChangeHandler[]
+    CategoryReorder: OnChangeHandler[]
 }
 
 type Subscriptions = {
@@ -116,7 +119,7 @@ class WSClient {
     state: 'init'|'open'|'close' = 'init'
     onStateChange: OnStateChangeHandler[] = []
     onReconnect: OnReconnectHandler[] = []
-    onChange: ChangeHandlers = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: []}
+    onChange: ChangeHandlers = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: [], CategoryReorder: []}
     onError: OnErrorHandler[] = []
     onConfigChange: OnConfigChangeHandler[] = []
     onCardLimitTimestampChange: OnCardLimitTimestampChangeHandler[] = []
@@ -124,7 +127,7 @@ class WSClient {
     onUnfollowBlock: FollowChangeHandler = () => {}
     private notificationDelay = 100
     private reopenDelay = 3000
-    private updatedData: UpdatedData = {Blocks: [], Categories: [], BoardCategories: [], Boards: [], BoardMembers: []}
+    private updatedData: UpdatedData = {Blocks: [], Categories: [], BoardCategories: [], Boards: [], BoardMembers: [], CategoryOrder: []}
     private updateTimeout?: NodeJS.Timeout
     private errorPollId?: NodeJS.Timeout
     private subscriptions: Subscriptions = {Teams: {}}
@@ -227,6 +230,9 @@ class WSClient {
         case 'boardMembers':
             this.onChange.BoardMember.push(handler)
             break
+        case 'categoryOrder':
+            this.onChange.CategoryReorder.push(handler)
+            break
         }
     }
 
@@ -247,6 +253,9 @@ class WSClient {
             break
         case 'category':
             haystack = this.onChange.Category
+            break
+        case 'categoryOrder':
+            haystack = this.onChange.CategoryReorder
             break
         }
 
@@ -468,6 +477,9 @@ class WSClient {
                 case ACTION_UPDATE_SUBSCRIPTION:
                     this.updateSubscriptionHandler(message)
                     break
+                case ACTION_REORDER_CATEGORIES:
+                    this.updateHandler(message)
+                    break
                 default:
                     Utils.logError(`Unexpected action: ${message.action}`)
                 }
@@ -665,6 +677,12 @@ class WSClient {
         } else if (type === 'boardMembers') {
             this.updatedData.BoardMembers = this.updatedData.BoardMembers.filter((m) => m.userId !== (data as BoardMember).userId || m.boardId !== (data as BoardMember).boardId)
             this.updatedData.BoardMembers.push(data as BoardMember)
+        } else if (type === 'categoryOrder') {
+            // Since each update contains the whole state of all
+            // categories, we don't need to keep accumulating all updates.
+            // Only the very latest one is sufficient to describe the
+            // latest state of all sidebar categories.
+            this.updatedData.CategoryOrder = (data as CategoryOrder)
         }
 
         if (this.updateTimeout) {
@@ -697,6 +715,8 @@ class WSClient {
         for (const boardMember of this.updatedData.BoardMembers) {
             Utils.log(`WSClient flush update boardMember: ${boardMember.userId} ${boardMember.boardId}`)
         }
+
+        Utils.log(`WSClient flush update categoryOrder: ${this.updatedData.CategoryOrder}`)
     }
 
     private flushUpdateNotifications() {
@@ -722,12 +742,17 @@ class WSClient {
             handler(this, this.updatedData.BoardMembers)
         }
 
+        for (const handler of this.onChange.CategoryReorder) {
+            handler(this, this.updatedData.CategoryOrder)
+        }
+
         this.updatedData = {
             Blocks: [],
             Categories: [],
             BoardCategories: [],
             Boards: [],
             BoardMembers: [],
+            CategoryOrder: [],
         }
     }
 
@@ -741,7 +766,7 @@ class WSClient {
         // Use this sequence so the onclose method doesn't try to re-open
         const ws = this.ws
         this.ws = null
-        this.onChange = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: []}
+        this.onChange = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: [], CategoryReorder: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []

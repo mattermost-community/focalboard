@@ -61,7 +61,7 @@ type WebsocketCommand struct {
 }
 
 type CategoryReorderMessage struct {
-	Action string   `json:"action"`
-	Order  []string `json:"order"`
-	TeamID string   `json:"teamId"`
+	Action        string   `json:"action"`
+	CategoryOrder []string `json:"categoryOrder"`
+	TeamID        string   `json:"teamId"`
 }

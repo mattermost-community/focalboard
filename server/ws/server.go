@@ -591,8 +591,8 @@ func (ws *Server) BroadcastCategoryChange(category model.Category) {
 
 func (ws *Server) BroadcastCategoryReorder(teamID, userID string, categoryOrder []string) {
 	message := CategoryReorderMessage{
-		Order:  categoryOrder,
-		TeamID: teamID,
+		CategoryOrder: categoryOrder,
+		TeamID:        teamID,
 	}
 
 	listeners := ws.getListenersForTeam(teamID)

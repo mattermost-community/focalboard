@@ -503,9 +503,9 @@ func (pa *PluginAdapter) BroadcastCategoryReorder(teamID, userID string, categor
 	)
 
 	message := CategoryReorderMessage{
-		Action: websocketActionReorderCategories,
-		Order:  categoryOrder,
-		TeamID: teamID,
+		Action:        websocketActionReorderCategories,
+		CategoryOrder: categoryOrder,
+		TeamID:        teamID,
 	}
 	payload := utils.StructToMap(message)
 	go func() {

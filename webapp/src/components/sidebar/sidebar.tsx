@@ -22,14 +22,14 @@ import {
     CategoryBoards,
     fetchSidebarCategories,
     getSidebarCategories, updateBoardCategories,
-    updateCategories,
+    updateCategories, updateCategoryOrder,
 } from '../../store/sidebar'
 
 import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import wsClient, {WSClient} from '../../wsclient'
 
-import {getCurrentTeam} from '../../store/teams'
+import {getCurrentTeam, getCurrentTeamId} from '../../store/teams'
 
 import {Constants} from '../../constants'
 
@@ -37,6 +37,8 @@ import {getMe} from '../../store/users'
 import {getCurrentViewId} from '../../store/views'
 
 import octoClient from '../../octoClient'
+
+import {useWebsockets} from '../../hooks/websockets'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -76,6 +78,7 @@ const Sidebar = (props: Props) => {
         }, 'blockCategories')
     }, [])
 
+    const teamId = useAppSelector(getCurrentTeamId)
     const team = useAppSelector(getCurrentTeam)
 
     useEffect(() => {
@@ -146,6 +149,17 @@ const Sidebar = (props: Props) => {
         )
     }
 
+    useWebsockets(teamId, (websocketClient: WSClient) => {
+        const onCategoryReorderHandler = (_: WSClient, newCategoryOrder: string[]): void => {
+            dispatch(updateCategoryOrder(newCategoryOrder))
+        }
+
+        websocketClient.addOnChange(onCategoryReorderHandler, 'categoryOrder')
+        return () => {
+            websocketClient.removeOnChange(onCategoryReorderHandler, 'categoryOrder')
+        }
+    }, [teamId])
+
     const onDragEnd = useCallback(async (result: DropResult) => {
         const {destination, source} = result
 
@@ -172,8 +186,11 @@ const Sidebar = (props: Props) => {
         newCategories.splice(destination.index, 0, categories[source.index])
 
         const newCategoryOrder = newCategories.map((category) => category.id)
+
+        // optimistically updating the store to produce a lag-free UI
+        await dispatch(updateCategoryOrder(newCategoryOrder))
         await octoClient.reorderSidebarCategories(team.id, newCategoryOrder)
-    }, [team])
+    }, [team, sidebarCategories])
 
     return (
         <div className='Sidebar octo-sidebar'>

@@ -222,7 +222,7 @@ const SidebarCategory = (props: Props) => {
             draggableId={props.categoryBoards.id || 'boards'}
             index={props.index}
         >
-            {(provided) => (
+            {(provided, snapshot) => (
                 <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
@@ -240,7 +240,7 @@ const SidebarCategory = (props: Props) => {
                                 onClick={toggleCollapse}
                                 {...provided.dragHandleProps}
                             >
-                                {collapsed ? <ChevronRight/> : <ChevronDown/>}
+                                {collapsed || snapshot.isDragging ? <ChevronRight/> : <ChevronDown/>}
                                 {props.categoryBoards.name}
                                 <div className='sidebarCategoriesTour'>
                                     {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
@@ -293,14 +293,14 @@ const SidebarCategory = (props: Props) => {
                                 </MenuWrapper>
                             </div>
                         </div>
-                        {!collapsed && visibleBlocks.length === 0 &&
+                        {!(collapsed || snapshot.isDragging) && visibleBlocks.length === 0 &&
                         <div className='octo-sidebar-item subitem no-views'>
                             <FormattedMessage
                                 id='Sidebar.no-boards-in-category'
                                 defaultMessage='No boards inside'
                             />
                         </div>}
-                        {collapsed && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
+                        {collapsed && !snapshot.isDragging && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board) => {
                             if (!isBoardVisible(board.id)) {
                                 return null
                             }
@@ -317,7 +317,7 @@ const SidebarCategory = (props: Props) => {
                                 />
                             )
                         })}
-                        {!collapsed && props.boards.map((board: Board) => {
+                        {!(collapsed || snapshot.isDragging) && props.boards.map((board: Board) => {
                             if (!isBoardVisible(board.id)) {
                                 return null
                             }

@@ -5,6 +5,8 @@ import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@red
 
 import {default as client} from '../octoClient'
 
+import {Utils} from '../utils'
+
 import {RootState} from './index'
 
 interface Category {
@@ -87,6 +89,26 @@ const sidebarSlice = createSlice({
                 }
             })
         },
+        updateCategoryOrder: (state, action: PayloadAction<string[]>) => {
+            if (action.payload.length === 0) {
+                return
+            }
+
+            const categoryById = new Map<string, CategoryBoards>()
+            state.categoryAttributes.forEach((categoryBoards: CategoryBoards) => categoryById.set(categoryBoards.id, categoryBoards))
+
+            const newOrderedCategories: CategoryBoards[] = []
+            action.payload.forEach((categoryId) => {
+                const category = categoryById.get(categoryId)
+                if (!category) {
+                    Utils.logError('Category ID from updated category order not found in store. CategoryID: ' + categoryId)
+                    return
+                }
+                newOrderedCategories.push(category)
+            })
+
+            state.categoryAttributes = newOrderedCategories
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSidebarCategories.fulfilled, (state, action) => {
@@ -102,7 +124,7 @@ export const getSidebarCategories = createSelector(
 
 export const {reducer} = sidebarSlice
 
-export const {updateCategories, updateBoardCategories} = sidebarSlice.actions
+export const {updateCategories, updateBoardCategories, updateCategoryOrder} = sidebarSlice.actions
 
 export {Category, CategoryBoards, BoardCategoryWebsocketData}
 
