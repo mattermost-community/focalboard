@@ -92,14 +92,14 @@ const Person = (props: PropertyProps): JSX.Element => {
     }
 
     const addUser = useCallback(async (userId: string, role: string) => {
+        const minimumRole = role || MemberRole.Viewer
         const newMember = {
             boardId: board.id,
             userId,
             roles: role,
-            schemeAdmin: role === MemberRole.Admin,
-            schemeEditor: role === MemberRole.Admin || role === MemberRole.Editor,
-            schemeCommenter: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter,
-            schemeViewer: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter || role === MemberRole.Viewer,
+            schemeEditor: minimumRole === MemberRole.Editor,
+            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
+            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
@@ -111,7 +111,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
-    const allowAddUsers = board.type === BoardTypeOpen
+    const allowAddUsers = allowManageBoardRoles || board.type === BoardTypeOpen
 
     const loadOptions = useCallback(async (value: string) => {
         if (!allowAddUsers) {

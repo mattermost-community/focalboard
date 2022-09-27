@@ -172,14 +172,14 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     const addUser = (user: IUser) => {
-        // minimum role is never admin, don't allow direct creation of admin
+        const minimumRole = board.minimumRole || MemberRole.Viewer
         const newMember = {
             boardId,
             userId: user.id,
-            roles: board.minimumRole,
-            schemeEditor: board.minimumRole === MemberRole.Editor,
-            schemeCommenter: board.minimumRole === MemberRole.Editor || board.minimumRole === MemberRole.Commenter,
-            schemeViewer: board.minimumRole === MemberRole.Editor || board.minimumRole === MemberRole.Commenter || board.minimumRole === MemberRole.Viewer,
+            roles: minimumRole,
+            schemeEditor: minimumRole === MemberRole.Editor,
+            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
+            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
         } as BoardMember
         mutator.createBoardMember(newMember)
     }

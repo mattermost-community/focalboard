@@ -475,10 +475,6 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return existingMembership, nil
 	}
 
-	if board.MinimumRole == "" {
-		member.SchemeViewer = true
-	}
-
 	newMember, err := a.store.SaveMember(member)
 	if err != nil {
 		return nil, err

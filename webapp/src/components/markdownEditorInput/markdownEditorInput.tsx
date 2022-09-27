@@ -120,14 +120,14 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
 
     const addUser = useCallback(async (userId: string, role: string) => {
+        const minimumRole = role || MemberRole.Viewer
         const newMember = {
             boardId: board.id,
             userId,
             roles: role,
-            schemeAdmin: role === MemberRole.Admin,
-            schemeEditor: role === MemberRole.Admin || role === MemberRole.Editor,
-            schemeCommenter: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter,
-            schemeViewer: role === MemberRole.Admin || role === MemberRole.Editor || role === MemberRole.Commenter || role === MemberRole.Viewer,
+            schemeEditor: minimumRole === MemberRole.Editor,
+            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
+            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)

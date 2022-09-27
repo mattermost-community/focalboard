@@ -23,8 +23,8 @@ type Props = {
 
 const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
     const {user, allowManageBoardRoles} = props
-    const [newUserRole, setNewUserRole] = useState(props.defaultRole)
-    const userRole = useRef<string>(props.defaultRole)
+    const [newUserRole, setNewUserRole] = useState<MemberRole>(props.defaultRole || MemberRole.Viewer)
+    const userRole = useRef<string>(newUserRole)
 
     const intl = useIntl()
 
@@ -78,8 +78,8 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
             </div>
             <Select
                 className='select'
-                getOptionLabel={(o: {id: string, label: string}) => o.label}
-                getOptionValue={(o: {id: string, label: string}) => o.id}
+                getOptionLabel={(o: {id: MemberRole, label: string}) => o.label}
+                getOptionValue={(o: {id: MemberRole, label: string}) => o.id}
                 styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
                 menuPortalTarget={document.body}
                 isDisabled={!allowManageBoardRoles}
