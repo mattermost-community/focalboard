@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 )

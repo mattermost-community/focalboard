@@ -1,10 +1,11 @@
 package app
 
 import (
+	"testing"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateCategory(t *testing.T) {
@@ -41,18 +42,18 @@ func TestCreateCategory(t *testing.T) {
 		assert.Error(t, err)
 
 		category.Name = "Name"
-		category.UserID = "" //empty creator user id shouldn't be allowed
+		category.UserID = "" // empty creator user id shouldn't be allowed
 		createdCategory, err = th.App.CreateCategory(category)
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
 
 		category.UserID = "user_id"
-		category.TeamID = "" //empty TeamID shouldn't be allowed
+		category.TeamID = "" // empty TeamID shouldn't be allowed
 		createdCategory, err = th.App.CreateCategory(category)
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
 
-		category.Type = "invalid" //unknown type shouldn't be allowed
+		category.Type = "invalid" // unknown type shouldn't be allowed
 		createdCategory, err = th.App.CreateCategory(category)
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
@@ -111,18 +112,18 @@ func TestUpdateCategory(t *testing.T) {
 		assert.Error(t, err)
 
 		category.Name = "Name"
-		category.UserID = "" //empty creator user id shouldn't be allowed
+		category.UserID = "" // empty creator user id shouldn't be allowed
 		createdCategory, err = th.App.UpdateCategory(category)
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
 
 		category.UserID = "user_id"
-		category.TeamID = "" //empty TeamID shouldn't be allowed
+		category.TeamID = "" // empty TeamID shouldn't be allowed
 		createdCategory, err = th.App.UpdateCategory(category)
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
 
-		category.Type = "invalid" //unknown type shouldn't be allowed
+		category.Type = "invalid" // unknown type shouldn't be allowed
 		createdCategory, err = th.App.UpdateCategory(category)
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
@@ -190,7 +191,6 @@ func TestUpdateCategory(t *testing.T) {
 		assert.Nil(t, updatedCategory)
 		assert.Error(t, err)
 	})
-
 }
 
 func TestDeleteCategory(t *testing.T) {
