@@ -2971,6 +2971,7 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 				UserID:   userID,
 				CreateAt: model.GetMillis(),
 				UpdateAt: model.GetMillis(),
+				Type:     "custom",
 			})
 		}
 
