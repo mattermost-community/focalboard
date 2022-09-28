@@ -215,10 +215,6 @@ func (s *SQLStore) reorderCategories(db sq.BaseRunner, userID, teamID string, ne
 			"team_id": teamID,
 		})
 
-	q, arg, _ := query.ToSql()
-	s.logger.Error(q)
-	s.logger.Error(fmt.Sprintf("%v", arg))
-
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error(
 			"reorderCategories failed to update category order",

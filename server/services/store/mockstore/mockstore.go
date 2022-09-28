@@ -1370,6 +1370,21 @@ func (mr *MockStoreMockRecorder) ReorderCategories(arg0, arg1, arg2 interface{})
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderCategories", reflect.TypeOf((*MockStore)(nil).ReorderCategories), arg0, arg1, arg2)
 }
 
+// ReorderCategoryBoards mocks base method.
+func (m *MockStore) ReorderCategoryBoards(arg0 string, arg1 []string) ([]string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReorderCategoryBoards", arg0, arg1)
+	ret0, _ := ret[0].([]string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReorderCategoryBoards indicates an expected call of ReorderCategoryBoards.
+func (mr *MockStoreMockRecorder) ReorderCategoryBoards(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderCategoryBoards", reflect.TypeOf((*MockStore)(nil).ReorderCategoryBoards), arg0, arg1)
+}
+
 // RunDataRetention mocks base method.
 func (m *MockStore) RunDataRetention(arg0, arg1 int64) (int64, error) {
 	m.ctrl.T.Helper()

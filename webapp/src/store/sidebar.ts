@@ -33,6 +33,11 @@ interface BoardCategoryWebsocketData {
     categoryID: string
 }
 
+interface CategoryBoardsReorderData {
+    categoryID: string
+    boardIDs: string[]
+}
+
 export const DefaultCategory: CategoryBoards = {
     id: '',
     name: 'Boards',
@@ -112,6 +117,27 @@ const sidebarSlice = createSlice({
 
             state.categoryAttributes = newOrderedCategories
         },
+        updateCategoryBoardsOrder: (state, action: PayloadAction<CategoryBoardsReorderData>) => {
+            if (action.payload.boardIDs.length === 0) {
+                return
+            }
+
+            const categoryIndex = state.categoryAttributes.findIndex((categoryBoards) => categoryBoards.id === action.payload.categoryID)
+            if (categoryIndex < 0) {
+                Utils.logError('Category ID from updated category boards order not found in store. CategoryID: ' + action.payload.categoryID)
+                return
+            }
+
+            const category = state.categoryAttributes[categoryIndex]
+            const updatedCategory = {
+                ...category,
+                boardIDs: action.payload.boardIDs,
+            }
+
+            // creating a new reference of array so redux knows its mutated
+            const updatedCategoryBoards = state.categoryAttributes.map((original, i) => (i === categoryIndex ? updatedCategory : original))
+            state.categoryAttributes = updatedCategoryBoards
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSidebarCategories.fulfilled, (state, action) => {
@@ -127,7 +153,7 @@ export const getSidebarCategories = createSelector(
 
 export const {reducer} = sidebarSlice
 
-export const {updateCategories, updateBoardCategories, updateCategoryOrder} = sidebarSlice.actions
+export const {updateCategories, updateBoardCategories, updateCategoryOrder, updateCategoryBoardsOrder} = sidebarSlice.actions
 
-export {Category, CategoryBoards, BoardCategoryWebsocketData}
+export {Category, CategoryBoards, BoardCategoryWebsocketData, CategoryBoardsReorderData}
 

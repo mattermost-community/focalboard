@@ -771,6 +771,11 @@ func (s *SQLStore) ReorderCategories(userID string, teamID string, newCategoryOr
 
 }
 
+func (s *SQLStore) ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error) {
+	return s.reorderCategoryBoards(s.db, categoryID, newBoardsOrder)
+
+}
+
 func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error) {
 	if s.dbType == model.SqliteDBType {
 		return s.runDataRetention(s.db, globalRetentionDate, batchSize)

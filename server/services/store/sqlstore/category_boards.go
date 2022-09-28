@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
@@ -9,6 +10,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+const categoryBoardsSortOrderGap = 10
 
 func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string) ([]model.CategoryBoards, error) {
 	categories, err := s.getUserCategories(db, userID, teamID)
@@ -41,7 +44,8 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 		Where(sq.Eq{
 			"category_id": categoryID,
 			"delete_at":   0,
-		})
+		}).
+		OrderBy("sort_order")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -55,13 +59,6 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID, boardID string) error {
 	if err := s.deleteUserCategoryBoard(db, userID, boardID); err != nil {
 		return err
-	}
-
-	if categoryID == "0" {
-		// category ID "0" means user wants to move board out of
-		// the custom category. Deleting the user-board-category
-		// mapping achieves this.
-		return nil
 	}
 
 	return s.addUserCategoryBoard(db, userID, categoryID, boardID)
@@ -133,4 +130,37 @@ func (s *SQLStore) categoryBoardsFromRows(rows *sql.Rows) ([]string, error) {
 	}
 
 	return blocks, nil
+}
+
+func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, newBoardsOrder []string) ([]string, error) {
+	if len(newBoardsOrder) == 0 {
+		return nil, nil
+	}
+
+	updateCase := sq.Case("board_id")
+	for i, boardId := range newBoardsOrder {
+		updateCase = updateCase.When("'"+boardId+"'", sq.Expr(fmt.Sprintf("%d", i+categoryBoardsSortOrderGap)))
+	}
+	updateCase.Else("sort_order")
+
+	query := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"category_boards").
+		Set("sort_order", updateCase).
+		Where(sq.Eq{
+			"category_id": categoryID,
+			"delete_at":   0,
+		})
+
+	if _, err := query.Exec(); err != nil {
+		s.logger.Error(
+			"reorderCategoryBoards failed to update category board order",
+			mlog.String("category_id", categoryID),
+			mlog.Err(err),
+		)
+
+		return nil, err
+	}
+
+	return newBoardsOrder, nil
+
 }

@@ -53,6 +53,10 @@ type Category struct {
 	// required: true
 	SortOrder int `json:"sortOrder"`
 
+	// The sorting method applied on this category
+	// required: true
+	Sorting string `json:"sorting"`
+
 	// Category's type
 	// required: true
 	Type string `json:"type"`

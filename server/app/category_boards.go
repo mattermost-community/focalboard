@@ -1,12 +1,16 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/mattermost/focalboard/server/model"
 )
 
 const defaultCategoryBoards = "Boards"
+
+var errCategoryBoardsLengthMismatch = errors.New("cannot update category boards order, passed list of categories boards different size than in DB")
+var errBoardNotFoundInCategory = errors.New("specified board ID not found in specified category ID")
 
 func (a *App) GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error) {
 	categoryBoards, err := a.store.GetUserCategoryBoards(userID, teamID)
@@ -120,6 +124,75 @@ func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID str
 			})
 		return nil
 	})
+
+	return nil
+}
+
+func (a *App) ReorderCategoryBoards(userID, teamID, categoryID string, newBoardsOrder []string) ([]string, error) {
+	if err := a.verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID, newBoardsOrder); err != nil {
+		return nil, err
+	}
+
+	newOrder, err := a.store.ReorderCategoryBoards(categoryID, newBoardsOrder)
+	if err != nil {
+		return nil, err
+	}
+
+	go func() {
+		a.wsAdapter.BroadcastCategoryBoardsReorder(teamID, userID, categoryID, newOrder)
+	}()
+
+	return newOrder, nil
+}
+
+func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID string, newBoardsOrder []string) error {
+	existingCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	var targetCategoryBoards *model.CategoryBoards
+	for i := range existingCategoryBoards {
+		a.logger.Error("checking category: " + existingCategoryBoards[i].Category.ID)
+		if existingCategoryBoards[i].Category.ID == categoryID {
+			targetCategoryBoards = &existingCategoryBoards[i]
+			break
+		}
+	}
+
+	if targetCategoryBoards == nil {
+		return fmt.Errorf("%w categoryID: %s", errCategoryNotFound, categoryID)
+	}
+
+	if len(targetCategoryBoards.BoardIDs) != len(newBoardsOrder) {
+		return fmt.Errorf(
+			"%w length new category boards: %d, length existing category boards: %d, userID: %s, teamID: %s, categoryID: %s",
+			errCategoryBoardsLengthMismatch,
+			len(newBoardsOrder),
+			len(targetCategoryBoards.BoardIDs),
+			userID,
+			teamID,
+			categoryID,
+		)
+	}
+
+	existingBoardMap := map[string]bool{}
+	for _, boardID := range targetCategoryBoards.BoardIDs {
+		existingBoardMap[boardID] = true
+	}
+
+	for _, boardID := range newBoardsOrder {
+		if _, found := existingBoardMap[boardID]; !found {
+			return fmt.Errorf(
+				"%w board ID: %s, category ID: %s, userID: %s, teamID: %s",
+				errBoardNotFoundInCategory,
+				boardID,
+				categoryID,
+				userID,
+				teamID,
+			)
+		}
+	}
 
 	return nil
 }

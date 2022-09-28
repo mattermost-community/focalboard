@@ -161,7 +161,13 @@ const Sidebar = (props: Props) => {
     }, [teamId])
 
     const onDragEnd = useCallback(async (result: DropResult) => {
-        const {destination, source} = result
+        console.log('onDragEnd called')
+
+        const {destination, source, type} = result
+
+        if (type !== 'category') {
+            return
+        }
 
         if (!team || !destination) {
             return
@@ -237,7 +243,10 @@ const Sidebar = (props: Props) => {
             />
 
             <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId='lhs-categories'>
+                <Droppable
+                    droppableId='lhs-categories'
+                    type='category'
+                >
                     {(provided) => (
                         <div
                             ref={provided.innerRef}

@@ -132,6 +132,7 @@ type Store interface {
 
 	// @withTransaction
 	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
+	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error

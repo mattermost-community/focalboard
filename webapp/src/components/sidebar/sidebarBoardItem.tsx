@@ -40,6 +40,8 @@ import octoClient from '../../octoClient'
 import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 
+import {Draggable} from 'react-beautiful-dnd'
+
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
     case 'board': return <BoardIcon/>
@@ -58,6 +60,7 @@ type Props = {
     onDeleteRequest: (board: Board) => void
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
+    index: number
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -195,104 +198,115 @@ const SidebarBoardItem = (props: Props) => {
 
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
     return (
-        <>
-            <div
-                className={`SidebarBoardItem subitem ${props.isActive ? 'active' : ''}`}
-                onClick={() => props.showBoard(board.id)}
-                ref={boardItemRef}
-            >
-                <div className='octo-sidebar-icon'>
-                    {board.icon || <CompassIcon icon='product-boards'/>}
-                </div>
+        <Draggable
+            draggableId={props.board.id}
+            index={props.index}
+        >
+            {(provided) => (
                 <div
-                    className='octo-sidebar-title'
-                    title={title}
+                    {...provided.draggableProps}
+                    ref={provided.innerRef}
                 >
-                    {title}
-                </div>
-                <div>
-                    <MenuWrapper
-                        className={boardsMenuOpen[board.id] ? 'menuOpen' : 'x'}
-                        stopPropagationOnToggle={true}
-                        onToggle={(open) => {
-                            setBoardsMenuOpen((menuState) => {
-                                const newState = {...menuState}
-                                newState[board.id] = open
-                                return newState
-                            })
-                        }}
-                    >
-                        <IconButton icon={<OptionsIcon/>}/>
-                        <Menu
-                            fixed={true}
-                            position='auto'
-                            parentRef={boardItemRef}
-                        >
-                            <Menu.SubMenu
-                                key={`moveBlock-${board.id}`}
-                                id='moveBlock'
-                                className='boardMoveToCategorySubmenu'
-                                name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
-                                icon={<CreateNewFolder/>}
-                                position='auto'
-                            >
-                                {generateMoveToCategoryOptions(board.id)}
-                            </Menu.SubMenu>
-                            {!me?.is_guest &&
-                                <Menu.Text
-                                    id='duplicateBoard'
-                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
-                                    icon={<DuplicateIcon/>}
-                                    onClick={() => handleDuplicateBoard(board.isTemplate)}
-                                />}
-                            {!me?.is_guest &&
-                                <Menu.Text
-                                    id='templateFromBoard'
-                                    name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
-                                    icon={<AddIcon/>}
-                                    onClick={() => handleDuplicateBoard(true)}
-                                />}
-                            <Menu.Text
-                                id='hideBoard'
-                                name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
-                                icon={<CloseIcon/>}
-                                onClick={() => handleHideBoard()}
-                            />
-                            <BoardPermissionGate
-                                boardId={board.id}
-                                permissions={[Permission.DeleteBoard]}
-                            >
-                                <Menu.Text
-                                    key={`deleteBlock-${board.id}`}
-                                    id='deleteBlock'
-                                    className='text-danger'
-                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
-                                    icon={<DeleteIcon/>}
-                                    onClick={() => {
-                                        props.onDeleteRequest(board)
-                                    }}
-                                />
-                            </BoardPermissionGate>
-                        </Menu>
-                    </MenuWrapper>
-                </div>
-            </div>
-            {props.isActive && boardViews.map((view: BoardView) => (
-                <div
-                    key={view.id}
-                    className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}
-                    onClick={() => props.showView(view.id, board.id)}
-                >
-                    {iconForViewType(view.fields.viewType)}
                     <div
-                        className='octo-sidebar-title'
-                        title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                        {...provided.dragHandleProps}
+                        className={`SidebarBoardItem subitem ${props.isActive ? 'active' : ''}`}
+                        onClick={() => props.showBoard(board.id)}
+                        ref={boardItemRef}
                     >
-                        {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                        <div className='octo-sidebar-icon'>
+                            {board.icon || <CompassIcon icon='product-boards'/>}
+                        </div>
+                        <div
+                            className='octo-sidebar-title'
+                            title={title}
+                        >
+                            {title}
+                        </div>
+                        <div>
+                            <MenuWrapper
+                                className={boardsMenuOpen[board.id] ? 'menuOpen' : 'x'}
+                                stopPropagationOnToggle={true}
+                                onToggle={(open) => {
+                                    setBoardsMenuOpen((menuState) => {
+                                        const newState = {...menuState}
+                                        newState[board.id] = open
+                                        return newState
+                                    })
+                                }}
+                            >
+                                <IconButton icon={<OptionsIcon/>}/>
+                                <Menu
+                                    fixed={true}
+                                    position='auto'
+                                    parentRef={boardItemRef}
+                                >
+                                    <Menu.SubMenu
+                                        key={`moveBlock-${board.id}`}
+                                        id='moveBlock'
+                                        className='boardMoveToCategorySubmenu'
+                                        name={intl.formatMessage({id: 'SidebarCategories.BlocksMenu.Move', defaultMessage: 'Move To...'})}
+                                        icon={<CreateNewFolder/>}
+                                        position='auto'
+                                    >
+                                        {generateMoveToCategoryOptions(board.id)}
+                                    </Menu.SubMenu>
+                                    {!me?.is_guest &&
+                                        <Menu.Text
+                                            id='duplicateBoard'
+                                            name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                                            icon={<DuplicateIcon/>}
+                                            onClick={() => handleDuplicateBoard(board.isTemplate)}
+                                        />}
+                                    {!me?.is_guest &&
+                                        <Menu.Text
+                                            id='templateFromBoard'
+                                            name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
+                                            icon={<AddIcon/>}
+                                            onClick={() => handleDuplicateBoard(true)}
+                                        />}
+                                    <Menu.Text
+                                        id='hideBoard'
+                                        name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
+                                        icon={<CloseIcon/>}
+                                        onClick={() => handleHideBoard()}
+                                    />
+                                    <BoardPermissionGate
+                                        boardId={board.id}
+                                        permissions={[Permission.DeleteBoard]}
+                                    >
+                                        <Menu.Text
+                                            key={`deleteBlock-${board.id}`}
+                                            id='deleteBlock'
+                                            className='text-danger'
+                                            name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
+                                            icon={<DeleteIcon/>}
+                                            onClick={() => {
+                                                props.onDeleteRequest(board)
+                                            }}
+                                        />
+                                    </BoardPermissionGate>
+                                </Menu>
+                            </MenuWrapper>
+                        </div>
                     </div>
+                    {props.isActive && boardViews.map((view: BoardView) => (
+                        <div
+                            key={view.id}
+                            className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}
+                            onClick={() => props.showView(view.id, board.id)}
+                        >
+                            {iconForViewType(view.fields.viewType)}
+                            <div
+                                className='octo-sidebar-title'
+                                title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                            >
+                                {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            ))}
-        </>
+            )}
+        </Draggable>
     )
 }
 

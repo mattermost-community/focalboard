@@ -65,3 +65,10 @@ type CategoryReorderMessage struct {
 	CategoryOrder []string `json:"categoryOrder"`
 	TeamID        string   `json:"teamId"`
 }
+
+type CategoryBoardReorderMessage struct {
+	Action     string   `json:"action"`
+	CategoryID string   `json:"CategoryId"`
+	BoardOrder []string `json:"BoardOrder"`
+	TeamID     string   `json:"teamId"`
+}
