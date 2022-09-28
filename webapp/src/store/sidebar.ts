@@ -9,6 +9,8 @@ import {Utils} from '../utils'
 
 import {RootState} from './index'
 
+export type CategoryType = 'system' | 'custom'
+
 interface Category {
     id: string
     name: string
@@ -19,6 +21,7 @@ interface Category {
     deleteAt: number
     collapsed: boolean
     sortOrder: number
+    type: CategoryType
 }
 
 interface CategoryBoards extends Category {
