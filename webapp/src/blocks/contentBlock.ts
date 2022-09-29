@@ -3,7 +3,7 @@
 import {Block, createBlock} from './block'
 
 type IContentBlockWithCords = {
-    block: Block,
+    block: Block
     cords: {x: number, y?: number, z?: number}
 }
 

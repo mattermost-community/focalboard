@@ -121,7 +121,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
 
     const loadData = async () => {
-        if( hasSharePermissions ){
+        if (hasSharePermissions) {
             const newSharing = await client.getSharing(boardId)
             setSharing(newSharing)
             setWasCopiedPublic(false)
@@ -153,7 +153,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         }
         setShowLinkChannelConfirmation(null)
         const newBoard = createBoard(board)
-        newBoard.channelId = channel.id  // This is a channel ID hardcoded here as an example
+        newBoard.channelId = channel.id // This is a channel ID hardcoded here as an example
         mutator.updateBoard(newBoard, board, 'linked channel')
     }
 
@@ -269,27 +269,23 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     const shareBoardTitle = (
-        <span className='text-heading5'>
-            <FormattedMessage
-                id={'ShareBoard.Title'}
-                defaultMessage={'Share Board'}
-            />
-        </span>
+        <FormattedMessage
+            id={'ShareBoard.Title'}
+            defaultMessage={'Share Board'}
+        />
     )
 
     const shareTemplateTitle = (
-        <span className='text-heading5'>
-            <FormattedMessage
-                id={'ShareTemplate.Title'}
-                defaultMessage={'Share Template'}
-            />
-        </span>
+        <FormattedMessage
+            id={'ShareTemplate.Title'}
+            defaultMessage={'Share Template'}
+        />
     )
 
     const formatOptionLabel = (userOrChannel: IUser | Channel) => {
         if ((userOrChannel as IUser).username) {
             const user = userOrChannel as IUser
-            return(
+            return (
                 <div className='user-item'>
                     {Utils.isFocalboardPlugin() &&
                         <img
@@ -311,7 +307,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         }
 
         const channel = userOrChannel as Channel
-        return(
+        return (
             <div className='user-item'>
                 {channel.type === ChannelTypePrivate && <PrivateIcon/>}
                 {channel.type === ChannelTypeOpen && <PublicIcon/>}
@@ -322,11 +318,9 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         )
     }
 
-    const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
-
     let confirmSubtext
     let confirmButtonText
-    if (board.channelId == '') {
+    if (board.channelId === '') {
         confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.'})
         confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Link channel'})
     } else {
@@ -337,16 +331,16 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     return (
         <Dialog
             onClose={props.onClose}
+            title={board.isTemplate ? shareTemplateTitle : shareBoardTitle}
             className='ShareBoardDialog'
-            toolbar={toolbar}
         >
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
                     dialogBox={{
                         heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
                         subText: confirmSubtext,
-                        confirmButtonText: confirmButtonText,
-                        destructive: board.channelId != '',
+                        confirmButtonText,
+                        destructive: board.channelId !== '',
                         onConfirm: () => onLinkBoard(showLinkChannelConfirmation, true),
                         onClose: () => setShowLinkChannelConfirmation(null),
                     }}
@@ -360,7 +354,15 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             value={selectedUser}
                             className={'userSearchInput'}
                             cacheOptions={true}
-                            filterOption={(o) => !members[o.value]}
+                            filterOption={(o) => {
+                                // render non-explicit members
+                                if (members[o.value]) {
+                                    return members[o.value].synthetic
+                                }
+
+                                // not a member, definitely render
+                                return true
+                            }}
                             loadOptions={async (inputValue: string) => {
                                 const result = []
                                 if (Utils.isFocalboardPlugin()) {
@@ -373,7 +375,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                                         const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
                                         if (channels) {
                                             result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
-                                        }    
+                                        }
                                     }
                                 } else {
                                     const users = await client.searchTeamUsers(inputValue) || []
@@ -387,7 +389,10 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u: IUser|Channel) => (u as IUser).username || (u as Channel).display_name}
                             isMulti={false}
-                            placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})}
+                            placeholder={board.isTemplate ?
+                                intl.formatMessage({id: 'ShareTemplate.searchPlaceholder', defaultMessage: 'Search for people'}) :
+                                intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})
+                            }
                             onChange={(newValue) => {
                                 if (newValue && (newValue as IUser).username) {
                                     mutator.createBoardMember(boardId, newValue.id)

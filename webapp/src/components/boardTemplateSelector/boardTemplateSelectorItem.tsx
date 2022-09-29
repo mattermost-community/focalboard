@@ -13,7 +13,7 @@ import DeleteBoardDialog from '../sidebar/deleteBoardDialog'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './boardTemplateSelectorItem.scss'
-import {Constants, Permission} from "../../constants"
+import {Constants, Permission} from '../../constants'
 
 type Props = {
     isActive: boolean

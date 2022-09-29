@@ -213,18 +213,18 @@ const Table = (props: Props): JSX.Element => {
 
                         {/* No Grouping, Rows, one per card */}
                         {!activeView.fields.groupById &&
-                    <TableRows
-                        board={board}
-                        activeView={activeView}
-                        cards={cards}
-                        selectedCardIds={props.selectedCardIds}
-                        readonly={props.readonly || !canEditCards}
-                        cardIdToFocusOnRender={props.cardIdToFocusOnRender}
-                        showCard={props.showCard}
-                        addCard={props.addCard}
-                        onCardClicked={props.onCardClicked}
-                        onDrop={onDropToCard}
-                    />
+                        <TableRows
+                            board={board}
+                            activeView={activeView}
+                            cards={cards}
+                            selectedCardIds={props.selectedCardIds}
+                            readonly={props.readonly || !canEditCards}
+                            cardIdToFocusOnRender={props.cardIdToFocusOnRender}
+                            showCard={props.showCard}
+                            addCard={props.addCard}
+                            onCardClicked={props.onCardClicked}
+                            onDrop={onDropToCard}
+                        />
                         }
                     </div>
 

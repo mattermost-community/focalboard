@@ -63,7 +63,7 @@ export interface Subscription {
 
 // The Mattermost websocket client interface
 export interface MMWebSocketClient {
-    conn: WebSocket | null;
+    conn: WebSocket | null
     sendMessage(action: string, data: any, responseCallback?: () => void): void /* eslint-disable-line @typescript-eslint/no-explicit-any */
     addFirstConnectListener(callback: () => void): void
     addReconnectListener(callback: () => void): void
@@ -84,7 +84,7 @@ export type ChangeHandlerType = 'block' | 'category' | 'blockCategories' | 'boar
 type UpdatedData = {
     Blocks: Block[]
     Categories: Category[]
-    BoardCategories: Array<BoardCategoryWebsocketData>
+    BoardCategories: BoardCategoryWebsocketData[]
     Boards: Board[]
     BoardMembers: BoardMember[]
 }
@@ -168,21 +168,25 @@ class WSClient {
     // to subscribe to all registered subscriptions
     subscribe() {
         Utils.log('Sending commands for the registered subscriptions')
-        Object.keys(this.subscriptions.Teams).forEach(teamId => this.sendSubscribeToTeamCommand(teamId))
+        Object.keys(this.subscriptions.Teams).forEach((teamId) => this.sendSubscribeToTeamCommand(teamId))
     }
 
     sendCommand(command: WSCommand): void {
-        if (this.client !== null) {
-            const {action, ...data} = command
-            this.client.sendMessage(this.clientPrefix + action, data)
-            return
-        }
+        try {
+            if (this.client !== null) {
+                const {action, ...data} = command
+                this.client.sendMessage(this.clientPrefix + action, data)
+                return
+            }
 
-        this.ws?.send(JSON.stringify(command))
+            this.ws?.send(JSON.stringify(command))
+        } catch (e) {
+            Utils.logError(`WSClient failed to send command ${command.action}: ${e}`)
+        }
     }
 
     sendAuthenticationCommand(token: string): void {
-        const command = { action: ACTION_AUTH, token }
+        const command = {action: ACTION_AUTH, token}
 
         this.sendCommand(command)
     }
@@ -571,6 +575,7 @@ class WSClient {
     subscribeToTeam(teamId: string): void {
         if (!this.subscriptions.Teams[teamId]) {
             Utils.log(`First component subscribing to team ${teamId}`)
+
             // only send command if the WS connection has already been
             // stablished. If not, the connect or reconnect functions
             // will do
@@ -599,7 +604,7 @@ class WSClient {
                 this.sendUnsubscribeToTeamCommand(teamId)
             }
 
-            if (teamId == this.teamId) {
+            if (teamId === this.teamId) {
                 this.teamId = ''
             }
             delete this.subscriptions.Teams[teamId]

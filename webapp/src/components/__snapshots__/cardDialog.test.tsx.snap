@@ -18,9 +18,13 @@ exports[`components/cardDialog already following card 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -214,9 +218,13 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -442,9 +450,13 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -557,9 +569,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -602,9 +618,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                         <div
                           class="d-flex"
                         >
-                          <i
-                            class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                          />
+                          <div
+                            class="menu-option__icon"
+                          >
+                            <i
+                              class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                            />
+                          </div>
                         </div>
                         <div
                           class="menu-option__content"
@@ -629,9 +649,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                         <div
                           class="d-flex"
                         >
-                          <i
-                            class="CompassIcon icon-link-variant LinkIcon"
-                          />
+                          <div
+                            class="menu-option__icon"
+                          >
+                            <i
+                              class="CompassIcon icon-link-variant LinkIcon"
+                            />
+                          </div>
                         </div>
                         <div
                           class="menu-option__content"
@@ -656,9 +680,13 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
                         <div
                           class="d-flex"
                         >
-                          <i
-                            class="CompassIcon icon-plus"
-                          />
+                          <div
+                            class="menu-option__icon"
+                          >
+                            <i
+                              class="CompassIcon icon-plus"
+                            />
+                          </div>
                         </div>
                         <div
                           class="menu-option__content"
@@ -878,9 +906,13 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -1074,9 +1106,13 @@ exports[`components/cardDialog should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
@@ -1270,9 +1306,13 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div />
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >

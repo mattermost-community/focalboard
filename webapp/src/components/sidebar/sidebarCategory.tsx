@@ -4,7 +4,7 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
-import {debounce} from "lodash"
+import {debounce} from 'lodash'
 
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
@@ -31,7 +31,7 @@ import {
 import {getCurrentCard} from '../../store/cards'
 import {Utils} from '../../utils'
 
-import { TOUR_SIDEBAR, SidebarTourSteps, TOUR_BOARD, FINISHED } from '../../components/onboardingTour/index'
+import {TOUR_SIDEBAR, SidebarTourSteps, TOUR_BOARD, FINISHED} from '../../components/onboardingTour/index'
 import telemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import {getCurrentTeam} from '../../store/teams'
@@ -51,7 +51,7 @@ type Props = {
     hideSidebar: () => void
     categoryBoards: CategoryBoards
     boards: Board[]
-    allCategories: Array<CategoryBoards>
+    allCategories: CategoryBoards[]
     index: number
     onBoardTemplateSelectorClose?: () => void
 }
@@ -92,7 +92,7 @@ const SidebarCategory = (props: Props) => {
                                             onboardingTourStep === SidebarTourSteps.MANAGE_CATEGORIES.toString()
 
     useEffect(() => {
-        if(shouldViewManageCatergoriesTour && props.index === 0) {
+        if (shouldViewManageCatergoriesTour && props.index === 0) {
             setCategoryMenuOpen(true)
         }
     }, [shouldViewManageCatergoriesTour])
@@ -109,6 +109,7 @@ const SidebarCategory = (props: Props) => {
         if (viewId === props.activeViewID && props.onBoardTemplateSelectorClose) {
             props.onBoardTemplateSelectorClose()
         }
+
         // if the same board, reuse the match params
         // otherwise remove viewId and cardId, results in first view being selected
         const params = {...match.params, boardId: boardId || '', viewId: viewId || ''}
@@ -215,7 +216,10 @@ const SidebarCategory = (props: Props) => {
     }
 
     return (
-        <div className='SidebarCategory' ref={menuWrapperRef}>
+        <div
+            className='SidebarCategory'
+            ref={menuWrapperRef}
+        >
             <div
                 className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
             >

@@ -12,7 +12,7 @@ import React, {
     useState,
 } from 'react'
 
-import {debounce} from "lodash"
+import {debounce} from 'lodash'
 
 import {useAppSelector} from '../../store/hooks'
 import {IUser} from '../../user'
@@ -20,14 +20,13 @@ import {getBoardUsersList, getMe} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
 import {useHasPermissions} from '../../hooks/permissions'
 import {Permission} from '../../constants'
-import {BoardMember} from '../../blocks/board'
+import {BoardMember, BoardTypeOpen} from '../../blocks/board'
 import mutator from '../../mutator'
 import ConfirmAddUserForNotifications from '../confirmAddUserForNotifications'
 import RootPortal from '../rootPortal'
 
 import './markdownEditorInput.scss'
 
-import {BoardTypeOpen} from '../../blocks/board'
 import {getCurrentBoard} from '../../store/boards'
 import octoClient from '../../octoClient'
 
@@ -40,7 +39,7 @@ import Entry from './entryComponent/entryComponent'
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
 type MentionUser = {
-    user: IUser,
+    user: IUser
     name: string
     avatar: string
     is_bot: boolean
@@ -68,27 +67,31 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
     const me = useAppSelector<IUser|null>(getMe)
 
-    const [suggestions, setSuggestions] = useState<Array<MentionUser>>([])
+    const [suggestions, setSuggestions] = useState<MentionUser[]>([])
 
     const loadSuggestions = async (term: string) => {
-        let users: Array<IUser>
+        let users: IUser[]
 
         if (!me?.is_guest && (allowAddUsers || (board && board.type === BoardTypeOpen))) {
             const excludeBots = true
             users = await octoClient.searchTeamUsers(term, excludeBots)
         } else {
-            users = boardUsers
-                .filter(user => {
+            users = boardUsers.
+                filter((user) => {
                     // no search term
-                    if (!term) return true
+                    if (!term) {
+                        return true
+                    }
+
                     // does the search term occur anywhere in the display name?
                     return Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay).includes(term)
-                })
+                }).
+
                 // first 10 results
-                .slice(0, 10)
+                slice(0, 10)
         }
 
-        const mentions: Array<MentionUser> = users.map(
+        const mentions: MentionUser[] = users.map(
             (user: IUser): MentionUser => ({
                 name: user.username,
                 avatar: `${imageURLForUser ? imageURLForUser(user.id) : ''}`,
@@ -96,7 +99,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 is_guest: user.is_guest,
                 displayName: Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay),
                 isBoardMember: Boolean(boardUsers.find((u) => u.id === user.id)),
-                user: user,
+                user,
             }))
         setSuggestions(mentions)
     }
@@ -119,7 +122,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const addUser = useCallback(async (userId: string, role: string) => {
         const newMember = {
             boardId: board.id,
-            userId: userId,
+            userId,
             roles: role,
             schemeAdmin: role === 'Admin',
             schemeEditor: role === 'Admin' || role === 'Editor',
@@ -187,34 +190,34 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return 'editor-blur'
         }
 
-        if(getDefaultKeyBinding(e) === 'undo'){
+        if (getDefaultKeyBinding(e) === 'undo') {
             return 'editor-undo'
         }
 
-        if(getDefaultKeyBinding(e) === 'redo'){
+        if (getDefaultKeyBinding(e) === 'redo') {
             return 'editor-redo'
         }
 
         return getDefaultKeyBinding(e as any)
     }, [isEmojiPopoverOpen, isMentionPopoverOpen])
 
-    const handleKeyCommand = useCallback((command: string, currentState: EditorState): DraftHandleValue => {        
+    const handleKeyCommand = useCallback((command: string, currentState: EditorState): DraftHandleValue => {
         if (command === 'editor-blur') {
             ref.current?.blur()
             return 'handled'
         }
-        
-        if(command === 'editor-redo'){
+
+        if (command === 'editor-redo') {
             const selectionRemovedState = EditorState.redo(currentState)
             onEditorStateChange(EditorState.redo(selectionRemovedState))
 
             return 'handled'
         }
-        
-        if(command === 'editor-undo'){
+
+        if (command === 'editor-undo') {
             const selectionRemovedState = EditorState.undo(currentState)
             onEditorStateChange(EditorState.undo(selectionRemovedState))
-            
+
             return 'handled'
         }
 

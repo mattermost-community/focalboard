@@ -18,9 +18,11 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmat
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            />
+          </div>
           <div
             class="toolbar--right"
           >
@@ -132,9 +134,11 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show view limit dialog 1`] 
         <div
           class="toolbar"
         >
-          <h1
-            class="dialog-title"
-          />
+          <div>
+            <h1
+              class="dialog-title"
+            />
+          </div>
           <div
             class="toolbar--right"
           >

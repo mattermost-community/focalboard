@@ -16,7 +16,7 @@ import {getAllTeams, getCurrentTeam, Team} from '../../store/teams'
 import {getMe} from '../../store/users'
 import {Utils} from '../../utils'
 import {BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
-import { Constants } from '../../constants'
+import {Constants} from '../../constants'
 
 type Props = {
     onClose: () => void
@@ -54,10 +54,12 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         props.onClose()
     }
 
-    const teamsById:Record<string, Team> = {}
-    useAppSelector(getAllTeams).forEach((t) => teamsById[t.id] = t)
+    const teamsById: Record<string, Team> = {}
+    useAppSelector(getAllTeams).forEach((t) => {
+        teamsById[t.id] = t
+    })
 
-    const searchHandler = async (query: string): Promise<Array<ReactNode>> => {
+    const searchHandler = async (query: string): Promise<ReactNode[]> => {
         if (query.trim().length === 0 || !team) {
             return []
         }
@@ -72,7 +74,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             setIDs((prevIDs: any) => ({
                 ...prevIDs,
-                [i]: [item.teamId, item.id]
+                [i]: [item.teamId, item.id],
             }))
             return (
                 <div
@@ -99,8 +101,9 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     }
 
     useEffect(() => {
-        if (selected >= 0)
+        if (selected >= 0) {
             refs.current[selected].current.parentElement.focus()
+        }
 
         document.addEventListener('keydown', handleEnterKeyPress)
 

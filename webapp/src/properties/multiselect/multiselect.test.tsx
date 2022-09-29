@@ -17,7 +17,7 @@ import MultiSelect from './multiselect'
 jest.mock('../../mutator')
 const mockedMutator = mocked(mutator, true)
 
-function buildMultiSelectPropertyTemplate(options: IPropertyOption[] = []) : IPropertyTemplate {
+function buildMultiSelectPropertyTemplate(options: IPropertyOption[] = []): IPropertyTemplate {
     return {
         id: 'multiselect-template-1',
         name: 'Multi',
@@ -44,7 +44,7 @@ function buildMultiSelectPropertyTemplate(options: IPropertyOption[] = []) : IPr
 }
 
 type WrapperProps = {
-    children?: React.ReactNode;
+    children?: React.ReactNode
 }
 
 const Wrapper = ({children}: WrapperProps) => {

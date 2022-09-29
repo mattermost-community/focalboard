@@ -14,7 +14,7 @@ export default function useImagePaste(boardId: string, cardId: string, contentOr
     const intl = useIntl()
     const uploadItems = useCallback(async (items: FileList) => {
         let newImage: File|null = null
-        const uploads: Promise<string|undefined>[] = []
+        const uploads: Array<Promise<string|undefined>> = []
 
         if (!items.length) {
             return

@@ -9,21 +9,23 @@ import React from 'react'
 import {MemoryRouter} from 'react-router'
 import {mocked} from 'jest-mock'
 
-import {BoardMember} from '../../blocks/board'
-
 import {IUser} from '../../user'
+import {Channel} from '../../store/channels'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import client from '../../octoClient'
 import {Utils} from '../../utils'
 
-import UserPermissionsRow from './userPermissionsRow'
+import ChannelPermissionsRow from './channelPermissionsRow'
 
 jest.useFakeTimers()
 
 const boardId = '1'
 
 jest.mock('../../utils')
+jest.mock('../../octoClient')
 
+const mockedOctoClient = mocked(client, true)
 const mockedUtils = mocked(Utils, true)
 
 const board = TestBlockFactory.createBoard()
@@ -31,7 +33,7 @@ board.id = boardId
 board.teamId = 'team-id'
 board.channelId = 'channel_1'
 
-describe('src/components/shareBoard/userPermissionsRow', () => {
+describe('src/components/shareBoard/channelPermissionsRow', () => {
     const me: IUser = {
         id: 'user-id-1',
         username: 'username_1',
@@ -73,24 +75,55 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
 
     beforeEach(() => {
         jest.clearAllMocks()
+        mockedOctoClient.getChannel.mockResolvedValue({type: 'O', name: 'test-channel', display_name: 'Test Channel'} as Channel)
     })
 
     test('should match snapshot', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(false)
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const store = mockStateStore([thunk], state)
         await act(async () => {
             const result = render(
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
-                        <UserPermissionsRow
-                            user={me}
-                            isMe={true}
-                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
-                            teammateNameDisplay={'test'}
-                            onDeleteBoardMember={() => {}}
-                            onUpdateBoardMember={() => {}}
-                        />
+                        <ChannelPermissionsRow/>
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot with unknown channel', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        mockedOctoClient.getChannel.mockResolvedValue(undefined)
+        const store = mockStateStore([thunk], state)
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ChannelPermissionsRow/>
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot with menu open', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        const store = mockStateStore([thunk], state)
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ChannelPermissionsRow/>
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
@@ -104,6 +137,51 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
         expect(container).toMatchSnapshot()
     })
 
+    test('should match snapshot when no plugin mode', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(false)
+        const store = mockStateStore([thunk], state)
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ChannelPermissionsRow/>
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should match snapshot when board has no channel id', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
+        const newState = {
+            ...state,
+            boards: {
+                ...state.boards,
+                boards: {
+                    [board.id]: {...board, channelId: ''},
+                },
+            },
+        }
+        const store = mockStateStore([thunk], newState)
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <ChannelPermissionsRow/>
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        expect(container).toMatchSnapshot()
+    })
+
     test('should match snapshot in plugin mode', async () => {
         let container: Element | undefined
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)
@@ -112,14 +190,7 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
             const result = render(
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
-                        <UserPermissionsRow
-                            user={me}
-                            isMe={true}
-                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
-                            teammateNameDisplay={'test'}
-                            onDeleteBoardMember={() => {}}
-                            onUpdateBoardMember={() => {}}
-                        />
+                        <ChannelPermissionsRow/>
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )
@@ -151,14 +222,7 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
             const result = render(
                 wrapDNDIntl(
                     <ReduxProvider store={store}>
-                        <UserPermissionsRow
-                            user={me}
-                            isMe={true}
-                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
-                            teammateNameDisplay={'test'}
-                            onDeleteBoardMember={() => {}}
-                            onUpdateBoardMember={() => {}}
-                        />
+                        <ChannelPermissionsRow/>
                     </ReduxProvider>),
                 {wrapper: MemoryRouter},
             )

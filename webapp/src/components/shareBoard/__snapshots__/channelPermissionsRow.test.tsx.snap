@@ -1,43 +1,83 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/cardDetail/comment return comment 1`] = `
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot 1`] = `
 <div>
   <div
-    class="Comment comment"
+    class="user-item channel-item"
   >
     <div
-      class="comment-header"
+      class="user-item__content"
     >
-      <img
-        class="comment-avatar"
-        src="data:image/svg+xml"
-      />
-      <div
-        class="comment-username"
+      <span
+        class="user-item__img"
       >
-        username_1
-      </div>
+        <i
+          class="CompassIcon icon-globe GlobeIcon"
+        />
+      </span>
       <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        class="ml-3"
       >
-        <div
-          class="comment-date"
-        >
-          a day ago
-        </div>
+        <strong>
+          Test Channel
+        </strong>
       </div>
+    </div>
+    <div>
       <div
         aria-label="menuwrapper"
         class="MenuWrapper"
         role="button"
       >
         <button
-          class="IconButton"
-          type="button"
+          class="user-item__button"
         >
+          Editor
           <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
+            class="CompassIcon icon-chevron-down CompassIcon"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot in plugin mode 1`] = `
+<div>
+  <div
+    class="user-item channel-item"
+  >
+    <div
+      class="user-item__content"
+    >
+      <span
+        class="user-item__img"
+      >
+        <i
+          class="CompassIcon icon-globe GlobeIcon"
+        />
+      </span>
+      <div
+        class="ml-3"
+      >
+        <strong>
+          Test Channel
+        </strong>
+      </div>
+    </div>
+    <div>
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <button
+          class="user-item__button"
+        >
+          Editor
+          <i
+            class="CompassIcon icon-chevron-down CompassIcon"
           />
         </button>
         <div
@@ -51,7 +91,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
             >
               <div>
                 <div
-                  aria-label="Delete"
+                  aria-label="Unlink"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -72,7 +112,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
                     <div
                       class="menu-name"
                     >
-                      Delete
+                      Unlink
                     </div>
                   </div>
                   <div
@@ -117,55 +157,45 @@ exports[`components/cardDetail/comment return comment 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="comment-text"
-    >
-      <p>
-        Test comment
-      </p>
-    </div>
   </div>
 </div>
 `;
 
-exports[`components/cardDetail/comment return comment and delete comment 1`] = `
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot in template 1`] = `
 <div>
   <div
-    class="Comment comment"
+    class="user-item channel-item"
   >
     <div
-      class="comment-header"
+      class="user-item__content"
     >
-      <img
-        class="comment-avatar"
-        src="data:image/svg+xml"
-      />
-      <div
-        class="comment-username"
+      <span
+        class="user-item__img"
       >
-        username_1
-      </div>
+        <i
+          class="CompassIcon icon-globe GlobeIcon"
+        />
+      </span>
       <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
+        class="ml-3"
       >
-        <div
-          class="comment-date"
-        >
-          a day ago
-        </div>
+        <strong>
+          Test Channel
+        </strong>
       </div>
+    </div>
+    <div>
       <div
         aria-label="menuwrapper"
         class="MenuWrapper"
         role="button"
       >
         <button
-          class="IconButton"
-          type="button"
+          class="user-item__button"
         >
+          Editor
           <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
+            class="CompassIcon icon-chevron-down CompassIcon"
           />
         </button>
         <div
@@ -179,7 +209,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
             >
               <div>
                 <div
-                  aria-label="Delete"
+                  aria-label="Unlink"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -200,7 +230,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                     <div
                       class="menu-name"
                     >
-                      Delete
+                      Unlink
                     </div>
                   </div>
                   <div
@@ -245,103 +275,49 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="comment-text"
-    >
-      <p>
-        Test comment
-      </p>
-    </div>
   </div>
 </div>
 `;
 
-exports[`components/cardDetail/comment return comment readonly 1`] = `
-<div>
-  <div
-    class="Comment comment"
-  >
-    <div
-      class="comment-header"
-    >
-      <img
-        class="comment-avatar"
-        src="data:image/svg+xml"
-      />
-      <div
-        class="comment-username"
-      >
-        username_1
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
-      >
-        <div
-          class="comment-date"
-        >
-          a day ago
-        </div>
-      </div>
-    </div>
-    <div
-      class="comment-text"
-    >
-      <p>
-        Test comment
-      </p>
-    </div>
-  </div>
-</div>
-`;
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot when board has no channel id 1`] = `<div />`;
 
-exports[`components/cardDetail/comment return guest comment 1`] = `
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot when no plugin mode 1`] = `<div />`;
+
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot with menu open 1`] = `
 <div>
   <div
-    class="Comment comment"
+    class="user-item channel-item"
   >
     <div
-      class="comment-header"
+      class="user-item__content"
     >
-      <img
-        class="comment-avatar"
-        src="data:image/svg+xml"
-      />
-      <div
-        class="comment-username"
+      <span
+        class="user-item__img"
       >
-        username_1
-      </div>
+        <i
+          class="CompassIcon icon-globe GlobeIcon"
+        />
+      </span>
       <div
-        class="GuestBadge"
+        class="ml-3"
       >
-        <div
-          class="GuestBadge__box"
-        >
-          Guest
-        </div>
+        <strong>
+          Test Channel
+        </strong>
       </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
-      >
-        <div
-          class="comment-date"
-        >
-          a day ago
-        </div>
-      </div>
+    </div>
+    <div>
       <div
         aria-label="menuwrapper"
         class="MenuWrapper"
         role="button"
       >
         <button
-          class="IconButton"
-          type="button"
+          class="user-item__button"
         >
+          Editor
           <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
+            class="CompassIcon icon-chevron-down CompassIcon"
           />
         </button>
         <div
@@ -355,7 +331,7 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
             >
               <div>
                 <div
-                  aria-label="Delete"
+                  aria-label="Unlink"
                   class="MenuOption TextOption menu-option"
                   role="button"
                 >
@@ -376,7 +352,7 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
                     <div
                       class="menu-name"
                     >
-                      Delete
+                      Unlink
                     </div>
                   </div>
                   <div
@@ -421,197 +397,48 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
         </div>
       </div>
     </div>
-    <div
-      class="comment-text"
-    >
-      <p>
-        Test comment
-      </p>
-    </div>
   </div>
 </div>
 `;
 
-exports[`components/cardDetail/comment return guest comment and delete comment 1`] = `
+exports[`src/components/shareBoard/channelPermissionsRow should match snapshot with unknown channel 1`] = `
 <div>
   <div
-    class="Comment comment"
+    class="user-item channel-item"
   >
     <div
-      class="comment-header"
+      class="user-item__content"
     >
-      <img
-        class="comment-avatar"
-        src="data:image/svg+xml"
-      />
-      <div
-        class="comment-username"
+      <span
+        class="user-item__img"
       >
-        username_1
-      </div>
+        <i
+          class="CompassIcon icon-lock-outline LockOutlineIcon"
+        />
+      </span>
       <div
-        class="GuestBadge"
+        class="ml-3"
       >
-        <div
-          class="GuestBadge__box"
-        >
-          Guest
-        </div>
+        <strong>
+          Unknown channel
+        </strong>
       </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
-      >
-        <div
-          class="comment-date"
-        >
-          a day ago
-        </div>
-      </div>
+    </div>
+    <div>
       <div
         aria-label="menuwrapper"
         class="MenuWrapper"
         role="button"
       >
         <button
-          class="IconButton"
-          type="button"
+          class="user-item__button"
         >
+          Editor
           <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
+            class="CompassIcon icon-chevron-down CompassIcon"
           />
         </button>
-        <div
-          class="Menu noselect left "
-        >
-          <div
-            class="menu-contents"
-          >
-            <div
-              class="menu-options"
-            >
-              <div>
-                <div
-                  aria-label="Delete"
-                  class="MenuOption TextOption menu-option"
-                  role="button"
-                >
-                  <div
-                    class="d-flex"
-                  >
-                    <div
-                      class="menu-option__icon"
-                    >
-                      <i
-                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="menu-option__content"
-                  >
-                    <div
-                      class="menu-name"
-                    >
-                      Delete
-                    </div>
-                  </div>
-                  <div
-                    class="noicon"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
-              class="menu-spacer hideOnWidescreen"
-            />
-            <div
-              class="menu-options hideOnWidescreen"
-            >
-              <div
-                aria-label="Cancel"
-                class="MenuOption TextOption menu-option menu-cancel"
-                role="button"
-              >
-                <div
-                  class="d-flex"
-                >
-                  <div
-                    class="noicon"
-                  />
-                </div>
-                <div
-                  class="menu-option__content"
-                >
-                  <div
-                    class="menu-name"
-                  >
-                    Cancel
-                  </div>
-                </div>
-                <div
-                  class="noicon"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-    <div
-      class="comment-text"
-    >
-      <p>
-        Test comment
-      </p>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`components/cardDetail/comment return guest comment readonly 1`] = `
-<div>
-  <div
-    class="Comment comment"
-  >
-    <div
-      class="comment-header"
-    >
-      <img
-        class="comment-avatar"
-        src="data:image/svg+xml"
-      />
-      <div
-        class="comment-username"
-      >
-        username_1
-      </div>
-      <div
-        class="GuestBadge"
-      >
-        <div
-          class="GuestBadge__box"
-        >
-          Guest
-        </div>
-      </div>
-      <div
-        class="octo-tooltip tooltip-top"
-        data-tooltip="October 01, 2020, 12:00 AM"
-      >
-        <div
-          class="comment-date"
-        >
-          a day ago
-        </div>
-      </div>
-    </div>
-    <div
-      class="comment-text"
-    >
-      <p>
-        Test comment
-      </p>
     </div>
   </div>
 </div>

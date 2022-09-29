@@ -14,7 +14,7 @@ import {Category, CategoryBoards} from '../store/sidebar'
 import {Utils} from '../utils'
 import {CheckboxBlock, createCheckboxBlock} from '../blocks/checkboxBlock'
 import {Block} from '../blocks/block'
-import {IUser} from "../user"
+import {IUser} from '../user'
 
 class TestBlockFactory {
     static createBoard(): Board {

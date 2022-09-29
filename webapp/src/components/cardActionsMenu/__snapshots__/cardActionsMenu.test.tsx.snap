@@ -20,9 +20,13 @@ exports[`components/cardActionsMenu should match snapshot 1`] = `
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"
@@ -47,9 +51,13 @@ exports[`components/cardActionsMenu should match snapshot 1`] = `
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-link-variant LinkIcon"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-link-variant LinkIcon"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"
@@ -124,9 +132,13 @@ exports[`components/cardActionsMenu should match snapshot w/ children prop 1`] =
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"
@@ -151,9 +163,13 @@ exports[`components/cardActionsMenu should match snapshot w/ children prop 1`] =
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-link-variant LinkIcon"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-link-variant LinkIcon"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"
@@ -230,9 +246,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"
@@ -255,9 +275,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-content-copy content-copy"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-content-copy content-copy"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"
@@ -282,9 +306,13 @@ exports[`components/cardActionsMenu should match snapshot w/ onClickDuplicate pr
             <div
               class="d-flex"
             >
-              <i
-                class="CompassIcon icon-link-variant LinkIcon"
-              />
+              <div
+                class="menu-option__icon"
+              >
+                <i
+                  class="CompassIcon icon-link-variant LinkIcon"
+                />
+              </div>
             </div>
             <div
               class="menu-option__content"

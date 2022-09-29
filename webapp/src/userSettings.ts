@@ -164,7 +164,6 @@ export class UserSettings {
     static set nameFormat(newValue: string | null) {
         UserSettings.set(UserSettingKey.NameFormat, newValue)
     }
-
 }
 
 export function exportUserSettingsBlob(): string {

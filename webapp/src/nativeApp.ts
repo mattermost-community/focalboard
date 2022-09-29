@@ -5,7 +5,7 @@ import {IAppWindow} from './types'
 import {exportUserSettingsBlob, importUserSettingsBlob} from './userSettings'
 
 declare interface INativeApp {
-    settingsBlob: string | null;
+    settingsBlob: string | null
 }
 
 declare const NativeApp: INativeApp

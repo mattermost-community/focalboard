@@ -16,7 +16,7 @@ export interface Team {
     title: string
     signupToken: string
     modifiedBy: string
-    updateAt:number
+    updateAt: number
 }
 
 export const fetchTeams = createAsyncThunk(
@@ -37,7 +37,7 @@ export const refreshCurrentTeam = createAsyncThunk(
 type TeamState = {
     currentId: string
     current: Team | null
-    allTeams: Array<Team>
+    allTeams: Team[]
 }
 
 const teamSlice = createSlice({
@@ -86,4 +86,4 @@ export const {reducer} = teamSlice
 export const getCurrentTeamId = (state: RootState): string => state.teams.currentId
 export const getCurrentTeam = (state: RootState): Team|null => state.teams.current
 export const getFirstTeam = (state: RootState): Team|null => state.teams.allTeams[0]
-export const getAllTeams = (state: RootState): Array<Team> => state.teams.allTeams
+export const getAllTeams = (state: RootState): Team[] => state.teams.allTeams

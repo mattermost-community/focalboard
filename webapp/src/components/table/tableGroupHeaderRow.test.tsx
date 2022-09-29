@@ -44,9 +44,12 @@ const boardTreeGroup = {
 
 const Wrapper: React.FC = ({children}) => {
     return wrapDNDIntl(
-        <ColumnResizeProvider columnWidths={{}} onResizeColumn={jest.fn()}>
+        <ColumnResizeProvider
+            columnWidths={{}}
+            onResizeColumn={jest.fn()}
+        >
             {children}
-        </ColumnResizeProvider>
+        </ColumnResizeProvider>,
     )
 }
 
@@ -69,7 +72,7 @@ test('should match snapshot, no groups', async () => {
                     options: [{id: 'property1', value: 'Property 1', color: ''}],
                 }}
             />
-        </Wrapper>
+        </Wrapper>,
     )
     expect(container).toMatchSnapshot()
 })
@@ -87,7 +90,7 @@ test('should match snapshot with Group', async () => {
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
             />
-        </Wrapper>
+        </Wrapper>,
     )
     expect(container).toMatchSnapshot()
 })
@@ -105,7 +108,7 @@ test('should match snapshot on read only', async () => {
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
             />
-        </Wrapper>
+        </Wrapper>,
     )
     expect(container).toMatchSnapshot()
 })
@@ -128,7 +131,7 @@ test('should match snapshot, hide group', async () => {
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
             />
-        </Wrapper>
+        </Wrapper>,
     )
 
     const triangle = container.querySelector('.octo-table-cell__expand')
@@ -156,7 +159,7 @@ test('should match snapshot, add new', async () => {
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
             />
-        </Wrapper>
+        </Wrapper>,
     )
 
     const triangle = container.querySelector('i.AddIcon')
@@ -182,7 +185,7 @@ test('should match snapshot, edit title', async () => {
                 propertyNameChanged={jest.fn()}
                 onDrop={jest.fn()}
             />
-        </Wrapper>
+        </Wrapper>,
     )
 
     const input = getByTitle(/value 1/)

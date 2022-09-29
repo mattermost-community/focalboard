@@ -63,7 +63,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
-    const boardUsersById = useAppSelector<{[key:string]: IUser}>(getBoardUsers)
+    const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
     const me: IUser = boardUsersById[propertyValue as string]
@@ -94,7 +94,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     const addUser = useCallback(async (userId: string, role: string) => {
         const newMember = {
             boardId: board.id,
-            userId: userId,
+            userId,
             roles: role,
             schemeAdmin: role === 'Admin',
             schemeEditor: role === 'Admin' || role === 'Editor',
@@ -107,14 +107,6 @@ const Person = (props: PropertyProps): JSX.Element => {
         await mutator.changePropertyValue(board.id, card, propertyTemplate.id, newMember.userId)
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
     }, [board, card, propertyTemplate])
-
-    if (readOnly) {
-        return (
-            <div className={`Person ${props.property.valueClassName(true)}`}>
-                {me ? formatOptionLabel(me) : propertyValue}
-            </div>
-        )
-    }
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
 
@@ -144,6 +136,14 @@ const Person = (props: PropertyProps): JSX.Element => {
         ]
     }, [boardUsers, allowAddUsers, boardUsersById])
 
+    if (readOnly) {
+        return (
+            <div className={`Person ${props.property.valueClassName(true)}`}>
+                {me ? formatOptionLabel(me) : propertyValue}
+            </div>
+        )
+    }
+
     return (
         <>
             {confirmAddUser &&
@@ -168,10 +168,10 @@ const Person = (props: PropertyProps): JSX.Element => {
                 value={boardUsersById[propertyValue as string] || null}
                 onChange={(item, action) => {
                     if (action.action === 'select-option') {
-                        if (!boardUsersById[item?.id || '']) {
-                            setConfirmAddUser(item)
-                        } else {
+                        if (boardUsersById[item?.id || '']) {
                             onChange(item?.id || '')
+                        } else {
+                            setConfirmAddUser(item)
                         }
                     } else if (action.action === 'clear') {
                         onChange('')

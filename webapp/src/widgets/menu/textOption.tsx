@@ -6,14 +6,14 @@ import {MenuOptionProps} from './menuItem'
 
 type TextOptionProps = MenuOptionProps & {
     check?: boolean
-    icon?: React.ReactNode,
-    rightIcon?: React.ReactNode,
+    icon?: React.ReactNode
+    rightIcon?: React.ReactNode
     className?: string
     subText?: string
     disabled?: boolean
 }
 
-function TextOption(props:TextOptionProps): JSX.Element {
+function TextOption(props: TextOptionProps): JSX.Element {
     const {name, icon, rightIcon, check, subText, disabled} = props
     let className = 'MenuOption TextOption menu-option'
     if (props.className) {
@@ -37,7 +37,7 @@ function TextOption(props:TextOptionProps): JSX.Element {
                 e.stopPropagation()
             }}
         >
-            <div className={`${check ? 'd-flex menu-option__check' : 'd-flex'}`}>{icon ?? <div className='noicon'/>}</div>
+            <div className={`${check ? 'd-flex menu-option__check' : 'd-flex'}`}>{icon ? <div className='menu-option__icon'>{icon}</div> : <div className='noicon'/>}</div>
             <div className='menu-option__content'>
                 <div className='menu-name'>{name}</div>
                 {subText && <div className='menu-subtext text-75 mt-1'>{subText}</div>}

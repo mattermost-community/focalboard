@@ -13,6 +13,8 @@ const BoardTypePrivate = 'P'
 const boardTypes = [BoardTypeOpen, BoardTypePrivate]
 type BoardTypes = typeof boardTypes[number]
 
+type MemberRole = ''|'viewer'|'commenter'|'editor'|'admin'
+
 type Board = {
     id: string
     teamId: string
@@ -55,6 +57,7 @@ type BoardMember = {
     boardId: string
     userId: string
     roles?: string
+    minimumRole: MemberRole
     schemeAdmin: boolean
     schemeEditor: boolean
     schemeCommenter: boolean
@@ -63,15 +66,15 @@ type BoardMember = {
 }
 
 type BoardsAndBlocks = {
-    boards: Board[],
-    blocks: Block[],
+    boards: Board[]
+    blocks: Block[]
 }
 
 type BoardsAndBlocksPatch = {
-    boardIDs: string[],
-    boardPatches: BoardPatch[],
-    blockIDs: string[],
-    blockPatches: BlockPatch[],
+    boardIDs: string[]
+    boardPatches: BoardPatch[]
+    blockIDs: string[]
+    blockPatches: BlockPatch[]
 }
 
 type PropertyTypeEnum = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'multiPerson' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy' | 'unknown'
