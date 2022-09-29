@@ -242,7 +242,7 @@ func NewStore(config *config.Configuration, isSingleUser bool, logger mlog.Logge
 	drivers := map[string]virtualboardlayer.VirtualBoardDriver{
 		"playbooks": playbooksdriver.New(logger, "/tmp/localserver.socket"),
 	}
-	db, err = virtualboardlayer.New(db, logger, drivers)
+	db = virtualboardlayer.New(db, logger, drivers)
 	if err != nil {
 		return nil, err
 	}

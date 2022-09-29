@@ -33,6 +33,10 @@ func New(logger mlog.LoggerIFace, socketPath string) *PlaybooksDriver {
 	}
 }
 
+func (pd *PlaybooksDriver) Name() string {
+	return "playbooks"
+}
+
 func (pd *PlaybooksDriver) SetStore(store store.Store) {
 	pd.store = store
 }

@@ -16,6 +16,8 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/services/store/virtualboardlayer"
+	"github.com/mattermost/focalboard/server/services/store/virtualboardlayer/playbooksdriver"
 	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
@@ -100,6 +102,11 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 
 		db = layeredStore
 	}
+
+	drivers := map[string]virtualboardlayer.VirtualBoardDriver{
+		"playbooks": playbooksdriver.New(logger, "/tmp/localserver.socket"),
+	}
+	db = virtualboardlayer.New(db, logger, drivers)
 
 	permissionsService := mmpermissions.New(db, api, logger)
 
