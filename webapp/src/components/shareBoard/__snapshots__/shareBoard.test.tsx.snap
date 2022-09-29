@@ -2379,7 +2379,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     class=" css-14el2xx-placeholder"
                     id="react-select-14-placeholder"
                   >
-                    Search for people and channels
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2573,7 +2573,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     class=" css-14el2xx-placeholder"
                     id="react-select-14-placeholder"
                   >
-                    Search for people and channels
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -4185,7 +4185,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
                     class=" css-14el2xx-placeholder"
                     id="react-select-13-placeholder"
                   >
-                    Search for people and channels
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"

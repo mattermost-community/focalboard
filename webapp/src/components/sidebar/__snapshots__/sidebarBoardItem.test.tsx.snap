@@ -124,15 +124,9 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                   >
                     Move To...
                   </div>
-                  <svg
-                    class="SubmenuTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="50,35 75,50 50,65"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-chevron-right"
+                  />
                 </div>
               </div>
               <div>
@@ -386,15 +380,9 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
                   >
                     Move To...
                   </div>
-                  <svg
-                    class="SubmenuTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="50,35 75,50 50,65"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-chevron-right"
+                  />
                 </div>
               </div>
               <div />
