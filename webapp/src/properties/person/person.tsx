@@ -147,7 +147,7 @@ const Person = (props: PropertyProps): JSX.Element => {
             {confirmAddUser &&
             <ConfirmAddUserForNotifications
                 allowManageBoardRoles={allowManageBoardRoles}
-                defaultRole={board.minimumRole}
+                minimumRole={board.minimumRole}
                 user={confirmAddUser}
                 onConfirm={addUser}
                 onClose={() => setConfirmAddUser(null)}

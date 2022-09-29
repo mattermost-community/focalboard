@@ -18,7 +18,7 @@ describe('/components/confirmAddUserForNotifications', () => {
             wrapDNDIntl(
                 <ConfirmAddUserForNotifications
                     allowManageBoardRoles={true}
-                    defaultRole={MemberRole.Editor}
+                    minimumRole={MemberRole.Editor}
                     user={{id: 'fake-user-id', username: 'fake-username'} as IUser}
                     onConfirm={jest.fn()}
                     onClose={jest.fn()}
@@ -35,7 +35,7 @@ describe('/components/confirmAddUserForNotifications', () => {
             wrapDNDIntl(
                 <ConfirmAddUserForNotifications
                     allowManageBoardRoles={true}
-                    defaultRole={MemberRole.Editor}
+                    minimumRole={MemberRole.Editor}
                     user={{id: 'fake-user-id', username: 'fake-username'} as IUser}
                     onConfirm={onConfirm}
                     onClose={jest.fn()}
@@ -53,7 +53,7 @@ describe('/components/confirmAddUserForNotifications', () => {
             wrapDNDIntl(
                 <ConfirmAddUserForNotifications
                     allowManageBoardRoles={true}
-                    defaultRole={MemberRole.Editor}
+                    minimumRole={MemberRole.Editor}
                     user={{id: 'fake-user-id', username: 'fake-username'} as IUser}
                     onConfirm={jest.fn()}
                     onClose={onClose}

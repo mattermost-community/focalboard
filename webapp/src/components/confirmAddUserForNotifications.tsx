@@ -15,7 +15,7 @@ import './confirmAddUserForNotifications.scss'
 
 type Props = {
     user: IUser
-    defaultRole: MemberRole
+    minimumRole: MemberRole
     allowManageBoardRoles: boolean
     onConfirm: (userId: string, role: string) => void
     onClose: () => void
@@ -23,31 +23,50 @@ type Props = {
 
 const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
     const {user, allowManageBoardRoles} = props
-    const [newUserRole, setNewUserRole] = useState<MemberRole>(props.defaultRole || MemberRole.Viewer)
+    const [newUserRole, setNewUserRole] = useState<MemberRole>(props.minimumRole || MemberRole.Viewer)
     const userRole = useRef<string>(newUserRole)
 
     const intl = useIntl()
 
-    let roleOptions = [
-        {id: MemberRole.Admin, label: intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})},
-        {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
-        {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
-        {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
-    ]
-
-    if (!allowManageBoardRoles) {
-        roleOptions = [
-            {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
-        ]
-
-        if (props.defaultRole === MemberRole.Editor) {
+    // if allowed to manage board roles, only display roles higher than minimum
+    const roleOptions = []
+    if (allowManageBoardRoles) {
+        if (props.minimumRole === MemberRole.Viewer || props.minimumRole === MemberRole.None) {
             roleOptions.push(
-                {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
+                {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
+            )
+        }
+        if (props.minimumRole === MemberRole.Viewer || props.minimumRole === MemberRole.None || props.minimumRole === MemberRole.Commenter) {
+            roleOptions.push(
                 {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
             )
-        } else if (props.defaultRole === MemberRole.Commenter) {
+        }
+        roleOptions.push(
+            {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
+        )
+        if (!user.is_guest) {
+            roleOptions.push(
+                {id: MemberRole.Admin, label: intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})},
+            )
+        }
+    }
+
+    // if not admin, (ie. Editor/Commentor on Public board)
+    // set to minimum board role, only option, read only.
+    if (!allowManageBoardRoles) {
+        if (props.minimumRole === MemberRole.Viewer || props.minimumRole === MemberRole.None) {
+            roleOptions.push(
+                {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
+            )
+        }
+        if (props.minimumRole === MemberRole.Commenter) {
             roleOptions.push(
                 {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
+            )
+        }
+        if (props.minimumRole === MemberRole.Editor) {
+            roleOptions.push(
+                {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
             )
         }
     }
@@ -86,8 +105,8 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
                 options={roleOptions}
                 onChange={(option) => {
                     if (allowManageBoardRoles) {
-                        setNewUserRole(option?.id || props.defaultRole)
-                        userRole.current = option?.id || props.defaultRole
+                        setNewUserRole(option?.id || props.minimumRole)
+                        userRole.current = option?.id || props.minimumRole
                     }
                 }}
                 value={roleOptions.find((o) => o.id === newUserRole)}

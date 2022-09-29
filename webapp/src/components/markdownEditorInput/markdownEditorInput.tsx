@@ -285,7 +285,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 <RootPortal>
                     <ConfirmAddUserForNotifications
                         allowManageBoardRoles={allowManageBoardRoles}
-                        defaultRole={board.minimumRole}
+                        minimumRole={board.minimumRole}
                         user={confirmAddUser}
                         onConfirm={addUser}
                         onClose={() => {
