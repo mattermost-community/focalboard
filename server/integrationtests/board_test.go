@@ -1401,7 +1401,7 @@ func TestAddMember(t *testing.T) {
 			require.Len(t, members, 2)
 		})
 
-		t.Run("should always add a new member as an editor", func(t *testing.T) {
+		t.Run("should always add a new member as given board role", func(t *testing.T) {
 			th := SetupTestHelper(t).InitBasic()
 			defer th.TearDown()
 
@@ -1414,10 +1414,11 @@ func TestAddMember(t *testing.T) {
 			require.NoError(t, err)
 
 			newMember := &model.BoardMember{
-				UserID:       th.GetUser2().ID,
-				BoardID:      board.ID,
-				SchemeAdmin:  true,
-				SchemeEditor: false,
+				UserID:          th.GetUser2().ID,
+				BoardID:         board.ID,
+				SchemeAdmin:     false,
+				SchemeEditor:    false,
+				SchemeCommenter: true,
 			}
 
 			member, resp := th.Client.AddMemberToBoard(newMember)
@@ -1425,7 +1426,8 @@ func TestAddMember(t *testing.T) {
 			require.Equal(t, newMember.UserID, member.UserID)
 			require.Equal(t, newMember.BoardID, member.BoardID)
 			require.False(t, member.SchemeAdmin)
-			require.True(t, member.SchemeEditor)
+			require.False(t, member.SchemeEditor)
+			require.True(t, member.SchemeCommenter)
 		})
 	})
 
