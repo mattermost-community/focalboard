@@ -13,7 +13,13 @@ const BoardTypePrivate = 'P'
 const boardTypes = [BoardTypeOpen, BoardTypePrivate]
 type BoardTypes = typeof boardTypes[number]
 
-type MemberRole = ''|'viewer'|'commenter'|'editor'|'admin'
+enum MemberRole {
+    Viewer = 'viewer',
+    Commenter = 'commenter',
+    Editor = 'editor',
+    Admin = 'admin',
+    None = '',
+}
 
 type Board = {
     id: string
@@ -22,7 +28,7 @@ type Board = {
     createdBy: string
     modifiedBy: string
     type: BoardTypes
-    minimumRole: string
+    minimumRole: MemberRole
 
     title: string
     description: string
@@ -40,7 +46,7 @@ type Board = {
 
 type BoardPatch = {
     type?: BoardTypes
-    minimumRole?: string
+    minimumRole?: MemberRole
     title?: string
     description?: string
     icon?: string
@@ -126,7 +132,7 @@ function createBoard(board?: Board): Board {
         createdBy: board?.createdBy || '',
         modifiedBy: board?.modifiedBy || '',
         type: board?.type || BoardTypePrivate,
-        minimumRole: board?.minimumRole || '',
+        minimumRole: board?.minimumRole || MemberRole.None,
         title: board?.title || '',
         description: board?.description || '',
         icon: board?.icon || '',
@@ -321,6 +327,7 @@ export {
     BoardTypes,
     BoardTypeOpen,
     BoardTypePrivate,
+    MemberRole,
     createPatchesFromBoards,
     createPatchesFromBoardsAndBlocks,
     createCardPropertiesPatches,
