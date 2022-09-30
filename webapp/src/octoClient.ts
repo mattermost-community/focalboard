@@ -812,7 +812,7 @@ class OctoClient {
     }
 
     async reorderSidebarCategoryBoards(teamID: string, categoryID: string, newBoardsOrder: string[]): Promise<string[]> {
-        const path = `api/v2/teams/${teamID}/categories/${categoryID}/boards/reorder`
+        const path = `/api/v2/teams/${teamID}/categories/${categoryID}/boards/reorder`
         const body = JSON.stringify(newBoardsOrder)
         const response = await fetch(this.getBaseURL() + path, {
             method: 'PUT',

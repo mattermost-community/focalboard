@@ -301,6 +301,7 @@ const SidebarCategory = (props: Props) => {
                         >
                             {(categoryProvided) => (
                                 <div
+                                    className='categoryBoardsDroppableArea'
                                     ref={categoryProvided.innerRef}
                                     {...categoryProvided.droppableProps}
                                 >
@@ -311,13 +312,13 @@ const SidebarCategory = (props: Props) => {
                                                 defaultMessage='No boards inside'
                                             />
                                         </div>}
-                                    {collapsed && !snapshot.isDragging && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, index) => {
+                                    {collapsed && !snapshot.isDragging && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
                                         if (!isBoardVisible(board.id)) {
                                             return null
                                         }
                                         return (
                                             <SidebarBoardItem
-                                                index={index}
+                                                index={zzz}
                                                 key={board.id}
                                                 board={board}
                                                 categoryBoards={props.categoryBoards}
@@ -329,13 +330,11 @@ const SidebarCategory = (props: Props) => {
                                             />
                                         )
                                     })}
-                                    {!(collapsed || snapshot.isDragging) && props.boards.map((board: Board, index) => {
-                                        if (!isBoardVisible(board.id)) {
-                                            return null
-                                        }
+                                    {!(collapsed || snapshot.isDragging) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
+                                        console.log(`zzz: ${zzz} ${board.title}`)
                                         return (
                                             <SidebarBoardItem
-                                                index={index}
+                                                index={zzz}
                                                 key={board.id}
                                                 board={board}
                                                 categoryBoards={props.categoryBoards}

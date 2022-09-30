@@ -87,12 +87,16 @@ const sidebarSlice = createSlice({
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
-                    // first we remove the board from list of boards
-                    categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
-
-                    // then we add it if this is the target category
                     if (categoryAttribute.id === boardCategory.categoryID) {
+                        // if board is already in the right category, don't do anything
+                        // and let the board stay in its right order
+                        if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) >= 0) {
+                            return
+                        }
                         categoryAttribute.boardIDs.push(boardCategory.boardID)
+                    } else {
+                        // remove the board from other categories
+                        categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
                     }
                 }
             })
@@ -135,8 +139,7 @@ const sidebarSlice = createSlice({
             }
 
             // creating a new reference of array so redux knows its mutated
-            const updatedCategoryBoards = state.categoryAttributes.map((original, i) => (i === categoryIndex ? updatedCategory : original))
-            state.categoryAttributes = updatedCategoryBoards
+            state.categoryAttributes = state.categoryAttributes.map((original, i) => (i === categoryIndex ? updatedCategory : original))
         },
     },
     extraReducers: (builder) => {

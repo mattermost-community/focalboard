@@ -22,7 +22,7 @@ import {
     CategoryBoards,
     fetchSidebarCategories,
     getSidebarCategories, updateBoardCategories,
-    updateCategories, updateCategoryOrder,
+    updateCategories, updateCategoryBoardsOrder, updateCategoryOrder,
 } from '../../store/sidebar'
 
 import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
@@ -39,6 +39,10 @@ import {getCurrentViewId} from '../../store/views'
 import octoClient from '../../octoClient'
 
 import {useWebsockets} from '../../hooks/websockets'
+
+import mutator from '../../mutator'
+
+import {Board} from '../../blocks/board'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -160,25 +164,13 @@ const Sidebar = (props: Props) => {
         }
     }, [teamId])
 
-    const onDragEnd = useCallback(async (result: DropResult) => {
-        console.log('onDragEnd called')
-
-        const {destination, source, type} = result
-
-        if (type !== 'category') {
-            return
-        }
-
+    const handleCategoryDND = useCallback(async (result: DropResult) => {
+        const {destination, source} = result
         if (!team || !destination) {
             return
         }
 
-        if (
-            destination.droppableId === source.droppableId &&
-            destination.index === source.index
-        ) {
-            return
-        }
+        console.log(`Moving from index: ${source.index} to index: ${destination.index}`)
 
         const categories = sidebarCategories
 
@@ -197,6 +189,98 @@ const Sidebar = (props: Props) => {
         await dispatch(updateCategoryOrder(newCategoryOrder))
         await octoClient.reorderSidebarCategories(team.id, newCategoryOrder)
     }, [team, sidebarCategories])
+
+    const handleCategoryBoardDND = useCallback(async (result: DropResult) => {
+        const {source, destination, draggableId} = result
+
+        if (!team || !destination) {
+            return
+        }
+
+        const fromCategoryID = source.droppableId
+        const toCategoryID = destination.droppableId
+        const boardID = draggableId
+
+        console.log(`Source droppable ID: ${source.droppableId}`)
+        console.log(`Destination droppable ID: ${destination.droppableId}`)
+        console.log(source.droppableId === destination.droppableId ? 'SAME CATEGORY' : 'DIFFERENT CATEGORIES')
+
+        if (fromCategoryID === toCategoryID) {
+            // board re-arranged withing the same category
+            console.log(`Moving from index: ${source.index} to index: ${destination.index}`)
+            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
+            if (!toSidebarCategory) {
+                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
+                return
+            }
+
+            const boardIDs = [...toSidebarCategory.boardIDs]
+            boardIDs.splice(source.index, 1)
+            boardIDs.splice(destination.index, 0, toSidebarCategory.boardIDs[source.index])
+
+            dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
+            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
+        } else {
+            // board moved to a different category
+            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
+            if (!toSidebarCategory) {
+                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
+                return
+            }
+
+            const boardIDs = [...toSidebarCategory.boardIDs]
+            boardIDs.splice(destination.index, 0, boardID)
+
+            // optimistically updating the store to create a lag-free UI.
+            await dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
+            dispatch(updateBoardCategories([{boardID, categoryID: toCategoryID}]))
+
+            await mutator.moveBoardToCategory(team.id, boardID, toCategoryID, fromCategoryID)
+            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
+        }
+    }, [team, sidebarCategories])
+
+    const onDragEnd = useCallback(async (result: DropResult) => {
+        console.log('onDragEnd called')
+
+        const {destination, source, type} = result
+
+        if (!team || !destination) {
+            return
+        }
+
+        if (destination.droppableId === source.droppableId && destination.index === source.index) {
+            return
+        }
+
+        if (type === 'category') {
+            handleCategoryDND(result)
+        } else if (type === 'board') {
+            handleCategoryBoardDND(result)
+        } else {
+            Utils.logWarn(`unknown drag type encountered, type: ${type}`)
+        }
+    }, [team, sidebarCategories])
+
+    const getSortedCategoryBoards = (category: CategoryBoards): Board[] => {
+        const categoryBoardsByID = new Map<string, Board>()
+        boards.forEach((board) => {
+            if (!category.boardIDs.includes(board.id)) {
+                return
+            }
+
+            categoryBoardsByID.set(board.id, board)
+        })
+
+        const sortedBoards: Board[] = []
+        category.boardIDs.forEach((boardID) => {
+            const b = categoryBoardsByID.get(boardID)
+            if (b) {
+                sortedBoards.push(b)
+            }
+        })
+        return sortedBoards
+    }
 
     return (
         <div className='Sidebar octo-sidebar'>
@@ -261,7 +345,7 @@ const Sidebar = (props: Props) => {
                                         activeBoardID={props.activeBoardId}
                                         activeViewID={activeViewID}
                                         categoryBoards={category}
-                                        boards={boards}
+                                        boards={getSortedCategoryBoards(category)}
                                         allCategories={sidebarCategories}
                                         index={index}
                                         onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
