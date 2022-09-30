@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useEffect, useState, useContext, CSSProperties, useRef} from 'react'
 
-import SubmenuTriangleIcon from '../icons/submenuTriangle'
+import CompassIcon from '../../widgets/icons/compassIcon'
 
 import MenuUtil from './menuUtil'
 
@@ -62,10 +62,9 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
             }}
             ref={ref}
         >
-            {(props.position === 'left' || props.position === 'left-bottom') && <SubmenuTriangleIcon/>}
             {props.icon ? <div className='menu-option__icon'>{props.icon}</div> : <div className='noicon'/>}
             <div className='menu-name'>{props.name}</div>
-            {props.position !== 'left' && props.position !== 'left-bottom' && <SubmenuTriangleIcon/>}
+            <CompassIcon icon='chevron-right'/>
             {isOpen &&
                 <div
                     className={'SubMenu Menu noselect ' + (props.position || 'bottom')}
