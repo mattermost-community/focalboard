@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/mattermost/focalboard/server/app"
 	"io"
 	"net/http"
 	"path/filepath"
@@ -144,10 +145,20 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fileReader, err := a.app.GetFileReader(board.TeamID, boardID, filename)
-	if err != nil {
+	if err != nil && err != app.ErrFileNotFound {
 		a.errorResponse(w, r, err)
 		return
 	}
+
+	if err == app.ErrFileNotFound {
+		// prior to moving from
+		fileReader, err = a.app.GetFileReader(board.ChannelID, boardID, filename)
+		if err != nil {
+			a.errorResponse(w, r, err)
+			return
+		}
+	}
+
 	defer fileReader.Close()
 	http.ServeContent(w, r, filename, time.Now(), fileReader)
 	auditRec.Success()
