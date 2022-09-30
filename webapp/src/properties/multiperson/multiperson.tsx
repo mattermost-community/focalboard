@@ -68,6 +68,7 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
 
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
+    const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const allowAddUsers = allowManageBoardRoles || board.type === BoardTypeOpen
@@ -170,7 +171,7 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
                     onClose={() => setConfirmAddUser(null)}
                 />}
             <Select
-                key={boardUsers.length}
+                key={boardUsersKey}
                 loadOptions={loadOptions}
                 isMulti={true}
                 defaultOptions={true}

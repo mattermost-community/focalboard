@@ -165,6 +165,15 @@ class Utils {
         return output
     }
 
+    // general purpose (non-secure) hash
+    static hashCode(s: string) {
+        let h = 0
+        for (let i = 0; i < s.length; i++) {
+            h = Math.imul(31, h) + s.charCodeAt(i) | 0
+        }
+        return h
+    }
+
     static htmlToElement(html: string): HTMLElement {
         const template = document.createElement('template')
         template.innerHTML = html.trim()

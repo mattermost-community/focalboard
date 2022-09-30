@@ -65,6 +65,7 @@ const Person = (props: PropertyProps): JSX.Element => {
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
+    const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
     const me: IUser = boardUsersById[propertyValue as string]
@@ -152,7 +153,7 @@ const Person = (props: PropertyProps): JSX.Element => {
                 onClose={() => setConfirmAddUser(null)}
             />}
             <Select
-                key={boardUsers.length}
+                key={boardUsersKey}
                 loadOptions={loadOptions}
                 defaultOptions={true}
                 isSearchable={true}
