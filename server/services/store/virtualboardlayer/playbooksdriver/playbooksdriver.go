@@ -114,55 +114,6 @@ func (pd *PlaybooksDriver) GetBlocksForBoard(boardID string) ([]model.Block, err
 		BoardID:  boardID,
 	})
 
-	// blocks := []model.Block{
-	// 	{
-	// 		ID:         "1",
-	// 		ParentID:   "1",
-	// 		CreatedBy:  "zt4asipnc3f97nxobo91o66nfe",
-	// 		ModifiedBy: "zt4asipnc3f97nxobo91o66nfe",
-	// 		Schema:     1,
-	// 		Type:       model.TypeView,
-	// 		Title:      "Board View",
-	// 		Fields: map[string]any{
-	// 			"cardOrder":          []string{"2"},
-	// 			"collapsedOptionIds": []string{},
-	// 			"columnCalculations": map[string]any{},
-	// 			"columnWidths":       map[string]any{},
-	// 			"defaultTemplateId":  "",
-	// 			"filter": map[string]any{
-	// 				"filters":   []string{},
-	// 				"operation": "and",
-	// 			},
-	// 			"hiddenOptionIds":    []string{},
-	// 			"kanbanCalculations": map[string]any{},
-	// 			"sortOptions":        []string{},
-	// 			"viewType":           "board",
-	// 			"visibleOptionIds":   []string{},
-	// 			"visiblePropertyIds": []string{},
-	// 		},
-	// 		CreateAt: 123,
-	// 		BoardID:  "B497kmtu3yfbc9nkt69ghq1uc7a",
-	// 	},
-	// 	{
-	// 		ID:         "2",
-	// 		ParentID:   "2",
-	// 		CreatedBy:  "zt4asipnc3f97nxobo91o66nfe",
-	// 		ModifiedBy: "zt4asipnc3f97nxobo91o66nfe",
-	// 		Schema:     1,
-	// 		Type:       model.TypeCard,
-	// 		Title:      "Hello world",
-	// 		Fields: map[string]any{
-	// 			"contentOrder": []string{},
-	// 			"icon":         "🚚",
-	// 			"isTemplate":   false,
-	// 			"properties":   map[string]any{},
-	// 		},
-	// 		CreateAt: 123,
-	// 		BoardID:  "B497kmtu3yfbc9nkt69ghq1uc7a",
-	// 		DeleteAt: 0,
-	// 	},
-	// }
-
 	return blocks, nil
 }
 
@@ -186,17 +137,6 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 	if err := json.NewDecoder(rp.Body).Decode(&boardMembers); err != nil {
 		return nil, err
 	}
-
-	// boardMembers := []*model.BoardMember{
-	// 	{
-	// 		BoardID:      "Brj3yfo5ojbdbbbrmt9i5nzbhge",
-	// 		UserID:       "xz65wtimjpgn5mto9x6s5penmw",
-	// 		Roles:        "",
-	// 		MinimumRole:  "viewer",
-	// 		SchemeViewer: true,
-	// 		Synthetic:    true,
-	// 	},
-	// }
 
 	return boardMembers, nil
 }

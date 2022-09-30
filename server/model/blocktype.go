@@ -14,13 +14,14 @@ import (
 type BlockType string
 
 const (
-	TypeUnknown = "unknown"
-	TypeBoard   = "board"
-	TypeCard    = "card"
-	TypeView    = "view"
-	TypeText    = "text"
-	TypeComment = "comment"
-	TypeImage   = "image"
+	TypeUnknown      = "unknown"
+	TypeBoard        = "board"
+	TypeVirtualBoard = "virtualboard"
+	TypeCard         = "card"
+	TypeView         = "view"
+	TypeText         = "text"
+	TypeComment      = "comment"
+	TypeImage        = "image"
 )
 
 func (bt BlockType) String() string {
@@ -32,6 +33,8 @@ func BlockTypeFromString(s string) (BlockType, error) {
 	switch strings.ToLower(s) {
 	case "board":
 		return TypeBoard, nil
+	case "virtualboard":
+		return TypeVirtualBoard, nil
 	case "card":
 		return TypeCard, nil
 	case "view":
@@ -51,6 +54,8 @@ func BlockType2IDType(blockType BlockType) utils.IDType {
 	switch blockType {
 	case TypeBoard:
 		return utils.IDTypeBoard
+	case TypeVirtualBoard:
+		return utils.IDTypeVirtualBoard
 	case TypeCard:
 		return utils.IDTypeCard
 	case TypeView:
