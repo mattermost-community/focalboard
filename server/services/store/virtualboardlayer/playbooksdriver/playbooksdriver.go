@@ -1,22 +1,25 @@
 package playbooksdriver
 
 import (
+	"encoding/json"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const baseURL = "http://_"
+const baseURL = "http://localserver/"
 
 type PlaybooksDriver struct {
-	store store.Store
-	client *http.Client
+	store      store.Store
+	client     *http.Client
 	socketPath string
-	logger mlog.LoggerIFace
+	logger     mlog.LoggerIFace
 }
 
 func New(logger mlog.LoggerIFace, socketPath string) *PlaybooksDriver {
@@ -27,9 +30,9 @@ func New(logger mlog.LoggerIFace, socketPath string) *PlaybooksDriver {
 	}
 
 	return &PlaybooksDriver{
-		logger: logger,
+		logger:     logger,
 		socketPath: socketPath,
-		client: &http.Client{Transport: tr},
+		client:     &http.Client{Transport: tr},
 	}
 }
 
@@ -42,7 +45,7 @@ func (pd *PlaybooksDriver) SetStore(store store.Store) {
 }
 
 func (pd *PlaybooksDriver) doRequest(method, url string, data io.Reader) (*http.Response, error) {
-	rq, err := http.NewRequest(method, baseURL + url, data)
+	rq, err := http.NewRequest(method, baseURL+url, data)
 	if err != nil {
 		return nil, err
 	}
@@ -62,9 +65,12 @@ func (pd *PlaybooksDriver) doRequest(method, url string, data io.Reader) (*http.
 }
 
 func (pd *PlaybooksDriver) GetBlocksForBoard(boardID string) ([]model.Block, error) {
-	/*
+	board, err := pd.store.GetBoard(boardID)
+	if err != nil {
+		return []model.Block{}, err
+	}
 
-	url := fmt.Sprintf("/blocks?boardID=%s", boardID)
+	url := fmt.Sprintf("/boards/blocks?boardID=%s&playbookIDs=%s&teamID=%s", boardID, board.VirtualLink, board.TeamID)
 	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
 	if model.IsErrNotFound(err) {
 		return []model.Block{}, nil
@@ -79,64 +85,94 @@ func (pd *PlaybooksDriver) GetBlocksForBoard(boardID string) ([]model.Block, err
 		return nil, err
 	}
 
-	*/
+	blocks = append(blocks, model.Block{
+		ID:         "1",
+		ParentID:   "1",
+		CreatedBy:  board.CreatedBy,
+		ModifiedBy: board.CreatedBy,
+		Schema:     1,
+		Type:       model.TypeView,
+		Title:      "Board View",
+		Fields: map[string]any{
+			"cardOrder":          []string{"2"},
+			"collapsedOptionIds": []string{},
+			"columnCalculations": map[string]any{},
+			"columnWidths":       map[string]any{},
+			"defaultTemplateId":  "",
+			"filter": map[string]any{
+				"filters":   []string{},
+				"operation": "and",
+			},
+			"hiddenOptionIds":    []string{},
+			"kanbanCalculations": map[string]any{},
+			"sortOptions":        []string{},
+			"viewType":           "board",
+			"visibleOptionIds":   []string{},
+			"visiblePropertyIds": []string{},
+		},
+		CreateAt: board.CreateAt,
+		BoardID:  boardID,
+	})
 
-	blocks := []model.Block{
-		{
-			ID: "1",
-			ParentID: "1",
-			CreatedBy: "xz65wtimjpgn5mto9x6s5penmw",
-			ModifiedBy: "xz65wtimjpgn5mto9x6s5penmw",
-			Schema: 1,
-			Type: model.TypeView,
-			Title: "Board View",
-			Fields: map[string]any{
-				"cardOrder": []string{"2"},
-				"collapsedOptionIds": []string{},
-				"columnCalculations":map[string]any{},
-				"columnWidths": map[string]any{},
-				"defaultTemplateId":"",
-				"filter": map[string]any{
-					"filters": []string{},
-					"operation":"and",
-				},
-				"hiddenOptionIds": []string{},
-				"kanbanCalculations": map[string]any{},
-				"sortOptions": []string{},
-				"viewType":"board",
-				"visibleOptionIds": []string{},
-				"visiblePropertyIds": []string{},
-			},
-			CreateAt: 123,
-			BoardID: "Brj3yfo5ojbdbbbrmt9i5nzbhge",
-		},
-		{
-			ID: "2",
-			ParentID: "2",
-			CreatedBy: "xz65wtimjpgn5mto9x6s5penmw",
-			ModifiedBy: "xz65wtimjpgn5mto9x6s5penmw",
-			Schema: 1,
-			Type: model.TypeCard,
-			Title: "Hello world",
-			Fields: map[string]any{
-				"contentOrder": []string{},
-				"icon": "🚚",
-				"isTemplate": false,
-				"properties": map[string]any{},
-			},
-			CreateAt: 123,
-			BoardID: "Brj3yfo5ojbdbbbrmt9i5nzbhge",
-			DeleteAt: 0,
-		},
-	}
+	// blocks := []model.Block{
+	// 	{
+	// 		ID:         "1",
+	// 		ParentID:   "1",
+	// 		CreatedBy:  "zt4asipnc3f97nxobo91o66nfe",
+	// 		ModifiedBy: "zt4asipnc3f97nxobo91o66nfe",
+	// 		Schema:     1,
+	// 		Type:       model.TypeView,
+	// 		Title:      "Board View",
+	// 		Fields: map[string]any{
+	// 			"cardOrder":          []string{"2"},
+	// 			"collapsedOptionIds": []string{},
+	// 			"columnCalculations": map[string]any{},
+	// 			"columnWidths":       map[string]any{},
+	// 			"defaultTemplateId":  "",
+	// 			"filter": map[string]any{
+	// 				"filters":   []string{},
+	// 				"operation": "and",
+	// 			},
+	// 			"hiddenOptionIds":    []string{},
+	// 			"kanbanCalculations": map[string]any{},
+	// 			"sortOptions":        []string{},
+	// 			"viewType":           "board",
+	// 			"visibleOptionIds":   []string{},
+	// 			"visiblePropertyIds": []string{},
+	// 		},
+	// 		CreateAt: 123,
+	// 		BoardID:  "B497kmtu3yfbc9nkt69ghq1uc7a",
+	// 	},
+	// 	{
+	// 		ID:         "2",
+	// 		ParentID:   "2",
+	// 		CreatedBy:  "zt4asipnc3f97nxobo91o66nfe",
+	// 		ModifiedBy: "zt4asipnc3f97nxobo91o66nfe",
+	// 		Schema:     1,
+	// 		Type:       model.TypeCard,
+	// 		Title:      "Hello world",
+	// 		Fields: map[string]any{
+	// 			"contentOrder": []string{},
+	// 			"icon":         "🚚",
+	// 			"isTemplate":   false,
+	// 			"properties":   map[string]any{},
+	// 		},
+	// 		CreateAt: 123,
+	// 		BoardID:  "B497kmtu3yfbc9nkt69ghq1uc7a",
+	// 		DeleteAt: 0,
+	// 	},
+	// }
 
 	return blocks, nil
 }
 
 func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
-	/*
+	board, err := pd.store.GetBoard(boardID)
+	if err != nil {
+		return []*model.BoardMember{}, err
+	}
 
-	url := fmt.Sprintf("/members?boardID=%s", boardID)
+	url := fmt.Sprintf("/boards/members?&playbookIDs=%s&teamID=%s", board.VirtualLink, board.TeamID)
 	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
 	if model.IsErrNotFound(err) {
 		return []*model.BoardMember{}, nil
@@ -151,18 +187,16 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 		return nil, err
 	}
 
-	*/
-
-	boardMembers := []*model.BoardMember{
-		{
-			BoardID: "Brj3yfo5ojbdbbbrmt9i5nzbhge",
-			UserID: "xz65wtimjpgn5mto9x6s5penmw",
-			Roles: "",
-			MinimumRole: "viewer",
-			SchemeViewer: true,
-			Synthetic: true,
-		},
-	}
+	// boardMembers := []*model.BoardMember{
+	// 	{
+	// 		BoardID:      "Brj3yfo5ojbdbbbrmt9i5nzbhge",
+	// 		UserID:       "xz65wtimjpgn5mto9x6s5penmw",
+	// 		Roles:        "",
+	// 		MinimumRole:  "viewer",
+	// 		SchemeViewer: true,
+	// 		Synthetic:    true,
+	// 	},
+	// }
 
 	return boardMembers, nil
 }
