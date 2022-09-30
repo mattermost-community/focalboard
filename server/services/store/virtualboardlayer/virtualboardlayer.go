@@ -88,14 +88,13 @@ func (vbl *VirtualBoardLayer) GetBlocksForBoard(boardID string) ([]model.Block, 
 	if err != nil {
 		return nil, err
 	}
-	vbl.logger.Debug("Got driver on GetBlocksForBoard",
-		mlog.String("driver", driver.Name()),
-		mlog.String("boardID", boardID),
-	)
 	if driver == nil {
+		vbl.logger.Debug("Got nil driver on GetBlocksForBoard",
+			mlog.String("boardID", boardID),
+		)
 		return storeBlocks, nil
 	}
-	vbl.logger.Debug("Routing GetBlocksForBoard to virtual store driver",
+	vbl.logger.Debug("Got driver on GetBlocksForBoard",
 		mlog.String("driver", driver.Name()),
 		mlog.String("boardID", boardID),
 	)
@@ -117,15 +116,14 @@ func (vbl *VirtualBoardLayer) GetMembersForBoard(boardID string) ([]*model.Board
 	if err != nil {
 		return nil, err
 	}
-	vbl.logger.Debug("Got driver on GetMembersForBoard",
-		mlog.String("driver", driver.Name()),
-		mlog.String("boardID", boardID),
-	)
 	if driver == nil {
+		vbl.logger.Debug("Got nil driver on GetMembersForBoard",
+			mlog.String("boardID", boardID),
+		)
 		return vbl.Store.GetMembersForBoard(boardID)
 	}
 
-	vbl.logger.Debug("Routing GetMembersForBoard to virtual store driver",
+	vbl.logger.Debug("Got driver on GetMembersForBoard",
 		mlog.String("driver", driver.Name()),
 		mlog.String("boardID", boardID),
 	)
