@@ -28,6 +28,7 @@ type VirtualBoardDriver interface {
 	SetStore(store store.Store)
 	GetBlocksForBoard(boardID string) ([]model.Block, error)
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
+	GetVirtualLinks(userID, teamID string) ([]*model.VirtualLink, error)
 }
 
 // Store represents the abstraction of the data storage.
@@ -52,7 +53,16 @@ func New(store store.Store, logger mlog.LoggerIFace, drivers map[string]VirtualB
 	return layer
 }
 
-func (vbl *VirtualBoardLayer) getDriver(id string) (VirtualBoardDriver, error) {
+func (vbl *VirtualBoardLayer) getDriver(name string) (VirtualBoardDriver, error) {
+	driver, ok := vbl.drivers[name]
+	if !ok {
+		return nil, NewErrDriverNotFound(name)
+	}
+
+	return driver, nil
+}
+
+func (vbl *VirtualBoardLayer) getDriverForBoard(id string) (VirtualBoardDriver, error) {
 	// ToDo: make it a const
 	// if the board ID is not a virtual one, do not go to the database
 	// to check the driver name
@@ -70,12 +80,7 @@ func (vbl *VirtualBoardLayer) getDriver(id string) (VirtualBoardDriver, error) {
 		return nil, nil
 	}
 
-	driver, ok := vbl.drivers[board.VirtualDriver]
-	if !ok {
-		return nil, NewErrDriverNotFound(board.VirtualDriver)
-	}
-
-	return driver, nil
+	return vbl.getDriver(board.VirtualDriver)
 }
 
 func (vbl *VirtualBoardLayer) GetBlocksForBoard(boardID string) ([]model.Block, error) {
@@ -84,7 +89,7 @@ func (vbl *VirtualBoardLayer) GetBlocksForBoard(boardID string) ([]model.Block, 
 		return nil, err
 	}
 
-	driver, err := vbl.getDriver(boardID)
+	driver, err := vbl.getDriverForBoard(boardID)
 	if err != nil {
 		return nil, err
 	}
@@ -112,7 +117,7 @@ func (vbl *VirtualBoardLayer) GetBlocksForBoard(boardID string) ([]model.Block, 
 }
 
 func (vbl *VirtualBoardLayer) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
-	driver, err := vbl.getDriver(boardID)
+	driver, err := vbl.getDriverForBoard(boardID)
 	if err != nil {
 		return nil, err
 	}
@@ -150,4 +155,29 @@ func (vbl *VirtualBoardLayer) GetMembersForBoard(boardID string) ([]*model.Board
 	}
 
 	return processedMembers, nil
+}
+
+func (vbl *VirtualBoardLayer) GetVirtualLinksForDriver(driverName, userID, teamID string) ([]*model.VirtualLink, error) {
+	driver, err := vbl.getDriver(driverName)
+	if err != nil {
+		return nil, err
+	}
+
+	vbl.logger.Debug("Got driver for GetVirtualLinksForDriver",
+		mlog.String("driver", driverName),
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+	)
+	links, err := driver.GetVirtualLinks(userID, teamID)
+	if err != nil {
+		return nil, err
+	}
+
+	vbl.logger.Debug("Got virtual links on GetVirtualLinksForDriver from virtual store driver",
+		mlog.String("driver", driverName),
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+		mlog.Int("virtualLinksCount", len(links)),
+	)
+	return links, nil
 }

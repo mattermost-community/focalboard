@@ -165,6 +165,9 @@ type Store interface {
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+
+	// Virtual
+	GetVirtualLinksForDriver(driverName, userID, teamID string) ([]*model.VirtualLink, error)
 }
 
 type NotSupportedError struct {

@@ -1166,6 +1166,21 @@ func (mr *MockStoreMockRecorder) GetUsersList(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersList", reflect.TypeOf((*MockStore)(nil).GetUsersList), arg0)
 }
 
+// GetVirtualLinksForDriver mocks base method.
+func (m *MockStore) GetVirtualLinksForDriver(arg0, arg1, arg2 string) ([]*model.VirtualLink, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetVirtualLinksForDriver", arg0, arg1, arg2)
+	ret0, _ := ret[0].([]*model.VirtualLink)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetVirtualLinksForDriver indicates an expected call of GetVirtualLinksForDriver.
+func (mr *MockStoreMockRecorder) GetVirtualLinksForDriver(arg0, arg1, arg2 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVirtualLinksForDriver", reflect.TypeOf((*MockStore)(nil).GetVirtualLinksForDriver), arg0, arg1, arg2)
+}
+
 // InsertBlock mocks base method.
 func (m *MockStore) InsertBlock(arg0 *model.Block, arg1 string) error {
 	m.ctrl.T.Helper()

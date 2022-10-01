@@ -11,6 +11,7 @@ import {UserSettings} from './userSettings'
 import {Category, CategoryBoards} from './store/sidebar'
 import {Channel} from './store/channels'
 import {Team} from './store/teams'
+import {VirtualLink} from './virtual'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
 import {Constants} from './constants'
@@ -940,6 +941,17 @@ class OctoClient {
         }
 
         return (await this.getJson(response, {})) as TopBoardResponse
+    }
+
+    // virtual
+    async getVirtualLinksForDriver(driverName: string, teamId: string): Promise<VirtualLink[] | undefined> {
+        const path = `/api/v2/virtual/links?driver=${driverName}&team=${teamId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as VirtualLink[]
     }
 }
 

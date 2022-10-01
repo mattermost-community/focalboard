@@ -123,7 +123,7 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 		return []*model.BoardMember{}, err
 	}
 
-	url := fmt.Sprintf("/boards/members?&playbookIDs=%s&teamID=%s", board.VirtualLink, board.TeamID)
+	url := fmt.Sprintf("/boards/members?playbookIDs=%s&teamID=%s", board.VirtualLink, board.TeamID)
 	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
 	if model.IsErrNotFound(err) {
 		return []*model.BoardMember{}, nil
@@ -139,4 +139,23 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 	}
 
 	return boardMembers, nil
+}
+
+func (pd *PlaybooksDriver) GetVirtualLinks(userID, teamID string) ([]*model.VirtualLink, error) {
+	url := fmt.Sprintf("/boards/playbooks?user_id=%s&team_id=%s", userID, teamID)
+	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
+	if model.IsErrNotFound(err) {
+		return []*model.VirtualLink{}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	defer closeBody(rp)
+
+	var links []*model.VirtualLink
+	if err := json.NewDecoder(rp.Body).Decode(&links); err != nil {
+		return nil, err
+	}
+
+	return links, nil
 }

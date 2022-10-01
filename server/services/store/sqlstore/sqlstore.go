@@ -183,3 +183,7 @@ func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query st
 func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmModel.Channel, error) {
 	return nil, store.NewNotSupportedError("get channel not supported on standalone mode")
 }
+
+func (s *SQLStore) getVirtualLinksForDriver(db sq.BaseRunner, driverName, userID, teamID string) ([]*model.VirtualLink, error) {
+	return nil, store.NewNotSupportedError("get virtual links for driver should be part of the virtual board layer")
+}
