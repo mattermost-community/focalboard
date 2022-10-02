@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -115,4 +116,16 @@ func newErrInvalidDBType(dbType string) error {
 
 func (e ErrInvalidDBType) Error() string {
 	return "unsupported database type: " + e.dbType
+}
+
+// deleteBoardRecord deletes a boards record without deleting any child records in the blocks table.
+// FOR UNIT TESTING ONLY
+func (s *SQLStore) deleteBoardRecord(db sq.BaseRunner, boardID string, modifiedBy string) error {
+	return s.deleteBoardAndChildren(db, boardID, modifiedBy, true)
+}
+
+// deleteBlockRecord deletes a blocks record without deleting any child records in the blocks table.
+// FOR UNIT TESTING ONLY
+func (s *SQLStore) deleteBlockRecord(db sq.BaseRunner, blockID, modifiedBy string) error {
+	return s.deleteBlockAndChildren(db, blockID, modifiedBy, true)
 }

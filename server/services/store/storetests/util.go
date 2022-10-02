@@ -75,7 +75,7 @@ func createTestCards(t *testing.T, store store.Store, userID string, boardID str
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
 		block := &model.Block{
-			ID:        utils.NewID(utils.IDTypeBlock),
+			ID:        utils.NewID(utils.IDTypeCard),
 			BoardID:   boardID,
 			ParentID:  boardID,
 			Type:      model.TypeCard,
@@ -106,4 +106,24 @@ func createTestBoards(t *testing.T, store store.Store, userID string, num int) [
 		boards = append(boards, boardNew)
 	}
 	return boards
+}
+
+func extractBlockIdsPtr(blockGroups ...[]*model.Block) []string {
+	ids := make([]string, 0, 0)
+	for _, group := range blockGroups {
+		for _, block := range group {
+			ids = append(ids, block.ID)
+		}
+	}
+	return ids
+}
+
+func extractBlockIds(blockGroups ...[]model.Block) []string {
+	ids := make([]string, 0, 0)
+	for _, group := range blockGroups {
+		for _, block := range group {
+			ids = append(ids, block.ID)
+		}
+	}
+	return ids
 }

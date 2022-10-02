@@ -148,6 +148,11 @@ func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 
 }
 
+func (s *SQLStore) DeleteBlockRecord(blockID string, modifiedBy string) error {
+	return s.deleteBlockRecord(s.db, blockID, modifiedBy)
+
+}
+
 func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBoard(s.db, boardID, userID)
@@ -169,6 +174,11 @@ func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) DeleteBoardRecord(boardID string, modifiedBy string) error {
+	return s.deleteBoardRecord(s.db, boardID, modifiedBy)
 
 }
 

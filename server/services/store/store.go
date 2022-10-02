@@ -47,6 +47,7 @@ type Store interface {
 	DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error)
 	// @withTransaction
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
+
 	FindOrphansForBoards() ([]string, error)
 	FindOrphansForBlocks() ([]string, error)
 
@@ -167,6 +168,10 @@ type Store interface {
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+
+	// For unit testing only
+	DeleteBoardRecord(boardID, modifiedBy string) error
+	DeleteBlockRecord(blockID, modifiedBy string) error
 }
 
 type NotSupportedError struct {
