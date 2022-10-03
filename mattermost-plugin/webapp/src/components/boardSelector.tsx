@@ -153,6 +153,23 @@ const BoardSelector = () => {
             <Dialog
                 className='BoardSelector'
                 onClose={closeDialog}
+                title={
+                    <FormattedMessage
+                        id='boardSelector.title'
+                        defaultMessage='Link boards'
+                    />
+                }
+                toolbar={
+                    <Button
+                        onClick={() => newLinkedBoard()}
+                        emphasis='secondary'
+                    >
+                        <FormattedMessage
+                            id='boardSelector.create-a-board'
+                            defaultMessage='Create a board'
+                        />
+                    </Button>
+                }
             >
                 {showLinkBoardConfirmation &&
                     <ConfirmationDialog
@@ -167,23 +184,6 @@ const BoardSelector = () => {
                     />}
                 <div className='BoardSelectorBody'>
                     <div className='head'>
-                        <div className='heading'>
-                            <h3 className='text-heading4'>
-                                <FormattedMessage
-                                    id='boardSelector.title'
-                                    defaultMessage='Link boards'
-                                />
-                            </h3>
-                            <Button
-                                onClick={() => newLinkedBoard()}
-                                emphasis='secondary'
-                            >
-                                <FormattedMessage
-                                    id='boardSelector.create-a-board'
-                                    defaultMessage='Create a board'
-                                />
-                            </Button>
-                        </div>
                         <div className='queryWrapper'>
                             <SearchIcon/>
                             <input

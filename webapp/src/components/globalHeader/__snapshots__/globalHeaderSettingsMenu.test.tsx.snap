@@ -31,15 +31,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 class="MenuOption SubMenuOption menu-option open-left menu-option-active"
                 id="import"
               >
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
                 <div
                   class="noicon"
                 />
@@ -48,6 +39,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 >
                   Import
                 </div>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
                 <div
                   class="SubMenu Menu noselect left-bottom"
                 >
@@ -249,15 +243,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 class="MenuOption SubMenuOption menu-option open-left"
                 id="lang"
               >
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
                 <div
                   class="noicon"
                 />
@@ -266,6 +251,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
                 >
                   Set language
                 </div>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -389,15 +377,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 class="MenuOption SubMenuOption menu-option open-left"
                 id="import"
               >
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
                 <div
                   class="noicon"
                 />
@@ -406,6 +385,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 >
                   Import
                 </div>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -413,15 +395,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 class="MenuOption SubMenuOption menu-option open-left menu-option-active"
                 id="lang"
               >
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
                 <div
                   class="noicon"
                 />
@@ -430,6 +403,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
                 >
                   Set language
                 </div>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
                 <div
                   class="SubMenu Menu noselect left-bottom"
                 >
@@ -1050,15 +1026,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 class="MenuOption SubMenuOption menu-option open-left"
                 id="import"
               >
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
                 <div
                   class="noicon"
                 />
@@ -1067,6 +1034,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 >
                   Import
                 </div>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>
@@ -1074,15 +1044,6 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 class="MenuOption SubMenuOption menu-option open-left"
                 id="lang"
               >
-                <svg
-                  class="SubmenuTriangleIcon Icon"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <polygon
-                    points="50,35 75,50 50,65"
-                  />
-                </svg>
                 <div
                   class="noicon"
                 />
@@ -1091,6 +1052,9 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
                 >
                   Set language
                 </div>
+                <i
+                  class="CompassIcon icon-chevron-right"
+                />
               </div>
             </div>
             <div>

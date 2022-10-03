@@ -154,11 +154,12 @@ func (mr *MockStoreMockRecorder) CreateSubscription(arg0 interface{}) *gomock.Ca
 }
 
 // CreateUser mocks base method.
-func (m *MockStore) CreateUser(arg0 *model.User) error {
+func (m *MockStore) CreateUser(arg0 *model.User) (*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateUser", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // CreateUser indicates an expected call of CreateUser.
@@ -1282,18 +1283,19 @@ func (mr *MockStoreMockRecorder) PatchBoardsAndBlocks(arg0, arg1 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchBoardsAndBlocks", reflect.TypeOf((*MockStore)(nil).PatchBoardsAndBlocks), arg0, arg1)
 }
 
-// PatchUserProps mocks base method.
-func (m *MockStore) PatchUserProps(arg0 string, arg1 model.UserPropPatch) error {
+// PatchUserPreferences mocks base method.
+func (m *MockStore) PatchUserPreferences(arg0 string, arg1 model.UserPreferencesPatch) (model0.Preferences, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "PatchUserProps", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "PatchUserPreferences", arg0, arg1)
+	ret0, _ := ret[0].(model0.Preferences)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// PatchUserProps indicates an expected call of PatchUserProps.
-func (mr *MockStoreMockRecorder) PatchUserProps(arg0, arg1 interface{}) *gomock.Call {
+// PatchUserPreferences indicates an expected call of PatchUserPreferences.
+func (mr *MockStoreMockRecorder) PatchUserPreferences(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserProps", reflect.TypeOf((*MockStore)(nil).PatchUserProps), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PatchUserPreferences", reflect.TypeOf((*MockStore)(nil).PatchUserPreferences), arg0, arg1)
 }
 
 // PostMessage mocks base method.
@@ -1570,11 +1572,12 @@ func (mr *MockStoreMockRecorder) UpdateSubscribersNotifiedAt(arg0, arg1 interfac
 }
 
 // UpdateUser mocks base method.
-func (m *MockStore) UpdateUser(arg0 *model.User) error {
+func (m *MockStore) UpdateUser(arg0 *model.User) (*model.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateUser", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // UpdateUser indicates an expected call of UpdateUser.

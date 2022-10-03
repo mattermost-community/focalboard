@@ -20,7 +20,7 @@
     > div {
         > div {
             height: 40px;
-            padding: 0 40px 0 20px;
+            padding: 0 20px;
 
             &[aria-selected='true'] {
                 background: rgba(var(--center-channel-color-rgb), 0.08);

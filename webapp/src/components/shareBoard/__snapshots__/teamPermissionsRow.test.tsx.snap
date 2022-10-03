@@ -49,8 +49,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     class="d-flex menu-option__check"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -76,8 +80,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     class="d-flex"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -103,8 +111,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                     class="d-flex"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -129,15 +141,19 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot 1`] 
                   <div
                     class="d-flex menu-option__check"
                   >
-                    <svg
-                      class="CheckIcon Icon"
-                      viewBox="0 0 100 100"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <div
+                      class="menu-option__icon"
                     >
-                      <polyline
-                        points="20,60 40,80 80,40"
-                      />
-                    </svg>
+                      <svg
+                        class="CheckIcon Icon"
+                        viewBox="0 0 100 100"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <polyline
+                          points="20,60 40,80 80,40"
+                        />
+                      </svg>
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -246,8 +262,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     class="d-flex menu-option__check"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -273,8 +293,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     class="d-flex"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -300,8 +324,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                     class="d-flex"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -326,15 +354,19 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in p
                   <div
                     class="d-flex menu-option__check"
                   >
-                    <svg
-                      class="CheckIcon Icon"
-                      viewBox="0 0 100 100"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <div
+                      class="menu-option__icon"
                     >
-                      <polyline
-                        points="20,60 40,80 80,40"
-                      />
-                    </svg>
+                      <svg
+                        class="CheckIcon Icon"
+                        viewBox="0 0 100 100"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <polyline
+                          points="20,60 40,80 80,40"
+                        />
+                      </svg>
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -445,8 +477,12 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in t
                     class="d-flex"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -471,15 +507,19 @@ exports[`src/components/shareBoard/teamPermissionsRow should match snapshot in t
                   <div
                     class="d-flex menu-option__check"
                   >
-                    <svg
-                      class="CheckIcon Icon"
-                      viewBox="0 0 100 100"
-                      xmlns="http://www.w3.org/2000/svg"
+                    <div
+                      class="menu-option__icon"
                     >
-                      <polyline
-                        points="20,60 40,80 80,40"
-                      />
-                    </svg>
+                      <svg
+                        class="CheckIcon Icon"
+                        viewBox="0 0 100 100"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <polyline
+                          points="20,60 40,80 80,40"
+                        />
+                      </svg>
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"

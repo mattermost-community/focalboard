@@ -21,7 +21,7 @@ import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
 
 import {ISharing} from '../../blocks/sharing'
-import {BoardMember, createBoard} from '../../blocks/board'
+import {BoardMember, createBoard, MemberRole} from '../../blocks/board'
 
 import client from '../../octoClient'
 import Dialog from '../dialog'
@@ -171,6 +171,19 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         }
     }
 
+    const addUser = (user: IUser) => {
+        const minimumRole = board.minimumRole || MemberRole.Viewer
+        const newMember = {
+            boardId,
+            userId: user.id,
+            roles: minimumRole,
+            schemeEditor: minimumRole === MemberRole.Editor,
+            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
+            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
+        } as BoardMember
+        mutator.createBoardMember(newMember)
+    }
+
     const onUpdateBoardMember = (member: BoardMember, newPermission: string) => {
         if (member.userId === me?.id && isLastAdmin(Object.values(members))) {
             sendFlashMessage({content: intl.formatMessage({id: 'shareBoard.lastAdmin', defaultMessage: 'Boards must have at least one Administrator'}), severity: 'low'})
@@ -184,21 +197,21 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         } as BoardMember
 
         switch (newPermission) {
-        case 'Admin':
+        case MemberRole.Admin:
             if (member.schemeAdmin) {
                 return
             }
             newMember.schemeAdmin = true
             newMember.schemeEditor = true
             break
-        case 'Editor':
+        case MemberRole.Editor:
             if (!member.schemeAdmin && member.schemeEditor) {
                 return
             }
             newMember.schemeAdmin = false
             newMember.schemeEditor = true
             break
-        case 'Commenter':
+        case MemberRole.Commenter:
             if (!member.schemeAdmin && !member.schemeEditor && member.schemeCommenter) {
                 return
             }
@@ -206,7 +219,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             newMember.schemeEditor = false
             newMember.schemeCommenter = true
             break
-        case 'Viewer':
+        case MemberRole.Viewer:
             if (!member.schemeAdmin && !member.schemeEditor && !member.schemeCommenter && member.schemeViewer) {
                 return
             }
@@ -269,21 +282,17 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     }
 
     const shareBoardTitle = (
-        <span className='text-heading5'>
-            <FormattedMessage
-                id={'ShareBoard.Title'}
-                defaultMessage={'Share Board'}
-            />
-        </span>
+        <FormattedMessage
+            id={'ShareBoard.Title'}
+            defaultMessage={'Share Board'}
+        />
     )
 
     const shareTemplateTitle = (
-        <span className='text-heading5'>
-            <FormattedMessage
-                id={'ShareTemplate.Title'}
-                defaultMessage={'Share Template'}
-            />
-        </span>
+        <FormattedMessage
+            id={'ShareTemplate.Title'}
+            defaultMessage={'Share Template'}
+        />
     )
 
     const formatOptionLabel = (userOrChannel: IUser | Channel) => {
@@ -322,8 +331,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         )
     }
 
-    const toolbar = board.isTemplate ? shareTemplateTitle : shareBoardTitle
-
     let confirmSubtext
     let confirmButtonText
     if (board.channelId === '') {
@@ -337,8 +344,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     return (
         <Dialog
             onClose={props.onClose}
+            title={board.isTemplate ? shareTemplateTitle : shareBoardTitle}
             className='ShareBoardDialog'
-            toolbar={toolbar}
         >
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
@@ -395,10 +402,13 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             getOptionValue={(u) => u.id}
                             getOptionLabel={(u: IUser|Channel) => (u as IUser).username || (u as Channel).display_name}
                             isMulti={false}
-                            placeholder={intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})}
+                            placeholder={board.isTemplate ?
+                                intl.formatMessage({id: 'ShareTemplate.searchPlaceholder', defaultMessage: 'Search for people'}) :
+                                intl.formatMessage({id: 'ShareBoard.searchPlaceholder', defaultMessage: 'Search for people and channels'})
+                            }
                             onChange={(newValue) => {
                                 if (newValue && (newValue as IUser).username) {
-                                    mutator.createBoardMember(boardId, newValue.id)
+                                    addUser(newValue as IUser)
                                     setSelectedUser(null)
                                 } else if (newValue) {
                                     onLinkBoard(newValue as Channel)

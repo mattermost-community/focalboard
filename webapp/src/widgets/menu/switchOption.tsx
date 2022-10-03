@@ -28,7 +28,7 @@ function SwitchOption(props: SwitchOptionProps): JSX.Element {
                 e.stopPropagation()
             }}
         >
-            {icon ?? <div className='noicon'/>}
+            {icon ? <div className='menu-option__icon'>{icon}</div> : <div className='noicon'/>}
             <div className='menu-name'>{name}</div>
             <Switch
                 isOn={isOn}
