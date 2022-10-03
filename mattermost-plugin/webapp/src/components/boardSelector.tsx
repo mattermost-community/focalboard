@@ -120,12 +120,12 @@ const BoardSelector = () => {
     if (showLinkBoardConfirmation?.channelId !== '') {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
-            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
         }, {boardName: showLinkBoardConfirmation?.title, lineBreak: <p/>})
     } else {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext',
-            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. You can unlink a board from a channel at any time.'
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests. You can unlink a board from a channel at any time.'
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
