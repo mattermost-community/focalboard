@@ -13,11 +13,17 @@ const (
 	MinimumPasswordLength = 8
 )
 
-type AuthParamError struct {
+func NewErrAuthParam(msg string) *ErrAuthParam {
+	return &ErrAuthParam{
+		msg: msg,
+	}
+}
+
+type ErrAuthParam struct {
 	msg string
 }
 
-func (pe AuthParamError) Error() string {
+func (pe *ErrAuthParam) Error() string {
 	return pe.msg
 }
 
@@ -84,16 +90,16 @@ type RegisterRequest struct {
 
 func (rd *RegisterRequest) IsValid() error {
 	if strings.TrimSpace(rd.Username) == "" {
-		return AuthParamError{"username is required"}
+		return NewErrAuthParam("username is required")
 	}
 	if strings.TrimSpace(rd.Email) == "" {
-		return AuthParamError{"email is required"}
+		return NewErrAuthParam("email is required")
 	}
 	if !auth.IsEmailValid(rd.Email) {
-		return AuthParamError{"invalid email format"}
+		return NewErrAuthParam("invalid email format")
 	}
 	if rd.Password == "" {
-		return AuthParamError{"password is required"}
+		return NewErrAuthParam("password is required")
 	}
 	return isValidPassword(rd.Password)
 }
@@ -113,17 +119,17 @@ type ChangePasswordRequest struct {
 // IsValid validates a password change request.
 func (rd *ChangePasswordRequest) IsValid() error {
 	if rd.OldPassword == "" {
-		return AuthParamError{"old password is required"}
+		return NewErrAuthParam("old password is required")
 	}
 	if rd.NewPassword == "" {
-		return AuthParamError{"new password is required"}
+		return NewErrAuthParam("new password is required")
 	}
 	return isValidPassword(rd.NewPassword)
 }
 
 func isValidPassword(password string) error {
 	if len(password) < MinimumPasswordLength {
-		return AuthParamError{fmt.Sprintf("password must be at least %d characters", MinimumPasswordLength)}
+		return NewErrAuthParam(fmt.Sprintf("password must be at least %d characters", MinimumPasswordLength))
 	}
 	return nil
 }

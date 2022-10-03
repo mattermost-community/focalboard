@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {ReactElement} from 'react'
+import {FormattedMessage} from 'react-intl'
 import {EntryComponentProps} from '@draft-js-plugins/mention/lib/MentionSuggestions/Entry/Entry'
 
 import GuestBadge from '../../../widgets/guestBadge'
@@ -21,19 +22,28 @@ const Entry = (props: EntryComponentProps): ReactElement => {
             {...parentProps}
         >
             <div className={`${theme?.mentionSuggestionsEntryContainer} EntryComponent`}>
-                <img
-                    src={mention.avatar}
-                    className={theme?.mentionSuggestionsEntryAvatar}
-                    role='presentation'
-                />
-                <div className={theme?.mentionSuggestionsEntryText}>
-                    {mention.name}
-                    {BotBadge && <BotBadge show={mention.is_bot}/>}
-                    <GuestBadge show={mention.is_guest}/>
+                <div className='EntryComponent__left'>
+                    <img
+                        src={mention.avatar}
+                        className={theme?.mentionSuggestionsEntryAvatar}
+                        role='presentation'
+                    />
+                    <div className={theme?.mentionSuggestionsEntryText}>
+                        {mention.name}
+                        {BotBadge && <BotBadge show={mention.is_bot}/>}
+                        <GuestBadge show={mention.is_guest}/>
+                    </div>
+                    <div className={theme?.mentionSuggestionsEntryText}>
+                        {mention.displayName}
+                    </div>
                 </div>
-                <div className={theme?.mentionSuggestionsEntryText}>
-                    {mention.displayName}
-                </div>
+                {!mention.isBoardMember &&
+                    <div className={`EntryComponent__hint ${theme?.mentionSuggestionsEntryText}`}>
+                        <FormattedMessage
+                            id='MentionSuggestion.is-not-board-member'
+                            defaultMessage='(not board member)'
+                        />
+                    </div>}
             </div>
         </div>
     )

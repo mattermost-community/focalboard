@@ -31,7 +31,7 @@ const WelcomePage = () => {
     const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
 
-    const setWelcomePageViewed = async (userID: string):Promise<any> => {
+    const setWelcomePageViewed = async (userID: string): Promise<any> => {
         const patch: UserConfigPatch = {}
         patch.updatedFields = {}
         patch.updatedFields[UserSettingKey.WelcomePageViewed] = '1'
@@ -98,7 +98,7 @@ const WelcomePage = () => {
     // let's mark it as viewed, if necessary, and route them forward
     if (me?.is_guest) {
         if (!myConfig[UserSettingKey.WelcomePageViewed]) {
-            (async() => {
+            (async () => {
                 await setWelcomePageViewed(me.id)
             })()
         }
@@ -177,7 +177,7 @@ const WelcomePage = () => {
                     >
                         <FormattedMessage
                             id='WelcomePage.StartUsingIt.Text'
-                            defaultMessage="Start using it"
+                            defaultMessage='Start using it'
                         />
                     </Button>}
             </div>

@@ -44,7 +44,7 @@ func (a *API) handleGetTeams(w http.ResponseWriter, r *http.Request) {
 
 	teams, err := a.app.GetTeamsForUser(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 	}
 
 	auditRec := a.makeAuditRecord(r, "getTeams", audit.Fail)
@@ -53,7 +53,7 @@ func (a *API) handleGetTeams(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(teams)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -92,7 +92,7 @@ func (a *API) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -101,17 +101,16 @@ func (a *API) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 
 	if a.MattermostAuth {
 		team, err = a.app.GetTeam(teamID)
-		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		if model.IsErrNotFound(err) {
+			a.errorResponse(w, r, model.NewErrUnauthorized("invalid team"))
 		}
-		if team == nil {
-			a.errorResponse(w, r.URL.Path, http.StatusUnauthorized, "invalid team", nil)
-			return
+		if err != nil {
+			a.errorResponse(w, r, err)
 		}
 	} else {
 		team, err = a.app.GetRootTeam()
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			a.errorResponse(w, r, err)
 			return
 		}
 	}
@@ -122,7 +121,7 @@ func (a *API) handleGetTeam(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(team)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -154,13 +153,13 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 	if a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in plugin mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in plugin mode"))
 		return
 	}
 
 	team, err := a.app.GetRootTeam()
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -169,9 +168,8 @@ func (a *API) handlePostTeamRegenerateSignupToken(w http.ResponseWriter, r *http
 
 	team.SignupToken = utils.NewID(utils.IDTypeToken)
 
-	err = a.app.UpsertTeamSignupToken(*team)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+	if err = a.app.UpsertTeamSignupToken(*team); err != nil {
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -198,6 +196,11 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	//   description: string to filter users list
 	//   required: false
 	//   type: string
+	// - name: exclude_bots
+	//   in: query
+	//   description: exclude bot users
+	//   required: false
+	//   type: boolean
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -217,9 +220,10 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	query := r.URL.Query()
 	searchQuery := query.Get("search")
+	excludeBots := r.URL.Query().Get("exclude_bots") == True
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "Access denied to team", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
@@ -228,7 +232,7 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	asGuestUser := ""
@@ -236,15 +240,15 @@ func (a *API) handleGetTeamUsers(w http.ResponseWriter, r *http.Request) {
 		asGuestUser = userID
 	}
 
-	users, err := a.app.SearchTeamUsers(teamID, searchQuery, asGuestUser)
+	users, err := a.app.SearchTeamUsers(teamID, searchQuery, asGuestUser, excludeBots)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "searchQuery="+searchQuery, err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(users)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

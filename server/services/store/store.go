@@ -32,6 +32,7 @@ type Store interface {
 	// @withTransaction
 	UndeleteBoard(boardID string, modifiedBy string) error
 	GetBlockCountsByType() (map[string]int64, error)
+	GetBoardCount() (int64, error)
 	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
@@ -58,13 +59,13 @@ type Store interface {
 	GetUsersList(userIDs []string) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
-	CreateUser(user *model.User) error
-	UpdateUser(user *model.User) error
+	CreateUser(user *model.User) (*model.User, error)
+	UpdateUser(user *model.User) (*model.User, error)
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
 	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error)
-	PatchUserProps(userID string, patch model.UserPropPatch) error
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error)
+	PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error)
 	GetUserPreferences(userID string) (mmModel.Preferences, error)
 
 	GetActiveUserCount(updatedSecondsAgo int64) (int, error)

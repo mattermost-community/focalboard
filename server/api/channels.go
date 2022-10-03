@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -50,7 +51,7 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	if !a.MattermostAuth {
-		a.errorResponse(w, r.URL.Path, http.StatusNotImplemented, "not permitted in standalone mode", nil)
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
 		return
 	}
 
@@ -59,12 +60,12 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to team"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 
 	if !a.permissions.HasPermissionToChannel(userID, channelID, model.PermissionReadChannel) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to channel"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to channel"))
 		return
 	}
 
@@ -75,7 +76,7 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 
 	channel, err := a.app.GetChannel(teamID, channelID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -86,14 +87,15 @@ func (a *API) handleGetChannel(w http.ResponseWriter, r *http.Request) {
 
 	if channel.TeamId != teamID {
 		if channel.Type != mm_model.ChannelTypeDirect && channel.Type != mm_model.ChannelTypeGroup {
-			a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+			message := fmt.Sprintf("channel ID=%s on TeamID=%s", channel.Id, teamID)
+			a.errorResponse(w, r, model.NewErrNotFound(message))
 			return
 		}
 	}
 
 	data, err := json.Marshal(channel)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

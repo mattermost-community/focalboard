@@ -38,7 +38,7 @@ describe('properties/createdBy', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <CreatedBy
-                    property={new CreatedByProperty}
+                    property={new CreatedByProperty()}
                     board={{} as Board}
                     card={card}
                     readOnly={false}
@@ -46,7 +46,7 @@ describe('properties/createdBy', () => {
                     propertyValue={''}
                     showEmptyPlaceholder={false}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
         const {container} = render(component)
@@ -74,7 +74,7 @@ describe('properties/createdBy', () => {
         const component = wrapIntl(
             <ReduxProvider store={store}>
                 <CreatedBy
-                    property={new CreatedByProperty}
+                    property={new CreatedByProperty()}
                     board={{} as Board}
                     card={card}
                     readOnly={false}
@@ -82,10 +82,10 @@ describe('properties/createdBy', () => {
                     propertyValue={''}
                     showEmptyPlaceholder={false}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         )
 
-        const {container} = render(component)
+        const {container} = render(wrapIntl(component))
         expect(container).toMatchSnapshot()
     })
 })

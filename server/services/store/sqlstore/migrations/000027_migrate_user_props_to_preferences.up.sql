@@ -38,15 +38,15 @@
         UPDATE {{.prefix}}users SET props = (props::jsonb - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion')::json;
 
     {{else}}
-            {{- /* Surprisingly SQLite and MySQL have same JSON functions and syntax! */ -}}
+        {{- /* Surprisingly SQLite and MySQL have same JSON functions and syntax! */ -}}
 
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'welcomePageViewed', replace(JSON_EXTRACT(Props, '$."focalboard_welcomePageViewed"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_welcomePageViewed') IS NOT NULL;
-        INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'hiddenBoardIDs', replace(replace(replace(JSON_EXTRACT(Props, '$."hiddenBoardIDs'), '"[', '['), ']"', ']'), '\\"', '"') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.hiddenBoardIDs') IS NOT NULL;
+        INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'hiddenBoardIDs', replace(replace(replace(JSON_EXTRACT(Props, '$."hiddenBoardIDs"'), '"[', '['), ']"', ']'), '\\"', '"') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.hiddenBoardIDs') IS NOT NULL;
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'tourCategory', replace(JSON_EXTRACT(Props, '$."focalboard_tourCategory"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_tourCategory') IS NOT NULL;
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'onboardingTourStep', replace(JSON_EXTRACT(Props, '$."focalboard_onboardingTourStep"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_onboardingTourStep') IS NOT NULL;
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'onboardingTourStarted', replace(JSON_EXTRACT(Props, '$."focalboard_onboardingTourStarted"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_onboardingTourStarted') IS NOT NULL;
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'version72MessageCanceled', replace(JSON_EXTRACT(Props, '$."focalboard_version72MessageCanceled"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_version72MessageCanceled') IS NOT NULL;
-        INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'lastWelcomeVersion', replace(JSON_EXTRACT(Props, 'focalboard_lastWelcomeVersion"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_lastWelcomeVersion') IS NOT NULL;
+        INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'lastWelcomeVersion', replace(JSON_EXTRACT(Props, '$."focalboard_lastWelcomeVersion"'), '"', '') from {{.prefix}}users WHERE JSON_EXTRACT(Props, '$.focalboard_lastWelcomeVersion') IS NOT NULL;
 
         UPDATE {{.prefix}}users SET Props =  JSON_REMOVE(Props, '$."focalboard_welcomePageViewed"', '$."hiddenBoardIDs"', '$."focalboard_tourCategory"', '$."focalboard_onboardingTourStep"', '$."focalboard_onboardingTourStarted"', '$."focalboard_version72MessageCanceled"', '$."focalboard_lastWelcomeVersion"');
     {{end}}

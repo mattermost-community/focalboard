@@ -158,18 +158,24 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
           <div
             class="toolbar"
           >
-            <button
-              aria-label="Close dialog"
-              title="Close dialog"
-              type="button"
-            >
-              <i
-                class="CompassIcon icon-close CloseIcon"
+            <div>
+              <h1
+                class="dialog-title"
               />
-            </button>
+            </div>
             <div
               class="toolbar--right"
-            />
+            >
+              <button
+                aria-label="Close dialog"
+                title="Close dialog"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-close CloseIcon"
+                />
+              </button>
+            </div>
           </div>
           <div
             class="container"

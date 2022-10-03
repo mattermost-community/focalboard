@@ -31,6 +31,7 @@ function FBRoute(props: RouteProps) {
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     let redirect: React.ReactNode = null
+
     // No FTUE for guests
     const disableTour = me?.is_guest || clientConfig?.featureFlags?.disableTour || false
 

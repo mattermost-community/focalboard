@@ -48,7 +48,7 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
     },
 )
 
-const limitCard = (isBoardTemplate: boolean, limitTimestamp:number, card: Card): Card => {
+const limitCard = (isBoardTemplate: boolean, limitTimestamp: number, card: Card): Card => {
     if (isBoardTemplate) {
         return card
     }
@@ -296,6 +296,22 @@ function sortCards(cards: Card[], lastCommentByCard: {[key: string]: CommentBloc
                     if (template.type === 'select' || template.type === 'multiSelect') {
                         aValue = template.options.find((o) => o.id === (Array.isArray(aValue) ? aValue[0] : aValue))?.value || ''
                         bValue = template.options.find((o) => o.id === (Array.isArray(bValue) ? bValue[0] : bValue))?.value || ''
+                    }
+
+                    if (template.type === 'multiPerson') {
+                        aValue = Array.isArray(aValue) && aValue.length !== 0 && usersById !== {} ? aValue.map((id) => {
+                            if (usersById[id] !== undefined) {
+                                return usersById[id].username
+                            }
+                            return ''
+                        }).toString() : aValue
+
+                        bValue = Array.isArray(bValue) && bValue.length !== 0 && usersById !== {} ? bValue.map((id) => {
+                            if (usersById[id] !== undefined) {
+                                return usersById[id].username
+                            }
+                            return ''
+                        }).toString() : bValue
                     }
 
                     result = (aValue as string).localeCompare(bValue as string)

@@ -7,8 +7,7 @@ import '@testing-library/jest-dom'
 
 import {wrapIntl} from '../../testUtils'
 
-import NotificationBox from "./notificationBox"
-
+import NotificationBox from './notificationBox'
 
 describe('widgets/NotificationBox', () => {
     beforeEach(() => {

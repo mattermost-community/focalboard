@@ -81,7 +81,7 @@ export const loadBoards = createAsyncThunk(
     },
 )
 
-export const getUserBlockSubscriptions = (state: RootState): Array<Subscription> => state.users.blockSubscriptions
+export const getUserBlockSubscriptions = (state: RootState): Subscription[] => state.users.blockSubscriptions
 
 export const getUserBlockSubscriptionList = createSelector(
     getUserBlockSubscriptions,

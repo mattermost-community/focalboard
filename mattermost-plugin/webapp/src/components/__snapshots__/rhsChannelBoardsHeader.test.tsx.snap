@@ -5,7 +5,7 @@ exports[`components/rhsChannelBoardsHeader renders the header 1`] = `
   <div>
     <img
       class="boards-rhs-header-logo"
-      src="undefined/public/app-bar-icon.png"
+      src="test-file-stub"
     />
     <span>
       Boards

@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import {PropertyTypeEnum} from '../blocks/board'
 
 import CreatedTimeProperty from './createdTime/property'
@@ -13,13 +15,14 @@ import SelectProperty from './select/property'
 import MultiSelectProperty from './multiselect/property'
 import DateProperty from './date/property'
 import PersonProperty from './person/property'
+import MultiPersonProperty from './multiperson/property'
 import CheckboxProperty from './checkbox/property'
 import UnknownProperty from './unknown/property'
 
 import {PropertyType} from './types'
 
 class PropertiesRegistry {
-    properties: {[key:string]: PropertyType} = {}
+    properties: {[key: string]: PropertyType} = {}
     propertiesList: PropertyType[] = []
     unknownProperty: PropertyType = new UnknownProperty()
 
@@ -30,7 +33,7 @@ class PropertiesRegistry {
 
     unregister(prop: PropertyType) {
         delete this.properties[prop.type]
-        this.propertiesList = this.propertiesList.filter((p) => p.type == prop.type)
+        this.propertiesList = this.propertiesList.filter((p) => p.type === prop.type)
     }
 
     list() {
@@ -52,6 +55,7 @@ registry.register(new SelectProperty())
 registry.register(new MultiSelectProperty())
 registry.register(new DateProperty())
 registry.register(new PersonProperty())
+registry.register(new MultiPersonProperty())
 registry.register(new CheckboxProperty())
 registry.register(new CreatedTimeProperty())
 registry.register(new CreatedByProperty())

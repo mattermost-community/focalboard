@@ -128,9 +128,9 @@ describe('components/sidebar/GlobalHeaderSettingsMenu', () => {
 
         expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id', {
             updatedFields: {
-                'onboardingTourStarted': '1',
-                'onboardingTourStep': '0',
-                'tourCategory': 'onboarding',
+                onboardingTourStarted: '1',
+                onboardingTourStep: '0',
+                tourCategory: 'onboarding',
             },
         })
     })

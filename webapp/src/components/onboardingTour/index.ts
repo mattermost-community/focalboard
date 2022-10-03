@@ -33,7 +33,7 @@ export const TOUR_ORDER = [
     TOUR_BASE,
     TOUR_CARD,
     TOUR_BOARD,
-    TOUR_SIDEBAR
+    TOUR_SIDEBAR,
 ]
 
 export const TourCategoriesMapToSteps: Record<string, Record<string, number>> = {

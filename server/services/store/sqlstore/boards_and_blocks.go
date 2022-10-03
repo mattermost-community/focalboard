@@ -1,7 +1,6 @@
 package sqlstore
 
 import (
-	"database/sql"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -114,9 +113,6 @@ func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoa
 		block, err := s.getBlock(db, blockID)
 		if err != nil {
 			return err
-		}
-		if block == nil {
-			return sql.ErrNoRows
 		}
 
 		if _, ok := boardIDMap[block.BoardID]; !ok {

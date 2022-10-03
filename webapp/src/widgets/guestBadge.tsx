@@ -7,7 +7,7 @@ import {FormattedMessage} from 'react-intl'
 import './guestBadge.scss'
 
 type Props = {
-    show?: boolean;
+    show?: boolean
 }
 
 const GuestBadge = (props: Props) => {

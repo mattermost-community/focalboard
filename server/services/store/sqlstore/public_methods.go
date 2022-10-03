@@ -119,7 +119,7 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 
 }
 
-func (s *SQLStore) CreateUser(user *model.User) error {
+func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 	return s.createUser(s.db, user)
 
 }
@@ -341,6 +341,11 @@ func (s *SQLStore) GetBoardAndCard(block *model.Block) (*model.Board, *model.Blo
 
 func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Block, error) {
 	return s.getBoardAndCardByID(s.db, blockID)
+
+}
+
+func (s *SQLStore) GetBoardCount() (int64, error) {
+	return s.getBoardCount(s.db)
 
 }
 
@@ -717,8 +722,8 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 
 }
 
-func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	return s.patchUserProps(s.db, userID, patch)
+func (s *SQLStore) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+	return s.patchUserPreferences(s.db, userID, patch)
 
 }
 
@@ -786,8 +791,8 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots)
 
 }
 
@@ -869,7 +874,7 @@ func (s *SQLStore) UpdateSubscribersNotifiedAt(blockID string, notifiedAt int64)
 
 }
 
-func (s *SQLStore) UpdateUser(user *model.User) error {
+func (s *SQLStore) UpdateUser(user *model.User) (*model.User, error) {
 	return s.updateUser(s.db, user)
 
 }

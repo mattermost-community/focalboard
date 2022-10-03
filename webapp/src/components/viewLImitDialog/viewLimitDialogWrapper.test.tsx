@@ -2,26 +2,25 @@
 // See LICENSE.txt for license information.
 import React from 'react'
 
-import {render, waitFor} from "@testing-library/react"
+import {render, waitFor} from '@testing-library/react'
 
 import '@testing-library/jest-dom'
 
+import {Provider as ReduxProvider} from 'react-redux'
 
-import {Provider as ReduxProvider} from "react-redux"
+import {MemoryRouter} from 'react-router-dom'
 
-import {MemoryRouter} from "react-router-dom"
+import userEvent from '@testing-library/user-event'
 
-import userEvent from "@testing-library/user-event"
+import {mocked} from 'jest-mock'
 
-import {mocked} from "jest-mock"
+import {mockStateStore, wrapDNDIntl} from '../../testUtils'
+import {TestBlockFactory} from '../../test/testBlockFactory'
+import {Board} from '../../blocks/board'
 
-import {mockStateStore, wrapDNDIntl} from "../../testUtils"
-import {TestBlockFactory} from "../../test/testBlockFactory"
-import {Board} from "../../blocks/board"
+import client from '../../octoClient'
 
-import client from "../../octoClient"
-
-import ViewLimitModalWrapper from "./viewLimitDialogWrapper"
+import ViewLimitModalWrapper from './viewLimitDialogWrapper'
 
 jest.mock('../../octoClient')
 const mockedOctoClient = mocked(client, true)
@@ -45,7 +44,7 @@ describe('components/viewLimitDialog/ViewL]imitDialog', () => {
                 [board.id]: board,
             },
             current: board.id,
-        }
+        },
     }
 
     const store = mockStateStore([], state)
@@ -63,7 +62,7 @@ describe('components/viewLimitDialog/ViewL]imitDialog', () => {
                     onClose={handleOnClose}
                     show={true}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         ), {wrapper: MemoryRouter})
         expect(container).toMatchSnapshot()
     })
@@ -78,7 +77,7 @@ describe('components/viewLimitDialog/ViewL]imitDialog', () => {
                     onClose={handleOnClose}
                     show={true}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         ), {wrapper: MemoryRouter})
 
         const notifyBtn = container.querySelector('button.primaryAction')

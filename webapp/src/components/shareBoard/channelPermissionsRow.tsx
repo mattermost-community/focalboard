@@ -21,12 +21,12 @@ import PrivateIcon from '../../widgets/icons/lockOutline'
 import PublicIcon from '../../widgets/icons/globe'
 import DeleteIcon from '../../widgets/icons/delete'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import ConfirmationDialogBox from "../confirmationDialogBox"
+import ConfirmationDialogBox from '../confirmationDialogBox'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 type Props = {
-    teammateNameDisplay: string,
+    teammateNameDisplay?: string
 }
 
 const ChannelPermissionsRow = (props: Props): JSX.Element => {
@@ -48,7 +48,16 @@ const ChannelPermissionsRow = (props: Props): JSX.Element => {
             setLinkedChannel(null)
             return
         }
-        octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c || null))
+        const unknownChannel = {
+            id: board.channelId,
+            type: 'P',
+            name: 'unknown',
+            display_name: intl.formatMessage({
+                id: 'shareBoard.unknown-channel-display-name',
+                defaultMessage: 'Unknown channel',
+            }),
+        } as Channel
+        octoClient.getChannel(board.teamId, board.channelId).then((c) => setLinkedChannel(c || unknownChannel))
     }, [board.channelId])
 
     if (!linkedChannel) {
@@ -77,13 +86,13 @@ const ChannelPermissionsRow = (props: Props): JSX.Element => {
     )
 
     const getDMName = () => {
-        const userIds = linkedChannel.name.split("__")
+        const userIds = linkedChannel.name.split('__')
         if (userIds.length !== 2) {
             Utils.logError('Invalid DM channel name, unable to get user ids')
         }
-        let result = Utils.getUserDisplayName(users[userIds[0]], props.teammateNameDisplay)
-        result += ", "
-        result += Utils.getUserDisplayName(users[userIds[1]], props.teammateNameDisplay)
+        let result = Utils.getUserDisplayName(users[userIds[0]], props.teammateNameDisplay || '')
+        result += ', '
+        result += Utils.getUserDisplayName(users[userIds[1]], props.teammateNameDisplay || '')
         return result
     }
 

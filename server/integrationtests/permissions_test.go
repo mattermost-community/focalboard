@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -38,7 +38,7 @@ type TestCase struct {
 	url                string
 	method             string
 	body               string
-	userRole           string // userAnon, userNoTeamMember, userTeamMember, userViewer, userCommenter, userEditor or userAdmin
+	userRole           string // userAnon, userNoTeamMember, userTeamMember, userViewer, userCommenter, userEditor, userAdmin or userGuest
 	expectedStatusCode int
 	totalResults       int
 }
@@ -301,7 +301,7 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 				require.NoError(t, err)
 			}
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
-				body, err := ioutil.ReadAll(response.Body)
+				body, err := io.ReadAll(response.Body)
 				if err != nil {
 					require.Fail(t, err.Error())
 				}
@@ -2561,7 +2561,7 @@ func TestPermissionsUserChangePassword(t *testing.T) {
 }
 
 func TestPermissionsUpdateUserConfig(t *testing.T) {
-	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
+	patch := toJSON(t, model.UserPreferencesPatch{UpdatedFields: map[string]string{"test": "test"}})
 
 	ttCases := []TestCase{
 		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},

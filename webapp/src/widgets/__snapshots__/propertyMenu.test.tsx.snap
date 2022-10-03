@@ -33,15 +33,9 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
             >
               Type: Text
             </div>
-            <svg
-              class="SubmenuTriangleIcon Icon"
-              viewBox="0 0 100 100"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <polygon
-                points="50,35 75,50 50,65"
-              />
-            </svg>
+            <i
+              class="CompassIcon icon-chevron-right"
+            />
             <div
               class="SubMenu Menu noselect bottom"
             >
@@ -290,6 +284,31 @@ exports[`widgets/PropertyMenu should match snapshot 1`] = `
                         class="menu-name"
                       >
                         Person
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Multi person"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Multi person
                       </div>
                     </div>
                     <div

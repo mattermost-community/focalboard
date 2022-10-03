@@ -4,8 +4,11 @@ go 1.18
 
 require (
 	github.com/golang/mock v1.6.0
+	github.com/gorilla/mux v1.8.0
+	github.com/mattermost/focalboard/server v0.0.0-20220818150333-feb49eaf197a
 	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
-	github.com/stretchr/testify v1.7.2
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20220802151854-f07c31c5d933
+	github.com/stretchr/testify v1.8.0
 )
 
 require (
@@ -69,7 +72,6 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/handlers v1.5.1 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/graph-gophers/graphql-go v1.4.0 // indirect
 	github.com/h2non/go-is-svg v0.0.0-20160927212452-35e8c4b0612c // indirect
@@ -96,7 +98,6 @@ require (
 	github.com/mattermost/go-i18n v1.11.1-0.20211013152124-5c415071e404 // indirect
 	github.com/mattermost/ldap v0.0.0-20201202150706-ee0e6284187d // indirect
 	github.com/mattermost/logr/v2 v2.0.15 // indirect
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20220802151854-f07c31c5d933 // indirect
 	github.com/mattermost/morph v0.0.0-20220401091636-39f834798da8 // indirect
 	github.com/mattermost/rsc v0.0.0-20160330161541-bbaefb05eaa0 // indirect
 	github.com/mattermost/squirrel v0.2.0 // indirect
@@ -136,7 +137,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/richardlehane/mscfb v1.0.4 // indirect
 	github.com/richardlehane/msoleps v1.0.3 // indirect
-	github.com/rivo/uniseg v0.2.0 // indirect
+	github.com/rivo/uniseg v0.3.4 // indirect
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/rudderlabs/analytics-go v3.3.2+incompatible // indirect

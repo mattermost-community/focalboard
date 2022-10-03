@@ -25,7 +25,7 @@ func StoreTestCategoryStore(t *testing.T, setup func(t *testing.T) (store.Store,
 		defer tearDown()
 		testDeleteCategory(t, store)
 	})
-	t.Run("GetUserCategoriesCategory", func(t *testing.T) {
+	t.Run("GetUserCategories", func(t *testing.T) {
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetUserCategories(t, store)
@@ -79,6 +79,14 @@ func testGetCreateCategory(t *testing.T, store store.Store) {
 		assert.Equal(t, "user_id_1", createdCategory.UserID)
 		assert.Equal(t, "team_id_1", createdCategory.TeamID)
 		assert.Equal(t, true, createdCategory.Collapsed)
+	})
+
+	t.Run("get nonexistent category", func(t *testing.T) {
+		category, err := store.GetCategory("nonexistent")
+		assert.Error(t, err)
+		var nf *model.ErrNotFound
+		assert.ErrorAs(t, err, &nf)
+		assert.Nil(t, category)
 	})
 }
 
