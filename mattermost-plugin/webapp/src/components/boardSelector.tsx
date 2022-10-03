@@ -138,7 +138,6 @@ const BoardSelector = () => {
     }
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        console.log(event.key)
         if(event.key == 'Escape') {
             closeDialog()
         }
