@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -129,15 +130,17 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 	boardsInsights := []*model.BoardInsight{}
 	for rows.Next() {
 		var boardInsight model.BoardInsight
-
+		var activeUsersString string
 		err := rows.Scan(
 			&boardInsight.BoardID,
 			&boardInsight.Title,
 			&boardInsight.Icon,
 			&boardInsight.ActivityCount,
-			&boardInsight.ActiveUsers,
+			&activeUsersString,
 			&boardInsight.CreatedBy,
 		)
+		// split activeUsersString into slice
+		boardInsight.ActiveUsers = strings.Split(activeUsersString, ",")
 		if err != nil {
 			return nil, err
 		}
