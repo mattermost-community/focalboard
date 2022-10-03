@@ -676,6 +676,27 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		})
 	}
 
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	// NOTE: theoretically, could do e.g. `isGuest := !includePublicBoards`
+	// but that introduces some tight coupling + fragility
+	if user.IsGuest {
+		var explicitMembers []*model.BoardMember
+		explicitMembers, err = s.Store.GetMembersForUser(userID)
+		if err != nil {
+			s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+			return nil, err
+		}
+		boardIDs := []string{}
+		for _, m := range explicitMembers {
+			boardIDs = append(boardIDs, m.BoardID)
+		}
+		// Only explicit memberships for guests
+		query = query.Where(sq.Eq{"b.id": boardIDs})
+	}
+
 	if term != "" {
 		// break search query into space separated words
 		// and search for all words.
