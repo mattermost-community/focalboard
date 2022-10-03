@@ -353,9 +353,7 @@ class Mutator {
 
     // Board Members
 
-    async createBoardMember(boardId: string, userId: string, description = 'create board member'): Promise<void> {
-        const member = {boardId, userId, schemeEditor: true} as BoardMember
-
+    async createBoardMember(member: BoardMember, description = 'create board member'): Promise<void> {
         await undoManager.perform(
             async () => {
                 await octoClient.createBoardMember(member)
@@ -1110,7 +1108,7 @@ class Mutator {
         const boardTemplate = createBoard()
         boardTemplate.isTemplate = true
         boardTemplate.teamId = teamId
-        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateDefaultTitle', defaultMessage: 'Untitled Template'})
 
         const view = createBoardView()
         view.fields.viewType = 'board'
