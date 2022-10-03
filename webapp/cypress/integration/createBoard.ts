@@ -2,7 +2,13 @@
 // See LICENSE.txt for license information.
 
 describe('Create and delete board / card', () => {
-    const timestamp = new Date().toLocaleString()
+    const timestamp = new Date().toLocaleString('en-US', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+    })
     const boardTitle = `Test Board (${timestamp})`
     const cardTitle = `Test Card (${timestamp})`
 
