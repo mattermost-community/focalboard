@@ -187,11 +187,16 @@ func (b *Backend) deliverMentionNotification(username string, extract string, ev
 			// add mentioned user to board (if not already a member)
 			member, err := b.appAPI.GetMemberForBoard(evt.Board.ID, mentionedUser.Id)
 			if member == nil || model.IsErrNotFound(err) {
-				// currently all memberships are created as editors by default
+				// create memberships based on minimum board role
 				newBoardMember := &model.BoardMember{
-					UserID:       mentionedUser.Id,
-					BoardID:      evt.Board.ID,
-					SchemeEditor: true,
+					UserID:  mentionedUser.Id,
+					BoardID: evt.Board.ID,
+					SchemeViewer: evt.Board.MinimumRole == model.BoardRoleViewer ||
+						evt.Board.MinimumRole == model.BoardRoleCommenter ||
+						evt.Board.MinimumRole == model.BoardRoleEditor,
+					SchemeCommenter: evt.Board.MinimumRole == model.BoardRoleCommenter ||
+						evt.Board.MinimumRole == model.BoardRoleEditor,
+					SchemeEditor: evt.Board.MinimumRole == model.BoardRoleEditor,
 				}
 				if _, err = b.appAPI.AddMemberToBoard(newBoardMember); err != nil {
 					return "", fmt.Errorf("cannot add mentioned user %s to board %s: %w", mentionedUser.Id, evt.Board.ID, err)

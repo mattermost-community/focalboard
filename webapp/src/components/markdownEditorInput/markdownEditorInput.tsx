@@ -20,7 +20,7 @@ import {getBoardUsersList, getMe} from '../../store/users'
 import createLiveMarkdownPlugin from '../live-markdown-plugin/liveMarkdownPlugin'
 import {useHasPermissions} from '../../hooks/permissions'
 import {Permission} from '../../constants'
-import {BoardMember, BoardTypeOpen} from '../../blocks/board'
+import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 import mutator from '../../mutator'
 import ConfirmAddUserForNotifications from '../confirmAddUserForNotifications'
 import RootPortal from '../rootPortal'
@@ -63,7 +63,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const board = useAppSelector(getCurrentBoard)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const ref = useRef<Editor>(null)
-    const allowAddUsers = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
+    const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -72,7 +72,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const loadSuggestions = async (term: string) => {
         let users: IUser[]
 
-        if (!me?.is_guest && (allowAddUsers || (board && board.type === BoardTypeOpen))) {
+        if (!me?.is_guest && (allowManageBoardRoles || (board && board.type === BoardTypeOpen))) {
             const excludeBots = true
             users = await octoClient.searchTeamUsers(term, excludeBots)
         } else {
@@ -120,21 +120,20 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
 
     const addUser = useCallback(async (userId: string, role: string) => {
+        const minimumRole = role || MemberRole.Viewer
         const newMember = {
             boardId: board.id,
             userId,
             roles: role,
-            schemeAdmin: role === 'Admin',
-            schemeEditor: role === 'Admin' || role === 'Editor',
-            schemeCommenter: role === 'Admin' || role === 'Editor' || role === 'Commenter',
-            schemeViewer: role === 'Admin' || role === 'Editor' || role === 'Commenter' || role === 'Viewer',
+            schemeEditor: minimumRole === MemberRole.Editor,
+            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
+            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
         setEditorState(EditorState.moveSelectionToEnd(editorState))
         ref.current?.focus()
-        await mutator.createBoardMember(board.id, newMember.userId)
-        mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
+        await mutator.createBoardMember(newMember)
     }, [board, editorState])
 
     const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
@@ -285,6 +284,8 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             {confirmAddUser &&
                 <RootPortal>
                     <ConfirmAddUserForNotifications
+                        allowManageBoardRoles={allowManageBoardRoles}
+                        minimumRole={board.minimumRole}
                         user={confirmAddUser}
                         onConfirm={addUser}
                         onClose={() => {
