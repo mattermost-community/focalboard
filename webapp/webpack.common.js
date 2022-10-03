@@ -1,7 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-const tsTransformer = require('@formatjs/ts-transformer');
 const path = require('path');
+
+const tsTransformer = require('@formatjs/ts-transformer');
 const CopyPlugin = require('copy-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -70,8 +71,8 @@ function makeCommonConfig() {
                     test: /\.(eot|tiff|svg|woff2|woff|ttf|png|jpg|jpeg|gif)$/,
                     type: 'asset/resource',
                     generator: {
-                        filename: 'static/[name].[ext]',
-                    }
+                        filename: 'static/[name][ext]',
+                    },
                 },
             ],
         },

@@ -63,7 +63,9 @@ const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
+    const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
     const me: IUser = boardUsersById[propertyValue as string]
@@ -108,8 +110,6 @@ const Person = (props: PropertyProps): JSX.Element => {
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
     }, [board, card, propertyTemplate])
 
-    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
-
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const allowAddUsers = allowManageBoardRoles || board.type === BoardTypeOpen
 
@@ -153,6 +153,7 @@ const Person = (props: PropertyProps): JSX.Element => {
                 onClose={() => setConfirmAddUser(null)}
             />}
             <Select
+                key={boardUsersKey}
                 loadOptions={loadOptions}
                 defaultOptions={true}
                 isSearchable={true}
