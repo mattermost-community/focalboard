@@ -151,7 +151,10 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err == app.ErrFileNotFound {
-		// prior to moving from
+		// prior to moving from workspaces to teams, the filepath was constructed from
+		// workspaceID, which is the channel ID in plugin mode.
+		// If a file is not found from team ID as we tried above, try looking for it via
+		// channel ID.
 		fileReader, err = a.app.GetFileReader(board.ChannelID, boardID, filename)
 		if err != nil {
 			a.errorResponse(w, r, err)
