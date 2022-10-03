@@ -15,6 +15,7 @@
     .Person-item {
         display: flex;
         align-items: center;
+        color: rgba(var(--center-channel-color-rgb), 1);
 
         img {
             border-radius: 50px;
