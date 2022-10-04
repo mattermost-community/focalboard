@@ -62,32 +62,29 @@ const TeamPermissionsRow = (): JSX.Element => {
         currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
     }
 
-
     const confirmationDialog = (
         <ConfirmationDialogBox
             dialogBox={{
                 heading: intl.formatMessage({
                     id: 'shareBoard.confirm-change-team-role.title',
-                    defaultMessage: 'Make board public',
+                    defaultMessage: 'Change minimum board role',
                 }),
                 subText: intl.formatMessage({
                     id: 'shareBoard.confirm-change-team-role.body',
-                    defaultMessage: 'Everyone on the board that has a lower permission than the "{role}" role will <b>now be promoted to be {role}</b>. Are you sure you want to make this board public?',
+                    defaultMessage: 'Everyone on the board that has a lower permission than the "{role}" role will <b>now be promoted to {role}</b>. Are you sure you want to change the minimum role for the board?',
                 }, {
                     b: (...chunks) => <b>{chunks}</b>,
                     role: changeRoleConfirmation === MemberRole.Editor ? intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'}) : intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'}),
                 }),
                 confirmButtonText: intl.formatMessage({
                     id: 'shareBoard.confirm-change-team-role.confirmBtnText',
-                    defaultMessage: 'Make board public',
+                    defaultMessage: 'Change board role',
                 }),
                 onConfirm: onChangeRole,
                 onClose: () => setChangeRoleConfirmation(null),
             }}
         />
     )
-
-
 
     return (
         <div className='user-item'>
