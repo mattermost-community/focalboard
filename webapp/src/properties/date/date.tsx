@@ -30,7 +30,7 @@ export type DateProperty = {
     timeZone?: string
 }
 
-export function createDatePropertyFromString(initialValue: string) : DateProperty {
+export function createDatePropertyFromString(initialValue: string): DateProperty {
     let dateProperty: DateProperty = {}
     if (initialValue) {
         const singleDate = new Date(Number(initialValue))
@@ -97,7 +97,7 @@ function DateRange(props: PropertyProps): JSX.Element {
     }
 
     const handleDayClick = (day: Date) => {
-        const range : DateProperty = {}
+        const range: DateProperty = {}
         if (isRange) {
             const newRange = DateUtils.addDayToRange(day, {from: dateFrom, to: dateTo})
             range.from = newRange.from?.getTime()
@@ -110,7 +110,7 @@ function DateRange(props: PropertyProps): JSX.Element {
     }
 
     const onRangeClick = () => {
-        let range : DateProperty = {
+        let range: DateProperty = {
             from: dateFrom?.getTime(),
             to: dateFrom?.getTime(),
         }
@@ -196,7 +196,7 @@ function DateRange(props: PropertyProps): JSX.Element {
                                         const newDate = MomentLocaleUtils.parseDate(fromInput, 'L', intl.locale)
                                         if (newDate && DateUtils.isDate(newDate)) {
                                             newDate.setHours(12)
-                                            const range : DateProperty = {
+                                            const range: DateProperty = {
                                                 from: newDate.getTime(),
                                                 to: dateTo?.getTime(),
                                             }
@@ -224,7 +224,7 @@ function DateRange(props: PropertyProps): JSX.Element {
                                             const newDate = MomentLocaleUtils.parseDate(toInput, 'L', intl.locale)
                                             if (newDate && DateUtils.isDate(newDate)) {
                                                 newDate.setHours(12)
-                                                const range : DateProperty = {
+                                                const range: DateProperty = {
                                                     from: dateFrom?.getTime(),
                                                     to: newDate.getTime(),
                                                 }

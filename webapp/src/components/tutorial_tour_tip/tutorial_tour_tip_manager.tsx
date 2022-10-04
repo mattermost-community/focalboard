@@ -14,29 +14,29 @@ import {Utils, KeyCodes} from '../../utils'
 import TelemetryClient, {TelemetryCategory} from '../../telemetry/telemetryClient'
 
 export interface TutorialTourTipManager {
-    show: boolean;
-    tourSteps: Record<string, number>;
-    getLastStep: () => number;
-    handleOpen: (e: React.MouseEvent) => void;
-    handleHide: (e: React.MouseEvent) => void;
-    handleSkipTutorial: (e: React.MouseEvent) => void;
-    handleDismiss: (e: React.MouseEvent) => void;
-    handleSavePreferences: (step: number) => void;
-    handlePrevious: (e: React.MouseEvent) => void;
-    handleNext: (e?: React.MouseEvent) => void;
+    show: boolean
+    tourSteps: Record<string, number>
+    getLastStep: () => number
+    handleOpen: (e: React.MouseEvent) => void
+    handleHide: (e: React.MouseEvent) => void
+    handleSkipTutorial: (e: React.MouseEvent) => void
+    handleDismiss: (e: React.MouseEvent) => void
+    handleSavePreferences: (step: number) => void
+    handlePrevious: (e: React.MouseEvent) => void
+    handleNext: (e?: React.MouseEvent) => void
     handleEventPropagationAndDefault: (e: React.MouseEvent | KeyboardEvent) => void
     handleSendToNextTour: (currentTourCategory: string) => Promise<void>
 }
 
 export type TutorialTourTipManagerProps = {
-    autoTour?: boolean;
-    telemetryTag?: string;
-    tutorialCategory: string;
-    step: number;
-    onNextNavigateTo?: () => void;
-    onPrevNavigateTo?: () => void;
-    stopPropagation?: boolean;
-    preventDefault?: boolean;
+    autoTour?: boolean
+    telemetryTag?: string
+    tutorialCategory: string
+    step: number
+    onNextNavigateTo?: () => void
+    onPrevNavigateTo?: () => void
+    stopPropagation?: boolean
+    preventDefault?: boolean
 }
 
 const useTutorialTourTipManager = ({

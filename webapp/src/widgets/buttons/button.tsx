@@ -45,7 +45,8 @@ function Button(props: Props): JSX.Element {
             {!props.rightIcon && props.icon}
             <span>{props.children}</span>
             {props.rightIcon && props.icon}
-        </button>)
+        </button>
+    )
 }
 
 export default React.memo(Button)

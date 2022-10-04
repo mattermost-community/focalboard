@@ -18,7 +18,7 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './versionMessage.scss'
-const helpURL = 'https://docs.mattermost.com/welcome/whats-new-in-v72.html'
+const helpURL = 'https://mattermost.com/pl/whats-new-boards/'
 
 const VersionMessage = React.memo(() => {
     const intl = useIntl()
@@ -39,13 +39,13 @@ const VersionMessage = React.memo(() => {
         if (me) {
             const patch: UserConfigPatch = {
                 updatedFields: {
-                    [versionProperty]: 'true'
+                    [versionProperty]: 'true',
                 },
             }
             const patchedProps = await octoClient.patchUserConfig(me.id, patch)
             if (patchedProps) {
                 dispatch(patchProps(patchedProps))
-            }    
+            }
         }
     }
 

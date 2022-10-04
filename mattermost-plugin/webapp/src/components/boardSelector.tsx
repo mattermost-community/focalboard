@@ -120,12 +120,12 @@ const BoardSelector = () => {
     if (showLinkBoardConfirmation?.channelId !== '') {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
-            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
         }, {boardName: showLinkBoardConfirmation?.title, lineBreak: <p/>})
     } else {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext',
-            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. You can unlink a board from a channel at any time.'
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests. You can unlink a board from a channel at any time.'
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
@@ -133,6 +133,23 @@ const BoardSelector = () => {
         <div className='focalboard-body'>
             <Dialog
                 className='BoardSelector'
+                title={
+                    <FormattedMessage
+                        id='boardSelector.title'
+                        defaultMessage='Link boards'
+                    />
+                }
+                toolbar={
+                    <Button
+                        onClick={() => newLinkedBoard()}
+                        emphasis='secondary'
+                    >
+                        <FormattedMessage
+                            id='boardSelector.create-a-board'
+                            defaultMessage='Create a board'
+                        />
+                    </Button>
+                }
                 onClose={() => {
                     dispatch(setLinkToChannel(''))
                     setResults([])
@@ -154,23 +171,6 @@ const BoardSelector = () => {
                     />}
                 <div className='BoardSelectorBody'>
                     <div className='head'>
-                        <div className='heading'>
-                            <h3 className='text-heading4'>
-                                <FormattedMessage
-                                    id='boardSelector.title'
-                                    defaultMessage='Link boards'
-                                />
-                            </h3>
-                            <Button
-                                onClick={() => newLinkedBoard()}
-                                emphasis='secondary'
-                            >
-                                <FormattedMessage
-                                    id='boardSelector.create-a-board'
-                                    defaultMessage='Create a board'
-                                />
-                            </Button>
-                        </div>
                         <div className='queryWrapper'>
                             <SearchIcon/>
                             <input

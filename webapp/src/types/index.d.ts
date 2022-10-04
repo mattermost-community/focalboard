@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 type TelemetryProps = {
-    trackingLocation: string;
+    trackingLocation: string
 }
 export interface IAppWindow extends Window {
     baseURL?: string

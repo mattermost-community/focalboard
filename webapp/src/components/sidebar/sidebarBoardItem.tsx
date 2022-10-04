@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, { useCallback, useRef, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
-import {generatePath, useHistory, useRouteMatch} from "react-router-dom"
+import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
 import {BoardView, IViewType} from '../../blocks/boardView'
@@ -29,16 +29,16 @@ import CalendarIcon from '../../widgets/icons/calendar'
 
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
-import DuplicateIcon from "../../widgets/icons/duplicate"
-import {Utils} from "../../utils"
+import DuplicateIcon from '../../widgets/icons/duplicate'
+import {Utils} from '../../utils'
 
-import AddIcon from "../../widgets/icons/add"
-import CloseIcon from "../../widgets/icons/close"
-import {UserConfigPatch} from "../../user"
-import {getMe, getMyConfig, patchProps} from "../../store/users"
-import octoClient from "../../octoClient"
-import {getCurrentBoardId, getMySortedBoards} from "../../store/boards"
-import {UserSettings} from "../../userSettings"
+import AddIcon from '../../widgets/icons/add'
+import CloseIcon from '../../widgets/icons/close'
+import {UserConfigPatch} from '../../user'
+import {getMe, getMyConfig, patchProps} from '../../store/users'
+import octoClient from '../../octoClient'
+import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
+import {UserSettings} from '../../userSettings'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -54,7 +54,7 @@ type Props = {
     isActive: boolean
     categoryBoards: CategoryBoards
     board: Board
-    allCategories: Array<CategoryBoards>
+    allCategories: CategoryBoards[]
     onDeleteRequest: (board: Board) => void
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
@@ -97,7 +97,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const board = props.board
 
-    const handleDuplicateBoard = useCallback(async(asTemplate: boolean) => {
+    const handleDuplicateBoard = useCallback(async (asTemplate: boolean) => {
         const blocksAndBoards = await mutator.duplicateBoard(
             board.id,
             undefined,
@@ -106,7 +106,7 @@ const SidebarBoardItem = (props: Props) => {
             () => {
                 Utils.showBoard(board.id, match, history)
                 return Promise.resolve()
-            }
+            },
         )
 
         if (blocksAndBoards.boards.length === 0) {
@@ -135,7 +135,6 @@ const SidebarBoardItem = (props: Props) => {
         }
 
         Utils.showBoard(boardId, match, history)
-
     }, [board.id])
 
     const showTemplatePicker = () => {
@@ -146,7 +145,7 @@ const SidebarBoardItem = (props: Props) => {
         history.push(newPath)
     }
 
-    const handleHideBoard = async() => {
+    const handleHideBoard = async () => {
         if (!me) {
             return
         }
@@ -159,8 +158,8 @@ const SidebarBoardItem = (props: Props) => {
         const hiddenBoardsArray = Object.keys(hiddenBoards)
         const patch: UserConfigPatch = {
             updatedFields: {
-                'hiddenBoardIDs': JSON.stringify(hiddenBoardsArray),
-            }
+                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
+            },
         }
         const patchedProps = await octoClient.patchUserConfig(me.id, patch)
         if (!patchedProps) {

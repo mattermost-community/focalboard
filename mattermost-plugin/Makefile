@@ -84,7 +84,7 @@ ifneq ($(HAS_SERVER),)
 endif
 
 templates-archive: setup-go-work ## Build templates archive file
-	cd ../server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive" 
+	cd ../server/assets/build-template-archive; go run -tags '$(BUILD_TAGS)' main.go --dir="../templates-boardarchive" --out="../templates.boardarchive"
 
 ## Builds the server, if it exists, for all supported architectures.
 .PHONY: server
@@ -146,7 +146,6 @@ endif
 ifneq ($(HAS_WEBAPP),)
 	mkdir -p dist/$(PLUGIN_ID)/webapp
 	cp -r webapp/dist dist/$(PLUGIN_ID)/webapp/
-	cp -r webapp/dist/static/* dist/$(PLUGIN_ID)/pack/static/
 endif
 	cd dist && tar -cvzf $(BUNDLE_NAME) $(PLUGIN_ID)
 
@@ -174,6 +173,10 @@ endif
 .PHONY: deploy-from-watch
 deploy-from-watch: bundle
 	./build/bin/pluginctl deploy $(PLUGIN_ID) dist/$(BUNDLE_NAME)
+
+.PHONY: watch-product
+watch-product: apply
+	cd webapp && npm run start:product
 
 ## Setup dlv for attaching, identifying the plugin PID for other targets.
 .PHONY: setup-attach

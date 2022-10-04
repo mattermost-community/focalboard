@@ -28,7 +28,7 @@ import {updateViews} from './store/views'
 import {updateCards} from './store/cards'
 import {updateComments} from './store/comments'
 import {updateContents} from './store/contents'
-import {addBoardUsers, removeBoardUsersById} from "./store/users"
+import {addBoardUsers, removeBoardUsersById} from './store/users'
 
 function updateAllBoardsAndBlocks(boards: Board[], blocks: Block[]) {
     return batch(() => {
@@ -353,9 +353,7 @@ class Mutator {
 
     // Board Members
 
-    async createBoardMember(boardId: string, userId: string, description = 'create board member'): Promise<void> {
-        const member = {boardId, userId, schemeEditor: true} as BoardMember
-
+    async createBoardMember(member: BoardMember, description = 'create board member'): Promise<void> {
         await undoManager.perform(
             async () => {
                 await octoClient.createBoardMember(member)
@@ -963,7 +961,7 @@ class Mutator {
         )
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Array<UserPreference> | undefined> {
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<UserPreference[] | undefined> {
         return octoClient.patchUserConfig(userID, patch)
     }
 
@@ -1005,7 +1003,7 @@ class Mutator {
                 const patch = {
                     updatedFields: {
                         icon: newRootBlock.fields.icon,
-                        properties: {...newRootBlock.fields.properties, ...propertyOverrides}
+                        properties: {...newRootBlock.fields.properties, ...propertyOverrides},
                     },
                     title: newRootBlock.title,
                 }
@@ -1123,7 +1121,7 @@ class Mutator {
         const boardTemplate = createBoard()
         boardTemplate.isTemplate = true
         boardTemplate.teamId = teamId
-        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateDefaultTitle', defaultMessage: 'Untitled Template'})
 
         const view = createBoardView()
         view.fields.viewType = 'board'

@@ -107,7 +107,7 @@ describe('components/sidebarSidebar', () => {
                 },
                 myBoardMemberships: {
                     [board.id]: board,
-                }
+                },
             },
             cards: {
                 cards: {
@@ -183,8 +183,8 @@ describe('components/sidebarSidebar', () => {
                 myConfig: {
                     hiddenBoardIDs: {value: {
                         [board.id]: true,
-                    }}
-                }
+                    }},
+                },
             },
             sidebar: {
                 categoryAttributes: [
@@ -207,6 +207,7 @@ describe('components/sidebarSidebar', () => {
         expect(container).toMatchSnapshot()
 
         const sidebarBoards = container.getElementsByClassName('SidebarBoardItem')
+
         // The only board in redux store is hidden, so there should
         // be no boards visible in sidebar
         expect(sidebarBoards.length).toBe(0)

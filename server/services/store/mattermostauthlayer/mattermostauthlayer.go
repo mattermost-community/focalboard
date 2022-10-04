@@ -115,12 +115,12 @@ func (s *MattermostAuthLayer) GetUserByUsername(username string) (*model.User, e
 	return &user, nil
 }
 
-func (s *MattermostAuthLayer) CreateUser(user *model.User) error {
-	return store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
+func (s *MattermostAuthLayer) CreateUser(user *model.User) (*model.User, error) {
+	return nil, store.NewNotSupportedError("no user creation allowed from focalboard, create it using mattermost")
 }
 
-func (s *MattermostAuthLayer) UpdateUser(user *model.User) error {
-	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
+func (s *MattermostAuthLayer) UpdateUser(user *model.User) (*model.User, error) {
+	return nil, store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
 func (s *MattermostAuthLayer) UpdateUserPassword(username, password string) error {
@@ -131,7 +131,12 @@ func (s *MattermostAuthLayer) UpdateUserPasswordByID(userID, password string) er
 	return store.NewNotSupportedError("no update allowed from focalboard, update it using mattermost")
 }
 
-func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserPropPatch) error {
+func (s *MattermostAuthLayer) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+	preferences, err := s.GetUserPreferences(userID)
+	if err != nil {
+		return nil, err
+	}
+
 	if len(patch.UpdatedFields) > 0 {
 		updatedPreferences := mmModel.Preferences{}
 		for key, value := range patch.UpdatedFields {
@@ -147,8 +152,27 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 
 		if err := s.servicesAPI.UpdatePreferencesForUser(userID, updatedPreferences); err != nil {
 			s.logger.Error("failed to update user preferences", mlog.String("user_id", userID), mlog.Err(err))
-			return err
+			return nil, err
 		}
+
+		// we update the preferences list replacing or adding those
+		// that were updated
+		newPreferences := mmModel.Preferences{}
+		for _, existingPreference := range preferences {
+			hasBeenUpdated := false
+			for _, updatedPreference := range updatedPreferences {
+				if updatedPreference.Name == existingPreference.Name {
+					hasBeenUpdated = true
+					break
+				}
+			}
+
+			if !hasBeenUpdated {
+				newPreferences = append(newPreferences, existingPreference)
+			}
+		}
+		newPreferences = append(newPreferences, updatedPreferences...)
+		preferences = newPreferences
 	}
 
 	if len(patch.DeletedFields) > 0 {
@@ -165,11 +189,29 @@ func (s *MattermostAuthLayer) PatchUserProps(userID string, patch model.UserProp
 
 		if err := s.servicesAPI.DeletePreferencesForUser(userID, deletedPreferences); err != nil {
 			s.logger.Error("failed to delete user preferences", mlog.String("user_id", userID), mlog.Err(err))
-			return err
+			return nil, err
 		}
+
+		// we update the preferences removing those that have been
+		// deleted
+		newPreferences := mmModel.Preferences{}
+		for _, existingPreference := range preferences {
+			hasBeenDeleted := false
+			for _, deletedPreference := range deletedPreferences {
+				if deletedPreference.Name == existingPreference.Name {
+					hasBeenDeleted = true
+					break
+				}
+			}
+
+			if !hasBeenDeleted {
+				newPreferences = append(newPreferences, existingPreference)
+			}
+		}
+		preferences = newPreferences
 	}
 
-	return nil
+	return preferences, nil
 }
 
 func (s *MattermostAuthLayer) GetUserPreferences(userID string) (mmModel.Preferences, error) {
@@ -291,7 +333,7 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 
 func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserID = u.id )").
@@ -332,7 +374,7 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([
 
 func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
@@ -358,7 +400,7 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 
 func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.props", "u.CreateAt as create_at", "u.UpdateAt as update_at",
+		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
 			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
@@ -414,7 +456,6 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 
 	for rows.Next() {
 		var user model.User
-		var propsBytes []byte
 
 		err := rows.Scan(
 			&user.ID,
@@ -423,18 +464,12 @@ func (s *MattermostAuthLayer) usersFromRows(rows *sql.Rows) ([]*model.User, erro
 			&user.Nickname,
 			&user.FirstName,
 			&user.LastName,
-			&propsBytes,
 			&user.CreateAt,
 			&user.UpdateAt,
 			&user.DeleteAt,
 			&user.IsBot,
 			&user.IsGuest,
 		)
-		if err != nil {
-			return nil, err
-		}
-
-		err = json.Unmarshal(propsBytes, &user.Props)
 		if err != nil {
 			return nil, err
 		}
@@ -464,10 +499,6 @@ func (s *MattermostAuthLayer) CreatePrivateWorkspace(userID string) (string, err
 }
 
 func mmUserToFbUser(mmUser *mmModel.User) model.User {
-	props := map[string]interface{}{}
-	for key, value := range mmUser.Props {
-		props[key] = value
-	}
 	authData := ""
 	if mmUser.AuthData != nil {
 		authData = *mmUser.AuthData
@@ -483,7 +514,6 @@ func mmUserToFbUser(mmUser *mmModel.User) model.User {
 		MfaSecret:   mmUser.MfaSecret,
 		AuthService: mmUser.AuthService,
 		AuthData:    authData,
-		Props:       props,
 		CreateAt:    mmUser.CreateAt,
 		UpdateAt:    mmUser.UpdateAt,
 		DeleteAt:    mmUser.DeleteAt,
@@ -646,6 +676,27 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		})
 	}
 
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	// NOTE: theoretically, could do e.g. `isGuest := !includePublicBoards`
+	// but that introduces some tight coupling + fragility
+	if user.IsGuest {
+		var explicitMembers []*model.BoardMember
+		explicitMembers, err = s.Store.GetMembersForUser(userID)
+		if err != nil {
+			s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+			return nil, err
+		}
+		boardIDs := []string{}
+		for _, m := range explicitMembers {
+			boardIDs = append(boardIDs, m.BoardID)
+		}
+		// Only explicit memberships for guests
+		query = query.Where(sq.Eq{"b.id": boardIDs})
+	}
+
 	if term != "" {
 		// break search query into space separated words
 		// and search for all words.
@@ -750,7 +801,18 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	// Explicit membership not found
 	if model.IsErrNotFound(err) {
+		var user *model.User
+		// No synthetic memberships for guests
+		user, err = s.GetUserByID(userID)
+		if err != nil {
+			return nil, err
+		}
+		if user.IsGuest {
+			return nil, model.NewErrNotFound("user is a guest")
+		}
+
 		b, boardErr := s.Store.GetBoard(boardID)
 		if boardErr != nil {
 			return nil, boardErr
@@ -828,15 +890,25 @@ func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMe
 	}
 	defer s.CloseRows(rows)
 
-	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
-	if err != nil {
-		return nil, err
-	}
 	members := []*model.BoardMember{}
 	existingMembers := map[string]bool{}
 	for _, m := range explicitMembers {
 		members = append(members, m)
 		existingMembers[m.BoardID] = true
+	}
+
+	// No synthetic memberships for guests
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	if user.IsGuest {
+		return members, nil
+	}
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
 	}
 	for _, m := range implicitMembers {
 		if !existingMembers[m.BoardID] {
@@ -858,8 +930,11 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Join("Users as U on CM.userID = U.id").
 		Where(sq.Eq{"B.id": boardID}).
-		Where(sq.NotEq{"B.channel_id": ""})
+		Where(sq.NotEq{"B.channel_id": ""}).
+		// Filter out guests as they don't have synthetic membership
+		Where(sq.NotEq{"U.roles": "system_guest"})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -910,6 +985,15 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 	}
 
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
+	// ToDo: check if the query is being used appropriately from the
+	//       interface, as we're getting ID sets on request that
+	//       return partial results that seem to be valid
+	if model.IsErrNotFound(err) {
+		if boards == nil {
+			boards = []*model.Board{}
+		}
+		return boards, nil
+	}
 	if err != nil {
 		return nil, err
 	}

@@ -58,9 +58,13 @@ exports[`components/cardDetail/comment return comment 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -182,9 +186,13 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -354,9 +362,13 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -487,9 +499,13 @@ exports[`components/cardDetail/comment return guest comment and delete comment 1
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"

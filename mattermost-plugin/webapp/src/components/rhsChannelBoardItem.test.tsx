@@ -55,6 +55,9 @@ describe('components/rhsChannelBoardItem', () => {
                 myBoardMemberships: {
                     [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                 },
+                boards: {
+                    [board.id]: board
+                }
             }
         }
         board.updateAt = 1657311058157

@@ -29,9 +29,9 @@ describe('properties/dateRange', () => {
     const card = createCard()
     const board = createBoard()
     const propertyTemplate: IPropertyTemplate = {
-        id: "test",
-        name: "test",
-        type: "date",
+        id: 'test',
+        name: 'test',
+        type: 'date',
         options: [],
     }
 

@@ -11,9 +11,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="d-flex"
     >
       <div
-        class="Icon"
+        class="menu-option__icon"
       >
-        i
+        <div
+          class="Icon"
+        >
+          i
+        </div>
       </div>
     </div>
     <div
@@ -56,15 +60,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CheckIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <polyline
-                      points="20,60 40,80 80,40"
-                    />
-                  </svg>
+                    <svg
+                      class="CheckIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="20,60 40,80 80,40"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -89,9 +97,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-pencil-outline EditIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-pencil-outline EditIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -116,9 +128,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -185,9 +201,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="d-flex"
     >
       <div
-        class="Icon"
+        class="menu-option__icon"
       >
-        i
+        <div
+          class="Icon"
+        >
+          i
+        </div>
       </div>
     </div>
     <div
@@ -230,15 +250,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CheckIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <polyline
-                      points="20,60 40,80 80,40"
-                    />
-                  </svg>
+                    <svg
+                      class="CheckIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="20,60 40,80 80,40"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -263,9 +287,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-pencil-outline EditIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-pencil-outline EditIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -290,9 +318,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -359,9 +391,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="d-flex"
     >
       <div
-        class="Icon"
+        class="menu-option__icon"
       >
-        i
+        <div
+          class="Icon"
+        >
+          i
+        </div>
       </div>
     </div>
     <div
@@ -402,9 +438,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="d-flex"
     >
       <div
-        class="Icon"
+        class="menu-option__icon"
       >
-        i
+        <div
+          class="Icon"
+        >
+          i
+        </div>
       </div>
     </div>
     <div
@@ -447,15 +487,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CheckIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <polyline
-                      points="20,60 40,80 80,40"
-                    />
-                  </svg>
+                    <svg
+                      class="CheckIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="20,60 40,80 80,40"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -480,9 +524,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-pencil-outline EditIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-pencil-outline EditIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -507,9 +555,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -576,9 +628,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
       class="d-flex"
     >
       <div
-        class="Icon"
+        class="menu-option__icon"
       >
-        i
+        <div
+          class="Icon"
+        >
+          i
+        </div>
       </div>
     </div>
     <div
@@ -621,15 +677,19 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CheckIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <polyline
-                      points="20,60 40,80 80,40"
-                    />
-                  </svg>
+                    <svg
+                      class="CheckIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="20,60 40,80 80,40"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -654,9 +714,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-pencil-outline EditIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-pencil-outline EditIcon"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"
@@ -681,9 +745,13 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
                   class="menu-option__content"

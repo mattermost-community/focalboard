@@ -517,6 +517,23 @@ func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, err
 	return m, nil
 }
 
+func (s *SQLStore) getBoardCount(db sq.BaseRunner) (int64, error) {
+	query := s.getQueryBuilder(db).
+		Select("COUNT(*) AS count").
+		From(s.tablePrefix + "boards").
+		Where(sq.Eq{"delete_at": 0})
+
+	row := query.QueryRow()
+
+	var count int64
+	err := row.Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
 func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).

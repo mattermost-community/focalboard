@@ -18,7 +18,7 @@ describe('components/sidebar/RegistrationLink', () => {
         teams: {
             current: {
                 id: 'team-id',
-                signupToken: 'abc123'
+                signupToken: 'abc123',
             },
         },
     }

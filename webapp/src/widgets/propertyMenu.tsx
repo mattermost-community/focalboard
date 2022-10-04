@@ -66,7 +66,9 @@ const PropertyMenu = (props: Props) => {
                     props.onTypeAndNameChanged(props.propertyType, n)
                     currentPropertyName = n
                 }}
-                onValueChanged={(n) => currentPropertyName = n}
+                onValueChanged={(n) => {
+                    currentPropertyName = n
+                }}
             />
             <Menu.SubMenu
                 id='type'

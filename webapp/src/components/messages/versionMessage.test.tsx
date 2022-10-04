@@ -30,7 +30,7 @@ describe('components/messages/VersionMessage', () => {
 
     const mockStore = configureStore([])
 
-    if (versionProperty){
+    if (versionProperty) {
         test('single user mode, no display', () => {
             const me: IUser = {
                 id: 'single-user',
@@ -82,8 +82,8 @@ describe('components/messages/VersionMessage', () => {
                 users: {
                     me,
                     myConfig: {
-                        [versionProperty]: {value: 'true'}
-                    }
+                        [versionProperty]: {value: 'true'},
+                    },
                 },
             }
             const store = mockStore(state)
@@ -182,6 +182,5 @@ describe('components/messages/VersionMessage', () => {
             const {container} = render(component)
             expect(container.firstChild).toBeNull()
         })
-
     }
 })

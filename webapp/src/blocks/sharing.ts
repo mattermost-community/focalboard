@@ -2,11 +2,11 @@
 // See LICENSE.txt for license information.
 
 interface ISharing {
-    id: string,
-    enabled: boolean,
-    token: string,
-    modifiedBy?: string,
-    updateAt?: number,
+    id: string
+    enabled: boolean
+    token: string
+    modifiedBy?: string
+    updateAt?: number
 }
 
 export {ISharing}
