@@ -676,6 +676,27 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		})
 	}
 
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	// NOTE: theoretically, could do e.g. `isGuest := !includePublicBoards`
+	// but that introduces some tight coupling + fragility
+	if user.IsGuest {
+		var explicitMembers []*model.BoardMember
+		explicitMembers, err = s.Store.GetMembersForUser(userID)
+		if err != nil {
+			s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
+			return nil, err
+		}
+		boardIDs := []string{}
+		for _, m := range explicitMembers {
+			boardIDs = append(boardIDs, m.BoardID)
+		}
+		// Only explicit memberships for guests
+		query = query.Where(sq.Eq{"b.id": boardIDs})
+	}
+
 	if term != "" {
 		// break search query into space separated words
 		// and search for all words.
@@ -780,7 +801,18 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
 	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	// Explicit membership not found
 	if model.IsErrNotFound(err) {
+		var user *model.User
+		// No synthetic memberships for guests
+		user, err = s.GetUserByID(userID)
+		if err != nil {
+			return nil, err
+		}
+		if user.IsGuest {
+			return nil, model.NewErrNotFound("user is a guest")
+		}
+
 		b, boardErr := s.Store.GetBoard(boardID)
 		if boardErr != nil {
 			return nil, boardErr
@@ -858,15 +890,25 @@ func (s *MattermostAuthLayer) GetMembersForUser(userID string) ([]*model.BoardMe
 	}
 	defer s.CloseRows(rows)
 
-	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
-	if err != nil {
-		return nil, err
-	}
 	members := []*model.BoardMember{}
 	existingMembers := map[string]bool{}
 	for _, m := range explicitMembers {
 		members = append(members, m)
 		existingMembers[m.BoardID] = true
+	}
+
+	// No synthetic memberships for guests
+	user, err := s.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	if user.IsGuest {
+		return members, nil
+	}
+
+	implicitMembers, err := s.implicitBoardMembershipsFromRows(rows)
+	if err != nil {
+		return nil, err
 	}
 	for _, m := range implicitMembers {
 		if !existingMembers[m.BoardID] {
@@ -888,8 +930,11 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		Select("CM.userID, B.Id").
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
+		Join("Users as U on CM.userID = U.id").
 		Where(sq.Eq{"B.id": boardID}).
-		Where(sq.NotEq{"B.channel_id": ""})
+		Where(sq.NotEq{"B.channel_id": ""}).
+		// Filter out guests as they don't have synthetic membership
+		Where(sq.NotEq{"U.roles": "system_guest"})
 
 	rows, err := query.Query()
 	if err != nil {
