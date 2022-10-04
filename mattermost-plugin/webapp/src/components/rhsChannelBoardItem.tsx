@@ -19,7 +19,6 @@ import {Permission} from '../../../../webapp/src/constants'
 
 import './rhsChannelBoardItem.scss'
 import BoardPermissionGate from '../../../../webapp/src/components/permissions/boardPermissionGate'
-import { MarkdownEditor } from '../../../../webapp/src/components/markdownEditor'
 
 const windowAny = (window as SuiteWindow)
 
