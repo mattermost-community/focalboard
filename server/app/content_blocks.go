@@ -9,7 +9,7 @@ import (
 
 func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where string, userID string) error {
 	if block.ParentID != dstBlock.ParentID {
-		message := fmt.Sprintf("invalid dstBlockId")
+		message := fmt.Sprintf("invalid dstBlockId %s", dstBlock.ParentID)
 		return model.NewErrBadRequest(message)
 	}
 
@@ -50,12 +50,12 @@ func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where 
 	}
 
 	if !foundSrc {
-		message := fmt.Sprintf("source block not found")
+		message := fmt.Sprintf("source block %s not found", block.ID)
 		return model.NewErrBadRequest(message)
 	}
 
 	if !foundDst {
-		message := fmt.Sprintf("destination block not found")
+		message := fmt.Sprintf("destination block %s not found", dstBlock.ID)
 		return model.NewErrBadRequest(message)
 	}
 
