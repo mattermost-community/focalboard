@@ -76,7 +76,7 @@ describe('components/rhsChannelBoardItem', () => {
         board.description = '**Board** with description'
         board.updateAt = 1657311058157
         const store = mockStateStore([], state)
-        const {container} = render(wrapIntl(
+        const {container, getByText} = render(wrapIntl(
             <ReduxProvider store={store}>
                 <RHSChannelBoardItem board={board} />
             </ReduxProvider>
@@ -85,6 +85,9 @@ describe('components/rhsChannelBoardItem', () => {
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
         await userEvent.click(buttonElement)
 
-        expect(container).toBeDefined()
+        const description = getByText(/with description/i)
+
+        expect(description.outerHTML).toEqual("<p><strong>Board</strong> with description</p>")
+        expect(container).toMatchSnapshot()
     })
 })
