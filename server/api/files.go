@@ -164,7 +164,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 		}
 		// move file to team location
 		// nothing to do if there is an error
-		a.app.MoveFile(board.ChannelID, board.TeamID, boardID, filename)
+		_ = a.app.MoveFile(board.ChannelID, board.TeamID, boardID, filename)
 	}
 
 	defer fileReader.Close()
