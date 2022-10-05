@@ -331,7 +331,6 @@ const SidebarCategory = (props: Props) => {
                                         )
                                     })}
                                     {!(collapsed || snapshot.isDragging) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
-                                        console.log(`zzz: ${zzz} ${board.title}`)
                                         return (
                                             <SidebarBoardItem
                                                 index={zzz}
