@@ -59,7 +59,10 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 	}
 
 	if existingCategory.Type == model.CategoryTypeSystem {
-		return nil, ErrCannotUpdateSystemCategory
+		// You cannot rename or delete a system category,
+		// So restoring its name and undeleting it if set so.
+		category.Name = existingCategory.Name
+		category.DeleteAt = 0
 	}
 
 	category.UpdateAt = utils.GetMillis()
