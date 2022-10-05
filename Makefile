@@ -186,6 +186,10 @@ watch-plugin: modd-precheck ## Run and upload the plugin to a development server
 live-watch-plugin: modd-precheck ## Run and update locally the plugin in the development server
 	cd mattermost-plugin; make live-watch
 
+.PHONY: build-product
+build-product: ## Builds the product as something the Mattermost server will pull files from when packaging a release
+	cd mattermost-plugin; make build-product
+
 .PHONY: watch-product
 watch-product: ## Run the product as something the Mattermost web app will watch for
 	cd mattermost-plugin; make watch-product

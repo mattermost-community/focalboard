@@ -12,6 +12,7 @@
     "test:watch": "jest --watch",
     "test-ci": "jest --forceExit --detectOpenHandles --maxWorkers=2",
     "check-types": "tsc",
+    "build:product": "webpack --mode=production",
     "start:product": "webpack serve --mode=development"
   },
   "devDependencies": {
