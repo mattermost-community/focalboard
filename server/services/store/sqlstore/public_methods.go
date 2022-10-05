@@ -279,13 +279,13 @@ func (s *SQLStore) DuplicateBoard(boardID string, userID string, toTeam string, 
 
 }
 
-func (s *SQLStore) FindOrphansForBlocks() ([]string, error) {
-	return s.findOrphansForBlocks(s.db)
+func (s *SQLStore) FindOrphansForBlocks(limit int) ([]string, error) {
+	return s.findOrphansForBlocks(s.db, limit)
 
 }
 
-func (s *SQLStore) FindOrphansForBoards() ([]string, error) {
-	return s.findOrphansForBoards(s.db)
+func (s *SQLStore) FindOrphansForBoards(limit int) ([]string, error) {
+	return s.findOrphansForBoards(s.db, limit)
 
 }
 

@@ -26,6 +26,12 @@ func (re ErrEmptyBoardID) Error() string {
 	return "boardID is empty"
 }
 
+type ErrLimitExceeded struct{ max int }
+
+func (le ErrLimitExceeded) Error() string {
+	return fmt.Sprintf("limit exceeded (max=%d)", le.max)
+}
+
 func (s *SQLStore) timestampToCharField(name string, as string) string {
 	switch s.dbType {
 	case model.MysqlDBType:
@@ -954,7 +960,14 @@ func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, paren
 	return nil
 }
 
-func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner) ([]string, error) {
+func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner, limit int) ([]string, error) {
+	if limit <= 0 {
+		limit = 1000
+	}
+	if limit > 1000 {
+		return nil, ErrLimitExceeded{1000}
+	}
+
 	// Find all orphaned child blocks for deleted boards.
 	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
 	sql := `
@@ -963,9 +976,10 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner) ([]string, error) {
 			SELECT bh.id FROM %sboards_history AS bh,
 				(SELECT id, max(insert_at) AS max_insert_at FROM %sboards_history GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
-		);
+		)
+		limit %d;
 	`
-	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
+	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix, limit)
 
 	rows, err := db.Query(sql, nil)
 	if err != nil {
@@ -988,7 +1002,14 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner) ([]string, error) {
 	return results, nil
 }
 
-func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner) ([]string, error) {
+func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner, limit int) ([]string, error) {
+	if limit <= 0 {
+		limit = 1000
+	}
+	if limit > 1000 {
+		return nil, ErrLimitExceeded{1000}
+	}
+
 	// Find all orphaned child blocks for deleted blocks/cards.
 	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
 	sql := `
@@ -997,9 +1018,10 @@ func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner) ([]string, error) {
 			SELECT bh.id FROM %sblocks_history AS bh,
 				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
-		);
+		)
+		limit %d;
 	`
-	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
+	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix, limit)
 
 	rows, err := db.Query(sql, nil)
 	if err != nil {

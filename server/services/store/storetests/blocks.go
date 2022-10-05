@@ -1185,7 +1185,7 @@ func testFindOrphans(t *testing.T, store store.Store) {
 		err := store.DeleteBoardRecord(boardDelete.ID, testUserID)
 		require.NoError(t, err)
 
-		ids, err := store.FindOrphansForBoards()
+		ids, err := store.FindOrphansForBoards(100)
 		require.NoError(t, err)
 
 		// make sure only the orphaned blocks were found
@@ -1199,7 +1199,7 @@ func testFindOrphans(t *testing.T, store store.Store) {
 		err := store.DeleteBlockRecord(cardOrphaned.ID, testUserID)
 		require.NoError(t, err)
 
-		ids, err := store.FindOrphansForBlocks()
+		ids, err := store.FindOrphansForBlocks(100)
 		require.NoError(t, err)
 
 		// make sure only the orphaned content blocks for the deleted card were found
