@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useRef} from 'react'
 import {useIntl} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -46,8 +46,13 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
         displayRole = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
     }
 
+    const menuWrapperRef = useRef<HTMLDivElement>(null)
+
     return (
-        <div className='user-item'>
+        <div
+            className='user-item'
+            ref={menuWrapperRef}
+        >
             <div className='user-item__content'>
                 {Utils.isFocalboardPlugin() &&
                     <img
@@ -72,7 +77,10 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 className='CompassIcon'
                             />
                         </button>
-                        <Menu position='left'>
+                        <Menu
+                            position='left'
+                            parentRef={menuWrapperRef}
+                        >
                             {(board.minimumRole === MemberRole.Viewer || board.minimumRole === MemberRole.None) &&
                                 <Menu.Text
                                     id={MemberRole.Viewer}
