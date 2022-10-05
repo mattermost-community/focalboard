@@ -31,7 +31,7 @@ func TestClientUpdateNotify(t *testing.T) {
 
 	client := NewClient(cfg, logger)
 
-	client.NotifyUpdate(model.Block{})
+	client.NotifyUpdate(&model.Block{})
 
 	if !isNotified {
 		t.Error("webhook url not be notified")

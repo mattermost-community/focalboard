@@ -126,7 +126,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	// TODO: Stream this once `model.GenerateBlockIDs` can take a stream of blocks.
 	//       We don't want to load the whole file in memory, even though it's a single board.
 	boardsAndBlocks := &model.BoardsAndBlocks{
-		Blocks: make([]model.Block, 0, 10),
+		Blocks: make([]*model.Block, 0, 10),
 		Boards: make([]*model.Board, 0, 10),
 	}
 	lineReader := bufio.NewReader(r)
@@ -175,20 +175,20 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					boardID = board.ID
 				case "board_block":
 					// legacy archives encoded boards as blocks; we need to convert them to real boards.
-					var block model.Block
+					var block *model.Block
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return "", fmt.Errorf("invalid board block in archive line %d: %w", lineNum, err2)
 					}
 					block.ModifiedBy = userID
 					block.UpdateAt = now
-					board, err := a.blockToBoard(&block, opt)
+					board, err := a.blockToBoard(block, opt)
 					if err != nil {
 						return "", fmt.Errorf("cannot convert archive line %d to block: %w", lineNum, err)
 					}
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, board)
 					boardID = board.ID
 				case "block":
-					var block model.Block
+					var block *model.Block
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
 					}
@@ -253,7 +253,7 @@ func (a *App) fixBoardsandBlocks(boardsAndBlocks *model.BoardsAndBlocks, opt mod
 
 	modInfoCache := make(map[string]interface{})
 	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
-	modBlocks := make([]model.Block, 0, len(boardsAndBlocks.Blocks))
+	modBlocks := make([]*model.Block, 0, len(boardsAndBlocks.Blocks))
 
 	for _, board := range boardsAndBlocks.Boards {
 		b := *board
@@ -268,7 +268,7 @@ func (a *App) fixBoardsandBlocks(boardsAndBlocks *model.BoardsAndBlocks, opt mod
 
 	for _, block := range boardsAndBlocks.Blocks {
 		b := block
-		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+		if opt.BlockModifier != nil && !opt.BlockModifier(b, modInfoCache) {
 			a.logger.Debug("skipping insert block per block modifier",
 				mlog.String("blockID", block.ID),
 			)

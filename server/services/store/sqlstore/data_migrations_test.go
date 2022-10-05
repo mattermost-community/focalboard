@@ -21,45 +21,45 @@ func TestGetBlocksWithSameID(t *testing.T) {
 	container2 := "2"
 	container3 := "3"
 
-	block1 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block2 := model.Block{ID: "block-id-2", BoardID: "board-id-2"}
-	block3 := model.Block{ID: "block-id-3", BoardID: "board-id-3"}
+	block1 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block2 := &model.Block{ID: "block-id-2", BoardID: "board-id-2"}
+	block3 := &model.Block{ID: "block-id-3", BoardID: "board-id-3"}
 
-	block4 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block5 := model.Block{ID: "block-id-2", BoardID: "board-id-2"}
+	block4 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block5 := &model.Block{ID: "block-id-2", BoardID: "board-id-2"}
 
-	block6 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block7 := model.Block{ID: "block-id-7", BoardID: "board-id-7"}
-	block8 := model.Block{ID: "block-id-8", BoardID: "board-id-8"}
+	block6 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block7 := &model.Block{ID: "block-id-7", BoardID: "board-id-7"}
+	block8 := &model.Block{ID: "block-id-8", BoardID: "board-id-8"}
 
-	for _, block := range []model.Block{block1, block2, block3} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, &block, "user-id")
+	for _, block := range []*model.Block{block1, block2, block3} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, block := range []model.Block{block4, block5} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, &block, "user-id")
+	for _, block := range []*model.Block{block4, block5} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, block := range []model.Block{block6, block7, block8} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container3, &block, "user-id")
+	for _, block := range []*model.Block{block6, block7, block8} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container3, block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	blocksWithDuplicatedID := []model.Block{block1, block2, block4, block5, block6}
+	blocksWithDuplicatedID := []*model.Block{block1, block2, block4, block5, block6}
 
 	blocks, err := sqlStore.getBlocksWithSameID(sqlStore.db)
 	require.NoError(t, err)
 
 	// we process the found blocks to remove extra information and be
 	// able to compare both expected and found sets
-	foundBlocks := []model.Block{}
+	foundBlocks := []*model.Block{}
 	for _, foundBlock := range blocks {
-		foundBlocks = append(foundBlocks, model.Block{ID: foundBlock.ID, BoardID: foundBlock.BoardID})
+		foundBlocks = append(foundBlocks, &model.Block{ID: foundBlock.ID, BoardID: foundBlock.BoardID})
 	}
 
 	require.ElementsMatch(t, blocksWithDuplicatedID, foundBlocks)
@@ -77,33 +77,33 @@ func TestReplaceBlockID(t *testing.T) {
 	container2 := "2"
 
 	// blocks from team1
-	block1 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block2 := model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
-	block3 := model.Block{ID: "block-id-3", BoardID: "block-id-1"}
-	block4 := model.Block{ID: "block-id-4", BoardID: "block-id-2"}
-	block5 := model.Block{ID: "block-id-5", BoardID: "block-id-1", ParentID: "block-id-1"}
-	block8 := model.Block{
+	block1 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block2 := &model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
+	block3 := &model.Block{ID: "block-id-3", BoardID: "block-id-1"}
+	block4 := &model.Block{ID: "block-id-4", BoardID: "block-id-2"}
+	block5 := &model.Block{ID: "block-id-5", BoardID: "block-id-1", ParentID: "block-id-1"}
+	block8 := &model.Block{
 		ID: "block-id-8", BoardID: "board-id-2", Type: model.TypeCard,
 		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
 	}
 
 	// blocks from team2. They're identical to blocks 1 and 2,
 	// but they shouldn't change
-	block6 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block7 := model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
-	block9 := model.Block{
+	block6 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block7 := &model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
+	block9 := &model.Block{
 		ID: "block-id-8", BoardID: "board-id-2", Type: model.TypeCard,
 		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
 	}
 
-	for _, block := range []model.Block{block1, block2, block3, block4, block5, block8} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, &block, "user-id")
+	for _, block := range []*model.Block{block1, block2, block3, block4, block5, block8} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, block := range []model.Block{block6, block7, block9} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, &block, "user-id")
+	for _, block := range []*model.Block{block6, block7, block9} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, block, "user-id")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
@@ -163,33 +163,33 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 
 	// blocks from workspace1. They shouldn't change, as the first
 	// duplicated ID is preserved
-	block1 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block2 := model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
-	block3 := model.Block{ID: "block-id-3", BoardID: "block-id-1"}
+	block1 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block2 := &model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
+	block3 := &model.Block{ID: "block-id-3", BoardID: "block-id-1"}
 
 	// blocks from workspace2. They're identical to blocks 1, 2 and 3,
 	// and they should change
-	block4 := model.Block{ID: "block-id-1", BoardID: "board-id-1"}
-	block5 := model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
-	block6 := model.Block{ID: "block-id-6", BoardID: "block-id-1", ParentID: "block-id-2"}
+	block4 := &model.Block{ID: "block-id-1", BoardID: "board-id-1"}
+	block5 := &model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
+	block6 := &model.Block{ID: "block-id-6", BoardID: "block-id-1", ParentID: "block-id-2"}
 
 	// block from workspace3. It should change as well
-	block7 := model.Block{ID: "block-id-2", BoardID: "board-id-2"}
+	block7 := &model.Block{ID: "block-id-2", BoardID: "board-id-2"}
 
-	for _, block := range []model.Block{block1, block2, block3} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, &block, "user-id-2")
+	for _, block := range []*model.Block{block1, block2, block3} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container1, block, "user-id-2")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, block := range []model.Block{block4, block5, block6} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, &block, "user-id-2")
+	for _, block := range []*model.Block{block4, block5, block6} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container2, block, "user-id-2")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}
 
-	for _, block := range []model.Block{block7} {
-		err := sqlStore.insertLegacyBlock(sqlStore.db, container3, &block, "user-id-2")
+	for _, block := range []*model.Block{block7} {
+		err := sqlStore.insertLegacyBlock(sqlStore.db, container3, block, "user-id-2")
 		require.NoError(t, err)
 		time.Sleep(100 * time.Millisecond)
 	}

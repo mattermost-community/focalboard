@@ -16,7 +16,7 @@ type UpdateCategoryMessage struct {
 type UpdateBlockMsg struct {
 	Action string      `json:"action"`
 	TeamID string      `json:"teamId"`
-	Block  model.Block `json:"block"`
+	Block  *model.Block `json:"block"`
 }
 
 // UpdateBoardMsg is sent on block updates.

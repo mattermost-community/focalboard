@@ -31,7 +31,7 @@ func createTestSubscriptions(client *client.Client, num int) ([]*model.Subscript
 	}
 
 	for n := 0; n < num; n++ {
-		newBlock := model.Block{
+		newBlock := &model.Block{
 			ID:       utils.NewID(utils.IDTypeCard),
 			BoardID:  board.ID,
 			CreateAt: 1,
@@ -39,7 +39,7 @@ func createTestSubscriptions(client *client.Client, num int) ([]*model.Subscript
 			Type:     model.TypeCard,
 		}
 
-		newBlocks, resp := client.InsertBlocks(board.ID, []model.Block{newBlock}, false)
+		newBlocks, resp := client.InsertBlocks(board.ID, []*model.Block{newBlock}, false)
 		if resp.Error != nil {
 			return nil, "", fmt.Errorf("cannot insert test card block: %w", resp.Error)
 		}

@@ -424,7 +424,7 @@ func TestGetAllBlocksForBoard(t *testing.T) {
 	childBlockID2 := utils.NewID(utils.IDTypeBlock)
 
 	t.Run("Create the block structure", func(t *testing.T) {
-		newBlocks := []model.Block{
+		newBlocks := []*model.Block{
 			{
 				ID:       parentBlockID,
 				BoardID:  board.ID,
@@ -739,7 +739,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
 
 		// Insert card1
-		card1 := model.Block{
+		card1 := &model.Block{
 			ID:      "card1",
 			BoardID: rBoard.ID,
 			Title:   "Card 1",
@@ -760,7 +760,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
 
 		// Insert card2
-		card2 := model.Block{
+		card2 := &model.Block{
 			ID:      "card2",
 			BoardID: rBoard.ID,
 			Title:   "Card 2",
@@ -1946,7 +1946,7 @@ func TestDuplicateBoard(t *testing.T) {
 		require.Equal(t, me.ID, board.CreatedBy)
 		require.Equal(t, me.ID, board.ModifiedBy)
 
-		newBlocks := []model.Block{
+		newBlocks := []*model.Block{
 			{
 				ID:       utils.NewID(utils.IDTypeBlock),
 				BoardID:  board.ID,
@@ -2031,7 +2031,7 @@ func TestDuplicateBoard(t *testing.T) {
 		th.CheckOK(resp)
 		require.NoError(t, resp.Error)
 
-		newBlocks := []model.Block{
+		newBlocks := []*model.Block{
 			{
 				ID:       utils.NewID(utils.IDTypeBlock),
 				BoardID:  board.ID,
