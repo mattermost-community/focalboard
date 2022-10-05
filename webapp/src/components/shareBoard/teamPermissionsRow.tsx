@@ -78,7 +78,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                 }),
                 confirmButtonText: intl.formatMessage({
                     id: 'shareBoard.confirm-change-team-role.confirmBtnText',
-                    defaultMessage: 'Change board role',
+                    defaultMessage: 'Change minimum board role',
                 }),
                 onConfirm: onChangeRole,
                 onClose: () => setChangeRoleConfirmation(null),
