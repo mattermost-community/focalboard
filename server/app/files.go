@@ -123,3 +123,18 @@ func (a *App) GetFileReader(teamID, rootID, filename string) (filestore.ReadClos
 
 	return reader, nil
 }
+
+func (a *App) MoveFile(channelID, teamID, boardID, filename string) error {
+	oldPath := filepath.Join(channelID, boardID, filename)
+	newPath := filepath.Join(teamID, boardID, filename)
+	err := a.filesBackend.MoveFile(oldPath, newPath)
+	if err != nil {
+		a.logger.Error("ERROR moving file",
+			mlog.String("old", oldPath),
+			mlog.String("new", newPath),
+			mlog.Err(err),
+		)
+		return err
+	}
+	return nil
+}

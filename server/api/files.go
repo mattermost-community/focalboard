@@ -152,7 +152,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if errors.Is(err, app.ErrFileNotFound) {
+	if errors.Is(err, app.ErrFileNotFound) && board.ChannelID != "" {
 		// prior to moving from workspaces to teams, the filepath was constructed from
 		// workspaceID, which is the channel ID in plugin mode.
 		// If a file is not found from team ID as we tried above, try looking for it via
@@ -162,6 +162,9 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r, err)
 			return
 		}
+		// move file to team location
+		// nothing to do if there is an error
+		a.app.MoveFile(board.ChannelID, board.TeamID, boardID, filename)
 	}
 
 	defer fileReader.Close()
