@@ -171,25 +171,73 @@ func TestUpdateCategory(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("trying to update a system category", func(t *testing.T) {
+	t.Run("should not be allowed to rename system category", func(t *testing.T) {
 		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
 			ID:     "category_id_1",
 			Name:   "Category",
 			TeamID: "team_id_1",
 			UserID: "user_id_1",
 			Type:   "system",
-		}, nil)
+		}, nil).Times(1)
+
+		th.Store.EXPECT().UpdateCategory(utils.Anything).Return(nil)
+
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:        "category_id_1",
+			Name:      "Category",
+			TeamID:    "team_id_1",
+			UserID:    "user_id_1",
+			Type:      "system",
+			Collapsed: true,
+		}, nil).Times(1)
 
 		category := &model.Category{
 			ID:     "category_id_1",
-			Name:   "Category",
+			Name:   "Updated Name",
 			UserID: "user_id_1",
 			TeamID: "team_id_1",
 			Type:   "system",
 		}
 		updatedCategory, err := th.App.UpdateCategory(category)
-		assert.Nil(t, updatedCategory)
-		assert.Error(t, err)
+		assert.NotNil(t, updatedCategory)
+		assert.NoError(t, err)
+		assert.Equal(t, "Category", updatedCategory.Name)
+	})
+
+	t.Run("should be allowed to collapse and expand any category type", func(t *testing.T) {
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:        "category_id_1",
+			Name:      "Category",
+			TeamID:    "team_id_1",
+			UserID:    "user_id_1",
+			Type:      "system",
+			Collapsed: false,
+		}, nil).Times(1)
+
+		th.Store.EXPECT().UpdateCategory(utils.Anything).Return(nil)
+
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:        "category_id_1",
+			Name:      "Category",
+			TeamID:    "team_id_1",
+			UserID:    "user_id_1",
+			Type:      "system",
+			Collapsed: true,
+		}, nil).Times(1)
+
+		category := &model.Category{
+			ID:        "category_id_1",
+			Name:      "Updated Name",
+			UserID:    "user_id_1",
+			TeamID:    "team_id_1",
+			Type:      "system",
+			Collapsed: true,
+		}
+		updatedCategory, err := th.App.UpdateCategory(category)
+		assert.NotNil(t, updatedCategory)
+		assert.NoError(t, err)
+		assert.Equal(t, "Category", updatedCategory.Name, "The name should have not been updated")
+		assert.True(t, updatedCategory.Collapsed)
 	})
 }
 
