@@ -83,23 +83,29 @@ const sidebarSlice = createSlice({
             })
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
+            const updatedCategoryAttributes: CategoryBoards[] = []
+
             action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
                     if (categoryAttribute.id === boardCategory.categoryID) {
                         // if board is already in the right category, don't do anything
-                        // and let the board stay in its right order
-                        if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) >= 0) {
-                            return
+                        // and let the board stay in its right order.
+                        // Only if its not in the right category, do add it.
+                        if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) < 0) {
+                            categoryAttribute.boardIDs.push(boardCategory.boardID)
                         }
-                        categoryAttribute.boardIDs.push(boardCategory.boardID)
                     } else {
                         // remove the board from other categories
                         categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
                     }
+
+                    updatedCategoryAttributes[i] = categoryAttribute
                 }
             })
+
+            state.categoryAttributes = updatedCategoryAttributes
         },
         updateCategoryOrder: (state, action: PayloadAction<string[]>) => {
             if (action.payload.length === 0) {
@@ -138,7 +144,7 @@ const sidebarSlice = createSlice({
                 boardIDs: action.payload.boardIDs,
             }
 
-            // creating a new reference of array so redux knows its mutated
+            // creating a new reference of array so redux knows it changed
             state.categoryAttributes = state.categoryAttributes.map((original, i) => (i === categoryIndex ? updatedCategory : original))
         },
     },

@@ -202,7 +202,7 @@ const SidebarBoardItem = (props: Props) => {
             draggableId={props.board.id}
             index={props.index}
         >
-            {(provided) => (
+            {(provided, snapshot) => (
                 <div
                     {...provided.draggableProps}
                     ref={provided.innerRef}
@@ -289,7 +289,7 @@ const SidebarBoardItem = (props: Props) => {
                             </MenuWrapper>
                         </div>
                     </div>
-                    {props.isActive && boardViews.map((view: BoardView) => (
+                    {props.isActive && !snapshot.isDragging && boardViews.map((view: BoardView) => (
                         <div
                             key={view.id}
                             className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}
