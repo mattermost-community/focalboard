@@ -105,7 +105,9 @@ const sidebarSlice = createSlice({
                 }
             })
 
-            state.categoryAttributes = updatedCategoryAttributes
+            if (updatedCategoryAttributes.length > 0) {
+                state.categoryAttributes = updatedCategoryAttributes
+            }
         },
         updateCategoryOrder: (state, action: PayloadAction<string[]>) => {
             if (action.payload.length === 0) {

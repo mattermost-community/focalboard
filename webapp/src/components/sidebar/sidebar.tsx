@@ -108,51 +108,6 @@ const Sidebar = (props: Props) => {
         hideSidebar()
     }, [windowDimensions])
 
-    if (!boards) {
-        return <div/>
-    }
-
-    const hideSidebar = () => {
-        if (!userHidden) {
-            if (windowDimensions.width < 768) {
-                setHidden(true)
-            } else {
-                setHidden(false)
-            }
-        }
-    }
-
-    if (!me) {
-        return <div/>
-    }
-
-    if (isHidden) {
-        return (
-            <div className='Sidebar octo-sidebar hidden'>
-                <div className='octo-sidebar-header show-button'>
-                    <div className='hamburger-icon'>
-                        <IconButton
-                            icon={<HamburgerIcon/>}
-                            onClick={() => {
-                                setUserHidden(false)
-                                setHidden(false)
-                            }}
-                        />
-                    </div>
-                    <div className='show-icon'>
-                        <IconButton
-                            icon={<ShowSidebarIcon/>}
-                            onClick={() => {
-                                setUserHidden(false)
-                                setHidden(false)
-                            }}
-                        />
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
     useWebsockets(teamId, (websocketClient: WSClient) => {
         const onCategoryReorderHandler = (_: WSClient, newCategoryOrder: string[]): void => {
             dispatch(updateCategoryOrder(newCategoryOrder))
@@ -163,6 +118,16 @@ const Sidebar = (props: Props) => {
             websocketClient.removeOnChange(onCategoryReorderHandler, 'categoryOrder')
         }
     }, [teamId])
+
+    const hideSidebar = () => {
+        if (!userHidden) {
+            if (windowDimensions.width < 768) {
+                setHidden(true)
+            } else {
+                setHidden(false)
+            }
+        }
+    }
 
     const handleCategoryDND = useCallback(async (result: DropResult) => {
         const {destination, source} = result
@@ -261,6 +226,41 @@ const Sidebar = (props: Props) => {
             Utils.logWarn(`unknown drag type encountered, type: ${type}`)
         }
     }, [team, sidebarCategories])
+
+    if (!boards) {
+        return <div/>
+    }
+
+    if (!me) {
+        return <div/>
+    }
+
+    if (isHidden) {
+        return (
+            <div className='Sidebar octo-sidebar hidden'>
+                <div className='octo-sidebar-header show-button'>
+                    <div className='hamburger-icon'>
+                        <IconButton
+                            icon={<HamburgerIcon/>}
+                            onClick={() => {
+                                setUserHidden(false)
+                                setHidden(false)
+                            }}
+                        />
+                    </div>
+                    <div className='show-icon'>
+                        <IconButton
+                            icon={<ShowSidebarIcon/>}
+                            onClick={() => {
+                                setUserHidden(false)
+                                setHidden(false)
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     const getSortedCategoryBoards = (category: CategoryBoards): Board[] => {
         const categoryBoardsByID = new Map<string, Board>()
