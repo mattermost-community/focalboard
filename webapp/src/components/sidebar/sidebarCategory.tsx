@@ -348,6 +348,8 @@ const SidebarCategory = (props: Props) => {
                             />
                         )}
                         onClose={() => setShowUpdateCategoryModal(false)}
+                        boardCategoryId={props.categoryBoards.id}
+                        renameModal={true}
                     />
                 )
             }

@@ -3,14 +3,17 @@
 import React, {CSSProperties} from 'react'
 
 /**
- * Calculates if a menu should open aligned down or up around the `anchorRef` element.
- * This should be used to make sure the menues are always fullly visible in cases
- * when opening them close to the edges of screen.
+ * Calculates the position where the menu should be open, aligning it with the
+ * `anchorRef` and positioning it down or up around the ref.
+ * This should be used to make sure the menues are always aligned regardless of
+ * the scroll position and fullly visible in cases when opening them close to
+ * the edges of screen.
  * @param anchorRef ref of the element with respect to which the menu position is to be calculated.
+ * @param forceBottom forces the element to be aligned at the bottom of the ref
  * @param menuMargin a safe margin value to be ensured around the menu in the calculations.
  *  this ensures the menu stick to the edges of the screen ans has some space around for ease of use.
  */
-function openUp(anchorRef: React.RefObject<HTMLElement>, menuMargin = 40): {openUp: boolean, style: CSSProperties} {
+function openUp(anchorRef: React.RefObject<HTMLElement>, forceBottom = false, menuMargin = 40): {openUp: boolean, style: CSSProperties} {
     const ret = {
         openUp: false,
         style: {} as CSSProperties,
@@ -26,7 +29,7 @@ function openUp(anchorRef: React.RefObject<HTMLElement>, menuMargin = 40): {open
     const spaceOnTop = y || 0
     const spaceOnBottom = totalSpace - spaceOnTop
     ret.openUp = spaceOnTop > spaceOnBottom
-    if (ret.openUp) {
+    if (!forceBottom && ret.openUp) {
         ret.style.bottom = spaceOnBottom + menuMargin
     } else {
         ret.style.top = spaceOnTop + menuMargin

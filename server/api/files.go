@@ -122,7 +122,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", contentType)
 
 	fileInfo, err := a.app.GetFileInfo(filename)
-	if err != nil {
+	if err != nil && !model.IsErrNotFound(err) {
 		a.errorResponse(w, r, err)
 		return
 	}
