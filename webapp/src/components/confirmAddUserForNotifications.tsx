@@ -5,6 +5,8 @@ import React, {useState, useRef} from 'react'
 import Select from 'react-select'
 import {useIntl, FormattedMessage} from 'react-intl'
 
+import {MemberRole} from '../blocks/board'
+
 import {IUser} from '../user'
 
 import ConfirmationDialog from './confirmationDialogBox'
@@ -13,23 +15,61 @@ import './confirmAddUserForNotifications.scss'
 
 type Props = {
     user: IUser
+    minimumRole: MemberRole
+    allowManageBoardRoles: boolean
     onConfirm: (userId: string, role: string) => void
     onClose: () => void
 }
 
 const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
-    const {user} = props
-    const [newUserRole, setNewUserRole] = useState('Editor')
-    const userRole = useRef<string>('Editor')
+    const {user, allowManageBoardRoles} = props
+    const [newUserRole, setNewUserRole] = useState<MemberRole>(props.minimumRole || MemberRole.Viewer)
+    const userRole = useRef<string>(newUserRole)
 
     const intl = useIntl()
 
-    const roleOptions = [
-        {id: 'Admin', label: intl.formatMessage({id: 'PersonProperty.add-user-admin-role', defaultMessage: 'Admin'})},
-        {id: 'Editor', label: intl.formatMessage({id: 'PersonProperty.add-user-editor-role', defaultMessage: 'Editor'})},
-        {id: 'Commenter', label: intl.formatMessage({id: 'PersonProperty.add-user-commenter-role', defaultMessage: 'Commenter'})},
-        {id: 'Viewer', label: intl.formatMessage({id: 'PersonProperty.add-user-viewer-role', defaultMessage: 'Viewer'})},
-    ]
+    // if allowed to manage board roles, only display roles higher than minimum
+    const roleOptions = []
+    if (allowManageBoardRoles) {
+        if (props.minimumRole === MemberRole.Viewer || props.minimumRole === MemberRole.None) {
+            roleOptions.push(
+                {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
+            )
+        }
+        if (props.minimumRole === MemberRole.Viewer || props.minimumRole === MemberRole.None || props.minimumRole === MemberRole.Commenter) {
+            roleOptions.push(
+                {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
+            )
+        }
+        roleOptions.push(
+            {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
+        )
+        if (!user.is_guest) {
+            roleOptions.push(
+                {id: MemberRole.Admin, label: intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})},
+            )
+        }
+    }
+
+    // if not admin, (ie. Editor/Commentor on Public board)
+    // set to minimum board role, only option, read only.
+    if (!allowManageBoardRoles) {
+        if (props.minimumRole === MemberRole.Viewer || props.minimumRole === MemberRole.None) {
+            roleOptions.push(
+                {id: MemberRole.Viewer, label: intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})},
+            )
+        }
+        if (props.minimumRole === MemberRole.Commenter) {
+            roleOptions.push(
+                {id: MemberRole.Commenter, label: intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})},
+            )
+        }
+        if (props.minimumRole === MemberRole.Editor) {
+            roleOptions.push(
+                {id: MemberRole.Editor, label: intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})},
+            )
+        }
+    }
 
     const subText = (
         <div className='ConfirmAddUserForNotifications'>
@@ -57,14 +97,17 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
             </div>
             <Select
                 className='select'
-                getOptionLabel={(o: {id: string, label: string}) => o.label}
-                getOptionValue={(o: {id: string, label: string}) => o.id}
+                getOptionLabel={(o: {id: MemberRole, label: string}) => o.label}
+                getOptionValue={(o: {id: MemberRole, label: string}) => o.id}
                 styles={{menuPortal: (base) => ({...base, zIndex: 9999})}}
                 menuPortalTarget={document.body}
+                isDisabled={!allowManageBoardRoles}
                 options={roleOptions}
                 onChange={(option) => {
-                    setNewUserRole(option?.id || 'Editor')
-                    userRole.current = option?.id || 'Editor'
+                    if (allowManageBoardRoles) {
+                        setNewUserRole(option?.id || props.minimumRole)
+                        userRole.current = option?.id || props.minimumRole
+                    }
                 }}
                 value={roleOptions.find((o) => o.id === newUserRole)}
             />

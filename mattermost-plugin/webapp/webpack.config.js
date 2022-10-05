@@ -174,6 +174,7 @@ if (TARGET_IS_PRODUCT) {
 
     config.externals = {
         react: 'React',
+        'react-dom': 'ReactDOM',
         redux: 'Redux',
         'react-redux': 'ReactRedux',
         'mm-react-router-dom': 'ReactRouterDom',
