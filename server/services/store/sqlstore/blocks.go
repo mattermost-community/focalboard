@@ -804,7 +804,7 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 }
 
 func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentID string, modifiedBy string) error {
-	now := fmt.Sprintf("cast(%d as bigint)", utils.GetMillis())
+	now := utils.GetMillis()
 
 	selectQuery := s.getQueryBuilder(db).
 		Select(
@@ -817,8 +817,8 @@ func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentI
 			"fields",
 			"'"+modifiedBy+"'",
 			"create_at",
-			now,
-			now,
+			s.castInt(now, "update_at"),
+			s.castInt(now, "delete_at"),
 			"created_by",
 		).
 		From(s.tablePrefix + "blocks").
@@ -891,8 +891,8 @@ func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, paren
 			"bh.fields",
 			"'"+modifiedBy+"' AS modified_by",
 			"bh.create_at",
-			fmt.Sprintf("cast(%d as bigint) AS update_at", utils.GetMillis()),
-			"cast(0 as bigint) AS delete_at",
+			s.castInt(utils.GetMillis(), "update_at"),
+			s.castInt(0, "delete_at"),
 			"bh.created_by",
 		).
 		From(fmt.Sprintf(`
@@ -981,7 +981,7 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner, limit int) ([]string, 
 	`
 	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix, limit)
 
-	rows, err := db.Query(sql, nil)
+	rows, err := db.Query(sql)
 	if err != nil {
 		s.logger.Error("findOrphansForBoards ERROR", mlog.Err(err))
 		return nil, err
@@ -1023,7 +1023,7 @@ func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner, limit int) ([]string, 
 	`
 	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix, limit)
 
-	rows, err := db.Query(sql, nil)
+	rows, err := db.Query(sql)
 	if err != nil {
 		s.logger.Error("findOrphansForBlocks ERROR", mlog.Err(err))
 		return nil, err

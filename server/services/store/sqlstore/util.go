@@ -129,3 +129,10 @@ func (s *SQLStore) deleteBoardRecord(db sq.BaseRunner, boardID string, modifiedB
 func (s *SQLStore) deleteBlockRecord(db sq.BaseRunner, blockID, modifiedBy string) error {
 	return s.deleteBlockAndChildren(db, blockID, modifiedBy, true)
 }
+
+func (s *SQLStore) castInt(val int64, as string) string {
+	if s.dbType == model.MysqlDBType {
+		return fmt.Sprintf("cast(%d as unsigned) AS %s", val, as)
+	}
+	return fmt.Sprintf("cast(%d as bigint) AS %s", val, as)
+}
