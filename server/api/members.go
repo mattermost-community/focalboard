@@ -132,7 +132,6 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
-	a.logger.Debug("PAss permissions")
 
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
