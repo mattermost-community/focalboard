@@ -1397,12 +1397,11 @@ func TestAddMember(t *testing.T) {
 			require.Equal(t, th.GetUser2().ID, member.UserID)
 
 			member, resp = th.Client2.AddMemberToBoard(newMember)
-			th.CheckForbidden(resp)
-			require.Nil(t, member)
+			th.CheckOK(resp)
 
 			members, resp = th.Client2.GetMembersForBoard(board.ID)
 			th.CheckOK(resp)
-			require.Len(t, members, 2)
+			require.Len(t, members, 3)
 		})
 
 		t.Run("should always add a new member as given board role", func(t *testing.T) {
