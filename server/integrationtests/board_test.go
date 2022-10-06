@@ -1398,6 +1398,7 @@ func TestAddMember(t *testing.T) {
 
 			member, resp = th.Client2.AddMemberToBoard(newMember)
 			th.CheckOK(resp)
+			require.NotNil(t, member)
 
 			members, resp = th.Client2.GetMembersForBoard(board.ID)
 			th.CheckOK(resp)
