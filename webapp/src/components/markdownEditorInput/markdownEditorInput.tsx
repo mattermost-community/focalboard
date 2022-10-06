@@ -125,9 +125,10 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             boardId: board.id,
             userId,
             roles: role,
-            schemeEditor: minimumRole === MemberRole.Editor,
-            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
-            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
+            schemeAdmin: minimumRole === MemberRole.Admin,
+            schemeEditor: minimumRole === MemberRole.Admin || MemberRole.Editor,
+            schemeCommenter: minimumRole === MemberRole.Admin || MemberRole.Editor || minimumRole === MemberRole.Commenter,
+            schemeViewer: minimumRole === MemberRole.Admin || MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
