@@ -1402,7 +1402,7 @@ func TestAddMember(t *testing.T) {
 
 			members, resp = th.Client2.GetMembersForBoard(board.ID)
 			th.CheckOK(resp)
-			require.Len(t, members, 3)
+			require.Len(t, members, 2)
 		})
 
 		t.Run("should always add a new member as given board role", func(t *testing.T) {
