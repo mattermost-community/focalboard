@@ -99,6 +99,7 @@ const Sidebar = (props: Props) => {
     }, [windowDimensions])
 
     if (!boards) {
+        // eslint-disable-next-line no-console
         console.log('AAAA')
         return <div/>
     }
@@ -114,11 +115,13 @@ const Sidebar = (props: Props) => {
     }
 
     if (!me) {
+        // eslint-disable-next-line no-console
         console.log('BBBB')
         return <div/>
     }
 
     if (isHidden) {
+        // eslint-disable-next-line no-console
         console.log('CCCC')
         return (
             <div className='Sidebar octo-sidebar hidden'>
@@ -146,6 +149,7 @@ const Sidebar = (props: Props) => {
         )
     }
 
+    // eslint-disable-next-line no-console
     console.log('DDDD')
     return (
         <div className='Sidebar octo-sidebar'>
