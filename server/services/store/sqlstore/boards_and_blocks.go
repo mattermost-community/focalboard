@@ -106,7 +106,7 @@ func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoa
 	}
 
 	// delete the blocks first, since deleting the board will clean up any children and we'll get
-	// not found errors when delting the blocks after.
+	// not found errors when deleting the blocks after.
 	for _, blockID := range dbab.Blocks {
 		block, err := s.getBlock(db, blockID)
 		if err != nil {
