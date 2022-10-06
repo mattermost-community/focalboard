@@ -49,7 +49,7 @@ type Store interface {
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
 
 	FindOrphansForBoards(limit int) ([]string, error)
-	FindOrphansForBlocks(limit int) ([]string, error)
+	FindOrphansForCards(limit int) ([]string, error)
 
 	Shutdown() error
 

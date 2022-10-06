@@ -1199,7 +1199,7 @@ func testFindOrphans(t *testing.T, store store.Store) {
 		err := store.DeleteBlockRecord(cardOrphaned.ID, testUserID)
 		require.NoError(t, err)
 
-		ids, err := store.FindOrphansForBlocks(100)
+		ids, err := store.FindOrphansForCards(100)
 		require.NoError(t, err)
 
 		// make sure only the orphaned content blocks for the deleted card were found

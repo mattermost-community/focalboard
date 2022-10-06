@@ -1002,7 +1002,7 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner, limit int) ([]string, 
 	return results, nil
 }
 
-func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner, limit int) ([]string, error) {
+func (s *SQLStore) findOrphansForCards(db sq.BaseRunner, limit int) ([]string, error) {
 	if limit <= 0 {
 		limit = 1000
 	}
@@ -1010,13 +1010,13 @@ func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner, limit int) ([]string, 
 		return nil, ErrLimitExceeded{1000}
 	}
 
-	// Find all orphaned child blocks for deleted blocks/cards.
+	// Find all orphaned child blocks for deleted cards.
 	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
 	sql := `
 		SELECT fb.id from %sblocks AS fb WHERE fb.parent_id IN
 		(
 			SELECT bh.id FROM %sblocks_history AS bh,
-				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history GROUP BY id) AS sub
+				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE type='card' GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		)
 		limit %d;
@@ -1025,7 +1025,7 @@ func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner, limit int) ([]string, 
 
 	rows, err := db.Query(sql)
 	if err != nil {
-		s.logger.Error("findOrphansForBlocks ERROR", mlog.Err(err))
+		s.logger.Error("findOrphansForCards ERROR", mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -1035,7 +1035,7 @@ func (s *SQLStore) findOrphansForBlocks(db sq.BaseRunner, limit int) ([]string, 
 		var id string
 		err := rows.Scan(&id)
 		if err != nil {
-			s.logger.Error("findOrphansForBlocks cannot scan id", mlog.Err(err))
+			s.logger.Error("findOrphansForCards cannot scan id", mlog.Err(err))
 			return nil, err
 		}
 		results = append(results, id)

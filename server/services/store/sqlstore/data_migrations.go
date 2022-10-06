@@ -696,7 +696,7 @@ func (s *SQLStore) RunMoveOrphanedBlocksToHistoryMigration() error {
 
 	// find orphans for cards/blocks
 	for i := 0; i < maxIterations; i++ {
-		orphans, err := s.findOrphansForBlocks(s.db, limit)
+		orphans, err := s.findOrphansForCards(s.db, limit)
 		if err != nil {
 			if !canContinueOnError("error finding orphans for cards", mlog.Err(err)) {
 				return nil
