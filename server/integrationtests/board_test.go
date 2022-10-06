@@ -1393,8 +1393,8 @@ func TestAddMember(t *testing.T) {
 			require.Equal(t, th.GetUser2().ID, member.UserID)
 
 			member, resp = th.Client2.AddMemberToBoard(newMember)
-			th.CheckForbidden(resp)
-			require.Nil(t, member)
+			th.CheckOK(resp)
+			require.NotNil(t, member)
 
 			members, resp = th.Client2.GetMembersForBoard(board.ID)
 			th.CheckOK(resp)
