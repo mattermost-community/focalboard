@@ -99,6 +99,7 @@ const Sidebar = (props: Props) => {
     }, [windowDimensions])
 
     if (!boards) {
+        console.log('AAAA')
         return <div/>
     }
 
@@ -113,10 +114,12 @@ const Sidebar = (props: Props) => {
     }
 
     if (!me) {
+        console.log('BBBB')
         return <div/>
     }
 
     if (isHidden) {
+        console.log('CCCC')
         return (
             <div className='Sidebar octo-sidebar hidden'>
                 <div className='octo-sidebar-header show-button'>
@@ -143,6 +146,7 @@ const Sidebar = (props: Props) => {
         )
     }
 
+    console.log('DDDD')
     return (
         <div className='Sidebar octo-sidebar'>
             {!Utils.isFocalboardPlugin() &&
