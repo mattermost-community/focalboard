@@ -119,13 +119,13 @@ func (e ErrInvalidDBType) Error() string {
 }
 
 // deleteBoardRecord deletes a boards record without deleting any child records in the blocks table.
-// FOR UNIT TESTING ONLY
+// FOR UNIT TESTING ONLY.
 func (s *SQLStore) deleteBoardRecord(db sq.BaseRunner, boardID string, modifiedBy string) error {
 	return s.deleteBoardAndChildren(db, boardID, modifiedBy, true)
 }
 
 // deleteBlockRecord deletes a blocks record without deleting any child records in the blocks table.
-// FOR UNIT TESTING ONLY
+// FOR UNIT TESTING ONLY.
 func (s *SQLStore) deleteBlockRecord(db sq.BaseRunner, blockID, modifiedBy string) error {
 	return s.deleteBlockAndChildren(db, blockID, modifiedBy, true)
 }

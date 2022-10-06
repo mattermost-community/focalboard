@@ -1178,7 +1178,7 @@ func testFindOrphans(t *testing.T, store store.Store) {
 	// create some cards and content blocks to keep.
 	blocksKeep := createTestCards(t, store, testUserID, boardKeep.ID, 5)
 	cardKeep := blocksKeep[0]
-	blocksKeep = append(blocksKeep, createTestBlocksForCard(t, store, cardKeep.ID, 5)...)
+	_ = createTestBlocksForCard(t, store, cardKeep.ID, 5)
 
 	t.Run("find board orphans", func(t *testing.T) {
 		// orphan some blocks by deleting a board record
