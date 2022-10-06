@@ -2,11 +2,14 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/mattermost/focalboard/server/app"
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
@@ -144,10 +147,26 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fileReader, err := a.app.GetFileReader(board.TeamID, boardID, filename)
-	if err != nil {
+	if err != nil && !errors.Is(err, app.ErrFileNotFound) {
 		a.errorResponse(w, r, err)
 		return
 	}
+
+	if errors.Is(err, app.ErrFileNotFound) && board.ChannelID != "" {
+		// prior to moving from workspaces to teams, the filepath was constructed from
+		// workspaceID, which is the channel ID in plugin mode.
+		// If a file is not found from team ID as we tried above, try looking for it via
+		// channel ID.
+		fileReader, err = a.app.GetFileReader(board.ChannelID, boardID, filename)
+		if err != nil {
+			a.errorResponse(w, r, err)
+			return
+		}
+		// move file to team location
+		// nothing to do if there is an error
+		_ = a.app.MoveFile(board.ChannelID, board.TeamID, boardID, filename)
+	}
+
 	defer fileReader.Close()
 	http.ServeContent(w, r, filename, time.Now(), fileReader)
 	auditRec.Success()
