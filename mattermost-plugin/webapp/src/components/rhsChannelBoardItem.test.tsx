@@ -3,9 +3,7 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {render, screen} from '@testing-library/react'
-
-import userEvent from '@testing-library/user-event'
+import {render} from '@testing-library/react'
 
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
@@ -54,40 +52,22 @@ describe('components/rhsChannelBoardItem', () => {
                 },
             },
             boards: {
-                current: board.id,
-                boards: {
-                    [board.id]: board,
-                },
                 myBoardMemberships: {
                     [board.id]: {userId: 'user_id_1', schemeAdmin: true},
                 },
-            },
-            users: {
-                boardUsers: {
-                    user_id_1: {username: 'abc'},
-                },
-            },
-            clientConfig: {
-                value: {},
-            },
+            }
         }
         board.id = 'test_id'
         board.title = 'New board'
         board.description = '**Board** with description'
         board.updateAt = 1657311058157
         const store = mockStateStore([], state)
-        const {container, getByText} = render(wrapIntl(
+        const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
                 <RHSChannelBoardItem board={board} />
             </ReduxProvider>
         ))
 
-        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
-        await userEvent.click(buttonElement)
-
-        const description = getByText(/with description/i)
-
-        expect(description.outerHTML).toEqual("<p><strong>Board</strong> with description</p>")
         expect(container).toMatchSnapshot()
     })
 })

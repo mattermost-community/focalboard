@@ -47,7 +47,7 @@ const RHSChannelBoardItem = (props: Props) => {
 
     const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
 
-    const html = Utils.htmlFromMarkdown(board.description)
+    const markdownHtml = Utils.htmlFromMarkdown(board.description)
     return (
         <div
             onClick={() => handleBoardClicked(board.id)}
@@ -98,7 +98,7 @@ const RHSChannelBoardItem = (props: Props) => {
                 </MenuWrapper>
             </div>
             <div className='description'
-                dangerouslySetInnerHTML={{__html: html}}
+                dangerouslySetInnerHTML={{__html: markdownHtml}}
             />
             <div className='date'>
                 <FormattedMessage
