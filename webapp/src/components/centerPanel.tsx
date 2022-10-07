@@ -57,6 +57,7 @@ import CardLimitNotification from './cardLimitNotification'
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
+import ShowPlaybooksList from './shareBoard/showPlaybooksList'
 
 type Props = {
     clientConfig?: ClientConfig
@@ -364,6 +365,9 @@ const CenterPanel = (props: Props) => {
         () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
         [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
     )
+    const showPlaybooksList = !props.readonly && board.virtualDriver === 'playbooks'
+    const isVirtualReadOnly = props.readonly || board.virtualDriver.length !== 0
+
     return (
         <div
             className='BoardComponent'
@@ -380,7 +384,7 @@ const CenterPanel = (props: Props) => {
                         cardId={props.shownCardId}
                         onClose={() => showCard(undefined)}
                         showCard={(cardId) => showCard(cardId)}
-                        readonly={props.readonly}
+                        readonly={isVirtualReadOnly}
                     />
                 </RootPortal>}
 
@@ -393,7 +397,7 @@ const CenterPanel = (props: Props) => {
                         readonly={props.readonly}
                     />
                     <div className='shareButtonWrapper'>
-                        {showShareButton &&
+                        {!showShareButton &&
                         <ShareBoardButton
                             enableSharedBoards={props.clientConfig?.enablePublicSharedBoards || false}
                         />
@@ -402,6 +406,12 @@ const CenterPanel = (props: Props) => {
                             <ShareBoardLoginButton/>
                         }
                         <ShareBoardTourStep/>
+                        {showPlaybooksList &&
+                            <ShowPlaybooksList
+                                numberOfPlaybooks={board.virtualLink.split(',').length}
+                                board={board}
+                            />
+                        }
                     </div>
                 </div>
                 <ViewHeader
@@ -428,7 +438,7 @@ const CenterPanel = (props: Props) => {
                 visibleGroups={visibleGroups}
                 hiddenGroups={hiddenGroups}
                 selectedCardIds={selectedCardIds}
-                readonly={props.readonly}
+                readonly={isVirtualReadOnly}
                 onCardClicked={cardClicked}
                 addCard={addCard}
                 addCardFromTemplate={addCardFromTemplate}
@@ -445,7 +455,7 @@ const CenterPanel = (props: Props) => {
                     views={props.views}
                     visibleGroups={visibleGroups}
                     selectedCardIds={selectedCardIds}
-                    readonly={props.readonly}
+                    readonly={isVirtualReadOnly}
                     cardIdToFocusOnRender={cardIdToFocusOnRender}
                     showCard={showCard}
                     addCard={addCard}
@@ -458,7 +468,7 @@ const CenterPanel = (props: Props) => {
                     board={props.board}
                     cards={props.cards}
                     activeView={props.activeView}
-                    readonly={props.readonly}
+                    readonly={isVirtualReadOnly}
                     dateDisplayProperty={props.dateDisplayProperty}
                     showCard={showCard}
                     addCard={(properties: Record<string, string>) => {
@@ -471,7 +481,7 @@ const CenterPanel = (props: Props) => {
                     board={props.board}
                     cards={props.cards}
                     activeView={props.activeView}
-                    readonly={props.readonly}
+                    readonly={isVirtualReadOnly}
                     onCardClicked={cardClicked}
                     selectedCardIds={selectedCardIds}
                     addCard={(show) => addCard('', show)}

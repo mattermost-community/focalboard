@@ -12,24 +12,41 @@ type Props = {
     children?: React.ReactNode
     title?: string
     text: React.ReactNode
+    isPlaybooksReadOnly?: boolean
 }
 
 function ButtonWithMenu(props: Props): JSX.Element {
+    const styleButton = {
+        borderRadius: '5px',
+        background: 'rgba(63, 67, 80, 0.08)',
+        color: 'rgba(63, 67, 80, 0.4)',
+    }
+
+    const noClick = {
+        pointerEvents: 'none',
+    } as const
+
     return (
         <div
             onClick={props.onClick}
             className='ButtonWithMenu'
             title={props.title}
+            style={props.isPlaybooksReadOnly ? noClick : {}}
         >
-            <div className='button-text'>
+            <div
+                style={props.isPlaybooksReadOnly ? styleButton : {}}
+                className='button-text'
+            >
                 {props.text}
             </div>
-            <MenuWrapper stopPropagationOnToggle={true}>
-                <div className='button-dropdown'>
+            {!props.isPlaybooksReadOnly && <MenuWrapper stopPropagationOnToggle={true}>
+                <div
+                    className='button-dropdown'
+                >
                     <DropdownIcon/>
                 </div>
                 {props.children}
-            </MenuWrapper>
+            </MenuWrapper>}
         </div>
     )
 }

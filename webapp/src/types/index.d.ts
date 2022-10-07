@@ -13,6 +13,13 @@ export interface IAppWindow extends Window {
     openInNewBrowser?: ((href: string) => void) | null
     webkit?: {messageHandlers: {nativeApp?: {postMessage: <T>(message: T) => void}}}
     openPricingModal?: () => (telemetry: TelemetryProps) => void
+    showPlaybooksConnected?: boolean
+}
+
+declare global {
+    interface Window {
+        showPlaybooksConnected?: boolean;
+    }
 }
 
 // SuiteWindow documents all custom properties
@@ -25,4 +32,5 @@ export type SuiteWindow = Window & {
     frontendBaseURL?: string
     isFocalboardPlugin?: boolean
     WebappUtils?: any
+    showPlaybooksConnected?: boolean
 }

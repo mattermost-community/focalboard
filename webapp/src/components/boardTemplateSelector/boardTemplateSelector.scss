@@ -1,5 +1,13 @@
 @import '../../styles/z-index';
 
+.selectPlaybooks {
+    min-width: 300px;
+
+    & > div {
+        min-height: 40px;
+    }
+}
+
 .BoardTemplateSelector {
     @include z-index(board-template-selector);
     position: absolute;

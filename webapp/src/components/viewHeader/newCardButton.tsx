@@ -20,6 +20,7 @@ type Props = {
     addCardFromTemplate: (cardTemplateId: string) => void
     addCardTemplate: () => void
     editCardTemplate: (cardTemplateId: string) => void
+    isPlaybooksReadOnly?: boolean
 }
 
 const NewCardButton = (props: Props): JSX.Element => {
@@ -37,11 +38,20 @@ const NewCardButton = (props: Props): JSX.Element => {
                     props.addCard()
                 }
             }}
+            isPlaybooksReadOnly={props.isPlaybooksReadOnly}
             text={(
-                <FormattedMessage
-                    id='ViewHeader.new'
-                    defaultMessage='New'
-                />
+                <>
+                    {!props.isPlaybooksReadOnly &&
+                    <FormattedMessage
+                        id='ViewHeader.new'
+                        defaultMessage='New'
+                    />}
+                    {props.isPlaybooksReadOnly &&
+                    <FormattedMessage
+                        id='ViewHeader.isReadOnly'
+                        defaultMessage='Read Only'
+                    />}
+                </>
             )}
         >
             <Menu position='left'>

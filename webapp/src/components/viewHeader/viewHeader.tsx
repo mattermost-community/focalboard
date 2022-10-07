@@ -242,6 +242,7 @@ const ViewHeader = (props: Props) => {
 
                 <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                     <NewCardButton
+                        isPlaybooksReadOnly={board.virtualDriver.length !== 0}
                         addCard={props.addCard}
                         addCardFromTemplate={props.addCardFromTemplate}
                         addCardTemplate={props.addCardTemplate}
