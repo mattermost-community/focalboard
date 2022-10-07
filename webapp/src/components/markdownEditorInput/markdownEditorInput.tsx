@@ -126,9 +126,9 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             userId,
             roles: role,
             schemeAdmin: newRole === MemberRole.Admin,
-            schemeEditor: newRole === MemberRole.Admin || MemberRole.Editor,
-            schemeCommenter: newRole === MemberRole.Admin || MemberRole.Editor || newRole === MemberRole.Commenter,
-            schemeViewer: newRole === MemberRole.Admin || MemberRole.Editor || newRole === MemberRole.Commenter || newRole === MemberRole.Viewer,
+            schemeEditor: newRole === MemberRole.Admin || newRole === MemberRole.Editor,
+            schemeCommenter: newRole === MemberRole.Admin || newRole === MemberRole.Editor || newRole === MemberRole.Commenter,
+            schemeViewer: newRole === MemberRole.Admin || newRole === MemberRole.Editor || newRole === MemberRole.Commenter || newRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
