@@ -110,14 +110,15 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
     }
 
     const addUser = useCallback(async (userId: string, role: string) => {
-        const minimumRole = role || MemberRole.Viewer
+        const newRole = role || MemberRole.Viewer
         const newMember = {
             boardId: board.id,
             userId,
             roles: role,
-            schemeEditor: minimumRole === MemberRole.Editor,
-            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
-            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
+            schemeAdmin: newRole === MemberRole.Admin,
+            schemeEditor: newRole === MemberRole.Admin || MemberRole.Editor,
+            schemeCommenter: newRole === MemberRole.Admin || MemberRole.Editor || newRole === MemberRole.Commenter,
+            schemeViewer: newRole === MemberRole.Admin || MemberRole.Editor || newRole === MemberRole.Commenter || newRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
