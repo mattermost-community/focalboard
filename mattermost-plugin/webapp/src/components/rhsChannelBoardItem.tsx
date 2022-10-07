@@ -86,7 +86,7 @@ const RHSChannelBoardItem = (props: Props) => {
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
                                 disabled={true}
-                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board Hello'})}
+                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
                                 icon={<CompassIcon icon='link-variant-off'/>}
                                 onClick={() => {
                                     onUnlinkBoard(board)

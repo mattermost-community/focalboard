@@ -3,7 +3,9 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {render} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
+
+import userEvent from '@testing-library/user-event'
 
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
@@ -68,6 +70,8 @@ describe('components/rhsChannelBoardItem', () => {
             </ReduxProvider>
         ))
 
+        const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
+        await userEvent.click(buttonElement)
         expect(container).toMatchSnapshot()
     })
 })
