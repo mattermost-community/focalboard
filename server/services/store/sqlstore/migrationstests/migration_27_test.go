@@ -40,7 +40,11 @@ func Test27MigrateUserPropsToPreferences(t *testing.T) {
 		require.Contains(t, userProps, "focalboard_onboardingTourStep")
 		require.Equal(t, float64(1), userProps["focalboard_onboardingTourStep"])
 		require.Contains(t, userProps, "focalboard_onboardingTourStarted")
-		require.True(t, userProps["focalboard_onboardingTourStarted"].(bool))
+		// initially, onboardingTourStarted will be false on the user,
+		// but already inserted in the preferences table as true. The
+		// migration should not overwrite the already existing value,
+		// so after migration #27, this value should be true
+		require.False(t, userProps["focalboard_onboardingTourStarted"].(bool))
 		require.Contains(t, userProps, "focalboard_version72MessageCanceled")
 		require.True(t, userProps["focalboard_version72MessageCanceled"].(bool))
 		require.Contains(t, userProps, "focalboard_lastWelcomeVersion")

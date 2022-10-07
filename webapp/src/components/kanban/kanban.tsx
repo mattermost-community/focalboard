@@ -66,12 +66,7 @@ const Kanban = (props: Props) => {
         }
     }, [activeView.fields.defaultTemplateId])
 
-    if (!groupByProperty) {
-        Utils.assertFailure('Board views must have groupByProperty set')
-        return <div/>
-    }
-
-    const propertyValues = groupByProperty.options || []
+    const propertyValues = groupByProperty?.options || []
     Utils.log(`${propertyValues.length} propertyValues`)
 
     const visiblePropertyTemplates = useMemo(() => {
@@ -168,7 +163,7 @@ const Kanban = (props: Props) => {
     }, [cards, visibleGroups, activeView.id, activeView.fields.cardOrder, groupByProperty, props.selectedCardIds])
 
     const onDropToCard = useCallback(async (srcCard: Card, dstCard: Card) => {
-        if (srcCard.id === dstCard.id) {
+        if (srcCard.id === dstCard.id || !groupByProperty) {
             return
         }
         Utils.log(`onDropToCard: ${dstCard.title}`)
@@ -215,6 +210,11 @@ const Kanban = (props: Props) => {
         const newShowOptions = new Map<string, boolean>(showCalculationsMenu)
         newShowOptions.set(templateId, show)
         setShowCalculationsMenu(newShowOptions)
+    }
+
+    if (!groupByProperty) {
+        Utils.assertFailure('Board views must have groupByProperty set')
+        return <div/>
     }
 
     return (
@@ -326,25 +326,25 @@ const Kanban = (props: Props) => {
                 {/* Hidden columns */}
 
                 {(hiddenGroups.length > 0 || hiddenCardsCount > 0) &&
-                <div className='octo-board-column narrow'>
-                    {hiddenGroups.map((group) => (
-                        <KanbanHiddenColumnItem
-                            key={group.option.id}
-                            group={group}
-                            activeView={activeView}
-                            intl={props.intl}
-                            readonly={props.readonly}
-                            onDrop={(card: Card) => onDropToColumn(group.option, card)}
-                        />
-                    ))}
-                    {hiddenCardsCount > 0 &&
-                    <div className='ml-1'>
-                        <HiddenCardCount
-                            hiddenCardsCount={hiddenCardsCount}
-                            showHiddenCardNotification={props.showHiddenCardCountNotification}
-                        />
+                    <div className='octo-board-column narrow'>
+                        {hiddenGroups.map((group) => (
+                            <KanbanHiddenColumnItem
+                                key={group.option.id}
+                                group={group}
+                                activeView={activeView}
+                                intl={props.intl}
+                                readonly={props.readonly}
+                                onDrop={(card: Card) => onDropToColumn(group.option, card)}
+                            />
+                        ))}
+                        {hiddenCardsCount > 0 &&
+                        <div className='ml-1'>
+                            <HiddenCardCount
+                                hiddenCardsCount={hiddenCardsCount}
+                                showHiddenCardNotification={props.showHiddenCardCountNotification}
+                            />
+                        </div>}
                     </div>}
-                </div>}
             </div>
         </ScrollingComponent>
     )

@@ -69,7 +69,7 @@ const CardDetailProperties = (props: Props) => {
         const subTextString = intl.formatMessage({
             id: 'CardDetailProperty.property-name-change-subtext',
             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
-        }, {oldPropType: oldType, newPropType: newType})
+        }, {oldPropType: oldType.displayName(intl), newPropType: newType.displayName(intl)})
 
         setConfirmationDialogBox({
             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm property type change'}),
