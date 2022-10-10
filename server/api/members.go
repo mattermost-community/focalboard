@@ -127,7 +127,8 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) {
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardRoles) &&
+		!(board.Type == model.BoardTypeOpen && a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionManageBoardProperties)) {
 		a.errorResponse(w, r, model.NewErrPermission("access denied to modify board members"))
 		return
 	}
