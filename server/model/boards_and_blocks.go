@@ -148,6 +148,12 @@ func GenerateBoardsAndBlocksIDs(bab *BoardsAndBlocks, logger mlog.LoggerIFace) (
 	blocks := []Block{}
 	for _, board := range bab.Boards {
 		newID := utils.NewID(utils.IDTypeBoard)
+
+		// Generate BXXX board ids if it's a virtual board
+		if board.VirtualDriver != "" {
+			newID = "B" + newID[1:]
+		}
+
 		for _, block := range blocksByBoard[board.ID] {
 			block.BoardID = newID
 			blocks = append(blocks, block)

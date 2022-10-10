@@ -85,35 +85,6 @@ func (pd *PlaybooksDriver) GetBlocksForBoard(boardID string) ([]model.Block, err
 		return nil, err
 	}
 
-	blocks = append(blocks, model.Block{
-		ID:         "1",
-		ParentID:   "1",
-		CreatedBy:  board.CreatedBy,
-		ModifiedBy: board.CreatedBy,
-		Schema:     1,
-		Type:       model.TypeView,
-		Title:      "Board View",
-		Fields: map[string]any{
-			"cardOrder":          []string{"2"},
-			"collapsedOptionIds": []string{},
-			"columnCalculations": map[string]any{},
-			"columnWidths":       map[string]any{},
-			"defaultTemplateId":  "",
-			"filter": map[string]any{
-				"filters":   []string{},
-				"operation": "and",
-			},
-			"hiddenOptionIds":    []string{},
-			"kanbanCalculations": map[string]any{},
-			"sortOptions":        []string{},
-			"viewType":           "board",
-			"visibleOptionIds":   []string{},
-			"visiblePropertyIds": []string{},
-		},
-		CreateAt: board.CreateAt,
-		BoardID:  boardID,
-	})
-
 	return blocks, nil
 }
 
