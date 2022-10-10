@@ -34,7 +34,7 @@ type VirtualBoardDriver interface {
 // Store represents the abstraction of the data storage.
 type VirtualBoardLayer struct {
 	store.Store
-	logger mlog.LoggerIFace
+	logger  mlog.LoggerIFace
 	drivers map[string]VirtualBoardDriver
 }
 
@@ -142,13 +142,13 @@ func (vbl *VirtualBoardLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		mlog.Int("memberCount", len(members)),
 	)
 
-	processedMembers := make([]*model.BoardMember, len(members))
+	processedMembers := make([]*model.BoardMember, 0)
 	for _, member := range members {
 		newMember := &model.BoardMember{
-			BoardID: member.BoardID,
-			UserID: member.UserID,
-			Roles: "",
-			MinimumRole: "viewer",
+			BoardID:      boardID,
+			UserID:       member.UserID,
+			Roles:        "",
+			MinimumRole:  "viewer",
 			SchemeViewer: true,
 		}
 		processedMembers = append(processedMembers, newMember)

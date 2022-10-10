@@ -104,7 +104,7 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 	}
 	defer closeBody(rp)
 
-	var boardMembers []*model.BoardMember
+	boardMembers := make([]*model.BoardMember, 0)
 	if err := json.NewDecoder(rp.Body).Decode(&boardMembers); err != nil {
 		return nil, err
 	}
