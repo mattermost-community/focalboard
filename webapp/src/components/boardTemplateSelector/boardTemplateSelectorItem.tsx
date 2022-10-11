@@ -4,6 +4,7 @@ import React, {useCallback, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board} from '../../blocks/board'
+import Label from '../../widgets/label'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
 import DeleteIcon from '../../widgets/icons/delete'
@@ -42,6 +43,7 @@ const BoardTemplateSelectorItem = (props: Props) => {
         >
             <span className='template-icon'>{template.icon || <CompassIcon icon='product-boards'/>}</span>
             <span className='template-name'>{template.title || intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled'})}</span>
+            {props.template.virtualDriver.length > 0 && <span className='template-smart'>{intl.formatMessage({id: 'View.Smart', defaultMessage: 'SMART'})}</span>}
 
             {/* don't show template menu options for default templates */}
             {template.createdBy !== Constants.SystemUserID &&

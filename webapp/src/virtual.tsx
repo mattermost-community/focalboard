@@ -4,5 +4,5 @@
 export interface VirtualLink {
     id: string
     name: string
-    type: string
+    properties: Record<string, any>
 }

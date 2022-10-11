@@ -55,7 +55,7 @@ const isVirtualPlayblooks = (board: Board | undefined): boolean => {
 const SelectPlaybooks = ({onUpdate, selectedPlaybooks, availableValues, handleUseTemplate, onDelete}: SelectPlaybooksProps) => {
     return (
         <div
-            style={{gap: '8px', alignItems: 'center'}}
+            style={{gap: '8px', alignItems: 'center', marginBottom: '8px'}}
             className='buttons'
         >
             <Select
@@ -292,6 +292,19 @@ const BoardTemplateSelector = (props: Props) => {
                             </Button>
                         </div>
                     }
+                    {activeTemplate && activeTemplate.virtualDriver.length > 0 &&
+                    <div
+                        style={{
+                            display: 'flex',
+                            gap: '5px',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '100%',
+                        }}
+                    >
+                        <span className='template-smart'>{intl.formatMessage({id: 'View.Smart', defaultMessage: 'SMART'})}</span>
+                        <span className='template-smart-description'>{intl.formatMessage({id: 'View.SmartDescription', defaultMessage: '— Smart boards are dynamically updated and cannot be edited'})}</span>
+                    </div>}
                 </div>
             </div>
         </div>
