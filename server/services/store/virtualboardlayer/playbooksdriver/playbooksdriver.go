@@ -112,6 +112,14 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 	return boardMembers, nil
 }
 
+type playbook struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	LastRunAt   int64  `json:"last_run_at"`
+}
+
 func (pd *PlaybooksDriver) GetVirtualLinks(userID, teamID string) ([]*model.VirtualLink, error) {
 	url := fmt.Sprintf("/boards/playbooks?user_id=%s&team_id=%s", userID, teamID)
 	rp, err := pd.doRequest(http.MethodGet, url, strings.NewReader(""))
@@ -123,9 +131,21 @@ func (pd *PlaybooksDriver) GetVirtualLinks(userID, teamID string) ([]*model.Virt
 	}
 	defer closeBody(rp)
 
-	var links []*model.VirtualLink
-	if err := json.NewDecoder(rp.Body).Decode(&links); err != nil {
+	links := make([]*model.VirtualLink, 0)
+	playbooks := make([]*playbook, 0)
+	if err := json.NewDecoder(rp.Body).Decode(&playbooks); err != nil {
 		return nil, err
+	}
+	for _, pb := range playbooks {
+		links = append(links, &model.VirtualLink{
+			ID:   pb.ID,
+			Name: pb.Name,
+			Properties: map[string]interface{}{
+				"Description": pb.Description,
+				"LastRunAt":   pb.LastRunAt,
+				"Type":        pb.Type,
+			},
+		})
 	}
 
 	return links, nil
