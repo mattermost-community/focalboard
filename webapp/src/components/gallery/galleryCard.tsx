@@ -1,8 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useMemo, useState, useCallback} from 'react'
-import {useIntl} from 'react-intl'
-import {FormattedMessage} from 'react-intl'
+import {useIntl, FormattedMessage} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
