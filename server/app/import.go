@@ -323,6 +323,9 @@ func (a *App) blockToBoard(block *model.Block, opt model.ImportArchiveOptions) (
 	if cardProperties, ok := arrayMapsValue(block.Fields, "cardProperties"); ok {
 		board.CardProperties = cardProperties
 	}
+	if virtualDriver, ok := stringValue(block.Fields, "virtualDriver"); ok {
+		board.VirtualDriver = virtualDriver
+	}
 	return board, nil
 }
 

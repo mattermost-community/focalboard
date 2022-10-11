@@ -85,35 +85,6 @@ func (pd *PlaybooksDriver) GetBlocksForBoard(boardID string) ([]model.Block, err
 		return nil, err
 	}
 
-	blocks = append(blocks, model.Block{
-		ID:         "1",
-		ParentID:   "1",
-		CreatedBy:  board.CreatedBy,
-		ModifiedBy: board.CreatedBy,
-		Schema:     1,
-		Type:       model.TypeView,
-		Title:      "Board View",
-		Fields: map[string]any{
-			"cardOrder":          []string{"2"},
-			"collapsedOptionIds": []string{},
-			"columnCalculations": map[string]any{},
-			"columnWidths":       map[string]any{},
-			"defaultTemplateId":  "",
-			"filter": map[string]any{
-				"filters":   []string{},
-				"operation": "and",
-			},
-			"hiddenOptionIds":    []string{},
-			"kanbanCalculations": map[string]any{},
-			"sortOptions":        []string{},
-			"viewType":           "board",
-			"visibleOptionIds":   []string{},
-			"visiblePropertyIds": []string{},
-		},
-		CreateAt: board.CreateAt,
-		BoardID:  boardID,
-	})
-
 	return blocks, nil
 }
 
@@ -133,12 +104,20 @@ func (pd *PlaybooksDriver) GetMembersForBoard(boardID string) ([]*model.BoardMem
 	}
 	defer closeBody(rp)
 
-	var boardMembers []*model.BoardMember
+	boardMembers := make([]*model.BoardMember, 0)
 	if err := json.NewDecoder(rp.Body).Decode(&boardMembers); err != nil {
 		return nil, err
 	}
 
 	return boardMembers, nil
+}
+
+type playbook struct {
+	ID          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	LastRunAt   int64  `json:"last_run_at"`
 }
 
 func (pd *PlaybooksDriver) GetVirtualLinks(userID, teamID string) ([]*model.VirtualLink, error) {
@@ -152,9 +131,21 @@ func (pd *PlaybooksDriver) GetVirtualLinks(userID, teamID string) ([]*model.Virt
 	}
 	defer closeBody(rp)
 
-	var links []*model.VirtualLink
-	if err := json.NewDecoder(rp.Body).Decode(&links); err != nil {
+	links := make([]*model.VirtualLink, 0)
+	playbooks := make([]*playbook, 0)
+	if err := json.NewDecoder(rp.Body).Decode(&playbooks); err != nil {
 		return nil, err
+	}
+	for _, pb := range playbooks {
+		links = append(links, &model.VirtualLink{
+			ID:   pb.ID,
+			Name: pb.Name,
+			Properties: map[string]interface{}{
+				"Description": pb.Description,
+				"LastRunAt":   pb.LastRunAt,
+				"Type":        pb.Type,
+			},
+		})
 	}
 
 	return links, nil
