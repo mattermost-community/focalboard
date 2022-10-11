@@ -55,7 +55,7 @@ const isVirtualPlayblooks = (board: Board | undefined): boolean => {
 const SelectPlaybooks = ({onUpdate, selectedPlaybooks, availableValues, handleUseTemplate, onDelete}: SelectPlaybooksProps) => {
     return (
         <div
-            style={{gap: '8px'}}
+            style={{gap: '8px', alignItems: 'center'}}
             className='buttons'
         >
             <Select

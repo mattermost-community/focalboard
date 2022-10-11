@@ -1110,7 +1110,7 @@ class Mutator {
         const boardTemplate = createBoard()
         boardTemplate.isTemplate = true
         boardTemplate.teamId = teamId
-        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateDefaultTitle', defaultMessage: 'Untitled Template'})
 
         const view = createBoardView()
         view.fields.viewType = 'board'

@@ -29,7 +29,9 @@
 .addLinkedPlaybooks {
     padding: 20px 32px;
     margin-bottom: 16px;
-    border-bottom: 1px solid rgba(63, 67, 80, 0.08);    
+    border-bottom: 1px solid rgba(63, 67, 80, 0.08);
+    max-width: 536px;
+    width: 100%;    
 }
 
 .deletePlaybook {
@@ -44,10 +46,13 @@
     border: 1px solid rgba(63, 67, 80, 0.16);
     border-radius: 4px;
     padding: 16px;
+    max-width: 536px;
+    width: 100%;
 
     & > p {
         margin: 0 0 8px;
         color: rgba(63, 67, 80, 1);
+        text-overflow: ellipsis;
     }
 
     & > div {

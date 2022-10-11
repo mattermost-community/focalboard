@@ -1,8 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React from 'react'
+import {useIntl} from 'react-intl'
 
 import DropdownIcon from '../icons/dropdown'
+import Tooltip from '../../widgets/tooltip'
 import MenuWrapper from '../menuWrapper'
 
 import './buttonWithMenu.scss'
@@ -21,33 +23,38 @@ function ButtonWithMenu(props: Props): JSX.Element {
         background: 'rgba(63, 67, 80, 0.08)',
         color: 'rgba(63, 67, 80, 0.4)',
     }
+    const intl = useIntl()
 
     const noClick = {
         pointerEvents: 'none',
     } as const
 
+    const Wrapper = props.isPlaybooksReadOnly ? React.Fragment : Tooltip
+
     return (
-        <div
-            onClick={props.onClick}
-            className='ButtonWithMenu'
-            title={props.title}
-            style={props.isPlaybooksReadOnly ? noClick : {}}
-        >
+        <Wrapper title={intl.formatMessage({id: 'ViewHeader.dynamicBoard', defaultMessage: 'This board is dynamically updated with playbook runs and cannot be edited manually'})}>
             <div
-                style={props.isPlaybooksReadOnly ? styleButton : {}}
-                className='button-text'
+                onClick={props.onClick}
+                className='ButtonWithMenu'
+                title={props.title}
+                style={props.isPlaybooksReadOnly ? noClick : {}}
             >
-                {props.text}
-            </div>
-            {!props.isPlaybooksReadOnly && <MenuWrapper stopPropagationOnToggle={true}>
                 <div
-                    className='button-dropdown'
+                    style={props.isPlaybooksReadOnly ? styleButton : {}}
+                    className='button-text'
                 >
-                    <DropdownIcon/>
+                    {props.text}
                 </div>
-                {props.children}
-            </MenuWrapper>}
-        </div>
+                {!props.isPlaybooksReadOnly && <MenuWrapper stopPropagationOnToggle={true}>
+                    <div
+                        className='button-dropdown'
+                    >
+                        <DropdownIcon/>
+                    </div>
+                    {props.children}
+                </MenuWrapper>}
+            </div>
+        </Wrapper>
     )
 }
 

@@ -10,6 +10,7 @@ import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
 import DeleteIcon from '../../widgets/icons/delete'
 import CompassIcon from '../../widgets/icons/compassIcon'
+import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Board} from '../../blocks/board'
 import {VirtualLink} from '../../virtual'
@@ -91,6 +92,14 @@ const ShowPlaybooksList = (props: ShowPlaybooksListProps) => {
         }
     }, [])
 
+    useEffect(() => {
+        const updateBoard = async () => {
+            await mutator.updateBoard({...props.board, virtualLink: playbooksSelected.join(',')}, props.board, 'linked channel')
+        }
+
+        updateBoard()
+    }, [playbooksSelected])
+
     const Title = (
         <h3
             style={{
@@ -103,6 +112,14 @@ const ShowPlaybooksList = (props: ShowPlaybooksListProps) => {
             />
             {'Linked Playbooks'}
         </h3>)
+
+    console.log("ACTUAL STATE", {
+        ...props,
+        playbooksList,
+        playbooksFetchStatus,
+        playbooksSelected,
+        showShareDialog,
+    })
 
     return (
         <>
@@ -147,8 +164,8 @@ const ShowPlaybooksList = (props: ShowPlaybooksListProps) => {
                                 <PlayBookConnectedItem
                                     key={playbookId}
                                     title={playbooksList[playbookId].name}
-                                    description={playbooksList[playbookId].type}
-                                    lastRunDate={Utils.relativeDisplayDateTime(new Date(new Date().getTime() - 4000000), intl)}
+                                    description={playbooksList[playbookId].properties.description}
+                                    lastRunDate={Utils.relativeDisplayDateTime(playbooksList[playbookId].properties.description)}
                                     disabledActions={playbooksSelected.length === 1}
                                     onDelete={() => {
                                         handleDelete(playbookId)
