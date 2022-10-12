@@ -6,6 +6,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/model"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -233,4 +234,36 @@ func TestRunUniqueIDsMigration(t *testing.T) {
 	// workspace 2 first two block IDs have changed
 	require.NotEqual(t, block4.ID, newBlock4.BoardID)
 	require.NotEqual(t, block5.ID, newBlock5.ParentID)
+}
+
+func TestCheckForMismatchedCollation(t *testing.T) {
+	store, tearDown := SetupTests(t)
+	sqlStore := store.(*SQLStore)
+	defer tearDown()
+
+	if sqlStore.dbType != model.MysqlDBType {
+		return
+	}
+
+	collation, _, err := sqlStore.getCollationAndCharset()
+	require.NoError(t, err)
+
+	tableNames, err := sqlStore.getFocalBoardTableNames()
+	require.NoError(t, err)
+
+	sqlCollation := "SELECT table_collation FROM information_schema.tables WHERE table_name=?"
+	stmtCollation, err := sqlStore.db.Prepare(sqlCollation)
+	require.NoError(t, err)
+	defer stmtCollation.Close()
+
+	// make sure the correct charset is applied to each table.
+	for _, name := range tableNames {
+		row := stmtCollation.QueryRow(name)
+
+		var actualCollation string
+		err = row.Scan(&actualCollation)
+		require.NoError(t, err)
+
+		assert.Equal(t, collation, actualCollation)
+	}
 }

@@ -236,6 +236,10 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 		return fmt.Errorf("error running categoryID migration: %w", mErr)
 	}
 
+	if mErr := s.RunFixCollationsAndCharsetsMigration(); mErr != nil {
+		return fmt.Errorf("error running fix collations and charsets migration: %w", mErr)
+	}
+
 	appliedMigrations, err := driver.AppliedMigrations()
 	if err != nil {
 		return err
