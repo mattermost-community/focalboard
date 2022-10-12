@@ -970,18 +970,28 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner, limit int) ([]string, 
 
 	// Find all orphaned child blocks for deleted boards.
 	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
-	sql := `
+	/*
 		SELECT fb.id FROM %sblocks AS fb WHERE fb.board_id IN
 		(
 			SELECT bh.id FROM %sboards_history AS bh,
 				(SELECT id, max(insert_at) AS max_insert_at FROM %sboards_history GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		)
-		ORDER BY fb.insert_at DESC LIMIT ?
-	`
-	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
+		ORDER BY fb.insert_at DESC LIMIT ? ;
+	*/
+	query := s.getQueryBuilder(s.db).
+		Select("fb.id").
+		From(s.tablePrefix+"blocks AS fb").
+		Suffix(fmt.Sprintf(` WHERE fb.board_id IN
+			(
+				SELECT bh.id FROM %sboards_history AS bh,
+					(SELECT id, max(insert_at) AS max_insert_at FROM %sboards_history GROUP BY id) AS sub
+				WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
+			)
+			ORDER BY fb.insert_at DESC LIMIT ? ;
+		`, s.tablePrefix, s.tablePrefix), limit)
 
-	rows, err := db.Query(sql, limit)
+	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("findOrphansForBoards ERROR", mlog.Err(err))
 		return nil, err
@@ -1012,18 +1022,28 @@ func (s *SQLStore) findOrphansForCards(db sq.BaseRunner, limit int) ([]string, e
 
 	// Find all orphaned child blocks for deleted cards.
 	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
-	sql := `
+	/*
 		SELECT fb.id FROM %sblocks AS fb WHERE fb.parent_id IN
 		(
 			SELECT bh.id FROM %sblocks_history AS bh,
 				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE type='card' GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		)
-		ORDER BY fb.insert_at DESC LIMIT ?
-	`
-	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
+		ORDER BY fb.insert_at DESC LIMIT ? ;
+	*/
+	query := s.getQueryBuilder(s.db).
+		Select("fb.id").
+		From(s.tablePrefix+"blocks AS fb").
+		Suffix(fmt.Sprintf(` WHERE fb.parent_id IN
+			(
+				SELECT bh.id FROM %sblocks_history AS bh,
+					(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE type='card' GROUP BY id) AS sub
+				WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
+			)
+			ORDER BY fb.insert_at DESC LIMIT ? ;
+		`, s.tablePrefix, s.tablePrefix), limit)
 
-	rows, err := db.Query(sql, limit)
+	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error("findOrphansForCards ERROR", mlog.Err(err))
 		return nil, err
