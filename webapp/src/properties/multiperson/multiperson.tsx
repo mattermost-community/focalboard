@@ -22,6 +22,7 @@ import {Permission} from '../../constants'
 import client from '../../octoClient'
 import ConfirmAddUserForNotifications from '../../components/confirmAddUserForNotifications'
 import GuestBadge from '../../widgets/guestBadge'
+import {getMe} from '../../store/users'
 
 import './multiperson.scss'
 
@@ -60,8 +61,6 @@ const selectStyles = {
 }
 
 const MultiPerson = (props: PropertyProps): JSX.Element => {
-
-
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
@@ -72,10 +71,10 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
 
-    const me: IUser = boardUsersById[propertyValue as string]
+    const me = useAppSelector<IUser|null>(getMe)
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
-    const allowAddUsers = !me.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
+    const allowAddUsers = !me?.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
 
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
