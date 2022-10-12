@@ -1,11 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useCallback, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
+import octoClient from '../octoClient'
 import mutator from '../mutator'
 import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
@@ -25,6 +26,7 @@ import {getUserBlockSubscriptionList} from '../store/initialLoad'
 import {IUser} from '../user'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
+import {Block} from '../blocks/block'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
@@ -33,6 +35,7 @@ import Dialog from './dialog'
 
 import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
+import {contentRegistry} from './content/contentRegistry'
 
 type Props = {
     board: Board
@@ -129,25 +132,74 @@ const CardDialog = (props: Props): JSX.Element => {
         </CardActionsMenu>
     )
 
+    const handler = contentRegistry.getHandler('file')
+    if (!handler) {
+        Utils.logError('addContentMenu, unknown content type: file')
+        return <></>
+    }
+
+    const addElement = async () => {
+        if (card) {
+            const block = await handler.createBlock(card.boardId, intl)
+            block.parentId = card.id
+            block.boardId = card.boardId
+            const typeName = handler.getDisplayText(intl)
+            const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+            await mutator.performAsUndoGroup(async () => {
+                const afterRedo = async (newBlock: Block) => {
+                    const contentOrder = card.fields.contentOrder.slice()
+                    contentOrder.splice(card.fields.contentOrder.length, 0, newBlock.id)
+                    await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+                }
+
+                const beforeUndo = async () => {
+                    const contentOrder = card.fields.contentOrder.slice()
+                    await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
+                }
+
+                await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
+            })
+        }
+    }
+
+    const attachBtn = (): React.ReactNode => {
+        return (
+            <Button
+                icon={<CompassIcon icon='paperclip'/>}
+                className='cardFollowBtn attach'
+                size='medium'
+                onClick={addElement}
+            >
+                {'Attach'}
+            </Button>
+        )
+    }
+
     const followActionButton = (following: boolean): React.ReactNode => {
         const followBtn = (
-            <Button
-                className='cardFollowBtn follow'
-                size='medium'
-                onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
-            >
-                {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
-            </Button>
+            <>
+                {attachBtn()}
+                <Button
+                    className='cardFollowBtn follow'
+                    size='medium'
+                    onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
+                >
+                    {intl.formatMessage({id: 'CardDetail.Follow', defaultMessage: 'Follow'})}
+                </Button>
+            </>
         )
 
         const unfollowBtn = (
-            <Button
-                className='cardFollowBtn unfollow'
-                size='medium'
-                onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
-            >
-                {intl.formatMessage({id: 'CardDetail.Following', defaultMessage: 'Following'})}
-            </Button>
+            <>
+                {attachBtn()}
+                <Button
+                    className='cardFollowBtn unfollow'
+                    size='medium'
+                    onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
+                >
+                    {intl.formatMessage({id: 'CardDetail.Following', defaultMessage: 'Following'})}
+                </Button>
+            </>
         )
 
         return following ? unfollowBtn : followBtn

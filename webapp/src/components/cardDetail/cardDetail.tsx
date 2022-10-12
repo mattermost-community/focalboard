@@ -31,6 +31,7 @@ import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
+import Attachment from './attachment'
 
 import './cardDetail.scss'
 
@@ -102,6 +103,18 @@ const CardDetail = (props: Props): JSX.Element|null => {
     if (!card) {
         return null
     }
+
+    const allBlock = [] as ContentBlock[]
+    props.contents.forEach((block: ContentBlock|ContentBlock[]) => {
+        if (Array.isArray(block)) {
+            allBlock.push(...block)
+        } else {
+            allBlock.push(block)
+        }
+    })
+
+    const blocksWithAttachment = allBlock.filter((block) => block.fields.isAttachment)
+    const blocksWithoutAttachment = allBlock.filter((block) => !block.fields.isAttachment)
 
     return (
         <>
@@ -200,6 +213,14 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     readonly={props.readonly}
                 />}
 
+                {blocksWithAttachment.length !== 0 && <Fragment>
+                    <hr/>
+                    <Attachment
+                        count={blocksWithAttachment.length}
+                        contents={blocksWithAttachment}
+                    />
+                </Fragment>}
+
                 {/* Comments */}
 
                 {!limited && <Fragment>
@@ -219,7 +240,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <CardDetailProvider card={card}>
                     <CardDetailContents
                         card={props.card}
-                        contents={props.contents}
+                        contents={blocksWithoutAttachment}
                         readonly={props.readonly || !canEditBoardCards}
                     />
                     {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}

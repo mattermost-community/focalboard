@@ -1,0 +1,38 @@
+.FileElement {
+    background: rgb(var(--center-channel-bg-rgb));
+    border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+    min-width: 240px;
+    width: max-content;
+    height: 64px;
+    box-shadow: var(--elevation-1);
+    display: flex;
+
+    .fileElement-file-name {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .fileElement-file-ext-and-size {
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        color: rgb(var(--center-channel-color-rgb))
+    }
+
+    .fileElement-icon-division {
+        margin-top: 8px;
+    }
+
+    .fileElement-icon{
+        font-size: 48px;
+        color: rgba(237, 82, 42, 1);
+    }
+
+    .fileElement-download-btn {
+        margin: 20px;
+        font-size: 20px;
+        color: rgb(193, 193, 193);
+    }
+
+}
