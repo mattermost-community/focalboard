@@ -112,7 +112,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     }, [board, card, propertyTemplate])
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
-    const allowAddUsers = allowManageBoardRoles || board.type === BoardTypeOpen
+    const allowAddUsers = !me.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
 
     const loadOptions = useCallback(async (value: string) => {
         if (!allowAddUsers) {
