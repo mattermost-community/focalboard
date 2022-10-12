@@ -76,6 +76,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
     const canAddCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const [card, setCard] = useState<Card>();
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
@@ -116,24 +117,30 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
+    const openConfirmationDialogBox = (cardItem: Card) => {
+        setShowConfirmationDialogBox(true)
+        setCard(cardItem)
+    }
+
+    const handleDeleteCard = useCallback(() => {
+        if (!card) return
+        mutator.deleteBlock(card, 'delete card')
+    }, [card, board.id])
+
+    const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
+        return {
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        }
+    }, [handleDeleteCard])
+
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         const card = cards.find((o) => o.id === event.id) || cards[0]
-
-        const handleDeleteCard = useCallback(() => {
-            mutator.deleteBlock(card, 'delete card')
-        }, [card, board.id])
-
-        const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
-            return {
-                heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
-                confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
-                onConfirm: handleDeleteCard,
-                onClose: () => {
-                    setShowConfirmationDialogBox(false)
-                },
-            }
-        }, [handleDeleteCard])
 
         return (
             <>
@@ -149,7 +156,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         <IconButton icon={<OptionsIcon/>}/>
                         <CardActionsMenu
                             cardId={card.id}
-                            onClickDelete={() => setShowConfirmationDialogBox(true)}
+                            onClickDelete={() => openConfirmationDialogBox(card)}
                             onClickDuplicate={() => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
                                 mutator.duplicateCard(card.id, board.id)
