@@ -9,7 +9,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-//nolint:gosec
 func TestGetBlocksWithSameID(t *testing.T) {
 	t.Skip("we need to setup a test with the database migrated up to version 14 and then run these tests")
 
@@ -65,7 +64,6 @@ func TestGetBlocksWithSameID(t *testing.T) {
 	require.ElementsMatch(t, blocksWithDuplicatedID, foundBlocks)
 }
 
-//nolint:gosec
 func TestReplaceBlockID(t *testing.T) {
 	t.Skip("we need to setup a test with the database migrated up to version 14 and then run these tests")
 
@@ -144,7 +142,6 @@ func TestReplaceBlockID(t *testing.T) {
 	require.Equal(t, newBlock9.Fields["contentOrder"].([]interface{})[1], "block-id-2")
 }
 
-//nolint:gosec
 func TestRunUniqueIDsMigration(t *testing.T) {
 	t.Skip("we need to setup a test with the database migrated up to version 14 and then run these tests")
 
