@@ -145,7 +145,11 @@ const BoardPage = (props: Props): JSX.Element => {
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-        wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+        wsClient.addOnReconnect(() => {
+            if (me) {
+                dispatch(loadAction(match.params.boardId))
+            }
+        })
 
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
             if (subscription.subscriberId === me?.id) {
@@ -163,7 +167,11 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-            wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+            wsClient.removeOnReconnect(() => {
+                if (me) {
+                    dispatch(loadAction(match.params.boardId))
+                }
+            })
         }
     }, [me?.id, activeBoardId])
 
