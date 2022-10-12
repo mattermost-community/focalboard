@@ -76,7 +76,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
     const canAddCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
-    const [cardItem, setCardItem] = useState<Card>();
+    const [cardItem, setCardItem] = useState<Card>()
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
@@ -117,13 +117,15 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
-    const openConfirmationDialogBox = (cardItem: Card) => {
+    const openConfirmationDialogBox = (card: Card) => {
         setShowConfirmationDialogBox(true)
-        setCardItem(cardItem)
+        setCardItem(card)
     }
 
     const handleDeleteCard = useCallback(() => {
-        if (!cardItem) return
+        if (!cardItem) {
+            return
+        }
         mutator.deleteBlock(cardItem, 'delete card')
     }, [cardItem, board.id])
 
