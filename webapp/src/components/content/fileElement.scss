@@ -1,7 +1,7 @@
 .FileElement {
     background: rgb(var(--center-channel-bg-rgb));
     border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
-    min-width: 240px;
+    min-width: 300px;
     width: max-content;
     height: 64px;
     box-shadow: var(--elevation-1);
@@ -30,9 +30,23 @@
     }
 
     .fileElement-download-btn {
-        margin: 20px;
+        display: none;
         font-size: 20px;
         color: rgb(193, 193, 193);
+    }
+
+    .fileElement-menu-icon {
+        display: none;
+        float: right;
+    }
+
+    &:hover {
+        .fileElement-download-btn {
+            display: block;
+        }
+        .fileElement-menu-icon {
+            display: block;
+        }
     }
 
 }

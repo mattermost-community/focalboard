@@ -17,18 +17,22 @@ import ArchivedFile from './archivedFile/archivedFile'
 
 import './fileElement.scss'
 import CompassIcon from './../../widgets/icons/compassIcon'
+import MenuWrapper from './../../widgets/menuWrapper'
+import IconButton from './../../widgets/buttons/iconButton'
+import OptionsIcon from './../../widgets/icons/options'
+import Menu from './../../widgets/menu'
 
 type Props = {
     block: ContentBlock
 }
 
 const FileElement = (props: Props): JSX.Element|null => {
+    const {block} = props
     const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
     const [fileInfo, setFileInfo] = useState<FileInfo>({})
     const [fileSize, setFileSize] = useState<string>()
     const [fileIcon, setFileIcon] = useState<string>('file-zip-outline-large')
-
-    const {block} = props
+    const [fileName, setFileName] = useState<string>()
 
     useEffect(() => {
         if (!fileDataUrl) {
@@ -55,11 +59,22 @@ const FileElement = (props: Props): JSX.Element|null => {
             }
             setFileSize(generateFileSize(block.fields.fileSize))
         }
+        if (!fileName) {
+            const generateFileName = (fName: string) => {
+                if (fName.length > 21) {
+                    let result = fName.slice(0, 18)
+                    result += '...'
+                    return result
+                }
+                return fName
+            }
+            setFileName(generateFileName(block.fields.fileName))
+        }
     }, [])
 
     useEffect(() => {
-        const getFileIcon = (fileName: string) => {
-            const fileExt = fileName.split('.').pop()
+        const getFileIcon = (fName: string) => {
+            const fileExt = fName.split('.').pop()
             switch (fileExt) {
             case 'txt':
                 setFileIcon('file-text-outline-large')
@@ -100,18 +115,33 @@ const FileElement = (props: Props): JSX.Element|null => {
             </div>
             <div className='fileElement-file-details mt-3'>
                 <div className='fileElement-file-name'>
-                    {block.fields.fileName}
+                    {fileName}
                 </div>
                 <div className='fileElement-file-ext-and-size'>
                     {fileExtension} {fileSize}
                 </div>
             </div>
+            <MenuWrapper className='mt-3 fileElement-menu-icon'>
+                <IconButton
+                    size='medium'
+                    icon={<CompassIcon icon='dots-vertical'/>}
+                />
+                <Menu.Text
+                    id='makeTemplate'
+                    icon={
+                        <CompassIcon
+                            icon='trash-can-outline'
+                        />}
+                    name='Delete'
+                    onClick={() => {}}
+                />
+            </MenuWrapper>
             <a
                 href={fileDataUrl}
                 download={block.fields.fileName}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='fileElement-download-btn'
+                className='fileElement-download-btn mt-5 mr-2'
             >
                 <CompassIcon
                     icon='download-outline'
