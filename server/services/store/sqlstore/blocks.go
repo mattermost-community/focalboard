@@ -977,7 +977,7 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner, limit int) ([]string, 
 				(SELECT id, max(insert_at) AS max_insert_at FROM %sboards_history GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		)
-		ORDER BY fb.insert_at DESC LIMIT ?;
+		ORDER BY fb.insert_at DESC LIMIT ?
 	`
 	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
 
@@ -1019,7 +1019,7 @@ func (s *SQLStore) findOrphansForCards(db sq.BaseRunner, limit int) ([]string, e
 				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE type='card' GROUP BY id) AS sub
 			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
 		)
-		ORDER BY fb.insert_at DESC LIMIT ?;
+		ORDER BY fb.insert_at DESC LIMIT ?
 	`
 	sql = fmt.Sprintf(sql, s.tablePrefix, s.tablePrefix, s.tablePrefix)
 
