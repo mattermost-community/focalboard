@@ -76,7 +76,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const isSelectable = !readonly
     const canAddCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
-    const [card, setCard] = useState<Card>();
+    const [cardItem, setCardItem] = useState<Card>();
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
@@ -119,13 +119,13 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const openConfirmationDialogBox = (cardItem: Card) => {
         setShowConfirmationDialogBox(true)
-        setCard(cardItem)
+        setCardItem(cardItem)
     }
 
     const handleDeleteCard = useCallback(() => {
-        if (!card) return
-        mutator.deleteBlock(card, 'delete card')
-    }, [card, board.id])
+        if (!cardItem) return
+        mutator.deleteBlock(cardItem, 'delete card')
+    }, [cardItem, board.id])
 
     const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
         return {
@@ -187,7 +187,6 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                     {visibleBadges &&
                     <CardBadges card={card}/> }
                 </div>
-                {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
             </>
         )
     }
@@ -279,6 +278,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 selectMirror={true}
                 select={onNewEvent}
             />
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )
 }
