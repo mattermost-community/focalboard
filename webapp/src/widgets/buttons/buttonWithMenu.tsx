@@ -32,7 +32,10 @@ function ButtonWithMenu(props: Props): JSX.Element {
     const Wrapper = props.isPlaybooksReadOnly ? Tooltip : React.Fragment
 
     return (
-        <Wrapper title={intl.formatMessage({id: 'ViewHeader.dynamicBoard', defaultMessage: 'This board is dynamically updated with playbook runs and cannot be edited manually'})}>
+        <Wrapper
+            longText={true}
+            title={intl.formatMessage({id: 'ViewHeader.dynamicBoard', defaultMessage: 'This board is dynamically updated with playbook runs and cannot be edited manually'})}
+        >
             <div
                 onClick={props.onClick}
                 className='ButtonWithMenu'

@@ -40,6 +40,18 @@ $tooltop-vertical-offset: 2px;
     border-color: #000 transparent transparent;
 }
 
+.tooltip-long {
+    &:hover::after {
+        width: 20ch;
+        white-space: pre-wrap;
+        text-align: center;
+        font-weight: 600;
+        max-width: none;
+        overflow: initial;
+        text-overflow: initial;
+    }
+}
+
 .octo-tooltip {
     display: inline;
     // Tooltip itself needs to be relative so
