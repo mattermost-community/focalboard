@@ -58,8 +58,12 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot 1`] 
                     class="d-flex menu-option__check"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -308,8 +312,12 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in p
                     class="d-flex menu-option__check"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -558,8 +566,12 @@ exports[`src/components/shareBoard/userPermissionsRow should match snapshot in t
                     class="d-flex menu-option__check"
                   >
                     <div
-                      class="noicon"
-                    />
+                      class="menu-option__icon"
+                    >
+                      <div
+                        class="empty-icon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
