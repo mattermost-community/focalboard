@@ -33,7 +33,7 @@ type SelectPlaybooksProps = {
 
 const SelectPlaybooks = ({onUpdate, selectedPlaybooks, availableValues, onDelete}: SelectPlaybooksProps) => {
     return (
-        <div className='addLinkedPlaybooks'>
+        <div className='select-container'>
             <Select
                 isMulti={true}
                 options={availableValues}
@@ -119,12 +119,14 @@ const PlaybooksModal = (props: ShowPlaybooksListProps) => {
             toolbar={false}
             className='playbookModal'
         >
-            <SelectPlaybooks
-                onUpdate={setPlaybooksSelected}
-                onDelete={handleDelete}
-                selectedPlaybooks={playbooksSelected.map((id: string) => playbooksList[id])}
-                availableValues={Object.values(playbooksList)}
-            />
+            <div className='addLinkedPlaybooks'>
+                <SelectPlaybooks
+                    onUpdate={setPlaybooksSelected}
+                    onDelete={handleDelete}
+                    selectedPlaybooks={playbooksSelected.map((id: string) => playbooksList[id])}
+                    availableValues={Object.values(playbooksList)}
+                />
+            </div>
             <div className='playbookBody'>
                 <ul className='playbookConnectedList'>
                     {playbooksSelected.map((playbookId) => {

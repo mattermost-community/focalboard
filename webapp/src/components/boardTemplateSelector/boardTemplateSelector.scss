@@ -1,7 +1,7 @@
 @import '../../styles/z-index';
 
 .selectPlaybooks {
-    max-width: 300px;
+    max-width: 400px;
     width: 100%;
 
     & > div {
@@ -19,6 +19,7 @@
     color: rgba(255, 255, 255, 1);
     font-size: 10px;
     font-weight: 600;
+    line-height: 16px;
 }
 
 .BoardTemplateSelector {
