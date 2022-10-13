@@ -11,7 +11,7 @@ import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import {useAppSelector} from '../../store/hooks'
-import {getBoardUsers, getBoardUsersList} from '../../store/users'
+import {getBoardUsers, getBoardUsersList, getMe} from '../../store/users'
 import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 
 import {PropertyProps} from '../types'
@@ -22,7 +22,6 @@ import {Permission} from '../../constants'
 import client from '../../octoClient'
 import ConfirmAddUserForNotifications from '../../components/confirmAddUserForNotifications'
 import GuestBadge from '../../widgets/guestBadge'
-import {getMe} from '../../store/users'
 
 import './multiperson.scss'
 

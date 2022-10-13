@@ -8,7 +8,7 @@ import {CSSObject} from '@emotion/serialize'
 
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
-import {getBoardUsersList, getBoardUsers} from '../../store/users'
+import {getBoardUsersList, getBoardUsers, getMe} from '../../store/users'
 import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import mutator from '../../mutator'
@@ -21,7 +21,6 @@ import client from '../../octoClient'
 import ConfirmAddUserForNotifications from '../../components/confirmAddUserForNotifications'
 import GuestBadge from '../../widgets/guestBadge'
 
-import {getMe} from '../../store/users'
 import {PropertyProps} from '../types'
 
 import './person.scss'
