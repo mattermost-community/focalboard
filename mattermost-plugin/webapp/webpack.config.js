@@ -144,7 +144,7 @@ if (TARGET_IS_PRODUCT) {
     }
 
     config.plugins.push(new ModuleFederationPlugin({
-        name: PLUGIN_ID,
+        name: 'boards',
         filename: 'remote_entry.js',
         exposes: {
             '.': './src/index',
