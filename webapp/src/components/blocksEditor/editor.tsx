@@ -38,11 +38,11 @@ export default function Editor(props: Props) {
                     onChange={setValue}
                     onChangeType={setCurrentBlockType}
                     value={value}
-                    onSave={(val: string, blockType: string) => {
+                    onSave={async (val: string, blockType: string) => {
                         if (blockType === null && val === '') {
                             return
                         }
-                        props.onSave({value: val, contentType: blockType, id: props.id})
+                        await props.onSave({value: val, contentType: blockType, id: props.id})
                         setValue('')
                         setCurrentBlockType(null)
                     }}
@@ -55,8 +55,11 @@ export default function Editor(props: Props) {
                         setValue('')
                         setCurrentBlockType(null)
                     }}
-                    onSave={(val: string) => {
-                        props.onSave({value: val, contentType: currentBlockType.name, id: props.id})
+                    onSave={async (val: string) => {
+                        const newBlock = await props.onSave({value: val, contentType: currentBlockType.name, id: props.id})
+                        setValue('')
+                        const createdContentType = contentBlocks.get(newBlock?.contentType || '')
+                        setCurrentBlockType(contentBlocks.get(createdContentType.nextType || '') || null)
                     }}
                 />}
         </div>
