@@ -245,9 +245,7 @@ func TestCheckForMismatchedCollation(t *testing.T) {
 		return
 	}
 
-	collation, _, err := sqlStore.getCollationAndCharset()
-	require.NoError(t, err)
-
+	// make sure all collations are consistent.
 	tableNames, err := sqlStore.getFocalBoardTableNames()
 	require.NoError(t, err)
 
@@ -256,6 +254,8 @@ func TestCheckForMismatchedCollation(t *testing.T) {
 	require.NoError(t, err)
 	defer stmtCollation.Close()
 
+	var collation string
+
 	// make sure the correct charset is applied to each table.
 	for _, name := range tableNames {
 		row := stmtCollation.QueryRow(name)
@@ -263,6 +263,10 @@ func TestCheckForMismatchedCollation(t *testing.T) {
 		var actualCollation string
 		err = row.Scan(&actualCollation)
 		require.NoError(t, err)
+
+		if collation == "" {
+			collation = actualCollation
+		}
 
 		assert.Equal(t, collation, actualCollation)
 	}

@@ -3,9 +3,11 @@ package sqlstore
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -652,32 +654,37 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 		return nil
 	}
 
+	// get collation and charSet setting that Channels is using.
+	// when unit testing, no channels tables exist so just set to a default.
+	var collation string
+	var charSet string
+	var err error
+	if os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
+		collation = "utf8mb4_general_ci"
+		charSet = "utf8mb4"
+	} else {
+		collation, charSet, err = s.getCollationAndCharset()
+		if err != nil {
+			return err
+		}
+	}
+
 	// get all FocalBoard tables
 	tableNames, err := s.getFocalBoardTableNames()
 	if err != nil {
 		return err
 	}
 
-	// get collation and charSet setting
-	collation, charSet, err := s.getCollationAndCharset()
-	if err != nil {
-		return err
-	}
-
-	sql := "ALTER TABLE ? CONVERT TO CHARACTER SET ? COLLATE ?"
-	stmt, err := s.db.Prepare(sql)
-	if err != nil {
-		return err
-	}
-	defer stmt.Close()
+	merr := merror.New()
 
 	// alter each table; this is idempotent
 	for _, name := range tableNames {
-		if _, err := stmt.Exec(name, charSet, collation); err != nil {
-			return fmt.Errorf("error setting collation and charSet for %s: %w", name, err)
+		sql := fmt.Sprintf("ALTER TABLE %s CONVERT TO CHARACTER SET '%s' COLLATE '%s'", name, charSet, collation)
+		if _, err = s.db.Exec(sql); err != nil {
+			merr.Append(err)
 		}
 	}
-	return nil
+	return merr.ErrorOrNil()
 }
 
 func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
@@ -688,7 +695,10 @@ func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
 	query := s.getQueryBuilder(s.db).
 		Select("table_name").
 		From("information_schema.tables").
-		Where(sq.Like{"table_name": s.tablePrefix + "%"})
+		Where(sq.Like{
+			"table_name":   s.tablePrefix + "%",
+			"table_schema": "DATABASE()",
+		})
 
 	rows, err := query.Query()
 	if err != nil {
