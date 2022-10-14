@@ -680,8 +680,19 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 	// alter each table; this is idempotent
 	for _, name := range tableNames {
 		sql := fmt.Sprintf("ALTER TABLE %s CONVERT TO CHARACTER SET '%s' COLLATE '%s'", name, charSet, collation)
-		if _, err = s.db.Exec(sql); err != nil {
+		result, err := s.db.Exec(sql)
+		if err != nil {
 			merr.Append(err)
+			continue
+		}
+		num, err := result.RowsAffected()
+		if err != nil {
+			merr.Append(err)
+		}
+		if num > 0 {
+			s.logger.Debug("table collation and/or charSet fixed",
+				mlog.String("table_name", name),
+			)
 		}
 	}
 	return merr.ErrorOrNil()
@@ -695,10 +706,8 @@ func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
 	query := s.getQueryBuilder(s.db).
 		Select("table_name").
 		From("information_schema.tables").
-		Where(sq.Like{
-			"table_name":   s.tablePrefix + "%",
-			"table_schema": "DATABASE()",
-		})
+		Where(sq.Like{"table_name": s.tablePrefix + "%"}).
+		Where("table_schema=(SELECT DATABASE())")
 
 	rows, err := query.Query()
 	if err != nil {
@@ -730,10 +739,8 @@ func (s *SQLStore) getCollationAndCharset() (string, string, error) {
 	query := s.getQueryBuilder(s.db).
 		Select("table_collation").
 		From("information_schema.tables").
-		Where(sq.Eq{
-			"table_name":   "Channels",
-			"table_schema": "(SELECT DATABASE())",
-		})
+		Where(sq.Eq{"table_name": "Channels"}).
+		Where("table_schema=(SELECT DATABASE())")
 
 	row := query.QueryRow()
 
@@ -747,10 +754,10 @@ func (s *SQLStore) getCollationAndCharset() (string, string, error) {
 		Select("CHARACTER_SET_NAME").
 		From("information_schema.columns").
 		Where(sq.Eq{
-			"table_name":   "Channels",
-			"table_schema": "(SELECT DATABASE())",
-			"COLUMN_NAME":  "Name",
-		})
+			"table_name":  "Channels",
+			"COLUMN_NAME": "Name",
+		}).
+		Where("table_schema=(SELECT DATABASE())")
 
 	row = query.QueryRow()
 

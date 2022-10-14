@@ -236,19 +236,24 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 		return fmt.Errorf("error running categoryID migration: %w", mErr)
 	}
 
-	if mErr := s.RunFixCollationsAndCharsetsMigration(); mErr != nil {
-		return fmt.Errorf("error running fix collations and charsets migration: %w", mErr)
-	}
-
 	appliedMigrations, err := driver.AppliedMigrations()
 	if err != nil {
 		return err
 	}
 
 	s.logger.Debug("== Applying all remaining migrations ====================",
-		mlog.Int("current_version", len(appliedMigrations)))
+		mlog.Int("current_version", len(appliedMigrations)),
+	)
 
-	return engine.ApplyAll()
+	if err := engine.ApplyAll(); err != nil {
+		return err
+	}
+
+	// always run the collations & charset fix-ups
+	if mErr := s.RunFixCollationsAndCharsetsMigration(); mErr != nil {
+		return fmt.Errorf("error running fix collations and charsets migration: %w", mErr)
+	}
+	return nil
 }
 
 func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, driver drivers.Driver, version int) error {
