@@ -47,6 +47,7 @@ const RHSChannelBoardItem = (props: Props) => {
 
     const untitledBoardTitle = intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
 
+    const markdownHtml = Utils.htmlFromMarkdown(board.description)
     return (
         <div
             onClick={() => handleBoardClicked(board.id)}
@@ -85,7 +86,7 @@ const RHSChannelBoardItem = (props: Props) => {
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
                                 disabled={true}
-                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board Hello'})}
+                                name={intl.formatMessage({id: 'rhs-boards.unlink-board1', defaultMessage: 'Unlink board'})}
                                 icon={<CompassIcon icon='link-variant-off'/>}
                                 onClick={() => {
                                     onUnlinkBoard(board)
@@ -96,7 +97,9 @@ const RHSChannelBoardItem = (props: Props) => {
                     </Menu>
                 </MenuWrapper>
             </div>
-            <div className='description'>{board.description}</div>
+            <div className='description'
+                dangerouslySetInnerHTML={{__html: markdownHtml}}
+            />
             <div className='date'>
                 <FormattedMessage
                     id='rhs-boards.last-update-at'

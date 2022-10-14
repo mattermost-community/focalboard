@@ -193,6 +193,37 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
               </div>
               <div>
                 <div
+                  aria-label="Export board archive"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-export-variant"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Export board archive
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
                   aria-label="Hide board"
                   class="MenuOption TextOption menu-option"
                   role="button"
@@ -387,6 +418,37 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
               </div>
               <div />
               <div />
+              <div>
+                <div
+                  aria-label="Export board archive"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-export-variant"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Export board archive
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
               <div>
                 <div
                   aria-label="Hide board"

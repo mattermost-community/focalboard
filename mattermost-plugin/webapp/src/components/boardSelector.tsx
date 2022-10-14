@@ -129,10 +129,29 @@ const BoardSelector = () => {
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
+    const closeDialog = () => {
+        dispatch(setLinkToChannel(''))
+        setResults([])
+        setIsSearching(false)
+        setSearchQuery('')
+        setShowLinkBoardConfirmation(null)
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if(event.key == 'Escape') {
+            closeDialog()
+        }
+    }
+
+
     return (
-        <div className='focalboard-body'>
+        <div
+            className='focalboard-body'
+            onKeyDown={handleKeyDown}
+        >
             <Dialog
                 className='BoardSelector'
+                onClose={closeDialog}
                 title={
                     <FormattedMessage
                         id='boardSelector.title'
@@ -150,13 +169,6 @@ const BoardSelector = () => {
                         />
                     </Button>
                 }
-                onClose={() => {
-                    dispatch(setLinkToChannel(''))
-                    setResults([])
-                    setIsSearching(false)
-                    setSearchQuery('')
-                    setShowLinkBoardConfirmation(null)
-                }}
             >
                 {showLinkBoardConfirmation &&
                     <ConfirmationDialog
