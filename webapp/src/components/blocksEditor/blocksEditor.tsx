@@ -1,6 +1,8 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useState, useMemo} from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import {DndProvider} from 'react-dnd'
+import {HTML5Backend} from 'react-dnd-html5-backend'
 
 import Editor from './editor'
 import {BlockData} from './blocks/types'
@@ -21,7 +23,7 @@ function BlocksEditor(props: Props) {
     const contentOrder = useMemo(() => props.blocks.filter((b) => b.id).map((b) => b.id!), [props.blocks])
     return (
         <div
-            className="BlocksEditor"
+            className='BlocksEditor'
             onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
                 if (e.key === 'ArrowUp') {
                     if (editing === null) {

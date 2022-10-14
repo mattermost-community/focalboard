@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useEffect} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
@@ -17,7 +19,7 @@ const Divider: ContentType = {
             props.onSave(props.value)
         }, [])
         return null
-    }
+    },
 }
 
 Divider.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {

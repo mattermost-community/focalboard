@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
@@ -14,10 +16,12 @@ const H3: ContentType = {
     editable: true,
     Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
-        const html = marked('### '+props.value, {renderer, breaks: true})
-        return <div
-            dangerouslySetInnerHTML={{__html: html.trim()}}
-        />
+        const html = marked('### ' + props.value, {renderer, breaks: true})
+        return (
+            <div
+                dangerouslySetInnerHTML={{__html: html.trim()}}
+            />
+        )
     },
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
@@ -30,17 +34,17 @@ const H3: ContentType = {
                 className='H3'
                 onChange={(e) => props.onChange(e.currentTarget.value)}
                 onKeyDown={(e) => {
-                    if (props.value === '' && e.key === "Backspace") {
+                    if (props.value === '' && e.key === 'Backspace') {
                         props.onCancel()
                     }
-                    if (e.key === "Enter") {
+                    if (e.key === 'Enter') {
                         props.onSave(props.value)
                     }
                 }}
                 value={props.value}
             />
         )
-    }
+    },
 }
 
 H3.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {

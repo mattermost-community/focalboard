@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
@@ -14,10 +16,12 @@ const Text: ContentType = {
     editable: true,
     Display: (props: BlockInputProps) => {
         const html: string = Utils.htmlFromMarkdown(props.value || '')
-        return <div
-            dangerouslySetInnerHTML={{__html: html}}
-            className={props.value ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
-        />
+        return (
+            <div
+                dangerouslySetInnerHTML={{__html: html}}
+                className={props.value ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
+            />
+        )
     },
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)
@@ -30,17 +34,17 @@ const Text: ContentType = {
                 className='Text'
                 onChange={(e) => props.onChange(e.currentTarget.value)}
                 onKeyDown={(e) => {
-                    if (props.value === '' && e.key === "Backspace") {
+                    if (props.value === '' && e.key === 'Backspace') {
                         props.onCancel()
                     }
-                    if (e.key === "Enter") {
+                    if (e.key === 'Enter') {
                         props.onSave(props.value)
                     }
                 }}
                 value={props.value}
             />
         )
-    }
+    },
 }
 
 Text.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {

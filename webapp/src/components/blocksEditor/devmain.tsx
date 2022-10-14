@@ -17,7 +17,7 @@ import '../../styles/_markdown.scss'
 
 import './devmain.scss'
 
-const ID = () => Math.random().toString(36).slice(2)
+const newID = () => Math.random().toString(36).slice(2)
 
 register(TextDev)
 
@@ -32,18 +32,18 @@ const fakeData = [
 
 function App() {
     //const [data, setData] = useState<BlockData[]>([])
-    const [data, setData] = useState<BlockData<any>[]>(fakeData)
+    const [data, setData] = useState<Array<BlockData<any>>>(fakeData)
 
     return (
-        <div className="App">
-            <header className="App-header">
+        <div className='App'>
+            <header className='App-header'>
                 <BlocksEditor
                     blocks={data}
                     onBlockCreated={async (block: BlockData<any>, afterBlock?: BlockData<any>): Promise<BlockData|null> => {
                         if (block.contentType === 'text' && block.value === '') {
                             return null
                         }
-                        const id = ID()
+                        const id = newID()
                         let newData: BlockData[] = []
                         const newBlock = {value: block.value, contentType: block.contentType, id}
 

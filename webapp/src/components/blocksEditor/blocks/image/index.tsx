@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
@@ -37,7 +39,12 @@ const Image: ContentType<FileInfo> = {
         }, [props.value, props.value.file, boardId])
 
         if (imageDataUrl) {
-            return <img className='ImageView' src={imageDataUrl}/>
+            return (
+                <img
+                    className='ImageView'
+                    src={imageDataUrl}
+                />
+            )
         }
         return null
     },
@@ -51,7 +58,8 @@ const Image: ContentType<FileInfo> = {
             <div>
                 {props.value.file && (typeof props.value.file === 'string') && (
                     <img
-                        className='ImageView' src={props.value.file}
+                        className='ImageView'
+                        src={props.value.file}
                         onClick={() => ref.current?.click()}
                     />
                 )}
@@ -62,12 +70,12 @@ const Image: ContentType<FileInfo> = {
                     accept='image/*'
                     onChange={(e) => {
                         const file = (e.currentTarget?.files || [])[0]
-                        props.onSave({file: file})
+                        props.onSave({file})
                     }}
                 />
             </div>
         )
-    }
+    },
 }
 
 Image.runSlashCommand = (changeType: (contentType: ContentType<FileInfo>) => void, changeValue: (value: FileInfo) => void): void => {

@@ -74,7 +74,7 @@ async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fie
             if (idx === -1) {
                 contentOrder.push(newBlock.id)
             } else {
-                contentOrder.splice(idx+1, 0, newBlock.id)
+                contentOrder.splice(idx + 1, 0, newBlock.id)
             }
         } else {
             contentOrder.push(newBlock.id)
@@ -349,22 +349,22 @@ const CardDetail = (props: Props): JSX.Element|null => {
                                 let sourceBlockId: string
                                 let sourceWhere: 'after'|'before'
                                 if (idx === -1) {
-                                    Utils.logError("Unable to find the block id in the order of the current block")
+                                    Utils.logError('Unable to find the block id in the order of the current block')
                                     return
                                 }
                                 if (idx === 0) {
                                     sourceBlockId = card.fields.contentOrder[1] as string
                                     sourceWhere = 'before'
                                 } else {
-                                    sourceBlockId = card.fields.contentOrder[idx-1] as string
+                                    sourceBlockId = card.fields.contentOrder[idx - 1] as string
                                     sourceWhere = 'after'
                                 }
                                 if (afterBlock && afterBlock.id) {
-                                    await mutator.moveContentBlock(block.id, afterBlock.id, "after", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
+                                    await mutator.moveContentBlock(block.id, afterBlock.id, 'after', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
                                     return
                                 }
                                 if (beforeBlock && beforeBlock.id) {
-                                    await mutator.moveContentBlock(block.id, beforeBlock.id, "before", sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
+                                    await mutator.moveContentBlock(block.id, beforeBlock.id, 'before', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
                                 }
                             }
                         }}

@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
@@ -26,10 +28,10 @@ const ListItem: ContentType = {
                         className='ListItem'
                         onChange={(e) => props.onChange(e.currentTarget.value)}
                         onKeyDown={(e) => {
-                            if (props.value === '' && e.key === "Backspace") {
+                            if (props.value === '' && e.key === 'Backspace') {
                                 props.onCancel()
                             }
-                            if (e.key === "Enter") {
+                            if (e.key === 'Enter') {
                                 props.onSave(props.value)
                             }
                         }}
@@ -38,7 +40,7 @@ const ListItem: ContentType = {
                 </li>
             </ul>
         )
-    }
+    },
 }
 
 ListItem.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {

@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import {ContentType} from './types'
 import H1 from './h1'
 import H2 from './h2'
@@ -5,6 +7,7 @@ import H3 from './h3'
 import Image from './image'
 import Text from './text'
 import Divider from './divider'
+
 // import Markdown from './markdown'
 import ListItem from './list-item'
 import Attachment from './attachment'
@@ -64,6 +67,7 @@ register(H3)
 register(Image)
 register(Text)
 register(Divider)
+
 // register(Markdown)
 register(ListItem)
 register(Attachment)

@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
@@ -39,7 +41,12 @@ const Video: ContentType<FileInfo> = {
 
         if (videoDataUrl) {
             return (
-                <video width="320" height="240" controls className='VideoView'>
+                <video
+                    width='320'
+                    height='240'
+                    controls={true}
+                    className='VideoView'
+                >
                     <source src={videoDataUrl}/>
                 </video>
             )
@@ -60,11 +67,11 @@ const Video: ContentType<FileInfo> = {
                 accept='video/*'
                 onChange={(e) => {
                     const file = (e.currentTarget?.files || [])[0]
-                    props.onSave({file: file, filename: file.name})
+                    props.onSave({file, filename: file.name})
                 }}
             />
         )
-    }
+    },
 }
 
 Video.runSlashCommand = (changeType: (contentType: ContentType<FileInfo>) => void, changeValue: (value: FileInfo) => void): void => {

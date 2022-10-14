@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
@@ -68,10 +70,10 @@ const Checkbox: ContentType<ValueType> = {
                         props.onChange({checked: Boolean(props.value.checked), value: e.currentTarget.value})
                     }}
                     onKeyDown={(e) => {
-                        if ((props.value.value || '') === '' && e.key === "Backspace") {
+                        if ((props.value.value || '') === '' && e.key === 'Backspace') {
                             props.onCancel()
                         }
-                        if (e.key === "Enter") {
+                        if (e.key === 'Enter') {
                             props.onSave(props.value || {checked: false, value: ''})
                         }
                     }}
@@ -79,7 +81,7 @@ const Checkbox: ContentType<ValueType> = {
                 />
             </div>
         )
-    }
+    },
 }
 
 Checkbox.runSlashCommand = (changeType: (contentType: ContentType<ValueType>) => void, changeValue: (value: ValueType) => void, ...args: string[]): void => {

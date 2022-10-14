@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React from 'react'
 
 import {MarkdownEditor} from '../../../markdownEditor'
@@ -16,14 +18,16 @@ const TextContent: ContentType = {
     editable: true,
     Display: (props: BlockInputProps) => {
         const html: string = Utils.htmlFromMarkdown(props.value || '')
-        return <div
-            dangerouslySetInnerHTML={{__html: html}}
-            className={props.value ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
-        />
+        return (
+            <div
+                dangerouslySetInnerHTML={{__html: html}}
+                className={props.value ? 'octo-editor-preview' : 'octo-editor-preview octo-placeholder'}
+            />
+        )
     },
     Input: (props: BlockInputProps) => {
         return (
-            <div className="TextContent">
+            <div className='TextContent'>
                 <MarkdownEditor
                     autofocus={true}
                     onBlur={(val: string) => {
@@ -37,7 +41,7 @@ const TextContent: ContentType = {
                 />
             </div>
         )
-    }
+    },
 }
 
 TextContent.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {

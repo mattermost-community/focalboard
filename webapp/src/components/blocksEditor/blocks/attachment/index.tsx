@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
@@ -42,7 +44,7 @@ const Attachment: ContentType<FileInfo> = {
                     onClick={(e) => e.stopPropagation()}
                     download={props.value.filename}
                 >
-                    📎 {props.value.filename}
+                    {'📎'} {props.value.filename}
                 </a>
             </div>
         )
@@ -64,14 +66,14 @@ const Attachment: ContentType<FileInfo> = {
                         for (let i = 0; i < files.length; i++) {
                             const file = files.item(i)
                             if (file) {
-                                props.onSave({file: file, filename: file.name})
+                                props.onSave({file, filename: file.name})
                             }
                         }
                     }
                 }}
             />
         )
-    }
+    },
 }
 
 Attachment.runSlashCommand = (changeType: (contentType: ContentType<FileInfo>) => void, changeValue: (value: FileInfo) => void): void => {

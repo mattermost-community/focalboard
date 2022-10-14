@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React from 'react'
 import {useDrag, useDrop} from 'react-dnd'
 
@@ -13,10 +15,10 @@ import './blockContent.scss'
 
 type Props = {
     block: BlockData
-    contentOrder: Array<string>
+    contentOrder: string[]
     editing: BlockData|null
-    setEditing: (block: BlockData|null) =>  void
-    setAfterBlock: (block: BlockData|null) =>  void
+    setEditing: (block: BlockData|null) => void
+    setAfterBlock: (block: BlockData|null) => void
     onSave: (block: BlockData) => Promise<BlockData|null>
     onMove: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>
 }
@@ -26,11 +28,11 @@ function BlockContent(props: Props) {
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: 'block',
         item: block,
-        collect: monitor => ({
-            isDragging: !!monitor.isDragging(),
+        collect: (monitor) => ({
+            isDragging: Boolean(monitor.isDragging()),
         }),
     }), [block, contentOrder])
-    const [{ isOver, draggingUp }, drop] = useDrop(
+    const [{isOver, draggingUp}, drop] = useDrop(
         () => ({
             accept: 'block',
             drop: (item: BlockData) => {
@@ -43,11 +45,11 @@ function BlockContent(props: Props) {
                 }
             },
             collect: (monitor) => ({
-                isOver: !!monitor.isOver() && (monitor.getItem() as BlockData).id! !== block.id,
+                isOver: Boolean(monitor.isOver()) && (monitor.getItem() as BlockData).id! !== block.id,
                 draggingUp: (monitor.getItem() as BlockData)?.id && contentOrder.indexOf((monitor.getItem() as BlockData).id!) > contentOrder.indexOf(block.id || ''),
-            })
+            }),
         }),
-        [block, props.onMove, contentOrder]
+        [block, props.onMove, contentOrder],
     )
 
     if (editing && editing.id === block.id) {
@@ -81,12 +83,14 @@ function BlockContent(props: Props) {
                     setEditing(block)
                 }}
             >
-                <span className='action'
+                <span
+                    className='action'
                     onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
                         props.setAfterBlock(block)
-                    }}>
+                    }}
+                >
                     <AddIcon/>
                 </span>
                 <span

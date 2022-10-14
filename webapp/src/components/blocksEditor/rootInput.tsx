@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useState} from 'react'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
@@ -46,22 +48,22 @@ const styles = {
     }),
 }
 
-export default function RootInput(props: Props){
+export default function RootInput(props: Props) {
     const [showMenu, setShowMenu] = useState(false)
 
     return (
         <Select
             styles={styles}
-            components={{ DropdownIndicator:() => null, IndicatorSeparator:() => null }}
+            components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
             className='RootInput'
-            placeholder={"Introduce your text or your slash command"}
+            placeholder={'Introduce your text or your slash command'}
             autoFocus={true}
             menuIsOpen={showMenu}
             menuPortalTarget={document.getElementById('focalboard-root-portal')}
             menuPosition={'fixed'}
             options={registry.list()}
             getOptionValue={(ct: ContentType) => ct.slashCommand}
-            getOptionLabel={(ct: ContentType) => ct.slashCommand + " Creates a new " + ct.displayName + " block."}
+            getOptionLabel={(ct: ContentType) => ct.slashCommand + ' Creates a new ' + ct.displayName + ' block.'}
             filterOption={(option: any, inputValue: string): boolean => {
                 return inputValue.startsWith(option.value) || option.value.startsWith(inputValue)
             }}
@@ -91,17 +93,18 @@ export default function RootInput(props: Props){
             onFocus={(e: React.FocusEvent) => {
                 const target = e.currentTarget
                 target.scrollIntoView({block: 'center'})
+
                 // TODO: Fix this
                 setTimeout(() => {
                     target.scrollIntoView({block: 'center'})
                 }, 100)
             }}
             onKeyDown={(e) => {
-                if (e.key === "Escape") {
+                if (e.key === 'Escape') {
                     props.onSave('', 'text')
                     props.onChange('')
                 }
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                     const command = props.value.trimStart().split(' ')[0]
                     const block = registry.getBySlashCommandPrefix(command)
                     if (command === '' || !block) {

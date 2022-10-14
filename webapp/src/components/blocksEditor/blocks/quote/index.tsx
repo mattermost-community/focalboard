@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
@@ -12,11 +14,13 @@ const Quote: ContentType = {
     prefix: '> ',
     Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
-        const html = marked('> '+props.value, {renderer, breaks: true})
-        return <div
-            className='Quote'
-            dangerouslySetInnerHTML={{__html: html.trim()}}
-        />
+        const html = marked('> ' + props.value, {renderer, breaks: true})
+        return (
+            <div
+                className='Quote'
+                dangerouslySetInnerHTML={{__html: html.trim()}}
+            />
+        )
     },
     runSlashCommand: (): void => {},
     editable: true,
@@ -31,10 +35,10 @@ const Quote: ContentType = {
                     ref={ref}
                     onChange={(e) => props.onChange(e.currentTarget.value)}
                     onKeyDown={(e) => {
-                        if (props.value === '' && e.key === "Backspace") {
+                        if (props.value === '' && e.key === 'Backspace') {
                             props.onCancel()
                         }
-                        if (e.key === "Enter") {
+                        if (e.key === 'Enter') {
                             props.onSave(props.value)
                         }
                     }}
@@ -43,7 +47,7 @@ const Quote: ContentType = {
                 />
             </blockquote>
         )
-    }
+    },
 }
 
 Quote.runSlashCommand = (changeType: (contentType: ContentType) => void, changeValue: (value: string) => void, ...args: string[]): void => {

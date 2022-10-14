@@ -263,7 +263,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     const className = 'MarkdownEditorInput'
 
-
     const handleReturn = (e: any, state: EditorState): DraftHandleValue => {
         if (!e.shiftKey) {
             const text = state.getCurrentContent().getPlainText()

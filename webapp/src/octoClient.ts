@@ -942,7 +942,7 @@ class OctoClient {
         return (await this.getJson(response, {})) as TopBoardResponse
     }
 
-    async moveBlockTo(blockId: string, where: 'before'|'after', dstBlockId: string,): Promise<Response> {
+    async moveBlockTo(blockId: string, where: 'before'|'after', dstBlockId: string): Promise<Response> {
         return fetch(`${this.getBaseURL()}/api/v2/content-blocks/${blockId}/moveto/${where}/${dstBlockId}`, {
             method: 'POST',
             headers: this.headers(),
