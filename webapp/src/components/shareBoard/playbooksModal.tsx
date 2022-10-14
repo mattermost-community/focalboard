@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React, {useState, useEffect} from 'react'
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import Select from 'react-select'
 
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
@@ -108,7 +108,10 @@ const PlaybooksModal = (props: ShowPlaybooksListProps) => {
                 icon='product-playbooks'
                 className='playbookIcon'
             />
-            {'Linked Playbooks'}
+            <FormattedMessage
+                id='playbooksModal.title'
+                defaultMessage='Linked Playbooks'
+            />
         </h3>)
 
     return (
@@ -135,7 +138,10 @@ const PlaybooksModal = (props: ShowPlaybooksListProps) => {
                                 key={playbookId}
                                 title={playbooksList[playbookId].name}
                                 description={playbooksList[playbookId].properties.Description}
-                                lastRunDate={Utils.relativeDisplayDateTime(playbooksList[playbookId].properties.LastRunAt, intl)}
+                                lastRunDate={intl.formatMessage(
+                                    {id: 'playbooksModal.lastRan', defaultMessage: 'Last ran {time}'},
+                                    {time: Utils.relativeDisplayDateTime(playbooksList[playbookId].properties.LastRunAt, intl)},
+                                )}
                                 disabledActions={playbooksSelected.length === 1}
                                 onDelete={() => {
                                     handleDelete(playbookId)
