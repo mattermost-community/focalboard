@@ -14,7 +14,6 @@ import {MarkdownEditor} from './markdownEditor'
 jest.mock('../utils')
 jest.useFakeTimers()
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
-jest.setTimeout(30000)
 
 describe('components/markdownEditor', () => {
     beforeAll(mockDOM)
