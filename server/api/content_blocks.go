@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -72,8 +71,7 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if where != "after" && where != "before" {
-		message := fmt.Sprintf("invalid where parameter, use before or after")
-		a.errorResponse(w, r, model.NewErrBadRequest(message))
+		a.errorResponse(w, r, model.NewErrBadRequest("invalid where parameter, use before or after"))
 		return
 	}
 
