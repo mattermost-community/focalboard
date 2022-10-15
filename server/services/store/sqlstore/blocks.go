@@ -874,11 +874,6 @@ func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, paren
 		where += fmt.Sprintf(" AND parent_id='%s'", parentID)
 	}
 
-	/*
-		SELECT * FROM focalboard_blocks_history AS bh,
-			(SELECT id, max(insert_at) AS max_insert_at FROM focalboard_blocks_history WHERE board_id='xxx' AND parent_id='yyy' GROUP BY id) AS sub
-		WHERE bh.id = sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at <> 0
-	*/
 	selectQuery := s.getQueryBuilder(db).
 		Select(
 			"bh.board_id",
@@ -969,16 +964,8 @@ func (s *SQLStore) findOrphansForBoards(db sq.BaseRunner, limit int) ([]string, 
 	}
 
 	// Find all orphaned child blocks for deleted boards.
-	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
-	/*
-		SELECT fb.id FROM %sblocks AS fb WHERE fb.board_id IN
-		(
-			SELECT bh.id FROM %sboards_history AS bh,
-				(SELECT id, max(insert_at) AS max_insert_at FROM %sboards_history GROUP BY id) AS sub
-			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
-		)
-		ORDER BY fb.insert_at DESC LIMIT ? ;
-	*/
+	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`,
+	// so we have to stuff it all in a suffix .
 	query := s.getQueryBuilder(s.db).
 		Select("fb.id").
 		From(s.tablePrefix+"blocks AS fb").
@@ -1021,16 +1008,8 @@ func (s *SQLStore) findOrphansForCards(db sq.BaseRunner, limit int) ([]string, e
 	}
 
 	// Find all orphaned child blocks for deleted cards.
-	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`.
-	/*
-		SELECT fb.id FROM %sblocks AS fb WHERE fb.parent_id IN
-		(
-			SELECT bh.id FROM %sblocks_history AS bh,
-				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE type='card' GROUP BY id) AS sub
-			WHERE bh.id=sub.id AND bh.insert_at=sub.max_insert_at AND bh.delete_at > 0
-		)
-		ORDER BY fb.insert_at DESC LIMIT ? ;
-	*/
+	// Squirrel can't express multiple tables in FROM, nor can it mix `From` and `FromSelect`,
+	// so we stuff the rest into the suffix.
 	query := s.getQueryBuilder(s.db).
 		Select("fb.id").
 		From(s.tablePrefix+"blocks AS fb").
