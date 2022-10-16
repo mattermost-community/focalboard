@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useCallback, useMemo} from 'react'
+import React, {useCallback, useMemo, useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import FullCalendar, {EventChangeArg, EventInput, EventContentArg, DayCellContentArg} from '@fullcalendar/react'
@@ -21,6 +21,7 @@ import PropertyValueElement from '../propertyValueElement'
 import {Constants, Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 import CardBadges from '../cardBadges'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 
 import './fullcalendar.scss'
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -74,6 +75,8 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const {board, cards, activeView, dateDisplayProperty, readonly} = props
     const isSelectable = !readonly
     const canAddCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const [cardItem, setCardItem] = useState<Card>()
 
     const visiblePropertyTemplates = useMemo(() => (
         board.cardProperties.filter((template: IPropertyTemplate) => activeView.fields.visiblePropertyIds.includes(template.id))
@@ -114,53 +117,79 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
 
     const visibleBadges = activeView.fields.visiblePropertyIds.includes(Constants.badgesColumnId)
 
+    const openConfirmationDialogBox = (card: Card) => {
+        setShowConfirmationDialogBox(true)
+        setCardItem(card)
+    }
+
+    const handleDeleteCard = useCallback(() => {
+        if (!cardItem) {
+            return
+        }
+        mutator.deleteBlock(cardItem, 'delete card')
+    }, [cardItem, board.id])
+
+    const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
+        return {
+            heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-heading', defaultMessage: 'Confirm card delete!'}),
+            confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+            onConfirm: handleDeleteCard,
+            onClose: () => {
+                setShowConfirmationDialogBox(false)
+            },
+        }
+    }, [handleDeleteCard])
+
     const renderEventContent = (eventProps: EventContentArg): JSX.Element|null => {
         const {event} = eventProps
         const card = cards.find((o) => o.id === event.id) || cards[0]
+
         return (
-            <div
-                className='EventContent'
-                onClick={() => props.showCard(event.id)}
-            >
-                {!props.readonly &&
-                <MenuWrapper
-                    className='optionsMenu'
-                    stopPropagationOnToggle={true}
+            <>
+                <div
+                    className='EventContent'
+                    onClick={() => props.showCard(event.id)}
                 >
-                    <IconButton icon={<OptionsIcon/>}/>
-                    <CardActionsMenu
-                        cardId={card.id}
-                        onClickDelete={() => mutator.deleteBlock(card, 'delete card')}
-                        onClickDuplicate={() => {
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
-                            mutator.duplicateCard(card.id, board.id)
-                        }}
-                    />
-                </MenuWrapper>}
-                <div className='octo-icontitle'>
-                    { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
-                    <div
-                        className='fc-event-title'
-                        key='__title'
-                    >{event.title || intl.formatMessage({id: 'CalendarCard.untitled', defaultMessage: 'Untitled'})}</div>
-                </div>
-                {visiblePropertyTemplates.map((template) => (
-                    <Tooltip
-                        key={template.id}
-                        title={template.name}
+                    {!props.readonly &&
+                    <MenuWrapper
+                        className='optionsMenu'
+                        stopPropagationOnToggle={true}
                     >
-                        <PropertyValueElement
-                            board={board}
-                            readOnly={true}
-                            card={card}
-                            propertyTemplate={template}
-                            showEmptyPlaceholder={false}
+                        <IconButton icon={<OptionsIcon/>}/>
+                        <CardActionsMenu
+                            cardId={card.id}
+                            onClickDelete={() => openConfirmationDialogBox(card)}
+                            onClickDuplicate={() => {
+                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
+                                mutator.duplicateCard(card.id, board.id)
+                            }}
                         />
-                    </Tooltip>
-                ))}
-                {visibleBadges &&
-                <CardBadges card={card}/> }
-            </div>
+                    </MenuWrapper>}
+                    <div className='octo-icontitle'>
+                        { event.extendedProps.icon ? <div className='octo-icon'>{event.extendedProps.icon}</div> : undefined }
+                        <div
+                            className='fc-event-title'
+                            key='__title'
+                        >{event.title || intl.formatMessage({id: 'CalendarCard.untitled', defaultMessage: 'Untitled'})}</div>
+                    </div>
+                    {visiblePropertyTemplates.map((template) => (
+                        <Tooltip
+                            key={template.id}
+                            title={template.name}
+                        >
+                            <PropertyValueElement
+                                board={board}
+                                readOnly={true}
+                                card={card}
+                                propertyTemplate={template}
+                                showEmptyPlaceholder={false}
+                            />
+                        </Tooltip>
+                    ))}
+                    {visibleBadges &&
+                    <CardBadges card={card}/> }
+                </div>
+            </>
         )
     }
 
@@ -251,6 +280,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 selectMirror={true}
                 select={onNewEvent}
             />
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )
 }
