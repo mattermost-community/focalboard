@@ -12,7 +12,6 @@ import (
 func (a *API) registerStatisticsRoutes(r *mux.Router) {
 	// statistics
 	r.HandleFunc("/statistics", a.sessionRequired(a.handleStatistics)).Methods("GET")
-
 }
 
 func (a *API) handleStatistics(w http.ResponseWriter, r *http.Request) {
