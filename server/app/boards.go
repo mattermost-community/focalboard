@@ -18,8 +18,8 @@ var (
 	ErrNewBoardCannotHaveID = errors.New("new board cannot have an ID")
 )
 
-const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
-const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
+const linkBoardMessage = "@%s linked the board [%s](%s) with this channel"
+const unlinkBoardMessage = "@%s unlinked the board [%s](%s) with this channel"
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
