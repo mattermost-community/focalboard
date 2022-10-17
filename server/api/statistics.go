@@ -33,6 +33,10 @@ func (a *API) handleStatistics(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	if !a.MattermostAuth {
+		a.errorResponse(w, r, model.NewErrNotImplemented("not permitted in standalone mode"))
+		return
+	}
 
 	// user must have right to access analytics
 	userID := getUserID(r)
