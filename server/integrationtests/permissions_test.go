@@ -3775,7 +3775,6 @@ func TestPermissionsChannel(t *testing.T) {
 }
 
 func TestPermissionsGetStatistics(t *testing.T) {
-
 	t.Run("plugin", func(t *testing.T) {
 		th := SetupTestHelperPluginMode(t)
 		defer th.TearDown()
