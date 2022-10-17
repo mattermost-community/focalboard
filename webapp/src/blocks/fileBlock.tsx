@@ -4,20 +4,28 @@ import {Block, createBlock} from './block'
 import {ContentBlock} from './contentBlock'
 
 type FileBlockFields = {
-    fileId: string
+    attachmentId: string
+    attachmentName: string
+    attachmentType: string
+    attachmentSize: number
+    isAttachment: boolean
 }
 
 type FileBlock = ContentBlock & {
-    type: 'file'
+    type: 'attachment'
     fields: FileBlockFields
 }
 
 function createFileBlock(block?: Block): FileBlock {
     return {
         ...createBlock(block),
-        type: 'file',
+        type: 'attachment',
         fields: {
-            fileId: block?.fields.fileId || '',
+            attachmentId: block?.fields.attachmentId || '',
+            attachmentName: block?.fields.attachmentName || '',
+            attachmentType: block?.fields.attachmentType || '',
+            attachmentSize: block?.fields.attachmentSize || '',
+            isAttachment: block?.fields.isAttachment || false,
         },
     }
 }

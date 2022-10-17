@@ -17,7 +17,17 @@ const Attachment = (props: Props): JSX.Element|null => {
     return (
         <div className='Attachment'>
             <h4>{'Attachments'} {`(${count})`}</h4>
-            <div className='attachment-content'>{contents.map((block: ContentBlock) => <div key={block.id}><FileElement block={block}/></div>)}</div>
+            <div className='attachment-content'>
+                {contents.map((block: ContentBlock) => {
+                    return (
+                        <div key={block.id}>
+                            <FileElement
+                                block={block}
+                            />
+                        </div>)
+                })
+                }
+            </div>
         </div>
     )
 }

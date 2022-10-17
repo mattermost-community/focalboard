@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {Board} from '../blocks/board'
@@ -132,7 +132,7 @@ const CardDialog = (props: Props): JSX.Element => {
         </CardActionsMenu>
     )
 
-    const handler = contentRegistry.getHandler('file')
+    const handler = contentRegistry.getHandler('attachment')
     if (!handler) {
         Utils.logError('addContentMenu, unknown content type: file')
         return <></>

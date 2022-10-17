@@ -5,6 +5,7 @@ import {IntlShape} from 'react-intl'
 
 import {FileBlock, createFileBlock} from '../../blocks/fileBlock'
 import octoClient from '../../octoClient'
+import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
 import {sendFlashMessage} from '../../components/flashMessages'
@@ -19,7 +20,6 @@ import './fileElement.scss'
 import CompassIcon from './../../widgets/icons/compassIcon'
 import MenuWrapper from './../../widgets/menuWrapper'
 import IconButton from './../../widgets/buttons/iconButton'
-import OptionsIcon from './../../widgets/icons/options'
 import Menu from './../../widgets/menu'
 
 type Props = {
@@ -37,7 +37,7 @@ const FileElement = (props: Props): JSX.Element|null => {
     useEffect(() => {
         if (!fileDataUrl) {
             const loadFile = async () => {
-                const fileURL = await octoClient.getFileAsDataUrl(block.boardId, props.block.fields.fileId)
+                const fileURL = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
                 setFileDataUrl(fileURL.url || '')
                 setFileInfo(fileURL)
             }
@@ -57,7 +57,7 @@ const FileElement = (props: Props): JSX.Element|null => {
                 const i = Math.floor(Math.log(Number(bytes)) / Math.log(k))
                 return `${parseFloat((Number(bytes) / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
             }
-            setFileSize(generateFileSize(block.fields.fileSize))
+            setFileSize(generateFileSize(block.fields.attachmentSize))
         }
         if (!fileName) {
             const generateFileName = (fName: string) => {
@@ -68,7 +68,7 @@ const FileElement = (props: Props): JSX.Element|null => {
                 }
                 return fName
             }
-            setFileName(generateFileName(block.fields.fileName))
+            setFileName(generateFileName(block.fields.attachmentName))
         }
     }, [])
 
@@ -90,8 +90,12 @@ const FileElement = (props: Props): JSX.Element|null => {
                 setFileIcon('file-zip-outline-large')
             }
         }
-        getFileIcon(block.fields.fileName)
+        getFileIcon(block.fields.attachmentName)
     }, [])
+
+    const deleteAttachment = () => {
+        octoClient.deleteBlock(block.boardId, block.id)
+    }
 
     if (fileInfo.archived) {
         return (
@@ -103,7 +107,7 @@ const FileElement = (props: Props): JSX.Element|null => {
         return null
     }
 
-    const fileExtension = block.fields.fileName.split('.').pop()
+    const fileExtension = block.fields.attachmentName.split('.').pop()
 
     return (
         <div className='FileElement mr-4'>
@@ -126,19 +130,23 @@ const FileElement = (props: Props): JSX.Element|null => {
                     size='medium'
                     icon={<CompassIcon icon='dots-vertical'/>}
                 />
-                <Menu.Text
-                    id='makeTemplate'
-                    icon={
-                        <CompassIcon
-                            icon='trash-can-outline'
-                        />}
-                    name='Delete'
-                    onClick={() => {}}
-                />
+                <div className='delete-menu'>
+                    <Menu position='left'>
+                        <Menu.Text
+                            id='makeTemplate'
+                            icon={
+                                <CompassIcon
+                                    icon='trash-can-outline'
+                                />}
+                            name='Delete'
+                            onClick={deleteAttachment}
+                        />
+                    </Menu>
+                </div>
             </MenuWrapper>
             <a
                 href={fileDataUrl}
-                download={block.fields.fileName}
+                download={block.fields.attachmentName}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='fileElement-download-btn mt-5 mr-2'
@@ -152,21 +160,21 @@ const FileElement = (props: Props): JSX.Element|null => {
 }
 
 contentRegistry.registerContentType({
-    type: 'file',
+    type: 'attachment',
     getDisplayText: (intl: IntlShape) => intl.formatMessage({id: 'ContentBlock.File', defaultMessage: 'file'}),
     getIcon: () => <ImageIcon/>,
     createBlock: async (boardId: string, intl: IntlShape) => {
         return new Promise<FileBlock>(
             (resolve) => {
-                Utils.selectLocalFile(async (file) => {
-                    console.log("File", file)
-                    const fileId = await octoClient.uploadFile(boardId, file)
-                    if (fileId) {
+                Utils.selectLocalFile(async (attachment) => {
+                    console.log("File", attachment)
+                    const attachmentId = await octoClient.uploadFile(boardId, attachment)
+                    if (attachmentId) {
                         const block = createFileBlock()
-                        block.fields.fileId = fileId || ''
-                        block.fields.fileName = file.name || ''
-                        block.fields.fileType = file.type || ''
-                        block.fields.fileSize = file.size || ''
+                        block.fields.attachmentId = attachmentId || ''
+                        block.fields.attachmentName = attachment.name || ''
+                        block.fields.attachmentType = attachment.type || ''
+                        block.fields.attachmentSize = attachment.size || 0
                         block.fields.isAttachment = true
                         resolve(block)
                     } else {

@@ -40,6 +40,10 @@
         float: right;
     }
 
+    .delete-menu {
+        margin-top: -30px;
+    }
+
     &:hover {
         .fileElement-download-btn {
             display: block;
