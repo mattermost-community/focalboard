@@ -134,7 +134,7 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const handler = contentRegistry.getHandler('attachment')
     if (!handler) {
-        Utils.logError('addContentMenu, unknown content type: file')
+        Utils.logError('addContentMenu, unknown content type: attachment')
         return <></>
     }
 

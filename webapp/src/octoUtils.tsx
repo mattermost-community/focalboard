@@ -12,6 +12,7 @@ import {createDividerBlock} from './blocks/dividerBlock'
 import {createImageBlock} from './blocks/imageBlock'
 import {createTextBlock} from './blocks/textBlock'
 import {FilterCondition} from './blocks/filterClause'
+import {createFileBlock} from './blocks/fileBlock'
 import {Utils} from './utils'
 
 class OctoUtils {
@@ -24,6 +25,7 @@ class OctoUtils {
         case 'divider': { return createDividerBlock(block) }
         case 'comment': { return createCommentBlock(block) }
         case 'checkbox': { return createCheckboxBlock(block) }
+        case 'attachment': { return createFileBlock(block) }
         default: {
             Utils.assertFailure(`Can't hydrate unknown block type: ${block.type}`)
             return createBlock(block)
