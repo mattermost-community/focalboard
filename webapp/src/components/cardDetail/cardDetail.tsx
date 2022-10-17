@@ -34,6 +34,7 @@ import useImagePaste from './imagePaste'
 import Attachment from './attachment'
 
 import './cardDetail.scss'
+import {Block} from '../../blocks/block'
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'
@@ -48,10 +49,11 @@ type Props = {
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
     onClose: () => void
+    onDelete: (block: Block) => void
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
-    const {card, comments} = props
+    const {card, comments, onDelete} = props
     const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
@@ -218,6 +220,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     <Attachment
                         count={blocksWithAttachment.length}
                         contents={blocksWithAttachment}
+                        onDelete={onDelete}
                     />
                 </Fragment>}
 

@@ -6,14 +6,16 @@ import FileElement from '../../components/content/fileElement'
 import {ContentBlock} from '../../blocks/contentBlock'
 
 import './attachment.scss'
+import {Block} from '../../blocks/block'
 
 type Props = {
     count: number
     contents: ContentBlock[]
+    onDelete: (block: Block) => void
 }
 
 const Attachment = (props: Props): JSX.Element|null => {
-    const {count, contents} = props
+    const {count, contents, onDelete} = props
     return (
         <div className='Attachment'>
             <h4>{'Attachments'} {`(${count})`}</h4>
@@ -23,6 +25,7 @@ const Attachment = (props: Props): JSX.Element|null => {
                         <div key={block.id}>
                             <FileElement
                                 block={block}
+                                onDelete={onDelete}
                             />
                         </div>)
                 })

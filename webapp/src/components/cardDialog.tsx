@@ -162,6 +162,18 @@ const CardDialog = (props: Props): JSX.Element => {
         }
     }
 
+    const deleteBlock = useCallback(async (block: Block) => {
+        if (card) {
+            const contentOrder = card.fields.contentOrder.slice()
+            contentOrder.splice(card.fields.contentOrder.length, 0, block.id)
+            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+            await mutator.performAsUndoGroup(async () => {
+                await mutator.deleteBlock(block, description)
+                await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
+            })
+        }
+    }, [card?.boardId, card?.id, card?.fields.contentOrder])
+
     const attachBtn = (): React.ReactNode => {
         return (
             <Button
@@ -237,6 +249,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         comments={comments}
                         readonly={props.readonly}
                         onClose={props.onClose}
+                        onDelete={deleteBlock}
                     />}
 
                 {!card &&

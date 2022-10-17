@@ -11,7 +11,7 @@ import ImageIcon from '../../widgets/icons/image'
 import {sendFlashMessage} from '../../components/flashMessages'
 
 import {ContentBlock} from '../../blocks/contentBlock'
-import {FileInfo} from '../../blocks/block'
+import {Block, FileInfo} from '../../blocks/block'
 
 import {contentRegistry} from './contentRegistry'
 import ArchivedFile from './archivedFile/archivedFile'
@@ -24,10 +24,11 @@ import Menu from './../../widgets/menu'
 
 type Props = {
     block: ContentBlock
+    onDelete?: (block: Block) => void
 }
 
 const FileElement = (props: Props): JSX.Element|null => {
-    const {block} = props
+    const {block, onDelete} = props
     const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
     const [fileInfo, setFileInfo] = useState<FileInfo>({})
     const [fileSize, setFileSize] = useState<string>()
@@ -94,7 +95,9 @@ const FileElement = (props: Props): JSX.Element|null => {
     }, [])
 
     const deleteAttachment = () => {
-        octoClient.deleteBlock(block.boardId, block.id)
+        if (onDelete) {
+            onDelete(block)
+        }
     }
 
     if (fileInfo.archived) {
