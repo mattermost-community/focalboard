@@ -35,7 +35,6 @@ func (a *API) handleStatistics(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 
 	// user must have right to access analytics
-
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mmModel.PermissionGetAnalytics) {
 		a.errorResponse(w, r, model.NewErrPermission("access denied System Statistics"))

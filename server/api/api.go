@@ -169,7 +169,6 @@ func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 }
 
 func (a *API) userIsGuest(userID string) (bool, error) {
-	a.logger.Debug("userIsGuest " + a.singleUserToken)
 	if a.singleUserToken != "" {
 		return false, nil
 	}

@@ -147,7 +147,6 @@ func (a *API) handleCreateBoard(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	a.logger.Debug("HandleCreateBoard " + userID)
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
 		a.errorResponse(w, r, err)

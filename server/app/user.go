@@ -27,8 +27,6 @@ func (a *App) GetUserPreferences(userID string) ([]mmModel.Preference, error) {
 }
 
 func (a *App) UserIsGuest(userID string) (bool, error) {
-	a.logger.Debug("userIsGuest " + userID)
-
 	user, err := a.store.GetUserByID(userID)
 	if err != nil {
 		return false, err

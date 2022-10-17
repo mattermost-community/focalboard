@@ -367,7 +367,7 @@ export default class Plugin {
                                 name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
                                 id: 'total_cards',
                                 icon: 'icon-products',
-                                value: siteStats?.card_count,
+                                value: siteStats.card_count,
                             },
                         }
                     }
