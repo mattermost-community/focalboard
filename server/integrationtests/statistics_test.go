@@ -24,7 +24,7 @@ func TestStatisticsLocalMode(t *testing.T) {
 		th.Login1()
 
 		stats, resp := th.Client.GetStatistics()
-		th.CheckForbidden(resp)
+		th.CheckNotImplemented(resp)
 		require.Nil(t, stats)
 	})
 }
