@@ -903,3 +903,19 @@ func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
 
 	return limits, BuildResponse(r)
 }
+
+func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
+	r, err := c.DoAPIGet("/statistics", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var stats *model.BoardsStatistics
+	err = json.NewDecoder(r.Body).Decode(&stats)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return stats, BuildResponse(r)
+}

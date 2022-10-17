@@ -95,6 +95,7 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerTemplatesRoutes(apiv2)
 	a.registerBoardsRoutes(apiv2)
 	a.registerBlocksRoutes(apiv2)
+	a.registerStatisticsRoutes(apiv2)
 
 	// V3 routes
 	a.registerCardsRoutes(apiv2)
@@ -168,6 +169,7 @@ func (a *API) hasValidReadTokenForBoard(r *http.Request, boardID string) bool {
 }
 
 func (a *API) userIsGuest(userID string) (bool, error) {
+	a.logger.Debug("userIsGuest " + a.singleUserToken)
 	if a.singleUserToken != "" {
 		return false, nil
 	}

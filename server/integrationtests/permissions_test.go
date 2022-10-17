@@ -3773,3 +3773,33 @@ func TestPermissionsChannel(t *testing.T) {
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
+
+func TestPermissionsGetStatistics(t *testing.T) {
+	ttCases := []TestCase{
+		{"/statistics", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+		{"/statistics", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+		{"/statistics", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+		{"/statistics", methodGet, "", userViewer, http.StatusForbidden, 0},
+		{"/statistics", methodGet, "", userCommenter, http.StatusForbidden, 0},
+		{"/statistics", methodGet, "", userEditor, http.StatusForbidden, 0},
+		{"/statistics", methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/statistics", methodGet, "", userGuest, http.StatusForbidden, 0},
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases[6].expectedStatusCode = http.StatusForbidden
+		ttCases[1].totalResults = 0
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
