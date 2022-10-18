@@ -111,6 +111,7 @@ describe('components/cardDetail/CardDetail', () => {
                         readonly={false}
                         onClose={jest.fn()}
                         onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -170,6 +171,7 @@ describe('components/cardDetail/CardDetail', () => {
                         readonly={true}
                         onClose={jest.fn()}
                         onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -262,6 +264,7 @@ describe('components/cardDetail/CardDetail', () => {
                         readonly={false}
                         onClose={jest.fn()}
                         onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -369,6 +372,7 @@ describe('components/cardDetail/CardDetail', () => {
                         readonly={false}
                         onClose={jest.fn()}
                         onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -480,6 +484,7 @@ describe('components/cardDetail/CardDetail', () => {
                         readonly={false}
                         onClose={jest.fn()}
                         onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -561,6 +566,7 @@ describe('components/cardDetail/CardDetail', () => {
                         readonly={false}
                         onClose={jest.fn()}
                         onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>

@@ -11,6 +11,7 @@ import {sendFlashMessage} from '../../components/flashMessages'
 
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Block, FileInfo} from '../../blocks/block'
+import Files from '../../file'
 
 import {contentRegistry} from './contentRegistry'
 import ArchivedFile from './archivedFile/archivedFile'
@@ -75,16 +76,37 @@ const FileElement = (props: Props): JSX.Element|null => {
     useEffect(() => {
         const getFileIcon = (fName: string) => {
             const fileExt = fName.split('.').pop()
-            switch (fileExt) {
-            case 'txt':
-                setFileIcon('file-text-outline-large')
-
+            const extType = (Object.keys(Files) as string[]).find((key) => Files[key].find((ext) => ext === fileExt))
+            switch (extType) {
+            case 'AUDIO_TYPES':
+                setFileIcon('file-audio-outline')
                 break
-            case 'pdf':
+            case 'CODE_TYPES':
+                setFileIcon('file-code-outline-large')
+                break
+            case 'IMAGE_TYPES':
+                setFileIcon('file-image-outline-large')
+                break
+            case 'PDF_TYPES':
                 setFileIcon('file-pdf-outline-large')
                 break
-            case 'pptx':
+            case 'PATCH_TYPES':
+                setFileIcon('file-patch-outline-large')
+                break
+            case 'PRESENTATION_TYPES':
                 setFileIcon('file-powerpoint-outline-large')
+                break
+            case 'SPREADSHEET_TYPES':
+                setFileIcon('file-excel-outline-large')
+                break
+            case 'TEXT_TYPES':
+                setFileIcon('file-text-outline-large')
+                break
+            case 'VIDEO_TYPES':
+                setFileIcon('file-video-outline-large')
+                break
+            case 'WORD_TYPES':
+                setFileIcon('file-word-outline-large')
                 break
             default:
                 setFileIcon('file-zip-outline-large')
