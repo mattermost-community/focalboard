@@ -127,6 +127,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             return
         }
         mutator.deleteBlock(cardItem, 'delete card')
+        setShowConfirmationDialogBox(false)
     }, [cardItem, board.id])
 
     const confirmDialogProps: ConfirmationDialogBoxProps = useMemo(() => {
