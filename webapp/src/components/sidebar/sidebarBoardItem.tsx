@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useCallback, useRef, useState} from 'react'
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
@@ -43,6 +43,8 @@ import {Archiver} from '../../archiver'
 
 import SeparatorOption from '../../widgets/menu/separatorOption'
 
+import CreateCategory from '../../components/createCategory/createCategory'
+
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
     case 'board': return <BoardIcon/>
@@ -80,6 +82,7 @@ const SidebarBoardItem = (props: Props) => {
     const dispatch = useAppDispatch()
     const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
+    const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -245,7 +248,9 @@ const SidebarBoardItem = (props: Props) => {
                                     id='createNewCategory'
                                     icon={<CreateNewFolder/>}
                                     name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                    onClick={() => {}}
+                                    onClick={() => {
+                                        setShowCreateCategoryModal(true)
+                                    }}
                                 />
                             </Menu.SubMenu>
                             {!me?.is_guest &&
@@ -308,6 +313,16 @@ const SidebarBoardItem = (props: Props) => {
                     </div>
                 </div>
             ))}
+            {showCreateCategoryModal &&
+                <CreateCategory
+                    onClose={() => setShowCreateCategoryModal(false)}
+                    title={(
+                        <FormattedMessage
+                            id='SidebarCategories.CategoryMenu.CreateNew'
+                            defaultMessage='Create New Category'
+                        />
+                    )}
+                />}
         </>
     )
 }
