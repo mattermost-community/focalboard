@@ -215,24 +215,24 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 	for _, child := range cardDiff.Diffs {
 		if child.BlockType == model.TypeComment {
 			var format string
-			var block *model.Block
+			var msg string
 			if child.NewBlock != nil && child.OldBlock == nil {
 				// added comment
 				format = "%s"
-				block = child.NewBlock
+				msg = child.NewBlock.Title
 			}
 
 			if child.NewBlock == nil && child.OldBlock != nil {
 				// deleted comment
 				format = "~~`%s`~~"
-				block = child.OldBlock
+				msg = stripNewlines(child.OldBlock.Title)
 			}
 
 			if format != "" {
 				attachment.Fields = append(attachment.Fields, &mm_model.SlackAttachmentField{
 					Short: false,
 					Title: "Comment by " + makeAuthorsList(child.Authors, "unknown_user"), // todo:  localize this when server has i18n
-					Value: fmt.Sprintf(format, stripNewlines(block.Title)),
+					Value: fmt.Sprintf(format, msg),
 				})
 			}
 		}
@@ -242,11 +242,16 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 	for _, child := range cardDiff.Diffs {
 		if child.BlockType != model.TypeComment {
 			var newTitle, oldTitle string
-			if child.NewBlock != nil {
-				newTitle = stripNewlines(child.NewBlock.Title)
-			}
 			if child.OldBlock != nil {
 				oldTitle = stripNewlines(child.OldBlock.Title)
+			}
+			if child.NewBlock != nil {
+				// don't strip newlines when only adding blocks
+				if child.OldBlock == nil {
+					newTitle = child.NewBlock.Title
+				} else {
+					newTitle = stripNewlines(child.NewBlock.Title)
+				}
 			}
 
 			if newTitle == oldTitle {
