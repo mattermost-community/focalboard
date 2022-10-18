@@ -1,0 +1,16 @@
+name: "CodeQL config"
+
+query-filters:
+  - exclude:
+      problem.severity:
+        - warning
+        - recommendation
+  - exclude:
+      id: go/log-injection
+
+paths-ignore:
+  - 'server/swagger/**/*.html'
+  - 'website/**/*.html'
+  - '**/*_test.go'
+  - 'webapp/cypress/**'
+  - '**/*.test.*'
