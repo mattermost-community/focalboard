@@ -50,10 +50,11 @@ type Props = {
     readonly: boolean
     onClose: () => void
     onDelete: (block: Block) => void
+    addAttachment: () => void
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
-    const {card, comments, onDelete} = props
+    const {card, comments, onDelete, addAttachment} = props
     const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
@@ -221,6 +222,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                         count={blocksWithAttachment.length}
                         contents={blocksWithAttachment}
                         onDelete={onDelete}
+                        addAttachment={addAttachment}
                     />
                 </Fragment>}
 

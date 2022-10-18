@@ -5,7 +5,6 @@ import {IntlShape} from 'react-intl'
 
 import {FileBlock, createFileBlock} from '../../blocks/fileBlock'
 import octoClient from '../../octoClient'
-import mutator from '../../mutator'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
 import {sendFlashMessage} from '../../components/flashMessages'
@@ -170,7 +169,6 @@ contentRegistry.registerContentType({
         return new Promise<FileBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (attachment) => {
-                    console.log("File", attachment)
                     const attachmentId = await octoClient.uploadFile(boardId, attachment)
                     if (attachmentId) {
                         const block = createFileBlock()

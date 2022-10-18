@@ -182,7 +182,7 @@ const CardDialog = (props: Props): JSX.Element => {
                 size='medium'
                 onClick={addElement}
             >
-                {'Attach'}
+                {intl.formatMessage({id: 'CardDetail.Attach', defaultMessage: 'Attach'})}
             </Button>
         )
     }
@@ -250,6 +250,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         readonly={props.readonly}
                         onClose={props.onClose}
                         onDelete={deleteBlock}
+                        addAttachment={addElement}
                     />}
 
                 {!card &&
