@@ -18,7 +18,12 @@ func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where 
 		return err
 	}
 
-	contentOrder := card.Fields["contentOrder"].([]interface{})
+	contentOrderData, ok := card.Fields["contentOrder"]
+	var contentOrder []interface{}
+	if ok {
+		contentOrder = contentOrderData.([]interface{})
+	}
+
 	newContentOrder := []interface{}{}
 	foundDst := false
 	foundSrc := false
