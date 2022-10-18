@@ -9,7 +9,8 @@
         INSERT INTO Preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'onboardingTourStarted', replace((Props->'focalboard_onboardingTourStarted')::varchar, '"', '') FROM Users WHERE Props->'focalboard_onboardingTourStarted' IS NOT NULL ON CONFLICT DO NOTHING;
         INSERT INTO Preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'version72MessageCanceled', replace((Props->'focalboard_version72MessageCanceled')::varchar, '"', '') FROM Users WHERE Props->'focalboard_version72MessageCanceled' IS NOT NULL ON CONFLICT DO NOTHING;
         INSERT INTO Preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'lastWelcomeVersion', replace((Props->'focalboard_lastWelcomeVersion')::varchar, '"', '') FROM Users WHERE Props->'focalboard_lastWelcomeVersion' IS NOT NULL ON CONFLICT DO NOTHING;
-
+        -- make sure all props actually contain a json hash and not some other datastructure
+        UPDATE Users SET props = '{}'::json WHERE props::text NOT LIKE '{%';
         UPDATE Users SET props = (props - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion');
     {{end}}
 
