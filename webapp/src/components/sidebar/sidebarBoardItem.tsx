@@ -41,6 +41,8 @@ import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
 
+import SeparatorOption from '../../widgets/menu/separatorOption'
+
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
     case 'board': return <BoardIcon/>
@@ -238,6 +240,13 @@ const SidebarBoardItem = (props: Props) => {
                                 position='auto'
                             >
                                 {generateMoveToCategoryOptions(board.id)}
+                                <SeparatorOption/>
+                                <Menu.Text
+                                    id='createNewCategory'
+                                    icon={<CreateNewFolder/>}
+                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                    onClick={() => {}}
+                                />
                             </Menu.SubMenu>
                             {!me?.is_guest &&
                                 <Menu.Text
