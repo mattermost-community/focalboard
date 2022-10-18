@@ -39,6 +39,7 @@ import {getMe, getMyConfig, patchProps} from '../../store/users'
 import octoClient from '../../octoClient'
 import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
+import {Archiver} from '../../archiver'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -252,6 +253,12 @@ const SidebarBoardItem = (props: Props) => {
                                     icon={<AddIcon/>}
                                     onClick={() => handleDuplicateBoard(true)}
                                 />}
+                            <Menu.Text
+                                id='exportBoardArchive'
+                                name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
+                                icon={<CompassIcon icon='export-variant'/>}
+                                onClick={() => Archiver.exportBoardArchive(board)}
+                            />
                             <Menu.Text
                                 id='hideBoard'
                                 name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
