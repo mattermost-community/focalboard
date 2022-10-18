@@ -243,15 +243,16 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 		if child.BlockType != model.TypeComment {
 			var newTitle, oldTitle string
 			if child.OldBlock != nil {
-				oldTitle = stripNewlines(child.OldBlock.Title)
+				oldTitle = child.OldBlock.Title
 			}
 			if child.NewBlock != nil {
-				// don't strip newlines when only adding blocks
-				if child.OldBlock == nil {
-					newTitle = child.NewBlock.Title
-				} else {
-					newTitle = stripNewlines(child.NewBlock.Title)
-				}
+				newTitle = child.NewBlock.Title
+			}
+
+			// only strip newlines when modifying or deleting
+			if child.OldBlock != nil && child.NewBlock == nil {
+				newTitle = stripNewlines(newTitle)
+				oldTitle = stripNewlines(oldTitle)
 			}
 
 			if newTitle == oldTitle {
