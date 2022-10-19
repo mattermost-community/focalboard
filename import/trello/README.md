@@ -6,8 +6,8 @@ This node app converts a Trello json archive into a Focalboard archive. To use:
 3. Save it locally, e.g. to `trello.json`
 4. Run `npm install` from within `focalboard/webapp`
 5. Run `npm install` from within `focalboard/import/trello`
-6. Run `npx ts-node importTrello.ts -i <path-to-trello.json> -o archive.focalboard` (also from within `focalboard/import/trello`)
-7. In Focalboard, click `Settings`, then `Import archive` and select `archive.focalboard`
+6. Run `npx ts-node importTrello.ts -i <path-to-trello.json> -o archive.boardarchive` (also from within `focalboard/import/trello`)
+7. In Focalboard, click `Settings`, then `Import archive` and select `archive.boardarchive`
 
 ## Import scope
 
