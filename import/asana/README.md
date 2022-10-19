@@ -5,8 +5,8 @@ This node app converts an Asana json archive into a Focalboard archive. To use:
 2. Save it locally, e.g. to `asana.json`
 3. Run `npm install` from within `focalboard/webapp`
 4. Run `npm install` from within `focalboard/import/asana`
-5. Run `npx ts-node importAsana.ts -i <asana.json> -o archive.focalboard`
-6. In Focalboard, click `Settings`, then `Import archive` and select `archive.focalboard`
+5. Run `npx ts-node importAsana.ts -i <asana.json> -o archive.boardarchive`
+6. In Focalboard, click `Settings`, then `Import archive` and select `archive.boardarchive`
 
 ## Import scope
 
