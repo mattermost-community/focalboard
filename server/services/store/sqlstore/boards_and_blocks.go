@@ -155,6 +155,7 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 	board.Type = "P"
 	board.IsTemplate = asTemplate
 	board.CreatedBy = userID
+	board.ChannelID = ""
 
 	if toTeam != "" {
 		board.TeamID = toTeam
