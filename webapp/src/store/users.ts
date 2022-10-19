@@ -26,7 +26,7 @@ export const fetchMe = createAsyncThunk(
             client.getMyConfig(),
         ])
         return {me, myConfig}
-    }
+    },
 )
 
 export const versionProperty = 'version72MessageCanceled'
