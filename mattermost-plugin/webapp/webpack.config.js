@@ -116,7 +116,7 @@ const config = {
                 type: 'asset/resource',
                 generator: {
                     filename: '[name][ext]',
-                    publicPath: TARGET_IS_PRODUCT ? 'http://localhost:9006/static/' : '/static/',
+                    publicPath: TARGET_IS_PRODUCT ? '/static/products/boards/' : '/static/',
                 }
             },
         ],
@@ -203,8 +203,17 @@ config.plugins.push(new webpack.DefinePlugin({
 }));
 
 if (NPM_TARGET === 'start:product') {
+    const url = new URL('http://localhost:9006');
+
+    for (const rule of config.module.rules) {
+        if (rule.type === 'asset/resource' && rule.generator) {
+            rule.generator.publicPath = url.toString() + 'static/';
+        }
+    }
+
     config.devServer = {
-        port: 9006,
+        host: url.hostname,
+        port: url.port,
         devMiddleware: {
             writeToDisk: false,
         },
