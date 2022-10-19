@@ -212,7 +212,11 @@ if (NPM_TARGET === 'start:product') {
     }
 
     config.devServer = {
-        https: url.protocol === 'https',
+        https: url.protocol === 'https:' && {
+            minVersion: process.env.MM_SERVICESETTINGS_TLSMINVER,
+            key: process.env.MM_SERVICESETTINGS_TLSKEYFILE,
+            cert: process.env.MM_SERVICESETTINGS_TLSCERTFILE,
+        },
         host: url.hostname,
         port: url.port,
         devMiddleware: {
