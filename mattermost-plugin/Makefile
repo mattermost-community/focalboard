@@ -174,6 +174,10 @@ endif
 deploy-from-watch: bundle
 	./build/bin/pluginctl deploy $(PLUGIN_ID) dist/$(BUNDLE_NAME)
 
+.PHONY: build-product
+build-product: apply
+	cd webapp && npm run build:product
+
 .PHONY: watch-product
 watch-product: apply
 	cd webapp && npm run start:product

@@ -2,7 +2,6 @@ package sqlstore
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -16,9 +15,6 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
-
-//nolint:lll
-var ErrInvalidMariaDB = errors.New("MariaDB database is not supported, you can find more information at https://docs.mattermost.com/install/software-hardware-requirements.html#database-software")
 
 // SQLStore is a SQL database.
 type SQLStore struct {
@@ -56,10 +52,6 @@ func New(params Params) (*SQLStore, error) {
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		servicesAPI:      params.ServicesAPI,
-	}
-
-	if store.IsMariaDB() {
-		return nil, ErrInvalidMariaDB
 	}
 
 	var err error

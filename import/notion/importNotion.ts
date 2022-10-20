@@ -35,7 +35,7 @@ async function main() {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2))
 
     const inputFolder = args['i']
-    const outputFile = args['o'] || 'archive.focalboard'
+    const outputFile = args['o'] || 'archive.boardarchive'
 
     if (!inputFolder) {
         showHelp()
@@ -217,7 +217,7 @@ function convert(input: any[], title: string): [Board[], Block[]] {
 }
 
 function showHelp() {
-    console.log('import -i <input.json> -o [output.focalboard]')
+    console.log('import -i <input.json> -o [output.boardarchive]')
     exit(1)
 }
 

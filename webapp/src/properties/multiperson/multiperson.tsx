@@ -11,7 +11,7 @@ import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import mutator from '../../mutator'
 import {useAppSelector} from '../../store/hooks'
-import {getBoardUsers, getBoardUsersList} from '../../store/users'
+import {getBoardUsers, getBoardUsersList, getMe} from '../../store/users'
 import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 
 import {PropertyProps} from '../types'
@@ -70,8 +70,10 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
 
+    const me = useAppSelector<IUser|null>(getMe)
+
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
-    const allowAddUsers = allowManageBoardRoles || board.type === BoardTypeOpen
+    const allowAddUsers = !me?.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
 
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
