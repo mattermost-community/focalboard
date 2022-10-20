@@ -136,7 +136,7 @@ describe('Create and delete board / card', () => {
         cy.get('.Sidebar .octo-sidebar-list').then((el) => {
             cy.log(el.text())
         })
-        cy.get('.Sidebar .octo-sidebar-title').
+        cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
             find('.MenuWrapper').
