@@ -12,7 +12,7 @@ import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
 import {getCurrentTeamId} from '../../../../webapp/src/store/teams'
 import {IUser} from '../../../../webapp/src/user'
 import {getMe, fetchMe} from '../../../../webapp/src/store/users'
-import {loadBoards} from '../../../../webapp/src/store/initialLoad'
+import {loadBoards, loadMyBoardsMemberships} from '../../../../webapp/src/store/initialLoad'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {
     getMySortedBoards,
@@ -44,6 +44,7 @@ const RHSChannelBoards = () => {
 
     useEffect(() => {
         dispatch(loadBoards())
+        dispatch(loadMyBoardsMemberships())
         dispatch(fetchMe())
     }, [])
 
