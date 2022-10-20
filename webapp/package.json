@@ -31,7 +31,7 @@
 		"@fullcalendar/daygrid": "^5.10.1",
 		"@fullcalendar/interaction": "^5.10.1",
 		"@fullcalendar/react": "^5.10.1",
-		"@mattermost/compass-icons": "^0.1.22",
+		"@mattermost/compass-icons": "^0.1.28",
 		"@reduxjs/toolkit": "^1.8.0",
 		"@tippyjs/react": "4.2.6",
 		"color": "^4.2.1",

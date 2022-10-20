@@ -120,14 +120,15 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     const [editorState, setEditorState] = useState(() => generateEditorState(initialText))
 
     const addUser = useCallback(async (userId: string, role: string) => {
-        const minimumRole = role || MemberRole.Viewer
+        const newRole = role || MemberRole.Viewer
         const newMember = {
             boardId: board.id,
             userId,
             roles: role,
-            schemeEditor: minimumRole === MemberRole.Editor,
-            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
-            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
+            schemeAdmin: newRole === MemberRole.Admin,
+            schemeEditor: newRole === MemberRole.Admin || newRole === MemberRole.Editor,
+            schemeCommenter: newRole === MemberRole.Admin || newRole === MemberRole.Editor || newRole === MemberRole.Commenter,
+            schemeViewer: newRole === MemberRole.Admin || newRole === MemberRole.Editor || newRole === MemberRole.Commenter || newRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
@@ -137,6 +138,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [board, editorState])
 
     const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
+    const [initialTextUsed, setInitialTextUsed] = useState<boolean>(false)
 
     // avoiding stale closure
     useEffect(() => {
@@ -145,9 +147,16 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         // for this if condition here, mentions don't work. I suspect it's because without
         // the in condition, we're changing editor state twice during component initialization
         // and for some reason it causes mentions to not show up.
-        if (initialText && initialText !== initialTextCache) {
+
+        // initial text should only be used once, i'e', initially
+        // `initialTextUsed` flag records if the initialText prop has been used
+        // to se the editor state once as a truthy value.
+        // Once used, we don't react to its changing value
+
+        if (!initialTextUsed && initialText && initialText !== initialTextCache) {
             setEditorState(generateEditorState(initialText || ''))
             setInitialTextCache(initialText)
+            setInitialTextUsed(true)
         }
     }, [initialText])
 

@@ -39,6 +39,7 @@ import {getMe, getMyConfig, patchProps} from '../../store/users'
 import octoClient from '../../octoClient'
 import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
+import {Archiver} from '../../archiver'
 
 import {Draggable} from 'react-beautiful-dnd'
 
@@ -265,6 +266,12 @@ const SidebarBoardItem = (props: Props) => {
                                             onClick={() => handleDuplicateBoard(true)}
                                         />}
                                     <Menu.Text
+                                        id='exportBoardArchive'
+                                        name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
+                                        icon={<CompassIcon icon='export-variant'/>}
+                                        onClick={() => Archiver.exportBoardArchive(board)}
+                                    />
+                                    <Menu.Text
                                         id='hideBoard'
                                         name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
                                         icon={<CloseIcon/>}
@@ -289,7 +296,7 @@ const SidebarBoardItem = (props: Props) => {
                             </MenuWrapper>
                         </div>
                     </div>
-                    {props.isActive && !snapshot.isDragging && boardViews.map((view: BoardView) => (
+                    {props.isActive && boardViews.map((view: BoardView) => (
                         <div
                             key={view.id}
                             className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}

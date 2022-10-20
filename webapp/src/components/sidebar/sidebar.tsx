@@ -119,6 +119,12 @@ const Sidebar = (props: Props) => {
         }
     }, [teamId])
 
+    if (!boards) {
+        // eslint-disable-next-line no-console
+        console.log('AAAA')
+        return <div/>
+    }
+
     const hideSidebar = () => {
         if (!userHidden) {
             if (windowDimensions.width < 768) {
@@ -232,10 +238,14 @@ const Sidebar = (props: Props) => {
     }
 
     if (!me) {
+        // eslint-disable-next-line no-console
+        console.log('BBBB')
         return <div/>
     }
 
     if (isHidden) {
+        // eslint-disable-next-line no-console
+        console.log('CCCC')
         return (
             <div className='Sidebar octo-sidebar hidden'>
                 <div className='octo-sidebar-header show-button'>
