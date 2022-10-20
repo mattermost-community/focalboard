@@ -263,7 +263,7 @@ func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
-	return;
+	return
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {
