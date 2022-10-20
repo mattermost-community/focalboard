@@ -20,7 +20,13 @@ import {RootState} from './index'
 
 export const fetchMe = createAsyncThunk(
     'users/fetchMe',
-    async () => client.getMe(),
+    async () => {
+        const [me, myConfig] = await Promise.all([
+            client.getMe(),
+            client.getMyConfig(),
+        ])
+        return {me, myConfig}
+    },
 )
 
 export const versionProperty = 'version72MessageCanceled'
@@ -84,12 +90,16 @@ const usersSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
-            state.me = action.payload || null
+            state.me = action.payload.me || null
             state.loggedIn = Boolean(state.me)
+            if (action.payload.myConfig) {
+                state.myConfig = parseUserProps(action.payload.myConfig)
+            }
         })
         builder.addCase(fetchMe.rejected, (state) => {
             state.me = null
             state.loggedIn = false
+            state.myConfig = {}
         })
 
         // TODO: change this when the initial load is complete
