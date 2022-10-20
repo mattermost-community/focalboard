@@ -24,8 +24,9 @@ type Service struct {
 
 func New(store permissions.Store, api APIInterface, logger mlog.LoggerIFace) *Service {
 	return &Service{
-		store: store,
-		api:   api,
+		store:  store,
+		api:    api,
+		logger: logger,
 	}
 }
 
