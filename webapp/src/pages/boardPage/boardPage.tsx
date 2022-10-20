@@ -142,11 +142,15 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }
 
-        console.log('useWEbsocket adding onChange handler')
+        const dispatchLoadAction = () => {
+            dispatch(loadAction(match.params.boardId))
+        }
+
+        Utils.log('useWebsocket adding onChange handler')
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-        wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+        wsClient.addOnReconnect(dispatchLoadAction)
 
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
             if (subscription.subscriberId === me?.id) {
@@ -164,7 +168,7 @@ const BoardPage = (props: Props): JSX.Element => {
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-            wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+            wsClient.removeOnReconnect(dispatchLoadAction)
         }
     }, [me?.id, activeBoardId])
 
