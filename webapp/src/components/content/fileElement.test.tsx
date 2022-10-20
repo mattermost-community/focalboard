@@ -58,4 +58,37 @@ describe('component/content/FileBlock', () => {
         })
         expect(fileContainer).toMatchSnapshot()
     })
+
+    test('archived file', async () => {
+        mockedOcto.getFileAsDataUrl.mockResolvedValue({
+            archived: true,
+            name: 'FileName',
+            extension: '.txt',
+            size: 165002,
+        })
+
+        const component = wrapIntl(
+            <FileElement
+                block={defaultBlock}
+            />,
+        )
+        let fileContainer: Element | undefined
+        await act(async () => {
+            const {container} = render(component)
+            fileContainer = container
+        })
+        expect(fileContainer).toMatchSnapshot()
+    })
+
+    test('test icon', async () => {
+        const component = wrapIntl(
+            <FileElement
+                block={defaultBlock}
+            />,
+        )
+        const {container} = render(component)
+        const icon = container.querySelector('i')
+        console.log(icon)
+        expect(icon?.classList.contains('icon-file-text-outline-large')).toBe(true)
+    })
 })

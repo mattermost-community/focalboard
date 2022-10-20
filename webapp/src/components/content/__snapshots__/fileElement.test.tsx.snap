@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`component/content/FileBlock archived file 1`] = `<div />`;
+
 exports[`component/content/FileBlock should match snapshot 1`] = `
 <div>
   <div
