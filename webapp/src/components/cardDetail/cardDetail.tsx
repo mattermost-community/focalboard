@@ -116,8 +116,8 @@ const CardDetail = (props: Props): JSX.Element|null => {
         }
     })
 
-    const blocksWithAttachment = allBlock.filter((block) => block.fields.isAttachment)
-    const blocksWithoutAttachment = allBlock.filter((block) => !block.fields.isAttachment)
+    const blocksWithAttachment = allBlock.filter((block) => block.type === 'attachment')
+    const blocksWithoutAttachment = allBlock.filter((block) => block.type !== 'attachment')
 
     return (
         <>

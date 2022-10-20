@@ -32,22 +32,23 @@ const FileElement = (props: Props): JSX.Element|null => {
     const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
     const [fileInfo, setFileInfo] = useState<FileInfo>({})
     const [fileSize, setFileSize] = useState<string>()
-    const [fileIcon, setFileIcon] = useState<string>('file-zip-outline-large')
+    const [fileIcon, setFileIcon] = useState<string>('file-text-outline-larg')
     const [fileName, setFileName] = useState<string>()
 
     useEffect(() => {
         if (!fileDataUrl) {
             const loadFile = async () => {
-                const fileURL = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
-                setFileDataUrl(fileURL.url || '')
-                setFileInfo(fileURL)
+                const attachment = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
+                setFileDataUrl(attachment.url || '')
+                const attachmentInfo = await octoClient.getFileInfo(block.boardId, block.fields.attachmentId)
+                setFileInfo(attachmentInfo)
             }
             loadFile()
         }
     }, [])
 
     useEffect(() => {
-        if (!fileSize) {
+        if (fileInfo.size && !fileSize) {
             const generateFileSize = (bytes: string, decimals = 2) => {
                 if (!Number(bytes)) {
                     return '0 Bytes'
@@ -58,9 +59,9 @@ const FileElement = (props: Props): JSX.Element|null => {
                 const i = Math.floor(Math.log(Number(bytes)) / Math.log(k))
                 return `${parseFloat((Number(bytes) / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
             }
-            setFileSize(generateFileSize(block.fields.attachmentSize))
+            setFileSize(generateFileSize(fileInfo.size.toString()))
         }
-        if (!fileName) {
+        if (fileInfo.name && !fileName) {
             const generateFileName = (fName: string) => {
                 if (fName.length > 21) {
                     let result = fName.slice(0, 18)
@@ -69,51 +70,52 @@ const FileElement = (props: Props): JSX.Element|null => {
                 }
                 return fName
             }
-            setFileName(generateFileName(block.fields.attachmentName))
+            setFileName(generateFileName(fileInfo.name))
         }
-    }, [])
+    }, [fileInfo.size, fileInfo.name])
 
     useEffect(() => {
-        const getFileIcon = (fName: string) => {
-            const fileExt = fName.split('.').pop()
-            const extType = (Object.keys(Files) as string[]).find((key) => Files[key].find((ext) => ext === fileExt))
-            switch (extType) {
-            case 'AUDIO_TYPES':
-                setFileIcon('file-audio-outline')
-                break
-            case 'CODE_TYPES':
-                setFileIcon('file-code-outline-large')
-                break
-            case 'IMAGE_TYPES':
-                setFileIcon('file-image-outline-large')
-                break
-            case 'PDF_TYPES':
-                setFileIcon('file-pdf-outline-large')
-                break
-            case 'PATCH_TYPES':
-                setFileIcon('file-patch-outline-large')
-                break
-            case 'PRESENTATION_TYPES':
-                setFileIcon('file-powerpoint-outline-large')
-                break
-            case 'SPREADSHEET_TYPES':
-                setFileIcon('file-excel-outline-large')
-                break
-            case 'TEXT_TYPES':
-                setFileIcon('file-text-outline-large')
-                break
-            case 'VIDEO_TYPES':
-                setFileIcon('file-video-outline-large')
-                break
-            case 'WORD_TYPES':
-                setFileIcon('file-word-outline-large')
-                break
-            default:
-                setFileIcon('file-zip-outline-large')
+        if (fileInfo.extension) {
+            const getFileIcon = (fileExt: string) => {
+                const extType = (Object.keys(Files) as string[]).find((key) => Files[key].find((ext) => ext === fileExt))
+                switch (extType) {
+                case 'AUDIO_TYPES':
+                    setFileIcon('file-audio-outline')
+                    break
+                case 'CODE_TYPES':
+                    setFileIcon('file-code-outline-large')
+                    break
+                case 'IMAGE_TYPES':
+                    setFileIcon('file-image-outline-large')
+                    break
+                case 'PDF_TYPES':
+                    setFileIcon('file-pdf-outline-large')
+                    break
+                case 'PATCH_TYPES':
+                    setFileIcon('file-patch-outline-large')
+                    break
+                case 'PRESENTATION_TYPES':
+                    setFileIcon('file-powerpoint-outline-large')
+                    break
+                case 'SPREADSHEET_TYPES':
+                    setFileIcon('file-excel-outline-large')
+                    break
+                case 'TEXT_TYPES':
+                    setFileIcon('file-text-outline-large')
+                    break
+                case 'VIDEO_TYPES':
+                    setFileIcon('file-video-outline-large')
+                    break
+                case 'WORD_TYPES':
+                    setFileIcon('file-word-outline-large')
+                    break
+                default:
+                    setFileIcon('file-zip-outline-large')
+                }
             }
+            getFileIcon(fileInfo.extension.substring(1))
         }
-        getFileIcon(block.fields.attachmentName)
-    }, [])
+    }, [fileInfo.extension])
 
     const deleteAttachment = () => {
         if (onDelete) {
@@ -131,8 +133,6 @@ const FileElement = (props: Props): JSX.Element|null => {
         return null
     }
 
-    const fileExtension = block.fields.attachmentName.split('.').pop()
-
     return (
         <div className='FileElement mr-4'>
             <div className='fileElement-icon-division'>
@@ -146,7 +146,7 @@ const FileElement = (props: Props): JSX.Element|null => {
                     {fileName}
                 </div>
                 <div className='fileElement-file-ext-and-size'>
-                    {fileExtension} {fileSize}
+                    {fileInfo.extension?.substring(1)} {fileSize}
                 </div>
             </div>
             <MenuWrapper className='mt-3 fileElement-menu-icon'>
@@ -170,7 +170,7 @@ const FileElement = (props: Props): JSX.Element|null => {
             </MenuWrapper>
             <a
                 href={fileDataUrl}
-                download={block.fields.attachmentName}
+                download={fileName}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='fileElement-download-btn mt-5 mr-2'
@@ -195,10 +195,6 @@ contentRegistry.registerContentType({
                     if (attachmentId) {
                         const block = createFileBlock()
                         block.fields.attachmentId = attachmentId || ''
-                        block.fields.attachmentName = attachment.name || ''
-                        block.fields.attachmentType = attachment.type || ''
-                        block.fields.attachmentSize = attachment.size || 0
-                        block.fields.isAttachment = true
                         resolve(block)
                     } else {
                         sendFlashMessage({content: intl.formatMessage({id: 'createFileBlock.failed', defaultMessage: 'Unable to upload the file. File size limit reached.'}), severity: 'normal'})

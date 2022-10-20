@@ -38,6 +38,7 @@ func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
 func (a *API) registerFilesRoutes(r *mux.Router) {
 	// Files API
 	r.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
+	r.HandleFunc("/files/teams/{teamID}/{boardID}/info/{filename}", a.attachSession(a.handleFileInfo, false)).Methods("GET")
 	r.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 }
 
@@ -170,6 +171,65 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	defer fileReader.Close()
 	http.ServeContent(w, r, filename, time.Now(), fileReader)
 	auditRec.Success()
+}
+
+func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
+
+	vars := mux.Vars(r)
+	boardID := vars["boardID"]
+	filename := vars["filename"]
+	userID := getUserID(r)
+
+	hasValidReadToken := a.hasValidReadTokenForBoard(r, boardID)
+	if userID == "" && !hasValidReadToken {
+		a.errorResponse(w, r, model.NewErrUnauthorized("access denied to board"))
+		return
+	}
+
+	if !hasValidReadToken && !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
+		return
+	}
+
+	board, err := a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "getFile", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+	auditRec.AddMeta("teamID", board.TeamID)
+	auditRec.AddMeta("filename", filename)
+
+	contentType := "image/jpg"
+
+	fileExtension := strings.ToLower(filepath.Ext(filename))
+	if fileExtension == "png" {
+		contentType = "image/png"
+	}
+
+	if fileExtension == "gif" {
+		contentType = "image/gif"
+	}
+
+	w.Header().Set("Content-Type", contentType)
+
+	fileInfo, err := a.app.GetFileInfo(filename)
+	if err != nil && !model.IsErrNotFound(err) {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	data, err := json.Marshal(fileInfo)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	return;
 }
 
 func (a *API) handleUploadFile(w http.ResponseWriter, r *http.Request) {

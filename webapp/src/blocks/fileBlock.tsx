@@ -5,10 +5,6 @@ import {ContentBlock} from './contentBlock'
 
 type FileBlockFields = {
     attachmentId: string
-    attachmentName: string
-    attachmentType: string
-    attachmentSize: number
-    isAttachment: boolean
 }
 
 type FileBlock = ContentBlock & {
@@ -22,10 +18,6 @@ function createFileBlock(block?: Block): FileBlock {
         type: 'attachment',
         fields: {
             attachmentId: block?.fields.attachmentId || '',
-            attachmentName: block?.fields.attachmentName || '',
-            attachmentType: block?.fields.attachmentType || '',
-            attachmentSize: block?.fields.attachmentSize || '',
-            isAttachment: block?.fields.isAttachment || false,
         },
     }
 }

@@ -589,6 +589,25 @@ class OctoClient {
         return undefined
     }
 
+    async getFileInfo(boardId: string, fileId: string): Promise<FileInfo> {
+        let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/info/' + fileId
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `?read_token=${readToken}`
+        }
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        let fileInfo: FileInfo = {}
+
+        if (response.status === 200) {
+            console.log("Response : ", response)
+            fileInfo = this.getJson(response, {}) as FileInfo
+        } else if (response.status === 400) {
+            fileInfo = await this.getJson(response, {}) as FileInfo
+        }
+
+        return fileInfo
+    }
+
     async getFileAsDataUrl(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
