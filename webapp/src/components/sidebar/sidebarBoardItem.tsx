@@ -83,6 +83,7 @@ const SidebarBoardItem = (props: Props) => {
     const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
+    const [selectedBoardId, setSelectedBoardId] = useState<string>()
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -197,6 +198,18 @@ const SidebarBoardItem = (props: Props) => {
         }
     }
 
+    const handleOnCreate = async () => {
+        const nextCategoriesList = await octoClient.getSidebarCategories(teamID)
+        const toCategory = nextCategoriesList.
+            find((category) => props.allCategories.every((prevCategory) => prevCategory.id !== category.id))
+
+        if (!toCategory || !selectedBoardId) {
+            return
+        }
+
+        await mutator.moveBoardToCategory(teamID, selectedBoardId, toCategory.id, props.categoryBoards.id)
+    }
+
     const boardItemRef = useRef<HTMLDivElement>(null)
 
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
@@ -249,6 +262,7 @@ const SidebarBoardItem = (props: Props) => {
                                     icon={<CreateNewFolder/>}
                                     name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
                                     onClick={() => {
+                                        setSelectedBoardId(board.id)
                                         setShowCreateCategoryModal(true)
                                     }}
                                 />
@@ -315,13 +329,16 @@ const SidebarBoardItem = (props: Props) => {
             ))}
             {showCreateCategoryModal &&
                 <CreateCategory
-                    onClose={() => setShowCreateCategoryModal(false)}
+                    onClose={() => {
+                        setShowCreateCategoryModal(false)
+                    }}
                     title={(
                         <FormattedMessage
                             id='SidebarCategories.CategoryMenu.CreateNew'
                             defaultMessage='Create New Category'
                         />
                     )}
+                    onCreate={handleOnCreate}
                 />}
         </>
     )

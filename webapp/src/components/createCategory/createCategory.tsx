@@ -28,6 +28,7 @@ type Props = {
     initialValue?: string
     onClose: () => void
     title: JSX.Element
+    onCreate?: () => Promise<void>
 }
 
 const CreateCategory = (props: Props): JSX.Element => {
@@ -71,6 +72,7 @@ const CreateCategory = (props: Props): JSX.Element => {
             } as Category
 
             await mutator.createCategory(category)
+            await props.onCreate?.()
         }
 
         props.onClose()
