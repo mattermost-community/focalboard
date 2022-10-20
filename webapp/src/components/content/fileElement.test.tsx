@@ -79,16 +79,4 @@ describe('component/content/FileBlock', () => {
         })
         expect(fileContainer).toMatchSnapshot()
     })
-
-    test('test icon', async () => {
-        const component = wrapIntl(
-            <FileElement
-                block={defaultBlock}
-            />,
-        )
-        const {container} = render(component)
-        const icon = container.querySelector('i')
-        console.log(icon)
-        expect(icon?.classList.contains('icon-file-text-outline-large')).toBe(true)
-    })
 })

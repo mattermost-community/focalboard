@@ -174,6 +174,40 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation GET /files/teams/{teamID}/{boardID}/info/{filename} getFile
+	//
+	// Returns the contents of an uploaded file
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: boardID
+	//   in: path
+	//   description: Board ID
+	//   required: true
+	//   type: string
+	// - name: filename
+	//   in: path
+	//   description: name of the file
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   '404':
+	//     description: file not found
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
