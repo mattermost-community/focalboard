@@ -74,7 +74,7 @@ func TestMoveContentBlock(t *testing.T) {
 			parentBlock:  nil,
 			where:        "after",
 			userID:       "user-id",
-			errorMessage: "invalid dstBlockId other-test-card",
+			errorMessage: "not matching parent test-card and other-test-card",
 		},
 		{
 			name:         "parent not found",

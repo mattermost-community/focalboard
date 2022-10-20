@@ -9,7 +9,7 @@ import (
 
 func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where string, userID string) error {
 	if block.ParentID != dstBlock.ParentID {
-		message := fmt.Sprintf("invalid dstBlockId %s", dstBlock.ParentID)
+		message := fmt.Sprintf("not matching parent %s and %s", block.ParentID, dstBlock.ParentID)
 		return model.NewErrBadRequest(message)
 	}
 

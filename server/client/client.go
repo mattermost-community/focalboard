@@ -903,3 +903,13 @@ func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
 
 	return limits, BuildResponse(r)
 }
+
+func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where string, userID string) (bool, *Response) {
+	r, err := c.DoAPIPost("/content-blocks/"+srcBlockID+"/moveto/"+where+"/"+dstBlockID, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
