@@ -17,14 +17,14 @@
         font-weight: 400;
         font-size: 12px;
         line-height: 16px;
-        color: rgb(var(--center-channel-color-rgb))
+        color: rgb(var(--center-channel-color-rgb));
     }
 
     .fileElement-icon-division {
         margin-top: 8px;
     }
 
-    .fileElement-icon{
+    .fileElement-icon {
         font-size: 48px;
         color: rgba(237, 82, 42, 1);
     }
@@ -48,6 +48,7 @@
         .fileElement-download-btn {
             display: block;
         }
+
         .fileElement-menu-icon {
             display: block;
         }

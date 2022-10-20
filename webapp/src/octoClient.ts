@@ -599,7 +599,6 @@ class OctoClient {
         let fileInfo: FileInfo = {}
 
         if (response.status === 200) {
-            console.log("Response : ", response)
             fileInfo = this.getJson(response, {}) as FileInfo
         } else if (response.status === 400) {
             fileInfo = await this.getJson(response, {}) as FileInfo

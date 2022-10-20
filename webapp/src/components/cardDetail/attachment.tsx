@@ -9,7 +9,6 @@ import {ContentBlock} from '../../blocks/contentBlock'
 
 import './attachment.scss'
 import {Block} from '../../blocks/block'
-import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
 
 type Props = {

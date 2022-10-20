@@ -24,6 +24,7 @@ import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 import CardSkeleton from '../../svg/card-skeleton'
+import {Block} from '../../blocks/block'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
@@ -34,7 +35,6 @@ import useImagePaste from './imagePaste'
 import Attachment from './attachment'
 
 import './cardDetail.scss'
-import {Block} from '../../blocks/block'
 
 export const OnboardingBoardTitle = 'Welcome to Boards!'
 export const OnboardingCardTitle = 'Create a new card'
