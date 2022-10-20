@@ -126,7 +126,7 @@ watch-single-user: modd-precheck ## Run both server and webapp in single user mo
 watch-server-test: modd-precheck ## Run server tests watching for changes
 	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-servertest.conf
 
-server-test: server-test-sqlite server-test-mysql server-test-postgres ## Run server tests
+server-test: server-test-sqlite server-test-mysql server-test-mariadb server-test-postgres ## Run server tests
 
 server-test-sqlite: export FOCALBOARD_UNIT_TESTING=1
 
@@ -152,6 +152,20 @@ server-test-mysql: setup-go-work ## Run server tests using mysql
 	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-mysql-profile.coverage -count=1 -timeout=30m ./...
 	cd mattermost-plugin/server; go tool cover -func plugin-mysql-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
+
+server-test-mariadb: export FOCALBOARD_UNIT_TESTING=1
+server-test-mariadb: export FOCALBOARD_STORE_TEST_DB_TYPE=mariadb
+server-test-mariadb: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44445
+
+server-test-mariadb: templates-archive ## Run server tests using mysql
+	@echo Starting docker container for mariadb
+	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
+	docker-compose -f ./docker-testing/docker-compose-mariadb.yml run start_dependencies
+	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mariadb-profile.coverage -count=1 -timeout=30m ./...
+	cd server; go tool cover -func server-mariadb-profile.coverage
+	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-mariadb-profile.coverage -count=1 -timeout=30m ./...
+	cd mattermost-plugin/server; go tool cover -func plugin-mariadb-profile.coverage
+	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
 
 server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
 server-test-postgres: export FOCALBOARD_STORE_TEST_DB_TYPE=postgres
