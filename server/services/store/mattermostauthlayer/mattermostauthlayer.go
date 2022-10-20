@@ -800,9 +800,9 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 }
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
-	bm, original_error := s.Store.GetMemberForBoard(boardID, userID)
+	bm, originalErr := s.Store.GetMemberForBoard(boardID, userID)
 	// Explicit membership not found
-	if model.IsErrNotFound(original_error) {
+	if model.IsErrNotFound(originalErr) {
 		if userID == model.SystemUserID {
 			return nil, model.NewErrNotFound(userID)
 		}
@@ -867,8 +867,8 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 			}, nil
 		}
 	}
-	if original_error != nil {
-		return nil, original_error
+	if originalErr != nil {
+		return nil, originalErr
 	}
 	return bm, nil
 }
