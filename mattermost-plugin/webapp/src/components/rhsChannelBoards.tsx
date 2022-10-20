@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect}  from 'react'
+import React, {useEffect, useState}  from 'react'
 import {FormattedMessage, IntlProvider, useIntl} from 'react-intl'
 
 import {getMessages} from '../../../../webapp/src/i18n'
@@ -41,11 +41,16 @@ const RHSChannelBoards = () => {
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
     const intl = useIntl()
+    const [dataLoaded, setDataLoaded] = useState(false)
 
     useEffect(() => {
-        dispatch(loadBoards())
-        dispatch(loadMyBoardsMemberships())
-        dispatch(fetchMe())
+        async function loadRhsRequiredData() {
+            await dispatch(loadBoards())
+            await dispatch(loadMyBoardsMemberships())
+            await dispatch(fetchMe())
+            setDataLoaded(true)
+        }
+        loadRhsRequiredData()
     }, [])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
@@ -79,6 +84,11 @@ const RHSChannelBoards = () => {
     if (!currentChannel) {
         return null
     }
+
+    if (!dataLoaded) {
+        return null
+    }
+
     const channelBoards = boards.filter((b) => b.channelId === currentChannel.id)
 
     let channelName = currentChannel.display_name
