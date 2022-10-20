@@ -18,8 +18,8 @@ var (
 	ErrNewBoardCannotHaveID = errors.New("new board cannot have an ID")
 )
 
-const linkBoardMessage = "@%s linked Board [%s](%s) with this channel"
-const unlinkBoardMessage = "@%s unlinked Board [%s](%s) with this channel"
+const linkBoardMessage = "@%s linked the board [%s](%s) with this channel"
+const unlinkBoardMessage = "@%s unlinked the board [%s](%s) with this channel"
 
 var errNoDefaultCategoryFound = errors.New("no default category found for user")
 

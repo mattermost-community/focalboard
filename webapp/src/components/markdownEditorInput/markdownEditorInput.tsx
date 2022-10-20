@@ -138,6 +138,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
     }, [board, editorState])
 
     const [initialTextCache, setInitialTextCache] = useState<string | undefined>(initialText)
+    const [initialTextUsed, setInitialTextUsed] = useState<boolean>(false)
 
     // avoiding stale closure
     useEffect(() => {
@@ -146,9 +147,16 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         // for this if condition here, mentions don't work. I suspect it's because without
         // the in condition, we're changing editor state twice during component initialization
         // and for some reason it causes mentions to not show up.
-        if (initialText && initialText !== initialTextCache) {
+
+        // initial text should only be used once, i'e', initially
+        // `initialTextUsed` flag records if the initialText prop has been used
+        // to se the editor state once as a truthy value.
+        // Once used, we don't react to its changing value
+
+        if (!initialTextUsed && initialText && initialText !== initialTextCache) {
             setEditorState(generateEditorState(initialText || ''))
             setInitialTextCache(initialText)
+            setInitialTextUsed(true)
         }
     }, [initialText])
 
