@@ -308,14 +308,14 @@ const SidebarCategory = (props: Props) => {
                                     ref={categoryProvided.innerRef}
                                     {...categoryProvided.droppableProps}
                                 >
-                                    {!(collapsed || snapshot.isDragging) && visibleBlocks.length === 0 &&
+                                    {!(collapsed || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
                                         <div className='octo-sidebar-item subitem no-views'>
                                             <FormattedMessage
                                                 id='Sidebar.no-boards-in-category'
                                                 defaultMessage='No boards inside'
                                             />
                                         </div>}
-                                    {collapsed && !snapshot.isDragging && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
+                                    {collapsed && !snapshot.isDragging && props.draggedItemID !== props.categoryBoards.id && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
                                         if (!isBoardVisible(board.id)) {
                                             return null
                                         }
@@ -333,7 +333,7 @@ const SidebarCategory = (props: Props) => {
                                             />
                                         )
                                     })}
-                                    {(props.draggedItemID !== props.categoryBoards.id || !(collapsed || snapshot.isDragging)) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
+                                    {!(collapsed || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
                                         return (
                                             <SidebarBoardItem
                                                 index={zzz}
@@ -345,7 +345,7 @@ const SidebarCategory = (props: Props) => {
                                                 showBoard={showBoard}
                                                 showView={showView}
                                                 onDeleteRequest={setDeleteBoard}
-                                                foo={props.draggedItemID === board.id}
+                                                foo={props.draggedItemID === board.id || props.draggedItemID === props.categoryBoards.id}
                                             />
                                         )
                                     })}
