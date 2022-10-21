@@ -56,6 +56,82 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
               </button>
+              <div
+                class="Menu noselect left "
+              >
+                <div
+                  class="menu-contents"
+                >
+                  <div
+                    class="menu-options"
+                  >
+                    <div>
+                      <div
+                        aria-label="Unlink board"
+                        class="MenuOption TextOption menu-option"
+                        role="button"
+                      >
+                        <div
+                          class="d-flex"
+                        >
+                          <div
+                            class="menu-option__icon"
+                          >
+                            <i
+                              class="CompassIcon icon-link-variant-off"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="menu-option__content"
+                        >
+                          <div
+                            class="menu-name"
+                          >
+                            Unlink board
+                          </div>
+                        </div>
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                    </div>
+                    <div />
+                  </div>
+                  <div
+                    class="menu-spacer hideOnWidescreen"
+                  />
+                  <div
+                    class="menu-options hideOnWidescreen"
+                  >
+                    <div
+                      aria-label="Cancel"
+                      class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
+                    >
+                      <div
+                        class="d-flex"
+                      >
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                      <div
+                        class="menu-option__content"
+                      >
+                        <div
+                          class="menu-name"
+                        >
+                          Cancel
+                        </div>
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -92,6 +168,82 @@ exports[`components/rhsChannelBoards renders the RHS for channel boards 1`] = `
                   class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
               </button>
+              <div
+                class="Menu noselect left "
+              >
+                <div
+                  class="menu-contents"
+                >
+                  <div
+                    class="menu-options"
+                  >
+                    <div>
+                      <div
+                        aria-label="Unlink board"
+                        class="MenuOption TextOption menu-option"
+                        role="button"
+                      >
+                        <div
+                          class="d-flex"
+                        >
+                          <div
+                            class="menu-option__icon"
+                          >
+                            <i
+                              class="CompassIcon icon-link-variant-off"
+                            />
+                          </div>
+                        </div>
+                        <div
+                          class="menu-option__content"
+                        >
+                          <div
+                            class="menu-name"
+                          >
+                            Unlink board
+                          </div>
+                        </div>
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                    </div>
+                    <div />
+                  </div>
+                  <div
+                    class="menu-spacer hideOnWidescreen"
+                  />
+                  <div
+                    class="menu-options hideOnWidescreen"
+                  >
+                    <div
+                      aria-label="Cancel"
+                      class="MenuOption TextOption menu-option menu-cancel"
+                      role="button"
+                    >
+                      <div
+                        class="d-flex"
+                      >
+                        <div
+                          class="noicon"
+                        />
+                      </div>
+                      <div
+                        class="menu-option__content"
+                      >
+                        <div
+                          class="menu-name"
+                        >
+                          Cancel
+                        </div>
+                      </div>
+                      <div
+                        class="noicon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div

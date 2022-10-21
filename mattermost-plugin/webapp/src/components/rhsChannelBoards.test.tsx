@@ -16,6 +16,11 @@ import RHSChannelBoards from './rhsChannelBoards'
 jest.mock('../../../../webapp/src/octoClient')
 const mockedOctoClient = mocked(octoClient, true)
 
+jest.mock('react', () => ({
+    ...jest.requireActual('react'),
+    useState: jest.fn(),
+}))
+
 describe('components/rhsChannelBoards', () => {
     const board1 = createBoard()
     board1.updateAt = 1657311058157
@@ -69,6 +74,11 @@ describe('components/rhsChannelBoards', () => {
 
     beforeEach(() => {
         mockedOctoClient.getBoards.mockResolvedValue([board1, board2, board3])
+
+        const setState = jest.fn()
+        const useStateSpy = jest.spyOn(React, 'useState')
+        useStateSpy.mockImplementation(() => [true, setState])
+
         jest.clearAllMocks()
     })
 
