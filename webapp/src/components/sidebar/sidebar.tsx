@@ -216,11 +216,13 @@ const Sidebar = (props: Props) => {
 
         if (!team || !destination) {
             setDraggedItemID('')
+            setIsCategoryBeingDragged(false)
             return
         }
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
             setDraggedItemID('')
+            setIsCategoryBeingDragged(false)
             return
         }
 
@@ -233,13 +235,21 @@ const Sidebar = (props: Props) => {
         }
 
         setDraggedItemID('')
+        setIsCategoryBeingDragged(false)
     }, [team, sidebarCategories])
 
     const [draggedItemID, setDraggedItemID] = useState<string>('')
+    const [isCategoryBeingDragged, setIsCategoryBeingDragged] = useState<boolean>(false)
 
     const onBeforeCapture = useCallback((before: BeforeCapture) => {
+        console.log(`before.draggableId: ${before.draggableId}`)
         setDraggedItemID(before.draggableId)
-    }, [])
+        const draggedCategoryIndex = sidebarCategories.findIndex((category) => category.id === before.draggableId)
+        if (draggedCategoryIndex > -1) {
+            console.log('DELETCTED DNDING A CATEGORY')
+        }
+        setIsCategoryBeingDragged(draggedCategoryIndex > -1)
+    }, [sidebarCategories])
 
     if (!boards) {
         return <div/>
@@ -371,6 +381,7 @@ const Sidebar = (props: Props) => {
                                         index={index}
                                         onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
                                         draggedItemID={draggedItemID}
+                                        forceCollapse={isCategoryBeingDragged}
                                     />
                                 ))
                             }

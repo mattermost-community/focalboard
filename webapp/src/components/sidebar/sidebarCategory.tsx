@@ -57,12 +57,13 @@ type Props = {
     index: number
     onBoardTemplateSelectorClose?: () => void
     draggedItemID?: string
+    forceCollapse?: boolean
 }
 
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
 
 const SidebarCategory = (props: Props) => {
-    console.log(`category: ${props.categoryBoards.name} ${props.draggedItemID === props.categoryBoards.id}`)
+    console.log(`category: ${props.categoryBoards.name} draggedItemID: ${props.draggedItemID === props.categoryBoards.id} forceCollapse: ${props.forceCollapse}`)
 
     const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
     const intl = useIntl()
@@ -236,7 +237,7 @@ const SidebarCategory = (props: Props) => {
                         ref={menuWrapperRef}
                     >
                         <div
-                            className={`octo-sidebar-item category ' ${collapsed ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
+                            className={`octo-sidebar-item category ' ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
                         >
                             <div
                                 className='octo-sidebar-title category-title'
@@ -244,7 +245,7 @@ const SidebarCategory = (props: Props) => {
                                 onClick={toggleCollapse}
                                 {...provided.dragHandleProps}
                             >
-                                {collapsed || snapshot.isDragging ? <ChevronRight/> : <ChevronDown/>}
+                                {collapsed || snapshot.isDragging || props.forceCollapse ? <ChevronRight/> : <ChevronDown/>}
                                 {props.categoryBoards.name}
                                 <div className='sidebarCategoriesTour'>
                                     {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
@@ -308,14 +309,14 @@ const SidebarCategory = (props: Props) => {
                                     ref={categoryProvided.innerRef}
                                     {...categoryProvided.droppableProps}
                                 >
-                                    {!(collapsed || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
+                                    {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
                                         <div className='octo-sidebar-item subitem no-views'>
                                             <FormattedMessage
                                                 id='Sidebar.no-boards-in-category'
                                                 defaultMessage='No boards inside'
                                             />
                                         </div>}
-                                    {collapsed && !snapshot.isDragging && props.draggedItemID !== props.categoryBoards.id && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
+                                    {!props.forceCollapse && collapsed && !snapshot.isDragging && props.draggedItemID !== props.categoryBoards.id && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
                                         if (!isBoardVisible(board.id)) {
                                             return null
                                         }
@@ -333,7 +334,7 @@ const SidebarCategory = (props: Props) => {
                                             />
                                         )
                                     })}
-                                    {!(collapsed || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
+                                    {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
                                         return (
                                             <SidebarBoardItem
                                                 index={zzz}
