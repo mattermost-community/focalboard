@@ -135,23 +135,35 @@ func (a *serviceAPIAdapter) HasPermissionToChannel(askingUserID string, channelI
 	return a.api.permissionsService.HasPermissionToChannel(askingUserID, channelID, permission)
 }
 
+//
 // Bot service.
+//
+
 func (a *serviceAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 	return a.api.botService.EnsureBot(a.ctx, boardsProductID, bot)
 }
 
+//
 // License service.
+//
+
 func (a *serviceAPIAdapter) GetLicense() *mm_model.License {
 	return a.api.licenseService.GetLicense()
 }
 
+//
 // FileInfoStore service.
+//
+
 func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
 	fi, appErr := a.api.fileInfoStoreService.GetFileInfo(fileID)
 	return fi, normalizeAppErr(appErr)
 }
 
+//
 // Cluster store.
+//
+
 func (a *serviceAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
 	a.api.clusterService.PublishWebSocketEvent(boardsProductID, event, payload, broadcast)
 }
@@ -160,43 +172,67 @@ func (a *serviceAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterE
 	return a.api.clusterService.PublishPluginClusterEvent(boardsProductID, ev, opts)
 }
 
+//
 // Cloud service.
+//
+
 func (a *serviceAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 	return a.api.cloudService.GetCloudLimits()
 }
 
+//
 // Config service.
+//
+
 func (a *serviceAPIAdapter) GetConfig() *mm_model.Config {
 	return a.api.configService.Config()
 }
 
+//
 // Logger service.
+//
+
 func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 	return a.api.logger
 }
 
+//
 // KVStore service.
+//
+
 func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
 	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
 	return b, normalizeAppErr(appErr)
 }
 
+//
 // Store service.
+//
+
 func (a *serviceAPIAdapter) GetMasterDB() (*sql.DB, error) {
 	return a.api.storeService.GetMasterDB(), nil
 }
 
+//
 // System service.
+//
+
 func (a *serviceAPIAdapter) GetDiagnosticID() string {
 	return a.api.systemService.GetDiagnosticId()
 }
 
+//
 // Router service.
+//
+
 func (a *serviceAPIAdapter) RegisterRouter(sub *mux.Router) {
 	a.api.routerService.RegisterRouter(boardsProductName, sub)
 }
 
+//
 // Preferences service.
+//
+
 func (a *serviceAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
 	p, appErr := a.api.preferencesService.GetPreferencesForUser(userID)
 	return p, normalizeAppErr(appErr)
