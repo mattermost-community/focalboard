@@ -919,8 +919,8 @@ class Mutator {
         return this.unhideViewColumns(boardId, view, [columnOptionId])
     }
 
-    async createCategory(category: Category): Promise<void> {
-        await octoClient.createSidebarCategory(category)
+    async createCategory(category: Category): Promise<Category> {
+        return octoClient.createSidebarCategory(category)
     }
 
     async deleteCategory(teamID: string, categoryID: string): Promise<void> {

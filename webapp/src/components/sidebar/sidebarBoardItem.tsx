@@ -15,7 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './sidebarBoardItem.scss'
-import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
+import {Category, CategoryBoards, updateBoardCategories} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
@@ -198,11 +198,7 @@ const SidebarBoardItem = (props: Props) => {
         }
     }
 
-    const handleOnCreate = async () => {
-        const nextCategoriesList = await octoClient.getSidebarCategories(teamID)
-        const toCategory = nextCategoriesList.
-            find((category) => props.allCategories.every((prevCategory) => prevCategory.id !== category.id))
-
+    const handleOnCreate = async (toCategory: Category) => {
         if (!toCategory || !selectedBoardId) {
             return
         }
