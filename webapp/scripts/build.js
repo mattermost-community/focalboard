@@ -46,7 +46,7 @@ require('esbuild').build({
     ]
 }).catch(() => process.exit(1)).then(() => {
     const version = new Date().getTime();
-    ejs.renderFile('./html-templates/page.ejs', {version}, {}, function (err, str) {
+    ejs.renderFile('./html-templates/esbuild-page.ejs', {version}, {}, function (err, str) {
       if (err) console.error(err)
       fs.writeFileSync(path.join(__dirname, '..', 'pack', 'index.html'), str)
     })
