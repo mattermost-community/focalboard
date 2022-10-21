@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useRef, useState} from 'react'
+import React, {MutableRefObject, useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
@@ -62,6 +62,8 @@ type Props = {
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
     index: number
+    draggedItemID?: string
+    foo?: boolean
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -296,7 +298,7 @@ const SidebarBoardItem = (props: Props) => {
                             </MenuWrapper>
                         </div>
                     </div>
-                    {props.isActive && boardViews.map((view: BoardView) => (
+                    {props.isActive && !snapshot.isDragging && !props.foo && boardViews.map((view: BoardView) => (
                         <div
                             key={view.id}
                             className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}

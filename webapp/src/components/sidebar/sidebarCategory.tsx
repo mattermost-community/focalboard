@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
@@ -56,11 +56,14 @@ type Props = {
     allCategories: CategoryBoards[]
     index: number
     onBoardTemplateSelectorClose?: () => void
+    draggedItemID?: string
 }
 
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
 
 const SidebarCategory = (props: Props) => {
+    console.log(`category: ${props.categoryBoards.name} ${props.draggedItemID === props.categoryBoards.id}`)
+
     const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
     const intl = useIntl()
     const history = useHistory()
@@ -330,7 +333,7 @@ const SidebarCategory = (props: Props) => {
                                             />
                                         )
                                     })}
-                                    {!(collapsed || snapshot.isDragging) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
+                                    {(props.draggedItemID !== props.categoryBoards.id || !(collapsed || snapshot.isDragging)) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
                                         return (
                                             <SidebarBoardItem
                                                 index={zzz}
@@ -342,6 +345,7 @@ const SidebarCategory = (props: Props) => {
                                                 showBoard={showBoard}
                                                 showView={showView}
                                                 onDeleteRequest={setDeleteBoard}
+                                                foo={props.draggedItemID === board.id}
                                             />
                                         )
                                     })}

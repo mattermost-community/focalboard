@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useCallback, useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
-import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
+import {BeforeCapture, DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -212,15 +212,15 @@ const Sidebar = (props: Props) => {
     }, [team, sidebarCategories])
 
     const onDragEnd = useCallback(async (result: DropResult) => {
-        console.log('onDragEnd called')
-
         const {destination, source, type} = result
 
         if (!team || !destination) {
+            setDraggedItemID('')
             return
         }
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
+            setDraggedItemID('')
             return
         }
 
@@ -231,7 +231,15 @@ const Sidebar = (props: Props) => {
         } else {
             Utils.logWarn(`unknown drag type encountered, type: ${type}`)
         }
+
+        setDraggedItemID('')
     }, [team, sidebarCategories])
+
+    const [draggedItemID, setDraggedItemID] = useState<string>('')
+
+    const onBeforeCapture = useCallback((before: BeforeCapture) => {
+        setDraggedItemID(before.draggableId)
+    }, [])
 
     if (!boards) {
         return <div/>
@@ -336,7 +344,10 @@ const Sidebar = (props: Props) => {
                 userIsGuest={me?.is_guest}
             />
 
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext
+                onDragEnd={onDragEnd}
+                onBeforeCapture={onBeforeCapture}
+            >
                 <Droppable
                     droppableId='lhs-categories'
                     type='category'
@@ -359,6 +370,7 @@ const Sidebar = (props: Props) => {
                                         allCategories={sidebarCategories}
                                         index={index}
                                         onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
+                                        draggedItemID={draggedItemID}
                                     />
                                 ))
                             }
