@@ -237,16 +237,7 @@ func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("teamID", board.TeamID)
 	auditRec.AddMeta("filename", filename)
 
-	contentType := "image/jpg"
-
-	fileExtension := strings.ToLower(filepath.Ext(filename))
-	if fileExtension == "png" {
-		contentType = "image/png"
-	}
-
-	if fileExtension == "gif" {
-		contentType = "image/gif"
-	}
+	contentType := "application/json"
 
 	w.Header().Set("Content-Type", contentType)
 
