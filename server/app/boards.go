@@ -166,7 +166,7 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 	if destinationCategoryID == "" {
 		// if source board is not mapped to a category for this user,
 		// then move new board to default category
-		if !asTemplate && teamID != "0" {
+		if !asTemplate {
 			return a.addBoardsToDefaultCategory(userID, teamID, []*model.Board{{ID: destinationBoardID}})
 		} else {
 			return nil
