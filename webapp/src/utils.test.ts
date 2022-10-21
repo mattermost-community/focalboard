@@ -58,6 +58,10 @@ describe('utils', () => {
             expect(Utils.htmlFromMarkdown('[]("xss-attack="true"other="whatever)')).toBe(expectedHtml)
             window.openInNewBrowser = null
         })
+
+        test('should not double encode links href on the webapp', () => {
+            expect(Utils.htmlFromMarkdown('https://example.com?title=August%201%20-%202022')).toBe('<p><a target="_blank" rel="noreferrer" href="https://example.com?title=August%201%20-%202022" title="" onclick="">https://example.com?title=August%201%20-%202022</a></p>')
+        })
     })
 
     describe('countCheckboxesInMarkdown', () => {
