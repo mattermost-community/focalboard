@@ -44,13 +44,11 @@ const RHSChannelBoards = () => {
     const [dataLoaded, setDataLoaded] = React.useState(false)
 
     useEffect(() => {
-        async function loadRhsRequiredData() {
-            await dispatch(loadBoards())
-            await dispatch(loadMyBoardsMemberships())
-            await dispatch(fetchMe())
-            setDataLoaded(true)
-        }
-        loadRhsRequiredData()
+        Promise.all([
+            dispatch(loadBoards()),
+            dispatch(loadMyBoardsMemberships()),
+            dispatch(fetchMe()),
+        ]).then(() => setDataLoaded(true))
     }, [])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
