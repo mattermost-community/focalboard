@@ -116,8 +116,8 @@ const SidebarBoardItem = (props: Props) => {
 
         const boardId = blocksAndBoards.boards[0].id
 
-        // If the source board is in a custom category, set the new board in
-        // the same category. Even though the server does this as well on its side,
+        // If the source board is in a custom category and is not being duplicated as a template,
+        // set the new board in the same category. Even though the server does this as well on its side,
         // we need to do this to avoid the duplicated board showing up in default "Boards" category first
         // then jumping to the custom category.
         // The jump would happen because when server clones a board from a custom category,
@@ -128,7 +128,7 @@ const SidebarBoardItem = (props: Props) => {
         // to the correct category.
         // By not waiting for the board-category WS event and setting the right category for the board,
         // we avoid the jumping behavior.
-        if (props.categoryBoards.id !== '') {
+        if (!asTemplate && props.categoryBoards.id !== '') {
             await dispatch(updateBoardCategories([{
                 boardID: boardId,
                 categoryID: props.categoryBoards.id,
