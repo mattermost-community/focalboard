@@ -183,9 +183,11 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
-	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID); categoryErr != nil {
-			return nil, nil, categoryErr
+	if !asTemplate {
+		for _, board := range bab.Boards {
+			if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, board.TeamID); categoryErr != nil {
+				return nil, nil, categoryErr
+			}
 		}
 	}
 
