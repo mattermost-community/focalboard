@@ -175,3 +175,27 @@ func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query st
 func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmModel.Channel, error) {
 	return nil, store.NewNotSupportedError("get channel not supported on standalone mode")
 }
+
+func (s *SQLStore) dBVersion(db sq.BaseRunner) string {
+	var version string
+	var row *sql.Row
+
+	if s.dbType == model.MysqlDBType {
+		row = s.db.QueryRow("SELECT VERSION()")
+	}
+
+	if s.dbType == model.PostgresDBType {
+		row = s.db.QueryRow("SHOW server_version")
+	}
+
+	if s.dbType == model.SqliteDBType {
+		row = s.db.QueryRow("SELECT sqlite_version()")
+	}
+
+	if err := row.Scan(&version); err != nil {
+		s.logger.Error("error checking database version", mlog.Err(err))
+		return ""
+	}
+
+	return version
+}

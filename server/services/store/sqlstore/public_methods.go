@@ -124,6 +124,11 @@ func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 
 }
 
+func (s *SQLStore) DBVersion() string {
+	return s.dBVersion(s.db)
+
+}
+
 func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBlock(s.db, blockID, modifiedBy)
