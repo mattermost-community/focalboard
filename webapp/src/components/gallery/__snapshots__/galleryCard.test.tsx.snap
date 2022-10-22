@@ -37,7 +37,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -214,7 +214,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -429,7 +429,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -610,7 +610,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -1028,7 +1028,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
