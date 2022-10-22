@@ -2180,7 +2180,6 @@ func TestDuplicateBoard(t *testing.T) {
 		// verify duplicated board is in the default Boards category (i.e. not the same custom category as the source board)
 		userCategoryBoards, resp := th.Client.GetUserCategoryBoards(teamID)
 		th.CheckOK(resp)
-		require.NotNil(t, rBoardsAndBlock)
 
 		var duplicateBoardCategoryID string
 		for _, categoryBoard := range userCategoryBoards {
@@ -2190,7 +2189,7 @@ func TestDuplicateBoard(t *testing.T) {
 				}
 			}
 		}
-		require.Nil(t, duplicateBoardCategoryID)
+		require.Empty(t, duplicateBoardCategoryID)
 	})
 }
 
