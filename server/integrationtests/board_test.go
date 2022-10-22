@@ -2091,7 +2091,7 @@ func TestDuplicateBoard(t *testing.T) {
 		require.Equal(t, createdCategory.ID, duplicateBoardCategoryID)
 	})
 
-	t.Run("create and duplicate public board from a custom category", func(t *testing.T) {
+	t.Run("create and duplicate public board from a custom category as template", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
@@ -2160,7 +2160,7 @@ func TestDuplicateBoard(t *testing.T) {
 		require.Len(t, members, 2)
 
 		// Duplicate the board
-		rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, false, teamID)
+		rBoardsAndBlock, resp := th.Client.DuplicateBoard(board.ID, true, teamID)
 		th.CheckOK(resp)
 		require.NotNil(t, rBoardsAndBlock)
 		require.Equal(t, len(rBoardsAndBlock.Boards), 1)
@@ -2168,7 +2168,7 @@ func TestDuplicateBoard(t *testing.T) {
 
 		duplicateBoard := rBoardsAndBlock.Boards[0]
 		require.Equal(t, duplicateBoard.Type, model.BoardTypePrivate, "Duplicated board should be private")
-		require.Equal(t, "Public board copy", duplicateBoard.Title)
+		require.Equal(t, "New board template", duplicateBoard.Title)
 
 		members, err = th.Server.App().GetMembersForBoard(duplicateBoard.ID)
 		require.NoError(t, err)
@@ -2177,7 +2177,7 @@ func TestDuplicateBoard(t *testing.T) {
 		require.Equal(t, duplicateBoard.ID, members[0].BoardID)
 		require.True(t, members[0].SchemeAdmin)
 
-		// verify duplicated board is in the same custom category
+		// verify duplicated board is in the default Boards category (i.e. not the same custom category as the source board)
 		userCategoryBoards, resp := th.Client.GetUserCategoryBoards(teamID)
 		th.CheckOK(resp)
 		require.NotNil(t, rBoardsAndBlock)
@@ -2190,7 +2190,7 @@ func TestDuplicateBoard(t *testing.T) {
 				}
 			}
 		}
-		require.Equal(t, createdCategory.ID, duplicateBoardCategoryID)
+		require.Nil(t, duplicateBoardCategoryID)
 	})
 }
 
