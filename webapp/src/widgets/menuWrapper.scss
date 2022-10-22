@@ -6,6 +6,9 @@
         cursor: default;
     }
 
+    &.override.menuOpened {
+        display: block;
+    }
 
     *:first-child {
         /* stylelint-disable property-no-vendor-prefix*/
