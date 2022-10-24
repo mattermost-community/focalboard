@@ -26,7 +26,7 @@ const Attachment: ContentType<FileInfo> = {
             if (!fileDataUrl) {
                 const loadFile = async () => {
                     if (props.value && props.value.file && typeof props.value.file === 'string') {
-                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId, props.value.file)
+                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId || '', props.value.file)
                         setFileDataUrl(fileURL.url || '')
                     }
                 }

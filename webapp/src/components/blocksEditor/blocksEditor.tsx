@@ -10,6 +10,7 @@ import BlockContent from './blockContent'
 import * as registry from './blocks'
 
 type Props = {
+    boardId?: string
     onBlockCreated: (block: BlockData, afterBlock?: BlockData) => Promise<BlockData|null>
     onBlockModified: (block: BlockData) => Promise<BlockData|null>
     onBlockMoved: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>

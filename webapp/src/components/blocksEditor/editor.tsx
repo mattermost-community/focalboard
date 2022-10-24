@@ -12,6 +12,7 @@ import RootInput from './rootInput'
 import './editor.scss'
 
 type Props = {
+    boardId?: string
     onSave: (block: BlockData) => Promise<BlockData|null>
     id?: string
     initialValue?: string
@@ -21,7 +22,6 @@ type Props = {
 export default function Editor(props: Props) {
     const [value, setValue] = useState(props.initialValue || '')
     const [currentBlockType, setCurrentBlockType] = useState<ContentType|null>(contentBlocks.get(props.initialContentType || '') || null)
-    const currentBoardId = useAppSelector(getCurrentBoardId)
 
     useEffect(() => {
         if (!currentBlockType) {
@@ -67,7 +67,7 @@ export default function Editor(props: Props) {
                         const createdContentType = contentBlocks.get(newBlock?.contentType || '')
                         setCurrentBlockType(contentBlocks.get(createdContentType.nextType || '') || null)
                     }}
-                    currentBoardId={currentBoardId}
+                    currentBoardId={props.boardId}
                 />}
         </div>
     )
