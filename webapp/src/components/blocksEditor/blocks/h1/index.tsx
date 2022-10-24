@@ -32,6 +32,7 @@ const H1: ContentType = {
             <input
                 ref={ref}
                 className='H1'
+                data-testid='h1'
                 onChange={(e) => props.onChange(e.currentTarget.value)}
                 onKeyDown={(e) => {
                     if (props.value === '' && e.key === 'Backspace') {
