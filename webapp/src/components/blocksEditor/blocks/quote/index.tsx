@@ -18,6 +18,7 @@ const Quote: ContentType = {
         return (
             <div
                 className='Quote'
+                data-testid='quote'
                 dangerouslySetInnerHTML={{__html: html.trim()}}
             />
         )
@@ -30,9 +31,12 @@ const Quote: ContentType = {
             ref.current?.focus()
         }, [])
         return (
-            <blockquote className='Quote'>
+            <blockquote
+                className='Quote'
+            >
                 <input
                     ref={ref}
+                    data-testid='quote'
                     onChange={(e) => props.onChange(e.currentTarget.value)}
                     onKeyDown={(e) => {
                         if (props.value === '' && e.key === 'Backspace') {
