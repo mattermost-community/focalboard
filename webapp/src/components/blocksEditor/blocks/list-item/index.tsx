@@ -26,6 +26,7 @@ const ListItem: ContentType = {
                     <input
                         ref={ref}
                         className='ListItem'
+                        data-testid='list-item'
                         onChange={(e) => props.onChange(e.currentTarget.value)}
                         onKeyDown={(e) => {
                             if (props.value === '' && e.key === 'Backspace') {
