@@ -28,7 +28,7 @@ const Video: ContentType<FileInfo> = {
             if (!videoDataUrl) {
                 const loadVideo = async () => {
                     if (props.value && props.value.file && typeof props.value.file === 'string') {
-                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId, props.value.file)
+                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId || '', props.value.file)
                         setVideoDataUrl(fileURL.url || '')
                     }
                 }
@@ -43,6 +43,7 @@ const Video: ContentType<FileInfo> = {
                     height='240'
                     controls={true}
                     className='VideoView'
+                    data-testid='video'
                 >
                     <source src={videoDataUrl}/>
                 </video>
@@ -60,6 +61,7 @@ const Video: ContentType<FileInfo> = {
             <input
                 ref={ref}
                 className='Video'
+                data-testid='video-input'
                 type='file'
                 accept='video/*'
                 onChange={(e) => {
