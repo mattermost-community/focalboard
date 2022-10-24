@@ -26,12 +26,10 @@ const Checkbox: ContentType<ValueType> = {
         return (
             <div className='CheckboxView'>
                 <input
+                    data-testid='checkbox-check'
                     type='checkbox'
                     onChange={(e) => {
-                        let newValue = {checked: false, value: props.value.value || ''}
-                        if (e.target.checked) {
-                            newValue = {checked: true, value: props.value.value || ''}
-                        }
+                        const newValue = {checked: Boolean(e.target.checked), value: props.value.value || ''}
                         props.onSave(newValue)
                     }}
                     checked={props.value.checked || false}
@@ -52,6 +50,7 @@ const Checkbox: ContentType<ValueType> = {
             <div className='Checkbox'>
                 <input
                     type='checkbox'
+                    data-testid='checkbox-check'
                     className='inputCheck'
                     onChange={(e) => {
                         let newValue = {checked: false, value: props.value.value || ''}
@@ -65,6 +64,7 @@ const Checkbox: ContentType<ValueType> = {
                 />
                 <input
                     ref={ref}
+                    data-testid='checkbox-input'
                     className='inputText'
                     onChange={(e) => {
                         props.onChange({checked: Boolean(props.value.checked), value: e.currentTarget.value})
