@@ -85,7 +85,7 @@ func (a *API) handleMoveBlockTo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditRec := a.makeAuditRecord(r, "moveBlockAfter", audit.Fail)
+	auditRec := a.makeAuditRecord(r, "moveBlockTo", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 	auditRec.AddMeta("blockID", blockID)
 	auditRec.AddMeta("dstBlockID", dstBlockID)
