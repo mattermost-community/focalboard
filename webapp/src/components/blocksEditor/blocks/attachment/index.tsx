@@ -35,7 +35,10 @@ const Attachment: ContentType<FileInfo> = {
         }, [props.value, props.value.file, props.currentBoardId])
 
         return (
-            <div className='AttachmentView'>
+            <div
+                className='AttachmentView'
+                data-testid='attachment'
+            >
                 <a
                     href={fileDataUrl || '#'}
                     onClick={(e) => e.stopPropagation()}
@@ -56,6 +59,7 @@ const Attachment: ContentType<FileInfo> = {
             <input
                 ref={ref}
                 className='Attachment'
+                data-testid='attachment-input'
                 type='file'
                 onChange={(e) => {
                     const files = e.currentTarget?.files
