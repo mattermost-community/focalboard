@@ -9,35 +9,41 @@ import ListItemBlock from '.'
 describe('components/blocksEditor/blocks/list-item', () => {
     test('should match Display snapshot', async () => {
         const Component = ListItemBlock.Display
-        const {container} = render(<Component
-            onChange={jest.fn()}
-            value='test-value'
-            onCancel={jest.fn()}
-            onSave={jest.fn()}
-        />)
+        const {container} = render(
+            <Component
+                onChange={jest.fn()}
+                value='test-value'
+                onCancel={jest.fn()}
+                onSave={jest.fn()}
+            />,
+        )
         expect(container).toMatchSnapshot()
     })
 
     test('should match Input snapshot', async () => {
         const Component = ListItemBlock.Input
-        const {container} = render(<Component
-            onChange={jest.fn()}
-            value='test-value'
-            onCancel={jest.fn()}
-            onSave={jest.fn()}
-        />)
+        const {container} = render(
+            <Component
+                onChange={jest.fn()}
+                value='test-value'
+                onCancel={jest.fn()}
+                onSave={jest.fn()}
+            />,
+        )
         expect(container).toMatchSnapshot()
     })
 
     test('should emit onChange event', async () => {
         const onChange = jest.fn()
         const Component = ListItemBlock.Input
-        render(<Component
-            onChange={onChange}
-            value='test-value'
-            onCancel={jest.fn()}
-            onSave={jest.fn()}
-        />)
+        render(
+            <Component
+                onChange={onChange}
+                value='test-value'
+                onCancel={jest.fn()}
+                onSave={jest.fn()}
+            />,
+        )
 
         expect(onChange).not.toBeCalled()
 
@@ -49,12 +55,14 @@ describe('components/blocksEditor/blocks/list-item', () => {
     test('should not emit onCancel event when value is not empty and hit backspace', async () => {
         const onCancel = jest.fn()
         const Component = ListItemBlock.Input
-        render(<Component
-            onChange={jest.fn()}
-            value='test-value'
-            onCancel={onCancel}
-            onSave={jest.fn()}
-        />)
+        render(
+            <Component
+                onChange={jest.fn()}
+                value='test-value'
+                onCancel={onCancel}
+                onSave={jest.fn()}
+            />,
+        )
 
         expect(onCancel).not.toBeCalled()
         const input = screen.getByTestId('list-item')
@@ -65,12 +73,14 @@ describe('components/blocksEditor/blocks/list-item', () => {
     test('should emit onCancel event when value is empty and hit backspace', async () => {
         const onCancel = jest.fn()
         const Component = ListItemBlock.Input
-        render(<Component
-            onChange={jest.fn()}
-            value=''
-            onCancel={onCancel}
-            onSave={jest.fn()}
-        />)
+        render(
+            <Component
+                onChange={jest.fn()}
+                value=''
+                onCancel={onCancel}
+                onSave={jest.fn()}
+            />,
+        )
 
         expect(onCancel).not.toBeCalled()
 
@@ -82,12 +92,14 @@ describe('components/blocksEditor/blocks/list-item', () => {
     test('should emit onSave event hit enter', async () => {
         const onSave = jest.fn()
         const Component = ListItemBlock.Input
-        render(<Component
-            onChange={jest.fn()}
-            value='test-value'
-            onCancel={jest.fn()}
-            onSave={onSave}
-        />)
+        render(
+            <Component
+                onChange={jest.fn()}
+                value='test-value'
+                onCancel={jest.fn()}
+                onSave={onSave}
+            />,
+        )
 
         expect(onSave).not.toBeCalled()
         const input = screen.getByTestId('list-item')

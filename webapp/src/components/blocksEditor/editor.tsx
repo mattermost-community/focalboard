@@ -2,9 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
 
-import {useAppSelector} from '../../store/hooks'
-import {getCurrentBoardId} from '../../store/boards'
-
 import * as contentBlocks from './blocks/'
 import {ContentType, BlockData} from './blocks/types'
 import RootInput from './rootInput'

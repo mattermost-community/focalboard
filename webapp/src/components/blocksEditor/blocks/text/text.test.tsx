@@ -3,7 +3,7 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {render, screen, fireEvent, act} from '@testing-library/react'
+import {render, act} from '@testing-library/react'
 
 import {mockDOM, wrapDNDIntl, mockStateStore} from '../../../../testUtils'
 import {TestBlockFactory} from '../../../../test/testBlockFactory'
@@ -48,7 +48,7 @@ describe('components/blocksEditor/blocks/text', () => {
                     onCancel={jest.fn()}
                     onSave={jest.fn()}
                 />
-            </ReduxProvider>
+            </ReduxProvider>,
         ))
         expect(container).toMatchSnapshot()
     })
@@ -65,7 +65,7 @@ describe('components/blocksEditor/blocks/text', () => {
                         onCancel={jest.fn()}
                         onSave={jest.fn()}
                     />
-                </ReduxProvider>
+                </ReduxProvider>,
             ))
             container = result.container
         })
