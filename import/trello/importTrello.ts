@@ -35,7 +35,7 @@ function main() {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2))
 
     const inputFile = args['i']
-    const outputFile = args['o'] || 'archive.focalboard'
+    const outputFile = args['o'] || 'archive.boardarchive'
 
     if (!inputFile) {
         showHelp()
@@ -169,7 +169,7 @@ function convert(input: Trello): [Board[], Block[]] {
 }
 
 function showHelp() {
-    console.log('import -i <input.json> -o [output.focalboard]')
+    console.log('import -i <input.json> -o [output.boardarchive]')
     exit(1)
 }
 
