@@ -27,7 +27,10 @@ const TextContent: ContentType = {
     },
     Input: (props: BlockInputProps) => {
         return (
-            <div className='TextContent'>
+            <div
+                className='TextContent'
+                data-testid='text'
+            >
                 <MarkdownEditor
                     autofocus={true}
                     onBlur={(val: string) => {
