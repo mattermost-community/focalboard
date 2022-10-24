@@ -4,8 +4,6 @@ import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
-import {useAppSelector} from '../../../../store/hooks'
-import {getCurrentBoardId} from '../../../../store/boards'
 
 import './image.scss'
 
@@ -24,23 +22,23 @@ const Image: ContentType<FileInfo> = {
     editable: false,
     Display: (props: BlockInputProps<FileInfo>) => {
         const [imageDataUrl, setImageDataUrl] = useState<string|null>(null)
-        const boardId = useAppSelector(getCurrentBoardId)
 
         useEffect(() => {
             if (!imageDataUrl) {
                 const loadImage = async () => {
                     if (props.value && props.value.file && typeof props.value.file === 'string') {
-                        const fileURL = await octoClient.getFileAsDataUrl(boardId, props.value.file)
+                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId || '', props.value.file)
                         setImageDataUrl(fileURL.url || '')
                     }
                 }
                 loadImage()
             }
-        }, [props.value, props.value.file, boardId])
+        }, [props.value, props.value.file, props.currentBoardId])
 
         if (imageDataUrl) {
             return (
                 <img
+                    data-testid='image'
                     className='ImageView'
                     src={imageDataUrl}
                 />
@@ -66,6 +64,7 @@ const Image: ContentType<FileInfo> = {
                 <input
                     ref={ref}
                     className='Image'
+                    data-testid='image-input'
                     type='file'
                     accept='image/*'
                     onChange={(e) => {

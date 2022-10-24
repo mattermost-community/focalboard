@@ -5,6 +5,7 @@ export type BlockInputProps<ValueType = string> = {
     value: ValueType
     onCancel: () => void
     onSave: (val: ValueType) => void
+    currentBoardId?: string
 }
 
 export type ContentType<ValueType = string> = {

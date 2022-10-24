@@ -2,6 +2,9 @@
 // See LICENSE.txt for license information.
 import React, {useState, useEffect} from 'react'
 
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoardId} from '../../store/boards'
+
 import * as contentBlocks from './blocks/'
 import {ContentType, BlockData} from './blocks/types'
 import RootInput from './rootInput'
@@ -18,6 +21,7 @@ type Props = {
 export default function Editor(props: Props) {
     const [value, setValue] = useState(props.initialValue || '')
     const [currentBlockType, setCurrentBlockType] = useState<ContentType|null>(contentBlocks.get(props.initialContentType || '') || null)
+    const currentBoardId = useAppSelector(getCurrentBoardId)
 
     useEffect(() => {
         if (!currentBlockType) {
@@ -63,6 +67,7 @@ export default function Editor(props: Props) {
                         const createdContentType = contentBlocks.get(newBlock?.contentType || '')
                         setCurrentBlockType(contentBlocks.get(createdContentType.nextType || '') || null)
                     }}
+                    currentBoardId={currentBoardId}
                 />}
         </div>
     )

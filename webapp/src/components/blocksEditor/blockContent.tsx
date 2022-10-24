@@ -6,6 +6,8 @@ import {useDrag, useDrop} from 'react-dnd'
 import GripIcon from '../../widgets/icons/grip'
 
 import AddIcon from '../../widgets/icons/add'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoardId} from '../../store/boards'
 
 import Editor from './editor'
 import * as registry from './blocks'
@@ -25,6 +27,8 @@ type Props = {
 
 function BlockContent(props: Props) {
     const {block, editing, setEditing, onSave, contentOrder} = props
+    const currentBoardId = useAppSelector(getCurrentBoardId)
+
     const [{isDragging}, drag, preview] = useDrag(() => ({
         type: 'block',
         item: block,
@@ -108,6 +112,7 @@ function BlockContent(props: Props) {
                         onChange={() => null}
                         onCancel={() => null}
                         onSave={(value) => onSave({...block, value})}
+                        currentBoardId={currentBoardId}
                     />
                 </div>
             </div>

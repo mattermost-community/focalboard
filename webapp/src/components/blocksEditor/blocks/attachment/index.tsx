@@ -4,8 +4,6 @@ import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
-import {useAppSelector} from '../../../../store/hooks'
-import {getCurrentBoardId} from '../../../../store/boards'
 
 import './attachment.scss'
 
@@ -23,19 +21,18 @@ const Attachment: ContentType<FileInfo> = {
     editable: false,
     Display: (props: BlockInputProps<FileInfo>) => {
         const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
-        const boardId = useAppSelector(getCurrentBoardId)
 
         useEffect(() => {
             if (!fileDataUrl) {
                 const loadFile = async () => {
                     if (props.value && props.value.file && typeof props.value.file === 'string') {
-                        const fileURL = await octoClient.getFileAsDataUrl(boardId, props.value.file)
+                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId, props.value.file)
                         setFileDataUrl(fileURL.url || '')
                     }
                 }
                 loadFile()
             }
-        }, [props.value, props.value.file, boardId])
+        }, [props.value, props.value.file, props.currentBoardId])
 
         return (
             <div className='AttachmentView'>

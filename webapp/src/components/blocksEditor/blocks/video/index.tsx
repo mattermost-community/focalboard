@@ -4,8 +4,6 @@ import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
-import {useAppSelector} from '../../../../store/hooks'
-import {getCurrentBoardId} from '../../../../store/boards'
 
 import './video.scss'
 
@@ -25,19 +23,18 @@ const Video: ContentType<FileInfo> = {
     editable: false,
     Display: (props: BlockInputProps<FileInfo>) => {
         const [videoDataUrl, setVideoDataUrl] = useState<string|null>(null)
-        const boardId = useAppSelector(getCurrentBoardId)
 
         useEffect(() => {
             if (!videoDataUrl) {
                 const loadVideo = async () => {
                     if (props.value && props.value.file && typeof props.value.file === 'string') {
-                        const fileURL = await octoClient.getFileAsDataUrl(boardId, props.value.file)
+                        const fileURL = await octoClient.getFileAsDataUrl(props.currentBoardId, props.value.file)
                         setVideoDataUrl(fileURL.url || '')
                     }
                 }
                 loadVideo()
             }
-        }, [props.value, props.value.file, boardId])
+        }, [props.value, props.value.file, props.currentBoardId])
 
         if (videoDataUrl) {
             return (
