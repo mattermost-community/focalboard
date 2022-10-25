@@ -116,7 +116,7 @@ const config = {
                 type: 'asset/resource',
                 generator: {
                     filename: '[name][ext]',
-                    publicPath: '/static/',
+                    publicPath: TARGET_IS_PRODUCT ? undefined : '/static/',
                 }
             },
         ],
@@ -204,12 +204,6 @@ config.plugins.push(new webpack.DefinePlugin({
 
 if (NPM_TARGET === 'start:product') {
     const url = new URL(process.env.MM_BOARDS_DEV_SERVER_URL ?? 'http://localhost:9006');
-
-    for (const rule of config.module.rules) {
-        if (rule.type === 'asset/resource' && rule.generator) {
-            rule.generator.publicPath = url.toString() + 'static/';
-        }
-    }
 
     config.devServer = {
         https: url.protocol === 'https:' && {
