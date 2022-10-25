@@ -58,7 +58,12 @@ export abstract class PropertyType {
 
     exportValue = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape): string => {
         const displayValue = this.displayValue(value, card, template, intl)
-        return `"${encodeText(displayValue as string)}"`
+        if (typeof displayValue === 'string') {
+            return `"${encodeText(displayValue)}"`
+        } else if (Array.isArray(displayValue)) {
+            return `"${encodeText((displayValue as string[]).join('|'))}"`
+        }
+        return ''
     }
 
     valueClassName = (readonly: boolean): string => {
