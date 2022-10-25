@@ -55,6 +55,10 @@ func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
 	return boardsCloudLimits, nil
 }
 
+func (a *App) GetUsedCardsCount() (int, error) {
+	return a.store.GetUsedCardsCount()
+}
+
 // IsCloud returns true if the server is running as a plugin in a
 // cloud licensed server.
 func (a *App) IsCloud() bool {

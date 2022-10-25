@@ -23,6 +23,10 @@ func New(store permissions.Store, logger mlog.LoggerIFace) *Service {
 	}
 }
 
+func (s *Service) HasPermissionTo(userID string, permission *mmModel.Permission) bool {
+	return false
+}
+
 func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool {
 	if userID == "" || teamID == "" || permission == nil {
 		return false
