@@ -130,7 +130,7 @@ class Constants {
             displayName: 'Occitan',
         },
         {
-            code: 'pt_BR',
+            code: 'pt-br',
             name: 'portuguese',
             displayName: 'Português (Brasil)',
         },
