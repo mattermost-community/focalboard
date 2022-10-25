@@ -23,7 +23,6 @@ exports[`components/blocksEditor/blocks/text should match Input snapshot 1`] = `
     >
       <div
         class="MarkdownEditorInput"
-        data-testid="markdown-editor-input"
       >
         <div
           class="DraftEditor-root"
@@ -46,15 +45,15 @@ exports[`components/blocksEditor/blocks/text should match Input snapshot 1`] = `
                 <div
                   class=""
                   data-block="true"
-                  data-editor="9lt88"
-                  data-offset-key="3ccag-0-0"
+                  data-editor="2ve5t"
+                  data-offset-key="ckfqb-0-0"
                 >
                   <div
                     class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                    data-offset-key="3ccag-0-0"
+                    data-offset-key="ckfqb-0-0"
                   >
                     <span
-                      data-offset-key="3ccag-0-0"
+                      data-offset-key="ckfqb-0-0"
                     >
                       <span
                         data-text="true"

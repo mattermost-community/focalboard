@@ -282,7 +282,6 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     return (
         <div
-            data-testid='markdown-editor-input'
             className={className}
             onKeyDown={(e: React.KeyboardEvent) => {
                 if (isMentionPopoverOpen || isEmojiPopoverOpen) {
