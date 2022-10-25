@@ -14,6 +14,8 @@ import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 import {Utils} from '../../utils'
 
+import {MemberRole} from '../../blocks/board'
+
 import TeamPermissionsRow from './teamPermissionsRow'
 
 jest.useFakeTimers()
@@ -28,6 +30,7 @@ const board = TestBlockFactory.createBoard()
 board.id = boardId
 board.teamId = 'team-id'
 board.channelId = 'channel_1'
+board.minimumRole = MemberRole.Editor
 
 describe('src/components/shareBoard/teamPermissionsRow', () => {
     const me: IUser = {

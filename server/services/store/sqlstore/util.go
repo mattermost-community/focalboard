@@ -42,6 +42,9 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	if dbType == "" {
 		dbType = model.SqliteDBType
 	}
+	if dbType == "mariadb" {
+		dbType = model.MysqlDBType
+	}
 
 	var dbName string
 	var rootUser string

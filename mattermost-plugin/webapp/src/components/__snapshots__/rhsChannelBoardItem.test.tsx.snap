@@ -49,11 +49,15 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
     <div
       class="board-info"
     >
-      
+      <span
+        class="icon"
+      >
+        i
+      </span>
       <span
         class="title"
       >
-        Test board
+        New board
       </span>
       <div
         aria-label="menuwrapper"
@@ -77,10 +81,11 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
             <div
               class="menu-options"
             >
+              <div />
               <div>
                 <div
                   aria-label="Unlink board"
-                  class="MenuOption TextOption menu-option"
+                  class="MenuOption TextOption menu-option menu-option--with-subtext menu-option--disabled"
                   role="button"
                 >
                   <div
@@ -102,13 +107,17 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
                     >
                       Unlink board
                     </div>
+                    <div
+                      class="menu-subtext text-75 mt-1"
+                    >
+                      You are not an admin of the board
+                    </div>
                   </div>
                   <div
                     class="noicon"
                   />
                 </div>
               </div>
-              <div />
             </div>
             <div
               class="menu-spacer hideOnWidescreen"
@@ -148,7 +157,14 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
     </div>
     <div
       class="description"
-    />
+    >
+      <p>
+        <strong>
+          Board
+        </strong>
+         with description
+      </p>
+    </div>
     <div
       class="date"
     >

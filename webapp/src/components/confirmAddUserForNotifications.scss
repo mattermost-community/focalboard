@@ -21,7 +21,7 @@
         font-size: 12px;
 
         label {
-            @include z-index(modal-permission-label);
+            @include z-index(modal-permissions-label);
             position: absolute;
             padding: 0 5px;
             margin: 0;
