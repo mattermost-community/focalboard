@@ -127,7 +127,7 @@ func (a *App) UpdateCardLimitTimestamp() error {
 // getTemplateMapForBlocks gets all board ids for the blocks, and
 // builds a map with the board IDs as the key and their isTemplate
 // field as the value.
-func (a *App) getTemplateMapForBlocks(blocks []model.Block) (map[string]bool, error) {
+func (a *App) getTemplateMapForBlocks(blocks []*model.Block) (map[string]bool, error) {
 	boardMap := map[string]*model.Board{}
 	for _, block := range blocks {
 		if _, ok := boardMap[block.BoardID]; !ok {
@@ -150,7 +150,7 @@ func (a *App) getTemplateMapForBlocks(blocks []model.Block) (map[string]bool, er
 // ApplyCloudLimits takes a set of blocks and, if the server is cloud
 // limited, limits those that are outside of the card limit and don't
 // belong to a template.
-func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
+func (a *App) ApplyCloudLimits(blocks []*model.Block) ([]*model.Block, error) {
 	// if there is no limit currently being applied, return
 	if !a.IsCloudLimited() {
 		return blocks, nil
@@ -166,7 +166,7 @@ func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
 		return nil, err
 	}
 
-	limitedBlocks := make([]model.Block, len(blocks))
+	limitedBlocks := make([]*model.Block, len(blocks))
 	for i, block := range blocks {
 		// if the block belongs to a template, it will never be
 		// limited
@@ -187,7 +187,7 @@ func (a *App) ApplyCloudLimits(blocks []model.Block) ([]model.Block, error) {
 
 // ContainsLimitedBlocks checks if a list of blocks contain any block
 // that references a limited card.
-func (a *App) ContainsLimitedBlocks(blocks []model.Block) (bool, error) {
+func (a *App) ContainsLimitedBlocks(blocks []*model.Block) (bool, error) {
 	cardLimitTimestamp, err := a.store.GetCardLimitTimestamp()
 	if err != nil {
 		return false, err
@@ -197,7 +197,7 @@ func (a *App) ContainsLimitedBlocks(blocks []model.Block) (bool, error) {
 		return false, nil
 	}
 
-	cards := []model.Block{}
+	cards := []*model.Block{}
 	cardIDMap := map[string]bool{}
 	for _, block := range blocks {
 		switch block.Type {

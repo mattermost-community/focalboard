@@ -139,19 +139,19 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 		true,
 	)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
 	require.NoError(t, err)
 	customTemplate2, err := th.Server.App().CreateBoard(
 		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate, MinimumRole: "viewer"},
 		userAdminID,
 		true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
 	require.NoError(t, err)
 
 	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
 	require.NoError(t, err)
 	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
@@ -167,7 +167,7 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 	require.Equal(t, boardMember.UserID, userAdminID)
 	require.Equal(t, boardMember.BoardID, board2.ID)
 
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdminID)
 	require.NoError(t, err)
 
 	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: userAdminID, UpdateAt: model.GetMillis()})
@@ -1322,13 +1322,13 @@ func TestPermissionsPatchBoardBlock(t *testing.T) {
 
 func TestPermissionsDeleteBoardBlock(t *testing.T) {
 	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
-		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		err := th.Server.App().InsertBlock(&model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 		require.NoError(t, err)
 	}
 
@@ -1393,13 +1393,13 @@ func TestPermissionsDeleteBoardBlock(t *testing.T) {
 
 func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
-		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		err := th.Server.App().InsertBlock(&model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 		require.NoError(t, err)
 		err = th.Server.App().DeleteBlock("block-1", userAdmin)
 		require.NoError(t, err)
@@ -1548,13 +1548,13 @@ func TestPermissionsUndeleteBoard(t *testing.T) {
 
 func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
-		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		err := th.Server.App().InsertBlock(&model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 		require.NoError(t, err)
 	}
 
@@ -2592,7 +2592,7 @@ func TestPermissionsUpdateUserConfig(t *testing.T) {
 func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 	bab := toJSON(t, model.BoardsAndBlocks{
 		Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
-		Blocks: []model.Block{
+		Blocks: []*model.Block{
 			{ID: "test-block", BoardID: "test", Type: "card", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 		},
 	})

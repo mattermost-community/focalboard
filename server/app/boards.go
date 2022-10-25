@@ -130,7 +130,7 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	}
 	if len(blocks) > 0 {
 		// Compare the board history info with the descendant block info, if it exists
-		block := &blocks[0]
+		block := blocks[0]
 		if latest && block.UpdateAt > timestamp {
 			timestamp = block.UpdateAt
 			modifiedBy = block.ModifiedBy
@@ -228,7 +228,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		for _, block := range bab.Blocks {
 			blk := block
 			a.wsAdapter.BroadcastBlockChange(teamID, blk)
-			a.notifyBlockChanged(notify.Add, &blk, nil, userID)
+			a.notifyBlockChanged(notify.Add, blk, nil, userID)
 		}
 		for _, member := range members {
 			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)

@@ -28,7 +28,7 @@ const (
 	DeletedMembershipBoardsMigrationKey = "DeletedMembershipBoardsMigrationComplete"
 )
 
-func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
+func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]*model.Block, error) {
 	subquery, _, _ := s.getQueryBuilder(db).
 		Select("id").
 		From(s.tablePrefix + "blocks").
@@ -93,7 +93,7 @@ func (s *SQLStore) RunUniqueIDsMigration() error {
 		return fmt.Errorf("cannot get blocks with same ID: %w", err)
 	}
 
-	blocksByID := map[string][]model.Block{}
+	blocksByID := map[string][]*model.Block{}
 	for _, block := range blocks {
 		blocksByID[block.ID] = append(blocksByID[block.ID], block)
 	}

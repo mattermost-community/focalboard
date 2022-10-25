@@ -243,7 +243,7 @@ func (c *Client) GetUserBoardsInsights(teamID string, userID string, timeRange s
 	return boardInsightsList, BuildResponse(r)
 }
 
-func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
+func (c *Client) GetBlocksForBoard(boardID string) ([]*model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -253,7 +253,7 @@ func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response) {
+func (c *Client) GetAllBlocksForBoard(boardID string) ([]*model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetAllBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -320,7 +320,7 @@ func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
-func (c *Client) InsertBlocks(boardID string, blocks []model.Block, disableNotify bool) ([]model.Block, *Response) {
+func (c *Client) InsertBlocks(boardID string, blocks []*model.Block, disableNotify bool) ([]*model.Block, *Response) {
 	var queryParams string
 	if disableNotify {
 		queryParams = "?" + disableNotifyQueryParam

@@ -15,7 +15,7 @@ import (
 func TestGenerateBlockIDs(t *testing.T) {
 	t.Run("Should generate a new ID for a single block with no references", func(t *testing.T) {
 		blockID := utils.NewID(utils.IDTypeBlock)
-		blocks := []Block{{ID: blockID}}
+		blocks := []*Block{{ID: blockID}}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -28,7 +28,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID := utils.NewID(utils.IDTypeBlock)
 		boardID := utils.NewID(utils.IDTypeBlock)
 		parentID := utils.NewID(utils.IDTypeBlock)
-		blocks := []Block{{ID: blockID, BoardID: boardID, ParentID: parentID}}
+		blocks := []*Block{{ID: blockID, BoardID: boardID, ParentID: parentID}}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -41,14 +41,14 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID1 := utils.NewID(utils.IDTypeBlock)
 		boardID1 := utils.NewID(utils.IDTypeBlock)
 		parentID1 := utils.NewID(utils.IDTypeBlock)
-		block1 := Block{ID: blockID1, BoardID: boardID1, ParentID: parentID1}
+		block1 := &Block{ID: blockID1, BoardID: boardID1, ParentID: parentID1}
 
 		blockID2 := utils.NewID(utils.IDTypeBlock)
 		boardID2 := blockID1
 		parentID2 := utils.NewID(utils.IDTypeBlock)
-		block2 := Block{ID: blockID2, BoardID: boardID2, ParentID: parentID2}
+		block2 := &Block{ID: blockID2, BoardID: boardID2, ParentID: parentID2}
 
-		blocks := []Block{block1, block2}
+		blocks := []*Block{block1, block2}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -69,14 +69,14 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID1 := utils.NewID(utils.IDTypeBlock)
 		boardID1 := ""
 		parentID1 := utils.NewID(utils.IDTypeBlock)
-		block1 := Block{ID: blockID1, BoardID: boardID1, ParentID: parentID1}
+		block1 := &Block{ID: blockID1, BoardID: boardID1, ParentID: parentID1}
 
 		blockID2 := utils.NewID(utils.IDTypeBlock)
 		boardID2 := utils.NewID(utils.IDTypeBlock)
 		parentID2 := ""
-		block2 := Block{ID: blockID2, BoardID: boardID2, ParentID: parentID2}
+		block2 := &Block{ID: blockID2, BoardID: boardID2, ParentID: parentID2}
 
-		blocks := []Block{block1, block2}
+		blocks := []*Block{block1, block2}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -94,28 +94,28 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID1 := utils.NewID(utils.IDTypeBlock)
 		boardID1 := utils.NewID(utils.IDTypeBlock)
 		parentID1 := utils.NewID(utils.IDTypeBlock)
-		block1 := Block{ID: blockID1, BoardID: boardID1, ParentID: parentID1}
+		block1 := &Block{ID: blockID1, BoardID: boardID1, ParentID: parentID1}
 
 		// linked to 1
 		blockID2 := utils.NewID(utils.IDTypeBlock)
 		boardID2 := blockID1
 		parentID2 := utils.NewID(utils.IDTypeBlock)
-		block2 := Block{ID: blockID2, BoardID: boardID2, ParentID: parentID2}
+		block2 := &Block{ID: blockID2, BoardID: boardID2, ParentID: parentID2}
 
 		// linked to 2
 		blockID3 := utils.NewID(utils.IDTypeBlock)
 		boardID3 := blockID2
 		parentID3 := utils.NewID(utils.IDTypeBlock)
-		block3 := Block{ID: blockID3, BoardID: boardID3, ParentID: parentID3}
+		block3 := &Block{ID: blockID3, BoardID: boardID3, ParentID: parentID3}
 
 		// linked to 1
 		blockID4 := utils.NewID(utils.IDTypeBlock)
 		boardID4 := blockID1
 		parentID4 := utils.NewID(utils.IDTypeBlock)
-		block4 := Block{ID: blockID4, BoardID: boardID4, ParentID: parentID4}
+		block4 := &Block{ID: blockID4, BoardID: boardID4, ParentID: parentID4}
 
 		// blocks are shuffled
-		blocks := []Block{block4, block2, block1, block3}
+		blocks := []*Block{block4, block2, block1, block3}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -147,7 +147,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID1 := utils.NewID(utils.IDTypeBlock)
 		boardID1 := utils.NewID(utils.IDTypeBlock)
 		parentID1 := utils.NewID(utils.IDTypeBlock)
-		block1 := Block{
+		block1 := &Block{
 			ID:       blockID1,
 			BoardID:  boardID1,
 			ParentID: parentID1,
@@ -156,7 +156,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID2 := utils.NewID(utils.IDTypeBlock)
 		boardID2 := utils.NewID(utils.IDTypeBlock)
 		parentID2 := utils.NewID(utils.IDTypeBlock)
-		block2 := Block{
+		block2 := &Block{
 			ID:       blockID2,
 			BoardID:  boardID2,
 			ParentID: parentID2,
@@ -167,7 +167,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 			},
 		}
 
-		blocks := []Block{block1, block2}
+		blocks := []*Block{block1, block2}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -191,21 +191,21 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID1 := utils.NewID(utils.IDTypeBlock)
 		boardID1 := utils.NewID(utils.IDTypeBlock)
 		parentID1 := utils.NewID(utils.IDTypeBlock)
-		block1 := Block{
+		block1 := &Block{
 			ID:       blockID1,
 			BoardID:  boardID1,
 			ParentID: parentID1,
 		}
 
 		blockID2 := utils.NewID(utils.IDTypeBlock)
-		block2 := Block{
+		block2 := &Block{
 			ID:       blockID2,
 			BoardID:  boardID1,
 			ParentID: parentID1,
 		}
 
 		blockID3 := utils.NewID(utils.IDTypeBlock)
-		block3 := Block{
+		block3 := &Block{
 			ID:       blockID3,
 			BoardID:  boardID1,
 			ParentID: parentID1,
@@ -215,7 +215,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		boardID2 := utils.NewID(utils.IDTypeBlock)
 		parentID2 := utils.NewID(utils.IDTypeBlock)
 
-		block4 := Block{
+		block4 := &Block{
 			ID:       blockID4,
 			BoardID:  boardID2,
 			ParentID: parentID2,
@@ -230,7 +230,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 			},
 		}
 
-		blocks := []Block{block1, block2, block3, block4}
+		blocks := []*Block{block1, block2, block3, block4}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -258,7 +258,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID1 := utils.NewID(utils.IDTypeBlock)
 		boardID1 := utils.NewID(utils.IDTypeBlock)
 		parentID1 := utils.NewID(utils.IDTypeBlock)
-		block1 := Block{
+		block1 := &Block{
 			ID:       blockID1,
 			BoardID:  boardID1,
 			ParentID: parentID1,
@@ -267,7 +267,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 		blockID2 := utils.NewID(utils.IDTypeBlock)
 		boardID2 := utils.NewID(utils.IDTypeBlock)
 		parentID2 := utils.NewID(utils.IDTypeBlock)
-		block2 := Block{
+		block2 := &Block{
 			ID:       blockID2,
 			BoardID:  boardID2,
 			ParentID: parentID2,
@@ -276,7 +276,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 			},
 		}
 
-		blocks := []Block{block1, block2}
+		blocks := []*Block{block1, block2}
 
 		blocks = GenerateBlockIDs(blocks, &mlog.Logger{})
 
@@ -297,8 +297,8 @@ func TestGenerateBlockIDs(t *testing.T) {
 
 func TestStampModificationMetadata(t *testing.T) {
 	t.Run("base case", func(t *testing.T) {
-		block := Block{}
-		blocks := []Block{block}
+		block := &Block{}
+		blocks := []*Block{block}
 		assert.Empty(t, block.ModifiedBy)
 		assert.Empty(t, block.UpdateAt)
 

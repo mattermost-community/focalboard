@@ -31,7 +31,7 @@ func getBoardsInsightsTest(t *testing.T, store store.Store) {
 			{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 			{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 		},
-		Blocks: []model.Block{
+		Blocks: []*model.Block{
 			{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
 			{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
 			{ID: "block-id-3", BoardID: "board-id-1", Type: model.TypeCard},
@@ -52,7 +52,7 @@ func getBoardsInsightsTest(t *testing.T, store store.Store) {
 	require.NotNil(t, bab)
 
 	newBab = &model.BoardsAndBlocks{
-		Blocks: []model.Block{
+		Blocks: []*model.Block{
 			{ID: "block-id-13", BoardID: "board-id-1", Type: model.TypeCard},
 			{ID: "block-id-14", BoardID: "board-id-1", Type: model.TypeCard},
 		},
