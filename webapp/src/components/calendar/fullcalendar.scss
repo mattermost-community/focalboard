@@ -235,7 +235,9 @@
 
     .fc-day-sat,
     .fc-day-sun {
-        background-color: rgba(var(--center-channel-color-rgb), 0.04);
+        &:not(.fc-popover) {
+            background-color: rgba(var(--center-channel-color-rgb), 0.04);
+        }
     }
 
     .dateDisplay {
