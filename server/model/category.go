@@ -63,10 +63,22 @@ type Category struct {
 }
 
 func (c *Category) Hydrate() {
-	c.ID = utils.NewID(utils.IDTypeNone)
-	c.CreateAt = utils.GetMillis()
-	c.UpdateAt = c.CreateAt
-	c.SortOrder = 0
+	if c.ID == "" {
+		c.ID = utils.NewID(utils.IDTypeNone)
+	}
+
+	if c.CreateAt == 0 {
+		c.CreateAt = utils.GetMillis()
+	}
+
+	if c.UpdateAt == 0 {
+		c.UpdateAt = c.CreateAt
+	}
+
+	if c.SortOrder < 0 {
+		c.SortOrder = 0
+	}
+
 	if c.Type == "" {
 		c.Type = CategoryTypeCustom
 	}

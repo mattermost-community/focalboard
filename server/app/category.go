@@ -36,6 +36,7 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
+	category.Hydrate()
 	if err := category.IsValid(); err != nil {
 		return nil, err
 	}
@@ -111,6 +112,12 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 		return nil, ErrCannotDeleteSystemCategory
 	}
 
+	// we need a list of boards associated to this category
+	// so we can move them to user's default Boards category
+	if err := a.moveBoardsToDefaultCategory(userID, teamID, categoryID); err != nil {
+		return nil, err
+	}
+
 	if err = a.store.DeleteCategory(categoryID, userID, teamID); err != nil {
 		return nil, err
 	}
@@ -125,6 +132,46 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 	}()
 
 	return deletedCategory, nil
+}
+
+func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID string) error {
+	categoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	var sourceCategoryBoards *model.CategoryBoards
+	defaultCategoryID := ""
+
+	for i := range categoryBoards {
+		if categoryBoards[i].ID == sourceCategoryID {
+			sourceCategoryBoards = &categoryBoards[i]
+		}
+
+		if categoryBoards[i].Name == defaultCategoryBoards {
+			defaultCategoryID = categoryBoards[i].ID
+		}
+
+		if sourceCategoryBoards != nil && defaultCategoryID != "" {
+			break
+		}
+	}
+
+	if sourceCategoryBoards == nil {
+		return errCategoryNotFound
+	}
+
+	if defaultCategoryID == "" {
+		return fmt.Errorf("moveBoardsToDefaultCategory: %w", errNoDefaultCategoryFound)
+	}
+
+	for _, boardID := range sourceCategoryBoards.BoardIDs {
+		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, boardID); err != nil {
+			return fmt.Errorf("moveBoardsToDefaultCategory: %w", err)
+		}
+	}
+
+	return nil
 }
 
 func (a *App) ReorderCategories(userID, teamID string, newCategoryOrder []string) ([]string, error) {
