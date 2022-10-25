@@ -7,7 +7,7 @@ import {useIntl} from 'react-intl'
 
 import CheckIcon from '../../widgets/icons/check'
 
-import NotificationBox from "../../widgets/notificationBox/notificationBox"
+import NotificationBox from '../../widgets/notificationBox/notificationBox'
 
 import {PublicProps, ViewLimitModal} from './viewLimitDialog'
 

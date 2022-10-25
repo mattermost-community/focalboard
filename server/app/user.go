@@ -9,16 +9,12 @@ func (a *App) GetTeamUsers(teamID string, asGuestID string) ([]*model.User, erro
 	return a.store.GetUsersByTeam(teamID, asGuestID)
 }
 
-func (a *App) SearchTeamUsers(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
-	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID)
+func (a *App) SearchTeamUsers(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots)
 }
 
-func (a *App) UpdateUserConfig(userID string, patch model.UserPropPatch) ([]mmModel.Preference, error) {
-	if err := a.store.PatchUserProps(userID, patch); err != nil {
-		return nil, err
-	}
-
-	updatedPreferences, err := a.store.GetUserPreferences(userID)
+func (a *App) UpdateUserConfig(userID string, patch model.UserPreferencesPatch) ([]mmModel.Preference, error) {
+	updatedPreferences, err := a.store.PatchUserPreferences(userID, patch)
 	if err != nil {
 		return nil, err
 	}

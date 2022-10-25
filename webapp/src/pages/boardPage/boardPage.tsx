@@ -27,11 +27,10 @@ import {
     fetchBoardMembers,
     addMyBoardMemberships,
 } from '../../store/boards'
-import {getCurrentViewId, setCurrent as setCurrentView} from '../../store/views'
+import {getCurrentViewId, setCurrent as setCurrentView, updateViews} from '../../store/views'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {setTeam} from '../../store/teams'
-import {updateViews} from '../../store/views'
 import {updateCards} from '../../store/cards'
 import {updateComments} from '../../store/comments'
 import {updateContents} from '../../store/contents'
@@ -49,7 +48,7 @@ import CloseIcon from '../../widgets/icons/close'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
@@ -122,7 +121,15 @@ const BoardPage = (props: Props): JSX.Element => {
         const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
             // only takes into account the entities that belong to the team or the user boards
             const teamBoards = boards.filter((b: Board) => b.teamId === Constants.globalTeamId || b.teamId === teamId)
+            const activeBoard = teamBoards.find((b: Board) => b.id === activeBoardId)
             dispatch(updateBoards(teamBoards))
+
+            if (activeBoard) {
+                dispatch(fetchBoardMembers({
+                    teamId,
+                    boardId: activeBoardId,
+                }))
+            }
         }
 
         const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
@@ -134,11 +141,15 @@ const BoardPage = (props: Props): JSX.Element => {
             }
         }
 
-        console.log('useWEbsocket adding onChange handler')
+        const dispatchLoadAction = () => {
+            dispatch(loadAction(match.params.boardId))
+        }
+
+        Utils.log('useWEbsocket adding onChange handler')
         wsClient.addOnChange(incrementalBlockUpdate, 'block')
         wsClient.addOnChange(incrementalBoardUpdate, 'board')
         wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-        wsClient.addOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+        wsClient.addOnReconnect(dispatchLoadAction)
 
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
             if (subscription.subscriberId === me?.id) {
@@ -152,13 +163,13 @@ const BoardPage = (props: Props): JSX.Element => {
         })
 
         return () => {
-            console.log('useWebsocket cleanup')
+            Utils.log('useWebsocket cleanup')
             wsClient.removeOnChange(incrementalBlockUpdate, 'block')
             wsClient.removeOnChange(incrementalBoardUpdate, 'board')
             wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
-            wsClient.removeOnReconnect(() => dispatch(loadAction(match.params.boardId)))
+            wsClient.removeOnReconnect(dispatchLoadAction)
         }
-    }, [me?.id])
+    }, [me?.id, activeBoardId])
 
     const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
         // and fetch its data
@@ -190,9 +201,13 @@ const BoardPage = (props: Props): JSX.Element => {
             // and set it as most recently viewed board
             UserSettings.setLastBoardID(teamId, match.params.boardId)
 
-            if (viewId && viewId !== Constants.globalTeamId) {
+            if (viewId !== Constants.globalTeamId) {
+                // reset current, even if empty string
                 dispatch(setCurrentView(viewId))
-                UserSettings.setLastViewId(match.params.boardId, viewId)
+                if (viewId) {
+                    // don't reset per board if empty string
+                    UserSettings.setLastViewId(match.params.boardId, viewId)
+                }
             }
 
             if (!props.readonly && me) {
@@ -202,20 +217,21 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
-        console.log(`handleUnhideBoard called`)
+        Utils.log('handleUnhideBoard called')
         if (!me) {
             return
         }
 
         const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
+
         // const index = hiddenBoards.indexOf(boardID)
         // hiddenBoards.splice(index, 1)
         delete hiddenBoards[boardID]
         const hiddenBoardsArray = Object.keys(hiddenBoards)
         const patch: UserConfigPatch = {
             updatedFields: {
-                'hiddenBoardIDs': JSON.stringify(hiddenBoardsArray),
-            }
+                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
+            },
         }
         const patchedProps = await octoClient.patchUserConfig(me.id, patch)
         if (!patchedProps) {
@@ -279,6 +295,7 @@ const BoardPage = (props: Props): JSX.Element => {
                 </div>}
 
             {
+
                 // Don't display Templates page
                 // if readonly mode and no board defined.
                 (!props.readonly || activeBoardId !== undefined) &&

@@ -51,7 +51,6 @@
             font-size: 18px;
             opacity: 0.56;
             width: 18px;
-            margin-right: 12px;
 
             &::before {
                 margin: 0;
@@ -92,6 +91,10 @@
 
             &-active {
                 background: rgba(var(--button-bg-rgb), 0.08);
+            }
+
+            .empty-icon {
+                width: 18px;
             }
 
             .noicon {
@@ -142,9 +145,13 @@
         }
     }
 
+    .menu-option__icon {
+        display: flex;
+        align-items: center;
+        margin-right: 12px;
+    }
+
     .menu-option__check {
-        position: absolute;
-        left: 14px;
         color: rgba(var(--button-bg-rgb), 1);
 
         svg {

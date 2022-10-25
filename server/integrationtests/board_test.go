@@ -424,7 +424,7 @@ func TestGetAllBlocksForBoard(t *testing.T) {
 	childBlockID2 := utils.NewID(utils.IDTypeBlock)
 
 	t.Run("Create the block structure", func(t *testing.T) {
-		newBlocks := []model.Block{
+		newBlocks := []*model.Block{
 			{
 				ID:       parentBlockID,
 				BoardID:  board.ID,
@@ -739,7 +739,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rBoard.ModifiedBy, boardMetadata.LastModifiedBy)
 
 		// Insert card1
-		card1 := model.Block{
+		card1 := &model.Block{
 			ID:      "card1",
 			BoardID: rBoard.ID,
 			Title:   "Card 1",
@@ -760,7 +760,7 @@ func TestGetBoardMetadata(t *testing.T) {
 		require.Equal(t, rCard1.ModifiedBy, boardMetadata.LastModifiedBy)
 
 		// Insert card2
-		card2 := model.Block{
+		card2 := &model.Block{
 			ID:      "card2",
 			BoardID: rBoard.ID,
 			Title:   "Card 2",
@@ -1068,7 +1068,8 @@ func TestDeleteBoard(t *testing.T) {
 		require.True(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 }
@@ -1098,7 +1099,8 @@ func TestUndeleteBoard(t *testing.T) {
 		require.False(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 
@@ -1123,7 +1125,8 @@ func TestUndeleteBoard(t *testing.T) {
 		require.False(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 
@@ -1156,7 +1159,8 @@ func TestUndeleteBoard(t *testing.T) {
 		require.False(t, success)
 
 		dbBoard, err := th.Server.App().GetBoard(board.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, dbBoard)
 	})
 
@@ -1393,15 +1397,15 @@ func TestAddMember(t *testing.T) {
 			require.Equal(t, th.GetUser2().ID, member.UserID)
 
 			member, resp = th.Client2.AddMemberToBoard(newMember)
-			th.CheckForbidden(resp)
-			require.Nil(t, member)
+			th.CheckOK(resp)
+			require.NotNil(t, member)
 
 			members, resp = th.Client2.GetMembersForBoard(board.ID)
 			th.CheckOK(resp)
 			require.Len(t, members, 2)
 		})
 
-		t.Run("should always add a new member as an editor", func(t *testing.T) {
+		t.Run("should always add a new member as given board role", func(t *testing.T) {
 			th := SetupTestHelper(t).InitBasic()
 			defer th.TearDown()
 
@@ -1414,10 +1418,11 @@ func TestAddMember(t *testing.T) {
 			require.NoError(t, err)
 
 			newMember := &model.BoardMember{
-				UserID:       th.GetUser2().ID,
-				BoardID:      board.ID,
-				SchemeAdmin:  true,
-				SchemeEditor: false,
+				UserID:          th.GetUser2().ID,
+				BoardID:         board.ID,
+				SchemeAdmin:     false,
+				SchemeEditor:    false,
+				SchemeCommenter: true,
 			}
 
 			member, resp := th.Client.AddMemberToBoard(newMember)
@@ -1425,7 +1430,8 @@ func TestAddMember(t *testing.T) {
 			require.Equal(t, newMember.UserID, member.UserID)
 			require.Equal(t, newMember.BoardID, member.BoardID)
 			require.False(t, member.SchemeAdmin)
-			require.True(t, member.SchemeEditor)
+			require.False(t, member.SchemeEditor)
+			require.True(t, member.SchemeCommenter)
 		})
 	})
 
@@ -1940,7 +1946,7 @@ func TestDuplicateBoard(t *testing.T) {
 		require.Equal(t, me.ID, board.CreatedBy)
 		require.Equal(t, me.ID, board.ModifiedBy)
 
-		newBlocks := []model.Block{
+		newBlocks := []*model.Block{
 			{
 				ID:       utils.NewID(utils.IDTypeBlock),
 				BoardID:  board.ID,
@@ -2025,7 +2031,7 @@ func TestDuplicateBoard(t *testing.T) {
 		th.CheckOK(resp)
 		require.NoError(t, resp.Error)
 
-		newBlocks := []model.Block{
+		newBlocks := []*model.Block{
 			{
 				ID:       utils.NewID(utils.IDTypeBlock),
 				BoardID:  board.ID,

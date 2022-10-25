@@ -7,8 +7,8 @@ import Switch from '../switch'
 import {MenuOptionProps} from './menuItem'
 
 type SwitchOptionProps = MenuOptionProps & {
-    isOn: boolean,
-    icon?: React.ReactNode,
+    isOn: boolean
+    icon?: React.ReactNode
     suppressItemClicked?: boolean
 }
 
@@ -21,13 +21,14 @@ function SwitchOption(props: SwitchOptionProps): JSX.Element {
             role='button'
             aria-label={name}
             onClick={(e: React.MouseEvent) => {
-                if (!suppressItemClicked)
+                if (!suppressItemClicked) {
                     e.target.dispatchEvent(new Event('menuItemClicked'))
+                }
                 props.onClick(props.id)
                 e.stopPropagation()
             }}
         >
-            {icon ?? <div className='noicon'/>}
+            {icon ? <div className='menu-option__icon'>{icon}</div> : <div className='noicon'/>}
             <div className='menu-name'>{name}</div>
             <Switch
                 isOn={isOn}

@@ -14,13 +14,19 @@ import {Subscription} from '../wsclient'
 // import {initialLoad} from './initialLoad'
 import {UserSettings} from '../userSettings'
 
-import {initialLoad} from "./initialLoad"
+import {initialLoad} from './initialLoad'
 
 import {RootState} from './index'
 
 export const fetchMe = createAsyncThunk(
     'users/fetchMe',
-    async () => client.getMe(),
+    async () => {
+        const [me, myConfig] = await Promise.all([
+            client.getMe(),
+            client.getMyConfig(),
+        ])
+        return {me, myConfig}
+    },
 )
 
 export const versionProperty = 'version72MessageCanceled'
@@ -29,7 +35,7 @@ type UsersStatus = {
     me: IUser|null
     boardUsers: {[key: string]: IUser}
     loggedIn: boolean|null
-    blockSubscriptions: Array<Subscription>
+    blockSubscriptions: Subscription[]
     myConfig: Record<string, UserPreference>
 }
 
@@ -78,18 +84,22 @@ const usersSlice = createSlice({
             const oldSubscriptions = state.blockSubscriptions
             state.blockSubscriptions = oldSubscriptions.filter((subscription) => subscription.blockId !== action.payload.blockId)
         },
-        patchProps: (state, action: PayloadAction<Array<UserPreference>>) => {
+        patchProps: (state, action: PayloadAction<UserPreference[]>) => {
             state.myConfig = parseUserProps(action.payload)
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchMe.fulfilled, (state, action) => {
-            state.me = action.payload || null
+            state.me = action.payload.me || null
             state.loggedIn = Boolean(state.me)
+            if (action.payload.myConfig) {
+                state.myConfig = parseUserProps(action.payload.myConfig)
+            }
         })
         builder.addCase(fetchMe.rejected, (state) => {
             state.me = null
             state.loggedIn = false
+            state.myConfig = {}
         })
 
         // TODO: change this when the initial load is complete
@@ -135,14 +145,9 @@ export const getUser = (userId: string): (state: RootState) => IUser|undefined =
 export const getOnboardingTourStarted = createSelector(
     getMyConfig,
     (myConfig): boolean => {
-        console.log(`getOnboardingTourStarted myConfig: ${JSON.stringify(myConfig || 'NULL')}`)
         if (!myConfig) {
-            console.log('getOnboardingTourStarted AAA')
             return false
         }
-
-        console.log('getOnboardingTourStarted BBB')
-        console.log('getOnboardingTourStarted BBB')
 
         return Boolean(myConfig.onboardingTourStarted?.value)
     },
@@ -182,7 +187,7 @@ export const getVersionMessageCanceled = createSelector(
     getMe,
     getMyConfig,
     (me, myConfig): boolean => {
-        if (versionProperty && me){
+        if (versionProperty && me) {
             if (me.id === 'single-user') {
                 return true
             }

@@ -2,7 +2,8 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"errors"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -11,6 +12,8 @@ import (
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
+
+var ErrTurningOnSharing = errors.New("turning on sharing for board failed, see log for details")
 
 func (a *API) registerSharingRoutes(r *mux.Router) {
 	// Sharing APIs
@@ -51,7 +54,7 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionShareBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to sharing the board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to sharing the board"))
 		return
 	}
 
@@ -61,17 +64,13 @@ func (a *API) handleGetSharing(w http.ResponseWriter, r *http.Request) {
 
 	sharing, err := a.app.GetSharing(boardID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
-		return
-	}
-	if sharing == nil {
-		jsonStringResponse(w, http.StatusOK, "")
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	sharingData, err := json.Marshal(sharing)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -121,20 +120,20 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionShareBoard) {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", PermissionError{"access denied to sharing the board"})
+		a.errorResponse(w, r, model.NewErrPermission("access denied to sharing the board"))
 		return
 	}
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var sharing model.Sharing
 	err = json.Unmarshal(requestBody, &sharing)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -162,7 +161,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 			"Attempt to turn on sharing for board via API failed, sharing off in configuration.",
 			mlog.String("boardID", sharing.ID),
 			mlog.String("userID", userID))
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "Turning on sharing for board failed, see log for details.", nil)
+		a.errorResponse(w, r, ErrTurningOnSharing)
 		return
 	}
 
@@ -170,7 +169,7 @@ func (a *API) handlePostSharing(w http.ResponseWriter, r *http.Request) {
 
 	err = a.app.UpsertSharing(sharing)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

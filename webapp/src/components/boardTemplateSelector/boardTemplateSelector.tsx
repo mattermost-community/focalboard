@@ -23,9 +23,9 @@ import {IUser, UserConfigPatch} from '../../user'
 import {getMe, patchProps} from '../../store/users'
 import {BaseTourSteps, TOUR_BASE} from '../onboardingTour'
 
-import {Utils} from "../../utils"
+import {Utils} from '../../utils'
 
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
 import BoardTemplateSelectorPreview from './boardTemplateSelectorPreview'
 import BoardTemplateSelectorItem from './boardTemplateSelectorItem'

@@ -18,25 +18,25 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -268,25 +268,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -477,25 +477,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -686,25 +686,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -918,25 +918,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1154,25 +1154,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1622,25 +1622,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1858,25 +1858,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -2326,25 +2326,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Template
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Template
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -2379,7 +2379,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     class=" css-14el2xx-placeholder"
                     id="react-select-14-placeholder"
                   >
-                    Search for people and channels
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2511,25 +2511,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Template
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Template
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -2573,7 +2573,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
                     class=" css-14el2xx-placeholder"
                     id="react-select-14-placeholder"
                   >
-                    Search for people and channels
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2832,25 +2832,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3064,25 +3064,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3296,25 +3296,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3505,25 +3505,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3714,25 +3714,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3923,25 +3923,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -4132,25 +4132,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Template
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Template
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -4185,7 +4185,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
                     class=" css-14el2xx-placeholder"
                     id="react-select-13-placeholder"
                   >
-                    Search for people and channels
+                    Search for people
                   </div>
                   <div
                     class=" css-ox1y69-Input"

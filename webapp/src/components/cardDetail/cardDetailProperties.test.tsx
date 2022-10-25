@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
-import {render, screen, act} from '@testing-library/react'
+import {render, screen, act, fireEvent} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {mocked} from 'jest-mock'
 import '@testing-library/jest-dom'
@@ -165,6 +165,24 @@ describe('components/cardDetail/CardDetailProperties', () => {
         })
     })
 
+    it('should allow change property types menu, confirm', () => {
+        renderComponent()
+
+        const menuElement = screen.getByRole('button', {name: 'Owner'})
+        userEvent.click(menuElement)
+
+        const typeProperty = screen.getByText(/Type: Select/i)
+        expect(typeProperty).toBeInTheDocument()
+
+        fireEvent.mouseOver(typeProperty)
+
+        const newTypeMenu = screen.getByRole('button', {name: 'Text'})
+        userEvent.click(newTypeMenu)
+
+        expect(screen.getByRole('heading', {name: 'Confirm property type change'})).toBeInTheDocument()
+        expect(screen.getByRole('button', {name: /Change property/i})).toBeInTheDocument()
+    })
+
     test('rename select property and confirm button on dialog should rename property', async () => {
         const result = renderComponent()
 
@@ -229,7 +247,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(container).toMatchSnapshot()
     })
 
-    function openDeleteConfirmationDialog(container:HTMLElement) {
+    function openDeleteConfirmationDialog(container: HTMLElement) {
         const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)
@@ -242,7 +260,7 @@ describe('components/cardDetail/CardDetailProperties', () => {
         expect(confirmDialog).toBeDefined()
     }
 
-    function onPropertyRenameNoConfirmationDialog(container:HTMLElement) {
+    function onPropertyRenameNoConfirmationDialog(container: HTMLElement) {
         const propertyLabel = container.querySelector('.MenuWrapper')
         expect(propertyLabel).toBeDefined()
         userEvent.click(propertyLabel!)

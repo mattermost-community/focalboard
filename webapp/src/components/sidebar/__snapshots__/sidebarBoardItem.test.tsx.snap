@@ -112,23 +112,21 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                   class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
                   id="moveBlock"
                 >
-                  <i
-                    class="CompassIcon icon-folder-plus-outline CreateNewFolderIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-folder-plus-outline CreateNewFolderIcon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
                     Move To...
                   </div>
-                  <svg
-                    class="SubmenuTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="50,35 75,50 50,65"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-chevron-right"
+                  />
                 </div>
               </div>
               <div>
@@ -140,9 +138,13 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-content-copy content-copy"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-content-copy content-copy"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -167,9 +169,13 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-plus AddIcon"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-plus AddIcon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -187,6 +193,37 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
               </div>
               <div>
                 <div
+                  aria-label="Export board archive"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-export-variant"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Export board archive
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
                   aria-label="Hide board"
                   class="MenuOption TextOption menu-option"
                   role="button"
@@ -194,9 +231,13 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-close CloseIcon"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-close CloseIcon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -221,9 +262,13 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -354,27 +399,56 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
                   class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
                   id="moveBlock"
                 >
-                  <i
-                    class="CompassIcon icon-folder-plus-outline CreateNewFolderIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-folder-plus-outline CreateNewFolderIcon"
+                    />
+                  </div>
                   <div
                     class="menu-name"
                   >
                     Move To...
                   </div>
-                  <svg
-                    class="SubmenuTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="50,35 75,50 50,65"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-chevron-right"
+                  />
                 </div>
               </div>
               <div />
               <div />
+              <div>
+                <div
+                  aria-label="Export board archive"
+                  class="MenuOption TextOption menu-option"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-export-variant"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Export board archive
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
               <div>
                 <div
                   aria-label="Hide board"
@@ -384,9 +458,13 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-close CloseIcon"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-close CloseIcon"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"
@@ -411,9 +489,13 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
                   <div
                     class="d-flex"
                   >
-                    <i
-                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                      />
+                    </div>
                   </div>
                   <div
                     class="menu-option__content"

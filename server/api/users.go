@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -47,30 +47,51 @@ func (a *API) handleGetUsersList(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	var userIDs []string
 	if err = json.Unmarshal(requestBody, &userIDs); err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	auditRec := a.makeAuditRecord(r, "getUsersList", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
 
-	users, err := a.app.GetUsersList(userIDs)
-	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, err.Error(), err)
+	var users []*model.User
+	var error error
+
+	if len(userIDs) == 0 {
+		a.errorResponse(w, r, model.NewErrBadRequest("User IDs are empty"))
 		return
+	}
+
+	if userIDs[0] == model.SingleUser {
+		ws, _ := a.app.GetRootTeam()
+		now := utils.GetMillis()
+		user := &model.User{
+			ID:       model.SingleUser,
+			Username: model.SingleUser,
+			Email:    model.SingleUser,
+			CreateAt: ws.UpdateAt,
+			UpdateAt: now,
+		}
+		users = append(users, user)
+	} else {
+		users, error = a.app.GetUsersList(userIDs)
+		if error != nil {
+			a.errorResponse(w, r, error)
+			return
+		}
 	}
 
 	usersList, err := json.Marshal(users)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusBadRequest, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -115,19 +136,19 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 			Email:    model.SingleUser,
 			CreateAt: ws.UpdateAt,
 			UpdateAt: now,
-			Props:    map[string]interface{}{},
 		}
 	} else {
 		user, err = a.app.GetUser(userID)
 		if err != nil {
-			a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+			// ToDo: wrap with an invalid token error
+			a.errorResponse(w, r, err)
 			return
 		}
 	}
 
 	userData, err := json.Marshal(user)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	jsonBytesResponse(w, http.StatusOK, userData)
@@ -166,13 +187,13 @@ func (a *API) handleGetMyMemberships(w http.ResponseWriter, r *http.Request) {
 
 	members, err := a.app.GetMembersForUser(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	membersData, err := json.Marshal(members)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -216,7 +237,7 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := a.app.GetUser(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -225,17 +246,17 @@ func (a *API) handleGetUser(w http.ResponseWriter, r *http.Request) {
 
 	canSeeUser, err := a.app.CanSeeUser(session.UserID, userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 	if !canSeeUser {
-		a.errorResponse(w, r.URL.Path, http.StatusNotFound, "", nil)
+		a.errorResponse(w, r, model.NewErrNotFound("user ID="+userID))
 		return
 	}
 
 	userData, err := json.Marshal(user)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -273,16 +294,16 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	requestBody, err := ioutil.ReadAll(r.Body)
+	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
-	var patch *model.UserPropPatch
+	var patch *model.UserPreferencesPatch
 	err = json.Unmarshal(requestBody, &patch)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -297,19 +318,19 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 
 	// a user can update only own config
 	if userID != session.UserID {
-		a.errorResponse(w, r.URL.Path, http.StatusForbidden, "", nil)
+		a.errorResponse(w, r, model.NewErrForbidden(""))
 		return
 	}
 
 	updatedConfig, err := a.app.UpdateUserConfig(userID, *patch)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(updatedConfig)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
@@ -344,13 +365,13 @@ func (a *API) handleGetUserPreferences(w http.ResponseWriter, r *http.Request) {
 
 	preferences, err := a.app.GetUserPreferences(userID)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 
 	data, err := json.Marshal(preferences)
 	if err != nil {
-		a.errorResponse(w, r.URL.Path, http.StatusInternalServerError, "", err)
+		a.errorResponse(w, r, err)
 		return
 	}
 

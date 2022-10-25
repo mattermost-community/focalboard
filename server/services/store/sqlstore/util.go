@@ -24,10 +24,6 @@ func (s *SQLStore) IsErrNotFound(err error) bool {
 	return model.IsErrNotFound(err)
 }
 
-func (s *SQLStore) IsErrNotAllFound(err error) bool {
-	return model.IsErrNotAllFound(err)
-}
-
 func (s *SQLStore) MarshalJSONB(data interface{}) ([]byte, error) {
 	b, err := json.Marshal(data)
 	if err != nil {
@@ -45,6 +41,9 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	dbType = strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DB_TYPE"))
 	if dbType == "" {
 		dbType = model.SqliteDBType
+	}
+	if dbType == "mariadb" {
+		dbType = model.MysqlDBType
 	}
 
 	var dbName string

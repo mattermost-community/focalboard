@@ -34,9 +34,9 @@ import AddViewTourStep from '../onboardingTour/addView/add_view'
 import {getCurrentCard} from '../../store/cards'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
-import {getLimits} from "../../store/limits"
-import {LimitUnlimited} from "../../boardCloudLimits"
-import ViewLimitModalWrapper from "../viewLImitDialog/viewLimitDialogWrapper"
+import {getLimits} from '../../store/limits'
+import {LimitUnlimited} from '../../boardCloudLimits'
+import ViewLimitModalWrapper from '../viewLImitDialog/viewLimitDialogWrapper'
 
 import NewCardButton from './newCardButton'
 import ViewHeaderPropertiesMenu from './viewHeaderPropertiesMenu'
@@ -65,6 +65,7 @@ type Props = {
 
 const ViewHeader = (props: Props) => {
     const [showFilter, setShowFilter] = useState(false)
+    const [lockFilterOnClose, setLockFilterOnClose] = useState(false)
     const intl = useIntl()
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
@@ -197,7 +198,9 @@ const ViewHeader = (props: Props) => {
                 <ModalWrapper>
                     <Button
                         active={hasFilter}
-                        onClick={() => setShowFilter(true)}
+                        onClick={() => setShowFilter(!showFilter)}
+                        onMouseOver={() => setLockFilterOnClose(true)}
+                        onMouseLeave={() => setLockFilterOnClose(false)}
                     >
                         <FormattedMessage
                             id='ViewHeader.filter'
@@ -208,7 +211,11 @@ const ViewHeader = (props: Props) => {
                     <FilterComponent
                         board={board}
                         activeView={activeView}
-                        onClose={() => setShowFilter(false)}
+                        onClose={() => {
+                            if (!lockFilterOnClose) {
+                                setShowFilter(false)
+                            }
+                        }}
                     />}
                 </ModalWrapper>
 

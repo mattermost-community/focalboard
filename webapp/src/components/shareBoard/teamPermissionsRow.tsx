@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
@@ -10,7 +10,7 @@ import Menu from '../../widgets/menu'
 import CheckIcon from '../../widgets/icons/check'
 import CompassIcon from '../../widgets/icons/compassIcon'
 
-import {Board, createBoard, BoardTypeOpen, BoardTypePrivate} from '../../blocks/board'
+import {Board, createBoard, BoardTypeOpen, BoardTypePrivate, MemberRole} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentTeam} from '../../store/teams'
 import {getCurrentBoard} from '../../store/boards'
@@ -18,11 +18,12 @@ import {Permission} from '../../constants'
 import {Utils} from '../../utils'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
+import ConfirmationDialogBox from '../confirmationDialogBox'
 
 import mutator from '../../mutator'
 
-function updateBoardType(board: Board, newType: string, newMinimumRole: string) {
-    if (board.type === newType && board.minimumRole == newMinimumRole) {
+async function updateBoardType(board: Board, newType: string, newMinimumRole: MemberRole) {
+    if (board.type === newType && board.minimumRole === newMinimumRole) {
         return
     }
 
@@ -30,31 +31,64 @@ function updateBoardType(board: Board, newType: string, newMinimumRole: string) 
     newBoard.type = newType
     newBoard.minimumRole = newMinimumRole
 
-    mutator.updateBoard(newBoard, board, 'update board type')
+    await mutator.updateBoard(newBoard, board, 'update board type')
 }
 
 const TeamPermissionsRow = (): JSX.Element => {
     const intl = useIntl()
     const team = useAppSelector(getCurrentTeam)
     const board = useAppSelector(getCurrentBoard)
+    const [changeRoleConfirmation, setChangeRoleConfirmation] = useState<MemberRole|null>(null)
+
+    const onChangeRole = async () => {
+        if (changeRoleConfirmation !== null) {
+            await updateBoardType(board, BoardTypeOpen, changeRoleConfirmation)
+            setChangeRoleConfirmation(null)
+        }
+    }
 
     let currentRoleName = intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})
-    if (board.type === BoardTypeOpen && board.minimumRole === 'admin') {
+    if (board.type === BoardTypeOpen && board.minimumRole === MemberRole.Admin) {
         currentRoleName = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
-    }else if (board.type === BoardTypeOpen && board.minimumRole === 'editor') {
+    } else if (board.type === BoardTypeOpen && board.minimumRole === MemberRole.Editor) {
         if (board.isTemplate) {
             currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
         } else {
             currentRoleName = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
         }
-    }else if (board.type === BoardTypeOpen && board.minimumRole === 'commenter') {
+    } else if (board.type === BoardTypeOpen && board.minimumRole === MemberRole.Commenter) {
         currentRoleName = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
-    }else if (board.type === BoardTypeOpen && board.minimumRole === 'viewer') {
+    } else if (board.type === BoardTypeOpen && board.minimumRole === MemberRole.Viewer) {
         currentRoleName = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
     }
 
+    const confirmationDialog = (
+        <ConfirmationDialogBox
+            dialogBox={{
+                heading: intl.formatMessage({
+                    id: 'shareBoard.confirm-change-team-role.title',
+                    defaultMessage: 'Change minimum board role',
+                }),
+                subText: intl.formatMessage({
+                    id: 'shareBoard.confirm-change-team-role.body',
+                    defaultMessage: 'Everyone on this board with a lower permission than the "{role}" role will <b>now be promoted to {role}</b>. Are you sure you want to change the minimum role for the board?',
+                }, {
+                    b: (...chunks) => <b>{chunks}</b>,
+                    role: changeRoleConfirmation === MemberRole.Editor ? intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'}) : intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'}),
+                }),
+                confirmButtonText: intl.formatMessage({
+                    id: 'shareBoard.confirm-change-team-role.confirmBtnText',
+                    defaultMessage: 'Change minimum board role',
+                }),
+                onConfirm: onChangeRole,
+                onClose: () => setChangeRoleConfirmation(null),
+            }}
+        />
+    )
+
     return (
         <div className='user-item'>
+            {changeRoleConfirmation && confirmationDialog}
             <div className='user-item__content'>
                 {Utils.isFocalboardPlugin() &&
                     <CompassIcon
@@ -77,33 +111,33 @@ const TeamPermissionsRow = (): JSX.Element => {
                         <Menu position='left'>
                             {!board.isTemplate &&
                                 <Menu.Text
-                                    id='Editor'
-                                    check={board.minimumRole === '' || board.minimumRole === 'editor' }
-                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'editor' ? <CheckIcon/> : null}
+                                    id={MemberRole.Editor}
+                                    check={board.minimumRole === undefined || board.minimumRole === MemberRole.Editor}
+                                    icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Editor ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                                    onClick={() => updateBoardType(board, BoardTypeOpen, 'editor')}
+                                    onClick={() => setChangeRoleConfirmation(MemberRole.Editor)}
                                 />}
                             {!board.isTemplate &&
                                 <Menu.Text
-                                    id='Commenter'
-                                    check={board.minimumRole === 'commenter'}
-                                    icon={board.type === BoardTypeOpen && board.minimumRole === 'commenter' ? <CheckIcon/> : null}
+                                    id={MemberRole.Commenter}
+                                    check={board.minimumRole === MemberRole.Commenter}
+                                    icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Commenter ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
-                                    onClick={() => updateBoardType(board, BoardTypeOpen, 'commenter')}
+                                    onClick={() => setChangeRoleConfirmation(MemberRole.Commenter)}
                                 />}
                             <Menu.Text
-                                id='Viewer'
-                                check={board.minimumRole === 'viewer'}
-                                icon={board.type === BoardTypeOpen && board.minimumRole === 'viewer' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeViwer', defaultMessage: 'Viewer'})}
-                                onClick={() => updateBoardType(board, BoardTypeOpen, 'viewer')}
+                                id={MemberRole.Viewer}
+                                check={board.minimumRole === MemberRole.Viewer}
+                                icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Viewer ? <CheckIcon/> : <div className='empty-icon'/>}
+                                name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
+                                onClick={() => updateBoardType(board, BoardTypeOpen, MemberRole.Viewer)}
                             />
                             <Menu.Text
-                                id='None'
+                                id={MemberRole.None}
                                 check={true}
-                                icon={board.type === BoardTypePrivate ? <CheckIcon/> : null}
+                                icon={board.type === BoardTypePrivate ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeNone', defaultMessage: 'None'})}
-                                onClick={() => updateBoardType(board, BoardTypePrivate, 'editor')}
+                                onClick={() => updateBoardType(board, BoardTypePrivate, MemberRole.None)}
                             />
                         </Menu>
                     </MenuWrapper>

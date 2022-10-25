@@ -17,6 +17,7 @@ import (
 const emptyString = "empty"
 
 var errEmptyFilename = errors.New("IsFileArchived: empty filename not allowed")
+var ErrFileNotFound = errors.New("file not found")
 
 func (a *App) SaveFile(reader io.Reader, teamID, rootID, filename string) (string, error) {
 	// NOTE: File extension includes the dot
@@ -111,6 +112,8 @@ func (a *App) GetFileReader(teamID, rootID, filename string) (filestore.ReadClos
 				)
 			}
 		}
+	} else if !exists {
+		return nil, ErrFileNotFound
 	}
 
 	reader, err := a.filesBackend.Reader(filePath)
@@ -119,4 +122,19 @@ func (a *App) GetFileReader(teamID, rootID, filename string) (filestore.ReadClos
 	}
 
 	return reader, nil
+}
+
+func (a *App) MoveFile(channelID, teamID, boardID, filename string) error {
+	oldPath := filepath.Join(channelID, boardID, filename)
+	newPath := filepath.Join(teamID, boardID, filename)
+	err := a.filesBackend.MoveFile(oldPath, newPath)
+	if err != nil {
+		a.logger.Error("ERROR moving file",
+			mlog.String("old", oldPath),
+			mlog.String("new", newPath),
+			mlog.Err(err),
+		)
+		return err
+	}
+	return nil
 }

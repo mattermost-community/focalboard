@@ -85,13 +85,13 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	initialCount := len(blocks)
 
 	t.Run("valid block", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID:         "id-test",
 			BoardID:    boardID,
 			ModifiedBy: userID,
 		}
 
-		err := store.InsertBlock(&block, "user-id-1")
+		err := store.InsertBlock(block, "user-id-1")
 		require.NoError(t, err)
 
 		blocks, err := store.GetBlocksForBoard(boardID)
@@ -100,13 +100,13 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("invalid rootid", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID:         "id-test",
 			BoardID:    "",
 			ModifiedBy: userID,
 		}
 
-		err := store.InsertBlock(&block, "user-id-1")
+		err := store.InsertBlock(block, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetBlocksForBoard(boardID)
@@ -115,14 +115,14 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("invalid fields data", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID:         "id-test",
 			BoardID:    "id-test",
 			ModifiedBy: userID,
 			Fields:     map[string]interface{}{"no-serialiable-value": t.Run},
 		}
 
-		err := store.InsertBlock(&block, "user-id-1")
+		err := store.InsertBlock(block, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetBlocksForBoard(boardID)
@@ -131,24 +131,24 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("insert new block", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			BoardID: testBoardID,
 		}
 
-		err := store.InsertBlock(&block, "user-id-2")
+		err := store.InsertBlock(block, "user-id-2")
 		require.NoError(t, err)
 		require.Equal(t, "user-id-2", block.CreatedBy)
 	})
 
 	t.Run("update existing block", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID:      "id-2",
 			BoardID: "board-id-1",
 			Title:   "Old Title",
 		}
 
 		// inserting
-		err := store.InsertBlock(&block, "user-id-2")
+		err := store.InsertBlock(block, "user-id-2")
 		require.NoError(t, err)
 
 		// created by populated from user id for new blocks
@@ -159,13 +159,13 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 
 		// updating
-		newBlock := model.Block{
+		newBlock := &model.Block{
 			ID:        "id-2",
 			BoardID:   "board-id-1",
 			CreatedBy: "user-id-3",
 			Title:     "New Title",
 		}
-		err = store.InsertBlock(&newBlock, "user-id-4")
+		err = store.InsertBlock(newBlock, "user-id-4")
 		require.NoError(t, err)
 		// created by is not altered for existing blocks
 		require.Equal(t, "user-id-3", newBlock.CreatedBy)
@@ -179,7 +179,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 	assert.NoError(t, err)
 
 	t.Run("data tamper attempt", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID:         "id-10",
 			BoardID:    "board-id-1",
 			Title:      "Old Title",
@@ -190,7 +190,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 		}
 
 		// inserting
-		err := store.InsertBlock(&block, "user-id-1")
+		err := store.InsertBlock(block, "user-id-1")
 		require.NoError(t, err)
 		expectedTime := time.Now()
 
@@ -213,19 +213,19 @@ func testInsertBlocks(t *testing.T, store store.Store) {
 	initialCount := len(blocks)
 
 	t.Run("invalid block", func(t *testing.T) {
-		validBlock := model.Block{
+		validBlock := &model.Block{
 			ID:         "id-test",
 			BoardID:    "id-test",
 			ModifiedBy: userID,
 		}
 
-		invalidBlock := model.Block{
+		invalidBlock := &model.Block{
 			ID:         "id-test",
 			BoardID:    "",
 			ModifiedBy: userID,
 		}
 
-		newBlocks := []model.Block{validBlock, invalidBlock}
+		newBlocks := []*model.Block{validBlock, invalidBlock}
 
 		time.Sleep(1 * time.Millisecond)
 		err := store.InsertBlocks(newBlocks, "user-id-1")
@@ -242,7 +242,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	userID := testUserID
 	boardID := "board-id-1"
 
-	block := model.Block{
+	block := &model.Block{
 		ID:         "id-test",
 		BoardID:    boardID,
 		Title:      "oldTitle",
@@ -250,7 +250,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 		Fields:     map[string]interface{}{"test": "test value", "test2": "test value 2"},
 	}
 
-	err := store.InsertBlock(&block, "user-id-1")
+	err := store.InsertBlock(block, "user-id-1")
 	require.NoError(t, err)
 
 	blocks, errBlocks := store.GetBlocksForBoard(boardID)
@@ -259,7 +259,9 @@ func testPatchBlock(t *testing.T, store store.Store) {
 
 	t.Run("not existing block id", func(t *testing.T) {
 		err := store.PatchBlock("invalid-block-id", &model.BlockPatch{}, "user-id-1")
-		require.Error(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
+		require.True(t, model.IsErrNotFound(err))
 
 		blocks, err := store.GetBlocksForBoard(boardID)
 		require.NoError(t, err)
@@ -267,11 +269,11 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("invalid fields data", func(t *testing.T) {
-		blockPatch := model.BlockPatch{
+		blockPatch := &model.BlockPatch{
 			UpdatedFields: map[string]interface{}{"no-serialiable-value": t.Run},
 		}
 
-		err := store.PatchBlock("id-test", &blockPatch, "user-id-1")
+		err := store.PatchBlock("id-test", blockPatch, "user-id-1")
 		require.Error(t, err)
 
 		blocks, err := store.GetBlocksForBoard(boardID)
@@ -301,7 +303,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("update block custom fields", func(t *testing.T) {
-		blockPatch := model.BlockPatch{
+		blockPatch := &model.BlockPatch{
 			UpdatedFields: map[string]interface{}{"test": "new test value", "test3": "new value"},
 		}
 
@@ -309,7 +311,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 
 		// inserting
-		err := store.PatchBlock("id-test", &blockPatch, "user-id-2")
+		err := store.PatchBlock("id-test", blockPatch, "user-id-2")
 		require.NoError(t, err)
 
 		retrievedBlock, err := store.GetBlock("id-test")
@@ -323,7 +325,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 	})
 
 	t.Run("remove block custom fields", func(t *testing.T) {
-		blockPatch := model.BlockPatch{
+		blockPatch := &model.BlockPatch{
 			DeletedFields: []string{"test", "test3", "test100"},
 		}
 
@@ -331,7 +333,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 
 		// inserting
-		err := store.PatchBlock("id-test", &blockPatch, "user-id-2")
+		err := store.PatchBlock("id-test", blockPatch, "user-id-2")
 		require.NoError(t, err)
 
 		retrievedBlock, err := store.GetBlock("id-test")
@@ -346,19 +348,19 @@ func testPatchBlock(t *testing.T, store store.Store) {
 }
 
 func testPatchBlocks(t *testing.T, store store.Store) {
-	block := model.Block{
+	block := &model.Block{
 		ID:      "id-test",
 		BoardID: "id-test",
 		Title:   "oldTitle",
 	}
 
-	block2 := model.Block{
+	block2 := &model.Block{
 		ID:      "id-test2",
 		BoardID: "id-test2",
 		Title:   "oldTitle2",
 	}
 
-	insertBlocks := []model.Block{block, block2}
+	insertBlocks := []*model.Block{block, block2}
 	err := store.InsertBlocks(insertBlocks, "user-id-1")
 	require.NoError(t, err)
 
@@ -407,7 +409,8 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 
 		time.Sleep(1 * time.Millisecond)
 		err := store.PatchBlocks(&model.BlockPatchBatch{BlockIDs: blockIds, BlockPatches: blockPatches}, "user-id-1")
-		require.Error(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 
 		retrievedBlock, err := store.GetBlock("id-test")
 		require.NoError(t, err)
@@ -416,7 +419,7 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 }
 
 var (
-	subtreeSampleBlocks = []model.Block{
+	subtreeSampleBlocks = []*model.Block{
 		{
 			ID:         "parent",
 			BoardID:    testBoardID,
@@ -489,7 +492,7 @@ func testGetSubTree2(t *testing.T, store store.Store) {
 	t.Run("from not existing id", func(t *testing.T) {
 		blocks, err = store.GetSubTree2(boardID, "not-exists", model.QuerySubtreeOptions{})
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 }
 
@@ -501,7 +504,7 @@ func testDeleteBlock(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	blocksToInsert := []model.Block{
+	blocksToInsert := []*model.Block{
 		{
 			ID:         "block1",
 			BoardID:    boardID,
@@ -559,7 +562,7 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 	require.NoError(t, err)
 	initialCount := len(blocks)
 
-	blocksToInsert := []model.Block{
+	blocksToInsert := []*model.Block{
 		{
 			ID:         "block1",
 			BoardID:    boardID,
@@ -590,7 +593,8 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		block, err := store.GetBlock("block1")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, block)
 
 		time.Sleep(1 * time.Millisecond)
@@ -609,7 +613,8 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		block, err := store.GetBlock("block1")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, block)
 
 		// Wait for not colliding the ID+insert_at key
@@ -638,7 +643,8 @@ func testUndeleteBlock(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 
 		block, err := store.GetBlock("not-exists")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, block)
 	})
 }
@@ -648,7 +654,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
 
-	blocksToInsert := []model.Block{
+	blocksToInsert := []*model.Block{
 		{
 			ID:         "block1",
 			BoardID:    boardID,
@@ -692,14 +698,14 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithParentAndType(boardID, "not-exists", "test")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("not existing type", func(t *testing.T) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithParentAndType(boardID, "block1", "not-existing")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("valid parent and type", func(t *testing.T) {
@@ -713,7 +719,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithParent(boardID, "not-exists")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("valid parent", func(t *testing.T) {
@@ -727,7 +733,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksWithType(boardID, "not-exists")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("valid type", func(t *testing.T) {
@@ -741,7 +747,7 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		time.Sleep(1 * time.Millisecond)
 		blocks, err = store.GetBlocksForBoard("not-exists")
 		require.NoError(t, err)
-		require.Len(t, blocks, 0)
+		require.Empty(t, blocks)
 	})
 
 	t.Run("all blocks of the a board", func(t *testing.T) {
@@ -750,17 +756,42 @@ func testGetBlocks(t *testing.T, store store.Store) {
 		require.NoError(t, err)
 		require.Len(t, blocks, 5)
 	})
+
+	t.Run("several blocks by ids", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksByIDs([]string{"block2", "block4"})
+		require.NoError(t, err)
+		require.Len(t, blocks, 2)
+	})
+
+	t.Run("blocks by ids where some are not found", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksByIDs([]string{"block2", "blockNonexistent"})
+		var naf *model.ErrNotAllFound
+		require.ErrorAs(t, err, &naf)
+		require.True(t, model.IsErrNotFound(err))
+		require.Len(t, blocks, 1)
+	})
+
+	t.Run("blocks by ids where none are found", func(t *testing.T) {
+		time.Sleep(1 * time.Millisecond)
+		blocks, err = store.GetBlocksByIDs([]string{"blockNonexistent1", "blockNonexistent2"})
+		var naf *model.ErrNotAllFound
+		require.ErrorAs(t, err, &naf)
+		require.True(t, model.IsErrNotFound(err))
+		require.Empty(t, blocks)
+	})
 }
 
 func testGetBlock(t *testing.T, store store.Store) {
 	t.Run("get a block", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID:         "block-id-10",
 			BoardID:    "board-id-1",
 			ModifiedBy: "user-id-1",
 		}
 
-		err := store.InsertBlock(&block, "user-id-1")
+		err := store.InsertBlock(block, "user-id-1")
 		require.NoError(t, err)
 
 		fetchedBlock, err := store.GetBlock("block-id-10")
@@ -776,7 +807,8 @@ func testGetBlock(t *testing.T, store store.Store) {
 
 	t.Run("get a non-existing block", func(t *testing.T) {
 		fetchedBlock, err := store.GetBlock("non-existing-id")
-		require.NoError(t, err)
+		var nf *model.ErrNotFound
+		require.ErrorAs(t, err, &nf)
 		require.Nil(t, fetchedBlock)
 	})
 }
@@ -784,14 +816,14 @@ func testGetBlock(t *testing.T, store store.Store) {
 func testDuplicateBlock(t *testing.T, store store.Store) {
 	blocksToInsert := subtreeSampleBlocks
 	blocksToInsert = append(blocksToInsert,
-		model.Block{
+		&model.Block{
 			ID:         "grandchild1a",
 			BoardID:    testBoardID,
 			ParentID:   "child1",
 			ModifiedBy: testUserID,
 			Type:       model.TypeComment,
 		},
-		model.Block{
+		&model.Block{
 			ID:         "grandchild2a",
 			BoardID:    testBoardID,
 			ParentID:   "child2",
@@ -842,7 +874,7 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
 
-	blocksToInsert := []model.Block{
+	blocksToInsert := []*model.Block{
 		{
 			ID:         "block1",
 			BoardID:    boardID,
@@ -882,7 +914,7 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 
 	for _, v := range blocksToInsert {
 		time.Sleep(20 * time.Millisecond)
-		subBlocks := []model.Block{v}
+		subBlocks := []*model.Block{v}
 		InsertBlocks(t, store, subBlocks, testUserID)
 	}
 	defer DeleteBlocks(t, store, blocksToInsert, "test")
@@ -1019,5 +1051,13 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		block := blocks[0]
 
 		require.Equal(t, expectedBlock.ID, block.ID)
+	})
+
+	t.Run("get block history of a board with no history", func(t *testing.T) {
+		opts := model.QueryBlockHistoryOptions{}
+
+		blocks, err = store.GetBlockHistoryDescendants("nonexistent-board-id", opts)
+		require.NoError(t, err)
+		require.Empty(t, blocks)
 	})
 }

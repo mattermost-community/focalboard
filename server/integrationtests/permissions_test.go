@@ -5,7 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strings"
 	"testing"
@@ -38,7 +38,7 @@ type TestCase struct {
 	url                string
 	method             string
 	body               string
-	userRole           string // userAnon, userNoTeamMember, userTeamMember, userViewer, userCommenter, userEditor or userAdmin
+	userRole           string // userAnon, userNoTeamMember, userTeamMember, userViewer, userCommenter, userEditor, userAdmin or userGuest
 	expectedStatusCode int
 	totalResults       int
 }
@@ -139,19 +139,19 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 		true,
 	)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
 	require.NoError(t, err)
 	customTemplate2, err := th.Server.App().CreateBoard(
 		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate, MinimumRole: "viewer"},
 		userAdminID,
 		true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
 	require.NoError(t, err)
 
 	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
 	require.NoError(t, err)
 	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
@@ -167,7 +167,7 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 	require.Equal(t, boardMember.UserID, userAdminID)
 	require.Equal(t, boardMember.BoardID, board2.ID)
 
-	err = th.Server.App().InsertBlock(model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdminID)
 	require.NoError(t, err)
 
 	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: userAdminID, UpdateAt: model.GetMillis()})
@@ -301,7 +301,7 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 				require.NoError(t, err)
 			}
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
-				body, err := ioutil.ReadAll(response.Body)
+				body, err := io.ReadAll(response.Body)
 				if err != nil {
 					require.Fail(t, err.Error())
 				}
@@ -1322,13 +1322,13 @@ func TestPermissionsPatchBoardBlock(t *testing.T) {
 
 func TestPermissionsDeleteBoardBlock(t *testing.T) {
 	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
-		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		err := th.Server.App().InsertBlock(&model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 		require.NoError(t, err)
 	}
 
@@ -1393,13 +1393,13 @@ func TestPermissionsDeleteBoardBlock(t *testing.T) {
 
 func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
-		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		err := th.Server.App().InsertBlock(&model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 		require.NoError(t, err)
 		err = th.Server.App().DeleteBlock("block-1", userAdmin)
 		require.NoError(t, err)
@@ -1548,13 +1548,13 @@ func TestPermissionsUndeleteBoard(t *testing.T) {
 
 func TestPermissionsDuplicateBoardBlock(t *testing.T) {
 	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
-		err := th.Server.App().InsertBlock(model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
+		err := th.Server.App().InsertBlock(&model.Block{ID: "block-5", Title: "Test", Type: "card", BoardID: testData.publicTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-6", Title: "Test", Type: "card", BoardID: testData.privateTemplate.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-7", Title: "Test", Type: "card", BoardID: testData.publicBoard.ID}, userAdmin)
 		require.NoError(t, err)
-		err = th.Server.App().InsertBlock(model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "block-8", Title: "Test", Type: "card", BoardID: testData.privateBoard.ID}, userAdmin)
 		require.NoError(t, err)
 	}
 
@@ -1697,7 +1697,7 @@ func TestPermissionsCreateBoardMembers(t *testing.T) {
 			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userTeamMember, http.StatusForbidden, 0},
 			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userViewer, http.StatusForbidden, 0},
 			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userCommenter, http.StatusForbidden, 0},
-			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userEditor, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userEditor, http.StatusOK, 1},
 			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userAdmin, http.StatusOK, 1},
 			{"/boards/{PUBLIC_BOARD_ID}/members", methodPost, boardMemberJSON(testData.publicBoard.ID), userGuest, http.StatusForbidden, 0},
 
@@ -1715,7 +1715,7 @@ func TestPermissionsCreateBoardMembers(t *testing.T) {
 			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userTeamMember, http.StatusForbidden, 0},
 			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userViewer, http.StatusForbidden, 0},
 			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userCommenter, http.StatusForbidden, 0},
-			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userEditor, http.StatusForbidden, 0},
+			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userEditor, http.StatusOK, 1},
 			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userAdmin, http.StatusOK, 1},
 			{"/boards/{PUBLIC_TEMPLATE_ID}/members", methodPost, boardMemberJSON(testData.publicTemplate.ID), userGuest, http.StatusForbidden, 0},
 		}
@@ -2561,7 +2561,7 @@ func TestPermissionsUserChangePassword(t *testing.T) {
 }
 
 func TestPermissionsUpdateUserConfig(t *testing.T) {
-	patch := toJSON(t, model.UserPropPatch{UpdatedFields: map[string]string{"test": "test"}})
+	patch := toJSON(t, model.UserPreferencesPatch{UpdatedFields: map[string]string{"test": "test"}})
 
 	ttCases := []TestCase{
 		{"/users/{USER_TEAM_MEMBER_ID}/config", methodPut, patch, userAnon, http.StatusUnauthorized, 0},
@@ -2592,7 +2592,7 @@ func TestPermissionsUpdateUserConfig(t *testing.T) {
 func TestPermissionsCreateBoardsAndBlocks(t *testing.T) {
 	bab := toJSON(t, model.BoardsAndBlocks{
 		Boards: []*model.Board{{ID: "test", Title: "Test Board", TeamID: "test-team"}},
-		Blocks: []model.Block{
+		Blocks: []*model.Block{
 			{ID: "test-block", BoardID: "test", Type: "card", CreateAt: model.GetMillis(), UpdateAt: model.GetMillis()},
 		},
 	})
@@ -3769,6 +3769,43 @@ func TestPermissionsChannel(t *testing.T) {
 			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userCommenter, http.StatusNotImplemented, 0},
 			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userEditor, http.StatusNotImplemented, 0},
 			{"/teams/test-team/channels/valid-channel-id", methodGet, "", userAdmin, http.StatusNotImplemented, 0},
+		}
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsGetStatistics(t *testing.T) {
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			{"/statistics", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/statistics", methodGet, "", userNoTeamMember, http.StatusForbidden, 0},
+			{"/statistics", methodGet, "", userTeamMember, http.StatusForbidden, 0},
+			{"/statistics", methodGet, "", userViewer, http.StatusForbidden, 0},
+			{"/statistics", methodGet, "", userCommenter, http.StatusForbidden, 0},
+			{"/statistics", methodGet, "", userEditor, http.StatusForbidden, 0},
+			{"/statistics", methodGet, "", userAdmin, http.StatusOK, 1},
+			{"/statistics", methodGet, "", userGuest, http.StatusForbidden, 0},
+		}
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		ttCases := []TestCase{
+			{"/statistics", methodGet, "", userAnon, http.StatusUnauthorized, 0},
+			{"/statistics", methodGet, "", userNoTeamMember, http.StatusNotImplemented, 0},
+			{"/statistics", methodGet, "", userTeamMember, http.StatusNotImplemented, 0},
+			{"/statistics", methodGet, "", userViewer, http.StatusNotImplemented, 0},
+			{"/statistics", methodGet, "", userCommenter, http.StatusNotImplemented, 0},
+			{"/statistics", methodGet, "", userEditor, http.StatusNotImplemented, 0},
+			{"/statistics", methodGet, "", userAdmin, http.StatusNotImplemented, 1},
+			{"/statistics", methodGet, "", userGuest, http.StatusForbidden, 0},
 		}
 		runTestCases(t, ttCases, testData, clients)
 	})

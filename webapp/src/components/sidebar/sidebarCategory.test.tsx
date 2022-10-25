@@ -48,7 +48,7 @@ describe('components/sidebarCategory', () => {
         users: {
             me: {
                 id: 'user_id_1',
-                props: {}
+                props: {},
             },
         },
         boards: {
@@ -177,6 +177,7 @@ describe('components/sidebarCategory', () => {
         )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
+
         // testing collapsed state of category
         const subItems = container.querySelectorAll('.subitem')
         expect(subItems).toBeDefined()
@@ -214,5 +215,4 @@ describe('components/sidebarCategory', () => {
         userEvent.click(subItems[0] as Element)
         expect(mockTemplateClose).not.toBeCalled()
     })
-
 })

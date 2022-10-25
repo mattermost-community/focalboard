@@ -19,7 +19,7 @@ func TestApp_ImportArchive(t *testing.T) {
 		Title:  "Cross-Functional Project Plan",
 	}
 
-	block := model.Block{
+	block := &model.Block{
 		ID:       "2c1873e0-1484-407d-8b2c-3c3b5a2a9f9e",
 		ParentID: board.ID,
 		Type:     model.TypeView,
@@ -28,7 +28,7 @@ func TestApp_ImportArchive(t *testing.T) {
 
 	babs := &model.BoardsAndBlocks{
 		Boards: []*model.Board{board},
-		Blocks: []model.Block{block},
+		Blocks: []*model.Block{block},
 	}
 
 	boardMember := &model.BoardMember{

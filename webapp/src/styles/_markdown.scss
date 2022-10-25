@@ -1,6 +1,7 @@
 .markdown__table {
     margin: 5px 0 10px;
     background: var(--center-channel-bg);
+    border-collapse: collapse;
 
     th,
     td {

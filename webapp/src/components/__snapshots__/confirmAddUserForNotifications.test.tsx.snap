@@ -18,19 +18,25 @@ exports[`/components/confirmAddUserForNotifications should match snapshot 1`] = 
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton dialog__close size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
+          <div>
+            <h1
+              class="dialog-title"
             />
-          </button>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="box-area"
@@ -48,7 +54,7 @@ exports[`/components/confirmAddUserForNotifications should match snapshot 1`] = 
               class="ConfirmAddUserForNotifications"
             >
               <p>
-                fake-username is not a member of the board, and will not received any notifications about it.
+                fake-username is not a member of the board, and will not receive any notifications about it.
               </p>
               <p>
                 Do you want to add fake-username to the board?

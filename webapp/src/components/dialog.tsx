@@ -16,12 +16,13 @@ type Props = {
     toolbar?: React.ReactNode
     hideCloseButton?: boolean
     className?: string
-    title?: string
-    onClose: () => void,
+    title?: JSX.Element
+    subtitle?: JSX.Element
+    onClose: () => void
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu, toolbar, title} = props
+    const {toolsMenu, toolbar, title, subtitle} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -40,15 +41,14 @@ const Dialog = (props: Props) => {
                 className='wrapper'
                 onClick={(e) => {
                     e.stopPropagation()
-                    if(!isBackdropClickedRef.current){
+                    if (!isBackdropClickedRef.current) {
                         return
                     }
                     isBackdropClickedRef.current = false
                     props.onClose()
-
                 }}
                 onMouseDown={(e) => {
-                    if(e.target === e.currentTarget){
+                    if (e.target === e.currentTarget) {
                         isBackdropClickedRef.current = true
                     }
                 }}
@@ -58,17 +58,10 @@ const Dialog = (props: Props) => {
                     className='dialog'
                 >
                     <div className='toolbar'>
-                        {title && <h1 className='dialog-title'>{title}</h1>}
-                        {
-                            !props.hideCloseButton &&
-                            <IconButton
-                                className='dialog__close'
-                                onClick={props.onClose}
-                                icon={<CloseIcon/>}
-                                title={closeDialogText}
-                                size='medium'
-                            />
-                        }
+                        <div>
+                            {<h1 className='dialog-title'>{title || ''}</h1>}
+                            {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
+                        </div>
                         <div className='toolbar--right'>
                             {toolbar && <div>{toolbar}</div>}
                             {toolsMenu && <MenuWrapper>
@@ -78,6 +71,16 @@ const Dialog = (props: Props) => {
                                 />
                                 {toolsMenu}
                             </MenuWrapper>
+                            }
+                            {
+                                !props.hideCloseButton &&
+                                <IconButton
+                                    className='dialog__close'
+                                    onClick={props.onClose}
+                                    icon={<CloseIcon/>}
+                                    title={closeDialogText}
+                                    size='medium'
+                                />
                             }
                         </div>
                     </div>

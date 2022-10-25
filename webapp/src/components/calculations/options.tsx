@@ -18,7 +18,7 @@ export type Option = {
     displayName: string
 }
 
-export const Options:Record<string, Option> = {
+export const Options: Record<string, Option> = {
     none: {value: 'none', label: 'None', displayName: 'Calculate'},
     count: {value: 'count', label: 'Count', displayName: 'Count'},
     countEmpty: {value: 'countEmpty', label: 'Count Empty', displayName: 'Empty'},
@@ -161,10 +161,10 @@ const DropdownIndicator = (props: DropdownIndicatorProps<Option, false>) => {
 
 // Calculation option props shared by all implementations of calculation options
 export type CommonCalculationOptionProps = {
-    value: string,
+    value: string
     menuOpen: boolean
     onClose?: () => void
-    components?: {[key:string]: (props: any) => JSX.Element}
+    components?: {[key: string]: (props: any) => JSX.Element}
     onChange: (data: any) => void
     property?: IPropertyTemplate
 }

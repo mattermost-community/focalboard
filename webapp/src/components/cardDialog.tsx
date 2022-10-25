@@ -143,6 +143,7 @@ const CardDialog = (props: Props): JSX.Element => {
         const unfollowBtn = (
             <Button
                 className='cardFollowBtn unfollow'
+                size='medium'
                 onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
             >
                 {intl.formatMessage({id: 'CardDetail.Following', defaultMessage: 'Following'})}
@@ -159,6 +160,7 @@ const CardDialog = (props: Props): JSX.Element => {
     return (
         <>
             <Dialog
+                title={<div/>}
                 className='cardDialog'
                 onClose={props.onClose}
                 toolsMenu={!props.readonly && !card?.limited && menu}

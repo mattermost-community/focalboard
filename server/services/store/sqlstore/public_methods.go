@@ -119,7 +119,7 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 
 }
 
-func (s *SQLStore) CreateUser(user *model.User) error {
+func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 	return s.createUser(s.db, user)
 
 }
@@ -221,7 +221,7 @@ func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error
 
 }
 
-func (s *SQLStore) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+func (s *SQLStore) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]*model.Block, error) {
 	if s.dbType == model.SqliteDBType {
 		return s.duplicateBlock(s.db, boardID, blockID, userID, asTemplate)
 	}
@@ -289,42 +289,42 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 }
 
-func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	return s.getBlockHistory(s.db, blockID, opts)
 
 }
 
-func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	return s.getBlockHistoryDescendants(s.db, boardID, opts)
 
 }
 
-func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	return s.getBlocks(s.db, opts)
 
 }
 
-func (s *SQLStore) GetBlocksByIDs(ids []string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksByIDs(ids []string) ([]*model.Block, error) {
 	return s.getBlocksByIDs(s.db, ids)
 
 }
 
-func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksForBoard(boardID string) ([]*model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 
 }
 
-func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]*model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 
 }
 
-func (s *SQLStore) GetBlocksWithParentAndType(boardID string, parentID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParentAndType(boardID string, parentID string, blockType string) ([]*model.Block, error) {
 	return s.getBlocksWithParentAndType(s.db, boardID, parentID, blockType)
 
 }
 
-func (s *SQLStore) GetBlocksWithType(boardID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithType(boardID string, blockType string) ([]*model.Block, error) {
 	return s.getBlocksWithType(s.db, boardID, blockType)
 
 }
@@ -341,6 +341,11 @@ func (s *SQLStore) GetBoardAndCard(block *model.Block) (*model.Board, *model.Blo
 
 func (s *SQLStore) GetBoardAndCardByID(blockID string) (*model.Board, *model.Block, error) {
 	return s.getBoardAndCardByID(s.db, blockID)
+
+}
+
+func (s *SQLStore) GetBoardCount() (int64, error) {
+	return s.getBoardCount(s.db)
 
 }
 
@@ -434,7 +439,7 @@ func (s *SQLStore) GetSharing(rootID string) (*model.Sharing, error) {
 
 }
 
-func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	return s.getSubTree2(s.db, boardID, blockID, opts)
 
 }
@@ -568,7 +573,7 @@ func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 
 }
 
-func (s *SQLStore) InsertBlocks(blocks []model.Block, userID string) error {
+func (s *SQLStore) InsertBlocks(blocks []*model.Block, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.insertBlocks(s.db, blocks, userID)
 	}
@@ -717,8 +722,8 @@ func (s *SQLStore) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID
 
 }
 
-func (s *SQLStore) PatchUserProps(userID string, patch model.UserPropPatch) error {
-	return s.patchUserProps(s.db, userID, patch)
+func (s *SQLStore) PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error) {
+	return s.patchUserPreferences(s.db, userID, patch)
 
 }
 
@@ -786,8 +791,8 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots)
 
 }
 
@@ -869,7 +874,7 @@ func (s *SQLStore) UpdateSubscribersNotifiedAt(blockID string, notifiedAt int64)
 
 }
 
-func (s *SQLStore) UpdateUser(user *model.User) error {
+func (s *SQLStore) UpdateUser(user *model.User) (*model.User, error) {
 	return s.updateUser(s.db, user)
 
 }

@@ -41,18 +41,22 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     <div
                       class="d-flex"
                     >
-                      <svg
-                        class="SortUpIcon Icon"
-                        viewBox="0 0 100 100"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <div
+                        class="menu-option__icon"
                       >
-                        <polyline
-                          points="50,20 50,80"
-                        />
-                        <polyline
-                          points="30,40 50,20 70,40"
-                        />
-                      </svg>
+                        <svg
+                          class="SortUpIcon Icon"
+                          viewBox="0 0 100 100"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <polyline
+                            points="50,20 50,80"
+                          />
+                          <polyline
+                            points="30,40 50,20 70,40"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
                       class="menu-option__content"
@@ -77,18 +81,22 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     <div
                       class="d-flex"
                     >
-                      <svg
-                        class="SortDownIcon Icon"
-                        viewBox="0 0 100 100"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <div
+                        class="menu-option__icon"
                       >
-                        <polyline
-                          points="50,20 50,80"
-                        />
-                        <polyline
-                          points="30,60 50,80 70,60"
-                        />
-                      </svg>
+                        <svg
+                          class="SortDownIcon Icon"
+                          viewBox="0 0 100 100"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <polyline
+                            points="50,20 50,80"
+                          />
+                          <polyline
+                            points="30,60 50,80 70,60"
+                          />
+                        </svg>
+                      </div>
                     </div>
                     <div
                       class="menu-option__content"
@@ -109,23 +117,21 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     class="MenuOption SubMenuOption menu-option"
                     id="insertAbove"
                   >
-                    <i
-                      class="CompassIcon icon-plus AddIcon"
-                    />
+                    <div
+                      class="menu-option__icon"
+                    >
+                      <i
+                        class="CompassIcon icon-plus AddIcon"
+                      />
+                    </div>
                     <div
                       class="menu-name"
                     >
                       Insert above
                     </div>
-                    <svg
-                      class="SubmenuTriangleIcon Icon"
-                      viewBox="0 0 100 100"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <polygon
-                        points="50,35 75,50 50,65"
-                      />
-                    </svg>
+                    <i
+                      class="CompassIcon icon-chevron-right"
+                    />
                   </div>
                 </div>
                 <div>
@@ -137,9 +143,13 @@ exports[`components/contentBlock return commentBlock and click on menuwrapper 1`
                     <div
                       class="d-flex"
                     >
-                      <i
-                        class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                      />
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                        />
+                      </div>
                     </div>
                     <div
                       class="menu-option__content"

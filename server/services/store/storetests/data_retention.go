@@ -3,7 +3,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -49,30 +48,30 @@ func LoadData(t *testing.T, store store.Store) {
 	board, err := store.InsertBoard(&validBoard, testUserID)
 	require.NoError(t, err)
 
-	validBlock := model.Block{
+	validBlock := &model.Block{
 		ID:         "id-test",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
 
-	validBlock2 := model.Block{
+	validBlock2 := &model.Block{
 		ID:         "id-test2",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
-	validBlock3 := model.Block{
+	validBlock3 := &model.Block{
 		ID:         "id-test3",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
 
-	validBlock4 := model.Block{
+	validBlock4 := &model.Block{
 		ID:         "id-test4",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
 
-	newBlocks := []model.Block{validBlock, validBlock2, validBlock3, validBlock4}
+	newBlocks := []*model.Block{validBlock, validBlock2, validBlock3, validBlock4}
 
 	err = store.InsertBlocks(newBlocks, testUserID)
 	require.NoError(t, err)
@@ -124,13 +123,13 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 		// GetMemberForBoard throws error on now rows found
 		member, err := store.GetMemberForBoard(boardID, testUserID)
 		require.Error(t, err)
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), err)
 		require.Nil(t, member)
 
 		// GetSharing throws error on now rows found
 		sharing, err := store.GetSharing(boardID)
 		require.Error(t, err)
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), err)
 		require.Nil(t, sharing)
 
 		category, err := store.GetUserCategoryBoards(boardID, testTeamID)

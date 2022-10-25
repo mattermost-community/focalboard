@@ -72,6 +72,10 @@ type TestHelper struct {
 
 type FakePermissionPluginAPI struct{}
 
+func (*FakePermissionPluginAPI) HasPermissionTo(userID string, permission *mmModel.Permission) bool {
+	return userID == userAdmin
+}
+
 func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
 	if userID == userNoTeamMember {
 		return false
