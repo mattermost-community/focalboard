@@ -521,7 +521,8 @@ func (s *SQLStore) getBoardCount(db sq.BaseRunner) (int64, error) {
 	query := s.getQueryBuilder(db).
 		Select("COUNT(*) AS count").
 		From(s.tablePrefix + "boards").
-		Where(sq.Eq{"delete_at": 0})
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"is_template": false})
 
 	row := query.QueryRow()
 

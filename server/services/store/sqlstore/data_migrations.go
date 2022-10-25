@@ -655,11 +655,11 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 	}
 
 	// get collation and charSet setting that Channels is using.
-	// when unit testing, no channels tables exist so just set to a default.
+	// when personal server or unit testing, no channels tables exist so just set to a default.
 	var collation string
 	var charSet string
 	var err error
-	if os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
+	if !s.isPlugin || os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
 		collation = "utf8mb4_general_ci"
 		charSet = "utf8mb4"
 	} else {

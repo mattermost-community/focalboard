@@ -582,7 +582,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 
 	newBab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{
-			{ID: "board-id-1", TeamID: teamID, Type: model.BoardTypeOpen},
+			{ID: "board-id-1", TeamID: teamID, Type: model.BoardTypeOpen, ChannelID: "test-channel"},
 			{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 			{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 		},
@@ -606,6 +606,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 		require.Len(t, bab.Boards, 1)
 		require.Len(t, bab.Blocks, 1)
 		require.Equal(t, bab.Boards[0].IsTemplate, false)
+		require.Equal(t, "", bab.Boards[0].ChannelID)
 	})
 
 	t.Run("duplicate existing board as template", func(t *testing.T) {
@@ -615,6 +616,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 		require.Len(t, bab.Boards, 1)
 		require.Len(t, bab.Blocks, 1)
 		require.Equal(t, bab.Boards[0].IsTemplate, true)
+		require.Equal(t, "", bab.Boards[0].ChannelID)
 	})
 
 	t.Run("duplicate not existing board", func(t *testing.T) {

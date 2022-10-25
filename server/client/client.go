@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"strings"
@@ -56,7 +55,7 @@ func BuildErrorResponse(r *http.Response, err error) *Response {
 
 func closeBody(r *http.Response) {
 	if r.Body != nil {
-		_, _ = io.Copy(ioutil.Discard, r.Body)
+		_, _ = io.Copy(io.Discard, r.Body)
 		_ = r.Body.Close()
 	}
 }
@@ -902,4 +901,20 @@ func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
 	}
 
 	return limits, BuildResponse(r)
+}
+
+func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
+	r, err := c.DoAPIGet("/statistics", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var stats *model.BoardsStatistics
+	err = json.NewDecoder(r.Body).Decode(&stats)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return stats, BuildResponse(r)
 }

@@ -257,6 +257,8 @@
   "SidebarTour.SidebarCategories.Body": "All your boards are now organized under your new sidebar. No more switching between workspaces. One-time custom categories based on your prior workspaces may have automatically been created for you as part of your v7.2 upgrade. These can be removed or edited to your preference.",
   "SidebarTour.SidebarCategories.Link": "Learn more",
   "SidebarTour.SidebarCategories.Title": "Sidebar categories",
+  "SiteStats.total_boards": "Total Boards",
+  "SiteStats.total_cards": "Total Cards",
   "TableComponent.add-icon": "Add icon",
   "TableComponent.name": "Name",
   "TableComponent.plus-new": "+ New",

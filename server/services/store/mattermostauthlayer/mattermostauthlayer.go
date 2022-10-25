@@ -800,15 +800,15 @@ func (s *MattermostAuthLayer) implicitBoardMembershipsFromRows(rows *sql.Rows) (
 }
 
 func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.BoardMember, error) {
-	bm, err := s.Store.GetMemberForBoard(boardID, userID)
+	bm, originalErr := s.Store.GetMemberForBoard(boardID, userID)
 	// Explicit membership not found
-	if model.IsErrNotFound(err) {
+	if model.IsErrNotFound(originalErr) {
 		if userID == model.SystemUserID {
 			return nil, model.NewErrNotFound(userID)
 		}
 		var user *model.User
 		// No synthetic memberships for guests
-		user, err = s.GetUserByID(userID)
+		user, err := s.GetUserByID(userID)
 		if err != nil {
 			return nil, err
 		}
@@ -867,8 +867,8 @@ func (s *MattermostAuthLayer) GetMemberForBoard(boardID, userID string) (*model.
 			}, nil
 		}
 	}
-	if err != nil {
-		return nil, err
+	if originalErr != nil {
+		return nil, originalErr
 	}
 	return bm, nil
 }
@@ -1039,8 +1039,10 @@ func (s *MattermostAuthLayer) getBoardsBotID() (string, error) {
 	if boardsBotID == "" {
 		var err error
 		boardsBotID, err = s.servicesAPI.EnsureBot(model.FocalboardBot)
-		s.logger.Error("failed to ensure boards bot", mlog.Err(err))
-		return "", err
+		if err != nil {
+			s.logger.Error("failed to ensure boards bot", mlog.Err(err))
+			return "", err
+		}
 	}
 	return boardsBotID, nil
 }

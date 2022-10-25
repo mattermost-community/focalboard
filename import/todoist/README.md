@@ -8,5 +8,5 @@ This node app converts a Todoist json archive into a Focalboard archive. To use:
 1. Note the name and location of the downloaded *json* file.
 3. Run `npm install` from within `focalboard/webapp`
 4. Run `npm install` from within `focalboard/import/todoist`
-5. Run `npx ts-node importTodoist.ts -i <path-to-todoist.json> -o archive.focalboard` (also from within `focalboard/import/todoist`)
-6. In Focalboard, click `Settings`, then `Import archive` and select `archive.focalboard`
+5. Run `npx ts-node importTodoist.ts -i <path-to-todoist.json> -o archive.boardarchive` (also from within `focalboard/import/todoist`)
+6. In Focalboard, click `Settings`, then `Import archive` and select `archive.boardarchive`
