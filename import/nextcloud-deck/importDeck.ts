@@ -47,7 +47,7 @@ async function main() {
     const password = args['p'] ?? readline.question('Password: ', {hideEchoBack: true})
     const boardIdString = args['b']
 
-    const outputFile = args['o'] || 'archive.focalboard'
+    const outputFile = args['o'] || 'archive.boardarchive'
 
     // Create Client
     const deckClient = new NextcloudDeckClient({auth: {username, password}, url})

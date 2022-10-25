@@ -8,7 +8,7 @@ async function main() {
     const args: minimist.ParsedArgs = minimist(process.argv.slice(2))
 
     const inputFile = args['i']
-    const outputFile = args['o'] || 'archive.focalboard'
+    const outputFile = args['o'] || 'archive.boardarchive'
 
     return run(inputFile, outputFile)
 }
