@@ -86,7 +86,7 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
     <div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper menuOpen"
+        class="MenuWrapper override menuOpened menuOpen"
         role="button"
       >
         <button
@@ -373,7 +373,7 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
     <div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper menuOpen"
+        class="MenuWrapper override menuOpened menuOpen"
         role="button"
       >
         <button

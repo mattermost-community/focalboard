@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useState} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Card} from '../blocks/card'
@@ -41,6 +41,7 @@ const ContentBlock = (props: Props): JSX.Element => {
     const [, , gripRef, itemRef] = useSortableWithGrip('content', {block, cords}, true, () => {})
     const [, isOver2,, itemRef2] = useSortableWithGrip('content', {block, cords}, true, (src, dst) => props.onDrop(src, dst, 'right'))
     const [, isOver3,, itemRef3] = useSortableWithGrip('content', {block, cords}, true, (src, dst) => props.onDrop(src, dst, 'left'))
+    const [menuOpened, setMenuOpened] = useState(false)
 
     const index = cords.x
     const colIndex = (cords.y || cords.y === 0) && cords.y > -1 ? cords.y : -1
@@ -55,7 +56,11 @@ const ContentBlock = (props: Props): JSX.Element => {
         }
     }
 
-    const className = 'ContentBlock octo-block'
+    let className = 'ContentBlock octo-block'
+    if (menuOpened) {
+        className += ' menuOpened'
+    }
+
     return (
         <div
             className='rowContents'
@@ -67,7 +72,7 @@ const ContentBlock = (props: Props): JSX.Element => {
             >
                 <div className='octo-block-margin'>
                     {!props.readonly &&
-                    <MenuWrapper>
+                    <MenuWrapper onToggle={setMenuOpened}>
                         <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
                             {index > 0 &&
@@ -94,6 +99,7 @@ const ContentBlock = (props: Props): JSX.Element => {
                                 id='insertAbove'
                                 name={intl.formatMessage({id: 'ContentBlock.insertAbove', defaultMessage: 'Insert above'})}
                                 icon={<AddIcon/>}
+                                position='top'
                             >
                                 {contentRegistry.contentTypes.map((type) => (
                                     <AddContentMenuItem
