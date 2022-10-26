@@ -35,7 +35,7 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 		a.wsAdapter.BroadcastBlockChange(teamID, b)
 		a.metrics.IncrementBlocksInserted(1)
 		a.webhook.NotifyUpdate(b)
-		a.notifyBlockChanged(notify.Add, &b, nil, userID)
+		a.notifyBlockChanged(notify.Add, b, nil, userID)
 	}
 
 	if addMember {
@@ -82,7 +82,7 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 		}
 	}
 
-	oldBlocksMap := map[string]model.Block{}
+	oldBlocksMap := map[string]*model.Block{}
 	for _, block := range oldBlocks {
 		oldBlocksMap[block.ID] = block
 	}
@@ -106,7 +106,7 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 			a.metrics.IncrementBlocksPatched(1)
 			a.wsAdapter.BroadcastBlockChange(teamID, b)
 			a.webhook.NotifyUpdate(b)
-			a.notifyBlockChanged(notify.Update, &b, &oldBlock, userID)
+			a.notifyBlockChanged(notify.Update, b, oldBlock, userID)
 		}
 
 		for _, board := range bab.Boards {

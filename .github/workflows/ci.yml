@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
  EXCLUDE_ENTERPRISE: true
 
 jobs:
@@ -22,6 +22,7 @@ jobs:
         db:
           - sqlite
           - mysql
+          - mariadb
           - postgres
 
     steps:
@@ -34,14 +35,14 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
     - name: Set up Go
@@ -64,14 +65,14 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
     - name: npm ci
@@ -122,14 +123,14 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
 
@@ -159,14 +160,14 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
 

@@ -61,24 +61,24 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 
 		// board 1 has three cards
 		for _, cardID := range []string{"card1", "card2", "card3"} {
-			card := model.Block{
+			card := &model.Block{
 				ID:       cardID,
 				ParentID: "board1",
 				BoardID:  "board1",
 				Type:     model.TypeCard,
 			}
-			require.NoError(t, store.InsertBlock(&card, userID))
+			require.NoError(t, store.InsertBlock(card, userID))
 		}
 
 		// board 2 has two cards
 		for _, cardID := range []string{"card4", "card5"} {
-			card := model.Block{
+			card := &model.Block{
 				ID:       cardID,
 				ParentID: "board2",
 				BoardID:  "board2",
 				Type:     model.TypeCard,
 			}
-			require.NoError(t, store.InsertBlock(&card, userID))
+			require.NoError(t, store.InsertBlock(card, userID))
 		}
 
 		count, err := store.GetUsedCardsCount()
@@ -88,21 +88,21 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 
 	t.Run("should not take into account content blocks", func(t *testing.T) {
 		// we add a couple of content blocks
-		text := model.Block{
+		text := &model.Block{
 			ID:       "text-id",
 			ParentID: "card1",
 			BoardID:  "board1",
 			Type:     model.TypeText,
 		}
-		require.NoError(t, store.InsertBlock(&text, userID))
+		require.NoError(t, store.InsertBlock(text, userID))
 
-		view := model.Block{
+		view := &model.Block{
 			ID:       "view-id",
 			ParentID: "board1",
 			BoardID:  "board1",
 			Type:     model.TypeView,
 		}
-		require.NoError(t, store.InsertBlock(&view, userID))
+		require.NoError(t, store.InsertBlock(view, userID))
 
 		// and count should not change
 		count, err := store.GetUsedCardsCount()
@@ -113,7 +113,7 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 	t.Run("should not take into account cards belonging to templates", func(t *testing.T) {
 		// we add a template with cards
 		templateID := "template-id"
-		boardTemplate := model.Block{
+		boardTemplate := &model.Block{
 			ID:      templateID,
 			BoardID: templateID,
 			Type:    model.TypeBoard,
@@ -121,16 +121,16 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 				"isTemplate": true,
 			},
 		}
-		require.NoError(t, store.InsertBlock(&boardTemplate, userID))
+		require.NoError(t, store.InsertBlock(boardTemplate, userID))
 
 		for _, cardID := range []string{"card6", "card7", "card8"} {
-			card := model.Block{
+			card := &model.Block{
 				ID:       cardID,
 				ParentID: templateID,
 				BoardID:  templateID,
 				Type:     model.TypeCard,
 			}
-			require.NoError(t, store.InsertBlock(&card, userID))
+			require.NoError(t, store.InsertBlock(card, userID))
 		}
 
 		// and count should still be the same
@@ -141,14 +141,14 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 
 	t.Run("should not take into account deleted cards", func(t *testing.T) {
 		// we create a ninth card on the first board
-		card9 := model.Block{
+		card9 := &model.Block{
 			ID:       "card9",
 			ParentID: "board1",
 			BoardID:  "board1",
 			Type:     model.TypeCard,
 			DeleteAt: utils.GetMillis(),
 		}
-		require.NoError(t, store.InsertBlock(&card9, userID))
+		require.NoError(t, store.InsertBlock(card9, userID))
 
 		// and count should still be the same
 		count, err := store.GetUsedCardsCount()
@@ -215,25 +215,25 @@ func testUpdateCardLimitTimestamp(t *testing.T, store storeservice.Store) {
 
 	// board 1 has five cards
 	for _, cardID := range []string{"card1", "card2", "card3", "card4", "card5"} {
-		card := model.Block{
+		card := &model.Block{
 			ID:       cardID,
 			ParentID: "board1",
 			BoardID:  "board1",
 			Type:     model.TypeCard,
 		}
-		require.NoError(t, store.InsertBlock(&card, userID))
+		require.NoError(t, store.InsertBlock(card, userID))
 		time.Sleep(10 * time.Millisecond)
 	}
 
 	// board 2 has five cards
 	for _, cardID := range []string{"card6", "card7", "card8", "card9", "card10"} {
-		card := model.Block{
+		card := &model.Block{
 			ID:       cardID,
 			ParentID: "board2",
 			BoardID:  "board2",
 			Type:     model.TypeCard,
 		}
-		require.NoError(t, store.InsertBlock(&card, userID))
+		require.NoError(t, store.InsertBlock(card, userID))
 		time.Sleep(10 * time.Millisecond)
 	}
 

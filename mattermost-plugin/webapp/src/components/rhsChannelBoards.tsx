@@ -12,7 +12,7 @@ import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
 import {getCurrentTeamId} from '../../../../webapp/src/store/teams'
 import {IUser} from '../../../../webapp/src/user'
 import {getMe, fetchMe} from '../../../../webapp/src/store/users'
-import {loadBoards} from '../../../../webapp/src/store/initialLoad'
+import {loadBoards, loadMyBoardsMemberships} from '../../../../webapp/src/store/initialLoad'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {
     getMySortedBoards,
@@ -41,10 +41,14 @@ const RHSChannelBoards = () => {
     const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
     const intl = useIntl()
+    const [dataLoaded, setDataLoaded] = React.useState(false)
 
     useEffect(() => {
-        dispatch(loadBoards())
-        dispatch(fetchMe())
+        Promise.all([
+            dispatch(loadBoards()),
+            dispatch(loadMyBoardsMemberships()),
+            dispatch(fetchMe()),
+        ]).then(() => setDataLoaded(true))
     }, [])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
@@ -78,6 +82,10 @@ const RHSChannelBoards = () => {
     if (!currentChannel) {
         return null
     }
+    if (!dataLoaded) {
+        return null
+    }
+
     const channelBoards = boards.filter((b) => b.channelId === currentChannel.id)
 
     let channelName = currentChannel.display_name
