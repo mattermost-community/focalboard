@@ -2,7 +2,6 @@
 // See LICENSE.txt for license information.
 import React, {useState, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {IntlShape} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
@@ -29,7 +28,7 @@ import {IUser} from '../user'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
 import {Block} from '../blocks/block'
-import { AttachmentBlock, createAttachmentBlock } from '../blocks/fileBlock'
+import {AttachmentBlock, createAttachmentBlock} from '../blocks/fileBlock'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
@@ -38,7 +37,6 @@ import Dialog from './dialog'
 
 import './cardDialog.scss'
 import CardActionsMenu from './cardActionsMenu/cardActionsMenu'
-import {contentRegistry} from './content/contentRegistry'
 
 type Props = {
     board: Board
@@ -120,17 +118,17 @@ const CardDialog = (props: Props): JSX.Element => {
             onClickDelete={handleDeleteButtonOnClick}
         >
             {!isTemplate &&
-             <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                 <Menu.Text
-                     id='makeTemplate'
-                     icon={
-                         <CompassIcon
-                             icon='plus'
-                         />}
-                     name='New template from card'
-                     onClick={makeTemplateClicked}
-                 />
-             </BoardPermissionGate>
+            <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                <Menu.Text
+                    id='makeTemplate'
+                    icon={
+                        <CompassIcon
+                            icon='plus'
+                        />}
+                    name='New template from card'
+                    onClick={makeTemplateClicked}
+                />
+            </BoardPermissionGate>
             }
         </CardActionsMenu>
     )
