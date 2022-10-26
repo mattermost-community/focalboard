@@ -28,7 +28,7 @@ type Props = {
     initialValue?: string
     onClose: () => void
     title: JSX.Element
-    onCreate?: (id: Category) => Promise<void>
+    onCreate?: (category: Category) => Promise<void>
 }
 
 const CreateCategory = (props: Props): JSX.Element => {
