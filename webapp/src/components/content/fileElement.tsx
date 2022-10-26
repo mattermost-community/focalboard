@@ -7,6 +7,7 @@ import octoClient from '../../octoClient'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Block, FileInfo} from '../../blocks/block'
 import Files from '../../file'
+import FileIcons from '../../fileIcons'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
@@ -72,39 +73,8 @@ const FileElement = (props: Props): JSX.Element|null => {
         if (fileInfo.extension) {
             const getFileIcon = (fileExt: string) => {
                 const extType = (Object.keys(Files) as string[]).find((key) => Files[key].find((ext) => ext === fileExt))
-                switch (extType) {
-                case 'AUDIO_TYPES':
-                    setFileIcon('file-audio-outline')
-                    break
-                case 'CODE_TYPES':
-                    setFileIcon('file-code-outline-large')
-                    break
-                case 'IMAGE_TYPES':
-                    setFileIcon('file-image-outline-large')
-                    break
-                case 'PDF_TYPES':
-                    setFileIcon('file-pdf-outline-large')
-                    break
-                case 'PATCH_TYPES':
-                    setFileIcon('file-patch-outline-large')
-                    break
-                case 'PRESENTATION_TYPES':
-                    setFileIcon('file-powerpoint-outline-large')
-                    break
-                case 'SPREADSHEET_TYPES':
-                    setFileIcon('file-excel-outline-large')
-                    break
-                case 'TEXT_TYPES':
-                    setFileIcon('file-text-outline-large')
-                    break
-                case 'VIDEO_TYPES':
-                    setFileIcon('file-video-outline-large')
-                    break
-                case 'WORD_TYPES':
-                    setFileIcon('file-word-outline-large')
-                    break
-                default:
-                    setFileIcon('file-zip-outline-large')
+                if (extType) {
+                    setFileIcon(FileIcons[extType])
                 }
             }
             getFileIcon(fileInfo.extension.substring(1))
