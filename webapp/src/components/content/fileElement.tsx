@@ -1,19 +1,13 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
-import {IntlShape} from 'react-intl'
 
-import {AttachmentBlock, createAttachmentBlock} from '../../blocks/fileBlock'
 import octoClient from '../../octoClient'
-import {Utils} from '../../utils'
-import ImageIcon from '../../widgets/icons/image'
-import {sendFlashMessage} from '../../components/flashMessages'
 
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Block, FileInfo} from '../../blocks/block'
 import Files from '../../file'
 
-import {contentRegistry} from './contentRegistry'
 import ArchivedFile from './archivedFile/archivedFile'
 
 import './fileElement.scss'
