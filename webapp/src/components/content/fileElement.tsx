@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useEffect, useState} from 'react'
+import {useIntl} from 'react-intl'
 
 import octoClient from '../../octoClient'
 
@@ -8,6 +9,8 @@ import {ContentBlock} from '../../blocks/contentBlock'
 import {Block, FileInfo} from '../../blocks/block'
 import Files from '../../file'
 import FileIcons from '../../fileIcons'
+
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../../components/confirmationDialogBox'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
@@ -29,6 +32,9 @@ const FileElement = (props: Props): JSX.Element|null => {
     const [fileSize, setFileSize] = useState<string>()
     const [fileIcon, setFileIcon] = useState<string>('file-text-outline-larg')
     const [fileName, setFileName] = useState<string>()
+    const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+
+    const intl = useIntl()
 
     useEffect(() => {
         if (!fileDataUrl) {
@@ -87,6 +93,19 @@ const FileElement = (props: Props): JSX.Element|null => {
         }
     }
 
+    const confirmDialogProps: ConfirmationDialogBoxProps = {
+        heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-attachment', defaultMessage: 'Confirm Attachment delete!'}),
+        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        onConfirm: deleteAttachment,
+        onClose: () => {
+            setShowConfirmationDialogBox(false)
+        },
+    }
+
+    const handleDeleteButtonClick = () => {
+        setShowConfirmationDialogBox(true)
+    }
+
     if (fileInfo.archived) {
         return (
             <ArchivedFile fileInfo={fileInfo}/>
@@ -127,7 +146,7 @@ const FileElement = (props: Props): JSX.Element|null => {
                                     icon='trash-can-outline'
                                 />}
                             name='Delete'
-                            onClick={deleteAttachment}
+                            onClick={handleDeleteButtonClick}
                         />
                     </Menu>
                 </div>
@@ -143,6 +162,8 @@ const FileElement = (props: Props): JSX.Element|null => {
                     icon='download-outline'
                 />
             </a>
+
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )
 }
