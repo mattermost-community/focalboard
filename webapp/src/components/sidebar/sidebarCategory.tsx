@@ -299,7 +299,7 @@ const SidebarCategory = (props: Props) => {
                     />
                 )
             })}
-            {!collapsed && props.boards.map((board: Board) => {
+            {!collapsed && props.boards.filter((board) => !board.isTemplate).map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
                 }
