@@ -28,10 +28,10 @@ func TestInsertBlock(t *testing.T) {
 
 	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
-		block := model.Block{BoardID: boardID}
+		block := &model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().InsertBlock(block, "user-id-1").Return(nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
 		err := th.App.InsertBlock(block, "user-id-1")
 		require.NoError(t, err)
@@ -39,10 +39,10 @@ func TestInsertBlock(t *testing.T) {
 
 	t.Run("error scenario", func(t *testing.T) {
 		boardID := testBoardID
-		block := model.Block{BoardID: boardID}
+		block := &model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(blockError{"error"})
+		th.Store.EXPECT().InsertBlock(block, "user-id-1").Return(blockError{"error"})
 		err := th.App.InsertBlock(block, "user-id-1")
 		require.Error(t, err, "error")
 	})
@@ -60,10 +60,10 @@ func TestPatchBlocks(t *testing.T) {
 			},
 		}
 
-		block1 := model.Block{ID: "block1"}
-		th.Store.EXPECT().GetBlocksByIDs([]string{"block1"}).Return([]model.Block{block1}, nil)
+		block1 := &model.Block{ID: "block1"}
+		th.Store.EXPECT().GetBlocksByIDs([]string{"block1"}).Return([]*model.Block{block1}, nil)
 		th.Store.EXPECT().PatchBlocks(gomock.Eq(&blockPatches), gomock.Eq("user-id-1")).Return(nil)
-		th.Store.EXPECT().GetBlock("block1").Return(&block1, nil)
+		th.Store.EXPECT().GetBlock("block1").Return(block1, nil)
 		// this call comes from the WS server notification
 		th.Store.EXPECT().GetMembersForBoard(gomock.Any()).Times(1)
 		err := th.App.PatchBlocks("team-id", &blockPatches, "user-id-1")
@@ -91,7 +91,7 @@ func TestPatchBlocks(t *testing.T) {
 			},
 		}
 
-		block1 := model.Block{
+		block1 := &model.Block{
 			ID:       "block1",
 			Type:     model.TypeCard,
 			ParentID: "board-id",
@@ -104,7 +104,7 @@ func TestPatchBlocks(t *testing.T) {
 			Type: model.BoardTypeOpen,
 		}
 
-		th.Store.EXPECT().GetBlocksByIDs([]string{"block1"}).Return([]model.Block{block1}, nil)
+		th.Store.EXPECT().GetBlocksByIDs([]string{"block1"}).Return([]*model.Block{block1}, nil)
 		th.Store.EXPECT().GetBoard("board-id").Return(board1, nil)
 		th.Store.EXPECT().GetLicense().Return(fakeLicense)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(150), nil)
@@ -120,11 +120,11 @@ func TestDeleteBlock(t *testing.T) {
 	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
 		board := &model.Board{ID: boardID}
-		block := model.Block{
+		block := &model.Block{
 			ID:      "block-id",
 			BoardID: board.ID,
 		}
-		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(block, nil)
 		th.Store.EXPECT().DeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(nil)
 		th.Store.EXPECT().GetBoard(gomock.Eq(testBoardID)).Return(board, nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
@@ -135,11 +135,11 @@ func TestDeleteBlock(t *testing.T) {
 	t.Run("error scenario", func(t *testing.T) {
 		boardID := testBoardID
 		board := &model.Board{ID: boardID}
-		block := model.Block{
+		block := &model.Block{
 			ID:      "block-id",
 			BoardID: board.ID,
 		}
-		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(block, nil)
 		th.Store.EXPECT().DeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		th.Store.EXPECT().GetBoard(gomock.Eq(testBoardID)).Return(board, nil)
 		err := th.App.DeleteBlock("block-id", "user-id-1")
@@ -154,16 +154,16 @@ func TestUndeleteBlock(t *testing.T) {
 	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
 		board := &model.Board{ID: boardID}
-		block := model.Block{
+		block := &model.Block{
 			ID:      "block-id",
 			BoardID: board.ID,
 		}
 		th.Store.EXPECT().GetBlockHistory(
 			gomock.Eq("block-id"),
 			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
-		).Return([]model.Block{block}, nil)
+		).Return([]*model.Block{block}, nil)
 		th.Store.EXPECT().UndeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(nil)
-		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(&block, nil)
+		th.Store.EXPECT().GetBlock(gomock.Eq("block-id")).Return(block, nil)
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
 		_, err := th.App.UndeleteBlock("block-id", "user-id-1")
@@ -171,13 +171,13 @@ func TestUndeleteBlock(t *testing.T) {
 	})
 
 	t.Run("error scenario", func(t *testing.T) {
-		block := model.Block{
+		block := &model.Block{
 			ID: "block-id",
 		}
 		th.Store.EXPECT().GetBlockHistory(
 			gomock.Eq("block-id"),
 			gomock.Eq(model.QueryBlockHistoryOptions{Limit: 1, Descending: true}),
-		).Return([]model.Block{block}, nil)
+		).Return([]*model.Block{block}, nil)
 		th.Store.EXPECT().UndeleteBlock(gomock.Eq("block-id"), gomock.Eq("user-id-1")).Return(blockError{"error"})
 		_, err := th.App.UndeleteBlock("block-id", "user-id-1")
 		require.Error(t, err, "error")
@@ -203,9 +203,9 @@ func TestIsWithinViewsLimit(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
-		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{{}}, nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{{}}, nil)
 
-		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", &model.Block{ParentID: "parent_id"})
 		assert.NoError(t, err)
 		assert.True(t, withinLimits)
 	})
@@ -221,9 +221,9 @@ func TestIsWithinViewsLimit(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
-		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{{}}, nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{{}}, nil)
 
-		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", &model.Block{ParentID: "parent_id"})
 		assert.NoError(t, err)
 		assert.False(t, withinLimits)
 	})
@@ -239,9 +239,9 @@ func TestIsWithinViewsLimit(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
-		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{{}, {}, {}}, nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{{}, {}, {}}, nil)
 
-		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", &model.Block{ParentID: "parent_id"})
 		assert.NoError(t, err)
 		assert.False(t, withinLimits)
 	})
@@ -257,9 +257,9 @@ func TestIsWithinViewsLimit(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
-		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]model.Block{}, nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("board_id", "parent_id", "view").Return([]*model.Block{}, nil)
 
-		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", &model.Block{ParentID: "parent_id"})
 		assert.NoError(t, err)
 		assert.True(t, withinLimits)
 	})
@@ -270,7 +270,7 @@ func TestIsWithinViewsLimit(t *testing.T) {
 		}
 		th.Store.EXPECT().GetLicense().Return(nonCloudLicense)
 
-		withinLimits, err := th.App.isWithinViewsLimit("board_id", model.Block{ParentID: "parent_id"})
+		withinLimits, err := th.App.isWithinViewsLimit("board_id", &model.Block{ParentID: "parent_id"})
 		assert.NoError(t, err)
 		assert.True(t, withinLimits)
 	})
@@ -282,35 +282,35 @@ func TestInsertBlocks(t *testing.T) {
 
 	t.Run("success scenario", func(t *testing.T) {
 		boardID := testBoardID
-		block := model.Block{BoardID: boardID}
+		block := &model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().InsertBlock(block, "user-id-1").Return(nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
+		_, err := th.App.InsertBlocks([]*model.Block{block}, "user-id-1")
 		require.NoError(t, err)
 	})
 
 	t.Run("error scenario", func(t *testing.T) {
 		boardID := testBoardID
-		block := model.Block{BoardID: boardID}
+		block := &model.Block{BoardID: boardID}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(blockError{"error"})
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
+		th.Store.EXPECT().InsertBlock(block, "user-id-1").Return(blockError{"error"})
+		_, err := th.App.InsertBlocks([]*model.Block{block}, "user-id-1")
 		require.Error(t, err, "error")
 	})
 
 	t.Run("create view within limits", func(t *testing.T) {
 		boardID := testBoardID
-		block := model.Block{
+		block := &model.Block{
 			Type:     model.TypeView,
 			ParentID: "parent_id",
 			BoardID:  boardID,
 		}
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&block, "user-id-1").Return(nil)
+		th.Store.EXPECT().InsertBlock(block, "user-id-1").Return(nil)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
 
 		// setting up mocks for limits
@@ -327,15 +327,15 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
-		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}}, nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]*model.Block{{}}, nil)
 
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
+		_, err := th.App.InsertBlocks([]*model.Block{block}, "user-id-1")
 		require.NoError(t, err)
 	})
 
 	t.Run("create view exceeding limits", func(t *testing.T) {
 		boardID := testBoardID
-		block := model.Block{
+		block := &model.Block{
 			Type:     model.TypeView,
 			ParentID: "parent_id",
 			BoardID:  boardID,
@@ -357,9 +357,9 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil)
-		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}, {}}, nil)
+		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]*model.Block{{}, {}}, nil)
 
-		_, err := th.App.InsertBlocks([]model.Block{block}, "user-id-1")
+		_, err := th.App.InsertBlocks([]*model.Block{block}, "user-id-1")
 		require.Error(t, err)
 	})
 
@@ -367,13 +367,13 @@ func TestInsertBlocks(t *testing.T) {
 		t.Skipf("Will be fixed soon")
 
 		boardID := testBoardID
-		view1 := model.Block{
+		view1 := &model.Block{
 			Type:     model.TypeView,
 			ParentID: "parent_id",
 			BoardID:  boardID,
 		}
 
-		view2 := model.Block{
+		view2 := &model.Block{
 			Type:     model.TypeView,
 			ParentID: "parent_id",
 			BoardID:  boardID,
@@ -381,7 +381,7 @@ func TestInsertBlocks(t *testing.T) {
 
 		board := &model.Board{ID: boardID}
 		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.Store.EXPECT().InsertBlock(&view1, "user-id-1").Return(nil).Times(2)
+		th.Store.EXPECT().InsertBlock(view1, "user-id-1").Return(nil).Times(2)
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil).Times(2)
 
 		// setting up mocks for limits
@@ -398,9 +398,9 @@ func TestInsertBlocks(t *testing.T) {
 		th.Store.EXPECT().GetCloudLimits().Return(cloudLimit, nil).Times(2)
 		th.Store.EXPECT().GetUsedCardsCount().Return(1, nil).Times(2)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(int64(1), nil).Times(2)
-		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]model.Block{{}}, nil).Times(2)
+		th.Store.EXPECT().GetBlocksWithParentAndType("test-board-id", "parent_id", "view").Return([]*model.Block{{}}, nil).Times(2)
 
-		_, err := th.App.InsertBlocks([]model.Block{view1, view2}, "user-id-1")
+		_, err := th.App.InsertBlocks([]*model.Block{view1, view2}, "user-id-1")
 		require.Error(t, err)
 	})
 }

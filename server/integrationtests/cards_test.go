@@ -88,10 +88,10 @@ func TestGetCards(t *testing.T) {
 		cardNew, resp := th.Client.CreateCard(board.ID, card, true)
 		th.CheckOK(resp)
 
-		blocks := make([]model.Block, 0, 3)
+		blocks := make([]*model.Block, 0, 3)
 		for j := 0; j < 3; j++ {
 			now := model.GetMillis()
-			block := model.Block{
+			block := &model.Block{
 				ID:         utils.NewID(utils.IDTypeBlock),
 				ParentID:   cardNew.ID,
 				CreatedBy:  userID,

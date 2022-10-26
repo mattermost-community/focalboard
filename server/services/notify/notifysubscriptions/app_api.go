@@ -10,8 +10,8 @@ import (
 )
 
 type AppAPI interface {
-	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
-	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
+	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error)
+	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error)
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 
 	GetUserByID(userID string) (*model.User, error)

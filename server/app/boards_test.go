@@ -3,6 +3,10 @@ package app
 import (
 	"testing"
 
+	"github.com/mattermost/focalboard/server/utils"
+
+	"github.com/stretchr/testify/assert"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -376,5 +380,48 @@ func TestGetBoardCount(t *testing.T) {
 		count, err := th.App.GetBoardCount()
 		require.NoError(t, err)
 		require.Equal(t, boardCount, count)
+	})
+}
+
+func TestBoardCategory(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("test addBoardsToDefaultCategory", func(t *testing.T) {
+		t.Run("no boards default category exists", func(t *testing.T) {
+			th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+				{
+					Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+					BoardIDs: []string{"board_id_1", "board_id_2"},
+				},
+				{
+					Category: model.Category{ID: "category_id_2", Name: "Category 2"},
+					BoardIDs: []string{"board_id_3"},
+				},
+				{
+					Category: model.Category{ID: "category_id_3", Name: "Category 3"},
+					BoardIDs: []string{},
+				},
+			}, nil)
+
+			th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+			th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+				ID:   "default_category_id",
+				Name: "Boards",
+			}, nil)
+			th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
+			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_1").Return(nil)
+			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_2").Return(nil)
+			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_3").Return(nil)
+
+			boards := []*model.Board{
+				{ID: "board_id_1"},
+				{ID: "board_id_2"},
+				{ID: "board_id_3"},
+			}
+
+			err := th.App.addBoardsToDefaultCategory("user_id", "team_id", boards)
+			assert.NoError(t, err)
+		})
 	})
 }

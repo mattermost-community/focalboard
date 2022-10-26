@@ -28,7 +28,7 @@ const (
 	DeletedMembershipBoardsMigrationKey = "DeletedMembershipBoardsMigrationComplete"
 )
 
-func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
+func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]*model.Block, error) {
 	subquery, _, _ := s.getQueryBuilder(db).
 		Select("id").
 		From(s.tablePrefix + "blocks").
@@ -93,7 +93,7 @@ func (s *SQLStore) RunUniqueIDsMigration() error {
 		return fmt.Errorf("cannot get blocks with same ID: %w", err)
 	}
 
-	blocksByID := map[string][]model.Block{}
+	blocksByID := map[string][]*model.Block{}
 	for _, block := range blocks {
 		blocksByID[block.ID] = append(blocksByID[block.ID], block)
 	}
@@ -655,11 +655,11 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 	}
 
 	// get collation and charSet setting that Channels is using.
-	// when unit testing, no channels tables exist so just set to a default.
+	// when personal server or unit testing, no channels tables exist so just set to a default.
 	var collation string
 	var charSet string
 	var err error
-	if os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
+	if !s.isPlugin || os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
 		collation = "utf8mb4_general_ci"
 		charSet = "utf8mb4"
 	} else {

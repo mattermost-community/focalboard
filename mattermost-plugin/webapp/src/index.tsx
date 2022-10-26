@@ -352,6 +352,30 @@ export default class Plugin {
                     return data
                 })
             }
+
+            // Site statistics handler
+            if (registry.registerSiteStatisticsHandler) {
+                registry.registerSiteStatisticsHandler(async () => {
+                    const siteStats = await octoClient.getSiteStatistics()
+                    if(siteStats){
+                        return {
+                            boards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
+                                id: 'total_boards',
+                                icon: 'icon-product-boards',
+                                value: siteStats.board_count,
+                            },
+                            cards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
+                                id: 'total_cards',
+                                icon: 'icon-products',
+                                value: siteStats.card_count,
+                            },
+                        }
+                    }
+                    return {}
+                })
+            }
         }
 
         this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (

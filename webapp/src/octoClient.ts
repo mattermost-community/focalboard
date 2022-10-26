@@ -17,6 +17,7 @@ import {Constants} from './constants'
 
 import {BoardsCloudLimits} from './boardsCloudLimits'
 import {TopBoardResponse} from './insights'
+import {BoardSiteStatistics} from './statistics'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -919,6 +920,18 @@ class OctoClient {
         const limits = (await this.getJson(response, {})) as BoardsCloudLimits
         Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
         return limits
+    }
+
+    async getSiteStatistics(): Promise<BoardSiteStatistics | undefined> {
+        const path = '/api/v2/statistics'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        const stats = (await this.getJson(response, {})) as BoardSiteStatistics
+        Utils.log(`Site Statistics: cards=${stats.card_count}   boards=${stats.board_count}`)
+        return stats
     }
 
     // insights

@@ -38,7 +38,6 @@ import {getCurrentViewId} from '../../store/views'
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
-import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
@@ -60,9 +59,8 @@ const Sidebar = (props: Props) => {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
-    const partialCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
+    const sidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
-    const sidebarCategories = addMissingItems(partialCategories, boards)
     const activeViewID = useAppSelector(getCurrentViewId)
 
     useEffect(() => {
@@ -101,6 +99,8 @@ const Sidebar = (props: Props) => {
     }, [windowDimensions])
 
     if (!boards) {
+        // eslint-disable-next-line no-console
+        console.log('AAAA')
         return <div/>
     }
 
@@ -115,10 +115,14 @@ const Sidebar = (props: Props) => {
     }
 
     if (!me) {
+        // eslint-disable-next-line no-console
+        console.log('BBBB')
         return <div/>
     }
 
     if (isHidden) {
+        // eslint-disable-next-line no-console
+        console.log('CCCC')
         return (
             <div className='Sidebar octo-sidebar hidden'>
                 <div className='octo-sidebar-header show-button'>
@@ -145,6 +149,8 @@ const Sidebar = (props: Props) => {
         )
     }
 
+    // eslint-disable-next-line no-console
+    console.log('DDDD')
     return (
         <div className='Sidebar octo-sidebar'>
             {!Utils.isFocalboardPlugin() &&
