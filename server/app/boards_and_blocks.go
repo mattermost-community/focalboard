@@ -55,6 +55,14 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 		}()
 	}
 
+	for _, board := range newBab.Boards {
+		if !board.IsTemplate {
+			if err := a.addBoardsToDefaultCategory(userID, board.TeamID, []*model.Board{board}); err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	return newBab, nil
 }
 

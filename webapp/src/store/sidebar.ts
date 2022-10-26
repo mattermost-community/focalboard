@@ -7,6 +7,8 @@ import {default as client} from '../octoClient'
 
 import {RootState} from './index'
 
+export type CategoryType = 'system' | 'custom'
+
 interface Category {
     id: string
     name: string
@@ -16,6 +18,7 @@ interface Category {
     updateAt: number
     deleteAt: number
     collapsed: boolean
+    type: CategoryType
 }
 
 interface CategoryBoards extends Category {
