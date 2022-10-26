@@ -9,7 +9,7 @@ import {act} from 'react-dom/test-utils'
 
 import {mocked} from 'jest-mock'
 
-import {FileBlock} from '../../blocks/fileBlock'
+import {AttachmentBlock} from '../../blocks/fileBlock'
 
 import {wrapIntl} from '../../testUtils'
 
@@ -27,7 +27,7 @@ mockedOcto.getFileInfo.mockResolvedValue({
 })
 
 describe('component/content/FileBlock', () => {
-    const defaultBlock: FileBlock = {
+    const defaultBlock: AttachmentBlock = {
         id: 'test-id',
         boardId: '1',
         parentId: '',

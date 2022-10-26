@@ -1,18 +1,17 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import {Block, createBlock} from './block'
-import {ContentBlock} from './contentBlock'
 
-type FileBlockFields = {
+type AttachmentBlockFields = {
     attachmentId: string
 }
 
-type FileBlock = ContentBlock & {
+type AttachmentBlock = Block & {
     type: 'attachment'
-    fields: FileBlockFields
+    fields: AttachmentBlockFields
 }
 
-function createFileBlock(block?: Block): FileBlock {
+function createAttachmentBlock(block?: Block): AttachmentBlock {
     return {
         ...createBlock(block),
         type: 'attachment',
@@ -22,4 +21,4 @@ function createFileBlock(block?: Block): FileBlock {
     }
 }
 
-export {FileBlock, createFileBlock}
+export {AttachmentBlock, createAttachmentBlock}

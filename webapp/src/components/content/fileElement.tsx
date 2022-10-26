@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {IntlShape} from 'react-intl'
 
-import {FileBlock, createFileBlock} from '../../blocks/fileBlock'
+import {AttachmentBlock, createAttachmentBlock} from '../../blocks/fileBlock'
 import octoClient from '../../octoClient'
 import {Utils} from '../../utils'
 import ImageIcon from '../../widgets/icons/image'
@@ -182,31 +182,5 @@ const FileElement = (props: Props): JSX.Element|null => {
         </div>
     )
 }
-
-contentRegistry.registerContentType({
-    type: 'attachment',
-    getDisplayText: (intl: IntlShape) => intl.formatMessage({id: 'ContentBlock.File', defaultMessage: 'file'}),
-    getIcon: () => <ImageIcon/>,
-    createBlock: async (boardId: string, intl: IntlShape) => {
-        return new Promise<FileBlock>(
-            (resolve) => {
-                Utils.selectLocalFile(async (attachment) => {
-                    const attachmentId = await octoClient.uploadFile(boardId, attachment)
-                    if (attachmentId) {
-                        const block = createFileBlock()
-                        block.fields.attachmentId = attachmentId || ''
-                        resolve(block)
-                    } else {
-                        sendFlashMessage({content: intl.formatMessage({id: 'createFileBlock.failed', defaultMessage: 'Unable to upload the file. File size limit reached.'}), severity: 'normal'})
-                    }
-                },
-                '')
-            },
-        )
-
-        // return new FileBlock()
-    },
-    createComponent: (block) => <FileElement block={block}/>,
-})
 
 export default React.memo(FileElement)

@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 import React, {useState, useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
+import {IntlShape} from 'react-intl'
 
 import {Board} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
@@ -16,6 +17,7 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
 import Menu from '../widgets/menu'
+import {sendFlashMessage} from '../components/flashMessages'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
 
@@ -27,6 +29,7 @@ import {IUser} from '../user'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
 import {Block} from '../blocks/block'
+import { AttachmentBlock, createAttachmentBlock } from '../blocks/fileBlock'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
@@ -117,33 +120,45 @@ const CardDialog = (props: Props): JSX.Element => {
             onClickDelete={handleDeleteButtonOnClick}
         >
             {!isTemplate &&
-                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.Text
-                        id='makeTemplate'
-                        icon={
-                            <CompassIcon
-                                icon='plus'
-                            />}
-                        name='New template from card'
-                        onClick={makeTemplateClicked}
-                    />
-                </BoardPermissionGate>
+             <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                 <Menu.Text
+                     id='makeTemplate'
+                     icon={
+                         <CompassIcon
+                             icon='plus'
+                         />}
+                     name='New template from card'
+                     onClick={makeTemplateClicked}
+                 />
+             </BoardPermissionGate>
             }
         </CardActionsMenu>
     )
 
-    const handler = contentRegistry.getHandler('attachment')
-    if (!handler) {
-        Utils.logError('addContentMenu, unknown content type: attachment')
-        return <></>
+    const selectAttachment = (boardId: string) => {
+        return new Promise<AttachmentBlock>(
+            (resolve) => {
+                Utils.selectLocalFile(async (attachment) => {
+                    const attachmentId = await octoClient.uploadFile(boardId, attachment)
+                    if (attachmentId) {
+                        const block = createAttachmentBlock()
+                        block.fields.attachmentId = attachmentId || ''
+                        resolve(block)
+                    } else {
+                        sendFlashMessage({content: intl.formatMessage({id: 'createFileBlock.failed', defaultMessage: 'Unable to upload the file. File size limit reached.'}), severity: 'normal'})
+                    }
+                },
+                '')
+            },
+        )
     }
 
     const addElement = async () => {
         if (card) {
-            const block = await handler.createBlock(card.boardId, intl)
+            const block = await selectAttachment(board.id)
             block.parentId = card.id
             block.boardId = card.boardId
-            const typeName = handler.getDisplayText(intl)
+            const typeName = block.type
             const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
             await mutator.performAsUndoGroup(async () => {
                 const afterRedo = async (newBlock: Block) => {
