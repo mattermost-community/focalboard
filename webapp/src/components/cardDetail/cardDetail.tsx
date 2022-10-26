@@ -32,7 +32,7 @@ import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
-import Attachment from './attachment'
+import AttachmentList from './attachment'
 
 import './cardDetail.scss'
 
@@ -218,7 +218,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
                 {blocksWithAttachment.length !== 0 && <Fragment>
                     <hr/>
-                    <Attachment
+                    <AttachmentList
                         count={blocksWithAttachment.length}
                         contents={blocksWithAttachment}
                         onDelete={onDelete}

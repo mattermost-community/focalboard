@@ -18,7 +18,7 @@ type Props = {
     addAttachment: () => void
 }
 
-const Attachment = (props: Props): JSX.Element|null => {
+const AttachmentList = (props: Props): JSX.Element => {
     const {count, contents, onDelete, addAttachment} = props
     const intl = useIntl()
 
@@ -52,4 +52,4 @@ const Attachment = (props: Props): JSX.Element|null => {
     )
 }
 
-export default Attachment
+export default AttachmentList
