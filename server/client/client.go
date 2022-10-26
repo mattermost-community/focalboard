@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"strings"
@@ -56,7 +55,7 @@ func BuildErrorResponse(r *http.Response, err error) *Response {
 
 func closeBody(r *http.Response) {
 	if r.Body != nil {
-		_, _ = io.Copy(ioutil.Discard, r.Body)
+		_, _ = io.Copy(io.Discard, r.Body)
 		_ = r.Body.Close()
 	}
 }
@@ -244,7 +243,7 @@ func (c *Client) GetUserBoardsInsights(teamID string, userID string, timeRange s
 	return boardInsightsList, BuildResponse(r)
 }
 
-func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
+func (c *Client) GetBlocksForBoard(boardID string) ([]*model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -254,7 +253,7 @@ func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response) {
+func (c *Client) GetAllBlocksForBoard(boardID string) ([]*model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetAllBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -321,7 +320,7 @@ func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
-func (c *Client) InsertBlocks(boardID string, blocks []model.Block, disableNotify bool) ([]model.Block, *Response) {
+func (c *Client) InsertBlocks(boardID string, blocks []*model.Block, disableNotify bool) ([]*model.Block, *Response) {
 	var queryParams string
 	if disableNotify {
 		queryParams = "?" + disableNotifyQueryParam
@@ -902,4 +901,20 @@ func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
 	}
 
 	return limits, BuildResponse(r)
+}
+
+func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
+	r, err := c.DoAPIGet("/statistics", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var stats *model.BoardsStatistics
+	err = json.NewDecoder(r.Body).Decode(&stats)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return stats, BuildResponse(r)
 }

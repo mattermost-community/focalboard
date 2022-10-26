@@ -310,6 +310,8 @@ const Sidebar = (props: Props) => {
         return sortedBoards
     }
 
+    // eslint-disable-next-line no-console
+    console.log('DDDD')
     return (
         <div className='Sidebar octo-sidebar'>
             {!Utils.isFocalboardPlugin() &&

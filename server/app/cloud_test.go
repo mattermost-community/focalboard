@@ -231,7 +231,7 @@ func TestGetTemplateMapForBlocks(t *testing.T) {
 			IsTemplate: false,
 		}
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "card1",
 				Type:     model.TypeCard,
@@ -274,7 +274,7 @@ func TestGetTemplateMapForBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "card1",
 				Type:     model.TypeCard,
@@ -317,7 +317,7 @@ func TestApplyCloudLimits(t *testing.T) {
 		IsTemplate: true,
 	}
 
-	blocks := []model.Block{
+	blocks := []*model.Block{
 		{
 			ID:       "card1",
 			Type:     model.TypeCard,
@@ -360,14 +360,14 @@ func TestApplyCloudLimits(t *testing.T) {
 	})
 
 	t.Run("if the server is limited, it should limit the blocks that are beyond the card limit timestamp", func(t *testing.T) {
-		findBlock := func(blocks []model.Block, id string) model.Block {
+		findBlock := func(blocks []*model.Block, id string) *model.Block {
 			for _, block := range blocks {
 				if block.ID == id {
 					return block
 				}
 			}
 			require.FailNow(t, "block %s not found", id)
-			return model.Block{} // this should never be reached
+			return &model.Block{} // this should never be reached
 		}
 
 		th, tearDown := SetupTestHelper(t)
@@ -404,7 +404,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "card1",
 				Type:     model.TypeCard,
@@ -425,7 +425,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "card1",
 				Type:     model.TypeCard,
@@ -454,7 +454,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "card1",
 				Type:     model.TypeCard,
@@ -484,7 +484,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "text1",
 				Type:     model.TypeText,
@@ -494,7 +494,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			},
 		}
 
-		card1 := model.Block{
+		card1 := &model.Block{
 			ID:       "card1",
 			Type:     model.TypeCard,
 			ParentID: "board1",
@@ -510,7 +510,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
-		th.Store.EXPECT().GetBlocksByIDs([]string{"card1"}).Return([]model.Block{card1}, nil)
+		th.Store.EXPECT().GetBlocksByIDs([]string{"card1"}).Return([]*model.Block{card1}, nil)
 		th.Store.EXPECT().GetBoard("board1").Return(board1, nil)
 
 		containsLimitedBlocks, err := th.App.ContainsLimitedBlocks(blocks)
@@ -522,7 +522,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			{
 				ID:       "text1",
 				Type:     model.TypeText,
@@ -532,7 +532,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			},
 		}
 
-		card1 := model.Block{
+		card1 := &model.Block{
 			ID:       "card1",
 			Type:     model.TypeCard,
 			ParentID: "board1",
@@ -548,7 +548,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
-		th.Store.EXPECT().GetBlocksByIDs([]string{"card1"}).Return([]model.Block{card1}, nil)
+		th.Store.EXPECT().GetBlocksByIDs([]string{"card1"}).Return([]*model.Block{card1}, nil)
 		th.Store.EXPECT().GetBoard("board1").Return(board1, nil)
 
 		containsLimitedBlocks, err := th.App.ContainsLimitedBlocks(blocks)
@@ -560,7 +560,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		blocks := []model.Block{
+		blocks := []*model.Block{
 			// a content block that references a card that needs
 			// fetching
 			{
@@ -598,7 +598,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			},
 		}
 
-		card1 := model.Block{
+		card1 := &model.Block{
 			ID:       "card1",
 			Type:     model.TypeCard,
 			ParentID: "board1",
@@ -606,7 +606,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 			UpdateAt: 200,
 		}
 
-		card3 := model.Block{
+		card3 := &model.Block{
 			ID:       "card3",
 			Type:     model.TypeCard,
 			ParentID: "board3",
@@ -633,7 +633,7 @@ func TestContainsLimitedBlocks(t *testing.T) {
 		th.App.SetCardLimit(500)
 		cardLimitTimestamp := int64(150)
 		th.Store.EXPECT().GetCardLimitTimestamp().Return(cardLimitTimestamp, nil)
-		th.Store.EXPECT().GetBlocksByIDs(gomock.InAnyOrder([]string{"card1", "card3"})).Return([]model.Block{card1, card3}, nil)
+		th.Store.EXPECT().GetBlocksByIDs(gomock.InAnyOrder([]string{"card1", "card3"})).Return([]*model.Block{card1, card3}, nil)
 		th.Store.EXPECT().GetBoard("board1").Return(board1, nil)
 		th.Store.EXPECT().GetBoard("board2").Return(board2, nil)
 		th.Store.EXPECT().GetBoard("board3").Return(board3, nil)

@@ -12,7 +12,7 @@ import (
 // keeping consistent any references that other blocks would made to
 // the original IDs, so a tree of blocks can get new IDs and maintain
 // its shape.
-func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
+func GenerateBlockIDs(blocks []*Block, logger mlog.LoggerIFace) []*Block {
 	blockIDs := map[string]BlockType{}
 	referenceIDs := map[string]bool{}
 	for _, block := range blocks {
@@ -93,7 +93,7 @@ func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
 		return utils.NewID(BlockType2IDType(blockIDs[id]))
 	}
 
-	newBlocks := make([]Block, len(blocks))
+	newBlocks := make([]*Block, len(blocks))
 	for i, block := range blocks {
 		block.ID = getExistingOrNewID(block.ID)
 		block.BoardID = getExistingOrOldID(block.BoardID)
@@ -101,11 +101,11 @@ func GenerateBlockIDs(blocks []Block, logger mlog.LoggerIFace) []Block {
 
 		blockMod := block
 		if _, ok := blockMod.Fields["contentOrder"]; ok {
-			fixFieldIDs(&blockMod, "contentOrder", getExistingOrOldID, logger)
+			fixFieldIDs(blockMod, "contentOrder", getExistingOrOldID, logger)
 		}
 
 		if _, ok := blockMod.Fields["cardOrder"]; ok {
-			fixFieldIDs(&blockMod, "cardOrder", getExistingOrOldID, logger)
+			fixFieldIDs(blockMod, "cardOrder", getExistingOrOldID, logger)
 		}
 
 		if _, ok := blockMod.Fields["defaultTemplateId"]; ok {

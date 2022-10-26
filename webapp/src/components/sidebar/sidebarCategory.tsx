@@ -263,14 +263,8 @@ const SidebarCategory = (props: Props) => {
                                         position='auto'
                                         parentRef={menuWrapperRef}
                                     >
-                                        <Menu.Text
-                                            id='createNewCategory'
-                                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                            icon={<CreateNewFolder/>}
-                                            onClick={handleCreateNewCategory}
-                                        />
                                         {
-                                            props.categoryBoards.id !== '' &&
+                                            props.categoryBoards.type === 'custom' &&
                                             <React.Fragment>
                                                 <Menu.Text
                                                     id='updateCategory'
@@ -334,7 +328,7 @@ const SidebarCategory = (props: Props) => {
                                             />
                                         )
                                     })}
-                                    {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id)).map((board: Board, zzz) => {
+                                    {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id) && !board.isTemplate).map((board: Board, zzz) => {
                                         return (
                                             <SidebarBoardItem
                                                 index={zzz}

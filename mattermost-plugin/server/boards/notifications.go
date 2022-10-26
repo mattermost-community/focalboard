@@ -91,11 +91,11 @@ func (a *appAPI) init(store store.Store, app appIface) {
 	a.app = app
 }
 
-func (a *appAPI) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (a *appAPI) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	return a.store.GetBlockHistory(blockID, opts)
 }
 
-func (a *appAPI) GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+func (a *appAPI) GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	return a.store.GetSubTree2(boardID, blockID, opts)
 }
 
