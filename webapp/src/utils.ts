@@ -294,8 +294,8 @@ class Utils {
             return '<a ' +
                 'target="_blank" ' +
                 'rel="noreferrer" ' +
-                `href="${encodeURI(href || '')}" ` +
-                `title="${title ? encodeURI(title) : ''}" ` +
+                `href="${encodeURI(decodeURI(href || ''))}" ` +
+                `title="${title || ''}" ` +
                 `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
