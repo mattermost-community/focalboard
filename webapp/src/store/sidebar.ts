@@ -22,6 +22,7 @@ interface Category {
     collapsed: boolean
     sortOrder: number
     type: CategoryType
+    isNew: boolean
 }
 
 interface CategoryBoards extends Category {
@@ -68,6 +69,7 @@ const sidebarSlice = createSlice({
                     state.categoryAttributes.unshift({
                         ...updatedCategory,
                         boardIDs: [],
+                        isNew: true,
                     })
                 } else if (updatedCategory.deleteAt) {
                     // when category is deleted
@@ -78,6 +80,7 @@ const sidebarSlice = createSlice({
                         ...state.categoryAttributes[index],
                         name: updatedCategory.name,
                         updateAt: updatedCategory.updateAt,
+                        isNew: false,
                     }
                 }
             })
@@ -95,6 +98,7 @@ const sidebarSlice = createSlice({
                         // Only if its not in the right category, do add it.
                         if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) < 0) {
                             categoryAttribute.boardIDs.push(boardCategory.boardID)
+                            categoryAttribute.isNew = false
                         }
                     } else {
                         // remove the board from other categories

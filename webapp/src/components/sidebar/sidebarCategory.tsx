@@ -8,6 +8,8 @@ import {debounce} from 'lodash'
 
 import {Draggable, Droppable} from 'react-beautiful-dnd'
 
+import {HandRightIcon} from '@mattermost/compass-icons/components'
+
 import {Board} from '../../blocks/board'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -43,6 +45,8 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmation
 import SidebarCategoriesTourStep from '../../components/onboardingTour/sidebarCategories/sidebarCategories'
 import ManageCategoriesTourStep from '../../components/onboardingTour/manageCategories/manageCategories'
 
+import HandRight from '../../widgets/icons/HandRight'
+
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'
 
@@ -63,8 +67,6 @@ type Props = {
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
 
 const SidebarCategory = (props: Props) => {
-    console.log(`category: ${props.categoryBoards.name} draggedItemID: ${props.draggedItemID === props.categoryBoards.id} forceCollapse: ${props.forceCollapse}`)
-
     const [collapsed, setCollapsed] = useState(props.categoryBoards.collapsed)
     const intl = useIntl()
     const history = useHistory()
@@ -221,8 +223,34 @@ const SidebarCategory = (props: Props) => {
         }
     }
 
-    return (
+    const newCategoryBadge = (
+        <div className='badge newCategoryBadge'>
+            <span>
+                {
+                    intl.formatMessage({
+                        id: 'Sidebar.new-category.badge',
+                        defaultMessage: 'New',
+                    })
+                }
+            </span>
+        </div>
+    )
 
+    const newCategoryDragArea = (
+        <div className='newCategoryDragArea'>
+            <HandRightIcon/>
+            <span>
+                {
+                    intl.formatMessage({
+                        id: 'Sidebar.new-category.drag-boards-cta',
+                        defaultMessage: 'Drag boards here...',
+                    })
+                }
+            </span>
+        </div>
+    )
+
+    return (
         <Draggable
             draggableId={props.categoryBoards.id}
             index={props.index}
@@ -233,7 +261,7 @@ const SidebarCategory = (props: Props) => {
                     {...provided.draggableProps}
                 >
                     <div
-                        className='SidebarCategory'
+                        className={`SidebarCategory${props.categoryBoards.isNew ? ' new' : ''}`}
                         ref={menuWrapperRef}
                     >
                         <div
@@ -253,6 +281,9 @@ const SidebarCategory = (props: Props) => {
                             </div>
                             <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
                                 {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
+
+                                {props.categoryBoards.isNew && newCategoryBadge}
+
                                 <MenuWrapper
                                     className={categoryMenuOpen ? 'menuOpen' : ''}
                                     stopPropagationOnToggle={true}
@@ -304,12 +335,21 @@ const SidebarCategory = (props: Props) => {
                                     {...categoryProvided.droppableProps}
                                 >
                                     {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
-                                        <div className='octo-sidebar-item subitem no-views'>
-                                            <FormattedMessage
-                                                id='Sidebar.no-boards-in-category'
-                                                defaultMessage='No boards inside'
-                                            />
-                                        </div>}
+                                        (
+                                            <div>
+                                                {!props.categoryBoards.isNew && (
+                                                    <div className='octo-sidebar-item subitem no-views'>
+                                                        <FormattedMessage
+                                                            id='Sidebar.no-boards-in-category'
+                                                            defaultMessage='No boards inside'
+                                                        />
+                                                    </div>
+                                                )}
+
+                                                {props.categoryBoards.isNew && newCategoryDragArea}
+                                            </div>
+                                        )
+                                    }
                                     {!props.forceCollapse && collapsed && !snapshot.isDragging && props.draggedItemID !== props.categoryBoards.id && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
                                         if (!isBoardVisible(board.id)) {
                                             return null
