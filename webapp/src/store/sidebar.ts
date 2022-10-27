@@ -148,6 +148,7 @@ const sidebarSlice = createSlice({
             const updatedCategory = {
                 ...category,
                 boardIDs: action.payload.boardIDs,
+                isNew: false,
             }
 
             // creating a new reference of array so redux knows it changed

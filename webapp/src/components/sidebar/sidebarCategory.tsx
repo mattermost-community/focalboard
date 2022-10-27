@@ -265,7 +265,7 @@ const SidebarCategory = (props: Props) => {
                         ref={menuWrapperRef}
                     >
                         <div
-                            className={`octo-sidebar-item category ' ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
+                            className={`octo-sidebar-item category ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
                         >
                             <div
                                 className='octo-sidebar-title category-title'
@@ -328,9 +328,9 @@ const SidebarCategory = (props: Props) => {
                             droppableId={props.categoryBoards.id}
                             type='board'
                         >
-                            {(categoryProvided) => (
+                            {(categoryProvided, categorySnapshot) => (
                                 <div
-                                    className='categoryBoardsDroppableArea'
+                                    className={`categoryBoardsDroppableArea${categorySnapshot.isDraggingOver ? ' draggingOver' : ''}`}
                                     ref={categoryProvided.innerRef}
                                     {...categoryProvided.droppableProps}
                                 >
