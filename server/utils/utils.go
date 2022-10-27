@@ -50,15 +50,15 @@ func SecondsToMillis(seconds int64) int64 {
 	return seconds * 1000
 }
 
-func StructToMap(v interface{}) (m map[string]interface{}) {
+func StructToMap(v any) (m map[string]any) {
 	b, _ := json.Marshal(v)
 	_ = json.Unmarshal(b, &m)
 	return
 }
 
-func intersection(a []interface{}, b []interface{}) []interface{} {
-	set := make([]interface{}, 0)
-	hash := make(map[interface{}]bool)
+func intersection(a []any, b []any) []any {
+	set := make([]any, 0)
+	hash := make(map[any]bool)
 	av := reflect.ValueOf(a)
 	bv := reflect.ValueOf(b)
 
@@ -77,7 +77,7 @@ func intersection(a []interface{}, b []interface{}) []interface{} {
 	return set
 }
 
-func Intersection(x ...[]interface{}) []interface{} {
+func Intersection(x ...[]any) []any {
 	if len(x) == 0 {
 		return nil
 	}

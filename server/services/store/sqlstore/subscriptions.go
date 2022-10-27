@@ -23,8 +23,8 @@ var subscriptionFields = []string{
 	"delete_at",
 }
 
-func valuesForSubscription(sub *model.Subscription) []interface{} {
-	return []interface{}{
+func valuesForSubscription(sub *model.Subscription) []any {
+	return []any{
 		sub.BlockType,
 		sub.BlockID,
 		sub.SubscriberType,

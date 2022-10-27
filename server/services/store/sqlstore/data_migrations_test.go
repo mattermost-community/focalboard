@@ -83,7 +83,7 @@ func TestReplaceBlockID(t *testing.T) {
 	block5 := &model.Block{ID: "block-id-5", BoardID: "block-id-1", ParentID: "block-id-1"}
 	block8 := &model.Block{
 		ID: "block-id-8", BoardID: "board-id-2", Type: model.TypeCard,
-		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
+		Fields: map[string]any{"contentOrder": []string{"block-id-1", "block-id-2"}},
 	}
 
 	// blocks from team2. They're identical to blocks 1 and 2,
@@ -92,7 +92,7 @@ func TestReplaceBlockID(t *testing.T) {
 	block7 := &model.Block{ID: "block-id-2", BoardID: "board-id-2", ParentID: "block-id-1"}
 	block9 := &model.Block{
 		ID: "block-id-8", BoardID: "board-id-2", Type: model.TypeCard,
-		Fields: map[string]interface{}{"contentOrder": []string{"block-id-1", "block-id-2"}},
+		Fields: map[string]any{"contentOrder": []string{"block-id-1", "block-id-2"}},
 	}
 
 	for _, block := range []*model.Block{block1, block2, block3, block4, block5, block8} {
@@ -134,13 +134,13 @@ func TestReplaceBlockID(t *testing.T) {
 	require.Equal(t, newID, newBlock3.BoardID)
 	require.Equal(t, newID, newBlock5.BoardID)
 	require.Equal(t, newID, newBlock5.ParentID)
-	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[0], newID)
-	require.Equal(t, newBlock8.Fields["contentOrder"].([]interface{})[1], "block-id-2")
+	require.Equal(t, newBlock8.Fields["contentOrder"].([]any)[0], newID)
+	require.Equal(t, newBlock8.Fields["contentOrder"].([]any)[1], "block-id-2")
 
 	require.Equal(t, currentID, newBlock6.ID)
 	require.Equal(t, currentID, newBlock7.ParentID)
-	require.Equal(t, newBlock9.Fields["contentOrder"].([]interface{})[0], "block-id-1")
-	require.Equal(t, newBlock9.Fields["contentOrder"].([]interface{})[1], "block-id-2")
+	require.Equal(t, newBlock9.Fields["contentOrder"].([]any)[0], "block-id-1")
+	require.Equal(t, newBlock9.Fields["contentOrder"].([]any)[1], "block-id-2")
 }
 
 func TestRunUniqueIDsMigration(t *testing.T) {

@@ -14,7 +14,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (wss *websocketSession) WriteJSON(v interface{}) error {
+func (wss *websocketSession) WriteJSON(v any) error {
 	wss.mu.Lock()
 	defer wss.mu.Unlock()
 	err := wss.conn.WriteJSON(v)

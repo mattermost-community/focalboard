@@ -23,8 +23,8 @@ var notificationHintFields = []string{
 	"notify_at",
 }
 
-func valuesForNotificationHint(hint *model.NotificationHint) []interface{} {
-	return []interface{}{
+func valuesForNotificationHint(hint *model.NotificationHint) []any {
+	return []any{
 		hint.BlockType,
 		hint.BlockID,
 		hint.ModifiedByID,

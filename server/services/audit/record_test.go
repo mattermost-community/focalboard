@@ -20,7 +20,7 @@ type wilted struct {
 	wilt1 string
 }
 
-func conv(val interface{}) (interface{}, bool) {
+func conv(val any) (any, bool) {
 	if b, ok := val.(*bloated); ok {
 		return &wilted{wilt1: b.fld1}, true
 	}
@@ -33,7 +33,7 @@ func TestRecord_AddMeta(t *testing.T) {
 	}
 	type args struct {
 		name string
-		val  interface{}
+		val  any
 	}
 	tests := []struct {
 		name     string
@@ -57,7 +57,7 @@ func TestRecord_AddMeta(t *testing.T) {
 
 			// fetch the prop store in auditRecord meta data
 			var ok bool
-			var got interface{}
+			var got any
 			for _, meta := range rec.Meta {
 				if meta.K == "prop" {
 					ok = true

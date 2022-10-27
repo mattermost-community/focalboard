@@ -128,7 +128,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if fileInfo != nil && fileInfo.Archived {
-		fileMetadata := map[string]interface{}{
+		fileMetadata := map[string]any{
 			"archived":  true,
 			"name":      fileInfo.Name,
 			"size":      fileInfo.Size,

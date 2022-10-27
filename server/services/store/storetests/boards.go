@@ -321,7 +321,7 @@ func testInsertBoard(t *testing.T, store store.Store) {
 		board := &model.Board{
 			ID:         "id-test-props",
 			TeamID:     testTeamID,
-			Properties: map[string]interface{}{"no-serializable-value": t.Run},
+			Properties: map[string]any{"no-serializable-value": t.Run},
 		}
 
 		_, err := store.InsertBoard(board, userID)
@@ -423,7 +423,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 			ID:     boardID,
 			TeamID: testTeamID,
 			Type:   model.BoardTypeOpen,
-			Properties: map[string]interface{}{
+			Properties: map[string]any{
 				"one": "1",
 				"two": "2",
 			},
@@ -439,7 +439,7 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		time.Sleep(10 * time.Millisecond)
 
 		patch := &model.BoardPatch{
-			UpdatedProperties: map[string]interface{}{"three": "3"},
+			UpdatedProperties: map[string]any{"three": "3"},
 			DeletedProperties: []string{"one"},
 		}
 		patchedBoard, err := store.PatchBoard(boardID, patch, userID)
@@ -475,8 +475,8 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 	t.Run("a patch that doesn't include any of the properties should not modify them", func(t *testing.T) {
 		boardID := utils.NewID(utils.IDTypeBoard)
-		properties := map[string]interface{}{"prop1": "val1"}
-		cardProperties := []map[string]interface{}{{"prop2": "val2"}}
+		properties := map[string]any{"prop1": "val1"}
+		cardProperties := []map[string]any{{"prop2": "val2"}}
 
 		board := &model.Board{
 			ID:             boardID,
@@ -507,10 +507,10 @@ func testPatchBoard(t *testing.T, store store.Store) {
 
 	t.Run("a patch that removes a card property and updates another should work correctly", func(t *testing.T) {
 		boardID := utils.NewID(utils.IDTypeBoard)
-		prop1 := map[string]interface{}{"id": "prop1", "value": "val1"}
-		prop2 := map[string]interface{}{"id": "prop2", "value": "val2"}
-		prop3 := map[string]interface{}{"id": "prop3", "value": "val3"}
-		cardProperties := []map[string]interface{}{prop1, prop2, prop3}
+		prop1 := map[string]any{"id": "prop1", "value": "val1"}
+		prop2 := map[string]any{"id": "prop2", "value": "val2"}
+		prop3 := map[string]any{"id": "prop3", "value": "val3"}
+		cardProperties := []map[string]any{prop1, prop2, prop3}
 
 		board := &model.Board{
 			ID:             boardID,
@@ -528,10 +528,10 @@ func testPatchBoard(t *testing.T, store store.Store) {
 		// wait to avoid hitting pk uniqueness constraint in history
 		time.Sleep(10 * time.Millisecond)
 
-		newProp1 := map[string]interface{}{"id": "prop1", "value": "newval1"}
-		expectedCardProperties := []map[string]interface{}{newProp1, prop3}
+		newProp1 := map[string]any{"id": "prop1", "value": "newval1"}
+		expectedCardProperties := []map[string]any{newProp1, prop3}
 		patch := &model.BoardPatch{
-			UpdatedCardProperties: []map[string]interface{}{newProp1},
+			UpdatedCardProperties: []map[string]any{newProp1},
 			DeletedCardProperties: []string{"prop2"},
 		}
 		patchedBoard, err := store.PatchBoard(boardID, patch, userID)
@@ -942,10 +942,10 @@ func testUndeleteBoard(t *testing.T, store store.Store) {
 			Icon:            "🐻",
 			ShowDescription: true,
 			IsTemplate:      false,
-			Properties: map[string]interface{}{
+			Properties: map[string]any{
 				"prop_1": "value_1",
 			},
-			CardProperties: []map[string]interface{}{
+			CardProperties: []map[string]any{
 				{
 					"prop_1": "value_1",
 				},

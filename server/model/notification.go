@@ -56,7 +56,7 @@ func (s *NotificationHint) Copy() *NotificationHint {
 	}
 }
 
-func (s *NotificationHint) LogClone() interface{} {
+func (s *NotificationHint) LogClone() any {
 	return struct {
 		BlockType    BlockType `json:"block_type"`
 		BlockID      string    `json:"block_id"`

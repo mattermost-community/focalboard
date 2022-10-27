@@ -80,7 +80,7 @@ func (a *App) isInitializationNeeded(boards []*model.Board) (bool, string) {
 }
 
 // fixTemplateBlock fixes a block to be inserted as part of a template.
-func fixTemplateBlock(block *model.Block, cache map[string]interface{}) bool {
+func fixTemplateBlock(block *model.Block, cache map[string]any) bool {
 	// cache contains ids of skipped boards. Ensure their children are skipped as well.
 	if _, ok := cache[block.BoardID]; ok {
 		cache[block.ID] = struct{}{}
@@ -95,7 +95,7 @@ func fixTemplateBlock(block *model.Block, cache map[string]interface{}) bool {
 }
 
 // fixTemplateBoard fixes a board to be inserted as part of a template.
-func fixTemplateBoard(board *model.Board, cache map[string]interface{}) bool {
+func fixTemplateBoard(board *model.Board, cache map[string]any) bool {
 	// filter out template blocks; we only want the non-template
 	// blocks which we will turn into default template blocks.
 	if board.IsTemplate {

@@ -29,6 +29,6 @@ func (m *mutexAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_
 	return b, appErr
 }
 
-func (m *mutexAPIAdapter) LogError(msg string, keyValuePairs ...interface{}) {
+func (m *mutexAPIAdapter) LogError(msg string, keyValuePairs ...any) {
 	m.api.GetLogger().Error(msg, mlog.Array("kvpairs", keyValuePairs))
 }

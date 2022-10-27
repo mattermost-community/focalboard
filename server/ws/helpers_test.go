@@ -40,7 +40,7 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 	}
 }
 
-func (th *TestHelper) ReceiveWebSocketMessage(webConnID, userID, action string, data map[string]interface{}) {
+func (th *TestHelper) ReceiveWebSocketMessage(webConnID, userID, action string, data map[string]any) {
 	req := &mmModel.WebSocketRequest{Action: websocketMessagePrefix + action, Data: data}
 
 	th.pa.WebSocketMessageHasBeenPosted(webConnID, userID, req)
@@ -51,11 +51,11 @@ func (th *TestHelper) SubscribeWebConnToTeam(webConnID, userID, teamID string) {
 		DoesUserHaveTeamAccess(userID, teamID).
 		Return(true)
 
-	msgData := map[string]interface{}{"teamId": teamID}
+	msgData := map[string]any{"teamId": teamID}
 	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionSubscribeTeam, msgData)
 }
 
 func (th *TestHelper) UnsubscribeWebConnFromTeam(webConnID, userID, teamID string) {
-	msgData := map[string]interface{}{"teamId": teamID}
+	msgData := map[string]any{"teamId": teamID}
 	th.ReceiveWebSocketMessage(webConnID, userID, websocketActionUnsubscribeTeam, msgData)
 }

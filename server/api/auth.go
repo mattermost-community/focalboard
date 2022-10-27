@@ -343,7 +343,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				Token:       token,
 				UserID:      model.SingleUser,
 				AuthService: a.authService,
-				Props:       map[string]interface{}{},
+				Props:       map[string]any{},
 				CreateAt:    now,
 				UpdateAt:    now,
 			}
@@ -360,7 +360,7 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 				Token:       userID,
 				UserID:      userID,
 				AuthService: a.authService,
-				Props:       map[string]interface{}{},
+				Props:       map[string]any{},
 				CreateAt:    now,
 				UpdateAt:    now,
 			}

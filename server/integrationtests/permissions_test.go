@@ -131,7 +131,7 @@ func setupLocalClients(th *TestHelper) Clients {
 	return clients
 }
 
-func toJSON(t *testing.T, obj interface{}) string {
+func toJSON(t *testing.T, obj any) string {
 	result, err := json.Marshal(obj)
 	require.NoError(t, err)
 	return string(result)
@@ -317,7 +317,7 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 					require.Fail(t, err.Error(), tc.identifier())
 				}
 				if strings.HasPrefix(string(body), "[") {
-					var data []interface{}
+					var data []any
 					err = json.Unmarshal(body, &data)
 					if err != nil {
 						require.Fail(t, err.Error(), tc.identifier())

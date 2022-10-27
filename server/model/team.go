@@ -22,7 +22,7 @@ type Team struct {
 
 	// Team settings
 	// required: false
-	Settings map[string]interface{} `json:"settings"`
+	Settings map[string]any `json:"settings"`
 
 	// ID of user who last modified this
 	// required: true

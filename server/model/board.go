@@ -79,11 +79,11 @@ type Board struct {
 
 	// The properties of the board
 	// required: false
-	Properties map[string]interface{} `json:"properties"`
+	Properties map[string]any `json:"properties"`
 
 	// The properties of the board cards
 	// required: false
-	CardProperties []map[string]interface{} `json:"cardProperties"`
+	CardProperties []map[string]any `json:"cardProperties"`
 
 	// The creation time in miliseconds since the current epoch
 	// required: true
@@ -131,7 +131,7 @@ type BoardPatch struct {
 
 	// The board updated properties
 	// required: false
-	UpdatedProperties map[string]interface{} `json:"updatedProperties"`
+	UpdatedProperties map[string]any `json:"updatedProperties"`
 
 	// The board removed properties
 	// required: false
@@ -139,7 +139,7 @@ type BoardPatch struct {
 
 	// The board updated card properties
 	// required: false
-	UpdatedCardProperties []map[string]interface{} `json:"updatedCardProperties"`
+	UpdatedCardProperties []map[string]any `json:"updatedCardProperties"`
 
 	// The board removed card properties
 	// required: false
@@ -281,7 +281,7 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 	if len(p.UpdatedCardProperties) != 0 || len(p.DeletedCardProperties) != 0 {
 		// first we accumulate all properties indexed by, and maintain their order
 		keyOrder := []string{}
-		cardPropertyMap := map[string]map[string]interface{}{}
+		cardPropertyMap := map[string]map[string]any{}
 		for _, prop := range board.CardProperties {
 			id, ok := prop["id"].(string)
 			if !ok {
@@ -315,7 +315,7 @@ func (p *BoardPatch) Patch(board *Board) *Board {
 		}
 
 		// and finally we flatten and save the updated properties
-		newCardProperties := []map[string]interface{}{}
+		newCardProperties := []map[string]any{}
 		for _, key := range keyOrder {
 			p, exists := cardPropertyMap[key]
 			if exists {

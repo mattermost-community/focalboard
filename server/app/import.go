@@ -251,7 +251,7 @@ func (a *App) fixBoardsandBlocks(boardsAndBlocks *model.BoardsAndBlocks, opt mod
 		return
 	}
 
-	modInfoCache := make(map[string]interface{})
+	modInfoCache := make(map[string]any)
 	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
 	modBlocks := make([]*model.Block, 0, len(boardsAndBlocks.Blocks))
 
@@ -298,8 +298,8 @@ func (a *App) blockToBoard(block *model.Block, opt model.ImportArchiveOptions) (
 		CreateAt:       block.CreateAt,
 		UpdateAt:       block.UpdateAt,
 		DeleteAt:       block.DeleteAt,
-		Properties:     make(map[string]interface{}),
-		CardProperties: make([]map[string]interface{}, 0),
+		Properties:     make(map[string]any),
+		CardProperties: make([]map[string]any, 0),
 	}
 
 	if icon, ok := stringValue(block.Fields, "icon"); ok {
@@ -326,7 +326,7 @@ func (a *App) blockToBoard(block *model.Block, opt model.ImportArchiveOptions) (
 	return board, nil
 }
 
-func stringValue(m map[string]interface{}, key string) (string, bool) {
+func stringValue(m map[string]any, key string) (string, bool) {
 	v, ok := m[key]
 	if !ok {
 		return "", false
@@ -338,7 +338,7 @@ func stringValue(m map[string]interface{}, key string) (string, bool) {
 	return s, true
 }
 
-func boolValue(m map[string]interface{}, key string) (bool, bool) {
+func boolValue(m map[string]any, key string) (bool, bool) {
 	v, ok := m[key]
 	if !ok {
 		return false, false
@@ -350,7 +350,7 @@ func boolValue(m map[string]interface{}, key string) (bool, bool) {
 	return b, true
 }
 
-func intValue(m map[string]interface{}, key string) (int, bool) {
+func intValue(m map[string]any, key string) (int, bool) {
 	v, ok := m[key]
 	if !ok {
 		return 0, false
@@ -362,31 +362,31 @@ func intValue(m map[string]interface{}, key string) (int, bool) {
 	return i, true
 }
 
-func mapValue(m map[string]interface{}, key string) (map[string]interface{}, bool) {
+func mapValue(m map[string]any, key string) (map[string]any, bool) {
 	v, ok := m[key]
 	if !ok {
 		return nil, false
 	}
-	mm, ok := v.(map[string]interface{})
+	mm, ok := v.(map[string]any)
 	if !ok {
 		return nil, false
 	}
 	return mm, true
 }
 
-func arrayMapsValue(m map[string]interface{}, key string) ([]map[string]interface{}, bool) {
+func arrayMapsValue(m map[string]any, key string) ([]map[string]any, bool) {
 	v, ok := m[key]
 	if !ok {
 		return nil, false
 	}
-	ai, ok := v.([]interface{})
+	ai, ok := v.([]any)
 	if !ok {
 		return nil, false
 	}
 
-	arr := make([]map[string]interface{}, 0, len(ai))
+	arr := make([]map[string]any, 0, len(ai))
 	for _, mi := range ai {
-		mm, ok := mi.(map[string]interface{})
+		mm, ok := mi.(map[string]any)
 		if !ok {
 			return nil, false
 		}

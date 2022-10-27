@@ -117,7 +117,7 @@ func testGetUsedCardsCount(t *testing.T, store storeservice.Store) {
 			ID:      templateID,
 			BoardID: templateID,
 			Type:    model.TypeBoard,
-			Fields: map[string]interface{}{
+			Fields: map[string]any{
 				"isTemplate": true,
 			},
 		}

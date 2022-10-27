@@ -50,8 +50,8 @@ func TestConfigurationNullConfiguration(t *testing.T) {
 func TestOnConfigurationChange(t *testing.T) {
 	stringRef := ""
 
-	basePlugins := make(map[string]map[string]interface{})
-	basePlugins[PluginName] = make(map[string]interface{})
+	basePlugins := make(map[string]map[string]any)
+	basePlugins[PluginName] = make(map[string]any)
 	basePlugins[PluginName][SharedBoardsName] = true
 
 	baseFeatureFlags := &serverModel.FeatureFlags{

@@ -11,7 +11,7 @@ type ClusterMessage struct {
 	TeamID      string
 	BoardID     string
 	UserID      string
-	Payload     map[string]interface{}
+	Payload     map[string]any
 	EnsureUsers []string
 }
 

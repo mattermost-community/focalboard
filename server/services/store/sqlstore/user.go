@@ -57,7 +57,7 @@ func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model
 	return users[0], nil
 }
 
-func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, limit uint64) ([]*model.User, error) {
+func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition any, limit uint64) ([]*model.User, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",

@@ -118,7 +118,7 @@ func (a *App) Login(username, email, password, mfaToken string) (string, error) 
 		Token:       utils.NewID(utils.IDTypeToken),
 		UserID:      user.ID,
 		AuthService: authService,
-		Props:       map[string]interface{}{},
+		Props:       map[string]any{},
 	}
 	err := a.store.CreateSession(&session)
 	if err != nil {

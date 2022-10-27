@@ -28,13 +28,13 @@ func GenerateBlockIDs(blocks []*Block, logger mlog.LoggerIFace) []*Block {
 		}
 
 		if _, ok := block.Fields["contentOrder"]; ok {
-			contentOrder, typeOk := block.Fields["contentOrder"].([]interface{})
+			contentOrder, typeOk := block.Fields["contentOrder"].([]any)
 			if !typeOk {
 				logger.Warn(
 					"type assertion failed for content order when saving reference block IDs",
 					mlog.String("blockID", block.ID),
 					mlog.String("actionType", fmt.Sprintf("%T", block.Fields["contentOrder"])),
-					mlog.String("expectedType", "[]interface{}"),
+					mlog.String("expectedType", "[]any"),
 					mlog.String("contentOrder", fmt.Sprintf("%v", block.Fields["contentOrder"])),
 				)
 				continue
@@ -42,7 +42,7 @@ func GenerateBlockIDs(blocks []*Block, logger mlog.LoggerIFace) []*Block {
 
 			for _, blockID := range contentOrder {
 				switch v := blockID.(type) {
-				case []interface{}:
+				case []any:
 					for _, columnBlockID := range v {
 						referenceIDs[columnBlockID.(string)] = true
 					}
@@ -130,14 +130,14 @@ func GenerateBlockIDs(blocks []*Block, logger mlog.LoggerIFace) []*Block {
 }
 
 func fixFieldIDs(block *Block, fieldName string, getExistingOrOldID func(string) string, logger mlog.LoggerIFace) {
-	field, typeOk := block.Fields[fieldName].([]interface{})
+	field, typeOk := block.Fields[fieldName].([]any)
 	if !typeOk {
 		logger.Warn(
 			"type assertion failed for JSON field when setting new block IDs",
 			mlog.String("blockID", block.ID),
 			mlog.String("fieldName", fieldName),
 			mlog.String("actionType", fmt.Sprintf("%T", block.Fields[fieldName])),
-			mlog.String("expectedType", "[]interface{}"),
+			mlog.String("expectedType", "[]any"),
 			mlog.String("value", fmt.Sprintf("%v", block.Fields[fieldName])),
 		)
 	} else {
@@ -145,8 +145,8 @@ func fixFieldIDs(block *Block, fieldName string, getExistingOrOldID func(string)
 			switch v := field[j].(type) {
 			case string:
 				field[j] = getExistingOrOldID(v)
-			case []interface{}:
-				subOrder := field[j].([]interface{})
+			case []any:
+				subOrder := field[j].([]any)
 				for k := range v {
 					subOrder[k] = getExistingOrOldID(v[k].(string))
 				}

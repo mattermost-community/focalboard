@@ -103,7 +103,7 @@ func makeAuthorsList(authors StringMap, empty string) string {
 }
 
 // execTemplate executes the named template corresponding to the template name and language specified.
-func execTemplate(w io.Writer, name string, opts DiffConvOpts, def string, data interface{}) error {
+func execTemplate(w io.Writer, name string, opts DiffConvOpts, def string, data any) error {
 	t, err := getTemplate(name, opts, def)
 	if err != nil {
 		return err

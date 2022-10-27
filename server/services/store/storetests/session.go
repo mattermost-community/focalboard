@@ -90,7 +90,7 @@ func testUpdateSession(t *testing.T, store store.Store) {
 	session := &model.Session{
 		ID:    "session-id",
 		Token: "token",
-		Props: map[string]interface{}{"field1": "A"},
+		Props: map[string]any{"field1": "A"},
 	}
 
 	err := store.CreateSession(session)

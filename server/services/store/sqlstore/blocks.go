@@ -264,7 +264,7 @@ func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID stri
 			"board_id",
 		)
 
-	insertQueryValues := map[string]interface{}{
+	insertQueryValues := map[string]any{
 		"channel_id":            "",
 		"id":                    block.ID,
 		"parent_id":             block.ParentID,
@@ -451,7 +451,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 		"created_by",
 	}
 
-	values := []interface{}{
+	values := []any{
 		block.BoardID,
 		"",
 		block.ID,
@@ -773,7 +773,7 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 		}
 		if block.ID == blockID {
 			if block.Fields == nil {
-				block.Fields = make(map[string]interface{})
+				block.Fields = make(map[string]any)
 			}
 			block.Fields["isTemplate"] = asTemplate
 			rootBlock = block

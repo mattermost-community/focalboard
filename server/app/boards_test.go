@@ -32,7 +32,7 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		th.Store.EXPECT().GetMemberForBoard(boardID, userID).Return(nil, nil)
 
-		th.Store.EXPECT().SaveMember(mock.MatchedBy(func(i interface{}) bool {
+		th.Store.EXPECT().SaveMember(mock.MatchedBy(func(i any) bool {
 			p := i.(*model.BoardMember)
 			return p.BoardID == boardID && p.UserID == userID
 		})).Return(&model.BoardMember{
@@ -92,7 +92,7 @@ func TestAddMemberToBoard(t *testing.T) {
 			Synthetic: true,
 		}, nil)
 
-		th.Store.EXPECT().SaveMember(mock.MatchedBy(func(i interface{}) bool {
+		th.Store.EXPECT().SaveMember(mock.MatchedBy(func(i any) bool {
 			p := i.(*model.BoardMember)
 			return p.BoardID == boardID && p.UserID == userID
 		})).Return(&model.BoardMember{

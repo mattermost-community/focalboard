@@ -23,7 +23,7 @@ const (
 
 type TrackerFunc func() (Tracker, error)
 
-type Tracker map[string]interface{}
+type Tracker map[string]any
 
 type Service struct {
 	trackers                   map[string]TrackerFunc
@@ -78,7 +78,7 @@ func (ts *Service) sendDailyTelemetry(override bool) {
 	}
 }
 
-func (ts *Service) sendTelemetry(event string, properties map[string]interface{}) {
+func (ts *Service) sendTelemetry(event string, properties map[string]any) {
 	if ts.rudderClient != nil {
 		var context *rudder.Context
 		_ = ts.rudderClient.Enqueue(rudder.Track{

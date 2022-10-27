@@ -102,7 +102,7 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	}
 }
 
-func getPluginSetting(mmConfig mm_model.Config, key string) (interface{}, bool) {
+func getPluginSetting(mmConfig mm_model.Config, key string) (any, bool) {
 	plugin, ok := mmConfig.PluginSettings.Plugins[PluginName]
 	if !ok {
 		return nil, false

@@ -166,7 +166,7 @@ func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error
 // Cluster store.
 //
 
-func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
+func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[string]any, broadcast *mm_model.WebsocketBroadcast) {
 	a.api.PublishWebSocketEvent(event, payload, broadcast)
 }
 

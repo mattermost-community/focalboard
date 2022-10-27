@@ -194,7 +194,7 @@ func (p *CardPatch) CheckValid() error {
 
 // Card2Block converts a card to block using a shallow copy. Not needed once cards are first class entities.
 func Card2Block(card *Card) *Block {
-	fields := make(map[string]interface{})
+	fields := make(map[string]any)
 
 	fields["contentOrder"] = card.ContentOrder
 	fields["icon"] = card.Icon
