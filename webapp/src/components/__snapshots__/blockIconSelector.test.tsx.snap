@@ -29,7 +29,7 @@ exports[`components/blockIconSelector return menu on click 1`] = `
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div

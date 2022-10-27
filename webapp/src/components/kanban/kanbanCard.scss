@@ -30,26 +30,13 @@
     }
 
     .optionsMenu {
-        background: rgb(var(--center-channel-bg-rgb), 1);
+        background: rgb(var(--center-channel-bg-rgb));
         display: none;
         position: absolute;
         right: 12px;
 
         &.show {
             display: block;
-        }
-
-        .IconButton {
-            border-radius: 3px;
-            padding: 0;
-            box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
-                rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
-            height: 24px;
-            width: 24px;
-
-            &:hover {
-                background: rgb(var(--center-channel-color-rgb), 0.1);
-            }
         }
     }
 

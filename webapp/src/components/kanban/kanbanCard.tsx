@@ -10,8 +10,6 @@ import {useSortable} from '../../hooks/sortable'
 import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
-import IconButton from '../../widgets/buttons/iconButton'
-import OptionsIcon from '../../widgets/icons/options'
 import MenuWrapper from '../../widgets/menuWrapper'
 import Tooltip from '../../widgets/tooltip'
 import PropertyValueElement from '../propertyValueElement'
@@ -21,6 +19,7 @@ import CardBadges from '../cardBadges'
 import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
+import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
 
 export const OnboardingCardClassName = 'onboardingCard'
 
@@ -103,7 +102,7 @@ const KanbanCard = (props: Props) => {
                     className={`optionsMenu ${showOnboarding ? 'show' : ''}`}
                     stopPropagationOnToggle={true}
                 >
-                    <IconButton icon={<OptionsIcon/>}/>
+                    <CardActionsMenuIcon/>
                     <CardActionsMenu
                         cardId={card!.id}
                         onClickDelete={handleDeleteButtonOnClick}

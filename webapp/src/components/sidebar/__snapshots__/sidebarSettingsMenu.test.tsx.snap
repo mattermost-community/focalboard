@@ -7,7 +7,7 @@ exports[`components/sidebar/SidebarSettingsMenu imports menu open should match s
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -369,7 +369,7 @@ exports[`components/sidebar/SidebarSettingsMenu languages menu open should match
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -1032,7 +1032,7 @@ exports[`components/sidebar/SidebarSettingsMenu settings menu open should match 
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -1200,7 +1200,7 @@ exports[`components/sidebar/SidebarSettingsMenu theme menu open should match sna
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div

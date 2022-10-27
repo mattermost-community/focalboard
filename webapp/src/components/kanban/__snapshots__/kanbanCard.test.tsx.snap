@@ -9,7 +9,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu "
       role="button"
     >
       <button
@@ -191,7 +191,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu "
       role="button"
     >
       <button
@@ -373,7 +373,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu "
       role="button"
     >
       <button
