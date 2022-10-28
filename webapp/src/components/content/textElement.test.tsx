@@ -9,6 +9,8 @@ import '@testing-library/jest-dom'
 
 import {mocked} from 'jest-mock'
 
+import {CardDetailProvider} from '../cardDetail/cardDetailContext'
+
 import {TextBlock} from '../../blocks/textBlock'
 
 import {mockDOM, wrapDNDIntl, mockStateStore} from '../../testUtils'
@@ -45,6 +47,7 @@ describe('components/content/TextElement', () => {
     })
 
     const board1 = TestBlockFactory.createBoard()
+    const card = TestBlockFactory.createCard(board1)
     board1.id = 'board-id-1'
 
     const state = {
@@ -72,10 +75,12 @@ describe('components/content/TextElement', () => {
     test('return a textElement', async () => {
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
-                <TextElement
-                    block={defaultBlock}
-                    readonly={false}
-                />
+                <CardDetailProvider card={card}>
+                    <TextElement
+                        block={defaultBlock}
+                        readonly={false}
+                    />
+                </CardDetailProvider>
             </ReduxProvider>,
         )
 
