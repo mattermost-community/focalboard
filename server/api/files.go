@@ -13,6 +13,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -33,6 +35,15 @@ func FileUploadResponseFromJSON(data io.Reader) (*FileUploadResponse, error) {
 		return nil, err
 	}
 	return &fileUploadResponse, nil
+}
+
+func FileInfoResponseFromJSON(data io.Reader) (*mmModel.FileInfo, error) {
+	var fileInfo mmModel.FileInfo
+
+	if err := json.NewDecoder(data).Decode(&fileInfo); err != nil {
+		return nil, err
+	}
+	return &fileInfo, nil
 }
 
 func (a *API) registerFilesRoutes(r *mux.Router) {
@@ -118,6 +129,10 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	if fileExtension == "gif" {
 		contentType = "image/gif"
+	}
+
+	if fileExtension == "pdf" {
+		contentType = "application/pdf"
 	}
 
 	w.Header().Set("Content-Type", contentType)
