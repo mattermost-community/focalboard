@@ -350,7 +350,7 @@ const Sidebar = (props: Props) => {
 
             <DragDropContext
                 onDragEnd={onDragEnd}
-                onBeforeCapture={onBeforeCapture}
+                // onBeforeCapture={onBeforeCapture}
             >
                 <Droppable
                     droppableId='lhs-categories'

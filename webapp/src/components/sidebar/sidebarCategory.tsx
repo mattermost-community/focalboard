@@ -89,6 +89,8 @@ const SidebarCategory = (props: Props) => {
 
     const menuWrapperRef = useRef<HTMLDivElement>(null)
 
+    const [boardDraggingOver, setBoardDraggingOver] = useState<boolean>(false)
+
     const shouldViewSidebarTour = props.boards.length !== 0 &&
                                   noCardOpen &&
                                   (onboardingTourCategory === TOUR_SIDEBAR || onboardingTourCategory === TOUR_BOARD) &&
@@ -261,7 +263,7 @@ const SidebarCategory = (props: Props) => {
                     {...provided.draggableProps}
                 >
                     <div
-                        className={`SidebarCategory${props.categoryBoards.isNew ? ' new' : ''}`}
+                        className={`SidebarCategory${props.categoryBoards.isNew ? ' new' : ''}${boardDraggingOver ? ' draggingOver' : ''}`}
                         ref={menuWrapperRef}
                     >
                         <div
@@ -328,65 +330,71 @@ const SidebarCategory = (props: Props) => {
                             droppableId={props.categoryBoards.id}
                             type='board'
                         >
-                            {(categoryProvided, categorySnapshot) => (
-                                <div
-                                    className={`categoryBoardsDroppableArea${categorySnapshot.isDraggingOver ? ' draggingOver' : ''}`}
-                                    ref={categoryProvided.innerRef}
-                                    {...categoryProvided.droppableProps}
-                                >
-                                    {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
-                                        (
-                                            <div>
-                                                {!props.categoryBoards.isNew && (
-                                                    <div className='octo-sidebar-item subitem no-views'>
-                                                        <FormattedMessage
-                                                            id='Sidebar.no-boards-in-category'
-                                                            defaultMessage='No boards inside'
-                                                        />
-                                                    </div>
-                                                )}
+                            {(categoryProvided, categorySnapshot) => {
+                                if (boardDraggingOver !== categorySnapshot.isDraggingOver) {
+                                    setBoardDraggingOver(categorySnapshot.isDraggingOver)
+                                }
 
-                                                {props.categoryBoards.isNew && newCategoryDragArea}
-                                            </div>
-                                        )
-                                    }
-                                    {!props.forceCollapse && collapsed && !snapshot.isDragging && props.draggedItemID !== props.categoryBoards.id && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
-                                        if (!isBoardVisible(board.id)) {
-                                            return null
+                                return (
+                                    <div
+                                        className={`categoryBoardsDroppableArea${categorySnapshot.isDraggingOver ? ' draggingOver' : ''}`}
+                                        ref={categoryProvided.innerRef}
+                                        {...categoryProvided.droppableProps}
+                                    >
+                                        {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
+                                            (
+                                                <div>
+                                                    {!props.categoryBoards.isNew && (
+                                                        <div className='octo-sidebar-item subitem no-views'>
+                                                            <FormattedMessage
+                                                                id='Sidebar.no-boards-in-category'
+                                                                defaultMessage='No boards inside'
+                                                            />
+                                                        </div>
+                                                    )}
+
+                                                    {props.categoryBoards.isNew && newCategoryDragArea}
+                                                </div>
+                                            )
                                         }
-                                        return (
-                                            <SidebarBoardItem
-                                                index={zzz}
-                                                key={board.id}
-                                                board={board}
-                                                categoryBoards={props.categoryBoards}
-                                                allCategories={props.allCategories}
-                                                isActive={board.id === props.activeBoardID}
-                                                showBoard={showBoard}
-                                                showView={showView}
-                                                onDeleteRequest={setDeleteBoard}
-                                            />
-                                        )
-                                    })}
-                                    {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id) && !board.isTemplate).map((board: Board, zzz) => {
-                                        return (
-                                            <SidebarBoardItem
-                                                index={zzz}
-                                                key={board.id}
-                                                board={board}
-                                                categoryBoards={props.categoryBoards}
-                                                allCategories={props.allCategories}
-                                                isActive={board.id === props.activeBoardID}
-                                                showBoard={showBoard}
-                                                showView={showView}
-                                                onDeleteRequest={setDeleteBoard}
-                                                foo={props.draggedItemID === board.id || props.draggedItemID === props.categoryBoards.id}
-                                            />
-                                        )
-                                    })}
-                                    {categoryProvided.placeholder}
-                                </div>
-                            )}
+                                        {!props.forceCollapse && collapsed && !snapshot.isDragging && props.draggedItemID !== props.categoryBoards.id && props.boards.filter((board: Board) => board.id === props.activeBoardID).map((board: Board, zzz) => {
+                                            if (!isBoardVisible(board.id)) {
+                                                return null
+                                            }
+                                            return (
+                                                <SidebarBoardItem
+                                                    index={zzz}
+                                                    key={board.id}
+                                                    board={board}
+                                                    categoryBoards={props.categoryBoards}
+                                                    allCategories={props.allCategories}
+                                                    isActive={board.id === props.activeBoardID}
+                                                    showBoard={showBoard}
+                                                    showView={showView}
+                                                    onDeleteRequest={setDeleteBoard}
+                                                />
+                                            )
+                                        })}
+                                        {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && props.boards.filter((board) => isBoardVisible(board.id) && !board.isTemplate).map((board: Board, zzz) => {
+                                            return (
+                                                <SidebarBoardItem
+                                                    index={zzz}
+                                                    key={board.id}
+                                                    board={board}
+                                                    categoryBoards={props.categoryBoards}
+                                                    allCategories={props.allCategories}
+                                                    isActive={board.id === props.activeBoardID}
+                                                    showBoard={showBoard}
+                                                    showView={showView}
+                                                    onDeleteRequest={setDeleteBoard}
+                                                    foo={props.draggedItemID === board.id || props.draggedItemID === props.categoryBoards.id}
+                                                />
+                                            )
+                                        })}
+                                        {categoryProvided.placeholder}
+                                    </div>
+                                )
+                            }}
                         </Droppable>
 
                         {
