@@ -12,6 +12,7 @@ const FileIcons: Record<string, string> = {
     TEXT_TYPES: 'file-text-outline-large',
     VIDEO_TYPES: 'file-video-outline-large',
     WORD_TYPES: 'file-word-outline-large',
+    COMPRESSED_TYPES: 'file-zip-outline-large',
 }
 
 export default FileIcons

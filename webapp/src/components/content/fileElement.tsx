@@ -72,6 +72,8 @@ const FileElement = (props: Props): JSX.Element|null => {
                 const extType = (Object.keys(Files) as string[]).find((key) => Files[key].find((ext) => ext === fileExt))
                 if (extType) {
                     setFileIcon(FileIcons[extType])
+                } else {
+                    setFileIcon('file-generic-outline-large')
                 }
             }
             getFileIcon(fileInfo.extension.substring(1))
