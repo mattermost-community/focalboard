@@ -12,6 +12,7 @@ import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppSelector} from '../store/hooks'
+import {getCardAttachments} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -54,6 +55,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const card = useAppSelector(getCard(props.cardId))
     const contents = useAppSelector(getCardContents(props.cardId))
     const comments = useAppSelector(getCardComments(props.cardId))
+    const attachments = useAppSelector(getCardAttachments(props.cardId))
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
@@ -260,6 +262,7 @@ const CardDialog = (props: Props): JSX.Element => {
                         card={card}
                         contents={contents}
                         comments={comments}
+                        attachments={attachments}
                         readonly={props.readonly}
                         onClose={props.onClose}
                         onDelete={deleteBlock}

@@ -5,7 +5,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import FileElement from '../../components/content/fileElement'
-import {ContentBlock} from '../../blocks/contentBlock'
+import {AttachmentBlock} from '../../blocks/fileBlock'
 
 import './attachment.scss'
 import {Block} from '../../blocks/block'
@@ -13,13 +13,13 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 
 type Props = {
     count: number
-    contents: ContentBlock[]
+    attachments: AttachmentBlock[]
     onDelete: (block: Block) => void
     addAttachment: () => void
 }
 
 const AttachmentList = (props: Props): JSX.Element => {
-    const {count, contents, onDelete, addAttachment} = props
+    const {count, attachments, onDelete, addAttachment} = props
     const intl = useIntl()
 
     return (
@@ -37,7 +37,7 @@ const AttachmentList = (props: Props): JSX.Element => {
                 </div>
             </div>
             <div className='attachment-content'>
-                {contents.map((block: ContentBlock) => {
+                {attachments.map((block: AttachmentBlock) => {
                     return (
                         <div key={block.id}>
                             <FileElement

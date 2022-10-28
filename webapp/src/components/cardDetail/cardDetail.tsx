@@ -8,6 +8,7 @@ import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
+import {AttachmentBlock} from '../../blocks/fileBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
@@ -46,6 +47,7 @@ type Props = {
     cards: Card[]
     card: Card
     comments: CommentBlock[]
+    attachments: AttachmentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
     onClose: () => void
@@ -54,7 +56,7 @@ type Props = {
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
-    const {card, comments, onDelete, addAttachment} = props
+    const {card, contents, comments, attachments, onDelete, addAttachment} = props
     const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
@@ -115,9 +117,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
             allBlock.push(block)
         }
     })
-
-    const blocksWithAttachment = allBlock.filter((block) => block.type === 'attachment')
-    const blocksWithoutAttachment = allBlock.filter((block) => block.type !== 'attachment')
 
     return (
         <>
@@ -216,11 +215,11 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     readonly={props.readonly}
                 />}
 
-                {blocksWithAttachment.length !== 0 && <Fragment>
+                {attachments.length !== 0 && <Fragment>
                     <hr/>
                     <AttachmentList
-                        count={blocksWithAttachment.length}
-                        contents={blocksWithAttachment}
+                        count={attachments.length}
+                        attachments={attachments}
                         onDelete={onDelete}
                         addAttachment={addAttachment}
                     />
@@ -245,7 +244,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 <CardDetailProvider card={card}>
                     <CardDetailContents
                         card={props.card}
-                        contents={blocksWithoutAttachment}
+                        contents={contents}
                         readonly={props.readonly || !canEditBoardCards}
                     />
                     {!props.readonly && canEditBoardCards && <CardDetailContentsMenu/>}

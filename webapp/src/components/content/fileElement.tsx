@@ -5,7 +5,7 @@ import {useIntl} from 'react-intl'
 
 import octoClient from '../../octoClient'
 
-import {ContentBlock} from '../../blocks/contentBlock'
+import {AttachmentBlock} from '../../blocks/fileBlock'
 import {Block, FileInfo} from '../../blocks/block'
 import Files from '../../file'
 import FileIcons from '../../fileIcons'
@@ -21,7 +21,7 @@ import IconButton from './../../widgets/buttons/iconButton'
 import Menu from './../../widgets/menu'
 
 type Props = {
-    block: ContentBlock
+    block: AttachmentBlock
     onDelete?: (block: Block) => void
 }
 
