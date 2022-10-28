@@ -12,7 +12,7 @@ const Files: Record<string, string[]> = {
     TEXT_TYPES: ['txt', 'rtf'],
     VIDEO_TYPES: ['mp4', 'avi', 'webm', 'mkv', 'wmv', 'mpg', 'mov', 'flv'],
     WORD_TYPES: ['doc', 'docx'],
-    COMPRESSED_TYPES: ['arc', 'arj', 'b64', 'btoa', 'bz', 'bz2', 'cab', 'cpt', 'gz', 'hqx', 'iso', 'lha', 'lzh', 'mim', 'mme', 'pak', 'pf', 'rar', 'rpm', 'sea', 'sit', 'sitx', 'tar', 'gz', 'tbz', 'tbz2', 'tgz', 'uu', 'uue', 'z', 'zip', 'zipx', 'zoo']
+    COMPRESSED_TYPES: ['arc', 'arj', 'b64', 'btoa', 'bz', 'bz2', 'cab', 'cpt', 'gz', 'hqx', 'iso', 'lha', 'lzh', 'mim', 'mme', 'pak', 'pf', 'rar', 'rpm', 'sea', 'sit', 'sitx', 'tar', 'gz', 'tbz', 'tbz2', 'tgz', 'uu', 'uue', 'z', 'zip', 'zipx', 'zoo'],
 }
 
 export default Files
