@@ -14,8 +14,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/focalboard/server/services/audit"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
