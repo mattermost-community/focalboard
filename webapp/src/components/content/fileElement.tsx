@@ -11,6 +11,7 @@ import Files from '../../file'
 import FileIcons from '../../fileIcons'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../../components/confirmationDialogBox'
+import {Utils} from '../../utils'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
@@ -50,17 +51,7 @@ const FileElement = (props: Props): JSX.Element|null => {
 
     useEffect(() => {
         if (fileInfo.size && !fileSize) {
-            const generateFileSize = (bytes: string, decimals = 2) => {
-                if (!Number(bytes)) {
-                    return '0 Bytes'
-                }
-                const k = 1024
-                const dm = decimals < 0 ? 0 : decimals
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-                const i = Math.floor(Math.log(Number(bytes)) / Math.log(k))
-                return `${parseFloat((Number(bytes) / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
-            }
-            setFileSize(generateFileSize(fileInfo.size.toString()))
+            setFileSize(Utils.humanFileSize(fileInfo.size))
         }
         if (fileInfo.name && !fileName) {
             const generateFileName = (fName: string) => {
