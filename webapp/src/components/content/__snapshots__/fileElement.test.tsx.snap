@@ -31,30 +31,34 @@ exports[`component/content/FileBlock should match snapshot 1`] = `
       </div>
     </div>
     <div
-      aria-label="menuwrapper"
-      class="MenuWrapper mt-3 fileElement-menu-icon"
-      role="button"
+      class="fileElement-delete-download"
     >
-      <button
-        class="IconButton size--medium"
-        type="button"
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper mt-3 fileElement-menu-icon"
+        role="button"
+      >
+        <button
+          class="IconButton size--medium"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-dots-vertical"
+          />
+        </button>
+      </div>
+      <a
+        class="fileElement-download-btn mt-5 mr-2"
+        download="test.txt"
+        href="test.txt"
+        rel="noopener noreferrer"
+        target="_blank"
       >
         <i
-          class="CompassIcon icon-dots-vertical"
+          class="CompassIcon icon-download-outline"
         />
-      </button>
+      </a>
     </div>
-    <a
-      class="fileElement-download-btn mt-5 mr-2"
-      download="test.txt"
-      href="test.txt"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <i
-        class="CompassIcon icon-download-outline"
-      />
-    </a>
   </div>
 </div>
 `;
