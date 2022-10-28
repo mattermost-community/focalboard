@@ -13,6 +13,7 @@ type Props = {
     placeholderText?: string
     className?: string
     readonly?: boolean
+    focus?: boolean
 
     onChange?: (text: string) => void
     onFocus?: () => void
@@ -20,8 +21,8 @@ type Props = {
 }
 
 const MarkdownEditor = (props: Props): JSX.Element => {
-    const {placeholderText, onFocus, onBlur, onChange, text, id} = props
-    const [isEditing, setIsEditing] = useState(false)
+    const {placeholderText, onFocus, onBlur, onChange, text, id, focus = false} = props
+    const [isEditing, setIsEditing] = useState(focus)
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
     const previewElement = (

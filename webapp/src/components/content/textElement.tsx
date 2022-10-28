@@ -3,6 +3,8 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
+import {useCardDetailContext} from '../cardDetail/cardDetailContext'
+
 import {ContentBlock} from '../../blocks/contentBlock'
 import {createTextBlock} from '../../blocks/textBlock'
 import mutator from '../../mutator'
@@ -19,6 +21,7 @@ type Props = {
 const TextElement = (props: Props): JSX.Element => {
     const {block, readonly} = props
     const intl = useIntl()
+    const {lastAddedBlock} = useCardDetailContext()
 
     return (
         <MarkdownEditor
@@ -30,6 +33,7 @@ const TextElement = (props: Props): JSX.Element => {
                 }
             }}
             readonly={readonly}
+            focus={lastAddedBlock.id === block.id}
         />
     )
 }
