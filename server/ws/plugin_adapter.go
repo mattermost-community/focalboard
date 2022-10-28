@@ -26,7 +26,7 @@ type PluginAdapterInterface interface {
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
-	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockChange(teamID string, block *model.Block)
 	BroadcastBlockDelete(teamID, blockID, parentID string)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
@@ -453,7 +453,7 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 	pa.sendBoardMessageSkipCluster(teamID, boardID, payload, ensureUserIDs...)
 }
 
-func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) {
+func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block *model.Block) {
 	pa.logger.Debug("BroadcastingBlockChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", block.BoardID),
@@ -527,7 +527,7 @@ func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boa
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 	now := utils.GetMillis()
-	block := model.Block{}
+	block := &model.Block{}
 	block.ID = blockID
 	block.BoardID = boardID
 	block.UpdateAt = now

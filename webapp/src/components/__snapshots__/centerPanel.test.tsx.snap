@@ -1167,7 +1167,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -1201,7 +1201,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -8393,7 +8393,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
-            class="IconButton"
+            class="IconButton CardActionsMenuIcon"
             type="button"
           >
             <i
@@ -8884,7 +8884,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -9403,7 +9403,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i

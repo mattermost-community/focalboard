@@ -27,7 +27,7 @@ exports[`components/viewHeader/filterComponent return filterComponent 1`] = `
       >
         <div
           aria-label="menuwrapper"
-          class="MenuWrapper"
+          class="MenuWrapper override menuOpened"
           role="button"
         >
           <button
@@ -299,7 +299,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and add Fi
       >
         <div
           aria-label="menuwrapper"
-          class="MenuWrapper"
+          class="MenuWrapper override menuOpened"
           role="button"
         >
           <button
@@ -585,7 +585,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
         </div>
         <div
           aria-label="menuwrapper"
-          class="MenuWrapper"
+          class="MenuWrapper override menuOpened"
           role="button"
         >
           <button
@@ -812,7 +812,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
       >
         <div
           aria-label="menuwrapper"
-          class="MenuWrapper"
+          class="MenuWrapper override menuOpened"
           role="button"
         >
           <button

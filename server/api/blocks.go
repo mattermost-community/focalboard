@@ -121,7 +121,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("all", all)
 	auditRec.AddMeta("blockID", blockID)
 
-	var blocks []model.Block
+	var blocks []*model.Block
 	var block *model.Block
 	switch {
 	case all != "":
@@ -142,7 +142,7 @@ func (a *API) handleGetBlocks(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		blocks = append(blocks, *block)
+		blocks = append(blocks, block)
 	default:
 		blocks, err = a.app.GetBlocks(boardID, parentID, blockType)
 		if err != nil {
@@ -233,7 +233,7 @@ func (a *API) handlePostBlocks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var blocks []model.Block
+	var blocks []*model.Block
 
 	err = json.Unmarshal(requestBody, &blocks)
 	if err != nil {

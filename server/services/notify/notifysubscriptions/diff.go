@@ -68,7 +68,7 @@ func (dg *diffGenerator) generateDiffs() ([]*Diff, error) {
 	if len(blocks) == 0 {
 		return nil, fmt.Errorf("block not found for notification: %w", err)
 	}
-	block := &blocks[0]
+	block := blocks[0]
 
 	if dg.board == nil || dg.card == nil {
 		return nil, fmt.Errorf("cannot generate diff for block %s; must have a valid board and card: %w", dg.hint.BlockID, err)
@@ -166,7 +166,7 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 			continue
 		}
 
-		blockDiff, err := dg.generateDiffForBlock(&blocks[i], schema)
+		blockDiff, err := dg.generateDiffForBlock(blocks[i], schema)
 		if err != nil {
 			return nil, fmt.Errorf("could not generate diff for block %s: %w", blocks[i].ID, err)
 		}
@@ -225,7 +225,7 @@ func (dg *diffGenerator) generateDiffForBlock(newBlock *model.Block, schema mode
 
 	var oldBlock *model.Block
 	if len(history) != 0 {
-		oldBlock = &history[0]
+		oldBlock = history[0]
 
 		dg.logger.Debug("generateDiffForBlock - old block",
 			mlog.String("block_id", oldBlock.ID),

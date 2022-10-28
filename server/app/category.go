@@ -1,9 +1,14 @@
 package app
 
 import (
+	"errors"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 )
+
+var ErrCannotDeleteSystemCategory = errors.New("cannot delete a system category")
+var ErrCannotUpdateSystemCategory = errors.New("cannot update a system category")
 
 func (a *App) CreateCategory(category *model.Category) (*model.Category, error) {
 	category.Hydrate()
@@ -28,6 +33,10 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
+	if err := category.IsValid(); err != nil {
+		return nil, err
+	}
+
 	// verify if category belongs to the user
 	existingCategory, err := a.store.GetCategory(category.ID)
 	if err != nil {
@@ -40,6 +49,17 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 
 	if existingCategory.UserID != category.UserID {
 		return nil, model.ErrCategoryPermissionDenied
+	}
+
+	if existingCategory.TeamID != category.TeamID {
+		return nil, model.ErrCategoryPermissionDenied
+	}
+
+	if existingCategory.Type == model.CategoryTypeSystem {
+		// You cannot rename or delete a system category,
+		// So restoring its name and undeleting it if set so.
+		category.Name = existingCategory.Name
+		category.DeleteAt = 0
 	}
 
 	category.UpdateAt = utils.GetMillis()
@@ -82,6 +102,10 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 	// verify if category belongs to the team
 	if existingCategory.TeamID != teamID {
 		return nil, model.NewErrInvalidCategory("category doesn't belong to the team")
+	}
+
+	if existingCategory.Type == model.CategoryTypeSystem {
+		return nil, ErrCannotDeleteSystemCategory
 	}
 
 	if err = a.store.DeleteCategory(categoryID, userID, teamID); err != nil {

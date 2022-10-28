@@ -24,12 +24,12 @@ func (a *App) CreateCard(card *model.Card, boardID string, userID string, disabl
 
 	block := model.Card2Block(card)
 
-	newBlocks, err := a.InsertBlocksAndNotify([]model.Block{*block}, userID, disableNotify)
+	newBlocks, err := a.InsertBlocksAndNotify([]*model.Block{block}, userID, disableNotify)
 	if err != nil {
 		return nil, fmt.Errorf("cannot create card: %w", err)
 	}
 
-	newCard, err := model.Block2Card(&newBlocks[0])
+	newCard, err := model.Block2Card(newBlocks[0])
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ func (a *App) GetCardsForBoard(boardID string, page int, perPage int) ([]*model.
 	cards := make([]*model.Card, 0, len(blocks))
 	for _, blk := range blocks {
 		b := blk
-		if card, err := model.Block2Card(&b); err != nil {
+		if card, err := model.Block2Card(b); err != nil {
 			return nil, fmt.Errorf("Block2Card fail: %w", err)
 		} else {
 			cards = append(cards, card)

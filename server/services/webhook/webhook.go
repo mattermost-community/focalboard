@@ -13,7 +13,7 @@ import (
 )
 
 // NotifyUpdate calls webhooks.
-func (wh *Client) NotifyUpdate(block model.Block) {
+func (wh *Client) NotifyUpdate(block *model.Block) {
 	if len(wh.config.WebhookUpdate) < 1 {
 		return
 	}

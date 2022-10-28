@@ -7,7 +7,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu 1`] = `
   >
     <div
       aria-label="View header menu"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -128,7 +128,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
   >
     <div
       aria-label="View header menu"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -249,7 +249,7 @@ exports[`components/viewHeader/viewHeaderActionsMenu return menu and verify call
   >
     <div
       aria-label="View header menu"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button

@@ -29,7 +29,7 @@ exports[`components/cardDetail/comment return comment 1`] = `
       </div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button
@@ -157,7 +157,7 @@ exports[`components/cardDetail/comment return comment and delete comment 1`] = `
       </div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button
@@ -333,7 +333,7 @@ exports[`components/cardDetail/comment return guest comment 1`] = `
       </div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button
@@ -470,7 +470,7 @@ exports[`components/cardDetail/comment return guest comment and delete comment 1
       </div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button

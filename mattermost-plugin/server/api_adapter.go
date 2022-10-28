@@ -125,6 +125,10 @@ func (a *pluginAPIAdapter) CreateMember(teamID string, userID string) (*mm_model
 // Permissions service.
 //
 
+func (a *pluginAPIAdapter) HasPermissionTo(userID string, permission *mm_model.Permission) bool {
+	return a.api.HasPermissionTo(userID, permission)
+}
+
 func (a *pluginAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
 	return a.api.HasPermissionToTeam(userID, teamID, permission)
 }
@@ -136,6 +140,7 @@ func (a *pluginAPIAdapter) HasPermissionToChannel(askingUserID string, channelID
 //
 // Bot service.
 //
+
 func (a *pluginAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 	return a.api.EnsureBotUser(bot)
 }
@@ -143,6 +148,7 @@ func (a *pluginAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 //
 // License service.
 //
+
 func (a *pluginAPIAdapter) GetLicense() *mm_model.License {
 	return a.api.GetLicense()
 }
@@ -150,6 +156,7 @@ func (a *pluginAPIAdapter) GetLicense() *mm_model.License {
 //
 // FileInfoStore service.
 //
+
 func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
 	fi, appErr := a.api.GetFileInfo(fileID)
 	return fi, normalizeAppErr(appErr)
@@ -158,6 +165,7 @@ func (a *pluginAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error
 //
 // Cluster store.
 //
+
 func (a *pluginAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
 	a.api.PublishWebSocketEvent(event, payload, broadcast)
 }
@@ -169,6 +177,7 @@ func (a *pluginAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEv
 //
 // Cloud service.
 //
+
 func (a *pluginAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 	return a.api.GetCloudLimits()
 }
@@ -176,6 +185,7 @@ func (a *pluginAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 //
 // Config service.
 //
+
 func (a *pluginAPIAdapter) GetConfig() *mm_model.Config {
 	return a.api.GetUnsanitizedConfig()
 }
@@ -183,6 +193,7 @@ func (a *pluginAPIAdapter) GetConfig() *mm_model.Config {
 //
 // Logger service.
 //
+
 func (a *pluginAPIAdapter) GetLogger() mlog.LoggerIFace {
 	return a.logger
 }
@@ -190,6 +201,7 @@ func (a *pluginAPIAdapter) GetLogger() mlog.LoggerIFace {
 //
 // KVStore service.
 //
+
 func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
 	b, appErr := a.api.KVSetWithOptions(key, value, options)
 	return b, normalizeAppErr(appErr)
@@ -198,6 +210,7 @@ func (a *pluginAPIAdapter) KVSetWithOptions(key string, value []byte, options mm
 //
 // Store service.
 //
+
 func (a *pluginAPIAdapter) GetMasterDB() (*sql.DB, error) {
 	return a.storeService.GetMasterDB()
 }
@@ -205,6 +218,7 @@ func (a *pluginAPIAdapter) GetMasterDB() (*sql.DB, error) {
 //
 // System service.
 //
+
 func (a *pluginAPIAdapter) GetDiagnosticID() string {
 	return a.api.GetDiagnosticId()
 }
@@ -212,6 +226,7 @@ func (a *pluginAPIAdapter) GetDiagnosticID() string {
 //
 // Router service.
 //
+
 func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 	// NOOP for plugin
 }
@@ -219,6 +234,7 @@ func (a *pluginAPIAdapter) RegisterRouter(sub *mux.Router) {
 //
 // Preferences service.
 //
+
 func (a *pluginAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
 	preferences, appErr := a.api.GetPreferencesForUser(userID)
 	if appErr != nil {
