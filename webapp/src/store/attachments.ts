@@ -3,7 +3,7 @@
 
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
-import {AttachmentBlock} from '../blocks/fileBlock'
+import {AttachmentBlock} from '../blocks/attachmentBlock'
 
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 

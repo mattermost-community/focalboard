@@ -5,7 +5,7 @@ import {useIntl} from 'react-intl'
 
 import octoClient from '../../octoClient'
 
-import {AttachmentBlock} from '../../blocks/fileBlock'
+import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import {Block, FileInfo} from '../../blocks/block'
 import Files from '../../file'
 import FileIcons from '../../fileIcons'
@@ -15,7 +15,7 @@ import {Utils} from '../../utils'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
-import './fileElement.scss'
+import './attachmentElement.scss'
 import CompassIcon from './../../widgets/icons/compassIcon'
 import MenuWrapper from './../../widgets/menuWrapper'
 import IconButton from './../../widgets/buttons/iconButton'
@@ -26,7 +26,7 @@ type Props = {
     onDelete?: (block: Block) => void
 }
 
-const FileElement = (props: Props): JSX.Element|null => {
+const AttachmentElement = (props: Props): JSX.Element|null => {
     const {block, onDelete} = props
     const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
     const [fileInfo, setFileInfo] = useState<FileInfo>({})
@@ -162,4 +162,4 @@ const FileElement = (props: Props): JSX.Element|null => {
     )
 }
 
-export default React.memo(FileElement)
+export default React.memo(AttachmentElement)

@@ -12,7 +12,7 @@ import {createDividerBlock} from './blocks/dividerBlock'
 import {createImageBlock} from './blocks/imageBlock'
 import {createTextBlock} from './blocks/textBlock'
 import {FilterCondition} from './blocks/filterClause'
-import {createAttachmentBlock} from './blocks/fileBlock'
+import {createAttachmentBlock} from './blocks/attachmentBlock'
 import {Utils} from './utils'
 
 class OctoUtils {

@@ -4,8 +4,8 @@ import React from 'react'
 
 import {useIntl} from 'react-intl'
 
-import FileElement from '../../components/content/fileElement'
-import {AttachmentBlock} from '../../blocks/fileBlock'
+import AttachmentElement from '../../components/content/attachmentElement'
+import {AttachmentBlock} from '../../blocks/attachmentBlock'
 
 import './attachment.scss'
 import {Block} from '../../blocks/block'
@@ -40,7 +40,7 @@ const AttachmentList = (props: Props): JSX.Element => {
                 {attachments.map((block: AttachmentBlock) => {
                     return (
                         <div key={block.id}>
-                            <FileElement
+                            <AttachmentElement
                                 block={block}
                                 onDelete={onDelete}
                             />

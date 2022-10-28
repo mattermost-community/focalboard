@@ -9,13 +9,13 @@ import {act} from 'react-dom/test-utils'
 
 import {mocked} from 'jest-mock'
 
-import {AttachmentBlock} from '../../blocks/fileBlock'
+import {AttachmentBlock} from '../../blocks/attachmentBlock'
 
 import {wrapIntl} from '../../testUtils'
 
 import octoClient from '../../octoClient'
 
-import FileElement from './fileElement'
+import AttachmentElement from './attachmentElement'
 
 jest.mock('../../octoClient')
 const mockedOcto = mocked(octoClient, true)
@@ -47,7 +47,7 @@ describe('component/content/FileBlock', () => {
 
     test('should match snapshot', async () => {
         const component = wrapIntl(
-            <FileElement
+            <AttachmentElement
                 block={defaultBlock}
             />,
         )
@@ -68,7 +68,7 @@ describe('component/content/FileBlock', () => {
         })
 
         const component = wrapIntl(
-            <FileElement
+            <AttachmentElement
                 block={defaultBlock}
             />,
         )

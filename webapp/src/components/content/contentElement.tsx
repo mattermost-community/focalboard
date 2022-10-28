@@ -16,7 +16,7 @@ import './textElement'
 import './imageElement'
 import './dividerElement'
 import './checkboxElement'
-import './fileElement'
+import './attachmentElement'
 
 type Props = {
     block: ContentBlock

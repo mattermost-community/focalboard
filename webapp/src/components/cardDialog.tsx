@@ -29,7 +29,7 @@ import {IUser} from '../user'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
 import {Block} from '../blocks/block'
-import {AttachmentBlock, createAttachmentBlock} from '../blocks/fileBlock'
+import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
