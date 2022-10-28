@@ -6,6 +6,7 @@
     height: 64px;
     box-shadow: var(--elevation-1);
     display: flex;
+    position: relative;
 
     .fileElement-file-name {
         font-size: 14px;
@@ -42,6 +43,12 @@
 
     .delete-menu {
         margin-top: -30px;
+    }
+
+    .fileElement-delete-download {
+        position: absolute;
+        display: flex;
+        right: 0;
     }
 
     &:hover {

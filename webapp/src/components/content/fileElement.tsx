@@ -125,37 +125,38 @@ const FileElement = (props: Props): JSX.Element|null => {
                     {fileInfo.extension?.substring(1)} {fileSize}
                 </div>
             </div>
-            <MenuWrapper className='mt-3 fileElement-menu-icon'>
-                <IconButton
-                    size='medium'
-                    icon={<CompassIcon icon='dots-vertical'/>}
-                />
-                <div className='delete-menu'>
-                    <Menu position='left'>
-                        <Menu.Text
-                            id='makeTemplate'
-                            icon={
-                                <CompassIcon
-                                    icon='trash-can-outline'
-                                />}
-                            name='Delete'
-                            onClick={handleDeleteButtonClick}
-                        />
-                    </Menu>
-                </div>
-            </MenuWrapper>
-            <a
-                href={fileDataUrl}
-                download={fileName}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='fileElement-download-btn mt-5 mr-2'
-            >
-                <CompassIcon
-                    icon='download-outline'
-                />
-            </a>
-
+            <div className='fileElement-delete-download'>
+                <MenuWrapper className='mt-3 fileElement-menu-icon'>
+                    <IconButton
+                        size='medium'
+                        icon={<CompassIcon icon='dots-vertical'/>}
+                    />
+                    <div className='delete-menu'>
+                        <Menu position='left'>
+                            <Menu.Text
+                                id='makeTemplate'
+                                icon={
+                                    <CompassIcon
+                                        icon='trash-can-outline'
+                                    />}
+                                name='Delete'
+                                onClick={handleDeleteButtonClick}
+                            />
+                        </Menu>
+                    </div>
+                </MenuWrapper>
+                <a
+                    href={fileDataUrl}
+                    download={fileName}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='fileElement-download-btn mt-5 mr-2'
+                >
+                    <CompassIcon
+                        icon='download-outline'
+                    />
+                </a>
+            </div>
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )
