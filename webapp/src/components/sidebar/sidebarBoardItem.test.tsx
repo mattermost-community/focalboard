@@ -180,4 +180,41 @@ describe('components/sidebarBoardItem', () => {
         expect(createCategoryMenu).not.toBeNull()
         expect(container).toMatchSnapshot()
     })
+
+    test('modal should be displayed when create category sub-menu is clicked', () => {
+        const mockStore = configureStore([])
+        const store = mockStore({...state})
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={board}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
+        expect(elementMenuWrapper).not.toBeNull()
+        act(() => {
+            userEvent.click(elementMenuWrapper!)
+        })
+        act(() => {
+            const moveToElement = container.querySelector('#moveBlock')
+            userEvent.hover(moveToElement!)
+        })
+        const createCategoryMenuElement = container.querySelector('[aria-label="Create New Category"]')
+        expect(createCategoryMenuElement).not.toBeNull()
+        act(() => {
+            userEvent.click(createCategoryMenuElement!)
+        })
+        expect(container).toMatchSnapshot()
+    })
 })
