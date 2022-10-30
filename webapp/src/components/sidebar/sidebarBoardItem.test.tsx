@@ -12,6 +12,8 @@ import {Provider as ReduxProvider} from 'react-redux'
 
 import configureStore from 'redux-mock-store'
 
+import {act} from 'react-dom/test-utils'
+
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {wrapIntl} from '../../testUtils'
@@ -142,6 +144,40 @@ describe('components/sidebarBoardItem', () => {
         const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
         expect(elementMenuWrapper).not.toBeNull()
         userEvent.click(elementMenuWrapper!)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('should have create category sub-menu', () => {
+        const mockStore = configureStore([])
+        const store = mockStore({...state})
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <SidebarBoardItem
+                        categoryBoards={categoryBoards1}
+                        board={board}
+                        allCategories={allCategoryBoards}
+                        isActive={true}
+                        showBoard={jest.fn()}
+                        showView={jest.fn()}
+                        onDeleteRequest={jest.fn()}
+                    />
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
+        expect(elementMenuWrapper).not.toBeNull()
+        act(() => {
+            userEvent.click(elementMenuWrapper!)
+        })
+        act(() => {
+            const moveToElement = container.querySelector('#moveBlock')
+            userEvent.hover(moveToElement!)
+        })
+        const createCategoryMenu = container.querySelector('[aria-label="Create New Category"]')
+        expect(createCategoryMenu).not.toBeNull()
         expect(container).toMatchSnapshot()
     })
 })
