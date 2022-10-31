@@ -143,6 +143,11 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 	var sourceCategoryBoards *model.CategoryBoards
 	defaultCategoryID := ""
 
+	// iterate user's categories to find the source category
+	// and the default category.
+	// We need source category to get the list of its board
+	// and the default category to know its ID to
+	// move source category's boards to.
 	for i := range categoryBoards {
 		if categoryBoards[i].ID == sourceCategoryID {
 			sourceCategoryBoards = &categoryBoards[i]
@@ -152,6 +157,7 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 			defaultCategoryID = categoryBoards[i].ID
 		}
 
+		// if both categories are found, no need to iterate furthur.
 		if sourceCategoryBoards != nil && defaultCategoryID != "" {
 			break
 		}
@@ -165,10 +171,14 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 		return fmt.Errorf("moveBoardsToDefaultCategory: %w", errNoDefaultCategoryFound)
 	}
 
+	boardCategoryMapping := map[string]string{}
+
 	for _, boardID := range sourceCategoryBoards.BoardIDs {
-		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, boardID); err != nil {
-			return fmt.Errorf("moveBoardsToDefaultCategory: %w", err)
-		}
+		boardCategoryMapping[boardID] = defaultCategoryID
+	}
+
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, boardCategoryMapping); err != nil {
+		return fmt.Errorf("moveBoardsToDefaultCategory: %w", err)
 	}
 
 	return nil

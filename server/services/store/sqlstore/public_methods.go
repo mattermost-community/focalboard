@@ -22,15 +22,15 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
+func (s *SQLStore) AddUpdateCategoryBoard(userID string, boardCategoryMapping map[string]string) error {
 	if s.dbType == model.SqliteDBType {
-		return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
+		return s.addUpdateCategoryBoard(s.db, userID, boardCategoryMapping)
 	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.addUpdateCategoryBoard(tx, userID, categoryID, blockID)
+	err := s.addUpdateCategoryBoard(tx, userID, boardCategoryMapping)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "AddUpdateCategoryBoard"))

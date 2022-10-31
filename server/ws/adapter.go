@@ -38,7 +38,7 @@ type Adapter interface {
 	BroadcastMemberDelete(teamID, boardID, userID string)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastCategoryChange(category model.Category)
-	BroadcastCategoryBoardChange(teamID, userID string, blockCategory model.BoardCategoryWebsocketData)
+	BroadcastCategoryBoardChange(teamID, userID string, blockCategory []*model.BoardCategoryWebsocketData)
 	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 	BroadcastCategoryReorder(teamID, userID string, categoryOrder []string)

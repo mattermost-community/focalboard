@@ -669,8 +669,8 @@ class WSClient {
             this.updatedData.Categories = this.updatedData.Categories.filter((c) => c.id !== (data as Category).id)
             this.updatedData.Categories.push(data as Category)
         } else if (type === 'blockCategories') {
-            this.updatedData.BoardCategories = this.updatedData.BoardCategories.filter((b) => b.boardID === (data as BoardCategoryWebsocketData).boardID)
-            this.updatedData.BoardCategories.push(data as BoardCategoryWebsocketData)
+            this.updatedData.BoardCategories = this.updatedData.BoardCategories.filter((b) => !(data as BoardCategoryWebsocketData[]).find((boardCategory) => boardCategory.boardID === b.boardID))
+            this.updatedData.BoardCategories.push(...(data as BoardCategoryWebsocketData[]))
         } else if (type === 'board') {
             this.updatedData.Boards = this.updatedData.Boards.filter((b) => b.id !== (data as Board).id)
             this.updatedData.Boards.push(data as Board)

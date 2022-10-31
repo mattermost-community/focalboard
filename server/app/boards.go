@@ -175,7 +175,7 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 
 	// now that we have source board's category,
 	// we send destination board to the same category
-	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, destinationBoardID)
+	return a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{destinationBoardID: destinationCategoryID})
 }
 
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
@@ -328,7 +328,7 @@ func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.
 	}
 
 	for _, board := range boards {
-		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, board.ID); err != nil {
+		if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{board.ID: defaultCategoryID}); err != nil {
 			return err
 		}
 	}

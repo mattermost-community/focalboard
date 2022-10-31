@@ -56,16 +56,21 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 	return s.categoryBoardsFromRows(rows)
 }
 
-func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID, boardID string) error {
-	if err := s.deleteUserCategoryBoard(db, userID, boardID); err != nil {
+func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
+	boardIDs := []string{}
+	for boardID, _ := range boardCategoryMapping {
+		boardIDs = append(boardIDs, boardID)
+	}
+
+	if err := s.deleteUserCategoryBoard(db, userID, boardIDs); err != nil {
 		return err
 	}
 
-	return s.addUserCategoryBoard(db, userID, categoryID, boardID)
+	return s.addUserCategoryBoard(db, userID, boardCategoryMapping)
 }
 
-func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID, categoryID, boardID string) error {
-	_, err := s.getQueryBuilder(db).
+func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
+	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"category_boards").
 		Columns(
 			"id",
@@ -75,31 +80,35 @@ func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID, categoryID, bo
 			"create_at",
 			"update_at",
 			"delete_at",
-		).
-		Values(
-			utils.NewID(utils.IDTypeNone),
-			userID,
-			categoryID,
-			boardID,
-			utils.GetMillis(),
-			utils.GetMillis(),
-			0,
-		).Exec()
+		)
 
-	if err != nil {
+	for boardID, categoryID := range boardCategoryMapping {
+		query = query.
+			Values(
+				utils.NewID(utils.IDTypeNone),
+				userID,
+				categoryID,
+				boardID,
+				utils.GetMillis(),
+				utils.GetMillis(),
+				0,
+			)
+	}
+
+	if _, err := query.Exec(); err != nil {
 		s.logger.Error("addUserCategoryBoard error", mlog.Err(err))
 		return err
 	}
 	return nil
 }
 
-func (s *SQLStore) deleteUserCategoryBoard(db sq.BaseRunner, userID, boardID string) error {
+func (s *SQLStore) deleteUserCategoryBoard(db sq.BaseRunner, userID string, boardIDs []string) error {
 	_, err := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_boards").
 		Set("delete_at", utils.GetMillis()).
 		Where(sq.Eq{
 			"user_id":   userID,
-			"board_id":  boardID,
+			"board_id":  boardIDs,
 			"delete_at": 0,
 		}).Exec()
 
@@ -107,7 +116,7 @@ func (s *SQLStore) deleteUserCategoryBoard(db sq.BaseRunner, userID, boardID str
 		s.logger.Error(
 			"deleteUserCategoryBoard delete error",
 			mlog.String("userID", userID),
-			mlog.String("boardID", boardID),
+			mlog.Array("boardID", boardIDs),
 			mlog.Err(err),
 		)
 		return err

@@ -33,7 +33,7 @@ export const SYSTEM_ADMIN_ROLE = 'system_admin'
 export const TEAM_ADMIN_ROLE = 'team_admin'
 export type CategoryOrder = string[]
 
-export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData | BoardType | BoardMember | null | CategoryOrder
+export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData[] | BoardType | BoardMember | null | CategoryOrder
 
 // eslint-disable-next-line no-shadow
 enum IDType {

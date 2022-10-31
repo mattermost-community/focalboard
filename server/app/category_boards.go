@@ -95,7 +95,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		}
 
 		if !belongsToCategory {
-			if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, board.ID); err != nil {
+			if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{board.ID: createdCategory.ID}); err != nil {
 				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
 			}
 
@@ -106,20 +106,28 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	return createdCategoryBoards, nil
 }
 
-func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID string) error {
-	err := a.store.AddUpdateCategoryBoard(userID, categoryID, boardID)
+func (a *App) AddUpdateUserCategoryBoard(teamID, userID string, boardCategoryMapping map[string]string) error {
+	err := a.store.AddUpdateCategoryBoard(userID, boardCategoryMapping)
 	if err != nil {
 		return err
+	}
+
+	wsPayload := make([]*model.BoardCategoryWebsocketData, len(boardCategoryMapping))
+	i := 0
+	for boardID, categoryID := range boardCategoryMapping {
+		wsPayload[i] = &model.BoardCategoryWebsocketData{
+			BoardID:    boardID,
+			CategoryID: categoryID,
+		}
+		i++
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastCategoryBoardChange(
 			teamID,
 			userID,
-			model.BoardCategoryWebsocketData{
-				BoardID:    boardID,
-				CategoryID: categoryID,
-			})
+			wsPayload,
+		)
 		return nil
 	})
 

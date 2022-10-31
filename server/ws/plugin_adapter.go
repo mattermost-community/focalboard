@@ -546,19 +546,18 @@ func (pa *PluginAdapter) BroadcastCategoryBoardsReorder(teamID, userID, category
 	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
 }
 
-func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategories []*model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
 		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
-		mlog.String("categoryID", boardCategory.CategoryID),
-		mlog.String("blockID", boardCategory.BoardID),
+		mlog.Int("numEntries", len(boardCategories)),
 	)
 
 	message := UpdateCategoryMessage{
 		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
-		BoardCategories: &boardCategory,
+		BoardCategories: boardCategories,
 	}
 
 	payload := utils.StructToMap(message)
