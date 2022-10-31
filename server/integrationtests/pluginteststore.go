@@ -191,7 +191,7 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string, showEm
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error) {
 	users := []*model.User{}
 	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID, false, false)
 	if err != nil {

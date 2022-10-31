@@ -333,7 +333,6 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 }
 
 func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error) {
-
 	query := s.getQueryBuilder().
 		Select(userFields(showEmail, showName)...).
 		From("Users as u").
