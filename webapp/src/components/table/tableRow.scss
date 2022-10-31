@@ -25,7 +25,6 @@
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.05);
         overflow: initial;
-        margin-left: -60px;
 
         .delete-button {
             display: block;
@@ -42,6 +41,7 @@
             left: 8px;
             padding: 8px;
             height: 44px;
+            margin-left: -40px;
         }
 
         .octo-table-cell-btn {
