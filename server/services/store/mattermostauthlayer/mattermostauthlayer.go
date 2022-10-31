@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -331,10 +332,10 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	return builder.RunWith(s.mmDB)
 }
 
-func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error) {
+
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
+		Select(userFields(showEmail, showName)...).
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserID = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0})
@@ -372,10 +373,9 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
+func (s *MattermostAuthLayer) GetUsersList(userIDs []string, showEmail, showName bool) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
+		Select(userFields(showEmail, showName)...).
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
 		Where(sq.Eq{"u.id": userIDs})
@@ -398,10 +398,9 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots, showEmail, showName bool) ([]*model.User, error) {
 	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
+		Select(userFields(showEmail, showName)...).
 		From("Users as u").
 		LeftJoin("Bots b ON ( b.UserId = u.id )").
 		Where(sq.Eq{"u.deleteAt": 0}).
@@ -645,6 +644,38 @@ func boardFields(prefix string) []string {
 		}
 	}
 	return prefixedFields
+}
+
+func userFields(showEmail, showName bool) []string {
+	emailField := "''"
+	if showEmail {
+		emailField = "u.email"
+	}
+	firstNameField := "''"
+	lastNameField := "''"
+	if showName {
+		firstNameField = "u.firstname"
+		lastNameField = "u.lastname"
+	}
+
+	fields := []string{
+		"u.id",
+		"u.username",
+		emailField,
+		"u.nickname",
+		firstNameField,
+		lastNameField,
+		"u.CreateAt as create_at",
+		"u.UpdateAt as update_at",
+		"u.DeleteAt as delete_at",
+		"b.UserId IS NOT NULL AS is_bot",
+		"u.roles = 'system_guest' as is_guest",
+	}
+
+	fmt.Println("******" + strings.Join(fields, ","))
+	fmt.Println("******" + strconv.FormatInt(int64(len(fields)), 10))
+
+	return fields
 }
 
 // SearchBoardsForUser returns all boards that match with the
