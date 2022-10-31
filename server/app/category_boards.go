@@ -9,7 +9,7 @@ import (
 
 const defaultCategoryBoards = "Boards"
 
-var errCategoryBoardsLengthMismatch = errors.New("cannot update category boards order, passed list of categories boards different size than in DB")
+var errCategoryBoardsLengthMismatch = errors.New("cannot update category boards order, passed list of categories boards different size than in database")
 var errBoardNotFoundInCategory = errors.New("specified board ID not found in specified category ID")
 
 func (a *App) GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error) {
@@ -152,6 +152,8 @@ func (a *App) ReorderCategoryBoards(userID, teamID, categoryID string, newBoards
 }
 
 func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID string, newBoardsOrder []string) error {
+	// this function is to ensure that we don't miss specifying
+	// all boards of the category while reordering.
 	existingCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
 		return err
@@ -159,7 +161,6 @@ func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID st
 
 	var targetCategoryBoards *model.CategoryBoards
 	for i := range existingCategoryBoards {
-		a.logger.Error("checking category: " + existingCategoryBoards[i].Category.ID)
 		if existingCategoryBoards[i].Category.ID == categoryID {
 			targetCategoryBoards = &existingCategoryBoards[i]
 			break

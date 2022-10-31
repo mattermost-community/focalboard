@@ -9,7 +9,7 @@ import (
 )
 
 var errCategoryNotFound = errors.New("category ID specified in input does not exist for user")
-var errCategoriesLengthMismatch = errors.New("cannot update category order, passed list of categories different size than in DB")
+var errCategoriesLengthMismatch = errors.New("cannot update category order, passed list of categories different size than in database")
 var ErrCannotDeleteSystemCategory = errors.New("cannot delete a system category")
 var ErrCannotUpdateSystemCategory = errors.New("cannot update a system category")
 
@@ -112,8 +112,6 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 		return nil, ErrCannotDeleteSystemCategory
 	}
 
-	// we need a list of boards associated to this category
-	// so we can move them to user's default Boards category
 	if err := a.moveBoardsToDefaultCategory(userID, teamID, categoryID); err != nil {
 		return nil, err
 	}
@@ -135,6 +133,8 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 }
 
 func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID string) error {
+	// we need a list of boards associated to this category
+	// so we can move them to user's default Boards category
 	categoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
 		return err

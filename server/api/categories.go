@@ -473,7 +473,6 @@ func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request
 	}
 
 	var newBoardsOrder []string
-
 	err = json.Unmarshal(requestBody, &newBoardsOrder)
 	if err != nil {
 		a.errorResponse(w, r, err)

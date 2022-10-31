@@ -327,10 +327,13 @@ func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.
 		return fmt.Errorf("%w userID: %s", errNoDefaultCategoryFound, userID)
 	}
 
+	boardCategoryMapping := map[string]string{}
 	for _, board := range boards {
-		if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{board.ID: defaultCategoryID}); err != nil {
-			return err
-		}
+		boardCategoryMapping[board.ID] = defaultCategoryID
+	}
+
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, boardCategoryMapping); err != nil {
+		return err
 	}
 
 	return nil

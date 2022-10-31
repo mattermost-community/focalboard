@@ -21,8 +21,11 @@ import {
     Category,
     CategoryBoards,
     fetchSidebarCategories,
-    getSidebarCategories, updateBoardCategories,
-    updateCategories, updateCategoryBoardsOrder, updateCategoryOrder,
+    getSidebarCategories,
+    updateBoardCategories,
+    updateCategories,
+    updateCategoryBoardsOrder,
+    updateCategoryOrder,
 } from '../../store/sidebar'
 
 import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
@@ -139,8 +142,6 @@ const Sidebar = (props: Props) => {
             return
         }
 
-        console.log(`Moving from index: ${source.index} to index: ${destination.index}`)
-
         const categories = sidebarCategories
 
         // creating a mutable copy
@@ -170,13 +171,8 @@ const Sidebar = (props: Props) => {
         const toCategoryID = destination.droppableId
         const boardID = draggableId
 
-        console.log(`Source droppable ID: ${source.droppableId}`)
-        console.log(`Destination droppable ID: ${destination.droppableId}`)
-        console.log(source.droppableId === destination.droppableId ? 'SAME CATEGORY' : 'DIFFERENT CATEGORIES')
-
         if (fromCategoryID === toCategoryID) {
             // board re-arranged withing the same category
-            console.log(`Moving from index: ${source.index} to index: ${destination.index}`)
             const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
             if (!toSidebarCategory) {
                 Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
@@ -238,16 +234,6 @@ const Sidebar = (props: Props) => {
 
     const [draggedItemID, setDraggedItemID] = useState<string>('')
     const [isCategoryBeingDragged, setIsCategoryBeingDragged] = useState<boolean>(false)
-
-    const onBeforeCapture = useCallback((before: BeforeCapture) => {
-        console.log(`before.draggableId: ${before.draggableId}`)
-        setDraggedItemID(before.draggableId)
-        const draggedCategoryIndex = sidebarCategories.findIndex((category) => category.id === before.draggableId)
-        if (draggedCategoryIndex > -1) {
-            console.log('DELETCTED DNDING A CATEGORY')
-        }
-        setIsCategoryBeingDragged(draggedCategoryIndex > -1)
-    }, [sidebarCategories])
 
     if (!boards) {
         return <div/>
@@ -350,7 +336,6 @@ const Sidebar = (props: Props) => {
 
             <DragDropContext
                 onDragEnd={onDragEnd}
-                // onBeforeCapture={onBeforeCapture}
             >
                 <Droppable
                     droppableId='lhs-categories'

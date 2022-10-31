@@ -54,7 +54,8 @@ import wsClient, {
     ACTION_UPDATE_CARD_LIMIT_TIMESTAMP,
     ACTION_UPDATE_CATEGORY,
     ACTION_UPDATE_BOARD_CATEGORY,
-    ACTION_UPDATE_BOARD, ACTION_REORDER_CATEGORIES,
+    ACTION_UPDATE_BOARD,
+    ACTION_REORDER_CATEGORIES,
 } from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
