@@ -284,7 +284,7 @@ const SidebarCategory = (props: Props) => {
                             <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
                                 {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
 
-                                {props.categoryBoards.isNew && newCategoryBadge}
+                                {props.categoryBoards.isNew && !categoryMenuOpen && newCategoryBadge}
 
                                 <MenuWrapper
                                     className={categoryMenuOpen ? 'menuOpen' : ''}
@@ -313,14 +313,14 @@ const SidebarCategory = (props: Props) => {
                                                     onClick={() => setShowDeleteCategoryDialog(true)}
                                                 />
                                                 <Menu.Separator/>
-                                                <Menu.Text
-                                                    id='createNewCategory'
-                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                                    icon={<CreateNewFolder/>}
-                                                    onClick={handleCreateNewCategory}
-                                                />
                                             </React.Fragment>
                                         }
+                                        <Menu.Text
+                                            id='createNewCategory'
+                                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                            icon={<CreateNewFolder/>}
+                                            onClick={handleCreateNewCategory}
+                                        />
                                     </Menu>
                                 </MenuWrapper>
                             </div>
