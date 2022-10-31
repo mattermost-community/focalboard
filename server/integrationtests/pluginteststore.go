@@ -193,7 +193,7 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string, showEm
 
 func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error) {
 	users := []*model.User{}
-	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID, false, false)
+	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID, showEmail, showName)
 	if err != nil {
 		return nil, err
 	}

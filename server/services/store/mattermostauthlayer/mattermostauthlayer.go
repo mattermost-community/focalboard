@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -670,10 +669,6 @@ func userFields(showEmail, showName bool) []string {
 		"b.UserId IS NOT NULL AS is_bot",
 		"u.roles = 'system_guest' as is_guest",
 	}
-
-	fmt.Println("******" + strings.Join(fields, ","))
-	fmt.Println("******" + strconv.FormatInt(int64(len(fields)), 10))
-
 	return fields
 }
 
