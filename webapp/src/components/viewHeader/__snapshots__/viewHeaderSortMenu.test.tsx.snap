@@ -4,7 +4,7 @@ exports[`components/viewHeader/viewHeaderSortMenu return sort menu 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button
