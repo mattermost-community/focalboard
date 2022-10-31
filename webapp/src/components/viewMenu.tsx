@@ -279,6 +279,7 @@ const ViewMenu = (props: Props) => {
                             name={view.title}
                             icon={iconForViewType(view.fields.viewType)}
                             onClick={handleViewClick}
+                            disabled={props.readonly}
                         />))}
                 </div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
