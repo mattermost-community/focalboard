@@ -97,7 +97,7 @@ const sidebarSlice = createSlice({
                         // and let the board stay in its right order.
                         // Only if its not in the right category, do add it.
                         if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) < 0) {
-                            categoryAttribute.boardIDs.push(boardCategory.boardID)
+                            categoryAttribute.boardIDs.unshift(boardCategory.boardID)
                             categoryAttribute.isNew = false
                         }
                     } else {

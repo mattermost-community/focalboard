@@ -80,6 +80,7 @@ func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCa
 			"create_at",
 			"update_at",
 			"delete_at",
+			"sort_order",
 		)
 
 	for boardID, categoryID := range boardCategoryMapping {
@@ -91,6 +92,7 @@ func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCa
 				boardID,
 				utils.GetMillis(),
 				utils.GetMillis(),
+				0,
 				0,
 			)
 	}
