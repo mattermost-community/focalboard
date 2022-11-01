@@ -2510,7 +2510,7 @@ exports[`components/table/Table should match snapshot with GroupBy 1`] = `
                 type="button"
               >
                 <i
-                  class="CompassIcon icon-menu-down"
+                  class="CompassIcon icon-menu-right"
                 />
               </button>
               <span
