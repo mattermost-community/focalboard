@@ -53,6 +53,10 @@
         }
     }
 
+    &.readonly:hover {
+        margin-left: unset;
+    }
+
     .action-cell {
         display: none;
         margin-left: 20px;
