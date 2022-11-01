@@ -36,7 +36,7 @@ class Constants {
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '7.4.3'
+    static readonly versionString = '7.4.4'
     static readonly versionDisplayString = 'Oct 2022'
 
     static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
