@@ -52,7 +52,7 @@ Our [developer guide](https://developers.mattermost.com/contribute/focalboard/pe
 
 Clone [mattermost-server](https://github.com/mattermost/mattermost-server) into sibling directory.
 
-Create a .env file in the focalboard directory that contains:
+Create an `.env` file in the focalboard directory that contains:
 
 ```
 EXCLUDE_ENTERPRISE="1"
