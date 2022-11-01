@@ -14,12 +14,12 @@ import (
 func (a *API) registerCategoriesRoutes(r *mux.Router) {
 	// Category APIs
 	r.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
+	r.HandleFunc("/teams/{teamID}/categories/reorder", a.sessionRequired(a.handleReorderCategories)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 	r.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBoards)).Methods(http.MethodGet)
-	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}", a.sessionRequired(a.handleUpdateCategoryBoard)).Methods(http.MethodPost)
-	r.HandleFunc("/teams/{teamID}/categories/reorder", a.sessionRequired(a.handleReorderCategories)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/reorder", a.sessionRequired(a.handleReorderCategoryBoards)).Methods(http.MethodPut)
+	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}", a.sessionRequired(a.handleUpdateCategoryBoard)).Methods(http.MethodPost)
 }
 
 func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
