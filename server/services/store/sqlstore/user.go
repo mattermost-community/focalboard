@@ -45,7 +45,7 @@ func (s *SQLStore) getRegisteredUserCount(db sq.BaseRunner) (int, error) {
 }
 
 func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model.User, error) {
-	users, err := s.getUsersByCondition(db, condition, 0, true)
+	users, err := s.getUsersByCondition(db, condition, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -57,16 +57,12 @@ func (s *SQLStore) getUserByCondition(db sq.BaseRunner, condition sq.Eq) (*model
 	return users[0], nil
 }
 
-func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, limit uint64, showEmail bool) ([]*model.User, error) {
-	emailField := "''"
-	if showEmail {
-		emailField = "u.email"
-	}
+func (s *SQLStore) getUsersByCondition(db sq.BaseRunner, condition interface{}, limit uint64) ([]*model.User, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"id",
 			"username",
-			emailField,
+			"email",
 			"password",
 			"mfa_secret",
 			"auth_service",
@@ -106,8 +102,8 @@ func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, er
 	return s.getUserByCondition(db, sq.Eq{"id": userID})
 }
 
-func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string, showEmail, _ bool) ([]*model.User, error) {
-	users, err := s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0, showEmail)
+func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string, _, _ bool) ([]*model.User, error) {
+	users, err := s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
 	if err != nil {
 		return nil, err
 	}
@@ -218,8 +214,8 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 	return nil
 }
 
-func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string, showEmail, _ bool) ([]*model.User, error) {
-	users, err := s.getUsersByCondition(db, nil, 0, showEmail)
+func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string, _, _ bool) ([]*model.User, error) {
+	users, err := s.getUsersByCondition(db, nil, 0)
 	if model.IsErrNotFound(err) {
 		return []*model.User{}, nil
 	}
@@ -227,8 +223,8 @@ func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string, showEmai
 	return users, err
 }
 
-func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string, _, showEmail, _ bool) ([]*model.User, error) {
-	users, err := s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10, showEmail)
+func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string, _, _, _ bool) ([]*model.User, error) {
+	users, err := s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
 	if model.IsErrNotFound(err) {
 		return []*model.User{}, nil
 	}
