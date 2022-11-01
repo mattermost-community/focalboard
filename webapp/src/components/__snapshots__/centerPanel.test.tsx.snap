@@ -2153,7 +2153,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </button>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
@@ -2194,7 +2194,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </div>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
