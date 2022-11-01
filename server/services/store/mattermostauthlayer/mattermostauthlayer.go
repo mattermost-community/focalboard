@@ -332,7 +332,6 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 }
 
 func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error) {
-
 	query := s.baseUserQuery(showEmail, showName).
 		Where(sq.Eq{"u.deleteAt": 0})
 
