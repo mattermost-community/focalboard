@@ -6,7 +6,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -89,7 +88,7 @@ func build(cfg appConfig) (err error) {
 	}
 
 	// each board is a subdirectory; write each to the archive
-	files, err := ioutil.ReadDir(cfg.dir)
+	files, err := os.ReadDir(cfg.dir)
 	if err != nil {
 		return fmt.Errorf("error reading directory %s: %w", cfg.dir, err)
 	}
@@ -109,7 +108,7 @@ func build(cfg appConfig) (err error) {
 
 func getVersionFile(cfg appConfig) ([]byte, error) {
 	path := filepath.Join(cfg.dir, versionFilename)
-	buf, err := ioutil.ReadFile(path)
+	buf, err := os.ReadFile(path)
 	if err != nil {
 		return nil, fmt.Errorf("cannot read %s: %w", path, err)
 	}
@@ -135,7 +134,7 @@ func writeBoard(w *zip.Writer, boardID string, cfg appConfig) error {
 	}
 
 	boardPath := filepath.Join(cfg.dir, boardID)
-	files, err := ioutil.ReadDir(boardPath)
+	files, err := os.ReadDir(boardPath)
 	if err != nil {
 		return fmt.Errorf("error reading board directory %s: %w", cfg.dir, err)
 	}
