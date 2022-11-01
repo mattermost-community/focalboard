@@ -99,6 +99,8 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 		EnableDataRetention:      enableBoardsDeletion,
 		DataRetentionDays:        *mmconfig.DataRetentionSettings.BoardsRetentionDays,
 		TeammateNameDisplay:      *mmconfig.TeamSettings.TeammateNameDisplay,
+		ShowEmailAddress:         *mmconfig.PrivacySettings.ShowEmailAddress,
+		ShowFullName:             *mmconfig.PrivacySettings.ShowFullName,
 	}
 }
 

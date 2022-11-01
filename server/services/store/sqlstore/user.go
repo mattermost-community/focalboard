@@ -102,7 +102,7 @@ func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, er
 	return s.getUserByCondition(db, sq.Eq{"id": userID})
 }
 
-func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string, showEmail, showName bool) ([]*model.User, error) {
+func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string, _, _ bool) ([]*model.User, error) {
 	users, err := s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
 	if err != nil {
 		return nil, err
