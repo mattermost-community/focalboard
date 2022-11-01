@@ -264,66 +264,6 @@ const SidebarCategory = (props: Props) => {
                         className={`SidebarCategory${props.categoryBoards.isNew ? ' new' : ''}${boardDraggingOver ? ' draggingOver' : ''}`}
                         ref={menuWrapperRef}
                     >
-                        <div
-                            className={`octo-sidebar-item category ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
-                        >
-                            <div
-                                className='octo-sidebar-title category-title'
-                                title={props.categoryBoards.name}
-                                onClick={toggleCollapse}
-                                {...provided.dragHandleProps}
-                            >
-                                {collapsed || snapshot.isDragging || props.forceCollapse ? <ChevronRight/> : <ChevronDown/>}
-                                {props.categoryBoards.name}
-                                <div className='sidebarCategoriesTour'>
-                                    {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
-                                </div>
-                            </div>
-                            <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
-                                {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
-
-                                {props.categoryBoards.isNew && !categoryMenuOpen && newCategoryBadge}
-
-                                <MenuWrapper
-                                    className={categoryMenuOpen ? 'menuOpen' : ''}
-                                    stopPropagationOnToggle={true}
-                                    onToggle={(open) => setCategoryMenuOpen(open)}
-                                >
-                                    <IconButton icon={<OptionsIcon/>}/>
-                                    <Menu
-                                        position='auto'
-                                        parentRef={menuWrapperRef}
-                                    >
-                                        {
-                                            props.categoryBoards.type === 'custom' &&
-                                            <React.Fragment>
-                                                <Menu.Text
-                                                    id='updateCategory'
-                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
-                                                    icon={<CompassIcon icon='pencil-outline'/>}
-                                                    onClick={handleUpdateCategory}
-                                                />
-                                                <Menu.Text
-                                                    id='deleteCategory'
-                                                    className='text-danger'
-                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
-                                                    icon={<DeleteIcon/>}
-                                                    onClick={() => setShowDeleteCategoryDialog(true)}
-                                                />
-                                                <Menu.Separator/>
-                                            </React.Fragment>
-                                        }
-                                        <Menu.Text
-                                            id='createNewCategory'
-                                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                            icon={<CreateNewFolder/>}
-                                            onClick={handleCreateNewCategory}
-                                        />
-                                    </Menu>
-                                </MenuWrapper>
-                            </div>
-                        </div>
-
                         <Droppable
                             droppableId={props.categoryBoards.id}
                             type='board'
@@ -339,6 +279,65 @@ const SidebarCategory = (props: Props) => {
                                         ref={categoryProvided.innerRef}
                                         {...categoryProvided.droppableProps}
                                     >
+                                        <div
+                                            className={`octo-sidebar-item category ${collapsed || props.forceCollapse ? 'collapsed' : 'expanded'} ${props.categoryBoards.id === props.activeCategoryId ? 'active' : ''}`}
+                                        >
+                                            <div
+                                                className='octo-sidebar-title category-title'
+                                                title={props.categoryBoards.name}
+                                                onClick={toggleCollapse}
+                                                {...provided.dragHandleProps}
+                                            >
+                                                {collapsed || snapshot.isDragging || props.forceCollapse ? <ChevronRight/> : <ChevronDown/>}
+                                                {props.categoryBoards.name}
+                                                <div className='sidebarCategoriesTour'>
+                                                    {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
+                                                </div>
+                                            </div>
+                                            <div className={(props.index === 0 && shouldViewManageCatergoriesTour) ? `${ClassForManageCategoriesTourStep}` : ''}>
+                                                {props.index === 0 && shouldViewManageCatergoriesTour && <ManageCategoriesTourStep/>}
+
+                                                {props.categoryBoards.isNew && !categoryMenuOpen && newCategoryBadge}
+
+                                                <MenuWrapper
+                                                    className={categoryMenuOpen ? 'menuOpen' : ''}
+                                                    stopPropagationOnToggle={true}
+                                                    onToggle={(open) => setCategoryMenuOpen(open)}
+                                                >
+                                                    <IconButton icon={<OptionsIcon/>}/>
+                                                    <Menu
+                                                        position='auto'
+                                                        parentRef={menuWrapperRef}
+                                                    >
+                                                        {
+                                                            props.categoryBoards.type === 'custom' &&
+                                                            <React.Fragment>
+                                                                <Menu.Text
+                                                                    id='updateCategory'
+                                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Update', defaultMessage: 'Rename Category'})}
+                                                                    icon={<CompassIcon icon='pencil-outline'/>}
+                                                                    onClick={handleUpdateCategory}
+                                                                />
+                                                                <Menu.Text
+                                                                    id='deleteCategory'
+                                                                    className='text-danger'
+                                                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.Delete', defaultMessage: 'Delete Category'})}
+                                                                    icon={<DeleteIcon/>}
+                                                                    onClick={() => setShowDeleteCategoryDialog(true)}
+                                                                />
+                                                                <Menu.Separator/>
+                                                            </React.Fragment>
+                                                        }
+                                                        <Menu.Text
+                                                            id='createNewCategory'
+                                                            name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                                            icon={<CreateNewFolder/>}
+                                                            onClick={handleCreateNewCategory}
+                                                        />
+                                                    </Menu>
+                                                </MenuWrapper>
+                                            </div>
+                                        </div>
                                         {!(collapsed || props.forceCollapse || snapshot.isDragging || props.draggedItemID === props.categoryBoards.id) && visibleBlocks.length === 0 &&
                                             (
                                                 <div>
