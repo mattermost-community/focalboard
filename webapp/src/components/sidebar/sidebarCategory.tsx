@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {MutableRefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
@@ -44,8 +44,6 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmation
 
 import SidebarCategoriesTourStep from '../../components/onboardingTour/sidebarCategories/sidebarCategories'
 import ManageCategoriesTourStep from '../../components/onboardingTour/manageCategories/manageCategories'
-
-import HandRight from '../../widgets/icons/HandRight'
 
 import DeleteBoardDialog from './deleteBoardDialog'
 import SidebarBoardItem from './sidebarBoardItem'

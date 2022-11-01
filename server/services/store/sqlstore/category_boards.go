@@ -58,7 +58,7 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 
 func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
 	boardIDs := []string{}
-	for boardID, _ := range boardCategoryMapping {
+	for boardID := range boardCategoryMapping {
 		boardIDs = append(boardIDs, boardID)
 	}
 
@@ -149,8 +149,8 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 	}
 
 	updateCase := sq.Case("board_id")
-	for i, boardId := range newBoardsOrder {
-		updateCase = updateCase.When("'"+boardId+"'", sq.Expr(fmt.Sprintf("%d", i+categoryBoardsSortOrderGap)))
+	for i, boardID := range newBoardsOrder {
+		updateCase = updateCase.When("'"+boardID+"'", sq.Expr(fmt.Sprintf("%d", i+categoryBoardsSortOrderGap)))
 	}
 	updateCase.Else("sort_order")
 
@@ -173,5 +173,4 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 	}
 
 	return newBoardsOrder, nil
-
 }

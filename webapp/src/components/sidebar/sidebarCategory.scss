@@ -185,9 +185,6 @@
     }
 
     .badge.newCategoryBadge {
-        &:hover {
-            display: none;
-        }
 
         background-color: rgba(var(--sidebar-text-rgb));
         color: rgb(var(--sidebar-bg-rgb));
@@ -202,6 +199,10 @@
         letter-spacing: 0.01em;
         line-height: 16px;
         text-transform: uppercase;
+
+        &:hover {
+            display: none;
+        }
     }
 
     .newCategoryDragArea {

@@ -410,9 +410,9 @@ func TestBoardCategory(t *testing.T) {
 				Name: "Boards",
 			}, nil)
 			th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_1").Return(nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_2").Return(nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_3").Return(nil)
+			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "default_category_id"}).Return(nil)
+			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_2": "default_category_id"}).Return(nil)
+			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_3": "default_category_id"}).Return(nil)
 
 			boards := []*model.Board{
 				{ID: "board_id_1"},

@@ -1,8 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {MutableRefObject, useCallback, useRef, useState} from 'react'
+import React, {useCallback, useRef, useState} from 'react'
 import {useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
+import {Draggable} from 'react-beautiful-dnd'
 
 import {Board} from '../../blocks/board'
 import {BoardView, IViewType} from '../../blocks/boardView'
@@ -40,8 +41,6 @@ import octoClient from '../../octoClient'
 import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
-
-import {Draggable} from 'react-beautiful-dnd'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
