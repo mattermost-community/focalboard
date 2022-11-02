@@ -1876,7 +1876,7 @@ exports[`components/table/Table limited card in table view 1`] = `
         class="table-row-container"
       >
         <div
-          class="TableRow octo-table-row"
+          class="TableRow octo-table-row readonly"
           draggable="true"
           style="opacity: 1;"
         >
@@ -1955,7 +1955,7 @@ exports[`components/table/Table limited card in table view 1`] = `
           </div>
         </div>
         <div
-          class="TableRow octo-table-row"
+          class="TableRow octo-table-row readonly"
           draggable="true"
           style="opacity: 1;"
         >
@@ -2710,7 +2710,7 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
         class="table-row-container"
       >
         <div
-          class="TableRow octo-table-row"
+          class="TableRow octo-table-row readonly"
           draggable="true"
           style="opacity: 1;"
         >
@@ -2945,7 +2945,7 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
         class="table-row-container"
       >
         <div
-          class="TableRow octo-table-row"
+          class="TableRow octo-table-row readonly"
           draggable="true"
           style="opacity: 1;"
         >
