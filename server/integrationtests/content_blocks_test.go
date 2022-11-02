@@ -25,7 +25,7 @@ func TestMoveContentBlock(t *testing.T) {
 	contentBlockID5 := utils.NewID(utils.IDTypeBlock)
 	contentBlockID6 := utils.NewID(utils.IDTypeBlock)
 
-	card1 := model.Block{
+	card1 := &model.Block{
 		ID:       cardID1,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -35,7 +35,7 @@ func TestMoveContentBlock(t *testing.T) {
 			"contentOrder": []string{contentBlockID1, contentBlockID2, contentBlockID3},
 		},
 	}
-	card2 := model.Block{
+	card2 := &model.Block{
 		ID:       cardID2,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -46,16 +46,15 @@ func TestMoveContentBlock(t *testing.T) {
 		},
 	}
 
-	contentBlock1 :=
-		model.Block{
-			ID:       contentBlockID1,
-			BoardID:  board.ID,
-			CreateAt: 1,
-			UpdateAt: 1,
-			Type:     model.TypeCard,
-			ParentID: cardID1,
-		}
-	contentBlock2 := model.Block{
+	contentBlock1 := &model.Block{
+		ID:       contentBlockID1,
+		BoardID:  board.ID,
+		CreateAt: 1,
+		UpdateAt: 1,
+		Type:     model.TypeCard,
+		ParentID: cardID1,
+	}
+	contentBlock2 := &model.Block{
 		ID:       contentBlockID2,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -63,7 +62,7 @@ func TestMoveContentBlock(t *testing.T) {
 		Type:     model.TypeCard,
 		ParentID: cardID1,
 	}
-	contentBlock3 := model.Block{
+	contentBlock3 := &model.Block{
 		ID:       contentBlockID3,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -71,7 +70,7 @@ func TestMoveContentBlock(t *testing.T) {
 		Type:     model.TypeCard,
 		ParentID: cardID1,
 	}
-	contentBlock4 := model.Block{
+	contentBlock4 := &model.Block{
 		ID:       contentBlockID4,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -79,7 +78,7 @@ func TestMoveContentBlock(t *testing.T) {
 		Type:     model.TypeCard,
 		ParentID: cardID2,
 	}
-	contentBlock5 := model.Block{
+	contentBlock5 := &model.Block{
 		ID:       contentBlockID5,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -87,7 +86,7 @@ func TestMoveContentBlock(t *testing.T) {
 		Type:     model.TypeCard,
 		ParentID: cardID2,
 	}
-	contentBlock6 := model.Block{
+	contentBlock6 := &model.Block{
 		ID:       contentBlockID6,
 		BoardID:  board.ID,
 		CreateAt: 1,
@@ -96,7 +95,7 @@ func TestMoveContentBlock(t *testing.T) {
 		ParentID: cardID2,
 	}
 
-	newBlocks := []model.Block{
+	newBlocks := []*model.Block{
 		contentBlock1,
 		contentBlock2,
 		contentBlock3,
