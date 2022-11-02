@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/pkg/errors"
@@ -115,7 +114,7 @@ func applyManifest(manifest *model.Manifest) error {
 		manifestStr := string(manifestBytes)
 
 		// write generated code to file by using Go file template.
-		if err := ioutil.WriteFile(
+		if err := os.WriteFile(
 			"server/manifest.go",
 			[]byte(fmt.Sprintf(pluginIDGoFileTemplate, manifestStr)),
 			0600,
