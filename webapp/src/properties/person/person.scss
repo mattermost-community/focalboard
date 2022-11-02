@@ -14,7 +14,7 @@
         display: flex;
         align-items: center;
         color: rgba(var(--center-channel-color-rgb), 1);
-        margin-left: 10px;
+        margin-left: 7px;
 
         img {
             border-radius: 50px;
@@ -42,7 +42,7 @@
         display: flex;
         align-items: center;
         height: 40px;
-        padding: 0 40px 0 20px;
+        padding: 0 40px 0 10px;
 
         &:hover {
             background: rgba(var(--center-channel-color-rgb), 0.08);
