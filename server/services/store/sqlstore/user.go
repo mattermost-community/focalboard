@@ -104,7 +104,7 @@ func (s *SQLStore) getUserByID(db sq.BaseRunner, userID string) (*model.User, er
 	return s.getUserByCondition(db, sq.Eq{"id": userID})
 }
 
-func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string) ([]*model.User, error) {
+func (s *SQLStore) getUsersList(db sq.BaseRunner, userIDs []string, _, _ bool) ([]*model.User, error) {
 	return s.getUsersByCondition(db, sq.Eq{"id": userIDs}, 0)
 }
 
@@ -218,11 +218,11 @@ func (s *SQLStore) updateUserPasswordByID(db sq.BaseRunner, userID, password str
 	return nil
 }
 
-func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string) ([]*model.User, error) {
+func (s *SQLStore) getUsersByTeam(db sq.BaseRunner, _ string, _ string, _, _ bool) ([]*model.User, error) {
 	return s.getUsersByCondition(db, nil, 0)
 }
 
-func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string, _ bool) ([]*model.User, error) {
+func (s *SQLStore) searchUsersByTeam(db sq.BaseRunner, _ string, searchQuery string, _ string, _, _, _ bool) ([]*model.User, error) {
 	return s.getUsersByCondition(db, &sq.Like{"username": "%" + searchQuery + "%"}, 10)
 }
 
