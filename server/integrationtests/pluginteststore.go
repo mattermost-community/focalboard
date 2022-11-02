@@ -156,7 +156,7 @@ func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error) {
 	if asGuestID == "guest" {
 		return []*model.User{
 			s.users["viewer"],
@@ -191,9 +191,9 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string) ([]*mo
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error) {
 	users := []*model.User{}
-	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID)
+	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID, showEmail, showName)
 	if err != nil {
 		return nil, err
 	}

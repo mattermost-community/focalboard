@@ -91,8 +91,8 @@
         }
 
         &.expanded {
-            .icon-menu-down {
-                transform: rotate(270deg);
+            .icon-menu-right {
+                transform: rotate(90deg);
             }
         }
     }

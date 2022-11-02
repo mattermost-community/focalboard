@@ -70,11 +70,18 @@ func TestOnConfigurationChange(t *testing.T) {
 		TeammateNameDisplay: &usernameRef,
 	}
 
+	falseRef := false
+	basePrivacySettings := &serverModel.PrivacySettings{
+		ShowEmailAddress: &falseRef,
+		ShowFullName:     &falseRef,
+	}
+
 	baseConfig := &serverModel.Config{
 		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
 		TeamSettings:          *baseTeamSettings,
+		PrivacySettings:       *basePrivacySettings,
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {

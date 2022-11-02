@@ -354,7 +354,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
                     }
                 } else if (propertyTemplate.type === 'multiSelect') {
                     // Look up the value of the select option
-                    const options = (propertyValue as string[]).map((value) => propertyTemplate.options.find((o) => o.id === value)?.value.toLowerCase())
+                    const options = (Array.isArray(propertyValue) ? propertyValue : [propertyValue]).map((value) => propertyTemplate.options.find((o) => o.id === value)?.value.toLowerCase())
                     if (options?.includes(searchText)) {
                         return true
                     }

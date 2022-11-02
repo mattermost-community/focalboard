@@ -69,7 +69,7 @@ func (a *App) GetUsersList(userIDs []string) ([]*model.User, error) {
 		return nil, errors.New("No User IDs")
 	}
 
-	users, err := a.store.GetUsersList(userIDs)
+	users, err := a.store.GetUsersList(userIDs, a.config.ShowEmailAddress, a.config.ShowFullName)
 	if err != nil {
 		return nil, errors.Wrap(err, "unable to find users")
 	}
