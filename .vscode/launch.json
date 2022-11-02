@@ -52,7 +52,9 @@
             "host": "127.0.0.1",
             "program": "${file}",
             "env": {},
-            "args": [],
+            "args": [
+                "-tags json1"
+            ],
             "showLog": true
         },
         {

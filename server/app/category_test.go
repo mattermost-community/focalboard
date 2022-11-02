@@ -92,6 +92,14 @@ func TestUpdateCategory(t *testing.T) {
 	})
 
 	t.Run("updating invalid category", func(t *testing.T) {
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:     "category_id_1",
+			Name:   "Category",
+			TeamID: "team_id_1",
+			UserID: "user_id_1",
+			Type:   "custom",
+		}, nil)
+
 		category := &model.Category{
 			ID:     "category_id_1",
 			Name:   "Name",
@@ -259,6 +267,33 @@ func TestDeleteCategory(t *testing.T) {
 		th.Store.EXPECT().GetCategory("category_id_1").Return(&model.Category{
 			DeleteAt: 10000,
 		}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:       "category_id_default",
+					DeleteAt: 0,
+					UserID:   "user_id_1",
+					TeamID:   "team_id_1",
+					Type:     "default",
+					Name:     "Boards",
+				},
+				BoardIDs: []string{},
+			},
+			{
+				Category: model.Category{
+					ID:       "category_id_1",
+					DeleteAt: 0,
+					UserID:   "user_id_1",
+					TeamID:   "team_id_1",
+					Type:     "custom",
+					Name:     "Category 1",
+				},
+				BoardIDs: []string{},
+			},
+		}, nil)
+
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", utils.Anything).Return(nil)
 
 		deletedCategory, err := th.App.DeleteCategory("category_id_1", "user_id_1", "team_id_1")
 		assert.NotNil(t, deletedCategory)
