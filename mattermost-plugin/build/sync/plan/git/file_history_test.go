@@ -1,7 +1,6 @@
 package git_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -19,7 +18,7 @@ var fileContents = []byte("abcdefg")
 func TestFileHistory(t *testing.T) {
 	assert := assert.New(t)
 
-	dir, err := ioutil.TempDir("", "repo")
+	dir, err := os.TempDir("", "repo")
 	assert.Nil(err)
 	defer os.RemoveAll(dir)
 
@@ -29,7 +28,7 @@ func TestFileHistory(t *testing.T) {
 	w, err := repo.Worktree()
 	assert.Nil(err)
 	// Create repository files.
-	err = ioutil.WriteFile(filepath.Join(dir, "test"), fileContents, 0644)
+	err = os.WriteFile(filepath.Join(dir, "test"), fileContents, 0644)
 	assert.Nil(err)
 	_, err = w.Add("test")
 	assert.Nil(err)
@@ -41,10 +40,10 @@ func TestFileHistory(t *testing.T) {
 	_, err = w.Commit("initial commit", &git.CommitOptions{Author: sig})
 	assert.Nil(err)
 	pathA := "a.txt"
-	err = ioutil.WriteFile(filepath.Join(dir, pathA), fileContents, 0644)
+	err = os.WriteFile(filepath.Join(dir, pathA), fileContents, 0644)
 	assert.Nil(err)
 	pathB := "b.txt"
-	err = ioutil.WriteFile(filepath.Join(dir, pathB), fileContents, 0644)
+	err = os.WriteFile(filepath.Join(dir, pathB), fileContents, 0644)
 	assert.Nil(err)
 	_, err = w.Add(pathA)
 	assert.Nil(err)
