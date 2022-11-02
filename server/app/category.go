@@ -112,7 +112,7 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 		return nil, ErrCannotDeleteSystemCategory
 	}
 
-	if err := a.moveBoardsToDefaultCategory(userID, teamID, categoryID); err != nil {
+	if err = a.moveBoardsToDefaultCategory(userID, teamID, categoryID); err != nil {
 		return nil, err
 	}
 
