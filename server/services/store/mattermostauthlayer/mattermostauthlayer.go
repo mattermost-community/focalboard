@@ -992,12 +992,13 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 		return boards, nil
 	}
 
-	// retreive only
-	boardIDs := []string{}
+	// retreive only direct memberships for user
+	// this is usually done for guests.
 	members, err := s.GetMembersForUser(userID)
 	if err != nil {
 		return nil, err
 	}
+	boardIDs := []string{}
 	for _, m := range members {
 		boardIDs = append(boardIDs, m.BoardID)
 	}
