@@ -77,6 +77,7 @@ describe('components/sidebarBoardItem', () => {
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
+                        index={0}
                         categoryBoards={categoryBoards1}
                         board={board}
                         allCategories={allCategoryBoards}
@@ -104,6 +105,7 @@ describe('components/sidebarBoardItem', () => {
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
+                        index={0}
                         categoryBoards={categoryBoards1}
                         board={noIconBoard}
                         allCategories={allCategoryBoards}
@@ -127,6 +129,7 @@ describe('components/sidebarBoardItem', () => {
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
+                        index={0}
                         categoryBoards={categoryBoards1}
                         board={board}
                         allCategories={allCategoryBoards}

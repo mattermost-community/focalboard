@@ -23,7 +23,7 @@ export type WSMessage = {
     block?: Block
     board?: Board
     category?: Category
-    blockCategories?: BoardCategoryWebsocketData
+    blockCategories?: BoardCategoryWebsocketData[]
     error?: string
     teamId?: string
     member?: BoardMember
