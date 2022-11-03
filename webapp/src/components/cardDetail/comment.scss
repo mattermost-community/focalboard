@@ -44,6 +44,7 @@
         color: rgb(var(--center-channel-color-rgb));
         width: 100%;
         padding-left: 32px;
+        overflow-wrap: anywhere;
 
         a {
             color: rgb(var(--link-color-rgb));

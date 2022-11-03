@@ -110,7 +110,7 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 }
 
 // writeArchiveBlockLine writes a single block to the archive.
-func (a *App) writeArchiveBlockLine(w io.Writer, block model.Block) error {
+func (a *App) writeArchiveBlockLine(w io.Writer, block *model.Block) error {
 	b, err := json.Marshal(&block)
 	if err != nil {
 		return err
@@ -199,7 +199,7 @@ func (a *App) getBoardsForArchive(boardIDs []string) ([]model.Board, error) {
 	return boards, nil
 }
 
-func extractImageFilename(imageBlock model.Block) (string, error) {
+func extractImageFilename(imageBlock *model.Block) (string, error) {
 	f, ok := imageBlock.Fields["fileId"]
 	if !ok {
 		return "", model.ErrInvalidImageBlock

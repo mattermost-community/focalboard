@@ -12,7 +12,7 @@ import (
 
 func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed").
+		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "type").
 		From(s.tablePrefix + "categories").
 		Where(sq.Eq{"id": id})
 
@@ -47,6 +47,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			"update_at",
 			"delete_at",
 			"collapsed",
+			"type",
 		).
 		Values(
 			category.ID,
@@ -57,6 +58,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 			category.UpdateAt,
 			category.DeleteAt,
 			category.Collapsed,
+			category.Type,
 		)
 
 	_, err := query.Exec()
@@ -73,7 +75,10 @@ func (s *SQLStore) updateCategory(db sq.BaseRunner, category model.Category) err
 		Set("name", category.Name).
 		Set("update_at", category.UpdateAt).
 		Set("collapsed", category.Collapsed).
-		Where(sq.Eq{"id": category.ID})
+		Where(sq.Eq{
+			"id":        category.ID,
+			"delete_at": 0,
+		})
 
 	_, err := query.Exec()
 	if err != nil {
@@ -88,9 +93,10 @@ func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID s
 		Update(s.tablePrefix+"categories").
 		Set("delete_at", utils.GetMillis()).
 		Where(sq.Eq{
-			"id":      categoryID,
-			"user_id": userID,
-			"team_id": teamID,
+			"id":        categoryID,
+			"user_id":   userID,
+			"team_id":   teamID,
+			"delete_at": 0,
 		})
 
 	_, err := query.Exec()
@@ -109,7 +115,7 @@ func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID s
 
 func (s *SQLStore) getUserCategories(db sq.BaseRunner, userID, teamID string) ([]model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed").
+		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "type").
 		From(s.tablePrefix + "categories").
 		Where(sq.Eq{
 			"user_id":   userID,
@@ -140,6 +146,7 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 			&category.UpdateAt,
 			&category.DeleteAt,
 			&category.Collapsed,
+			&category.Type,
 		)
 
 		if err != nil {

@@ -4,7 +4,7 @@
 import React, {useState, useEffect} from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
-import {generatePath, useRouteMatch} from 'react-router'
+import {generatePath, useRouteMatch} from 'react-router-dom'
 import Select from 'react-select/async'
 import {CSSObject} from '@emotion/serialize'
 

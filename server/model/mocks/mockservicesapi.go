@@ -347,6 +347,20 @@ func (mr *MockServicesAPIMockRecorder) GetUsersFromProfiles(arg0 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersFromProfiles", reflect.TypeOf((*MockServicesAPI)(nil).GetUsersFromProfiles), arg0)
 }
 
+// HasPermissionTo mocks base method.
+func (m *MockServicesAPI) HasPermissionTo(arg0 string, arg1 *model.Permission) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPermissionTo", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// HasPermissionTo indicates an expected call of HasPermissionTo.
+func (mr *MockServicesAPIMockRecorder) HasPermissionTo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPermissionTo", reflect.TypeOf((*MockServicesAPI)(nil).HasPermissionTo), arg0, arg1)
+}
+
 // HasPermissionToChannel mocks base method.
 func (m *MockServicesAPI) HasPermissionToChannel(arg0, arg1 string, arg2 *model.Permission) bool {
 	m.ctrl.T.Helper()

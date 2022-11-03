@@ -12,6 +12,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
 import {sendFlashMessage} from '../flashMessages'
@@ -84,6 +85,7 @@ function onExportCsvTrigger(board: Board, activeView: BoardView, cards: Card[], 
         })
         sendFlashMessage({content: exportCompleteMessage, severity: 'normal'})
     } catch (e) {
+        Utils.logError(`ExportCSV ERROR: ${e}`)
         const exportFailedMessage = intl.formatMessage({
             id: 'ViewHeader.export-failed',
             defaultMessage: 'Export failed!',

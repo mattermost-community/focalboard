@@ -200,13 +200,15 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
 
+        const productID = process.env.TARGET_IS_PRODUCT ? 'com.mattermost.boards' : manifest.id
+
         // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
         this.registry?.registerPostTypeComponent('custom_cloud_upgrade_nudge', CloudUpgradeNudge)
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
@@ -348,6 +350,30 @@ export default class Plugin {
                     const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
 
                     return data
+                })
+            }
+
+            // Site statistics handler
+            if (registry.registerSiteStatisticsHandler) {
+                registry.registerSiteStatisticsHandler(async () => {
+                    const siteStats = await octoClient.getSiteStatistics()
+                    if(siteStats){
+                        return {
+                            boards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
+                                id: 'total_boards',
+                                icon: 'icon-product-boards',
+                                value: siteStats.board_count,
+                            },
+                            cards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
+                                id: 'total_cards',
+                                icon: 'icon-products',
+                                value: siteStats.card_count,
+                            },
+                        }
+                    }
+                    return {}
                 })
             }
         }

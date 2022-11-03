@@ -590,7 +590,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             </div>
             <div
               aria-label="menuwrapper"
-              class="MenuWrapper"
+              class="MenuWrapper override menuOpened"
               role="button"
             >
               <button

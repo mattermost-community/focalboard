@@ -97,6 +97,16 @@ func (b *BoardsApp) OnConfigurationChange() error {
 	b.server.Config().EnableDataRetention = enableBoardsDeletion
 	b.server.Config().DataRetentionDays = *mmconfig.DataRetentionSettings.BoardsRetentionDays
 	b.server.Config().TeammateNameDisplay = *mmconfig.TeamSettings.TeammateNameDisplay
+	showEmailAddress := false
+	if mmconfig.PrivacySettings.ShowEmailAddress != nil {
+		showEmailAddress = *mmconfig.PrivacySettings.ShowEmailAddress
+	}
+	b.server.Config().ShowEmailAddress = showEmailAddress
+	showFullName := false
+	if mmconfig.PrivacySettings.ShowFullName != nil {
+		showFullName = *mmconfig.PrivacySettings.ShowFullName
+	}
+	b.server.Config().ShowFullName = showFullName
 
 	b.server.UpdateAppConfig()
 	b.wsPluginAdapter.BroadcastConfigChange(*b.server.App().GetClientConfig())

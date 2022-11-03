@@ -81,6 +81,16 @@ export const loadBoards = createAsyncThunk(
     },
 )
 
+export const loadMyBoardsMemberships = createAsyncThunk(
+    'loadMyBoardsMemberships',
+    async () => {
+        const boardsMemberships = await client.getMyBoardMemberships()
+        return {
+            boardsMemberships,
+        }
+    },
+)
+
 export const getUserBlockSubscriptions = (state: RootState): Subscription[] => state.users.blockSubscriptions
 
 export const getUserBlockSubscriptionList = createSelector(

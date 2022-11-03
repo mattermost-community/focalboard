@@ -14,9 +14,9 @@ import (
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
 
-func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
+func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]*model.Block, error) {
 	if boardID == "" {
-		return []model.Block{}, nil
+		return []*model.Block{}, nil
 	}
 
 	if blockType != "" && parentID != "" {
@@ -30,7 +30,7 @@ func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Blo
 	return a.store.GetBlocksWithParent(boardID, parentID)
 }
 
-func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]*model.Block, error) {
 	board, err := a.GetBoard(boardID)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (a *App) PatchBlockAndNotify(blockID string, blockPatch *model.BlockPatch, 
 	}
 
 	if a.IsCloudLimited() {
-		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]model.Block{*oldBlock})
+		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]*model.Block{oldBlock})
 		if lErr != nil {
 			return nil, lErr
 		}
@@ -100,10 +100,10 @@ func (a *App) PatchBlockAndNotify(blockID string, blockPatch *model.BlockPatch, 
 	}
 	a.blockChangeNotifier.Enqueue(func() error {
 		// broadcast on websocket
-		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 
 		// broadcast on webhooks
-		a.webhook.NotifyUpdate(*block)
+		a.webhook.NotifyUpdate(block)
 
 		// send notifications
 		if !disableNotify {
@@ -145,10 +145,10 @@ func (a *App) PatchBlocksAndNotify(teamID string, blockPatches *model.BlockPatch
 			if err != nil {
 				return err
 			}
-			a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
-			a.webhook.NotifyUpdate(*newBlock)
+			a.wsAdapter.BroadcastBlockChange(teamID, newBlock)
+			a.webhook.NotifyUpdate(newBlock)
 			if !disableNotify {
-				a.notifyBlockChanged(notify.Update, newBlock, &oldBlocks[i], modifiedByID)
+				a.notifyBlockChanged(notify.Update, newBlock, oldBlocks[i], modifiedByID)
 			}
 		}
 		return nil
@@ -156,24 +156,24 @@ func (a *App) PatchBlocksAndNotify(teamID string, blockPatches *model.BlockPatch
 	return nil
 }
 
-func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
+func (a *App) InsertBlock(block *model.Block, modifiedByID string) error {
 	return a.InsertBlockAndNotify(block, modifiedByID, false)
 }
 
-func (a *App) InsertBlockAndNotify(block model.Block, modifiedByID string, disableNotify bool) error {
+func (a *App) InsertBlockAndNotify(block *model.Block, modifiedByID string, disableNotify bool) error {
 	board, bErr := a.store.GetBoard(block.BoardID)
 	if bErr != nil {
 		return bErr
 	}
 
-	err := a.store.InsertBlock(&block, modifiedByID)
+	err := a.store.InsertBlock(block, modifiedByID)
 	if err == nil {
 		a.blockChangeNotifier.Enqueue(func() error {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 			a.metrics.IncrementBlocksInserted(1)
 			a.webhook.NotifyUpdate(block)
 			if !disableNotify {
-				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
+				a.notifyBlockChanged(notify.Add, block, nil, modifiedByID)
 			}
 			return nil
 		})
@@ -191,7 +191,7 @@ func (a *App) InsertBlockAndNotify(block model.Block, modifiedByID string, disab
 	return err
 }
 
-func (a *App) isWithinViewsLimit(boardID string, block model.Block) (bool, error) {
+func (a *App) isWithinViewsLimit(boardID string, block *model.Block) (bool, error) {
 	limits, err := a.GetBoardsCloudLimits()
 	if err != nil {
 		return false, err
@@ -213,13 +213,13 @@ func (a *App) isWithinViewsLimit(boardID string, block model.Block) (bool, error
 	return len(views) < limits.Views, nil
 }
 
-func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string) ([]model.Block, error) {
+func (a *App) InsertBlocks(blocks []*model.Block, modifiedByID string) ([]*model.Block, error) {
 	return a.InsertBlocksAndNotify(blocks, modifiedByID, false)
 }
 
-func (a *App) InsertBlocksAndNotify(blocks []model.Block, modifiedByID string, disableNotify bool) ([]model.Block, error) {
+func (a *App) InsertBlocksAndNotify(blocks []*model.Block, modifiedByID string, disableNotify bool) ([]*model.Block, error) {
 	if len(blocks) == 0 {
-		return []model.Block{}, nil
+		return []*model.Block{}, nil
 	}
 
 	// all blocks must belong to the same board
@@ -235,7 +235,7 @@ func (a *App) InsertBlocksAndNotify(blocks []model.Block, modifiedByID string, d
 		return nil, err
 	}
 
-	needsNotify := make([]model.Block, 0, len(blocks))
+	needsNotify := make([]*model.Block, 0, len(blocks))
 	for i := range blocks {
 		// this check is needed to whitelist inbuilt template
 		// initialization. They do contain more than 5 views per board.
@@ -251,7 +251,7 @@ func (a *App) InsertBlocksAndNotify(blocks []model.Block, modifiedByID string, d
 			}
 		}
 
-		err := a.store.InsertBlock(&blocks[i], modifiedByID)
+		err := a.store.InsertBlock(blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
 		}
@@ -266,7 +266,7 @@ func (a *App) InsertBlocksAndNotify(blocks []model.Block, modifiedByID string, d
 			block := b
 			a.webhook.NotifyUpdate(block)
 			if !disableNotify {
-				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
+				a.notifyBlockChanged(notify.Add, block, nil, modifiedByID)
 			}
 		}
 		return nil
@@ -284,7 +284,7 @@ func (a *App) InsertBlocksAndNotify(blocks []model.Block, modifiedByID string, d
 	return blocks, nil
 }
 
-func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []model.Block) error {
+func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
 	// with the new board ID in path.
@@ -416,7 +416,7 @@ func (a *App) GetLastBlockHistoryEntry(blockID string) (*model.Block, error) {
 	if len(blocks) == 0 {
 		return nil, nil
 	}
-	return &blocks[0], nil
+	return blocks[0], nil
 }
 
 func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, error) {
@@ -450,9 +450,9 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 		a.metrics.IncrementBlocksInserted(1)
-		a.webhook.NotifyUpdate(*block)
+		a.webhook.NotifyUpdate(block)
 		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
 
 		return nil
@@ -474,7 +474,7 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
 
-func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
+func (a *App) GetBlocksForBoard(boardID string) ([]*model.Block, error) {
 	return a.store.GetBlocksForBoard(boardID)
 }
 
