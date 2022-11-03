@@ -159,7 +159,7 @@ func TestPatchBoard(t *testing.T) {
 		}, nil)
 
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -197,7 +197,7 @@ func TestPatchBoard(t *testing.T) {
 		}, nil)
 
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -234,7 +234,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -272,7 +272,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -310,7 +310,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -348,7 +348,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{

@@ -41,7 +41,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 		th.Store.EXPECT().GetMembersForBoard("board_id_2").Return([]*model.BoardMember{}, nil).Times(1)
 		th.Store.EXPECT().GetBoard(welcomeBoard.ID).Return(&welcomeBoard, nil).Times(1)
 		th.Store.EXPECT().GetBoard("board_id_2").Return(&welcomeBoard, nil).Times(1)
-		th.Store.EXPECT().GetUsersByTeam("0", "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam("0", "", false, false).Return([]*model.User{}, nil)
 
 		privateWelcomeBoard := model.Board{
 			ID:         "board_id_1",
@@ -104,7 +104,7 @@ func TestCreateWelcomeBoard(t *testing.T) {
 			Return(&model.BoardsAndBlocks{Boards: []*model.Board{&welcomeBoard}}, nil, nil)
 		th.Store.EXPECT().GetMembersForBoard(welcomeBoard.ID).Return([]*model.BoardMember{}, nil).Times(3)
 		th.Store.EXPECT().GetBoard(welcomeBoard.ID).Return(&welcomeBoard, nil).AnyTimes()
-		th.Store.EXPECT().GetUsersByTeam("0", "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam("0", "", false, false).Return([]*model.User{}, nil)
 
 		privateWelcomeBoard := model.Board{
 			ID:         "board_id_1",
