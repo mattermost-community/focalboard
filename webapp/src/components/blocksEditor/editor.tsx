@@ -62,7 +62,7 @@ export default function Editor(props: Props) {
                         const newBlock = await props.onSave({value: val, contentType: currentBlockType.name, id: props.id})
                         setValue('')
                         const createdContentType = contentBlocks.get(newBlock?.contentType || '')
-                        setCurrentBlockType(contentBlocks.get(createdContentType.nextType || '') || null)
+                        setCurrentBlockType(contentBlocks.get(createdContentType?.nextType || '') || null)
                     }}
                     currentBoardId={props.boardId}
                 />}
