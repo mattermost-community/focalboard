@@ -4,7 +4,6 @@
 package storetests
 
 import (
-	"fmt"
 	"testing"
 	"time"
 
@@ -113,70 +112,6 @@ func testCreateAndGetUser(t *testing.T, store store.Store) {
 		require.Equal(t, user.Username, got.Username)
 		require.Equal(t, user.Email, got.Email)
 	})
-
-	t.Run("GetUserByEmail nonexistent", func(t *testing.T) {
-		got, err := store.GetUserByID("nonexistent-email")
-		var nf *model.ErrNotFound
-		require.ErrorAs(t, err, &nf)
-		require.Nil(t, got)
-	})
-}
-
-func testGetUsersList(t *testing.T, store store.Store) {
-	for _, id := range []string{"user1", "user2"} {
-		user := &model.User{
-			ID:       id,
-			Username: fmt.Sprintf("%s-username", id),
-			Email:    fmt.Sprintf("%s@sample.com", id),
-		}
-		newUser, err := store.CreateUser(user)
-		require.NoError(t, err)
-		require.NotNil(t, newUser)
-	}
-
-	testCases := []struct {
-		Name          string
-		UserIDs       []string
-		ExpectedError bool
-		ExpectedIDs   []string
-	}{
-		{
-			Name:          "all of the IDs are found",
-			UserIDs:       []string{"user1", "user2"},
-			ExpectedError: false,
-			ExpectedIDs:   []string{"user1", "user2"},
-		},
-		{
-			Name:          "some of the IDs are found",
-			UserIDs:       []string{"user2", "non-existent"},
-			ExpectedError: true,
-			ExpectedIDs:   []string{"user2"},
-		},
-		{
-			Name:          "none of the IDs are found",
-			UserIDs:       []string{"non-existent-1", "non-existent-2"},
-			ExpectedError: true,
-			ExpectedIDs:   []string{},
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.Name, func(t *testing.T) {
-			users, err := store.GetUsersList(tc.UserIDs, false, false)
-			if tc.ExpectedError {
-				require.Error(t, err)
-				require.True(t, model.IsErrNotFound(err))
-			} else {
-				require.NoError(t, err)
-			}
-
-			userIDs := []string{}
-			for _, user := range users {
-				userIDs = append(userIDs, user.ID)
-			}
-			require.ElementsMatch(t, tc.ExpectedIDs, userIDs)
-		})
-	}
 }
 
 func testCreateAndUpdateUser(t *testing.T, store store.Store) {
