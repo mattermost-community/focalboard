@@ -12,20 +12,19 @@ import {Block} from '../../blocks/block'
 import CompassIcon from '../../widgets/icons/compassIcon'
 
 type Props = {
-    count: number
     attachments: AttachmentBlock[]
     onDelete: (block: Block) => void
     addAttachment: () => void
 }
 
 const AttachmentList = (props: Props): JSX.Element => {
-    const {count, attachments, onDelete, addAttachment} = props
+    const {attachments, onDelete, addAttachment} = props
     const intl = useIntl()
 
     return (
         <div className='Attachment'>
             <div className='attachment-header'>
-                <div className='attachment-title mb-2'>{intl.formatMessage({id: 'Attachment.Attachment-title', defaultMessage: 'Attachment'})} {`(${count})`}</div>
+                <div className='attachment-title mb-2'>{intl.formatMessage({id: 'Attachment.Attachment-title', defaultMessage: 'Attachment'})} {`(${attachments.length})`}</div>
                 <div
                     className='attachment-plus-btn'
                     onClick={addAttachment}

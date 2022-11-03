@@ -109,15 +109,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
         return null
     }
 
-    const allBlock = [] as ContentBlock[]
-    props.contents.forEach((block: ContentBlock|ContentBlock[]) => {
-        if (Array.isArray(block)) {
-            allBlock.push(...block)
-        } else {
-            allBlock.push(block)
-        }
-    })
-
     return (
         <>
             <div className={`CardDetail content${limited ? ' is-limited' : ''}`}>
@@ -218,7 +209,6 @@ const CardDetail = (props: Props): JSX.Element|null => {
                 {attachments.length !== 0 && <Fragment>
                     <hr/>
                     <AttachmentList
-                        count={attachments.length}
                         attachments={attachments}
                         onDelete={onDelete}
                         addAttachment={addAttachment}
