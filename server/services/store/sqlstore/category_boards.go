@@ -70,6 +70,10 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID string, board
 }
 
 func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
+	if len(boardCategoryMapping) == 0 {
+		return nil
+	}
+
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"category_boards").
 		Columns(
@@ -105,6 +109,10 @@ func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCa
 }
 
 func (s *SQLStore) deleteUserCategoryBoard(db sq.BaseRunner, userID string, boardIDs []string) error {
+	if len(boardIDs) == 0 {
+		return nil
+	}
+
 	_, err := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_boards").
 		Set("delete_at", utils.GetMillis()).
