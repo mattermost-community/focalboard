@@ -162,33 +162,15 @@ const CardDialog = (props: Props): JSX.Element => {
         block.boardId = card.boardId
         const typeName = block.type
         const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
-        await mutator.performAsUndoGroup(async () => {
-            const afterRedo = async (newBlock: Block) => {
-                const contentOrder = card.fields.contentOrder.slice()
-                contentOrder.splice(card.fields.contentOrder.length, 0, newBlock.id)
-                await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
-            }
-
-            const beforeUndo = async () => {
-                const contentOrder = card.fields.contentOrder.slice()
-                await octoClient.patchBlock(card.boardId, card.id, {updatedFields: {contentOrder}})
-            }
-
-            await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
-        })
+        await mutator.insertBlock(block.boardId, block, description)
     }
 
     const deleteBlock = useCallback(async (block: Block) => {
         if (!card) {
             return
         }
-        const contentOrder = card.fields.contentOrder.slice()
-        contentOrder.splice(card.fields.contentOrder.length, 0, block.id)
         const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
-        await mutator.performAsUndoGroup(async () => {
-            await mutator.deleteBlock(block, description)
-            await mutator.changeCardContentOrder(card.boardId, card.id, card.fields.contentOrder, contentOrder, description)
-        })
+        await mutator.deleteBlock(block, description)
     }, [card?.boardId, card?.id, card?.fields.contentOrder])
 
     const attachBtn = (): React.ReactNode => {

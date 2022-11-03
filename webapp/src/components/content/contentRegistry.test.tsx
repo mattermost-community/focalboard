@@ -4,7 +4,6 @@ import '../content/textElement'
 import '../content/imageElement'
 import '../content/dividerElement'
 import '../content/checkboxElement'
-import '../content/attachmentElement'
 
 import {contentBlockTypes} from '../../blocks/block'
 
