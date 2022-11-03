@@ -46,6 +46,12 @@ func TestSetConfiguration(t *testing.T) {
 		TeammateNameDisplay: &usernameRef,
 	}
 
+	falseRef := false
+	basePrivacySettings := &model.PrivacySettings{
+		ShowEmailAddress: &falseRef,
+		ShowFullName:     &falseRef,
+	}
+
 	baseConfig := &model.Config{
 		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
@@ -53,6 +59,7 @@ func TestSetConfiguration(t *testing.T) {
 		FileSettings:          *baseFileSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
 		TeamSettings:          *baseTeamSettings,
+		PrivacySettings:       *basePrivacySettings,
 	}
 
 	t.Run("test enable telemetry", func(t *testing.T) {

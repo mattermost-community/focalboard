@@ -47,7 +47,7 @@ func StoreTestUserStore(t *testing.T, setup func(t *testing.T) (store.Store, fun
 
 func testGetTeamUsers(t *testing.T, store store.Store) {
 	t.Run("GetTeamUSers", func(t *testing.T) {
-		users, err := store.GetUsersByTeam("team_1", "")
+		users, err := store.GetUsersByTeam("team_1", "", false, false)
 		require.Equal(t, 0, len(users))
 		require.True(t, model.IsErrNotFound(err), "Should be ErrNotFound compatible error")
 
@@ -69,7 +69,7 @@ func testGetTeamUsers(t *testing.T, store store.Store) {
 			})
 		}()
 
-		users, err = store.GetUsersByTeam("team_1", "")
+		users, err = store.GetUsersByTeam("team_1", "", false, false)
 		require.Equal(t, 1, len(users))
 		require.Equal(t, "darth.vader", users[0].Username)
 		require.NoError(t, err)
