@@ -36,8 +36,9 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
             <Button>
                 <FormattedMessage
                     id='ViewHeader.properties'
-                    defaultMessage='Properties'
+                    defaultMessage='Properties shown'
                 />
+                <span className='ml-1'>{`(${visiblePropertyIds.length})`}</span>
             </Button>
             <Menu>
                 {activeView.fields.viewType === 'gallery' &&

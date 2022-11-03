@@ -384,7 +384,12 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                 type="button"
               >
                 <span>
-                  Properties
+                  Properties shown
+                  <span
+                    class="ml-1"
+                  >
+                    (1)
+                  </span>
                 </span>
               </button>
             </div>
@@ -1483,7 +1488,12 @@ exports[`src/components/workspace should match snapshot 1`] = `
                 type="button"
               >
                 <span>
-                  Properties
+                  Properties shown
+                  <span
+                    class="ml-1"
+                  >
+                    (1)
+                  </span>
                 </span>
               </button>
             </div>

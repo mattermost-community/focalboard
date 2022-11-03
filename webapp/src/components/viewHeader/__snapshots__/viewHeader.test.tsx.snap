@@ -45,7 +45,12 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
         type="button"
       >
         <span>
-          Properties
+          Properties shown
+          <span
+            class="ml-1"
+          >
+            (0)
+          </span>
         </span>
       </button>
     </div>

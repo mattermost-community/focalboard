@@ -81,7 +81,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (1)
+              </span>
             </span>
           </button>
         </div>

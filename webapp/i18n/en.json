@@ -309,7 +309,7 @@
   "ViewHeader.filter": "Filter",
   "ViewHeader.group-by": "Group by: {property}",
   "ViewHeader.new": "New",
-  "ViewHeader.properties": "Properties",
+  "ViewHeader.properties": "Properties shown",
   "ViewHeader.properties-menu": "Properties menu",
   "ViewHeader.search-text": "Search cards",
   "ViewHeader.select-a-template": "Select a template",

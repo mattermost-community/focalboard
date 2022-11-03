@@ -12,7 +12,12 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
       type="button"
     >
       <span>
-        Properties
+        Properties shown
+        <span
+          class="ml-1"
+        >
+          (0)
+        </span>
       </span>
     </button>
     <div
@@ -191,7 +196,12 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
       type="button"
     >
       <span>
-        Properties
+        Properties shown
+        <span
+          class="ml-1"
+        >
+          (0)
+        </span>
       </span>
     </button>
     <div

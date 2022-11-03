@@ -155,7 +155,12 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -853,7 +858,12 @@ exports[`components/centerPanel return centerPanel and click on card to show car
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -1406,7 +1416,12 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -2463,7 +2478,12 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -3111,7 +3131,12 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -3759,7 +3784,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -4407,7 +4437,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -5055,7 +5090,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -5703,7 +5743,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -6351,7 +6396,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -6999,7 +7049,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -7647,7 +7702,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -8295,7 +8355,12 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -8570,7 +8635,12 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -9089,7 +9159,12 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
@@ -9608,7 +9683,12 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
             type="button"
           >
             <span>
-              Properties
+              Properties shown
+              <span
+                class="ml-1"
+              >
+                (0)
+              </span>
             </span>
           </button>
         </div>
