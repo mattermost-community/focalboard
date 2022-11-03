@@ -45,15 +45,15 @@ exports[`components/blocksEditor/blocks/text should match Input snapshot 1`] = `
                 <div
                   class=""
                   data-block="true"
-                  data-editor="2ve5t"
-                  data-offset-key="ckfqb-0-0"
+                  data-editor="123"
+                  data-offset-key="123-0-0"
                 >
                   <div
                     class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                    data-offset-key="ckfqb-0-0"
+                    data-offset-key="123-0-0"
                   >
                     <span
-                      data-offset-key="ckfqb-0-0"
+                      data-offset-key="123-0-0"
                     >
                       <span
                         data-text="true"
