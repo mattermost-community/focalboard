@@ -30,6 +30,11 @@ func StoreTestCategoryStore(t *testing.T, setup func(t *testing.T) (store.Store,
 		defer tearDown()
 		testGetUserCategories(t, store)
 	})
+	t.Run("ReorderCategories", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testReorderCategories(t, store)
+	})
 }
 
 func testGetCreateCategory(t *testing.T, store store.Store) {
@@ -210,4 +215,49 @@ func testGetUserCategories(t *testing.T, store store.Store) {
 	userCategories, err := store.GetUserCategoryBoards("user_id_1", "team_id_1")
 	assert.NoError(t, err)
 	assert.Equal(t, 3, len(userCategories))
+}
+
+func testReorderCategories(t *testing.T, store store.Store) {
+	t.Run("base case", func(t *testing.T) {
+		// setup
+
+		// create category
+		err := store.CreateCategory(model.Category{
+			ID:     "category_id_1",
+			Name:   "Category 1",
+			Type:   "custom",
+			UserID: "user_id",
+			TeamID: "team_id",
+		})
+		assert.NoError(t, err)
+
+		// add some boards to the category
+		err = store.AddUpdateCategoryBoard("user_id", map[string]string{
+			"board_id_1": "category_id_1",
+			"board_id_2": "category_id_1",
+			"board_id_3": "category_id_1",
+			"board_id_4": "category_id_1",
+		})
+		assert.NoError(t, err)
+
+		// re-ordering categories normally
+		_, err = store.ReorderCategories("user_id", "team_id", []string{
+			"board_id_4",
+			"board_id_2",
+			"board_id_3",
+			"board_id_1",
+		})
+		assert.NoError(t, err)
+
+		// verify the board order
+		categoryBoards, err := store.GetUserCategoryBoards("user_id", "team_id")
+		assert.NoError(t, err)
+		assert.Equal(t, 1, len(categoryBoards))
+		assert.Equal(t, "Category 1", categoryBoards[0].Name)
+		assert.Equal(t, 4, len(categoryBoards[0].BoardIDs))
+		assert.Equal(t, "board_id_4", len(categoryBoards[0].BoardIDs[0]))
+		assert.Equal(t, "board_id_3", len(categoryBoards[0].BoardIDs[1]))
+		assert.Equal(t, "board_id_2", len(categoryBoards[0].BoardIDs[2]))
+		assert.Equal(t, "board_id_1", len(categoryBoards[0].BoardIDs[3]))
+	})
 }
