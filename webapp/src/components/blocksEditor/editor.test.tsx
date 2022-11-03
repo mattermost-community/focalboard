@@ -76,7 +76,7 @@ describe('components/blocksEditor/editor', () => {
     })
 
     test('should call onSave after introduce text and hit enter', async () => {
-        let onSave = jest.fn()
+        const onSave = jest.fn()
         await act(async () => {
             render(wrapDNDIntl(
                 <ReduxProvider store={store}>
