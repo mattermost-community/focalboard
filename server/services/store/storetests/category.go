@@ -9,32 +9,25 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type testFunc func(t *testing.T, store store.Store)
+
 func StoreTestCategoryStore(t *testing.T, setup func(t *testing.T) (store.Store, func())) {
-	t.Run("CreateCategory", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetCreateCategory(t, store)
-	})
-	t.Run("UpdateCategory", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testUpdateCategory(t, store)
-	})
-	t.Run("DeleteCategory", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testDeleteCategory(t, store)
-	})
-	t.Run("GetUserCategories", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testGetUserCategories(t, store)
-	})
-	t.Run("ReorderCategories", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testReorderCategories(t, store)
-	})
+	tests := map[string]testFunc{
+		"CreateCategory":          testGetCreateCategory,
+		"UpdateCategory":          testUpdateCategory,
+		"DeleteCategory":          testDeleteCategory,
+		"GetUserCategories":       testGetUserCategories,
+		"ReorderCategories":       testReorderCategories,
+		"ReorderCategoriesBoards": testReorderCategoryBoards,
+	}
+
+	for name, f := range tests {
+		t.Run(name, func(t *testing.T) {
+			store, tearDown := setup(t)
+			defer tearDown()
+			f(t, store)
+		})
+	}
 }
 
 func testGetCreateCategory(t *testing.T, store store.Store) {
@@ -218,46 +211,127 @@ func testGetUserCategories(t *testing.T, store store.Store) {
 }
 
 func testReorderCategories(t *testing.T, store store.Store) {
-	t.Run("base case", func(t *testing.T) {
-		// setup
-
-		// create category
-		err := store.CreateCategory(model.Category{
-			ID:     "category_id_1",
-			Name:   "Category 1",
-			Type:   "custom",
-			UserID: "user_id",
-			TeamID: "team_id",
-		})
-		assert.NoError(t, err)
-
-		// add some boards to the category
-		err = store.AddUpdateCategoryBoard("user_id", map[string]string{
-			"board_id_1": "category_id_1",
-			"board_id_2": "category_id_1",
-			"board_id_3": "category_id_1",
-			"board_id_4": "category_id_1",
-		})
-		assert.NoError(t, err)
-
-		// re-ordering categories normally
-		_, err = store.ReorderCategories("user_id", "team_id", []string{
-			"board_id_4",
-			"board_id_2",
-			"board_id_3",
-			"board_id_1",
-		})
-		assert.NoError(t, err)
-
-		// verify the board order
-		categoryBoards, err := store.GetUserCategoryBoards("user_id", "team_id")
-		assert.NoError(t, err)
-		assert.Equal(t, 1, len(categoryBoards))
-		assert.Equal(t, "Category 1", categoryBoards[0].Name)
-		assert.Equal(t, 4, len(categoryBoards[0].BoardIDs))
-		assert.Equal(t, "board_id_4", len(categoryBoards[0].BoardIDs[0]))
-		assert.Equal(t, "board_id_3", len(categoryBoards[0].BoardIDs[1]))
-		assert.Equal(t, "board_id_2", len(categoryBoards[0].BoardIDs[2]))
-		assert.Equal(t, "board_id_1", len(categoryBoards[0].BoardIDs[3]))
+	// setup
+	err := store.CreateCategory(model.Category{
+		ID:     "category_id_1",
+		Name:   "Category 1",
+		Type:   "custom",
+		UserID: "user_id",
+		TeamID: "team_id",
 	})
+	assert.NoError(t, err)
+
+	err = store.CreateCategory(model.Category{
+		ID:     "category_id_2",
+		Name:   "Category 2",
+		Type:   "custom",
+		UserID: "user_id",
+		TeamID: "team_id",
+	})
+	assert.NoError(t, err)
+
+	err = store.CreateCategory(model.Category{
+		ID:     "category_id_3",
+		Name:   "Category 3",
+		Type:   "custom",
+		UserID: "user_id",
+		TeamID: "team_id",
+	})
+	assert.NoError(t, err)
+
+	// verify the current order
+	categories, err := store.GetUserCategories("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 3, len(categories))
+
+	// the categories should show up in reverse insertion order (latest one first)
+	assert.Equal(t, "category_id_3", categories[0].ID)
+	assert.Equal(t, "category_id_2", categories[1].ID)
+	assert.Equal(t, "category_id_1", categories[2].ID)
+
+	// re-ordering categories normally
+	_, err = store.ReorderCategories("user_id", "team_id", []string{
+		"category_id_2",
+		"category_id_3",
+		"category_id_1",
+	})
+	assert.NoError(t, err)
+
+	// verify the board order
+	categories, err = store.GetUserCategories("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 3, len(categories))
+	assert.Equal(t, "category_id_2", categories[0].ID)
+	assert.Equal(t, "category_id_3", categories[1].ID)
+	assert.Equal(t, "category_id_1", categories[2].ID)
+
+	// lets try specifying a non existing category ID.
+	// It shouldn't cause any problem
+	_, err = store.ReorderCategories("user_id", "team_id", []string{
+		"category_id_1",
+		"category_id_2",
+		"category_id_3",
+		"non-existing-category-id",
+	})
+	assert.NoError(t, err)
+
+	categories, err = store.GetUserCategories("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 3, len(categories))
+	assert.Equal(t, "category_id_1", categories[0].ID)
+	assert.Equal(t, "category_id_2", categories[1].ID)
+	assert.Equal(t, "category_id_3", categories[2].ID)
+}
+
+func testReorderCategoryBoards(t *testing.T, store store.Store) {
+	// setup
+	err := store.CreateCategory(model.Category{
+		ID:     "category_id_1",
+		Name:   "Category 1",
+		Type:   "custom",
+		UserID: "user_id",
+		TeamID: "team_id",
+	})
+	assert.NoError(t, err)
+
+	err = store.AddUpdateCategoryBoard("user_id", map[string]string{
+		"board_id_1": "category_id_1",
+		"board_id_2": "category_id_1",
+		"board_id_3": "category_id_1",
+		"board_id_4": "category_id_1",
+	})
+	assert.NoError(t, err)
+
+	// verify current order
+	categoryBoards, err := store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, 4, len(categoryBoards[0].BoardIDs))
+	assert.Equal(t, "board_id_1", categoryBoards[0].BoardIDs[0])
+	assert.Equal(t, "board_id_2", categoryBoards[0].BoardIDs[1])
+	assert.Equal(t, "board_id_3", categoryBoards[0].BoardIDs[2])
+	assert.Equal(t, "board_id_4", categoryBoards[0].BoardIDs[3])
+
+	// reordering
+	newOrder, err := store.ReorderCategoryBoards("category_id_1", []string{
+		"board_id_3",
+		"board_id_1",
+		"board_id_2",
+		"board_id_4",
+	})
+	assert.NoError(t, err)
+	assert.Equal(t, "board_id_3", newOrder[0])
+	assert.Equal(t, "board_id_1", newOrder[1])
+	assert.Equal(t, "board_id_2", newOrder[2])
+	assert.Equal(t, "board_id_4", newOrder[3])
+
+	// verify new order
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, 4, len(categoryBoards[0].BoardIDs))
+	assert.Equal(t, "board_id_3", categoryBoards[0].BoardIDs[0])
+	assert.Equal(t, "board_id_1", categoryBoards[0].BoardIDs[1])
+	assert.Equal(t, "board_id_2", categoryBoards[0].BoardIDs[2])
+	assert.Equal(t, "board_id_4", categoryBoards[0].BoardIDs[3])
 }

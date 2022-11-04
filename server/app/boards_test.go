@@ -427,3 +427,55 @@ func TestBoardCategory(t *testing.T) {
 		})
 	})
 }
+
+func TestDuplicateBoard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("base case", func(t *testing.T) {
+		board := &model.Board{
+			ID:    "board_id_2",
+			Title: "Duplicated Board",
+		}
+
+		block := &model.Block{
+			ID:   "block_id_1",
+			Type: "image",
+		}
+
+		th.Store.EXPECT().DuplicateBoard("board_id_1", "user_id_1", "team_id_1", false).Return(
+			&model.BoardsAndBlocks{
+				Boards: []*model.Board{
+					board,
+				},
+				Blocks: []*model.Block{
+					block,
+				},
+			},
+			[]*model.BoardMember{},
+			nil,
+		)
+
+		th.Store.EXPECT().GetBoard("board_id_1").Return(&model.Board{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "category_id_1",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil).Times(2)
+
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", utils.Anything).Return(nil)
+
+		// for WS change broadcast
+		th.Store.EXPECT().GetMembersForBoard(utils.Anything).Return([]*model.BoardMember{}, nil).Times(2)
+
+		bab, members, err := th.App.DuplicateBoard("board_id_1", "user_id_1", "team_id_1", false)
+		assert.NoError(t, err)
+		assert.NotNil(t, bab)
+		assert.NotNil(t, members)
+	})
+}
