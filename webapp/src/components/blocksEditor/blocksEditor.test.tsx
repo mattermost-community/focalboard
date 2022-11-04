@@ -16,7 +16,7 @@ jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 describe('components/blocksEditor/blocksEditor', () => {
     beforeEach(mockDOM)
 
-    const blocks: BlockData<any>[] = [
+    const blocks: Array<BlockData<any>> = [
         {id: '1', value: 'Title', contentType: 'h1'},
         {id: '2', value: 'Sub title', contentType: 'h2'},
         {id: '3', value: 'Sub sub title', contentType: 'h3'},
@@ -130,7 +130,7 @@ describe('components/blocksEditor/blocksEditor', () => {
                     />
                 </ReduxProvider>,
             ))
-            let input = screen.getByTestId('checkbox-check')
+            const input = screen.getByTestId('checkbox-check')
             expect(onBlockModified).not.toBeCalled()
             fireEvent.click(input)
             expect(onBlockModified).toBeCalledWith(expect.objectContaining({value: {checked: false, value: 'Checkbox'}}))
