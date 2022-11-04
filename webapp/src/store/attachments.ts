@@ -26,12 +26,6 @@ const attachmentSlice = createSlice({
                         state.attachmentsByCard[attachment.parentId] = [attachment]
                         return
                     }
-                    for (let i = 0; i < state.attachmentsByCard[attachment.parentId].length; i++) {
-                        if (state.attachmentsByCard[attachment.parentId][i].id === attachment.id) {
-                            state.attachmentsByCard[attachment.parentId][i] = attachment
-                            return
-                        }
-                    }
                     state.attachmentsByCard[attachment.parentId].push(attachment)
                 } else {
                     const parentId = state.attachments[attachment.id]?.parentId
