@@ -366,7 +366,7 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 }
 
 func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /teams/{teamID}/categories/reorder handleReorderCategories
+	// swagger:operation PUT /teams/{teamID}/categories/reorder handleReorderCategories
 	//
 	// Updated sidebar category order
 	//
@@ -430,7 +430,7 @@ func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/reorder handleReorderCategoryBoards
+	// swagger:operation PUT /teams/{teamID}/categories/{categoryID}/boards/reorder handleReorderCategoryBoards
 	//
 	// Updates order of boards inside a sidebar category
 	//

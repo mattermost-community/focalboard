@@ -464,6 +464,30 @@ func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *
 	return categoryBoards, BuildResponse(r)
 }
 
+func (c *Client) ReorderCategories(teamID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedCategoryOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedCategoryOrder)
+	return updatedCategoryOrder, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategoryBoards(teamID, categoryID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedBoardsOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedBoardsOrder)
+	return updatedBoardsOrder, BuildResponse(r)
+}
+
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPatch(c.GetBoardsAndBlocksRoute(), toJSON(pbab))
 	if err != nil {
