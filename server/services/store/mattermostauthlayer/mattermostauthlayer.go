@@ -992,7 +992,7 @@ func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, inc
 		return boards, nil
 	}
 
-	// retreive only direct memberships for user
+	// retrieve only direct memberships for user
 	// this is usually done for guests.
 	members, err := s.GetMembersForUser(userID)
 	if err != nil {
