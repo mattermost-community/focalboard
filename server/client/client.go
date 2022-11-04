@@ -793,7 +793,7 @@ func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.Fi
 }
 
 func (c *Client) TeamUploadFileInfo(teamID, boardID string, fileName string) (*mmModel.FileInfo, *Response) {
-	r, err := c.DoAPIGet(fmt.Sprintf("/files/teams/%s/%s/info/%s", teamID, boardID, fileName), "")
+	r, err := c.DoAPIGet(fmt.Sprintf("/files/teams/%s/%s/%s/info", teamID, boardID, fileName), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
