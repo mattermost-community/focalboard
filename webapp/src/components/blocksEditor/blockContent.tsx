@@ -76,6 +76,7 @@ function BlockContent(props: Props) {
         return (
             <div
                 ref={drop}
+                data-testid='block-content'
                 className={`BlockContent ${isOver && draggingUp ? 'over-up' : ''}  ${isOver && !draggingUp ? 'over-down' : ''}`}
                 key={block.id}
                 style={{
@@ -87,6 +88,7 @@ function BlockContent(props: Props) {
             >
                 <span
                     className='action'
+                    data-testid='add-action'
                     onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
