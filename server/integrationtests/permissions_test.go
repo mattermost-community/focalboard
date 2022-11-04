@@ -43,6 +43,18 @@ type TestCase struct {
 	totalResults       int
 }
 
+func (tt TestCase) identifier() string {
+	return fmt.Sprintf(
+		"url: %s method: %s body: %s userRoles: %s expectedStatusCode: %d totalResults: %d",
+		tt.url,
+		tt.method,
+		tt.body,
+		tt.userRole,
+		tt.expectedStatusCode,
+		tt.totalResults,
+	)
+}
+
 func setupClients(th *TestHelper) Clients {
 	// user1
 	clients := Clients{
@@ -262,7 +274,6 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 			url = strings.ReplaceAll(url, "{PUBLIC_BOARD_ID}", testData.publicBoard.ID)
 			url = strings.ReplaceAll(url, "{PUBLIC_TEMPLATE_ID}", testData.publicTemplate.ID)
 			url = strings.ReplaceAll(url, "{PRIVATE_TEMPLATE_ID}", testData.privateTemplate.ID)
-
 			url = strings.ReplaceAll(url, "{USER_ANON_ID}", userAnonID)
 			url = strings.ReplaceAll(url, "{USER_NO_TEAM_MEMBER_ID}", userNoTeamMemberID)
 			url = strings.ReplaceAll(url, "{USER_TEAM_MEMBER_ID}", userTeamMemberID)
@@ -273,7 +284,7 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 			url = strings.ReplaceAll(url, "{USER_GUEST_ID}", userGuestID)
 
 			if strings.Contains(url, "{") || strings.Contains(url, "}") {
-				require.Fail(t, "Unreplaced tokens in url", url)
+				require.Fail(t, "Unreplaced tokens in url", url, tc.identifier())
 			}
 
 			var response *http.Response
@@ -296,28 +307,28 @@ func runTestCases(t *testing.T, ttCases []TestCase, testData TestData, clients C
 				defer response.Body.Close()
 			}
 
-			require.Equal(t, tc.expectedStatusCode, response.StatusCode)
+			require.Equal(t, tc.expectedStatusCode, response.StatusCode, tc.identifier())
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
-				require.NoError(t, err)
+				require.NoError(t, err, tc.identifier())
 			}
 			if tc.expectedStatusCode >= 200 && tc.expectedStatusCode < 300 {
 				body, err := io.ReadAll(response.Body)
 				if err != nil {
-					require.Fail(t, err.Error())
+					require.Fail(t, err.Error(), tc.identifier())
 				}
 				if strings.HasPrefix(string(body), "[") {
 					var data []interface{}
 					err = json.Unmarshal(body, &data)
 					if err != nil {
-						require.Fail(t, err.Error())
+						require.Fail(t, err.Error(), tc.identifier())
 					}
-					require.Len(t, data, tc.totalResults)
+					require.Len(t, data, tc.totalResults, tc.identifier())
 				} else {
 					if tc.totalResults > 0 {
 						require.Equal(t, 1, tc.totalResults)
-						require.Greater(t, len(string(body)), 2)
+						require.Greater(t, len(string(body)), 2, tc.identifier())
 					} else {
-						require.Len(t, string(body), 2)
+						require.Len(t, string(body), 2, tc.identifier())
 					}
 				}
 			}
@@ -2865,14 +2876,14 @@ func TestPermissionsClientConfig(t *testing.T) {
 
 func TestPermissionsGetCategories(t *testing.T) {
 	ttCases := []TestCase{
-		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 0},
-		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userTeamMember, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userViewer, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userCommenter, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userEditor, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userAdmin, http.StatusOK, 0},
-		{"/teams/test-team/categories", methodGet, "", userGuest, http.StatusOK, 0},
+		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 1},
+		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userViewer, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userCommenter, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userEditor, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userAdmin, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userGuest, http.StatusOK, 1},
 	}
 
 	t.Run("plugin", func(t *testing.T) {
@@ -2960,6 +2971,7 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 				UserID:   userID,
 				CreateAt: model.GetMillis(),
 				UpdateAt: model.GetMillis(),
+				Type:     "custom",
 			})
 		}
 

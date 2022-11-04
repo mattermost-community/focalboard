@@ -31,7 +31,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -221,7 +221,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -458,7 +458,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -648,7 +648,7 @@ exports[`components/viewHeader/newCardButtonTemplateItem return NewCardButtonTem
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button

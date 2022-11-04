@@ -262,7 +262,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
     >
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button
