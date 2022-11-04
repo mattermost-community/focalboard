@@ -24,7 +24,7 @@ func TestExportBoard(t *testing.T) {
 			UpdateAt:  utils.GetMillis(),
 		}
 
-		block := model.Block{
+		block := &model.Block{
 			ID:        utils.NewID(utils.IDTypeCard),
 			ParentID:  board.ID,
 			Type:      model.TypeCard,
@@ -37,7 +37,7 @@ func TestExportBoard(t *testing.T) {
 
 		babs := &model.BoardsAndBlocks{
 			Boards: []*model.Board{board},
-			Blocks: []model.Block{block},
+			Blocks: []*model.Block{block},
 		}
 
 		babs, resp := th.Client.CreateBoardsAndBlocks(babs)

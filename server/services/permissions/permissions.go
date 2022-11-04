@@ -11,6 +11,7 @@ import (
 )
 
 type PermissionsService interface {
+	HasPermissionTo(userID string, permission *mmModel.Permission) bool
 	HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool
 	HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool
 	HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool

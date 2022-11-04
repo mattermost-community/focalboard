@@ -60,8 +60,8 @@ func legacyBoardFields(prefix string) []string {
 // the old block model. This method is kept to enable the unique IDs
 // data migration.
 //nolint:unused
-func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]model.Block, error) {
-	results := []model.Block{}
+func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]*model.Block, error) {
+	results := []*model.Block{}
 
 	for rows.Next() {
 		var block model.Block
@@ -103,7 +103,7 @@ func (s *SQLStore) legacyBlocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			return nil, err
 		}
 
-		results = append(results, block)
+		results = append(results, &block)
 	}
 
 	return results, nil
@@ -150,7 +150,7 @@ func (s *SQLStore) getLegacyBlock(db sq.BaseRunner, workspaceID string, blockID 
 		return nil, nil
 	}
 
-	return &blocks[0], nil
+	return blocks[0], nil
 }
 
 // insertLegacyBlock is the old insertBlock version that still uses

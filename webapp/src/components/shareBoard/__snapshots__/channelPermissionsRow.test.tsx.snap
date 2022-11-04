@@ -69,7 +69,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
     <div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button
@@ -187,7 +187,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
     <div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button
@@ -309,7 +309,7 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot w
     <div>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button

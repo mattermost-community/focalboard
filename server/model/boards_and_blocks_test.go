@@ -11,7 +11,7 @@ import (
 func TestIsValidBoardsAndBlocks(t *testing.T) {
 	t.Run("no boards", func(t *testing.T) {
 		bab := &BoardsAndBlocks{
-			Blocks: []Block{
+			Blocks: []*Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
 			},
@@ -37,7 +37,7 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 				{ID: "board-id-1", Type: BoardTypeOpen},
 				{ID: "board-id-2", Type: BoardTypePrivate},
 			},
-			Blocks: []Block{
+			Blocks: []*Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
 				{ID: "block-id-3", BoardID: "board-id-3", Type: TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
@@ -53,7 +53,7 @@ func TestIsValidBoardsAndBlocks(t *testing.T) {
 				{ID: "board-id-1", Type: BoardTypeOpen},
 				{ID: "board-id-2", Type: BoardTypePrivate},
 			},
-			Blocks: []Block{
+			Blocks: []*Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
 				{ID: "block-id-3", BoardID: "board-id-2", Type: TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
@@ -68,13 +68,13 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 	logger, err := mlog.NewLogger()
 	require.NoError(t, err)
 
-	getBlockByType := func(blocks []Block, blockType BlockType) Block {
+	getBlockByType := func(blocks []*Block, blockType BlockType) *Block {
 		for _, b := range blocks {
 			if b.Type == blockType {
 				return b
 			}
 		}
-		return Block{}
+		return &Block{}
 	}
 
 	getBoardByTitle := func(boards []*Board, title string) *Board {
@@ -88,7 +88,7 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 
 	t.Run("invalid boards and blocks", func(t *testing.T) {
 		bab := &BoardsAndBlocks{
-			Blocks: []Block{
+			Blocks: []*Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeCard},
 			},
@@ -106,7 +106,7 @@ func TestGenerateBoardsAndBlocksIDs(t *testing.T) {
 				{ID: "board-id-2", Type: BoardTypePrivate, Title: "board2"},
 				{ID: "board-id-3", Type: BoardTypeOpen, Title: "board3"},
 			},
-			Blocks: []Block{
+			Blocks: []*Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: TypeView},
 				{ID: "block-id-3", BoardID: "board-id-2", Type: TypeText},

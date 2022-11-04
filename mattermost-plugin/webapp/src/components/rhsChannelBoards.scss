@@ -7,12 +7,16 @@
 
     &.empty {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         flex-direction: column;
         height: 100%;
         width: 100%;
-        overflow: hidden;
+        overflow: auto;
         padding: 60px;
+
+        @media screen and (min-height: 800px) {
+            justify-content: center;
+        }
     }
 
     .rhs-boards-header {
@@ -27,8 +31,7 @@
     }
 
     .empty-paragraph {
-        text-align: justify;
-        text-align-last: center;
+        text-align: center;
     }
 
     .boards-screenshots {

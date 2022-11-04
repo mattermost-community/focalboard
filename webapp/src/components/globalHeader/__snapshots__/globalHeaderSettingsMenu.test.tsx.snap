@@ -7,7 +7,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu imports menu open should ma
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -353,7 +353,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu languages menu open should 
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -1002,7 +1002,7 @@ exports[`components/sidebar/GlobalHeaderSettingsMenu settings menu open should m
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div

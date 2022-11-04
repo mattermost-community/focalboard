@@ -13,15 +13,15 @@ ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);
 {{- /* cleanup incorrect data format in column calculations */ -}}
 {{- /* then move from 'board' type to 'view' type*/ -}}
 {{if .mysql}}
-UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json)) WHERE fields->'$.columnCalculations' = cast('[]' as json);
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', JSON_OBJECT()) WHERE JSON_EXTRACT(fields, '$.columnCalculations') = JSON_ARRAY();
 
 UPDATE {{.prefix}}blocks b
   JOIN (
-    SELECT id, fields->'$.columnCalculations' as board_calculations from {{.prefix}}blocks
-    WHERE fields -> '$.columnCalculations' <> cast('{}' as json)
+    SELECT id, JSON_EXTRACT(fields, '$.columnCalculations') as board_calculations from {{.prefix}}blocks
+    WHERE JSON_EXTRACT(fields, '$.columnCalculations') <> JSON_OBJECT()
   ) AS s on s.id = b.root_id
-  SET fields = JSON_SET(fields, '$.columnCalculations', cast(s.board_calculations as json))
-  WHERE b.fields->'$.viewType' = 'table'
+  SET fields = JSON_SET(fields, '$.columnCalculations', JSON_ARRAY(s.board_calculations))
+  WHERE JSON_EXTRACT(b.fields, '$.viewType') = 'table'
   AND b.type = 'view';
 {{end}}
 {{if .postgres}}
@@ -166,10 +166,10 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(B.title, ''),
                  COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
-                 COALESCE(B.fields->'$.showDescription', 'false') = 'true',
+                 COALESCE(JSON_EXTRACT(B.fields, '$.showDescription'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
-                 COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', B.fields->'$.cardProperties', B.create_at,
+                 COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
+                 '{}', JSON_EXTRACT(B.fields, '$.cardProperties'), B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
@@ -180,10 +180,10 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(B.title, ''),
                  COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.icon')),
-                 COALESCE(B.fields->'$.showDescription', 'false') = 'true',
+                 COALESCE(JSON_EXTRACT(B.fields, '$.showDescription'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
-                 COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', B.fields->'$.cardProperties', B.create_at,
+                 COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
+                 '{}', JSON_EXTRACT(B.fields, '$.cardProperties'), B.create_at,
                  B.update_at, B.delete_at
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
@@ -225,10 +225,10 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(B.title, ''),
                  COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')),
-                 COALESCE(B.fields->'$.showDescription', 'false') = 'true',
+                 COALESCE(JSON_EXTRACT(B.fields, '$.showDescription'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
-                 COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', fields->'$.cardProperties', create_at,
+                 COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
+                 '{}', JSON_EXTRACT(fields, '$.cardProperties'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
@@ -238,10 +238,10 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(B.title, ''),
                  COALESCE(JSON_UNQUOTE(JSON_EXTRACT(B.fields,'$.description')), ''),
                  JSON_UNQUOTE(JSON_EXTRACT(fields,'$.icon')),
-                 COALESCE(B.fields->'$.showDescription', 'false') = 'true',
+                 COALESCE(JSON_EXTRACT(B.fields, '$.showDescription'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
-                 COALESCE(B.fields->'$.templateVer', 0),
-                 '{}', fields->'$.cardProperties', create_at,
+                 COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
+                 '{}', JSON_EXTRACT(fields, '$.cardProperties'), create_at,
                  update_at, delete_at
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'

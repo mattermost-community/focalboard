@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -42,12 +41,15 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	if dbType == "" {
 		dbType = model.SqliteDBType
 	}
+	if dbType == "mariadb" {
+		dbType = model.MysqlDBType
+	}
 
 	var dbName string
 	var rootUser string
 
 	if dbType == model.SqliteDBType {
-		file, err := ioutil.TempFile("", "fbtest_*.db")
+		file, err := os.CreateTemp("", "fbtest_*.db")
 		if err != nil {
 			return "", "", err
 		}
