@@ -107,13 +107,3 @@ func createTestBoards(t *testing.T, store store.Store, userID string, num int) [
 	}
 	return boards
 }
-
-func extractBlockIdsPtr(blockGroups ...[]*model.Block) []string {
-	ids := make([]string, 0)
-	for _, group := range blockGroups {
-		for _, block := range group {
-			ids = append(ids, block.ID)
-		}
-	}
-	return ids
-}
