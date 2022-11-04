@@ -32,7 +32,6 @@ const (
 	uniqueIDsMigrationRequiredVersion        = 14
 	teamLessBoardsMigrationRequiredVersion   = 18
 	categoriesUUIDIDMigrationRequiredVersion = 20
-	moveOrphanedBlocksToHistory              = 29
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
@@ -235,14 +234,6 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 
 	if mErr := s.RunCategoryUUIDIDMigration(); mErr != nil {
 		return fmt.Errorf("error running categoryID migration: %w", mErr)
-	}
-
-	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, moveOrphanedBlocksToHistory); mErr != nil {
-		return mErr
-	}
-
-	if mErr := s.RunMoveOrphanedBlocksToHistoryMigration(); mErr != nil {
-		return fmt.Errorf("error running move_orphan_blocks_to_history migration: %w", mErr)
 	}
 
 	appliedMigrations, err := driver.AppliedMigrations()

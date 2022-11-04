@@ -279,16 +279,6 @@ func (s *SQLStore) DuplicateBoard(boardID string, userID string, toTeam string, 
 
 }
 
-func (s *SQLStore) FindOrphansForBoards(limit int) ([]string, error) {
-	return s.findOrphansForBoards(s.db, limit)
-
-}
-
-func (s *SQLStore) FindOrphansForCards(limit int) ([]string, error) {
-	return s.findOrphansForCards(s.db, limit)
-
-}
-
 func (s *SQLStore) GetActiveUserCount(updatedSecondsAgo int64) (int, error) {
 	return s.getActiveUserCount(s.db, updatedSecondsAgo)
 

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"time"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/wiggin77/merror"
@@ -647,82 +646,6 @@ func (s *SQLStore) getDeletedMembershipBoards(tx sq.BaseRunner) ([]*model.Board,
 	}
 
 	return boards, err
-}
-
-// RunMoveOrphanedBlocksToHistoryMigration will move any orphaned blocks to the blocks_history table by
-// copying the records then deleting from the blocks table.
-func (s *SQLStore) RunMoveOrphanedBlocksToHistoryMigration() error {
-	const maxIterations = 100
-	const limit = 1000
-	const maxErrors = 5
-
-	errorCount := 0
-	blockCount := 0
-
-	// we cannot block startup of focalboard if this cleanup fails since it is not a required migration.
-	// try a few times then give up.
-	canContinueOnError := func(msg string, fields ...mlog.Field) bool {
-		s.logger.Error("RunMoveOrphanedBlocksToHistoryMigration "+msg, fields...)
-		if errorCount >= maxErrors {
-			s.logger.Error("RunMoveOrphanedBlocksToHistoryMigration maximum errors exceeded; aborting.")
-			return false
-		}
-		time.Sleep(250)
-		return true
-	}
-
-	// find orphans for boards first
-	for i := 0; i < maxIterations; i++ {
-		orphans, err := s.findOrphansForBoards(s.db, limit)
-		if err != nil {
-			if !canContinueOnError("error finding orphans for boards", mlog.Err(err)) {
-				return nil
-			}
-			continue
-		}
-
-		if len(orphans) == 0 {
-			break
-		}
-
-		for _, blockID := range orphans {
-			if err := s.DeleteBlock(blockID, model.SystemUserID); err != nil {
-				if !canContinueOnError("error deleting block for board", mlog.String("block_id", blockID), mlog.Err(err)) {
-					return nil
-				}
-				continue
-			}
-			blockCount++
-		}
-	}
-
-	// find orphans for cards/blocks
-	for i := 0; i < maxIterations; i++ {
-		orphans, err := s.findOrphansForCards(s.db, limit)
-		if err != nil {
-			if !canContinueOnError("error finding orphans for cards", mlog.Err(err)) {
-				return nil
-			}
-			continue
-		}
-
-		if len(orphans) == 0 {
-			break
-		}
-
-		for _, blockID := range orphans {
-			if err := s.DeleteBlock(blockID, model.SystemUserID); err != nil {
-				if !canContinueOnError("error deleting block for card", mlog.String("block_id", blockID), mlog.Err(err)) {
-					return nil
-				}
-				continue
-			}
-			blockCount++
-		}
-	}
-
-	s.logger.Info("Move orphaned blocks to history migration completed", mlog.Int("orphan_blocks_removed", blockCount))
-	return nil
 }
 
 func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {

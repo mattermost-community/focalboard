@@ -79,11 +79,6 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testUndeleteBlockChildren(t, store)
 	})
-	t.Run("FindOrphans", func(t *testing.T) {
-		store, tearDown := setup(t)
-		defer tearDown()
-		testFindOrphans(t, store)
-	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store) {
@@ -1156,55 +1151,5 @@ func testUndeleteBlockChildren(t *testing.T, store store.Store) {
 		blocks, err = store.GetBlocksForBoard(boardDelete.ID)
 		require.NoError(t, err)
 		assert.Len(t, blocks, len(blocksDelete)+len(cardsDelete))
-	})
-}
-
-func testFindOrphans(t *testing.T, store store.Store) {
-	boards := createTestBoards(t, store, testUserID, 5)
-	boardDelete := boards[0]
-	boardForCard := boards[1]
-	boardKeep := boards[2]
-
-	// create some cards and content blocks to be orphaned when board deleted.
-	boardBlocksOrphaned := createTestCards(t, store, testUserID, boardDelete.ID, 3)
-	boardContentOrphaned := createTestBlocksForCard(t, store, boardBlocksOrphaned[0].ID, 3)
-	boardBlocksOrphaned = append(boardBlocksOrphaned, boardContentOrphaned...)
-
-	// create a card and content blocks to be orphaned when card deleted.
-	cards := createTestCards(t, store, testUserID, boardForCard.ID, 3)
-	cardOrphaned := cards[0]
-	cardContentOrphaned := createTestBlocksForCard(t, store, cardOrphaned.ID, 3)
-
-	// create some cards and content blocks to keep.
-	blocksKeep := createTestCards(t, store, testUserID, boardKeep.ID, 5)
-	cardKeep := blocksKeep[0]
-	_ = createTestBlocksForCard(t, store, cardKeep.ID, 5)
-
-	t.Run("find board orphans", func(t *testing.T) {
-		// orphan some blocks by deleting a board record
-		err := store.DeleteBoardRecord(boardDelete.ID, testUserID)
-		require.NoError(t, err)
-
-		ids, err := store.FindOrphansForBoards(100)
-		require.NoError(t, err)
-
-		// make sure only the orphaned blocks were found
-		require.Len(t, ids, len(boardBlocksOrphaned))
-		boardBlockIDsOrphaned := extractBlockIdsPtr(boardBlocksOrphaned)
-		assert.ElementsMatch(t, boardBlockIDsOrphaned, ids)
-	})
-
-	t.Run("find card orphans", func(t *testing.T) {
-		// orphan some blocks by deleting a card record
-		err := store.DeleteBlockRecord(cardOrphaned.ID, testUserID)
-		require.NoError(t, err)
-
-		ids, err := store.FindOrphansForCards(100)
-		require.NoError(t, err)
-
-		// make sure only the orphaned content blocks for the deleted card were found
-		require.Len(t, ids, len(cardContentOrphaned))
-		cardContentIDsOrphaned := extractBlockIdsPtr(cardContentOrphaned)
-		assert.ElementsMatch(t, cardContentIDsOrphaned, ids)
 	})
 }
