@@ -52,9 +52,9 @@ const attachmentSlice = createSlice({
                     state.attachments[block.id] = block as AttachmentBlock
                     state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
                     state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
-                    state.attachmentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
             }
+            Object.values(state.attachmentsByCard).forEach((arr) => arr.sort((a, b) => a.createAt - b.createAt))
         })
         builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.attachments = {}
@@ -64,9 +64,9 @@ const attachmentSlice = createSlice({
                     state.attachments[block.id] = block as AttachmentBlock
                     state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
                     state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
-                    state.attachmentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
             }
+            Object.values(state.attachmentsByCard).forEach((arr) => arr.sort((a, b) => a.createAt - b.createAt))
         })
     },
 })
