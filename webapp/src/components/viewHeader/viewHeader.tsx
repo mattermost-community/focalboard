@@ -150,7 +150,10 @@ const ViewHeader = (props: Props) => {
                     autoExpand={false}
                 />
                 <div>
-                    <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+                    <MenuWrapper
+                        disabled={props.readonly}
+                        label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}
+                    >
                         <IconButton icon={<DropdownIcon/>}/>
                         <ViewMenu
                             board={board}
