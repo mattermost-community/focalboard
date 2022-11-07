@@ -189,7 +189,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /files/teams/{teamID}/{boardID}/info/{filename} getFile
+	// swagger:operation GET /files/teams/{teamID}/{boardID}/{filename}/info getFile
 	//
 	// Returns the metadata of an uploaded file
 	//
