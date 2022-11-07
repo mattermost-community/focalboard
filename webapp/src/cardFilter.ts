@@ -89,7 +89,7 @@ class CardFilter {
             if (filter.values.length === 0) {
                 return true
             }
-            return (value as string || '').includes(filter.values[0])
+            return !(value as string || '').includes(filter.values[0])
         }
         case 'startsWith': {
             if (filter.values.length === 0) {
