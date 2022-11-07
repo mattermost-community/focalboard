@@ -7,6 +7,8 @@ import {Utils} from '../../utils'
 
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onMouseOver?: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onMouseLeave?: (e: React.MouseEvent<HTMLButtonElement>) => void
     onBlur?: (e: React.FocusEvent<HTMLButtonElement>) => void
     children?: React.ReactNode
     title?: string
@@ -37,6 +39,8 @@ function Button(props: Props): JSX.Element {
         <button
             type={props.submit ? 'submit' : 'button'}
             onClick={props.onClick}
+            onMouseOver={props.onMouseOver}
+            onMouseLeave={props.onMouseLeave}
             className={Utils.generateClassName(classNames)}
             title={props.title}
             onBlur={props.onBlur}

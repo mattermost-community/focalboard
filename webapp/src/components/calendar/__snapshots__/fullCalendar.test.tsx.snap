@@ -733,7 +733,7 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                               role="button"
                                             >
                                               <button
-                                                class="IconButton"
+                                                class="IconButton CardActionsMenuIcon"
                                                 type="button"
                                               >
                                                 <i
@@ -3007,7 +3007,7 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                               role="button"
                                             >
                                               <button
-                                                class="IconButton"
+                                                class="IconButton CardActionsMenuIcon"
                                                 type="button"
                                               >
                                                 <i
@@ -5979,7 +5979,7 @@ exports[`components/calendar/toolbar return calendar, with date property set 1`]
                                               role="button"
                                             >
                                               <button
-                                                class="IconButton"
+                                                class="IconButton CardActionsMenuIcon"
                                                 type="button"
                                               >
                                                 <i
@@ -7561,7 +7561,7 @@ exports[`components/calendar/toolbar return calendar, without permissions 1`] = 
                                               role="button"
                                             >
                                               <button
-                                                class="IconButton"
+                                                class="IconButton CardActionsMenuIcon"
                                                 type="button"
                                               >
                                                 <i

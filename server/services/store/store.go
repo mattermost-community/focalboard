@@ -14,19 +14,19 @@ const CardLimitTimestampSystemKey = "card_limit_timestamp"
 
 // Store represents the abstraction of the data storage.
 type Store interface {
-	GetBlocks(opts model.QueryBlocksOptions) ([]model.Block, error)
-	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]model.Block, error)
-	GetBlocksWithParent(boardID, parentID string) ([]model.Block, error)
-	GetBlocksByIDs(ids []string) ([]model.Block, error)
-	GetBlocksWithType(boardID, blockType string) ([]model.Block, error)
-	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error)
-	GetBlocksForBoard(boardID string) ([]model.Block, error)
+	GetBlocks(opts model.QueryBlocksOptions) ([]*model.Block, error)
+	GetBlocksWithParentAndType(boardID, parentID string, blockType string) ([]*model.Block, error)
+	GetBlocksWithParent(boardID, parentID string) ([]*model.Block, error)
+	GetBlocksByIDs(ids []string) ([]*model.Block, error)
+	GetBlocksWithType(boardID, blockType string) ([]*model.Block, error)
+	GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error)
+	GetBlocksForBoard(boardID string) ([]*model.Block, error)
 	// @withTransaction
 	InsertBlock(block *model.Block, userID string) error
 	// @withTransaction
 	DeleteBlock(blockID string, modifiedBy string) error
 	// @withTransaction
-	InsertBlocks(blocks []model.Block, userID string) error
+	InsertBlocks(blocks []*model.Block, userID string) error
 	// @withTransaction
 	UndeleteBlock(blockID string, modifiedBy string) error
 	// @withTransaction
@@ -36,15 +36,15 @@ type Store interface {
 	GetBlock(blockID string) (*model.Block, error)
 	// @withTransaction
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
-	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
-	GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error)
+	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error)
+	GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error)
 	GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error)
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
 	// @withTransaction
 	DuplicateBoard(boardID string, userID string, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error)
 	// @withTransaction
-	DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error)
+	DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]*model.Block, error)
 	// @withTransaction
 	PatchBlocks(blockPatches *model.BlockPatchBatch, userID string) error
 
@@ -56,15 +56,15 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
-	GetUsersList(userIDs []string) ([]*model.User, error)
+	GetUsersList(userIDs []string, showEmail, showName bool) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) (*model.User, error)
 	UpdateUser(user *model.User) (*model.User, error)
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
-	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error)
+	GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error)
 	PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error)
 	GetUserPreferences(userID string) (mmModel.Preferences, error)
 

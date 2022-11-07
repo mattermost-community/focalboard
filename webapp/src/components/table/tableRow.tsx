@@ -100,6 +100,9 @@ const TableRow = (props: Props) => {
             className += ' hidden'
         }
     }
+    if (props.readonly) {
+        className += ' readonly'
+    }
 
     const handleDeleteCard = useCallback(async () => {
         if (!card) {

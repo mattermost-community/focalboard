@@ -213,7 +213,7 @@ describe('components/sidebarSidebar', () => {
         expect(sidebarBoards.length).toBe(0)
 
         const noBoardsText = getAllByText('No boards inside')
-        expect(noBoardsText.length).toBe(2) // one for custom category, one for default category
+        expect(noBoardsText.length).toBe(1)
     })
 
     test('some categories hidden', () => {

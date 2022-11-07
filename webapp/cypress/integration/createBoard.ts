@@ -133,6 +133,9 @@ describe('Create and delete board / card', () => {
 
         // Delete board
         cy.log('**Delete board**')
+        cy.get('.Sidebar .octo-sidebar-list').then((el) => {
+            cy.log(el.text())
+        })
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
