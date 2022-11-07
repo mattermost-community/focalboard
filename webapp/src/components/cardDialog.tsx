@@ -189,7 +189,6 @@ const CardDialog = (props: Props): JSX.Element => {
     const followActionButton = (following: boolean): React.ReactNode => {
         const followBtn = (
             <>
-                {attachBtn()}
                 <Button
                     className='cardFollowBtn follow'
                     size='medium'
@@ -202,7 +201,6 @@ const CardDialog = (props: Props): JSX.Element => {
 
         const unfollowBtn = (
             <>
-                {attachBtn()}
                 <Button
                     className='cardFollowBtn unfollow'
                     size='medium'
@@ -213,7 +211,7 @@ const CardDialog = (props: Props): JSX.Element => {
             </>
         )
 
-        return following ? unfollowBtn : followBtn
+        return (<>{attachBtn()}{following ? unfollowBtn : followBtn}</>)
     }
 
     const followingCards = useAppSelector(getUserBlockSubscriptionList)

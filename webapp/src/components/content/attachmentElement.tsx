@@ -147,7 +147,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                 </MenuWrapper>
                 <a
                     href={fileDataUrl}
-                    download={fileName}
+                    download={fileInfo.name}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='fileElement-download-btn mt-5 mr-2'
