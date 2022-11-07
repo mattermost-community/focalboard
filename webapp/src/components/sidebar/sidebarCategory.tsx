@@ -121,6 +121,18 @@ const SidebarCategory = (props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
+    const showPage = useCallback((pageId, boardId) => {
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || '', viewId: pageId || ''}
+        if (boardId !== match.params.boardId && pageId !== match.params.viewId) {
+            params.cardId = undefined
+        }
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
+        history.push(newPath)
+        props.hideSidebar()
+    }, [match, history])
+
     const isBoardVisible = (boardID: string): boolean => {
         // hide if board doesn't belong to current category
         if (!blocks.includes(boardID)) {
@@ -295,6 +307,7 @@ const SidebarCategory = (props: Props) => {
                         isActive={board.id === props.activeBoardID}
                         showBoard={showBoard}
                         showView={showView}
+                        showPage={showPage}
                         onDeleteRequest={setDeleteBoard}
                     />
                 )
@@ -312,6 +325,7 @@ const SidebarCategory = (props: Props) => {
                         isActive={board.id === props.activeBoardID}
                         showBoard={showBoard}
                         showView={showView}
+                        showPage={showPage}
                         onDeleteRequest={setDeleteBoard}
                     />
                 )

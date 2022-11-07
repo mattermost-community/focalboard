@@ -5,6 +5,7 @@ import {useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
+import {Page, createPage} from '../../blocks/page'
 import {BoardView, IViewType} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -19,11 +20,13 @@ import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
+import {getCurrentBoardPages, getCurrentPageId} from '../../store/pages'
 import Folder from '../../widgets/icons/folder'
 import Check from '../../widgets/icons/checkIcon'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
+import TextIcon from '../../widgets/icons/text'
 import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
 
@@ -59,6 +62,7 @@ type Props = {
     onDeleteRequest: (board: Board) => void
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
+    showPage: (pageId: string, boardId: string) => void
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -68,7 +72,9 @@ const SidebarBoardItem = (props: Props) => {
 
     const team = useAppSelector(getCurrentTeam)
     const boardViews = useAppSelector(getCurrentBoardViews)
+    const pages = useAppSelector(getCurrentBoardPages)
     const currentViewId = useAppSelector(getCurrentViewId)
+    const currentPageId = useAppSelector(getCurrentPageId)
     const teamID = team?.id || ''
     const me = useAppSelector(getMe)
     const myConfig = useAppSelector(getMyConfig)
@@ -129,7 +135,7 @@ const SidebarBoardItem = (props: Props) => {
         // By not waiting for the board-category WS event and setting the right category for the board,
         // we avoid the jumping behavior.
         if (props.categoryBoards.id !== '') {
-            await dispatch(updateBoardCategories([{
+            dispatch(updateBoardCategories([{
                 boardID: boardId,
                 categoryID: props.categoryBoards.id,
             }]))
@@ -167,7 +173,7 @@ const SidebarBoardItem = (props: Props) => {
             return
         }
 
-        await dispatch(patchProps(patchedProps))
+        dispatch(patchProps(patchedProps))
 
         // If we're hiding the board we're currently on,
         // we need to switch to a different board once its hidden.
@@ -296,6 +302,22 @@ const SidebarBoardItem = (props: Props) => {
                         title={view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
                     >
                         {view.title || intl.formatMessage({id: 'Sidebar.untitled-view', defaultMessage: '(Untitled View)'})}
+                    </div>
+                </div>
+            ))}
+
+            {props.isActive && pages.map((page: Page) => (
+                <div
+                    key={page.id}
+                    className={`SidebarBoardItem sidebar-page-item ${page.id === currentPageId ? 'active' : ''}`}
+                    onClick={() => props.showPage(page.id, board.id)}
+                >
+                    <TextIcon/>
+                    <div
+                        className='octo-sidebar-title'
+                        title={page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
+                    >
+                        {page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
                     </div>
                 </div>
             ))}

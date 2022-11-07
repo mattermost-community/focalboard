@@ -18,6 +18,7 @@ const (
 	TypeBoard   = "board"
 	TypeCard    = "card"
 	TypeView    = "view"
+	TypePage    = "page"
 	TypeText    = "text"
 	TypeComment = "comment"
 	TypeImage   = "image"
@@ -36,6 +37,8 @@ func BlockTypeFromString(s string) (BlockType, error) {
 		return TypeCard, nil
 	case "view":
 		return TypeView, nil
+	case "page":
+		return TypePage, nil
 	case "text":
 		return TypeText, nil
 	case "comment":
@@ -55,6 +58,8 @@ func BlockType2IDType(blockType BlockType) utils.IDType {
 		return utils.IDTypeCard
 	case TypeView:
 		return utils.IDTypeView
+	case TypePage:
+		return utils.IDTypePage
 	case TypeText, TypeComment:
 		return utils.IDTypeBlock
 	}

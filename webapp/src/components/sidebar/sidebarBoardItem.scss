@@ -22,9 +22,10 @@
         font-weight: 400;
     }
 
-    &.sidebar-view-item {
+    &.sidebar-view-item, &.sidebar-page-item {
         padding-left: 42px;
         color: rgba(var(--sidebar-text-rgb), 0.64);
+        fill: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
     }
 

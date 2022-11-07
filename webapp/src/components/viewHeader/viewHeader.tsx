@@ -6,6 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import ViewMenu from '../../components/viewMenu'
 import mutator from '../../mutator'
 import {Board, IPropertyTemplate} from '../../blocks/board'
+import {Page} from '../../blocks/page'
 import {BoardView} from '../../blocks/boardView'
 import {Card} from '../../blocks/card'
 import Button from '../../widgets/buttons/button'
@@ -51,7 +52,8 @@ import './viewHeader.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView?: BoardView
+    activePage?: Page
     views: BoardView[]
     cards: Card[]
     groupByProperty?: IPropertyTemplate
@@ -69,19 +71,19 @@ const ViewHeader = (props: Props) => {
     const intl = useIntl()
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
-    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
+    const {board, activeView, activePage, views, groupByProperty, cards, dateDisplayProperty} = props
 
-    const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
-    const withDisplayBy = activeView.fields.viewType === 'calendar'
-    const withSortBy = activeView.fields.viewType !== 'calendar'
+    const withGroupBy = activeView?.fields.viewType === 'board' || activeView?.fields.viewType === 'table'
+    const withDisplayBy = activeView?.fields.viewType === 'calendar'
+    const withSortBy = activeView?.fields.viewType !== 'calendar'
 
-    const [viewTitle, setViewTitle] = useState(activeView.title)
+    const [viewTitle, setViewTitle] = useState(activeView?.title || activePage?.title)
 
     useEffect(() => {
-        setViewTitle(activeView.title)
-    }, [activeView.title])
+        setViewTitle(activePage?.title || activeView?.title)
+    }, [activeView?.title, activePage?.title])
 
-    const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
+    const hasFilter = activeView?.fields.filter && activeView?.fields.filter.filters?.length > 0
 
     const isOnboardingBoard = props.board.title === OnboardingBoardTitle
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
@@ -138,10 +140,10 @@ const ViewHeader = (props: Props) => {
                     value={viewTitle}
                     placeholderText='Untitled View'
                     onSave={(): void => {
-                        mutator.changeBlockTitle(activeView.boardId, activeView.id, activeView.title, viewTitle)
+                        mutator.changeBlockTitle((activeView || activePage || {boardId: ''}).boardId, (activeView || activePage || {id: ''}).id, (activeView || activePage || {title: ''}).title, viewTitle || '')
                     }}
                     onCancel={(): void => {
-                        setViewTitle(activeView.title)
+                        setViewTitle((activeView || activePage || {}).title)
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
@@ -150,6 +152,7 @@ const ViewHeader = (props: Props) => {
                     autoExpand={false}
                 />
                 <div>
+                    {activeView &&
                     <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                         <IconButton icon={<DropdownIcon/>}/>
                         <ViewMenu
@@ -159,14 +162,16 @@ const ViewHeader = (props: Props) => {
                             readonly={props.readonly || !canEditBoardProperties}
                             allowCreateView={allowCreateView}
                         />
-                    </MenuWrapper>
+                    </MenuWrapper>}
+                    {!activeView && activePage &&
+                        <div>TODO: Active Page menu</div>}
                     {showAddViewTourStep && <AddViewTourStep/>}
                 </div>
             </div>
 
             <div className='octo-spacer'/>
 
-            {!props.readonly && canEditBoardProperties &&
+            {!props.readonly && activeView && canEditBoardProperties &&
             <>
                 {/* Card properties */}
 
@@ -233,11 +238,12 @@ const ViewHeader = (props: Props) => {
 
             {/* Search */}
 
-            <ViewHeaderSearch/>
+            {activeView &&
+                <ViewHeaderSearch/>}
 
             {/* Options menu */}
 
-            {!props.readonly &&
+            {!props.readonly && activeView &&
             <>
                 <ViewHeaderActionsMenu
                     board={board}

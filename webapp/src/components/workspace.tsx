@@ -13,6 +13,7 @@ import {
     getCurrentViewDisplayBy,
     getCurrentView,
 } from '../store/views'
+import {getCurrentPage} from '../store/pages'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -44,6 +45,7 @@ function CenterContent(props: Props) {
     const templates = useAppSelector(getTemplates)
     const cards = useAppSelector(getCurrentViewCardsSortedFilteredAndGrouped)
     const activeView = useAppSelector(getCurrentView)
+    const activePage = useAppSelector(getCurrentPage)
     const views = useAppSelector(getCurrentBoardViews)
     const groupByProperty = useAppSelector(getCurrentViewGroupBy)
     const dateDisplayProperty = useAppSelector(getCurrentViewDisplayBy)
@@ -114,14 +116,14 @@ function CenterContent(props: Props) {
         return templateSelector
     }
 
-    if (board && !isBoardHidden() && activeView) {
+    if (board && !isBoardHidden() && (activeView || activePage)) {
         let property = groupByProperty
-        if ((!property || !propsRegistry.get(property.type).canGroup) && activeView.fields.viewType === 'board') {
+        if ((!property || !propsRegistry.get(property.type).canGroup) && activeView?.fields.viewType === 'board') {
             property = board?.cardProperties.find((o) => propsRegistry.get(o.type).canGroup)
         }
 
         let displayProperty = dateDisplayProperty
-        if (!displayProperty && activeView.fields.viewType === 'calendar') {
+        if (!displayProperty && activeView?.fields.viewType === 'calendar') {
             displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
         }
 
@@ -134,6 +136,7 @@ function CenterContent(props: Props) {
                 shownCardId={match.params.cardId}
                 showCard={showCard}
                 activeView={activeView}
+                activePage={activePage}
                 groupByProperty={property}
                 dateDisplayProperty={displayProperty}
                 views={views}

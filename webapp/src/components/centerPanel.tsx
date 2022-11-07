@@ -2,14 +2,15 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React, {useState, useCallback, useEffect, useMemo} from 'react'
-import {useIntl} from 'react-intl'
+import {useIntl, IntlShape} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {ClientConfig} from '../config/clientConfig'
 
-import {Block} from '../blocks/block'
+import {Block, ContentBlockTypes, createBlock} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
+import {Page} from '../blocks/page'
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
@@ -17,7 +18,9 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction, showCardHiddenWarning} from '../store/cards'
+import {getCurrentPageContents} from '../store/contents'
 import {getCardLimitTimestamp} from '../store/limits'
+import {updateContents} from '../store/contents'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -25,6 +28,7 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../web
 import './centerPanel.scss'
 
 import {useAppSelector, useAppDispatch} from '../store/hooks'
+import {updatePages} from '../store/pages'
 
 import {
     getMe,
@@ -40,6 +44,9 @@ import octoClient from '../octoClient'
 
 import ShareBoardButton from './shareBoard/shareBoardButton'
 import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
+
+import BlocksEditor from './blocksEditor/blocksEditor'
+import {BlockData} from './blocksEditor/blocks/types'
 
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
@@ -62,7 +69,8 @@ type Props = {
     clientConfig?: ClientConfig
     board: Board
     cards: Card[]
-    activeView: BoardView
+    activeView?: BoardView
+    activePage?: Page
     views: BoardView[]
     groupByProperty?: IPropertyTemplate
     dateDisplayProperty?: IPropertyTemplate
@@ -71,6 +79,43 @@ type Props = {
     showCard: (cardId?: string) => void
     hiddenCardsCount: number
 }
+
+async function addBlockNewEditor(page: Page, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
+    const block = createBlock()
+    block.parentId = page.id
+    block.boardId = page.boardId
+    block.title = title
+    block.type = contentType
+    block.fields = {...block.fields, ...fields}
+
+    const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add page text'})
+
+    const afterRedo = async (newBlock: Block) => {
+        const contentOrder = page.fields.contentOrder.slice()
+        if (afterBlockId) {
+            const idx = contentOrder.indexOf(afterBlockId)
+            if (idx === -1) {
+                contentOrder.push(newBlock.id)
+            } else {
+                contentOrder.splice(idx + 1, 0, newBlock.id)
+            }
+        } else {
+            contentOrder.push(newBlock.id)
+        }
+        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
+        dispatch(updatePages([{...page, fields: {...page.fields, contentOrder}}]))
+    }
+
+    const beforeUndo = async () => {
+        const contentOrder = page.fields.contentOrder.slice()
+        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
+    }
+
+    const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
+    dispatch(updateContents([newBlock]))
+    return newBlock
+}
+
 
 const CenterPanel = (props: Props) => {
     const intl = useIntl()
@@ -84,12 +129,13 @@ const CenterPanel = (props: Props) => {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const me = useAppSelector(getMe)
     const currentCard = useAppSelector(getCurrentCard)
+    const currentPageContents = useAppSelector(getCurrentPageContents)
     const dispatch = useAppDispatch()
 
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
     useEffect(() => {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView.id, viewType: props.activeView.fields.viewType})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView?.id, viewType: props.activeView?.fields.viewType, page: props.activePage?.id})
     }, [])
 
     useHotkeys('esc', (e: KeyboardEvent) => {
@@ -168,6 +214,11 @@ const CenterPanel = (props: Props) => {
     const addCard = useCallback(async (groupByOptionId?: string, show = false, properties: Record<string, string> = {}): Promise<void> => {
         const {activeView, board, groupByProperty} = props
 
+        if (!activeView) {
+            // TODO: Log here an error, it shouldn't happen ever
+            return
+        }
+
         const card = createCard()
 
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCard, {board: board.id, view: activeView.id, card: card.id})
@@ -236,7 +287,7 @@ const CenterPanel = (props: Props) => {
 
         const patchedProps = await octoClient.patchUserConfig(me.id, patch)
         if (patchedProps) {
-            await dispatch(patchProps(patchedProps))
+            dispatch(patchProps(patchedProps))
         }
     }, [me?.id])
 
@@ -261,6 +312,10 @@ const CenterPanel = (props: Props) => {
 
     const addCardFromTemplate = useCallback(async (cardTemplateId: string, groupByOptionId?: string) => {
         const {activeView, board, groupByProperty} = props
+        if (!activeView) {
+            // TODO: Log here an error, it shouldn't happen ever
+            return
+        }
 
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
         if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
@@ -280,8 +335,12 @@ const CenterPanel = (props: Props) => {
                 false,
                 propertiesThatMeetFilters,
                 async (cardId) => {
+                    if (!activeView) {
+                        // TODO: Log here an error, it shouldn't happen ever
+                        return
+                    }
                     dispatch(updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, cardId]}}))
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: props.board.id, view: props.activeView.id, card: cardId, cardTemplateId})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: props.board.id, view: activeView.id, card: cardId, cardTemplateId})
                     showCard(cardId)
                 },
                 async () => {
@@ -306,7 +365,7 @@ const CenterPanel = (props: Props) => {
             'add card template',
             async (newBlock: Block) => {
                 const newTemplate = createCard(newBlock)
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: newTemplate.id})
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView?.id, card: newTemplate.id})
                 dispatch(addTemplateAction(newTemplate))
                 showCard(newTemplate.id)
             }, async () => {
@@ -346,7 +405,7 @@ const CenterPanel = (props: Props) => {
                 }
                 setSelectedCardIds(newSelectedCardIds)
             }
-        } else if (activeView.fields.viewType === 'board' || activeView.fields.viewType === 'gallery') {
+        } else if (activeView?.fields.viewType === 'board' || activeView?.fields.viewType === 'gallery') {
             showCard(card.id)
         }
 
@@ -360,17 +419,59 @@ const CenterPanel = (props: Props) => {
     const showShareButton = !props.readonly && me?.id !== 'single-user'
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
 
-    const {groupByProperty, activeView, board, views, cards} = props
+    const {groupByProperty, activeView, activePage, board, views, cards} = props
+
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(
-        () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
-        [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
+        () => getVisibleAndHiddenGroups(cards, activeView?.fields.visibleOptionIds || [], activeView?.fields.hiddenOptionIds || [], groupByProperty),
+        [cards, activeView?.fields.visibleOptionIds, activeView?.fields.hiddenOptionIds, groupByProperty],
     )
+
+    const pageBlocks = useMemo(() => {
+        return currentPageContents.flatMap((value: Block | Block[]): BlockData<any> => {
+            const v: Block = Array.isArray(value) ? value[0] : value
+
+            let data: any = v?.title
+            if (v?.type === 'image') {
+                data = {
+                    file: v?.fields.fileId,
+                }
+            }
+
+            if (v?.type === 'attachment') {
+                data = {
+                    file: v?.fields.fileId,
+                    filename: v?.fields.filename,
+                }
+            }
+
+            if (v?.type === 'video') {
+                data = {
+                    file: v?.fields.fileId,
+                    filename: v?.fields.filename,
+                }
+            }
+
+            if (v?.type === 'checkbox') {
+                data = {
+                    value: v?.title,
+                    checked: v?.fields.value,
+                }
+            }
+
+            return {
+                id: v?.id,
+                value: data,
+                contentType: v?.type,
+            }
+        })
+    }, [currentPageContents])
+
     return (
         <div
             className='BoardComponent'
             onClick={backgroundClicked}
         >
-            {props.shownCardId &&
+            {props.shownCardId && activeView &&
                 <RootPortal>
                     <CardDialog
                         board={board}
@@ -407,7 +508,8 @@ const CenterPanel = (props: Props) => {
                 </div>
                 <ViewHeader
                     board={props.board}
-                    activeView={props.activeView}
+                    activeView={activeView}
+                    activePage={activePage}
                     cards={props.cards}
                     views={props.views}
                     groupByProperty={props.groupByProperty}
@@ -420,10 +522,79 @@ const CenterPanel = (props: Props) => {
                 />
             </div>
 
-            {activeView.fields.viewType === 'board' &&
+            {activePage &&
+                <BlocksEditor
+                    onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
+                        if (block.contentType === 'text' && block.value === '') {
+                            return null
+                        }
+                        let newBlock: Block
+                        if (block.contentType === 'checkbox') {
+                            newBlock = await addBlockNewEditor(activePage, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
+                        } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
+                            const newFileId = await octoClient.uploadFile(activePage.boardId, block.value.file)
+                            newBlock = await addBlockNewEditor(activePage, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
+                        } else {
+                            newBlock = await addBlockNewEditor(activePage, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
+                        }
+                        return {...block, id: newBlock.id}
+                    }}
+                    onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
+                        const originalContentBlock = currentPageContents.flatMap((b) => b).find((b) => b.id === block.id)
+                        if (!originalContentBlock) {
+                            return null
+                        }
+
+                        if (block.contentType === 'text' && block.value === '') {
+                            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+
+                            mutator.deleteBlock(originalContentBlock, description)
+                            return null
+                        }
+                        const newBlock = {
+                            ...originalContentBlock,
+                            title: block.value,
+                        }
+
+                        if (block.contentType === 'checkbox') {
+                            newBlock.title = block.value.value
+                            newBlock.fields = {...newBlock.fields, value: block.value.checked}
+                        }
+                        mutator.updateBlock(activePage.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
+                        return block
+                    }}
+                    onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
+                        if (block.id) {
+                            const idx = activePage.fields.contentOrder.indexOf(block.id)
+                            let sourceBlockId: string
+                            let sourceWhere: 'after'|'before'
+                            if (idx === -1) {
+                                Utils.logError('Unable to find the block id in the order of the current block')
+                                return
+                            }
+                            if (idx === 0) {
+                                sourceBlockId = activePage.fields.contentOrder[1] as string
+                                sourceWhere = 'before'
+                            } else {
+                                sourceBlockId = activePage.fields.contentOrder[idx - 1] as string
+                                sourceWhere = 'after'
+                            }
+                            if (afterBlock && afterBlock.id) {
+                                await mutator.moveContentBlock(block.id, afterBlock.id, 'after', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
+                                return
+                            }
+                            if (beforeBlock && beforeBlock.id) {
+                                await mutator.moveContentBlock(block.id, beforeBlock.id, 'before', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
+                            }
+                        }
+                    }}
+                    blocks={pageBlocks}
+                />}
+
+            {!activePage && activeView && activeView.fields.viewType === 'board' &&
             <Kanban
                 board={props.board}
-                activeView={props.activeView}
+                activeView={activeView}
                 cards={props.cards}
                 groupByProperty={props.groupByProperty}
                 visibleGroups={visibleGroups}
@@ -437,10 +608,10 @@ const CenterPanel = (props: Props) => {
                 hiddenCardsCount={props.hiddenCardsCount}
                 showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
             />}
-            {activeView.fields.viewType === 'table' &&
+            {!activePage && activeView && activeView.fields.viewType === 'table' &&
                 <Table
                     board={props.board}
-                    activeView={props.activeView}
+                    activeView={activeView}
                     cards={props.cards}
                     groupByProperty={props.groupByProperty}
                     views={props.views}
@@ -454,11 +625,11 @@ const CenterPanel = (props: Props) => {
                     hiddenCardsCount={props.hiddenCardsCount}
                     showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
                 />}
-            {activeView.fields.viewType === 'calendar' &&
+            {!activePage && activeView && activeView.fields.viewType === 'calendar' &&
                 <CalendarFullView
                     board={props.board}
                     cards={props.cards}
-                    activeView={props.activeView}
+                    activeView={activeView}
                     readonly={props.readonly}
                     dateDisplayProperty={props.dateDisplayProperty}
                     showCard={showCard}
@@ -467,11 +638,11 @@ const CenterPanel = (props: Props) => {
                     }}
                 />}
 
-            {activeView.fields.viewType === 'gallery' &&
+            {!activePage && activeView && activeView.fields.viewType === 'gallery' &&
                 <Gallery
                     board={props.board}
                     cards={props.cards}
-                    activeView={props.activeView}
+                    activeView={activeView}
                     readonly={props.readonly}
                     onCardClicked={cardClicked}
                     selectedCardIds={selectedCardIds}

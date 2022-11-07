@@ -9,6 +9,7 @@ import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
+import {Page} from './blocks/page'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
 import {CommentBlock} from './blocks/commentBlock'
@@ -25,6 +26,7 @@ import {UserConfigPatch, UserPreference} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
+import {updatePages} from './store/pages'
 import {updateCards} from './store/cards'
 import {updateComments} from './store/comments'
 import {updateContents} from './store/contents'
@@ -34,6 +36,7 @@ function updateAllBoardsAndBlocks(boards: Board[], blocks: Block[]) {
     return batch(() => {
         store.dispatch(updateBoards(boards.filter((b: Board) => b.deleteAt !== 0) as Board[]))
         store.dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+        store.dispatch(updatePages(blocks.filter((b: Block) => b.type === 'page' || b.deleteAt !== 0) as Page[]))
         store.dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
         store.dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
         store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))

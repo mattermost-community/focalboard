@@ -57,6 +57,7 @@ interface IEventProps {
     teamID?: string
     board?: string
     view?: string
+    page?: string
     viewType?: string
     card?: string
     cardTemplateId?: string
