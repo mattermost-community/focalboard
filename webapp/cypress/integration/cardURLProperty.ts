@@ -110,7 +110,7 @@ describe('Card URL Property', () => {
 
     const showURLProperty = () => {
         cy.log('**Show URL property**')
-        cy.findByRole('button', {name: 'Properties'}).click()
+        cy.findByRole('button', {name: 'Properties shown'}).click()
         cy.findByRole('button', {name: 'URL'}).click()
         cy.findByRole('link', {name: changedURL}).should('exist')
     }
