@@ -335,4 +335,17 @@ describe('src/cardFilter', () => {
             expect(result[0]).toEqual(card1)
         })
     })
+    describe('verify applyFilter for title', () => {
+        test('should not return array with card1', () => {
+            const filterClauseNotContains = createFilterClause({propertyId: 'title', condition: 'notContains', values: ['card1']})
+            const filterGroup = createFilterGroup({
+                operation: 'and',
+                filters: [
+                    filterClauseNotContains,
+                ],
+            })
+            const result = CardFilter.applyFilterGroup(filterGroup, [], [card1])
+            expect(result.length).toEqual(0)
+        })
+    })
 })
