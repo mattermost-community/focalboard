@@ -34,6 +34,7 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
+	// set to default category, UI doesn't create with Type
 	if strings.TrimSpace(category.Type) == "" {
 		category.Type = model.CategoryTypeCustom
 	}
@@ -59,6 +60,7 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 		return nil, model.ErrCategoryPermissionDenied
 	}
 
+	// in case type was defaulted above, set to existingCategory.Type
 	category.Type = existingCategory.Type
 	if existingCategory.Type == model.CategoryTypeSystem {
 		// You cannot rename or delete a system category,
