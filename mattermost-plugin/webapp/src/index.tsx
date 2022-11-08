@@ -91,10 +91,12 @@ const TELEMETRY_OPTIONS = {
 
 type Props = {
     webSocketClient: MMWebSocketClient
+    baseURL: string
+    browserHistory: History<unknown>
 }
 
-function customHistory() {
-    const history = createBrowserHistory({basename: Utils.getFrontendBaseURL()})
+function customHistory(basename: string, prefix: string) {
+    const history = createBrowserHistory({basename})
 
     if (Utils.isDesktop()) {
         window.addEventListener('message', (event: MessageEvent) => {
@@ -103,12 +105,17 @@ function customHistory() {
             }
 
             const pathName = event.data.message?.pathName
-            if (!pathName || !pathName.startsWith('/boards')) {
+            if (!pathName || !pathName.startsWith(prefix)) {
                 return
             }
 
-            Utils.log(`Navigating Boards to ${pathName}`)
-            history.replace(pathName.replace('/boards', ''))
+            Utils.log(`Navigating ${prefix} to ${pathName}`)
+            if (pathName.startsWith('/boards')) {
+                history.replace(pathName.replace('/boards', ''))
+            }
+            if (pathName.startsWith('/pages')) {
+                history.replace(pathName.replace('/pages', ''))
+            }
         })
     }
     return {
@@ -131,8 +138,6 @@ function customHistory() {
     }
 }
 
-let browserHistory: History<unknown>
-
 const MainApp = (props: Props) => {
     useEffect(() => {
         document.body.classList.add('focalboard-body')
@@ -151,12 +156,19 @@ const MainApp = (props: Props) => {
         }
     }, [])
 
+    useEffect(() => {
+        windowAny.frontendBaseURL = props.baseURL
+    }, [props.baseURL])
+
     return (
         <ErrorBoundary>
             <ReduxProvider store={store}>
                 <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
                     <div id='focalboard-app'>
-                        <App history={browserHistory}/>
+                        <App
+                            history={props.browserHistory}
+                            pages={props.baseURL.endsWith('pages')}
+                        />
                     </div>
                     <div id='focalboard-root-portal'/>
                 </WithWebSockets>
@@ -165,10 +177,14 @@ const MainApp = (props: Props) => {
     )
 }
 
-const HeaderComponent = () => {
+type HeaderComponentProps {
+    browserHistory: History<unknown>
+}
+
+const HeaderComponent = (props: HeaderComponentProps) => {
     return (
         <ErrorBoundary>
-            <GlobalHeader history={browserHistory}/>
+            <GlobalHeader history={props.browserHistory}/>
         </ErrorBoundary>
     )
 }
@@ -185,7 +201,8 @@ export default class Plugin {
         const subpath = siteURL ? getSubpath(siteURL) : ''
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
-        browserHistory = customHistory()
+        const browserHistory = customHistory(subpath + '/boards', '/boards')
+        const pagesBrowserHistory = customHistory(subpath + '/pages', '/pages')
         const cache = createIntlCache()
         const intl = createIntl({
             // modeled after <IntlProvider> in webapp/src/app.tsx
@@ -254,8 +271,13 @@ export default class Plugin {
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
                     // Don't re-push the URL if we're already on a URL for the current team
-                    if (!window.location.pathname.startsWith(`${(windowAny.frontendBaseURL || '')}/team/${currentTeamID}`))
-                        browserHistory.push(`/team/${currentTeamID}`)
+                    if (!window.location.pathname.startsWith(`${(windowAny.frontendBaseURL || '')}/team/${currentTeamID}`)) {
+                        if (windowAny.frontendBaseURL?.endsWith('/pages')) {
+                            pagesBrowserHistory.push(`/team/${currentTeamID}`)
+                        } else {
+                            browserHistory.push(`/team/${currentTeamID}`)
+                        }
+                    }
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
@@ -304,8 +326,19 @@ export default class Plugin {
                 'product-boards',
                 'Boards',
                 '/boards',
-                MainApp,
-                HeaderComponent,
+                (props) => <MainApp {...props} baseURL={subpath + '/boards'} browserHistory={browserHistory}/>,
+                () => <HeaderComponent browserHistory={browserHistory}/>,
+                () => null,
+                true,
+            )
+
+            this.registry.registerProduct(
+                '/pages',
+                'product-boards',
+                'Pages',
+                '/pages',
+                (props) => <MainApp {...props} baseURL={subpath + '/pages'} browserHistory={pagesBrowserHistory}/>,
+                () => <HeaderComponent browserHistory={pagesBrowserHistory}/>,
                 () => null,
                 true,
             )
@@ -443,3 +476,4 @@ export default class Plugin {
         this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
+

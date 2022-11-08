@@ -18,11 +18,13 @@ import {getLanguage, fetchLanguage} from './store/language'
 import {useAppSelector, useAppDispatch} from './store/hooks'
 import {fetchClientConfig} from './store/clientConfig'
 import FocalboardRouter from './router'
+import isPagesContext from './isPages'
 
 import {IUser} from './user'
 
 type Props = {
     history?: History<unknown>
+    pages: boolean
 }
 
 const App = (props: Props): JSX.Element => {
@@ -47,15 +49,17 @@ const App = (props: Props): JSX.Element => {
             locale={language.split(/[_]/)[0]}
             messages={getMessages(language)}
         >
-            <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
-                <FlashMessages milliseconds={2000}/>
-                <div id='frame'>
-                    <div id='main'>
-                        <NewVersionBanner/>
-                        <FocalboardRouter history={props.history}/>
+            <isPagesContext.Provider value={props.pages}>
+                <DndProvider backend={Utils.isMobile() ? TouchBackend : HTML5Backend}>
+                    <FlashMessages milliseconds={2000}/>
+                    <div id='frame'>
+                        <div id='main'>
+                            <NewVersionBanner/>
+                            <FocalboardRouter history={props.history}/>
+                        </div>
                     </div>
-                </div>
-            </DndProvider>
+                </DndProvider>
+            </isPagesContext.Provider>
         </IntlProvider>
     )
 }
