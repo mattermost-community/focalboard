@@ -33,9 +33,6 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
-	if err := category.IsValid(); err != nil {
-		return nil, err
-	}
 
 	// verify if category belongs to the user
 	existingCategory, err := a.store.GetCategory(category.ID)
@@ -55,6 +52,7 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 		return nil, model.ErrCategoryPermissionDenied
 	}
 
+	category.Type = existingCategory.Type
 	if existingCategory.Type == model.CategoryTypeSystem {
 		// You cannot rename or delete a system category,
 		// So restoring its name and undeleting it if set so.
