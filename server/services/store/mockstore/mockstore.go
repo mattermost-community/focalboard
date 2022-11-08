@@ -196,6 +196,20 @@ func (mr *MockStoreMockRecorder) DeleteBlock(arg0, arg1 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlock", reflect.TypeOf((*MockStore)(nil).DeleteBlock), arg0, arg1)
 }
 
+// DeleteBlockRecord mocks base method.
+func (m *MockStore) DeleteBlockRecord(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBlockRecord", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBlockRecord indicates an expected call of DeleteBlockRecord.
+func (mr *MockStoreMockRecorder) DeleteBlockRecord(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBlockRecord", reflect.TypeOf((*MockStore)(nil).DeleteBlockRecord), arg0, arg1)
+}
+
 // DeleteBoard mocks base method.
 func (m *MockStore) DeleteBoard(arg0, arg1 string) error {
 	m.ctrl.T.Helper()
@@ -208,6 +222,20 @@ func (m *MockStore) DeleteBoard(arg0, arg1 string) error {
 func (mr *MockStoreMockRecorder) DeleteBoard(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBoard", reflect.TypeOf((*MockStore)(nil).DeleteBoard), arg0, arg1)
+}
+
+// DeleteBoardRecord mocks base method.
+func (m *MockStore) DeleteBoardRecord(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteBoardRecord", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteBoardRecord indicates an expected call of DeleteBoardRecord.
+func (mr *MockStoreMockRecorder) DeleteBoardRecord(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBoardRecord", reflect.TypeOf((*MockStore)(nil).DeleteBoardRecord), arg0, arg1)
 }
 
 // DeleteBoardsAndBlocks mocks base method.

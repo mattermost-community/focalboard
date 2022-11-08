@@ -2,7 +2,6 @@ package utils
 
 import (
 	"context"
-	"runtime/debug"
 	"sync/atomic"
 	"time"
 
@@ -123,7 +122,6 @@ func (cn *CallbackQueue) exec(f CallbackFunc) {
 			cn.logger.Error("CallbackQueue callback panic",
 				mlog.String("name", cn.name),
 				mlog.Any("panic", r),
-				mlog.String("stack", string(debug.Stack())),
 			)
 		}
 	}()

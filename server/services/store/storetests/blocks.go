@@ -74,6 +74,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		defer tearDown()
 		testGetBlockMetadata(t, store)
 	})
+	t.Run("UndeleteBlockChildren", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUndeleteBlockChildren(t, store)
+	})
 }
 
 func testInsertBlock(t *testing.T, store store.Store) {
@@ -1021,6 +1026,7 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 
 	t.Run("get full block history after delete", func(t *testing.T) {
 		time.Sleep(20 * time.Millisecond)
+		// this will delete `block1` and any other blocks with `block1` as parent.
 		err = store.DeleteBlock(blocksToInsert[0].ID, testUserID)
 		require.NoError(t, err)
 
@@ -1029,15 +1035,14 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		}
 		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
 		require.NoError(t, err)
-		require.Len(t, blocks, 6)
-		expectedBlock := blocksToInsert[0]
-		block := blocks[0]
-
-		require.Equal(t, expectedBlock.ID, block.ID)
+		// all 5 blocks get a history record for insert, then `block1` gets a record for delete,
+		// and all 3 `block1` children get a record for delete. Thus total is 9.
+		require.Len(t, blocks, 9)
 	})
 
 	t.Run("get full block history after undelete", func(t *testing.T) {
 		time.Sleep(20 * time.Millisecond)
+		// this will undelete `block1` and its children
 		err = store.UndeleteBlock(blocksToInsert[0].ID, testUserID)
 		require.NoError(t, err)
 
@@ -1046,11 +1051,9 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		}
 		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
 		require.NoError(t, err)
-		require.Len(t, blocks, 7)
-		expectedBlock := blocksToInsert[0]
-		block := blocks[0]
-
-		require.Equal(t, expectedBlock.ID, block.ID)
+		// previous test put 9 records in history table. In this test 1 record was added for undeleting
+		// `block1` and another 3 for undeleting the children for a total of 13.
+		require.Len(t, blocks, 13)
 	})
 
 	t.Run("get block history of a board with no history", func(t *testing.T) {
@@ -1059,5 +1062,94 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		blocks, err = store.GetBlockHistoryDescendants("nonexistent-board-id", opts)
 		require.NoError(t, err)
 		require.Empty(t, blocks)
+	})
+}
+
+func testUndeleteBlockChildren(t *testing.T, store store.Store) {
+	boards := createTestBoards(t, store, testUserID, 2)
+	boardDelete := boards[0]
+	boardKeep := boards[1]
+
+	// create some blocks to be deleted
+	cardsDelete := createTestCards(t, store, testUserID, boardDelete.ID, 3)
+	blocksDelete := createTestBlocksForCard(t, store, cardsDelete[0].ID, 5)
+	require.Len(t, blocksDelete, 5)
+
+	// create some blocks to keep
+	cardsKeep := createTestCards(t, store, testUserID, boardKeep.ID, 3)
+	blocksKeep := createTestBlocksForCard(t, store, cardsKeep[0].ID, 4)
+	require.Len(t, blocksKeep, 4)
+
+	t.Run("undelete block children for card", func(t *testing.T) {
+		cardDelete := cardsDelete[0]
+		cardKeep := cardsKeep[0]
+
+		// delete a card
+		err := store.DeleteBlock(cardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the card was deleted
+		block, err := store.GetBlock(cardDelete.ID)
+		require.Error(t, err)
+		require.Nil(t, block)
+
+		// ensure the card children were deleted
+		blocks, err := store.GetBlocksWithParentAndType(cardDelete.BoardID, cardDelete.ID, model.TypeText)
+		require.NoError(t, err)
+		assert.Empty(t, blocks)
+
+		// ensure the other card children remain.
+		blocks, err = store.GetBlocksWithParentAndType(cardKeep.BoardID, cardKeep.ID, model.TypeText)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksKeep))
+
+		// undelete the card
+		err = store.UndeleteBlock(cardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the card was restored
+		block, err = store.GetBlock(cardDelete.ID)
+		require.NoError(t, err)
+		require.NotNil(t, block)
+
+		// ensure the card children were restored
+		blocks, err = store.GetBlocksWithParentAndType(cardDelete.BoardID, cardDelete.ID, model.TypeText)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksDelete))
+	})
+
+	t.Run("undelete block children for board", func(t *testing.T) {
+		// delete the board
+		err := store.DeleteBoard(boardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the board was deleted
+		board, err := store.GetBoard(boardDelete.ID)
+		require.Error(t, err)
+		require.Nil(t, board)
+
+		// ensure all cards and blocks for the board were deleted
+		blocks, err := store.GetBlocksForBoard(boardDelete.ID)
+		require.NoError(t, err)
+		assert.Empty(t, blocks)
+
+		// ensure the other board's cards and blocks remain.
+		blocks, err = store.GetBlocksForBoard(boardKeep.ID)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksKeep)+len(cardsKeep))
+
+		// undelete the board
+		err = store.UndeleteBoard(boardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the board was restored
+		board, err = store.GetBoard(boardDelete.ID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+
+		// ensure the board's cards and blocks were restored.
+		blocks, err = store.GetBlocksForBoard(boardDelete.ID)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksDelete)+len(cardsDelete))
 	})
 }
