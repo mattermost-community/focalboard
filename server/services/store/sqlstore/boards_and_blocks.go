@@ -102,13 +102,11 @@ func (s *SQLStore) patchBoardsAndBlocks(db sq.BaseRunner, pbab *model.PatchBoard
 func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoardsAndBlocks, userID string) error {
 	boardIDMap := map[string]bool{}
 	for _, boardID := range dbab.Boards {
-		if err := s.deleteBoard(db, boardID, userID); err != nil {
-			return err
-		}
-
 		boardIDMap[boardID] = true
 	}
 
+	// delete the blocks first, since deleting the board will clean up any children and we'll get
+	// not found errors when deleting the blocks after.
 	for _, blockID := range dbab.Blocks {
 		block, err := s.getBlock(db, blockID)
 		if err != nil {
@@ -120,6 +118,12 @@ func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoa
 		}
 
 		if err := s.deleteBlock(db, blockID, userID); err != nil {
+			return err
+		}
+	}
+
+	for _, boardID := range dbab.Boards {
+		if err := s.deleteBoard(db, boardID, userID); err != nil {
 			return err
 		}
 	}
