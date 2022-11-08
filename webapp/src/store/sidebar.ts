@@ -38,9 +38,10 @@ export const DefaultCategory: CategoryBoards = {
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
     async (teamID: string) => {
+        // TODO All this logic should remove once LHS DND PR gets merged
         const allCategories = await client.getSidebarCategories(teamID)
-        const boardSystemCategoies = allCategories.filter((board) => board.name === 'Boards' && board.type === 'system')
-        const categoriesWithoutSystemBoard = allCategories.filter((board) => board.name !== 'Boards' && board.type !== 'system')
+        const boardSystemCategoies = allCategories.filter((category) => category.name === 'Boards' && category.type === 'system')
+        const categoriesWithoutSystemBoard = allCategories.filter((category) => category.name !== 'Boards' && category.type !== 'system')
         const categories = categoriesWithoutSystemBoard
         categories.sort((a, b) => a.name.localeCompare(b.name))
         categories.push(boardSystemCategoies[0])
@@ -80,8 +81,9 @@ const sidebarSlice = createSlice({
             })
 
             // sort categories alphabetically only keeping board system category at the end
-            const boardsSystemCategories = state.categoryAttributes.filter((board) => board.name === 'Boards' && board.type === 'system')
-            const categoriesWithoutSystemBoard = state.categoryAttributes.filter((board) => board.name !== 'Baords' && board.type !== 'system')
+            // TODO All this logic should remove once LHS DND PR gets merged
+            const boardsSystemCategories = state.categoryAttributes.filter((category) => category.name === 'Boards' && category.type === 'system')
+            const categoriesWithoutSystemBoard = state.categoryAttributes.filter((category) => category.name !== 'Baords' && category.type !== 'system')
             const categories = categoriesWithoutSystemBoard
             categories.sort((a, b) => a.name.localeCompare(b.name))
             categories.push(boardsSystemCategories[0])
