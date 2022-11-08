@@ -116,13 +116,6 @@ export function useEditable(
     }
 }
 
-function borderWidth(style: CSSStyleDeclaration): number {
-    return (
-        parseInt(style.borderLeftWidth || '0', 10) +
-        parseInt(style.borderRightWidth || '0', 10)
-    )
-}
-
 const Editable = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element => {
     const elementRef = useRef<HTMLInputElement>(null)
     const elementProps = useEditable(props, ref, elementRef)
@@ -130,9 +123,7 @@ const Editable = (props: EditableProps, ref: React.Ref<Focusable>): JSX.Element 
     useLayoutEffect(() => {
         if (props.autoExpand && elementRef.current) {
             const input = elementRef.current
-            const computed = getComputedStyle(input)
-            input.style.width = 'auto'
-            input.style.width = `${input.scrollWidth + borderWidth(computed) + 1}px`
+            input.style.width = '100%'
         }
     })
 
