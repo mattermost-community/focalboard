@@ -741,6 +741,51 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 	return s.boardsFromRows(rows)
 }
 
+// searchBoardsForUserInTeam returns all boards that match with the
+// term that are either private and which the user is a member of, or
+// they're open, regardless of the user membership.
+// Search is case-insensitive.
+func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
+	query := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		Distinct().
+		From(s.tablePrefix + "boards as b").
+		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
+		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
+		Where(sq.Eq{"b.is_template": false}).
+		Where(sq.Eq{"b.team_id": teamID}).
+		Where(sq.Or{
+			sq.Eq{"b.type": model.BoardTypeOpen},
+			sq.Eq{"bm.user_id": userID},
+			sq.Eq{"cm.userId": userID},
+		})
+
+	if term != "" {
+		// break search query into space separated words
+		// and search for all words.
+		// This should later be upgraded to industrial-strength
+		// word tokenizer, that uses much more than space
+		// to break words.
+
+		conditions := sq.And{}
+
+		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		}
+
+		query = query.Where(conditions)
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.boardsFromRows(rows)
+}
+
 func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 	boards := []*model.Board{}
 
@@ -984,31 +1029,26 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 }
 
 func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	if includePublicBoards {
+		boards, err := s.SearchBoardsForUserInTeam(teamID, "", userID)
+		if err != nil {
+			return nil, err
+		}
+		return boards, nil
+	}
+
+	// retrieve only direct memberships for user
+	// this is usually done for guests.
 	members, err := s.GetMembersForUser(userID)
 	if err != nil {
 		return nil, err
 	}
-
 	boardIDs := []string{}
 	for _, m := range members {
 		boardIDs = append(boardIDs, m.BoardID)
 	}
 
-	if includePublicBoards {
-		var boards []*model.Board
-		boards, err = s.SearchBoardsForUserInTeam(teamID, "", userID)
-		if err != nil {
-			return nil, err
-		}
-		for _, b := range boards {
-			boardIDs = append(boardIDs, b.ID)
-		}
-	}
-
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
-	// ToDo: check if the query is being used appropriately from the
-	//       interface, as we're getting ID sets on request that
-	//       return partial results that seem to be valid
 	if model.IsErrNotFound(err) {
 		if boards == nil {
 			boards = []*model.Board{}
