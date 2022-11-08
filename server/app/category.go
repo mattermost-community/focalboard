@@ -33,7 +33,6 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
-
 	// verify if category belongs to the user
 	existingCategory, err := a.store.GetCategory(category.ID)
 	if err != nil {
