@@ -519,6 +519,10 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
+	if err = a.addBoardsToDefaultCategory(member.UserID, board.TeamID, []*model.Board{board}); err != nil {
+		return nil, err
+	}
+
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
 		return nil
