@@ -123,10 +123,9 @@ func TestUpdateCategory(t *testing.T) {
 		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
 
-		category.Type = "invalid" // type should be reset to existing category type
+		category.Type = "invalid" // unknown type shouldn't be allowed
 		createdCategory, err = th.App.UpdateCategory(category)
-		assert.NotNil(t, createdCategory)
-		assert.Equal(t, category.Type, createdCategory.Type)
+		assert.Nil(t, createdCategory)
 		assert.Error(t, err)
 	})
 

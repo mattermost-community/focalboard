@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -33,6 +34,13 @@ func (a *App) CreateCategory(category *model.Category) (*model.Category, error) 
 }
 
 func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) {
+	if strings.TrimSpace(category.Type) == "" {
+		category.Type = model.CategoryTypeCustom
+	}
+	if err := category.IsValid(); err != nil {
+		return nil, err
+	}
+
 	// verify if category belongs to the user
 	existingCategory, err := a.store.GetCategory(category.ID)
 	if err != nil {

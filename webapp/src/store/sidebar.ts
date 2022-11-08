@@ -39,15 +39,7 @@ export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
     async (teamID: string) => {
         const categories = await client.getSidebarCategories(teamID)
-        return categories.sort((a, b) => {
-            if (a.name === DefaultCategory.name) {
-                return 1
-            }
-            if (b.name === DefaultCategory.name) {
-                return -1
-            }
-            return a.name.localeCompare(b.name)
-        })
+        return categories.sort((a, b) => a.name.localeCompare(b.name))
     },
 )
 
