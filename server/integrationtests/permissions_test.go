@@ -439,7 +439,7 @@ func TestPermissionsGetTeamTemplates(t *testing.T) {
 		require.NoError(t, err, "InitTemplates should succeed")
 	}
 
-	builtInTemplateCount := 7
+	builtInTemplateCount := 13
 
 	ttCases := []TestCase{
 		// Get Team Boards
