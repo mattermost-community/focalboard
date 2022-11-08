@@ -77,10 +77,10 @@ const ViewHeader = (props: Props) => {
     const withDisplayBy = activeView?.fields.viewType === 'calendar'
     const withSortBy = activeView?.fields.viewType !== 'calendar'
 
-    const [viewTitle, setViewTitle] = useState(activeView?.title || activePage?.title)
+    const [viewTitle, setViewTitle] = useState(activeView?.title || activePage?.title || '')
 
     useEffect(() => {
-        setViewTitle(activePage?.title || activeView?.title)
+        setViewTitle(activePage?.title || activeView?.title || '')
     }, [activeView?.title, activePage?.title])
 
     const hasFilter = activeView?.fields.filter && activeView?.fields.filter.filters?.length > 0
@@ -134,16 +134,16 @@ const ViewHeader = (props: Props) => {
     }
 
     return (
-        <div className='ViewHeader'>
-            <div className='viewSelector'>
+        <div className={activePage ? 'ViewHeader viewHeaderPage' : 'ViewHeader viewHeaderView'}>
+            <div className={activePage ? 'pageSelector' : 'viewSelector'}>
                 <Editable
                     value={viewTitle}
                     placeholderText='Untitled View'
                     onSave={(): void => {
-                        mutator.changeBlockTitle((activeView || activePage || {boardId: ''}).boardId, (activeView || activePage || {id: ''}).id, (activeView || activePage || {title: ''}).title, viewTitle || '')
+                        mutator.changeBlockTitle(activeView?.boardId || activePage?.boardId || '', activeView?.id || activePage?.id || '', activeView?.title || activePage?.title || '', viewTitle)
                     }}
                     onCancel={(): void => {
-                        setViewTitle((activeView || activePage || {}).title)
+                        setViewTitle(activeView?.title || activePage?.title || '')
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
@@ -151,25 +151,24 @@ const ViewHeader = (props: Props) => {
                     spellCheck={true}
                     autoExpand={false}
                 />
-                <div>
-                    {activeView &&
-                    <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                        <IconButton icon={<DropdownIcon/>}/>
-                        <ViewMenu
-                            board={board}
-                            activeView={activeView}
-                            views={views}
-                            readonly={props.readonly || !canEditBoardProperties}
-                            allowCreateView={allowCreateView}
-                        />
-                    </MenuWrapper>}
-                    {!activeView && activePage &&
-                        <div>TODO: Active Page menu</div>}
-                    {showAddViewTourStep && <AddViewTourStep/>}
-                </div>
+                {activeView &&
+                    <div>
+                        <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+                            <IconButton icon={<DropdownIcon/>}/>
+                            <ViewMenu
+                                board={board}
+                                activeView={activeView}
+                                views={views}
+                                readonly={props.readonly || !canEditBoardProperties}
+                                allowCreateView={allowCreateView}
+                            />
+                        </MenuWrapper>
+                        {showAddViewTourStep && <AddViewTourStep/>}
+                    </div>}
             </div>
 
-            <div className='octo-spacer'/>
+            {activeView && !activePage &&
+                <div className='octo-spacer'/>}
 
             {!props.readonly && activeView && canEditBoardProperties &&
             <>
