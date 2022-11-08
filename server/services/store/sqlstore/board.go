@@ -422,6 +422,10 @@ func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *mode
 }
 
 func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
+	return s.deleteBoardAndChildren(db, boardID, userID, false)
+}
+
+func (s *SQLStore) deleteBoardAndChildren(db sq.BaseRunner, boardID, userID string, keepChildren bool) error {
 	now := utils.GetMillis()
 
 	board, err := s.getBoard(db, boardID)
@@ -477,7 +481,11 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	return nil
+	if keepChildren {
+		return nil
+	}
+
+	return s.deleteBlockChildren(db, boardID, "", userID)
 }
 
 func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, *model.BoardMember, error) {
@@ -861,7 +869,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return err
 	}
 
-	return nil
+	return s.undeleteBlockChildren(db, board.ID, "", modifiedBy)
 }
 
 func (s *SQLStore) getBoardMemberHistory(db sq.BaseRunner, boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
