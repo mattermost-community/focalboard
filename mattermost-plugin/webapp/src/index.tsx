@@ -92,50 +92,6 @@ const TELEMETRY_OPTIONS = {
 type Props = {
     webSocketClient: MMWebSocketClient
     baseURL: string
-    browserHistory: History<unknown>
-}
-
-function customHistory(basename: string, prefix: string) {
-    const history = createBrowserHistory({basename})
-
-    if (Utils.isDesktop()) {
-        window.addEventListener('message', (event: MessageEvent) => {
-            if (event.origin !== windowAny.location.origin) {
-                return
-            }
-
-            const pathName = event.data.message?.pathName
-            if (!pathName || !pathName.startsWith(prefix)) {
-                return
-            }
-
-            Utils.log(`Navigating ${prefix} to ${pathName}`)
-            if (pathName.startsWith('/boards')) {
-                history.replace(pathName.replace('/boards', ''))
-            }
-            if (pathName.startsWith('/pages')) {
-                history.replace(pathName.replace('/pages', ''))
-            }
-        })
-    }
-    return {
-        ...history,
-        push: (path: string, state?: unknown) => {
-            if (Utils.isDesktop()) {
-                windowAny.postMessage(
-                    {
-                        type: 'browser-history-push',
-                        message: {
-                            path: `${windowAny.frontendBaseURL}${path}`,
-                        },
-                    },
-                    windowAny.location.origin,
-                )
-            } else {
-                history.push(path, state as Record<string, never>)
-            }
-        },
-    }
 }
 
 const MainApp = (props: Props) => {
@@ -166,7 +122,7 @@ const MainApp = (props: Props) => {
                 <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
                     <div id='focalboard-app'>
                         <App
-                            history={props.browserHistory}
+                            history={windowAny.WebappUtils.browserHistory}
                             pages={props.baseURL.endsWith('pages')}
                         />
                     </div>
@@ -177,14 +133,10 @@ const MainApp = (props: Props) => {
     )
 }
 
-type HeaderComponentProps {
-    browserHistory: History<unknown>
-}
-
-const HeaderComponent = (props: HeaderComponentProps) => {
+const HeaderComponent = () => {
     return (
         <ErrorBoundary>
-            <GlobalHeader history={props.browserHistory}/>
+            <GlobalHeader history={windowAny.WebappUtils.browserHistory}/>
         </ErrorBoundary>
     )
 }
@@ -201,8 +153,6 @@ export default class Plugin {
         const subpath = siteURL ? getSubpath(siteURL) : ''
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
-        const browserHistory = customHistory(subpath + '/boards', '/boards')
-        const pagesBrowserHistory = customHistory(subpath + '/pages', '/pages')
         const cache = createIntlCache()
         const intl = createIntl({
             // modeled after <IntlProvider> in webapp/src/app.tsx
@@ -273,9 +223,9 @@ export default class Plugin {
                     // Don't re-push the URL if we're already on a URL for the current team
                     if (!window.location.pathname.startsWith(`${(windowAny.frontendBaseURL || '')}/team/${currentTeamID}`)) {
                         if (windowAny.frontendBaseURL?.endsWith('/pages')) {
-                            pagesBrowserHistory.push(`/team/${currentTeamID}`)
+                            windowAny.WebappUtils.browserHistory.push(`/pages/team/${currentTeamID}`)
                         } else {
-                            browserHistory.push(`/team/${currentTeamID}`)
+                            windowAny.WebappUtils.browserHistory.push(`/boards/team/${currentTeamID}`)
                         }
                     }
                 }
@@ -326,8 +276,8 @@ export default class Plugin {
                 'product-boards',
                 'Boards',
                 '/boards',
-                (props) => <MainApp {...props} baseURL={subpath + '/boards'} browserHistory={browserHistory}/>,
-                () => <HeaderComponent browserHistory={browserHistory}/>,
+                (props) => <MainApp {...props} baseURL={subpath + '/boards'}/>,
+                () => <HeaderComponent/>,
                 () => null,
                 true,
             )
@@ -337,8 +287,8 @@ export default class Plugin {
                 'product-boards',
                 'Pages',
                 '/pages',
-                (props) => <MainApp {...props} baseURL={subpath + '/pages'} browserHistory={pagesBrowserHistory}/>,
-                () => <HeaderComponent browserHistory={pagesBrowserHistory}/>,
+                (props) => <MainApp {...props} baseURL={subpath + '/pages'}/>,
+                () => <HeaderComponent/>,
                 () => null,
                 true,
             )
