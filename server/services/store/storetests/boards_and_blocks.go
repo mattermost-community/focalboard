@@ -51,7 +51,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
 			},
@@ -84,7 +84,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-5", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-6", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-3", BoardID: "board-id-4", Type: model.TypeCard},
 				{ID: "block-id-4", BoardID: "board-id-5", Type: model.TypeCard},
 			},
@@ -126,7 +126,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-8", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-9", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-5", BoardID: "board-id-7", Type: model.TypeCard},
 				{ID: "block-id-6", BoardID: "", Type: model.TypeCard},
 			},
@@ -164,12 +164,12 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 		_, err := store.InsertBoard(board, userID)
 		require.NoError(t, err)
 
-		block := model.Block{
+		block := &model.Block{
 			ID:      "block-id-1",
 			BoardID: "board-id-1",
 			Title:   initialTitle,
 		}
-		require.NoError(t, store.InsertBlock(&block, userID))
+		require.NoError(t, store.InsertBlock(block, userID))
 
 		// apply the patches
 		pbab := &model.PatchBoardsAndBlocks{
@@ -207,7 +207,7 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-3", Title: "initial title", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-1", Title: "initial title", BoardID: "board-id-1", Type: model.TypeCard},
 				{ID: "block-id-2", Schema: 1, BoardID: "board-id-2", Type: model.TypeCard},
 			},
@@ -586,7 +586,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 			{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 			{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 		},
-		Blocks: []model.Block{
+		Blocks: []*model.Block{
 			{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
 			{ID: "block-id-1a", BoardID: "board-id-1", Type: model.TypeComment},
 			{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},

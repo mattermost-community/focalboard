@@ -66,7 +66,7 @@ exports[`components/cardDetail/CardDetailProperties cancel on delete dialog shou
       <input
         class="Editable octo-propertyvalue"
         placeholder="Empty"
-        style="width: 5px;"
+        style="width: 100%;"
         title="1234"
         value="1234"
       />
@@ -159,7 +159,7 @@ exports[`components/cardDetail/CardDetailProperties should match snapshot 1`] = 
       <input
         class="Editable octo-propertyvalue"
         placeholder="Empty"
-        style="width: 5px;"
+        style="width: 100%;"
         title="1234"
         value="1234"
       />
@@ -252,7 +252,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
       <input
         class="Editable octo-propertyvalue"
         placeholder="Empty"
-        style="width: 5px;"
+        style="width: 100%;"
         title="1234"
         value="1234"
       />
@@ -262,7 +262,7 @@ exports[`components/cardDetail/CardDetailProperties should show property types m
     >
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button

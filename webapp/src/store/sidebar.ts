@@ -7,6 +7,8 @@ import {default as client} from '../octoClient'
 
 import {RootState} from './index'
 
+export type CategoryType = 'system' | 'custom'
+
 interface Category {
     id: string
     name: string
@@ -16,6 +18,7 @@ interface Category {
     updateAt: number
     deleteAt: number
     collapsed: boolean
+    type: CategoryType
 }
 
 interface CategoryBoards extends Category {
@@ -35,8 +38,14 @@ export const DefaultCategory: CategoryBoards = {
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
     async (teamID: string) => {
-        const categories = await client.getSidebarCategories(teamID)
-        return categories.sort((a, b) => a.name.localeCompare(b.name))
+        // TODO All this logic should remove once LHS DND PR gets merged
+        const allCategories = await client.getSidebarCategories(teamID)
+        const boardSystemCategoies = allCategories.filter((category) => category.name === 'Boards' && category.type === 'system')
+        const categoriesWithoutSystemBoard = allCategories.filter((category) => category.name !== 'Boards' && category.type !== 'system')
+        const categories = categoriesWithoutSystemBoard
+        categories.sort((a, b) => a.name.localeCompare(b.name))
+        categories.push(boardSystemCategoies[0])
+        return categories
     },
 )
 
@@ -71,8 +80,14 @@ const sidebarSlice = createSlice({
                 }
             })
 
-            // sort categories alphabetically
-            state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
+            // sort categories alphabetically only keeping board system category at the end
+            // TODO All this logic should remove once LHS DND PR gets merged
+            const boardsSystemCategories = state.categoryAttributes.filter((category) => category.name === 'Boards' && category.type === 'system')
+            const categoriesWithoutSystemBoard = state.categoryAttributes.filter((category) => category.name !== 'Baords' && category.type !== 'system')
+            const categories = categoriesWithoutSystemBoard
+            categories.sort((a, b) => a.name.localeCompare(b.name))
+            categories.push(boardsSystemCategories[0])
+            state.categoryAttributes = categories
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
             action.payload.forEach((boardCategory) => {

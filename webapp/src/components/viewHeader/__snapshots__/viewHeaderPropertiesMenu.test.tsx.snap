@@ -4,7 +4,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu 1
 <div>
   <div
     aria-label="Properties menu"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button
@@ -183,7 +183,7 @@ exports[`components/viewHeader/viewHeaderPropertiesMenu return properties menu w
 <div>
   <div
     aria-label="Properties menu"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button

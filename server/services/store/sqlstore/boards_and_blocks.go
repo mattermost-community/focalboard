@@ -43,7 +43,7 @@ func (s *SQLStore) createBoardsAndBlocksWithAdmin(db sq.BaseRunner, bab *model.B
 
 func (s *SQLStore) createBoardsAndBlocks(db sq.BaseRunner, bab *model.BoardsAndBlocks, userID string) (*model.BoardsAndBlocks, error) {
 	boards := []*model.Board{}
-	blocks := []model.Block{}
+	blocks := []*model.Block{}
 
 	for _, board := range bab.Boards {
 		newBoard, err := s.insertBoard(db, board, userID)
@@ -56,7 +56,7 @@ func (s *SQLStore) createBoardsAndBlocks(db sq.BaseRunner, bab *model.BoardsAndB
 
 	for _, block := range bab.Blocks {
 		b := block
-		err := s.insertBlock(db, &b, userID)
+		err := s.insertBlock(db, b, userID)
 		if err != nil {
 			return nil, err
 		}
@@ -90,7 +90,7 @@ func (s *SQLStore) patchBoardsAndBlocks(db sq.BaseRunner, pbab *model.PatchBoard
 		if err != nil {
 			return nil, err
 		}
-		bab.Blocks = append(bab.Blocks, *block)
+		bab.Blocks = append(bab.Blocks, block)
 	}
 
 	return bab, nil
@@ -102,13 +102,11 @@ func (s *SQLStore) patchBoardsAndBlocks(db sq.BaseRunner, pbab *model.PatchBoard
 func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoardsAndBlocks, userID string) error {
 	boardIDMap := map[string]bool{}
 	for _, boardID := range dbab.Boards {
-		if err := s.deleteBoard(db, boardID, userID); err != nil {
-			return err
-		}
-
 		boardIDMap[boardID] = true
 	}
 
+	// delete the blocks first, since deleting the board will clean up any children and we'll get
+	// not found errors when deleting the blocks after.
 	for _, blockID := range dbab.Blocks {
 		block, err := s.getBlock(db, blockID)
 		if err != nil {
@@ -124,13 +122,19 @@ func (s *SQLStore) deleteBoardsAndBlocks(db sq.BaseRunner, dbab *model.DeleteBoa
 		}
 	}
 
+	for _, boardID := range dbab.Boards {
+		if err := s.deleteBoard(db, boardID, userID); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
 func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID string, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	bab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{},
-		Blocks: []model.Block{},
+		Blocks: []*model.Block{},
 	}
 
 	board, err := s.getBoard(db, boardID)
@@ -162,7 +166,7 @@ func (s *SQLStore) duplicateBoard(db sq.BaseRunner, boardID string, userID strin
 	if err != nil {
 		return nil, nil, err
 	}
-	newBlocks := []model.Block{}
+	newBlocks := []*model.Block{}
 	for _, b := range blocks {
 		if b.Type != model.TypeComment {
 			newBlocks = append(newBlocks, b)

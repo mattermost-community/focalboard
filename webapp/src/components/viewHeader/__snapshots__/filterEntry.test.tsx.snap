@@ -7,7 +7,7 @@ exports[`components/viewHeader/filterEntry return filterEntry 1`] = `
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -262,7 +262,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -472,7 +472,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -682,7 +682,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -892,7 +892,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -1102,7 +1102,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -1298,7 +1298,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -1587,7 +1587,7 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button
@@ -1787,7 +1787,7 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button

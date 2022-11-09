@@ -20,10 +20,16 @@ const (
 	descClause     = " DESC "
 )
 
-type BoardIDNilError struct{}
+type ErrEmptyBoardID struct{}
 
-func (re BoardIDNilError) Error() string {
-	return "boardID is nil"
+func (re ErrEmptyBoardID) Error() string {
+	return "boardID is empty"
+}
+
+type ErrLimitExceeded struct{ max int }
+
+func (le ErrLimitExceeded) Error() string {
+	return fmt.Sprintf("limit exceeded (max=%d)", le.max)
 }
 
 func (s *SQLStore) timestampToCharField(name string, as string) string {
@@ -55,7 +61,7 @@ func (s *SQLStore) blockFields() []string {
 	}
 }
 
-func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([]model.Block, error) {
+func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks")
@@ -91,7 +97,7 @@ func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksWithParentAndType(db sq.BaseRunner, boardID, parentID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) getBlocksWithParentAndType(db sq.BaseRunner, boardID, parentID string, blockType string) ([]*model.Block, error) {
 	opts := model.QueryBlocksOptions{
 		BoardID:   boardID,
 		ParentID:  parentID,
@@ -100,7 +106,7 @@ func (s *SQLStore) getBlocksWithParentAndType(db sq.BaseRunner, boardID, parentI
 	return s.getBlocks(db, opts)
 }
 
-func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID string) ([]model.Block, error) {
+func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID string) ([]*model.Block, error) {
 	opts := model.QueryBlocksOptions{
 		BoardID:  boardID,
 		ParentID: parentID,
@@ -108,7 +114,7 @@ func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID strin
 	return s.getBlocks(db, opts)
 }
 
-func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block, error) {
+func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
@@ -134,7 +140,7 @@ func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]model.Block
 	return blocks, nil
 }
 
-func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string) ([]model.Block, error) {
+func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string) ([]*model.Block, error) {
 	opts := model.QueryBlocksOptions{
 		BoardID:   boardID,
 		BlockType: model.BlockType(blockType),
@@ -143,7 +149,7 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string
 }
 
 // getSubTree2 returns blocks within 2 levels of the given blockID.
-func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields()...).
 		From(s.tablePrefix + "blocks").
@@ -174,15 +180,15 @@ func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string,
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlocksForBoard(db sq.BaseRunner, boardID string) ([]model.Block, error) {
+func (s *SQLStore) getBlocksForBoard(db sq.BaseRunner, boardID string) ([]*model.Block, error) {
 	opts := model.QueryBlocksOptions{
 		BoardID: boardID,
 	}
 	return s.getBlocks(db, opts)
 }
 
-func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
-	results := []model.Block{}
+func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]*model.Block, error) {
+	results := []*model.Block{}
 
 	for rows.Next() {
 		var block model.Block
@@ -223,7 +229,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 			return nil, err
 		}
 
-		results = append(results, block)
+		results = append(results, &block)
 	}
 
 	return results, nil
@@ -231,7 +237,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]model.Block, error) {
 
 func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID string) error {
 	if block.BoardID == "" {
-		return BoardIDNilError{}
+		return ErrEmptyBoardID{}
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
@@ -336,14 +342,14 @@ func (s *SQLStore) patchBlocks(db sq.BaseRunner, blockPatches *model.BlockPatchB
 	return nil
 }
 
-func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []model.Block, userID string) error {
+func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []*model.Block, userID string) error {
 	for _, block := range blocks {
 		if block.BoardID == "" {
-			return BoardIDNilError{}
+			return ErrEmptyBoardID{}
 		}
 	}
 	for i := range blocks {
-		err := s.insertBlock(db, &blocks[i], userID)
+		err := s.insertBlock(db, blocks[i], userID)
 		if err != nil {
 			return err
 		}
@@ -352,6 +358,10 @@ func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []model.Block, userID s
 }
 
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy string) error {
+	return s.deleteBlockAndChildren(db, blockID, modifiedBy, false)
+}
+
+func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modifiedBy string, keepChildren bool) error {
 	block, err := s.getBlock(db, blockID)
 	if model.IsErrNotFound(err) {
 		s.logger.Warn("deleteBlock block not found", mlog.String("block_id", blockID))
@@ -409,7 +419,11 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 		return err
 	}
 
-	return nil
+	if keepChildren {
+		return nil
+	}
+
+	return s.deleteBlockChildren(db, block.BoardID, block.ID, modifiedBy)
 }
 
 func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy string) error {
@@ -481,7 +495,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 		return err
 	}
 
-	return nil
+	return s.undeleteBlockChildren(db, block.BoardID, block.ID, modifiedBy)
 }
 
 func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, error) {
@@ -521,7 +535,8 @@ func (s *SQLStore) getBoardCount(db sq.BaseRunner) (int64, error) {
 	query := s.getQueryBuilder(db).
 		Select("COUNT(*) AS count").
 		From(s.tablePrefix + "boards").
-		Where(sq.Eq{"delete_at": 0})
+		Where(sq.Eq{"delete_at": 0}).
+		Where(sq.Eq{"is_template": false})
 
 	row := query.QueryRow()
 
@@ -556,10 +571,10 @@ func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, err
 		return nil, model.NewErrNotFound("block ID=" + blockID)
 	}
 
-	return &blocks[0], nil
+	return blocks[0], nil
 }
 
-func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	var order string
 	if opts.Descending {
 		order = descClause
@@ -593,7 +608,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	var order string
 	if opts.Descending {
 		order = descClause
@@ -619,7 +634,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
+		s.logger.Error(`GetBlockHistoryDescendants ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -645,7 +660,7 @@ func (s *SQLStore) getBoardAndCardByID(db sq.BaseRunner, blockID string) (board 
 		return nil, nil, model.NewErrNotFound("block history BlockID=" + blockID)
 	}
 
-	return s.getBoardAndCard(db, &blocks[0])
+	return s.getBoardAndCard(db, blocks[0])
 }
 
 // getBoardAndCard returns the first parent of type `card` and and the `board` for the specified block.
@@ -677,7 +692,7 @@ func (s *SQLStore) getBoardAndCard(db sq.BaseRunner, block *model.Block) (board 
 		if len(blocks) == 0 {
 			return board, card, nil
 		}
-		iter = &blocks[0]
+		iter = blocks[0]
 	}
 	board, err = s.getBoard(db, block.BoardID)
 	if err != nil {
@@ -754,7 +769,7 @@ func (s *SQLStore) replaceBlockID(db sq.BaseRunner, currentID, newID, workspaceI
 	return nil
 }
 
-func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID string, userID string, asTemplate bool) ([]*model.Block, error) {
 	blocks, err := s.getSubTree2(db, boardID, blockID, model.QuerySubtreeOptions{})
 	if err != nil {
 		return nil, err
@@ -764,8 +779,8 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 		return nil, model.NewErrNotFound(message)
 	}
 
-	var rootBlock model.Block
-	allBlocks := []model.Block{}
+	var rootBlock *model.Block
+	allBlocks := []*model.Block{}
 	for _, block := range blocks {
 		if block.Type == model.TypeComment {
 			continue
@@ -780,11 +795,163 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 			allBlocks = append(allBlocks, block)
 		}
 	}
-	allBlocks = append([]model.Block{rootBlock}, allBlocks...)
+	allBlocks = append([]*model.Block{rootBlock}, allBlocks...)
 
 	allBlocks = model.GenerateBlockIDs(allBlocks, nil)
 	if err := s.insertBlocks(db, allBlocks, userID); err != nil {
 		return nil, err
 	}
 	return allBlocks, nil
+}
+
+func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentID string, modifiedBy string) error {
+	now := utils.GetMillis()
+
+	selectQuery := s.getQueryBuilder(db).
+		Select(
+			"board_id",
+			"id",
+			"parent_id",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"fields",
+			"'"+modifiedBy+"'",
+			"create_at",
+			s.castInt(now, "update_at"),
+			s.castInt(now, "delete_at"),
+			"created_by",
+		).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"board_id": boardID})
+
+	if parentID != "" {
+		selectQuery = selectQuery.Where(sq.Eq{"parent_id": parentID})
+	}
+
+	insertQuery := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"blocks_history").
+		Columns(
+			"board_id",
+			"id",
+			"parent_id",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"fields",
+			"modified_by",
+			"create_at",
+			"update_at",
+			"delete_at",
+			"created_by",
+		).Select(selectQuery)
+
+	if _, err := insertQuery.Exec(); err != nil {
+		return err
+	}
+
+	deleteQuery := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + "blocks").
+		Where(sq.Eq{"board_id": boardID})
+
+	if parentID != "" {
+		deleteQuery = deleteQuery.Where(sq.Eq{"parent_id": parentID})
+	}
+
+	if _, err := deleteQuery.Exec(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, parentID string, modifiedBy string) error {
+	if boardID == "" {
+		return ErrEmptyBoardID{}
+	}
+
+	where := fmt.Sprintf("board_id='%s'", boardID)
+	if parentID != "" {
+		where += fmt.Sprintf(" AND parent_id='%s'", parentID)
+	}
+
+	selectQuery := s.getQueryBuilder(db).
+		Select(
+			"bh.board_id",
+			"'' AS channel_id",
+			"bh.id",
+			"bh.parent_id",
+			"bh.schema",
+			"bh.type",
+			"bh.title",
+			"bh.fields",
+			"'"+modifiedBy+"' AS modified_by",
+			"bh.create_at",
+			s.castInt(utils.GetMillis(), "update_at"),
+			s.castInt(0, "delete_at"),
+			"bh.created_by",
+		).
+		From(fmt.Sprintf(`
+				%sblocks_history AS bh,
+				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE %s GROUP BY id) AS sub`,
+			s.tablePrefix, s.tablePrefix, where)).
+		Where("bh.id=sub.id").
+		Where("bh.insert_at=sub.max_insert_at").
+		Where(sq.NotEq{"bh.delete_at": 0})
+
+	columns := []string{
+		"board_id",
+		"channel_id",
+		"id",
+		"parent_id",
+		s.escapeField("schema"),
+		"type",
+		"title",
+		"fields",
+		"modified_by",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"created_by",
+	}
+
+	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks").
+		Columns(columns...).
+		Select(selectQuery)
+
+	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks_history").
+		Columns(columns...).
+		Select(selectQuery)
+
+	sql, args, err := insertQuery.ToSql()
+	s.logger.Trace("undeleteBlockChildren - insertQuery",
+		mlog.String("sql", sql),
+		mlog.Array("args", args),
+		mlog.Err(err),
+	)
+
+	sql, args, err = insertHistoryQuery.ToSql()
+	s.logger.Trace("undeleteBlockChildren - insertHistoryQuery",
+		mlog.String("sql", sql),
+		mlog.Array("args", args),
+		mlog.Err(err),
+	)
+
+	// insert into blocks table must happen before history table, otherwise the history
+	// table will be changed and the second query will fail to find the same records.
+	result, err := insertQuery.Exec()
+	if err != nil {
+		return err
+	}
+	rowsAffected, _ := result.RowsAffected()
+	s.logger.Debug("undeleteBlockChildren - insertQuery", mlog.Int64("rows_affected", rowsAffected))
+
+	result, err = insertHistoryQuery.Exec()
+	if err != nil {
+		return err
+	}
+	rowsAffected, _ = result.RowsAffected()
+	s.logger.Debug("undeleteBlockChildren - insertHistoryQuery", mlog.Int64("rows_affected", rowsAffected))
+
+	return nil
 }

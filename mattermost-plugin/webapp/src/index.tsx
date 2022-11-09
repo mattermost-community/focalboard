@@ -262,6 +262,14 @@ export default class Plugin {
                 octoClient.teamId = currentTeamID
                 store.dispatch(initialLoad())
             }
+
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                let theme = mmStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
+                if (!theme) {
+                    theme = mmStore.getState().entities.preferences.myPreferences['theme--'] || mmStore.getState().entities.preferences.myPreferences.theme
+                }
+                setMattermostTheme(theme)
+            }
         })
 
         let fbPrevTeamID = store.getState().teams.currentId
@@ -350,6 +358,30 @@ export default class Plugin {
                     const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
 
                     return data
+                })
+            }
+
+            // Site statistics handler
+            if (registry.registerSiteStatisticsHandler) {
+                registry.registerSiteStatisticsHandler(async () => {
+                    const siteStats = await octoClient.getSiteStatistics()
+                    if(siteStats){
+                        return {
+                            boards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
+                                id: 'total_boards',
+                                icon: 'icon-product-boards',
+                                value: siteStats.board_count,
+                            },
+                            cards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
+                                id: 'total_cards',
+                                icon: 'icon-products',
+                                value: siteStats.card_count,
+                            },
+                        }
+                    }
+                    return {}
                 })
             }
         }
