@@ -1,1 +1,1 @@
-DROP TABLE {{.prefix}}blocks;
+SELECT 1;
