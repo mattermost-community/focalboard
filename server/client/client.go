@@ -442,6 +442,15 @@ func (c *Client) CreateCategory(category model.Category) (*model.Category, *Resp
 	return model.CategoryFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) DeleteCategory(teamID, categoryID string) *Response {
+	r, err := c.DoAPIDelete(c.GetTeamRoute(teamID)+"/categories/"+categoryID, "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
 func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
 	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
 	if err != nil {
