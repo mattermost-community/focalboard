@@ -27,6 +27,7 @@ func TestAddMemberToBoard(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     "board_id_1",
 			TeamID: "team_id_1",
 		}, nil)
 
@@ -41,6 +42,17 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "default_category_id",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", "board_id_1").Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -83,6 +95,7 @@ func TestAddMemberToBoard(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     "board_id_1",
 			TeamID: "team_id_1",
 		}, nil)
 
@@ -103,6 +116,17 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "default_category_id",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", "board_id_1").Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
