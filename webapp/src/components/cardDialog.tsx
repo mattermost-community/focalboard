@@ -139,13 +139,15 @@ const CardDialog = (props: Props): JSX.Element => {
         return new Promise<AttachmentBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (attachment) => {
+                    sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
                     const attachmentId = await octoClient.uploadFile(boardId, attachment)
                     if (attachmentId) {
                         const block = createAttachmentBlock()
                         block.fields.attachmentId = attachmentId || ''
+                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
                         resolve(block)
                     } else {
-                        sendFlashMessage({content: intl.formatMessage({id: 'createFileBlock.failed', defaultMessage: 'Unable to upload the file. File size limit reached.'}), severity: 'normal'})
+                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                     }
                 },
                 '')
@@ -161,7 +163,7 @@ const CardDialog = (props: Props): JSX.Element => {
         block.parentId = card.id
         block.boardId = card.boardId
         const typeName = block.type
-        const description = intl.formatMessage({id: 'ContentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
+        const description = intl.formatMessage({id: 'AttachmentBlock.addElement', defaultMessage: 'add {type}'}, {type: typeName})
         await mutator.insertBlock(block.boardId, block, description)
     }
 
@@ -169,8 +171,9 @@ const CardDialog = (props: Props): JSX.Element => {
         if (!card) {
             return
         }
-        const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
+        const description = intl.formatMessage({id: 'AttachmentBlock.DeleteAction', defaultMessage: 'delete'})
         await mutator.deleteBlock(block, description)
+        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.delete', defaultMessage: 'Attachment Deleted Successfully.'}), severity: 'normal'})
     }, [card?.boardId, card?.id, card?.fields.contentOrder])
 
     const attachBtn = (): React.ReactNode => {
