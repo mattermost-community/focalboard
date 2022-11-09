@@ -32,7 +32,7 @@ declare let window: IAppWindow
 
 const UUID_REGEX = new RegExp(/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/)
 
-function HomeToCurrentTeam(props: {path: string, exact: boolean, basePath: string}) {
+function HomeToCurrentTeam(props: {path: string, exact: boolean, basePath: string, isPages: boolean}) {
     return (
         <FBRoute
             path={props.path}
@@ -53,8 +53,8 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean, basePath: strin
                 teamID = teamID || lastTeamID || firstTeam?.id || ''
 
                 if (UserSettings.lastBoardId) {
-                    const lastBoardID = UserSettings.lastBoardId[teamID]
-                    const lastViewID = UserSettings.lastViewId[lastBoardID]
+                    const lastBoardID = props.isPages ? UserSettings.lastFolderId[teamID] : UserSettings.lastBoardId[teamID]
+                    const lastViewID = props.isPages ? UserSettings.lastPageId[lastBoardID] : UserSettings.lastViewId[lastBoardID]
 
                     if (lastBoardID && lastViewID) {
                         return <Redirect to={props.basePath + `/team/${teamID}/${lastBoardID}/${lastViewID}`}/>

@@ -10,7 +10,9 @@ export enum UserSettingKey {
     Theme = 'theme',
     LastTeamId = 'lastTeamId',
     LastBoardId = 'lastBoardId',
+    LastFolderId = 'lastFolderId',
     LastViewId = 'lastViewId',
+    LastPageId = 'lastPageId',
     EmojiMartSkin = 'emoji-mart.skin',
     EmojiMartLast = 'emoji-mart.last',
     EmojiMartFrequently = 'emoji-mart.frequently',
@@ -82,6 +84,26 @@ export class UserSettings {
         return mapping
     }
 
+    // maps last board ID for each team
+    // maps teamID -> board ID
+    static get lastFolderId(): {[key: string]: string} {
+        let rawData = UserSettings.get(UserSettingKey.LastFolderId) || '{}'
+        if (rawData[0] !== '{') {
+            rawData = '{}'
+        }
+
+        let mapping: {[key: string]: string}
+        try {
+            mapping = JSON.parse(rawData)
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = {}
+        }
+
+        return mapping
+    }
+
     static setLastTeamID(teamID: string | null): void {
         UserSettings.set(UserSettingKey.LastTeamId, teamID)
     }
@@ -96,8 +118,32 @@ export class UserSettings {
         UserSettings.set(UserSettingKey.LastBoardId, JSON.stringify(data))
     }
 
+    static setLastFolderID(teamID: string, folderID: string | null): void {
+        const data = this.lastFolderId
+        if (folderID === null) {
+            delete data[teamID]
+        } else {
+            data[teamID] = folderID
+        }
+        UserSettings.set(UserSettingKey.LastFolderId, JSON.stringify(data))
+    }
+
     static get lastViewId(): {[key: string]: string} {
         const rawData = UserSettings.get(UserSettingKey.LastViewId) || '{}'
+        let mapping: {[key: string]: string}
+        try {
+            mapping = JSON.parse(rawData)
+        } catch {
+            // revert to empty data if JSON conversion fails.
+            // This will happen when users run the new code for the first time
+            mapping = {}
+        }
+
+        return mapping
+    }
+
+    static get lastPageId(): {[key: string]: string} {
+        const rawData = UserSettings.get(UserSettingKey.LastPageId) || '{}'
         let mapping: {[key: string]: string}
         try {
             mapping = JSON.parse(rawData)
@@ -118,6 +164,16 @@ export class UserSettings {
             data[boardID] = viewID
         }
         UserSettings.set(UserSettingKey.LastViewId, JSON.stringify(data))
+    }
+
+    static setLastPageId(folderID: string, pageID: string | null): void {
+        const data = this.lastPageId
+        if (pageID === null) {
+            delete data[folderID]
+        } else {
+            data[folderID] = pageID
+        }
+        UserSettings.set(UserSettingKey.LastPageId, JSON.stringify(data))
     }
 
     static get prefillRandomIcons(): boolean {

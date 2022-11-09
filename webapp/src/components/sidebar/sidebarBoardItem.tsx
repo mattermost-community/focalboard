@@ -1,11 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useRef, useState} from 'react'
+import React, {useCallback, useRef, useState, useContext} from 'react'
 import {useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
 import {Page, createPage} from '../../blocks/page'
+import {Block} from '../../blocks/block'
 import {BoardView, IViewType} from '../../blocks/boardView'
 import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -18,6 +19,7 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 import './sidebarBoardItem.scss'
 import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
+import isPagesContext from '../../isPages'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
 import {getCurrentBoardPages, getCurrentPageId} from '../../store/pages'
@@ -63,6 +65,7 @@ type Props = {
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
     showPage: (pageId: string, boardId: string) => void
+
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -70,6 +73,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const [boardsMenuOpen, setBoardsMenuOpen] = useState<{[key: string]: boolean}>({})
 
+    const isPages = useContext(isPagesContext)
     const team = useAppSelector(getCurrentTeam)
     const boardViews = useAppSelector(getCurrentBoardViews)
     const pages = useAppSelector(getCurrentBoardPages)
@@ -144,6 +148,24 @@ const SidebarBoardItem = (props: Props) => {
         Utils.showBoard(boardId, match, history)
     }, [board.id])
 
+    const addPage = useCallback(async () => {
+        const page = createPage()
+        page.parentId = board.id
+        page.boardId = board.id
+        page.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Page'})
+        await mutator.insertBlock(
+            board.id,
+            page,
+            intl.formatMessage({id: 'Mutator.new-page', defaultMessage: 'new page'}),
+            async (newBlock: Block) => {
+                props.showPage(newBlock.id, board.id)
+            },
+            async () => {
+                props.showPage(currentPageId, board.id)
+            },
+        )
+    }, [board.id, currentPageId])
+
     const showTemplatePicker = () => {
         // if the same board, reuse the match params
         // otherwise remove viewId and cardId, results in first view being selected
@@ -186,7 +208,11 @@ const SidebarBoardItem = (props: Props) => {
             const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
 
             if (visibleBoards.length === 0) {
-                UserSettings.setLastBoardID(match.params.teamId!, null)
+                if (isPages) {
+                    UserSettings.setLastFolderID(match.params.teamId!, null)
+                } else {
+                    UserSettings.setLastBoardID(match.params.teamId!, null)
+                }
                 showTemplatePicker()
             } else {
                 let nextBoardID = ''
@@ -235,6 +261,13 @@ const SidebarBoardItem = (props: Props) => {
                             position='auto'
                             parentRef={boardItemRef}
                         >
+                            {isPages &&
+                                <Menu.Text
+                                    id='addPage'
+                                    name={intl.formatMessage({id: 'ViewHeader.addPage', defaultMessage: 'Add Page'})}
+                                    icon={<CompassIcon icon='export-variant'/>}
+                                    onClick={addPage}
+                                />}
                             <Menu.SubMenu
                                 key={`moveBlock-${board.id}`}
                                 id='moveBlock'

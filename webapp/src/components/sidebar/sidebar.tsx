@@ -1,14 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, {useEffect, useState, useContext, useCallback} from 'react'
+import {FormattedMessage, useIntl} from 'react-intl'
+import {useHistory, useRouteMatch} from 'react-router-dom'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
+import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getMySortedBoards} from '../../store/boards'
+import isPagesContext from '../../isPages'
+import {getCurrentBoardId} from '../../store/boards'
+import {getMySortedBoards, getMySortedPageFolders} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
@@ -28,7 +32,7 @@ import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import wsClient, {WSClient} from '../../wsclient'
 
-import {getCurrentTeam} from '../../store/teams'
+import {getCurrentTeam, Team} from '../../store/teams'
 
 import {Constants} from '../../constants'
 
@@ -43,6 +47,7 @@ type Props = {
     activeBoardId?: string
     onBoardTemplateSelectorOpen: () => void
     onBoardTemplateSelectorClose?: () => void
+    onFolderCreate: () => void
 }
 
 function getWindowDimensions() {
@@ -57,11 +62,18 @@ const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
+    const currentBoardId = useAppSelector<string>(getCurrentBoardId) || null
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const boards = useAppSelector(getMySortedBoards)
+    const pages = useAppSelector(getMySortedPageFolders)
+    const isPages = useContext(isPagesContext)
     const dispatch = useAppDispatch()
     const sidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
     const activeViewID = useAppSelector(getCurrentViewId)
+    const history = useHistory()
+    const match = useRouteMatch<{boardId: string, viewId?: string}>()
+    const intl = useIntl()
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
@@ -111,6 +123,9 @@ const Sidebar = (props: Props) => {
             }
         }
     }
+    const showFolder = useCallback(async (boardId) => {
+        Utils.showBoard(boardId, match, history)
+    }, [match, history])
 
     if (!me) {
         return <div/>
@@ -184,7 +199,11 @@ const Sidebar = (props: Props) => {
 
             <BoardsSwitcher
                 onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
+                onFolderCreate={() => {
+                    mutator.addEmptyFolder(currentTeam?.id || '', intl, showFolder, () => showFolder(currentBoardId))
+                }}
                 userIsGuest={me?.is_guest}
+                isPages={isPages}
             />
 
             <div className='octo-sidebar-list'>
@@ -196,7 +215,8 @@ const Sidebar = (props: Props) => {
                             activeBoardID={props.activeBoardId}
                             activeViewID={activeViewID}
                             categoryBoards={category}
-                            boards={boards}
+                            boards={isPages ? pages : boards}
+                            isPages={isPages}
                             allCategories={sidebarCategories}
                             index={index}
                             onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}

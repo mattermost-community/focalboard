@@ -284,7 +284,7 @@ export default class Plugin {
 
             this.registry.registerProduct(
                 '/pages',
-                'product-boards',
+                'file-text-outline',
                 'Pages',
                 '/pages',
                 (props) => <MainApp {...props} baseURL={subpath + '/pages'}/>,

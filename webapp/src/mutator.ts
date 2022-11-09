@@ -7,6 +7,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
+import {createPage} from './blocks/page'
 import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Page} from './blocks/page'
@@ -1110,6 +1111,33 @@ class Mutator {
                 const newBoard = bab.boards[0]
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
                 await afterRedo(newBoard?.id || '')
+            },
+            beforeUndo,
+        )
+    }
+
+    async addEmptyFolder(
+        teamId: string,
+        intl: IntlShape,
+        afterRedo: (id: string) => Promise<void>,
+        beforeUndo: () => Promise<void>,
+    ): Promise<BoardsAndBlocks> {
+        const board = createBoard()
+        board.teamId = teamId
+        board.properties.isFolder = 'true'
+
+        const page = createPage()
+        page.parentId = board.id
+        page.boardId = board.id
+        page.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Page'})
+
+        return mutator.createBoardsAndBlocks(
+            {boards: [board], blocks: [page]},
+            'add folder',
+            async (bab: BoardsAndBlocks) => {
+                const newFolder = bab.boards[0]
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateFolder, {folder: newFolder?.id})
+                await afterRedo(newFolder?.id || '')
             },
             beforeUndo,
         )

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 import {generatePath, useRouteMatch} from 'react-router-dom'
@@ -17,6 +17,7 @@ import {ClientConfig} from '../../config/clientConfig'
 import {getClientConfig} from '../../store/clientConfig'
 
 import {Utils, IDType} from '../../utils'
+import isPagesContext from '../../isPages'
 import Tooltip from '../../widgets/tooltip'
 import mutator from '../../mutator'
 
@@ -105,6 +106,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [sharing, setSharing] = useState<ISharing|undefined>(undefined)
     const [selectedUser, setSelectedUser] = useState<IUser|Channel|null>(null)
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
+    const isPages = useContext(isPagesContext)
 
     // members of the current board
     const members = useAppSelector<{[key: string]: BoardMember}>(getCurrentBoardMembers)
@@ -281,12 +283,20 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             ))
     }
 
-    const shareBoardTitle = (
+    let shareBoardTitle = (
         <FormattedMessage
             id={'ShareBoard.Title'}
             defaultMessage={'Share Board'}
         />
     )
+    if (isPages) {
+        shareBoardTitle = (
+            <FormattedMessage
+                id={'ShareFolder.Title'}
+                defaultMessage={'Share Folder'}
+            />
+        )
+    }
 
     const shareTemplateTitle = (
         <FormattedMessage
@@ -334,11 +344,21 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     let confirmSubtext
     let confirmButtonText
     if (board.channelId === '') {
-        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.'})
-        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Link channel'})
+        if (isPages) {
+            confirmSubtext = intl.formatMessage({id: 'shareFolder.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a folder, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.'})
+            confirmButtonText = intl.formatMessage({id: 'shareFolder.confirm-link-channel-button', defaultMessage: 'Link channel'})
+        } else {
+            confirmSubtext = intl.formatMessage({id: 'sharePage.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.'})
+            confirmButtonText = intl.formatMessage({id: 'sharePage.confirm-link-channel-button', defaultMessage: 'Link channel'})
+        }
     } else {
-        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
-        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
+        if (isPages) {
+            confirmSubtext = intl.formatMessage({id: 'shareFolder.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a folder, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak}This folder is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
+            confirmButtonText = intl.formatMessage({id: 'shareFolder.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
+        } else {
+            confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
+            confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
+        }
     }
 
     return (
@@ -350,7 +370,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             {showLinkChannelConfirmation &&
                 <ConfirmationDialog
                     dialogBox={{
-                        heading: intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
+                        heading: isPages ? intl.formatMessage({id: 'shareFolder.confirm-link-channel', defaultMessage: 'Link folder to channel'}) : intl.formatMessage({id: 'shareBoard.confirm-link-channel', defaultMessage: 'Link board to channel'}),
                         subText: confirmSubtext,
                         confirmButtonText,
                         destructive: board.channelId !== '',

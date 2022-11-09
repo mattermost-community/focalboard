@@ -54,6 +54,7 @@ type Props = {
     allCategories: CategoryBoards[]
     index: number
     onBoardTemplateSelectorClose?: () => void
+    isPages: boolean
 }
 
 export const ClassForManageCategoriesTourStep = 'manageCategoriesTourStep'
@@ -241,7 +242,8 @@ const SidebarCategory = (props: Props) => {
                     onClick={toggleCollapse}
                 >
                     {collapsed ? <ChevronRight/> : <ChevronDown/>}
-                    {props.categoryBoards.name}
+                    {props.isPages && props.categoryBoards.type !== 'custom' && 'Pages'}
+                    {!(props.isPages && props.categoryBoards.type !== 'custom') && props.categoryBoards.name}
                     <div className='sidebarCategoriesTour'>
                         {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
                     </div>

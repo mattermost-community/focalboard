@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useMemo, useCallback} from 'react'
+import React, {useEffect, useState, useMemo, useCallback, useContext} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch} from 'react-router-dom'
@@ -11,6 +11,7 @@ import VersionMessage from '../../components/messages/versionMessage'
 import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
+import isPagesContext from '../../isPages'
 import {useWebsockets} from '../../hooks/websockets'
 import {IUser, UserConfigPatch} from '../../user'
 import {Block} from '../../blocks/block'
@@ -75,6 +76,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
+    const isPages = useContext(isPagesContext)
     const me = useAppSelector<IUser|null>(getMe)
     const myConfig = useAppSelector(getMyConfig)
 
@@ -181,8 +183,13 @@ const BoardPage = (props: Props): JSX.Element => {
         if (result.payload.blocks.length === 0 && userId) {
             const member = await octoClient.joinBoard(boardId)
             if (!member) {
-                UserSettings.setLastBoardID(boardTeamId, null)
-                UserSettings.setLastViewId(boardId, null)
+                if (isPages) {
+                    UserSettings.setLastFolderID(boardTeamId, null)
+                    UserSettings.setLastPageId(boardId, null)
+                } else {
+                    UserSettings.setLastBoardID(boardTeamId, null)
+                    UserSettings.setLastViewId(boardId, null)
+                }
                 dispatch(setGlobalError('board-not-found'))
                 return
             }
@@ -202,8 +209,12 @@ const BoardPage = (props: Props): JSX.Element => {
             // set the active board
             dispatch(setCurrentBoard(match.params.boardId))
 
-            // and set it as most recently viewed board
-            UserSettings.setLastBoardID(teamId, match.params.boardId)
+            if (isPages) {
+                // and set it as most recently viewed board
+                UserSettings.setLastBoardID(teamId, match.params.boardId)
+            } else {
+                UserSettings.setLastFolderID(teamId, match.params.boardId)
+            }
 
             if (viewId !== Constants.globalTeamId) {
                 if (viewId && viewId.startsWith('p')) {
@@ -217,7 +228,11 @@ const BoardPage = (props: Props): JSX.Element => {
                 }
                 if (viewId) {
                     // don't reset per board if empty string
-                    UserSettings.setLastViewId(match.params.boardId, viewId)
+                    if (isPages) {
+                        UserSettings.setLastPageId(match.params.boardId, viewId)
+                    } else {
+                        UserSettings.setLastViewId(match.params.boardId, viewId)
+                    }
                 }
             }
 

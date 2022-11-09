@@ -29,7 +29,9 @@ import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBo
 
 type Props = {
     onBoardTemplateSelectorOpen: () => void
+    onFolderCreate: () => void
     userIsGuest?: boolean
+    isPages: boolean
 }
 
 const BoardsSwitcher = (props: Props): JSX.Element => {
@@ -94,7 +96,8 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                 <Search/>
                 <div>
                     <span>
-                        {intl.formatMessage({id: 'BoardsSwitcher.Title', defaultMessage: 'Find Boards'})}
+                        {!props.isPages && intl.formatMessage({id: 'BoardsSwitcher.Title', defaultMessage: 'Find Boards'})}
+                        {props.isPages && intl.formatMessage({id: 'PagesSwitcher.Title', defaultMessage: 'Find Pages'})}
                     </span>
                 </div>
             </div>
@@ -109,12 +112,20 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                         icon={<AddIcon/>}
                     />
                     <Menu>
-                        <Menu.Text
-                            id='create-new-board-option'
-                            icon={<CompassIcon icon='plus'/>}
-                            onClick={props.onBoardTemplateSelectorOpen}
-                            name='Create new board'
-                        />
+                        {props.isPages &&
+                            <Menu.Text
+                                id='create-new-board-option'
+                                icon={<CompassIcon icon='plus'/>}
+                                onClick={props.onFolderCreate}
+                                name='Create new folder'
+                            />}
+                        {!props.isPages &&
+                            <Menu.Text
+                                id='create-new-board-option'
+                                icon={<CompassIcon icon='plus'/>}
+                                onClick={props.onBoardTemplateSelectorOpen}
+                                name='Create new board'
+                            />}
                         <Menu.Text
                             id='createNewCategory'
                             name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
