@@ -20,7 +20,6 @@ type ServerMetadata struct {
 }
 
 func (a *App) GetServerMetadata() *ServerMetadata {
-
 	var dbType string
 	var dbVersion string
 	if a != nil && a.store != nil {

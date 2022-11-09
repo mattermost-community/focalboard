@@ -38,7 +38,6 @@ func (a *API) handlePing(w http.ResponseWriter, r *http.Request) {
 	// responses:
 	//   '200':
 	//     description: success
-
 	serverMetadata := a.app.GetServerMetadata()
 
 	if a.singleUserToken != "" {
