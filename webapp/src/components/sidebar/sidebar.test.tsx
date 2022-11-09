@@ -29,6 +29,7 @@ describe('components/sidebarSidebar', () => {
     board.id = 'board1'
 
     const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
+    categoryAttribute1.id = 'category1'
     categoryAttribute1.name = 'Category 1'
     categoryAttribute1.boardIDs = [board.id]
 
@@ -218,6 +219,7 @@ describe('components/sidebarSidebar', () => {
 
     test('some categories hidden', () => {
         const collapsedCategory = TestBlockFactory.createCategoryBoards()
+        collapsedCategory.id = 'categoryCollapsed'
         collapsedCategory.name = 'Category 2'
         collapsedCategory.collapsed = true
 

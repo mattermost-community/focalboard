@@ -14,12 +14,13 @@ import configureStore from 'redux-mock-store'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {wrapIntl} from '../../testUtils'
+import {wrapIntl, wrapRBDNDDroppable} from '../../testUtils'
 
 import SidebarBoardItem from './sidebarBoardItem'
 
 describe('components/sidebarBoardItem', () => {
     const board = TestBlockFactory.createBoard()
+    board.id = 'board_id_1'
 
     const view = TestBlockFactory.createBoardView(board)
     view.fields.sortOptions = []
@@ -73,7 +74,7 @@ describe('components/sidebarBoardItem', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapIntl(
+        const component = wrapRBDNDDroppable(wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
@@ -88,7 +89,7 @@ describe('components/sidebarBoardItem', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        )
+        ))
         const {container} = render(component)
         const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
         expect(elementMenuWrapper).not.toBeNull()
@@ -101,7 +102,7 @@ describe('components/sidebarBoardItem', () => {
         const store = mockStore(state)
         const noIconBoard = {...board, icon: ''}
 
-        const component = wrapIntl(
+        const component = wrapRBDNDDroppable(wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
@@ -116,7 +117,7 @@ describe('components/sidebarBoardItem', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        )
+        ))
         const {container} = render(component)
         expect(container).toMatchSnapshot()
     })
@@ -125,7 +126,7 @@ describe('components/sidebarBoardItem', () => {
         const mockStore = configureStore([])
         const store = mockStore({...state, users: {me: {is_guest: true}}})
 
-        const component = wrapIntl(
+        const component = wrapRBDNDDroppable(wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarBoardItem
@@ -140,7 +141,7 @@ describe('components/sidebarBoardItem', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        )
+        ))
         const {container} = render(component)
         const elementMenuWrapper = container.querySelector('.SidebarBoardItem div.MenuWrapper')
         expect(elementMenuWrapper).not.toBeNull()
