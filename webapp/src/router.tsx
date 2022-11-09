@@ -52,7 +52,7 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean, basePath: strin
                 }
                 teamID = teamID || lastTeamID || firstTeam?.id || ''
 
-                if (UserSettings.lastBoardId) {
+                if ((!props.isPages && UserSettings.lastBoardId) || (props.isPages && UserSettings.lastFolderId)) {
                     const lastBoardID = props.isPages ? UserSettings.lastFolderId[teamID] : UserSettings.lastBoardId[teamID]
                     const lastViewID = props.isPages ? UserSettings.lastPageId[lastBoardID] : UserSettings.lastViewId[lastBoardID]
 
@@ -149,6 +149,7 @@ const FocalboardRouter = (props: Props): JSX.Element => {
                         path={basePath + '/'}
                         basePath={basePath}
                         exact={true}
+                        isPages={isPages}
                     />}
                 {isPlugin &&
                     <FBRoute

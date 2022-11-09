@@ -29,7 +29,11 @@ const TeamToBoardAndViewRedirect = (): null => {
         let boardID = match.params.boardId
         if (!match.params.boardId) {
             // first preference is for last visited board
-            boardID = UserSettings.lastBoardId[teamId]
+            if (isPages) {
+                boardID = UserSettings.lastFolderId[teamId]
+            } else {
+                boardID = UserSettings.lastBoardId[teamId]
+            }
 
             // if last visited board is unavailable, use the first board in categories list
             if (!boardID && categories.length > 0) {
@@ -70,6 +74,8 @@ const TeamToBoardAndViewRedirect = (): null => {
             // most recent view gets the first preference
             if (isPages) {
                 viewID = UserSettings.lastPageId[boardID]
+            } else {
+                viewID = UserSettings.lastViewId[boardID]
             }
             if (viewID) {
                 if (isPages) {
@@ -97,7 +103,7 @@ const TeamToBoardAndViewRedirect = (): null => {
                 history.replace(newPath)
             }
         }
-    }, [teamId, match.params.boardId, match.params.viewId, categories.length, boardViews.length, boardId, boardPages.length])
+    }, [teamId, match.params.boardId, match.params.viewId, categories.length, boardViews.length, boardId, boardPages.length, isPages])
 
     return null
 }

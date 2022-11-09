@@ -209,11 +209,11 @@ const BoardPage = (props: Props): JSX.Element => {
             // set the active board
             dispatch(setCurrentBoard(match.params.boardId))
 
+            // and set it as most recently viewed board/folder
             if (isPages) {
-                // and set it as most recently viewed board
-                UserSettings.setLastBoardID(teamId, match.params.boardId)
-            } else {
                 UserSettings.setLastFolderID(teamId, match.params.boardId)
+            } else {
+                UserSettings.setLastBoardID(teamId, match.params.boardId)
             }
 
             if (viewId !== Constants.globalTeamId) {
