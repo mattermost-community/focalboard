@@ -20,6 +20,7 @@ import CompassIcon from './../../widgets/icons/compassIcon'
 import MenuWrapper from './../../widgets/menuWrapper'
 import IconButton from './../../widgets/buttons/iconButton'
 import Menu from './../../widgets/menu'
+import Tooltip from './../../widgets/tooltip'
 
 type Props = {
     block: AttachmentBlock
@@ -118,9 +119,14 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                 />
             </div>
             <div className='fileElement-file-details mt-3'>
-                <div className='fileElement-file-name'>
-                    {fileName}
-                </div>
+                <Tooltip
+                    title={fileInfo.name ? fileInfo.name : ''}
+                    placement='bottom'
+                >
+                    <div className='fileElement-file-name'>
+                        {fileName}
+                    </div>
+                </Tooltip>
                 <div className='fileElement-file-ext-and-size'>
                     {fileInfo.extension?.substring(1)} {fileSize}
                 </div>
@@ -145,17 +151,22 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                         </Menu>
                     </div>
                 </MenuWrapper>
-                <a
-                    href={fileDataUrl}
-                    download={fileInfo.name}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='fileElement-download-btn mt-5 mr-2'
+                <Tooltip
+                    title='Download'
+                    placement='bottom'
                 >
-                    <CompassIcon
-                        icon='download-outline'
-                    />
-                </a>
+                    <a
+                        href={fileDataUrl}
+                        download={fileInfo.name}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='fileElement-download-btn mt-5 mr-2'
+                    >
+                        <CompassIcon
+                            icon='download-outline'
+                        />
+                    </a>
+                </Tooltip>
             </div>
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>

@@ -18,9 +18,14 @@ exports[`component/content/FileBlock should match snapshot 1`] = `
       class="fileElement-file-details mt-3"
     >
       <div
-        class="fileElement-file-name"
+        class="octo-tooltip tooltip-bottom"
+        data-tooltip="test.txt"
       >
-        test.txt
+        <div
+          class="fileElement-file-name"
+        >
+          test.txt
+        </div>
       </div>
       <div
         class="fileElement-file-ext-and-size"
@@ -47,17 +52,22 @@ exports[`component/content/FileBlock should match snapshot 1`] = `
           />
         </button>
       </div>
-      <a
-        class="fileElement-download-btn mt-5 mr-2"
-        download="test.txt"
-        href="test.txt"
-        rel="noopener noreferrer"
-        target="_blank"
+      <div
+        class="octo-tooltip tooltip-bottom"
+        data-tooltip="Download"
       >
-        <i
-          class="CompassIcon icon-download-outline"
-        />
-      </a>
+        <a
+          class="fileElement-download-btn mt-5 mr-2"
+          download="test.txt"
+          href="test.txt"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            class="CompassIcon icon-download-outline"
+          />
+        </a>
+      </div>
     </div>
   </div>
 </div>
