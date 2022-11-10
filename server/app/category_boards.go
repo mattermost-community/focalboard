@@ -57,6 +57,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		TeamID:    teamID,
 		Collapsed: false,
 		Type:      model.CategoryTypeSystem,
+		SortOrder: len(existingCategoryBoards) * model.CategoryBoardsSortOrderGap,
 	}
 	createdCategory, err := a.CreateCategory(&category)
 	if err != nil {

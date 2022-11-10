@@ -11,8 +11,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-const categoryBoardsSortOrderGap = 10
-
 func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string) ([]model.CategoryBoards, error) {
 	categories, err := s.getUserCategories(db, userID, teamID)
 	if err != nil {
@@ -158,7 +156,7 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 
 	updateCase := sq.Case("board_id")
 	for i, boardID := range newBoardsOrder {
-		updateCase = updateCase.When("'"+boardID+"'", sq.Expr(fmt.Sprintf("%d", i+categoryBoardsSortOrderGap)))
+		updateCase = updateCase.When("'"+boardID+"'", sq.Expr(fmt.Sprintf("%d", i+model.CategoryBoardsSortOrderGap)))
 	}
 	updateCase.Else("sort_order")
 

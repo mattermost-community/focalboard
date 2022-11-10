@@ -1,5 +1,7 @@
 package model
 
+const CategoryBoardsSortOrderGap = 10
+
 // CategoryBoards is a board category and associated boards
 // swagger:model
 type CategoryBoards struct {

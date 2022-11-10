@@ -80,7 +80,7 @@ func (s *SQLStore) createCategory(db sq.BaseRunner, category model.Category) err
 	// bumping up order of existing categories
 	updateQuery := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"categories").
-		Set("sort_order", sq.Expr(fmt.Sprintf("sort_order + %d", categorySortOrderGap))).
+		Set("sort_order", sq.Expr(fmt.Sprintf("sort_order * %d", categorySortOrderGap))).
 		Where(
 			sq.Eq{
 				"user_id":   category.UserID,
