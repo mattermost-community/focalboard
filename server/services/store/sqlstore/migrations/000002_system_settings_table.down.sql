@@ -1,1 +1,1 @@
-DROP TABLE {{.prefix}}system_settings;
+SELECT 1;

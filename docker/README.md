@@ -2,46 +2,41 @@
 
 ## Docker
 
-The Dockerfile gives a quick and easy way to pull the latest Focalboard server and deploy it locally.
-Please note that if you wish to have persistence and mount a volume for the `/data` directory, the host directory must be owned by user `nobody`.
-To do this run 'sudo chown -R nobody /home/user/focalboard-data' to grant the SQL Database Write Access
+The Dockerfile gives a quick and easy way to build the latest Focalboard server and deploy it locally. In the example below,
+the Focalboard database and files will be persisted in a named volumed called `fbdata`.
 
-Execute from the Root Directory of this Repository to Build it for your Current Architecture:
-```
+From the Focalboard project root directory:
+
+```bash
 docker build -f docker/Dockerfile -t focalboard .
-```
-To Build it for a custom Architecture (Experimental)
-```
-docker build -f docker/Dockerfile --platform linux/arm64 .
+docker run -it -v "fbdata:/opt/focalboard/data" -p 80:8000 focalboard
 ```
 
-Execute for Running the Container
-```
-docker run -it  -v "/home/user/focalboard-data:/data" \
-                -v "/home/user/focalboard-config:/config" \
-                -p 80:8000 focalboard 
-```
+Open a browser to [localhost](http://localhost) to start
 
-> The `-v` flag can be used to store Focalboard's config file and database and uploaded files in a directory on the Docker host
-> When you use the Bind Mount for the Config Folder, be Aware that you need to Put a Valid Config File in the Specified Directory on the Host
-> A Valid Config File can be found under: [Config File](server_config.json)
+## Alternative architectures
 
-Open a browser to http://localhost after you Started your Container to see it Running
+From the Focalboard project root directory:
+
+```bash
+docker build -f docker/Dockerfile --platform linux/arm64 -t focalboard .
+docker run -it -v "fbdata:/opt/focalboard/data" -p 80:8000 focalboard
+```
 
 ## Docker-Compose
 
 Docker-Compose provides the option to automate the build and run step, or even include some of the steps from the [personal server setup](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
-To start the server run
+To start the server, change directory to `focalboard/docker` and run:
 
-```
+```bash
 docker-compose up
 ```
 
-This will automatically build the focalboard image and start it with the http port mapping.
+This will automatically build the focalboard image and start it with the http port mapping. These examples also create a persistent named volume called `fbdata`.
 
-To run focalboard with a nginx proxy and a postgres backend run
+To run Focalboard with a nginx proxy and a postgres backend, change directory to `focalboard/docker` and run:
 
-```
+```bash
 docker-compose -f docker-compose-db-nginx.yml up
 ```
