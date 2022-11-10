@@ -19,6 +19,7 @@ import {Permission} from '../../../../webapp/src/constants'
 
 import './rhsChannelBoardItem.scss'
 import BoardPermissionGate from '../../../../webapp/src/components/permissions/boardPermissionGate'
+import octoClient from '../../../../webapp/src/octoClient'
 
 const windowAny = (window as SuiteWindow)
 
@@ -35,7 +36,15 @@ const RHSChannelBoardItem = (props: Props) => {
         return null
     }
 
-    const handleBoardClicked = (boardID: string) => {
+    const handleBoardClicked = async (boardID: string) => {
+        // fetching user categories creates Boards categories if one doesn't exist
+        const sidebarCategories = await octoClient.getSidebarCategories(team.id)
+        const boardsCategory = sidebarCategories.find((category) => category.name === 'Boards' && category.type === 'system')
+        if (boardsCategory) {
+            await octoClient.moveBoardToCategory(team.id, boardID, boardsCategory.id, '')
+        } else {
+            console.error('Default category not found for user')
+        }
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
     }
 
