@@ -5,8 +5,13 @@ services:
       context: ../
       dockerfile: docker/Dockerfile
     container_name: focalboard
+    volumes:
+      - fbdata:/opt/focalboard/data
     ports:
       - 80:8000
     environment:
       - VIRTUAL_HOST=focalboard.local
       - VIRTUAL_PORT=8000
+
+volumes:
+  fbdata:
