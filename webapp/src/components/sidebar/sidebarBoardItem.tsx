@@ -226,7 +226,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const boardItemRef = useRef<HTMLDivElement>(null)
 
-    const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
+    const title = board.title || (isPages ? intl.formatMessage({id: 'Sidebar.untitled-folder', defaultMessage: '(Untitled Folder)'}) : intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'}))
     return (
         <>
             <div
@@ -235,7 +235,7 @@ const SidebarBoardItem = (props: Props) => {
                 ref={boardItemRef}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon || <CompassIcon icon='product-boards'/>}
+                    {board.icon || (isPages ? <Folder/> : <CompassIcon icon='product-boards'/>)}
                 </div>
                 <div
                     className='octo-sidebar-title'
@@ -265,7 +265,7 @@ const SidebarBoardItem = (props: Props) => {
                                 <Menu.Text
                                     id='addPage'
                                     name={intl.formatMessage({id: 'ViewHeader.addPage', defaultMessage: 'Add Page'})}
-                                    icon={<CompassIcon icon='export-variant'/>}
+                                    icon={<AddIcon/>}
                                     onClick={addPage}
                                 />}
                             <Menu.SubMenu
@@ -345,7 +345,7 @@ const SidebarBoardItem = (props: Props) => {
                     className={`SidebarBoardItem sidebar-page-item ${page.id === currentPageId ? 'active' : ''}`}
                     onClick={() => props.showPage(page.id, board.id)}
                 >
-                    <TextIcon/>
+                    <CompassIcon icon='file-text-outline'/>
                     <div
                         className='octo-sidebar-title'
                         title={page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
