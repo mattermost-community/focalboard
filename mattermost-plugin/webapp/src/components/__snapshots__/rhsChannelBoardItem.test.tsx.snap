@@ -61,7 +61,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
       </span>
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper"
+        class="MenuWrapper override menuOpened"
         role="button"
       >
         <button

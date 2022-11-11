@@ -19,21 +19,20 @@ ADD . /go/src/focalboard
 ARG TARGETOS
 ARG TARGETARCH  
 
-RUN make server-docker os=${TARGETOS} arch=${TARGETARCH}
-
-RUN  EXCLUDE_PLUGIN=true EXCLUDE_SERVER=true EXCLUDE_ENTERPRISE=true make server-linux
-RUN mkdir /data
+RUN EXCLUDE_PLUGIN=true EXCLUDE_SERVER=true EXCLUDE_ENTERPRISE=true make server-docker os=${TARGETOS} arch=${TARGETARCH}
 
 ## Final image
-FROM gcr.io/distroless/base-debian10@sha256:d2ce069a83a6407e98c7e0844f4172565f439dab683157bf93b6de20c5b46155
+FROM debian:buster-slim@sha256:5b0b1a9a54651bbe9d4d3ee96bbda2b2a1da3d2fa198ddebbced46dfdca7f216
+
+RUN mkdir -p /opt/focalboard/data/files
+RUN chown -R nobody:nogroup /opt/focalboard
 
 WORKDIR /opt/focalboard
 
-COPY --from=gobuild --chown=nobody:nobody /data /data
-COPY --from=nodebuild --chown=nobody:nobody /webapp/pack pack/
-COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/bin/linux/focalboard-server bin/
-COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/LICENSE.txt LICENSE.txt
-COPY --from=gobuild --chown=nobody:nobody /go/src/focalboard/docker/server_config.json config.json
+COPY --from=nodebuild --chown=nobody:nogroup /webapp/pack pack/
+COPY --from=gobuild --chown=nobody:nogroup /go/src/focalboard/bin/docker/focalboard-server bin/
+COPY --from=gobuild --chown=nobody:nogroup /go/src/focalboard/LICENSE.txt LICENSE.txt
+COPY --from=gobuild --chown=nobody:nogroup /go/src/focalboard/docker/server_config.json config.json
 
 USER nobody
 
@@ -41,6 +40,6 @@ EXPOSE 8000/tcp
 
 EXPOSE 8000/tcp 9092/tcp
 
-VOLUME /data
+VOLUME /opt/focalboard/data
 
 CMD ["/opt/focalboard/bin/focalboard-server"]

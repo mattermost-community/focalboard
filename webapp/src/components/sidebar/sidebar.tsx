@@ -38,7 +38,6 @@ import {getCurrentViewId} from '../../store/views'
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
 import SidebarUserMenu from './sidebarUserMenu'
-import {addMissingItems} from './utils'
 
 type Props = {
     activeBoardId?: string
@@ -60,9 +59,8 @@ const Sidebar = (props: Props) => {
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
     const boards = useAppSelector(getMySortedBoards)
     const dispatch = useAppDispatch()
-    const partialCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
+    const sidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
-    const sidebarCategories = addMissingItems(partialCategories, boards)
     const activeViewID = useAppSelector(getCurrentViewId)
 
     useEffect(() => {

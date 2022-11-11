@@ -262,6 +262,14 @@ export default class Plugin {
                 octoClient.teamId = currentTeamID
                 store.dispatch(initialLoad())
             }
+
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                let theme = mmStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
+                if (!theme) {
+                    theme = mmStore.getState().entities.preferences.myPreferences['theme--'] || mmStore.getState().entities.preferences.myPreferences.theme
+                }
+                setMattermostTheme(theme)
+            }
         })
 
         let fbPrevTeamID = store.getState().teams.currentId

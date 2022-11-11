@@ -1,2 +1,1 @@
-ALTER TABLE {{.prefix}}blocks
-DROP COLUMN root_id;
+SELECT 1;

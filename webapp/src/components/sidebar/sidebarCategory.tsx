@@ -246,14 +246,8 @@ const SidebarCategory = (props: Props) => {
                             position='auto'
                             parentRef={menuWrapperRef}
                         >
-                            <Menu.Text
-                                id='createNewCategory'
-                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                icon={<CreateNewFolder/>}
-                                onClick={handleCreateNewCategory}
-                            />
                             {
-                                props.categoryBoards.id !== '' &&
+                                props.categoryBoards.type === 'custom' &&
                                 <React.Fragment>
                                     <Menu.Text
                                         id='updateCategory'
@@ -269,14 +263,14 @@ const SidebarCategory = (props: Props) => {
                                         onClick={() => setShowDeleteCategoryDialog(true)}
                                     />
                                     <Menu.Separator/>
-                                    <Menu.Text
-                                        id='createNewCategory'
-                                        name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
-                                        icon={<CreateNewFolder/>}
-                                        onClick={handleCreateNewCategory}
-                                    />
                                 </React.Fragment>
                             }
+                            <Menu.Text
+                                id='createNewCategory'
+                                name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                icon={<CreateNewFolder/>}
+                                onClick={handleCreateNewCategory}
+                            />
                         </Menu>
                     </MenuWrapper>
                 </div>
@@ -305,7 +299,7 @@ const SidebarCategory = (props: Props) => {
                     />
                 )
             })}
-            {!collapsed && props.boards.map((board: Board) => {
+            {!collapsed && props.boards.filter((board) => !board.isTemplate).map((board: Board) => {
                 if (!isBoardVisible(board.id)) {
                     return null
                 }
