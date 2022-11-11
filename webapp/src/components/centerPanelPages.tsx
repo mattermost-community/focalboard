@@ -18,6 +18,7 @@ import {updateContents} from '../store/contents'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 import CompassIcon from '../widgets/icons/compassIcon'
 import IconButton from '../widgets/buttons/iconButton'
+import Button from '../widgets/buttons/button'
 import GuestBadge from '../widgets/guestBadge'
 
 import PageTitle from './pageTitle'
@@ -161,6 +162,96 @@ const CenterPanelPages = (props: Props) => {
         >
             <div className='top-head'>
                 <div className='mid-head'>
+                    <div className='formatting'>
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-header-1'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-header-2'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-header-3'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-header-4'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-header-5'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-header-6'/>}
+                        />
+                        <span className='divider'/>
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-bold'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-italic'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-strikethrough-variant'/>}
+                        />
+                        <span className='divider'/>
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='link-variant'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='code-tags'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='code-block'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-quote-open'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-list-bulleted'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='format-list-numbered'/>}
+                        />
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='table-plus'/>}
+                        />
+                        <span className='divider'/>
+                        <IconButton
+                            size='small'
+                            onClick={() => console.log("TODO")}
+                            icon={<CompassIcon icon='plus'/>}
+                        />
+                    </div>
                     <div className='shareButtonWrapper'>
                         {showShareButton &&
                             <ShareBoardButton
@@ -170,6 +261,23 @@ const CenterPanelPages = (props: Props) => {
                             <ShareBoardLoginButton/>}
                         <ShareBoardTourStep/>
                     </div>
+                    <Button
+                        onClick={() => console.log("TODO")}
+                        size='small'
+                        icon={<CompassIcon icon='message-text-outline'/>}
+                    >
+                        8
+                    </Button>
+                    <IconButton
+                        size='small'
+                        onClick={() => console.log("TODO")}
+                        icon={<CompassIcon icon='star-outline'/>}
+                    />
+                    <IconButton
+                        size='small'
+                        onClick={() => console.log("TODO")}
+                        icon={<CompassIcon icon='information-outline'/>}
+                    />
                     <PageMenu
                         pageId={props.activePage?.id}
                         onClickDelete={async () => {

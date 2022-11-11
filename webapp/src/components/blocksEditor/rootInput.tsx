@@ -49,7 +49,7 @@ const styles = {
     }),
     placeholder: (provided: CSSObject): CSSObject => ({
         ...provided,
-        zIndex: 999,
+        zIndex: 10,
     }),
 }
 

@@ -139,6 +139,28 @@
             > div {
                 margin: 10px;
             }
+            .formatting {
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+                color: rgba(var(--center-channel-color-rgb), 0.5);
+
+                .CompassIcon {
+                    cursor: pointer;
+                }
+                .divider {
+                    border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
+                    height: 18px;
+                    width: 0px;
+                    margin: 0 8px;
+                }
+            }
+            .Button {
+                .CompassIcon: {
+                    color: rgba(var(--center-channel-color-rgb), 0.5);
+                    font-size: 18px;
+                }
+            }
         }
     }
 
