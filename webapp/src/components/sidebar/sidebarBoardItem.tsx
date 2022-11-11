@@ -62,7 +62,7 @@ type Props = {
     showView: (viewId: string, boardId: string) => void
     index: number
     draggedItemID?: string
-    foo?: boolean
+    hideViews?: boolean
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -297,7 +297,7 @@ const SidebarBoardItem = (props: Props) => {
                             </MenuWrapper>
                         </div>
                     </div>
-                    {props.isActive && !snapshot.isDragging && !props.foo && boardViews.map((view: BoardView) => (
+                    {props.isActive && !snapshot.isDragging && !props.hideViews && boardViews.map((view: BoardView) => (
                         <div
                             key={view.id}
                             className={`SidebarBoardItem sidebar-view-item ${view.id === currentViewId ? 'active' : ''}`}

@@ -384,7 +384,7 @@ const SidebarCategory = (props: Props) => {
                                                     showBoard={showBoard}
                                                     showView={showView}
                                                     onDeleteRequest={setDeleteBoard}
-                                                    foo={props.draggedItemID === board.id || props.draggedItemID === props.categoryBoards.id}
+                                                    hideViews={props.draggedItemID === board.id || props.draggedItemID === props.categoryBoards.id}
                                                 />
                                             )
                                         })}
