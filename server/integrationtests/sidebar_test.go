@@ -1,9 +1,10 @@
 package integrationtests
 
 import (
+	"testing"
+
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestSidebar(t *testing.T) {

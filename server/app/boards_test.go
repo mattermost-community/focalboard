@@ -52,7 +52,7 @@ func TestAddMemberToBoard(t *testing.T) {
 				},
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", "board_id_1").Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_1": "default_category_id"}).Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -126,7 +126,7 @@ func TestAddMemberToBoard(t *testing.T) {
 				},
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", "board_id_1").Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_1": "default_category_id"}).Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
