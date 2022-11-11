@@ -13,7 +13,7 @@ import {
     getCurrentViewDisplayBy,
     getCurrentView,
 } from '../store/views'
-import {getCurrentPage} from '../store/pages'
+import {getCurrentPage, setCurrent as setCurrentPage} from '../store/pages'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
@@ -27,6 +27,7 @@ import propsRegistry from '../properties'
 import {getMe, getMyConfig} from '../store/users'
 
 import CenterPanel from './centerPanel'
+import CenterPanelPages from './centerPanelPages'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 import GuestNoBoards from './guestNoBoards'
 
@@ -70,6 +71,16 @@ function CenterContent(props: Props) {
         }
         history.push(newPath)
         dispatch(setCurrentCard(cardId || ''))
+    }, [match, history])
+
+    const showPage = useCallback((pageId?: string) => {
+        const params = {...match.params, viewId: pageId, cardId: undefined}
+        let newPath = generatePath(Utils.getBoardPagePath(match.path), params)
+        if (props.readonly) {
+            newPath += `?r=${Utils.getReadToken()}`
+        }
+        history.push(newPath)
+        dispatch(setCurrentPage(pageId || ''))
     }, [match, history])
 
     useEffect(() => {
@@ -127,22 +138,33 @@ function CenterContent(props: Props) {
             displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
         }
 
-        return (
-            <CenterPanel
-                clientConfig={clientConfig}
-                readonly={props.readonly}
-                board={board}
-                cards={cards}
-                shownCardId={match.params.cardId}
-                showCard={showCard}
-                activeView={activeView}
-                activePage={activePage}
-                groupByProperty={property}
-                dateDisplayProperty={displayProperty}
-                views={views}
-                hiddenCardsCount={hiddenCardsCount}
-            />
-        )
+        if (activePage) {
+            return (
+                <CenterPanelPages
+                    clientConfig={clientConfig}
+                    readonly={props.readonly}
+                    board={board}
+                    activePage={activePage}
+                    showPage={showPage}
+                />
+            )
+        } else {
+            return (
+                <CenterPanel
+                    clientConfig={clientConfig}
+                    readonly={props.readonly}
+                    board={board}
+                    cards={cards}
+                    shownCardId={match.params.cardId}
+                    showCard={showCard}
+                    activeView={activeView}
+                    groupByProperty={property}
+                    dateDisplayProperty={displayProperty}
+                    views={views}
+                    hiddenCardsCount={hiddenCardsCount}
+                />
+            )
+        }
     }
 
     if ((board && !isBoardHidden()) || isLoading) {

@@ -1018,9 +1018,50 @@ class Mutator {
                 }
                 return [blocks, newRootBlock.id]
             },
-            async (newBlocks: Block[]) => {
+            async (newBlocks: [Block[], string]) => {
                 await beforeUndo?.()
-                const newRootBlock = newBlocks && newBlocks[0]
+                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id == newBlocks[1])
+                if (newRootBlock) {
+                    await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
+                }
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async duplicatePage(
+        pageId: string,
+        boardId: string,
+        description = 'duplicate page',
+        afterRedo?: (newCardId: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
+    ): Promise<[Block[], string]> {
+        return undoManager.perform(
+            async () => {
+                const blocks = await octoClient.duplicateBlock(boardId, pageId, false)
+                const newRootBlock = blocks && blocks[0]
+                if (!newRootBlock) {
+                    Utils.log('Unable to duplicate card')
+                    return [[], '']
+                }
+                newRootBlock.title = `${newRootBlock.title} copy`
+                const patch = {
+                    updatedFields: {
+                        icon: newRootBlock.fields.icon,
+                    },
+                    title: newRootBlock.title,
+                }
+                await octoClient.patchBlock(newRootBlock.boardId, newRootBlock.id, patch)
+                if (blocks) {
+                    updateAllBoardsAndBlocks([], blocks)
+                    await afterRedo?.(newRootBlock.id)
+                }
+                return [blocks, newRootBlock.id]
+            },
+            async (newBlocks: [Block[], string]) => {
+                await beforeUndo?.()
+                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id == newBlocks[1])
                 if (newRootBlock) {
                     await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
                 }

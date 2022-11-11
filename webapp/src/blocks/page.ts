@@ -30,6 +30,7 @@ function createPage(block?: Block): Page {
         type: 'page',
         fields: {
             contentOrder,
+            icon: block?.fields?.icon,
         },
     }
 }

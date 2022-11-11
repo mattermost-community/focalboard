@@ -70,7 +70,6 @@ type Props = {
     board: Board
     cards: Card[]
     activeView?: BoardView
-    activePage?: Page
     views: BoardView[]
     groupByProperty?: IPropertyTemplate
     dateDisplayProperty?: IPropertyTemplate
@@ -135,7 +134,7 @@ const CenterPanel = (props: Props) => {
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
     useEffect(() => {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView?.id, viewType: props.activeView?.fields.viewType, page: props.activePage?.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView?.id, viewType: props.activeView?.fields.viewType})
     }, [])
 
     useHotkeys('esc', (e: KeyboardEvent) => {
@@ -419,7 +418,7 @@ const CenterPanel = (props: Props) => {
     const showShareButton = !props.readonly && me?.id !== 'single-user'
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
 
-    const {groupByProperty, activeView, activePage, board, views, cards} = props
+    const {groupByProperty, activeView, board, views, cards} = props
 
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(
         () => getVisibleAndHiddenGroups(cards, activeView?.fields.visibleOptionIds || [], activeView?.fields.hiddenOptionIds || [], groupByProperty),
@@ -509,7 +508,6 @@ const CenterPanel = (props: Props) => {
                 <ViewHeader
                     board={props.board}
                     activeView={activeView}
-                    activePage={activePage}
                     cards={props.cards}
                     views={props.views}
                     groupByProperty={props.groupByProperty}
@@ -522,76 +520,7 @@ const CenterPanel = (props: Props) => {
                 />
             </div>
 
-            {activePage &&
-                <BlocksEditor
-                    onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
-                        if (block.contentType === 'text' && block.value === '') {
-                            return null
-                        }
-                        let newBlock: Block
-                        if (block.contentType === 'checkbox') {
-                            newBlock = await addBlockNewEditor(activePage, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
-                        } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
-                            const newFileId = await octoClient.uploadFile(activePage.boardId, block.value.file)
-                            newBlock = await addBlockNewEditor(activePage, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
-                        } else {
-                            newBlock = await addBlockNewEditor(activePage, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
-                        }
-                        return {...block, id: newBlock.id}
-                    }}
-                    onBlockModified={async (block: any): Promise<BlockData<any>|null> => {
-                        const originalContentBlock = currentPageContents.flatMap((b) => b).find((b) => b.id === block.id)
-                        if (!originalContentBlock) {
-                            return null
-                        }
-
-                        if (block.contentType === 'text' && block.value === '') {
-                            const description = intl.formatMessage({id: 'ContentBlock.DeleteAction', defaultMessage: 'delete'})
-
-                            mutator.deleteBlock(originalContentBlock, description)
-                            return null
-                        }
-                        const newBlock = {
-                            ...originalContentBlock,
-                            title: block.value,
-                        }
-
-                        if (block.contentType === 'checkbox') {
-                            newBlock.title = block.value.value
-                            newBlock.fields = {...newBlock.fields, value: block.value.checked}
-                        }
-                        mutator.updateBlock(activePage.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
-                        return block
-                    }}
-                    onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
-                        if (block.id) {
-                            const idx = activePage.fields.contentOrder.indexOf(block.id)
-                            let sourceBlockId: string
-                            let sourceWhere: 'after'|'before'
-                            if (idx === -1) {
-                                Utils.logError('Unable to find the block id in the order of the current block')
-                                return
-                            }
-                            if (idx === 0) {
-                                sourceBlockId = activePage.fields.contentOrder[1] as string
-                                sourceWhere = 'before'
-                            } else {
-                                sourceBlockId = activePage.fields.contentOrder[idx - 1] as string
-                                sourceWhere = 'after'
-                            }
-                            if (afterBlock && afterBlock.id) {
-                                await mutator.moveContentBlock(block.id, afterBlock.id, 'after', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
-                                return
-                            }
-                            if (beforeBlock && beforeBlock.id) {
-                                await mutator.moveContentBlock(block.id, beforeBlock.id, 'before', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
-                            }
-                        }
-                    }}
-                    blocks={pageBlocks}
-                />}
-
-            {!activePage && activeView && activeView.fields.viewType === 'board' &&
+            {activeView && activeView.fields.viewType === 'board' &&
             <Kanban
                 board={props.board}
                 activeView={activeView}
@@ -608,7 +537,7 @@ const CenterPanel = (props: Props) => {
                 hiddenCardsCount={props.hiddenCardsCount}
                 showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
             />}
-            {!activePage && activeView && activeView.fields.viewType === 'table' &&
+            {activeView && activeView.fields.viewType === 'table' &&
                 <Table
                     board={props.board}
                     activeView={activeView}
@@ -625,7 +554,7 @@ const CenterPanel = (props: Props) => {
                     hiddenCardsCount={props.hiddenCardsCount}
                     showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
                 />}
-            {!activePage && activeView && activeView.fields.viewType === 'calendar' &&
+            {activeView && activeView.fields.viewType === 'calendar' &&
                 <CalendarFullView
                     board={props.board}
                     cards={props.cards}
@@ -638,7 +567,7 @@ const CenterPanel = (props: Props) => {
                     }}
                 />}
 
-            {!activePage && activeView && activeView.fields.viewType === 'gallery' &&
+            {activeView && activeView.fields.viewType === 'gallery' &&
                 <Gallery
                     board={props.board}
                     cards={props.cards}

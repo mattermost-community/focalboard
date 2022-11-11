@@ -1,0 +1,169 @@
+@import '../styles/z-index';
+
+.CenterPanelPages {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+
+    .octo-board {
+        flex: 0 1 auto;
+
+        display: flex;
+        flex-direction: column;
+    }
+
+}
+
+
+.PageComponent {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    > * {
+        padding: 0 32px;
+
+        @media screen and (max-width: 768px) {
+            padding: 0 40px;
+        }
+
+        &:first-child {
+            padding-top: 8px;
+
+            @media screen and (max-width: 768px) {
+                padding: 0 8px;
+            }
+        }
+
+        &:last-child {
+            padding-bottom: 8px;
+        }
+    }
+
+    > .content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        > .doc-header {
+            margin-left: 16px;
+            width: 768px;
+            display: flex;
+            align-items: center;
+            margin-top: 60px;
+            margin-bottom: 10px;
+            .pages-breadcrumbs {
+                flex-grow: 1;
+            }
+        }
+        > .BlocksEditor {
+            position: relative;
+            right: 32px;
+            width: 800px;
+        }
+        > .PageTitle {
+            margin-left: 16px;
+            width: 768px;
+            .Editable {
+                font-size: 36px;
+            }
+            > div {
+                align-items: center;
+            }
+        }
+        > .page-author {
+            margin-top: 16px;
+            margin-bottom: 24px;
+            margin-left: 16px;
+            width: 768px;
+            > .person {
+                display: flex;
+                align-items: center;
+                color: rgba(var(--center-channel-color-rgb), 0.5);
+
+                img {
+                    border-radius: 50px;
+                    width: 24px;
+                    height: 24px;
+                    margin-right: 6px;
+                }
+
+                b {
+                    color: rgba(var(--center-channel-color-rgb), 1);
+                    margin: 0 3px;
+                }
+            }
+        }
+        &.expanded {
+            > .doc-header {
+                margin-left: 16px;
+                width: 100%;
+                .expand-collapsed-button {
+                    position: relative;
+                    right: 60px;
+                }
+            }
+            > .BlocksEditor {
+                position: relative;
+                right: 32px;
+                width: 100%;
+            }
+            > .PageTitle {
+                margin-left: 16px;
+                width: 100%;
+            }
+            > .page-author {
+                margin-left: 16px;
+                width: 100%;
+            }
+        }
+    }
+    > .top-head {
+        @include z-index(center-panel);
+        position: sticky;
+        top: 0;
+        left: 0;
+        background: rgb(var(--center-channel-bg-rgb));
+        padding: 0;
+
+        > .mid-head {
+            margin-top: 0px;
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: end;
+            align-items: center;
+            border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
+            > div {
+                margin: 10px;
+            }
+        }
+    }
+
+
+    > div:nth-child(2) {
+        padding: 0 0 0 1px;
+        margin-left: 32px;
+
+        @media (max-width: 768px) {
+            margin-left: 0;
+            padding-left: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+    .shareButtonWrapper {
+        position: relative;
+        flex: 0 0 auto;
+    }
+
+    .NotificationBox {
+        .AlertIcon {
+            color: #ffbc1f;
+            font-size: 24px;
+        }
+    }
+}
+

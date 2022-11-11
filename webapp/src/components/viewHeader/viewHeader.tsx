@@ -53,7 +53,6 @@ import './viewHeader.scss'
 type Props = {
     board: Board
     activeView?: BoardView
-    activePage?: Page
     views: BoardView[]
     cards: Card[]
     groupByProperty?: IPropertyTemplate
@@ -71,17 +70,17 @@ const ViewHeader = (props: Props) => {
     const intl = useIntl()
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
 
-    const {board, activeView, activePage, views, groupByProperty, cards, dateDisplayProperty} = props
+    const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
     const withGroupBy = activeView?.fields.viewType === 'board' || activeView?.fields.viewType === 'table'
     const withDisplayBy = activeView?.fields.viewType === 'calendar'
     const withSortBy = activeView?.fields.viewType !== 'calendar'
 
-    const [viewTitle, setViewTitle] = useState(activeView?.title || activePage?.title || '')
+    const [viewTitle, setViewTitle] = useState(activeView?.title || '')
 
     useEffect(() => {
-        setViewTitle(activePage?.title || activeView?.title || '')
-    }, [activeView?.title, activePage?.title])
+        setViewTitle(activeView?.title || '')
+    }, [activeView?.title])
 
     const hasFilter = activeView?.fields.filter && activeView?.fields.filter.filters?.length > 0
 
@@ -134,16 +133,16 @@ const ViewHeader = (props: Props) => {
     }
 
     return (
-        <div className={activePage ? 'ViewHeader viewHeaderPage' : 'ViewHeader viewHeaderView'}>
-            <div className={activePage ? 'pageSelector' : 'viewSelector'}>
+        <div className='ViewHeader viewHeaderView'>
+            <div className='viewSelector'>
                 <Editable
                     value={viewTitle}
                     placeholderText='Untitled View'
                     onSave={(): void => {
-                        mutator.changeBlockTitle(activeView?.boardId || activePage?.boardId || '', activeView?.id || activePage?.id || '', activeView?.title || activePage?.title || '', viewTitle)
+                        mutator.changeBlockTitle(activeView?.boardId || '', activeView?.id || '', activeView?.title || '', viewTitle)
                     }}
                     onCancel={(): void => {
-                        setViewTitle(activeView?.title || activePage?.title || '')
+                        setViewTitle(activeView?.title || '')
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
@@ -167,7 +166,7 @@ const ViewHeader = (props: Props) => {
                     </div>}
             </div>
 
-            {activeView && !activePage &&
+            {activeView &&
                 <div className='octo-spacer'/>}
 
             {!props.readonly && activeView && canEditBoardProperties &&

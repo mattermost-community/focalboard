@@ -235,7 +235,7 @@ const SidebarBoardItem = (props: Props) => {
                 ref={boardItemRef}
             >
                 <div className='octo-sidebar-icon'>
-                    {board.icon || (isPages ? <Folder/> : <CompassIcon icon='product-boards'/>)}
+                    {board.icon || (isPages ? <CompassIcon icon='file-text-outline'/> : <CompassIcon icon='product-boards'/>)}
                 </div>
                 <div
                     className='octo-sidebar-title'
@@ -345,7 +345,8 @@ const SidebarBoardItem = (props: Props) => {
                     className={`SidebarBoardItem sidebar-page-item ${page.id === currentPageId ? 'active' : ''}`}
                     onClick={() => props.showPage(page.id, board.id)}
                 >
-                    <CompassIcon icon='file-text-outline'/>
+
+                    {page.fields.icon || <CompassIcon icon='file-text-outline'/>}
                     <div
                         className='octo-sidebar-title'
                         title={page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
