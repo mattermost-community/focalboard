@@ -1,1 +1,0 @@
-update focalboard_categories fc set sort_order = (select 10 * (select count(*) from focalboard_categories group by user_id, team_id having user_id = fc.user_id and team_id = fc.team_id)) where name = 'Boards';
