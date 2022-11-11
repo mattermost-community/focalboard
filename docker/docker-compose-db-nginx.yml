@@ -16,6 +16,7 @@ services:
       - VIRTUAL_PROTO=http
     volumes:
       - "./config.json:/opt/focalboard/config.json"
+      - fbdata:/opt/focalboard/data
     restart: always
     networks:
       - proxy
@@ -37,11 +38,16 @@ services:
     container_name: focalboard-postgres
     restart: always
     volumes:
-      - "./data:/var/lib/postgresql/data"
+      - pgdata:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: boards
       POSTGRES_USER: boardsuser
       POSTGRES_PASSWORD: boardsuser-password
 
+volumes:
+  fbdata:
+  pgdata:
+
 networks:
   proxy:
+
