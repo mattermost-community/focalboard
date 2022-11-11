@@ -180,16 +180,15 @@ func (s *SQLStore) dBVersion(db sq.BaseRunner) string {
 	var version string
 	var row *sql.Row
 
-	if s.dbType == model.MysqlDBType {
+	switch s.dbType {
+	case model.MysqlDBType:
 		row = s.db.QueryRow("SELECT VERSION()")
-	}
-
-	if s.dbType == model.PostgresDBType {
+	case model.PostgresDBType:
 		row = s.db.QueryRow("SHOW server_version")
-	}
-
-	if s.dbType == model.SqliteDBType {
+	case model.SqliteDBType:
 		row = s.db.QueryRow("SELECT sqlite_version()")
+	default:
+		return ""
 	}
 
 	if err := row.Scan(&version); err != nil {

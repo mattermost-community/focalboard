@@ -44,6 +44,10 @@ func (a *API) handlePing(w http.ResponseWriter, r *http.Request) {
 		serverMetadata.SKU = "personal_desktop"
 	}
 
+	if serverMetadata.Edition == "plugin" {
+		serverMetadata.SKU = "suite"
+	}
+
 	bytes, err := json.Marshal(serverMetadata)
 	if err != nil {
 		a.errorResponse(w, r, err)
