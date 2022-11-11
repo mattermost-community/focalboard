@@ -28,7 +28,7 @@ func (a *API) handleHello(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handlePing(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /ping
+	// swagger:operation GET /ping ping
 	//
 	// Responds with server metadata if the web service is running.
 	//
