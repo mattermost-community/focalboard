@@ -288,63 +288,63 @@ describe('components/sidebarSidebar', () => {
         expect(sidebarCollapsedCategory.length).toBe(1)
     })
 
-    // test('should assign default category if current board doesnt have a category', () => {
-    //     const board2 = TestBlockFactory.createBoard()
-    //     board2.id = 'board2'
+    test('should assign default category if current board doesnt have a category', () => {
+        const board2 = TestBlockFactory.createBoard()
+        board2.id = 'board2'
 
-    //     const store = mockStore({
-    //         teams: {
-    //             current: {id: 'team-id'},
-    //         },
-    //         boards: {
-    //             current: board2.id,
-    //             boards: {
-    //                 [board2.id]: board2,
-    //             },
-    //             myBoardMemberships: {
-    //                 [board2.id]: board2,
-    //             },
-    //         },
-    //         cards: {
-    //             cards: {
-    //                 card_id_1: {title: 'Card'},
-    //             },
-    //             current: 'card_id_1',
-    //         },
-    //         views: {
-    //             views: [],
-    //         },
-    //         users: {
-    //             me: {
-    //                 id: 'user_id_1',
-    //                 props: {},
-    //             },
-    //         },
-    //         sidebar: {
-    //             categoryAttributes: [
-    //                 categoryAttribute1,
-    //                 defaultCategory,
-    //             ],
-    //         },
-    //     })
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board2.id,
+                boards: {
+                    [board2.id]: board2,
+                },
+                myBoardMemberships: {
+                    [board2.id]: board2,
+                },
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                    defaultCategory,
+                ],
+            },
+        })
 
-    //     const history = createMemoryHistory()
-    //     const onBoardTemplateSelectorOpen = jest.fn()
+        const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
 
-    //     mockedOctoClient.moveBoardToCategory.mockResolvedValueOnce({} as Response)
+        mockedOctoClient.moveBoardToCategory.mockResolvedValueOnce({} as Response)
 
-    //     const component = wrapIntl(
-    //         <ReduxProvider store={store}>
-    //             <Router history={history}>
-    //                 <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
-    //             </Router>
-    //         </ReduxProvider>,
-    //     )
-    //     const {container} = render(component)
-    //     expect(container).toMatchSnapshot()
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
 
-    //     expect(mockedOctoClient.moveBoardToCategory).toBeCalledWith('team-id', 'board2', 'default_category', '')
-    // })
+        expect(mockedOctoClient.moveBoardToCategory).toBeCalledWith('team-id', 'board2', 'default_category', '')
+    })
 
     test('shouldnt do any category assignment is board is in a category', () => {
         const board2 = TestBlockFactory.createBoard()
