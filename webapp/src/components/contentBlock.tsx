@@ -105,7 +105,6 @@ const ContentBlock = (props: Props): JSX.Element => {
                                     <AddContentMenuItem
                                         key={type}
                                         type={type}
-                                        card={card}
                                         cords={cords}
                                     />
                                 ))}
