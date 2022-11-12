@@ -86,7 +86,7 @@ const PageTitle = (props: Props) => {
                 <Editable
                     className='title'
                     value={title}
-                    placeholderText={isPages ? intl.formatMessage({id: 'ViewTitle.untitled-folder', defaultMessage: 'Untitled folder'}) : intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
+                    placeholderText={isPages ? intl.formatMessage({id: 'ViewTitle.untitled-page', defaultMessage: 'Untitled page'}) : intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
                     onChange={(newTitle) => setTitle(newTitle)}
                     saveOnEsc={true}
                     onSave={onEditTitleSave}

@@ -34,7 +34,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
     const me = useAppSelector(getMe)
     const isPages = useContext(isPagesContext)
 
-    const title = isPages ? intl.formatMessage({id: 'FindPagesDialog.Title', defaultMessage: 'Find Folders'}) : intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find Boards'})
+    const title = isPages ? intl.formatMessage({id: 'FindPagesDialog.Title', defaultMessage: 'Find Pages'}) : intl.formatMessage({id: 'FindBoardsDialog.Title', defaultMessage: 'Find Boards'})
     const subTitle = intl.formatMessage(
         isPages ? {
             id: 'FindPagesDialog.SubTitle',
@@ -71,7 +71,7 @@ const BoardSwitcherDialog = (props: Props): JSX.Element => {
         }
 
         const items = await octoClient.searchAll(query)
-        const untitledBoardTitle = isPages ? intl.formatMessage({id: 'ViewTitle.untitled-folder', defaultMessage: 'Untitled folder'}) : intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
+        const untitledBoardTitle = isPages ? intl.formatMessage({id: 'ViewTitle.untitled-folder', defaultMessage: 'Untitled page'}) : intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})
         refs.current = items.map((_, i) => refs.current[i] ?? createRef())
         setRefs(refs)
         return items.map((item, i) => {

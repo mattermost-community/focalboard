@@ -202,7 +202,6 @@ const Workspace = (props: Props) => {
                 <Sidebar
                     onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     onBoardTemplateSelectorClose={closeBoardTemplateSelector}
-                    onFolderCreate={() => null}
                     activeBoardId={board?.id}
                 />
             }

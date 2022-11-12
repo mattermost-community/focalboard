@@ -47,7 +47,6 @@ type Props = {
     activeBoardId?: string
     onBoardTemplateSelectorOpen: () => void
     onBoardTemplateSelectorClose?: () => void
-    onFolderCreate: () => void
 }
 
 function getWindowDimensions() {

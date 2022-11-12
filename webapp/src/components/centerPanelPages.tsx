@@ -325,7 +325,8 @@ const CenterPanelPages = (props: Props) => {
             <div className={expanded ? 'content expanded' :  'content'}>
                 <div className='doc-header'>
                     <div className='pages-breadcrumbs'>
-                        {props.activePage ? `${props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})} / ${activePage.title}` : props.board.title}
+                        {props.activePage && `${props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})} / ${activePage.title}`}
+                        {!props.activePage && `${props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}`}
                     </div>
                     <div className='expand-collapsed-button'>
                         <IconButton

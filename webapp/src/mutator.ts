@@ -6,8 +6,7 @@ import {batch} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
-import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {createPage} from './blocks/page'
+import {Block, BlockPatch, createPatchesFromBlocks, createBlock} from './blocks/block'
 import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Page} from './blocks/page'
@@ -1167,14 +1166,20 @@ class Mutator {
         board.teamId = teamId
         board.properties.isFolder = 'true'
 
-        const page = createPage()
-        page.parentId = board.id
-        page.boardId = board.id
-        page.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Page'})
+        const noopBlock: any = createBlock()
+        noopBlock.parentId = board.id
+        noopBlock.boardId = board.id
+        noopBlock.title = ''
+        noopBlock.type = 'noop'
+
+        // TODO: We need at least a block here, I'm adding an empty block. This
+        // is a hack so we should removed this before merge in main and find
+        // the right solution (maybe accepting no-blocks if the created board
+        // is a page board)
 
         return mutator.createBoardsAndBlocks(
-            {boards: [board], blocks: [page]},
-            'add folder',
+            {boards: [board], blocks: [noopBlock]},
+            'add page',
             async (bab: BoardsAndBlocks) => {
                 const newFolder = bab.boards[0]
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateFolder, {folder: newFolder?.id})
