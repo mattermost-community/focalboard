@@ -278,7 +278,7 @@ const ViewMenu = (props: Props) => {
     })
     const addPageText= intl.formatMessage({
         id: 'View.AddPage',
-        defaultMessage: 'Add page',
+        defaultMessage: 'Add subpage',
     })
     const addViewText = intl.formatMessage({
         id: 'View.AddView',

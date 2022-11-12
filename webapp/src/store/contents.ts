@@ -7,6 +7,7 @@ import {ContentBlock} from '../blocks/contentBlock'
 
 import {getCards, getTemplates} from './cards'
 import {getCurrentPage} from './pages'
+import {getCurrentBoard} from './boards'
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -26,7 +27,8 @@ const contentsSlice = createSlice({
                 if (content.deleteAt === 0) {
                     let existsInParent = false
                     state.contents[content.id] = content
-                    if (content.parentId.startsWith('p')) {
+                    if (content.parentId.startsWith('p') || content.parentId.startsWith('b')) {
+                        console.log("adding content in pages", content)
                         if (!state.contentsByPage[content.parentId]) {
                             state.contentsByPage[content.parentId] = [content]
                             return
@@ -42,6 +44,7 @@ const contentsSlice = createSlice({
                             state.contentsByPage[content.parentId].push(content)
                         }
                     } else {
+                        console.log("adding content in cards", content)
                         if (!state.contentsByCard[content.parentId]) {
                             state.contentsByCard[content.parentId] = [content]
                             return
@@ -93,7 +96,7 @@ const contentsSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment' && block.type !== 'page') {
                     state.contents[block.id] = block as ContentBlock
-                    if (block.parentId.startsWith('p')) {
+                    if (block.parentId.startsWith('p') || block.parentId.startsWith('b')) {
                         state.contentsByPage[block.parentId] = state.contentsByPage[block.parentId] || []
                         state.contentsByPage[block.parentId].push(block as ContentBlock)
                         state.contentsByPage[block.parentId].sort((a, b) => a.createAt - b.createAt)
@@ -111,7 +114,7 @@ const contentsSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment' && block.type !== 'page') {
                     state.contents[block.id] = block as ContentBlock
-                    if (block.parentId.startsWith('p')) {
+                    if (block.parentId.startsWith('p') || block.parentId.startsWith('b')) {
                         state.contentsByPage[block.parentId] = state.contentsByPage[block.parentId] || []
                         state.contentsByPage[block.parentId].push(block as ContentBlock)
                         state.contentsByPage[block.parentId].sort((a, b) => a.createAt - b.createAt)
@@ -174,13 +177,20 @@ export function getCardContents(cardId: string): (state: RootState) => Array<Con
 export const getCurrentPageContents = createSelector(
     (state: RootState) => state.contents?.contentsByPage,
     getCurrentPage,
-    (contentsByPage, currentPage): Array<ContentBlock|ContentBlock[]> => {
-        if (!currentPage) {
+    getCurrentBoard,
+    (contentsByPage, currentPage, currentBoard): Array<ContentBlock|ContentBlock[]> => {
+        const page = currentPage || currentBoard
+        if (!page) {
             return []
         }
         console.log(currentPage)
-        let contents = contentsByPage[currentPage.id]
-        let contentOrder = currentPage.fields.contentOrder
+        console.log(currentBoard)
+        console.log(contentsByPage)
+        let contents = contentsByPage[page.id]
+        let contentOrder = currentPage?.fields?.contentOrder
+        if (!currentPage) {
+            contentOrder = currentBoard?.properties?.contentOrder as string[]
+        }
         const result: Array<ContentBlock|ContentBlock[]> = []
         if (!contents) {
             return []

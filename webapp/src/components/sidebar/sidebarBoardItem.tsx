@@ -9,12 +9,10 @@ import {Page, createPage} from '../../blocks/page'
 import {Block} from '../../blocks/block'
 import {BoardView, IViewType} from '../../blocks/boardView'
 import mutator from '../../mutator'
-import IconButton from '../../widgets/buttons/iconButton'
-import DeleteIcon from '../../widgets/icons/delete'
-import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './sidebarBoardItem.scss'
 import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
@@ -28,13 +26,16 @@ import Check from '../../widgets/icons/checkIcon'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import BoardIcon from '../../widgets/icons/board'
 import TableIcon from '../../widgets/icons/table'
-import TextIcon from '../../widgets/icons/text'
 import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
+import DuplicateIcon from '../../widgets/icons/duplicate'
+import IconButton from '../../widgets/buttons/iconButton'
+import DeleteIcon from '../../widgets/icons/delete'
+import OptionsIcon from '../../widgets/icons/options'
+import PageMenu from '../pageMenu'
 
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
-import DuplicateIcon from '../../widgets/icons/duplicate'
 import {Utils} from '../../utils'
 
 import AddIcon from '../../widgets/icons/add'
@@ -226,7 +227,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const boardItemRef = useRef<HTMLDivElement>(null)
 
-    const title = board.title || (isPages ? intl.formatMessage({id: 'Sidebar.untitled-folder', defaultMessage: '(Untitled Folder)'}) : intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'}))
+    const title = board.title || (isPages ? intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'}) : intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'}))
     return (
         <>
             <div
@@ -264,7 +265,7 @@ const SidebarBoardItem = (props: Props) => {
                             {isPages &&
                                 <Menu.Text
                                     id='addPage'
-                                    name={intl.formatMessage({id: 'ViewHeader.addPage', defaultMessage: 'Add Page'})}
+                                    name={intl.formatMessage({id: 'ViewHeader.addSubpage', defaultMessage: 'Add subpage'})}
                                     icon={<AddIcon/>}
                                     onClick={addPage}
                                 />}
@@ -353,6 +354,36 @@ const SidebarBoardItem = (props: Props) => {
                     >
                         {page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
                     </div>
+                    <PageMenu
+                        pageId={page.id}
+                        onClickDelete={async () => {
+                            if (!page) {
+                                Utils.assertFailure()
+                                return
+                            }
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeletePage, {board: props.board.id, page: page.id})
+                            await mutator.deleteBlock(page, 'delete page')
+                            props.showBoard(page.boardId)
+                        }}
+                        onClickDuplicate={async () => {
+                            if (!page) {
+                                Utils.assertFailure()
+                                return
+                            }
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.board.id, page: page.id})
+                            await mutator.duplicatePage(
+                                page.id,
+                                props.board.id,
+                                'duplicate page',
+                                async (newPageId: string) => {
+                                    props.showPage(newPageId, page.boardId)
+                                },
+                                async () => {
+                                    props.showPage(page.id, page.boardId)
+                                },
+                            )
+                        }}
+                    />
                 </div>
             ))}
         </>

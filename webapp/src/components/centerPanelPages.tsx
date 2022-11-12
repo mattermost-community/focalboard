@@ -53,10 +53,10 @@ type Props = {
     showPage: (pageId?: string) => void
 }
 
-async function addBlockNewEditor(page: Page, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
+async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
     const block = createBlock()
     block.parentId = page.id
-    block.boardId = page.boardId
+    block.boardId = page.boardId || page.id
     block.title = title
     block.type = contentType
     block.fields = {...block.fields, ...fields}
@@ -64,7 +64,10 @@ async function addBlockNewEditor(page: Page, intl: IntlShape, title: string, fie
     const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add page text'})
 
     const afterRedo = async (newBlock: Block) => {
-        const contentOrder = page.fields.contentOrder.slice()
+        let contentOrder = page.fields?.contentOrder.slice()
+        if (!page.boardId) {
+            contentOrder = page.properties?.contentOrder?.slice() || []
+        }
         if (afterBlockId) {
             const idx = contentOrder.indexOf(afterBlockId)
             if (idx === -1) {
@@ -75,13 +78,21 @@ async function addBlockNewEditor(page: Page, intl: IntlShape, title: string, fie
         } else {
             contentOrder.push(newBlock.id)
         }
-        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
+        if (page.boardId) {
+            await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
+        } else {
+            await octoClient.patchBoard(page.id, {updatedProperties: {contentOrder}})
+        }
         dispatch(updatePages([{...page, fields: {...page.fields, contentOrder}}]))
     }
 
     const beforeUndo = async () => {
         const contentOrder = page.fields.contentOrder.slice()
-        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
+        if (page.boardId) {
+            await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
+        } else {
+            await octoClient.patchBoard(page.id, {updatedProperties: {contentOrder}})
+        }
     }
 
     const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
@@ -101,13 +112,11 @@ const CenterPanelPages = (props: Props) => {
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
     useEffect(() => {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, page: props.activePage.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, page: props.activePage?.id})
     }, [])
 
     const showShareButton = !props.readonly && me?.id !== 'single-user'
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
-
-    const {activePage} = props
 
     const pageBlocks = useMemo(() => {
         return currentPageContents.flatMap((value: Block | Block[]): BlockData<any> => {
@@ -149,10 +158,12 @@ const CenterPanelPages = (props: Props) => {
         })
     }, [currentPageContents])
 
+    const activePage = props.activePage || props.board
+
     const owner = folderUsersById[activePage.createdBy]
 
     let profileImg
-    if (owner.id) {
+    if (owner?.id) {
         profileImg = imageURLForUser(owner.id)
     }
 
@@ -279,31 +290,31 @@ const CenterPanelPages = (props: Props) => {
                         icon={<CompassIcon icon='information-outline'/>}
                     />
                     <PageMenu
-                        pageId={props.activePage?.id}
+                        pageId={activePage?.id}
                         onClickDelete={async () => {
-                            if (!props.activePage) {
+                            if (!activePage) {
                                 Utils.assertFailure()
                                 return
                             }
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeletePage, {board: props.board.id, page: props.activePage.id})
-                            await mutator.deleteBlock(props.activePage, 'delete page')
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeletePage, {board: props.board.id, page: activePage.id})
+                            await mutator.deleteBlock(activePage, 'delete page')
                             props.showPage(undefined)
                         }}
                         onClickDuplicate={async () => {
-                            if (!props.activePage) {
+                            if (!activePage) {
                                 Utils.assertFailure()
                                 return
                             }
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.board.id, page: props.activePage.id})
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.board.id, page: activePage.id})
                             await mutator.duplicatePage(
-                                props.activePage.id,
+                                activePage.id,
                                 props.board.id,
                                 'duplicate page',
                                 async (newPageId: string) => {
                                     props.showPage(newPageId)
                                 },
                                 async () => {
-                                    props.showPage(props.activePage.id)
+                                    props.showPage(activePage.id)
                                 },
                             )
                         }}
@@ -314,7 +325,7 @@ const CenterPanelPages = (props: Props) => {
             <div className={expanded ? 'content expanded' :  'content'}>
                 <div className='doc-header'>
                     <div className='pages-breadcrumbs'>
-                        {props.activePage ? `${props.board.title} / ${props.activePage.title}` : props.board.title}
+                        {props.activePage ? `${props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})} / ${activePage.title}` : props.board.title}
                     </div>
                     <div className='expand-collapsed-button'>
                         <IconButton
@@ -326,7 +337,8 @@ const CenterPanelPages = (props: Props) => {
                 </div>
 
                 <PageTitle
-                    page={activePage}
+                    page={props.activePage}
+                    board={props.board}
                     readonly={props.readonly}
                 />
 
@@ -342,7 +354,7 @@ const CenterPanelPages = (props: Props) => {
                             id='Page.author'
                             defaultMessage='Created by {author} {badge}'
                             values={{
-                                author: <b>{Utils.getUserDisplayName(owner, props.clientConfig?.teammateNameDisplay || '')}</b>,
+                                author: <b>{owner && Utils.getUserDisplayName(owner, props.clientConfig?.teammateNameDisplay || '')}</b>,
                                 badge: <GuestBadge show={Boolean(owner?.is_guest)}/>,
                             }}
                         />
@@ -350,7 +362,7 @@ const CenterPanelPages = (props: Props) => {
                         <FormattedMessage
                             id='Page.author'
                             defaultMessage='Last updated: {date}'
-                            values={{date: Utils.relativeDisplayDateTime(new Date(props.activePage.updateAt), intl)}}
+                            values={{date: Utils.relativeDisplayDateTime(new Date(activePage.updateAt), intl)}}
                         />
                     </div>
                 </div>

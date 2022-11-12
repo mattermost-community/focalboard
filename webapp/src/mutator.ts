@@ -40,7 +40,7 @@ function updateAllBoardsAndBlocks(boards: Board[], blocks: Block[]) {
         store.dispatch(updatePages(blocks.filter((b: Block) => b.type === 'page' || b.deleteAt !== 0) as Page[]))
         store.dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
         store.dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-        store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+        store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'page' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
     })
 }
 

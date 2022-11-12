@@ -117,7 +117,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                                 id='create-new-board-option'
                                 icon={<CompassIcon icon='plus'/>}
                                 onClick={props.onFolderCreate}
-                                name='Create new folder'
+                                name='Create new page'
                             />}
                         {!props.isPages &&
                             <Menu.Text

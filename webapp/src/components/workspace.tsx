@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState, useContext} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
@@ -15,6 +15,8 @@ import {
 } from '../store/views'
 import {getCurrentPage, setCurrent as setCurrentPage} from '../store/pages'
 import {useAppSelector, useAppDispatch} from '../store/hooks'
+
+import isPagesContext from '../isPages'
 
 import {getClientConfig, setClientConfig} from '../store/clientConfig'
 
@@ -40,6 +42,7 @@ type Props = {
 }
 
 function CenterContent(props: Props) {
+    const isPages = useContext(isPagesContext)
     const isLoading = useAppSelector(isLoadingBoard)
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, channelId?: string}>()
     const board = useAppSelector(getCurrentBoard)
@@ -127,7 +130,7 @@ function CenterContent(props: Props) {
         return templateSelector
     }
 
-    if (board && !isBoardHidden() && (activeView || activePage)) {
+    if (board && !isBoardHidden() && (activeView || isPages)) {
         let property = groupByProperty
         if ((!property || !propsRegistry.get(property.type).canGroup) && activeView?.fields.viewType === 'board') {
             property = board?.cardProperties.find((o) => propsRegistry.get(o.type).canGroup)
@@ -138,7 +141,7 @@ function CenterContent(props: Props) {
             displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
         }
 
-        if (activePage) {
+        if (isPages) {
             return (
                 <CenterPanelPages
                     clientConfig={clientConfig}
@@ -148,23 +151,22 @@ function CenterContent(props: Props) {
                     showPage={showPage}
                 />
             )
-        } else {
-            return (
-                <CenterPanel
-                    clientConfig={clientConfig}
-                    readonly={props.readonly}
-                    board={board}
-                    cards={cards}
-                    shownCardId={match.params.cardId}
-                    showCard={showCard}
-                    activeView={activeView}
-                    groupByProperty={property}
-                    dateDisplayProperty={displayProperty}
-                    views={views}
-                    hiddenCardsCount={hiddenCardsCount}
-                />
-            )
         }
+        return (
+            <CenterPanel
+                clientConfig={clientConfig}
+                readonly={props.readonly}
+                board={board}
+                cards={cards}
+                shownCardId={match.params.cardId}
+                showCard={showCard}
+                activeView={activeView}
+                groupByProperty={property}
+                dateDisplayProperty={displayProperty}
+                views={views}
+                hiddenCardsCount={hiddenCardsCount}
+            />
+        )
     }
 
     if ((board && !isBoardHidden()) || isLoading) {
@@ -200,6 +202,7 @@ const Workspace = (props: Props) => {
                 <Sidebar
                     onBoardTemplateSelectorOpen={openBoardTemplateSelector}
                     onBoardTemplateSelectorClose={closeBoardTemplateSelector}
+                    onFolderCreate={() => null}
                     activeBoardId={board?.id}
                 />
             }

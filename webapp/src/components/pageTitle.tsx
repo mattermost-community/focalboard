@@ -5,6 +5,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {Page} from '../blocks/page'
+import {Board} from '../blocks/board'
 import mutator from '../mutator'
 import isPagesContext from '../isPages'
 import Button from '../widgets/buttons/button'
@@ -17,20 +18,31 @@ import PageIconSelector from './pageIconSelector'
 import './pageTitle.scss'
 
 type Props = {
-    page: Page
+    page?: Page
+    board: Board
     readonly: boolean
 }
 
 const PageTitle = (props: Props) => {
-    const {page} = props
+    const page = props.page || props.board
 
     const [title, setTitle] = useState(page.title)
-    const onEditTitleSave = useCallback(() => mutator.changeBlockTitle(page.boardId, page.id, page.title, title), [page.boardId, page.id, page.title, title])
+    const onEditTitleSave = useCallback(() => {
+        if (props.page) {
+            mutator.changeBlockTitle(props.page.boardId, page.id, page.title, title)
+        } else {
+            mutator.changeBoardTitle(page.id, page.title, title)
+        }
+    }, [props.page?.boardId, page.id, page.title, title])
     const onEditTitleCancel = useCallback(() => setTitle(page.title), [page.title])
     const onAddRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        mutator.changeBlockIcon(page.boardId, page.id, page.fields.icon, newIcon)
-    }, [page.boardId, page.id, page.fields.icon])
+        if (props.page) {
+            mutator.changeBlockIcon(props.page.boardId, page.id, props.page.fields?.icon, newIcon)
+        } else {
+            mutator.changeBoardIcon(props.board.id, props.board.icon, newIcon)
+        }
+    }, [props.page?.boardId, page.id, props.page?.fields?.icon, props.board.icon])
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const isPages = useContext(isPagesContext)
 
@@ -42,10 +54,12 @@ const PageTitle = (props: Props) => {
 
     const intl = useIntl()
 
+    const hasIcon = Boolean((props.page && props.page.fields?.icon) || (!props.page && props.board.icon))
+
     return (
         <div className='PageTitle'>
             <div className='add-buttons add-visible'>
-                {!readonly && !page.fields.icon &&
+                {!readonly && !hasIcon &&
                     <Button
                         emphasis='default'
                         size='xsmall'
@@ -65,7 +79,8 @@ const PageTitle = (props: Props) => {
 
             <div className='title'>
                 <PageIconSelector
-                    page={page}
+                    page={props.page}
+                    board={props.board}
                     readonly={readonly}
                 />
                 <Editable
