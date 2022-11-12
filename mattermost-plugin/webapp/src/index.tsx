@@ -27,7 +27,8 @@ import {setTeam} from '../../../webapp/src/store/teams'
 import WithWebSockets from '../../../webapp/src/components/withWebSockets'
 import {setChannel} from '../../../webapp/src/store/channels'
 import {initialLoad} from '../../../webapp/src/store/initialLoad'
-import {Utils} from '../../../webapp/src/utils'
+import isPagesContext from '../../../webapp/src/isPages'
+import {Utils, IDType} from '../../../webapp/src/utils'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
 import {setMattermostTheme} from '../../../webapp/src/theme'
@@ -41,6 +42,7 @@ import octoClient from '../../../webapp/src/octoClient'
 import {Constants} from '../../../webapp/src/constants'
 
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
+import appBarIconPages from '../../../webapp/static/app-bar-pages-icon.png'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSChannelBoards from './components/rhsChannelBoards'
@@ -141,9 +143,13 @@ const HeaderComponent = () => {
     )
 }
 
+
+
 export default class Plugin {
     channelHeaderButtonId?: string
     rhsId?: string
+    rhsPagesId?: string
+    pagesAppIconId?: string
     boardSelectorId?: string
     registry?: PluginRegistry
 
@@ -269,7 +275,29 @@ export default class Plugin {
             )
             this.rhsId = rhsId
 
+            const {rhsId: rhsPagesId, toggleRHSPlugin: toggleRHSPagesPlugin} = this.registry.registerRightHandSidebarComponent(
+                (props: {webSocketClient: MMWebSocketClient}) => (
+                    <ReduxProvider store={store}>
+                        <WithWebSockets manifest={manifest} webSocketClient={props.webSocketClient}>
+                            <isPagesContext.Provider value={true}>
+                                <RHSChannelBoards/>
+                            </isPagesContext.Provider>
+                        </WithWebSockets>
+                    </ReduxProvider>
+                ),
+                <ErrorBoundary>
+                    <ReduxProvider store={store}>
+                        <isPagesContext.Provider value={true}>
+                            <RHSChannelBoardsHeader/>
+                        </isPagesContext.Provider>
+                    </ReduxProvider>
+                </ErrorBoundary>
+                ,
+            )
+            this.rhsPagesId = rhsPagesId
+
             this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => mmStore.dispatch(toggleRHSPlugin), 'Boards', 'Boards')
+            this.channelHeaderButtonId = registry.registerChannelHeaderButtonAction(<FocalboardIcon/>, () => mmStore.dispatch(toggleRHSPagesPlugin), 'Pages', 'Pages')
 
             this.registry.registerProduct(
                 '/boards',
@@ -305,7 +333,30 @@ export default class Plugin {
             }
 
             if (this.registry.registerAppBarComponent) {
-                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => {
+                    windowAny.frontendBaseURL = subpath + '/boards'
+                    mmStore.dispatch(toggleRHSPlugin)
+                }, intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+                // this.registry.registerAppBarComponent(,  , intl.formatMessage({id: 'AppBar.TooltipPages', defaultMessage: 'Toggle Linked Pages'}))
+                // HACK: Register second app bar component
+                // TODO: Remove this hack whenever is possible
+                const data = {
+                    id: Utils.createGuid(IDType.None),
+                    pluginId: manifest.id+'pages',
+                    iconUrl: Utils.buildURL(appBarIconPages, true),
+                    action: () => {
+                        windowAny.frontendBaseURL = subpath + '/pages'
+                        mmStore.dispatch(toggleRHSPagesPlugin)
+                    },
+                    tooltipText: intl.formatMessage({id: 'AppBar.TooltipPages', defaultMessage: 'Toggle Linked Pages'}),
+                }
+
+                mmStore.dispatch({
+                    type: 'RECEIVED_PLUGIN_COMPONENT',
+                    name: 'AppBar',
+                    data,
+                } as any);
+                this.pagesAppIconId = data.id
             }
 
             this.registry.registerPostWillRenderEmbedComponent(
@@ -417,6 +468,12 @@ export default class Plugin {
         }
         if (this.rhsId) {
             this.registry?.unregisterComponent(this.rhsId)
+        }
+        if (this.rhsPagesId) {
+            this.registry?.unregisterComponent(this.rhsPagesId)
+        }
+        if (this.pagesAppIconId) {
+            this.registry?.unregisterComponent(this.pagesAppIconId)
         }
         if (this.boardSelectorId) {
             this.registry?.unregisterComponent(this.boardSelectorId)
