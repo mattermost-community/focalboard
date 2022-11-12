@@ -1,5 +1,6 @@
 .SidebarCategory {
     margin-top: 12px;
+    width: calc(100% - 4px);
 
     &:first-child {
         margin-top: 0;

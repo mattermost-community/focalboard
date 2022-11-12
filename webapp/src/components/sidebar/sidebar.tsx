@@ -340,6 +340,7 @@ const Sidebar = (props: Props) => {
                 <Droppable
                     droppableId='lhs-categories'
                     type='category'
+                    key={sidebarCategories.length}
                 >
                     {(provided) => (
                         <div
