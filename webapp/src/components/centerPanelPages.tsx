@@ -7,7 +7,7 @@ import {useIntl, IntlShape, FormattedMessage} from 'react-intl'
 import {ClientConfig} from '../config/clientConfig'
 
 import {Block, ContentBlockTypes, createBlock} from '../blocks/block'
-import {Page} from '../blocks/page'
+import {Page, createPage} from '../blocks/page'
 import {Board} from '../blocks/board'
 import {IUser} from '../user'
 import mutator from '../mutator'
@@ -315,6 +315,24 @@ const CenterPanelPages = (props: Props) => {
                                 },
                                 async () => {
                                     props.showPage(activePage.id)
+                                },
+                            )
+                        }}
+                        onClickAddSubpage={async () => {
+                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateSubpage, {board: props.board.id, page: activePage?.id})
+                            const subpage = createPage()
+                            subpage.parentId = activePage?.id || props.board.id
+                            subpage.boardId = props.board.id
+                            subpage.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Sub Page'})
+                            await mutator.insertBlock(
+                                props.board.id,
+                                subpage,
+                                intl.formatMessage({id: 'Mutator.new-subpage', defaultMessage: 'new subpage'}),
+                                async (newBlock: Block) => {
+                                    props.showPage(newBlock.id)
+                                },
+                                async () => {
+                                    props.showPage(activePage?.id)
                                 },
                             )
                         }}

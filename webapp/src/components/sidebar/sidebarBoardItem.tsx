@@ -66,7 +66,105 @@ type Props = {
     showBoard: (boardId: string) => void
     showView: (viewId: string, boardId: string) => void
     showPage: (pageId: string, boardId: string) => void
+}
 
+type PageSidebarItemProps = {
+    page: Page
+    pages: Page[]
+    board: Board
+    currentPageId: string
+    showPage: (pageId: string, boardId: string) => void
+    showBoard: (boardId: string) => void
+    parentId: string
+    depth: number
+}
+
+const PageSidebarItem = (props: PageSidebarItemProps) {
+    const intl = useIntl()
+    const {page, pages, board, currentPageId, parentId, depth} = props
+    const subpages = pages.filter((p) => p.parentId == page.id)
+
+    return (
+        <>
+            <div
+                key={page.id}
+                className={`SidebarBoardItem sidebar-page-item ${page.id === currentPageId ? 'active' : ''} depth-${depth}`}
+                onClick={() => props.showPage(page.id, board.id)}
+            >
+                {page.fields.icon || <CompassIcon icon='file-text-outline'/>}
+                <div
+                    className='octo-sidebar-title'
+                    title={page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
+                >
+                    {page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
+                </div>
+                <PageMenu
+                    pageId={page.id}
+                    onClickDelete={async () => {
+                        if (!page) {
+                            Utils.assertFailure()
+                            return
+                        }
+                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeletePage, {board: props.board.id, page: page.id})
+                        await mutator.deleteBlock(page, 'delete page')
+                        props.showBoard(page.boardId)
+                    }}
+                    onClickDuplicate={async () => {
+                        if (!page) {
+                            Utils.assertFailure()
+                            return
+                        }
+                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.board.id, page: page.id})
+                        await mutator.duplicatePage(
+                            page.id,
+                            props.board.id,
+                            'duplicate page',
+                            async (newPageId: string) => {
+                                props.showPage(newPageId, page.boardId)
+                            },
+                            async () => {
+                                props.showPage(page.id, page.boardId)
+                            },
+                        )
+                    }}
+                    onClickAddSubpage={async () => {
+                        if (!page) {
+                            Utils.assertFailure()
+                            return
+                        }
+                        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateSubpage, {board: props.board.id, page: page.id})
+                        const subpage = createPage()
+                        subpage.parentId = page.id
+                        subpage.boardId = board.id
+                        subpage.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Sub Page'})
+                        await mutator.insertBlock(
+                            board.id,
+                            subpage,
+                            intl.formatMessage({id: 'Mutator.new-subpage', defaultMessage: 'new subpage'}),
+                            async (newBlock: Block) => {
+                                props.showPage(newBlock.id, board.id)
+                            },
+                            async () => {
+                                props.showPage(currentPageId, board.id)
+                            },
+                        )
+                    }}
+                />
+            </div>
+            {subpages.map((page: Page) => (
+                <PageSidebarItem
+                    depth={props.depth+1}
+                    page={page}
+                    pages={pages}
+                    board={board}
+                    currentPageId={currentPageId}
+                    showPage={props.showPage}
+                    showBoard={props.showBoard}
+                    parentId={page.id}
+                />
+            ))}
+        </>
+    )
 }
 
 const SidebarBoardItem = (props: Props) => {
@@ -344,51 +442,17 @@ const SidebarBoardItem = (props: Props) => {
                 </div>
             ))}
 
-            {props.isActive && pages.map((page: Page) => (
-                <div
-                    key={page.id}
-                    className={`SidebarBoardItem sidebar-page-item ${page.id === currentPageId ? 'active' : ''}`}
-                    onClick={() => props.showPage(page.id, board.id)}
-                >
-
-                    {page.fields.icon || <CompassIcon icon='file-text-outline'/>}
-                    <div
-                        className='octo-sidebar-title'
-                        title={page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
-                    >
-                        {page.title || intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'})}
-                    </div>
-                    <PageMenu
-                        pageId={page.id}
-                        onClickDelete={async () => {
-                            if (!page) {
-                                Utils.assertFailure()
-                                return
-                            }
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeletePage, {board: props.board.id, page: page.id})
-                            await mutator.deleteBlock(page, 'delete page')
-                            props.showBoard(page.boardId)
-                        }}
-                        onClickDuplicate={async () => {
-                            if (!page) {
-                                Utils.assertFailure()
-                                return
-                            }
-                            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.board.id, page: page.id})
-                            await mutator.duplicatePage(
-                                page.id,
-                                props.board.id,
-                                'duplicate page',
-                                async (newPageId: string) => {
-                                    props.showPage(newPageId, page.boardId)
-                                },
-                                async () => {
-                                    props.showPage(page.id, page.boardId)
-                                },
-                            )
-                        }}
-                    />
-                </div>
+            {props.isActive && pages.filter((p) => p.parentId === board.id).map((page: Page) => (
+                <PageSidebarItem
+                    page={page}
+                    pages={pages}
+                    board={board}
+                    currentPageId={currentPageId}
+                    showPage={props.showPage}
+                    showBoard={props.showBoard}
+                    parentId={board.id}
+                    depth={0}
+                />
             ))}
         </>
     )

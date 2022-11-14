@@ -12,6 +12,7 @@ export const TelemetryActions = {
     ViewBoard: 'viewBoard',
     CreateBoard: 'createBoard',
     CreateFolder: 'createFolder',
+    CreateSubpage: 'createSubpage',
     DuplicateBoard: 'duplicateBoard',
     DeleteBoard: 'deleteBoard',
     DeleteBoardTemplate: 'deleteBoardTemplate',

@@ -10,6 +10,7 @@ import {sendFlashMessage} from './flashMessages'
 import {Permission} from '../constants'
 import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
+import AddIcon from '../widgets/icons/add'
 import LinkIcon from '../widgets/icons/Link'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import OptionsIcon from '../widgets/icons/options'
@@ -20,6 +21,7 @@ type Props = {
     pageId: string
     onClickDelete: () => void
     onClickDuplicate: () => void
+    onClickAddSubpage: () => void
 }
 
 const PageMenu = (props: Props) => {
@@ -35,6 +37,12 @@ const PageMenu = (props: Props) => {
                 />
                 <Menu position='left'>
                     <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
+                        <Menu.Text
+                            icon={<AddIcon/>}
+                            id='add'
+                            name={intl.formatMessage({id: 'PageActionsMenu.add-subpage', defaultMessage: 'Add subpage'})}
+                            onClick={props.onClickAddSubpage}
+                        />
                         <Menu.Text
                             icon={<DeleteIcon/>}
                             id='delete'
