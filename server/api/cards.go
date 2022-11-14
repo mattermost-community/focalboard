@@ -52,7 +52,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 	//   description: Disables notifications (for bulk data inserting)
 	//   required: false
 	//   type: bool
-	//  security:
+	// security:
 	// - BearerAuth: []
 	// responses:
 	//   '200':
@@ -128,7 +128,7 @@ func (a *API) handleCreateCard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /boards/{boardID}/cards
+	// swagger:operation GET /boards/{boardID}/cards getCards
 	//
 	// Fetches cards for the specified board.
 	//
@@ -151,7 +151,7 @@ func (a *API) handleGetCards(w http.ResponseWriter, r *http.Request) {
 	//   description: Number of cards to return per page(default=100)
 	//   required: false
 	//   type: integer
-	//  security:
+	// security:
 	// - BearerAuth: []
 	// responses:
 	//   '200':
@@ -252,7 +252,7 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 	//   description: Disables notifications (for bulk data patching)
 	//   required: false
 	//   type: bool
-	//  security:
+	// security:
 	// - BearerAuth: []
 	// responses:
 	//   '200':
@@ -325,7 +325,7 @@ func (a *API) handlePatchCard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetCard(w http.ResponseWriter, r *http.Request) {
-	// swagger:operation GET /cards/{cardID}
+	// swagger:operation GET /cards/{cardID} getCard
 	//
 	// Fetches the specified card.
 	//
@@ -338,7 +338,7 @@ func (a *API) handleGetCard(w http.ResponseWriter, r *http.Request) {
 	//   description: Card ID
 	//   required: true
 	//   type: string
-	//  security:
+	// security:
 	// - BearerAuth: []
 	// responses:
 	//   '200':
