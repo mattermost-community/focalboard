@@ -16,7 +16,7 @@ exports[`src/components/gallery/Gallery limited card count check 1`] = `
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -39,7 +39,7 @@ exports[`src/components/gallery/Gallery limited card count check 1`] = `
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -98,7 +98,7 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -128,7 +128,7 @@ exports[`src/components/gallery/Gallery return Gallery and click new 1`] = `
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -195,11 +195,11 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
     >
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper optionsMenu"
+        class="MenuWrapper override menuOpened optionsMenu"
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -365,7 +365,7 @@ exports[`src/components/gallery/Gallery should match snapshot 1`] = `
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -398,11 +398,11 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
     >
       <div
         aria-label="menuwrapper"
-        class="MenuWrapper optionsMenu"
+        class="MenuWrapper override menuOpened optionsMenu"
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i
@@ -509,7 +509,7 @@ exports[`src/components/gallery/Gallery should match snapshot without permission
         role="button"
       >
         <button
-          class="IconButton"
+          class="IconButton CardActionsMenuIcon"
           type="button"
         >
           <i

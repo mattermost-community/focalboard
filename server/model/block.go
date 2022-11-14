@@ -118,14 +118,14 @@ type BoardModifier func(board *Board, cache map[string]interface{}) bool
 // Return true to import the block or false to skip import.
 type BlockModifier func(block *Block, cache map[string]interface{}) bool
 
-func BlocksFromJSON(data io.Reader) []Block {
-	var blocks []Block
+func BlocksFromJSON(data io.Reader) []*Block {
+	var blocks []*Block
 	_ = json.NewDecoder(data).Decode(&blocks)
 	return blocks
 }
 
 // LogClone implements the `mlog.LogCloner` interface to provide a subset of Block fields for logging.
-func (b Block) LogClone() interface{} {
+func (b *Block) LogClone() interface{} {
 	return struct {
 		ID       string
 		ParentID string
@@ -199,7 +199,7 @@ type QueryBoardHistoryOptions struct {
 	Descending     bool   // if true then the records are sorted by insert_at in descending order
 }
 
-func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Record) {
+func StampModificationMetadata(userID string, blocks []*Block, auditRec *audit.Record) {
 	if userID == SingleUser {
 		userID = ""
 	}
@@ -215,15 +215,15 @@ func StampModificationMetadata(userID string, blocks []Block, auditRec *audit.Re
 	}
 }
 
-func (b Block) ShouldBeLimited(cardLimitTimestamp int64) bool {
+func (b *Block) ShouldBeLimited(cardLimitTimestamp int64) bool {
 	return b.Type == TypeCard &&
 		b.UpdateAt < cardLimitTimestamp
 }
 
 // Returns a limited version of the block that doesn't contain the
 // contents of the block, only its IDs and type.
-func (b Block) GetLimited() Block {
-	newBlock := Block{
+func (b *Block) GetLimited() *Block {
+	newBlock := &Block{
 		Title:       b.Title,
 		ID:          b.ID,
 		ParentID:    b.ParentID,

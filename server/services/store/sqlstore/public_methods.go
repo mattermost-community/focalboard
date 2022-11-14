@@ -148,6 +148,11 @@ func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 
 }
 
+func (s *SQLStore) DeleteBlockRecord(blockID string, modifiedBy string) error {
+	return s.deleteBlockRecord(s.db, blockID, modifiedBy)
+
+}
+
 func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBoard(s.db, boardID, userID)
@@ -169,6 +174,11 @@ func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) DeleteBoardRecord(boardID string, modifiedBy string) error {
+	return s.deleteBoardRecord(s.db, boardID, modifiedBy)
 
 }
 
@@ -221,7 +231,7 @@ func (s *SQLStore) DeleteSubscription(blockID string, subscriberID string) error
 
 }
 
-func (s *SQLStore) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+func (s *SQLStore) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]*model.Block, error) {
 	if s.dbType == model.SqliteDBType {
 		return s.duplicateBlock(s.db, boardID, blockID, userID, asTemplate)
 	}
@@ -289,42 +299,42 @@ func (s *SQLStore) GetBlockCountsByType() (map[string]int64, error) {
 
 }
 
-func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	return s.getBlockHistory(s.db, blockID, opts)
 
 }
 
-func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	return s.getBlockHistoryDescendants(s.db, boardID, opts)
 
 }
 
-func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]model.Block, error) {
+func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	return s.getBlocks(s.db, opts)
 
 }
 
-func (s *SQLStore) GetBlocksByIDs(ids []string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksByIDs(ids []string) ([]*model.Block, error) {
 	return s.getBlocksByIDs(s.db, ids)
 
 }
 
-func (s *SQLStore) GetBlocksForBoard(boardID string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksForBoard(boardID string) ([]*model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 
 }
 
-func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParent(boardID string, parentID string) ([]*model.Block, error) {
 	return s.getBlocksWithParent(s.db, boardID, parentID)
 
 }
 
-func (s *SQLStore) GetBlocksWithParentAndType(boardID string, parentID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithParentAndType(boardID string, parentID string, blockType string) ([]*model.Block, error) {
 	return s.getBlocksWithParentAndType(s.db, boardID, parentID, blockType)
 
 }
 
-func (s *SQLStore) GetBlocksWithType(boardID string, blockType string) ([]model.Block, error) {
+func (s *SQLStore) GetBlocksWithType(boardID string, blockType string) ([]*model.Block, error) {
 	return s.getBlocksWithType(s.db, boardID, blockType)
 
 }
@@ -439,7 +449,7 @@ func (s *SQLStore) GetSharing(rootID string) (*model.Sharing, error) {
 
 }
 
-func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+func (s *SQLStore) GetSubTree2(boardID string, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	return s.getSubTree2(s.db, boardID, blockID, opts)
 
 }
@@ -539,13 +549,13 @@ func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
 
 }
 
-func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
-	return s.getUsersByTeam(s.db, teamID, asGuestID)
+func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID, asGuestID, showEmail, showName)
 
 }
 
-func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
-	return s.getUsersList(s.db, userIDs)
+func (s *SQLStore) GetUsersList(userIDs []string, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs, showEmail, showName)
 
 }
 
@@ -573,7 +583,7 @@ func (s *SQLStore) InsertBlock(block *model.Block, userID string) error {
 
 }
 
-func (s *SQLStore) InsertBlocks(blocks []model.Block, userID string) error {
+func (s *SQLStore) InsertBlocks(blocks []*model.Block, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.insertBlocks(s.db, blocks, userID)
 	}
@@ -791,8 +801,8 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots, showEmail, showName)
 
 }
 

@@ -12,7 +12,7 @@ const tsTransformer = require('@formatjs/ts-transformer');
 const PLUGIN_ID = require('../plugin.json').id;
 
 const NPM_TARGET = process.env.npm_lifecycle_event; //eslint-disable-line no-process-env
-const TARGET_IS_PRODUCT = NPM_TARGET === 'start:product' || NPM_TARGET === 'build:product';
+const TARGET_IS_PRODUCT = NPM_TARGET?.endsWith(':product');
 
 let mode = 'production';
 let devtool;
@@ -116,7 +116,7 @@ const config = {
                 type: 'asset/resource',
                 generator: {
                     filename: '[name][ext]',
-                    publicPath: TARGET_IS_PRODUCT ? 'http://localhost:9006/static/' : '/static/',
+                    publicPath: TARGET_IS_PRODUCT ? undefined : '/static/',
                 }
             },
         ],
@@ -144,7 +144,7 @@ if (TARGET_IS_PRODUCT) {
     }
 
     config.plugins.push(new ModuleFederationPlugin({
-        name: PLUGIN_ID,
+        name: 'boards',
         filename: 'remote_entry.js',
         exposes: {
             '.': './src/index',
@@ -169,11 +169,16 @@ if (TARGET_IS_PRODUCT) {
     config.plugins.push(new webpack.DefinePlugin({
         'process.env.TARGET_IS_PRODUCT': TARGET_IS_PRODUCT, // TODO We might want a better name for this
     }));
+
+    config.output = {
+        path: path.join(__dirname, '/dist'),
+    };
 } else {
     config.resolve.alias['react-intl'] = path.resolve(__dirname, '../../webapp/node_modules/react-intl/');
 
     config.externals = {
         react: 'React',
+        'react-dom': 'ReactDOM',
         redux: 'Redux',
         'react-redux': 'ReactRedux',
         'mm-react-router-dom': 'ReactRouterDom',
@@ -198,8 +203,19 @@ config.plugins.push(new webpack.DefinePlugin({
 }));
 
 if (NPM_TARGET === 'start:product') {
+    const url = new URL(process.env.MM_BOARDS_DEV_SERVER_URL ?? 'http://localhost:9006');
+
     config.devServer = {
-        port: 9006,
+        server: {
+            type: url.protocol.substring(0, url.protocol.length - 1),
+            options: {
+                minVersion: process.env.MM_SERVICESETTINGS_TLSMINVER ?? 'TLSv1.2',
+                key: process.env.MM_SERVICESETTINGS_TLSKEYFILE,
+                cert: process.env.MM_SERVICESETTINGS_TLSCERTFILE,
+            },
+        },
+        host: url.hostname,
+        port: url.port,
         devMiddleware: {
             writeToDisk: false,
         },

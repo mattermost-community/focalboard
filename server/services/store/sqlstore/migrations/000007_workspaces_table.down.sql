@@ -1,1 +1,1 @@
-DROP TABLE {{.prefix}}workspaces;
+SELECT 1;

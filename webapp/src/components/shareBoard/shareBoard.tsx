@@ -4,7 +4,7 @@
 import React, {useState, useEffect} from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
-import {generatePath, useRouteMatch} from 'react-router'
+import {generatePath, useRouteMatch} from 'react-router-dom'
 import Select from 'react-select/async'
 import {CSSObject} from '@emotion/serialize'
 
@@ -334,10 +334,10 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     let confirmSubtext
     let confirmButtonText
     if (board.channelId === '') {
-        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.'})
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.'})
         confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button', defaultMessage: 'Link channel'})
     } else {
-        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
         confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
     }
 

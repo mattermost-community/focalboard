@@ -4,7 +4,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button
@@ -247,7 +247,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu For viewType table render o
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button
@@ -490,7 +490,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu 1`] = `
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button
@@ -697,7 +697,7 @@ exports[`components/viewHeader/viewHeaderGroupByMenu return groupBy menu, hideEm
 <div>
   <div
     aria-label="menuwrapper"
-    class="MenuWrapper"
+    class="MenuWrapper override menuOpened"
     role="button"
   >
     <button

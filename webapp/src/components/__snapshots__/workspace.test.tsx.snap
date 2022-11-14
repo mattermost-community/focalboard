@@ -207,48 +207,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="SidebarCategory"
-        >
-          <div
-            class="octo-sidebar-item category ' expanded "
-          >
-            <div
-              class="octo-sidebar-title category-title"
-              title="Boards"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-              Boards
-              <div
-                class="sidebarCategoriesTour"
-              />
-            </div>
-            <div
-              class=""
-            >
-              <div
-                aria-label="menuwrapper"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="octo-sidebar-item subitem no-views"
-          >
-            No boards inside
-          </div>
-        </div>
       </div>
       <div
         class="octo-spacer"
@@ -1346,48 +1304,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
             >
               view title
             </div>
-          </div>
-        </div>
-        <div
-          class="SidebarCategory"
-        >
-          <div
-            class="octo-sidebar-item category ' expanded "
-          >
-            <div
-              class="octo-sidebar-title category-title"
-              title="Boards"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-              Boards
-              <div
-                class="sidebarCategoriesTour"
-              />
-            </div>
-            <div
-              class=""
-            >
-              <div
-                aria-label="menuwrapper"
-                class="MenuWrapper"
-                role="button"
-              >
-                <button
-                  type="button"
-                >
-                  <i
-                    class="CompassIcon icon-dots-horizontal OptionsIcon"
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-          <div
-            class="octo-sidebar-item subitem no-views"
-          >
-            No boards inside
           </div>
         </div>
       </div>

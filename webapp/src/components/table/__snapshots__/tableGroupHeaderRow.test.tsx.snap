@@ -16,7 +16,7 @@ exports[`should match snapshot on read only 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-menu-down"
+          class="CompassIcon icon-menu-right"
         />
       </button>
       <span
@@ -60,7 +60,7 @@ exports[`should match snapshot with Group 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-menu-down"
+          class="CompassIcon icon-menu-right"
         />
       </button>
       <span
@@ -125,7 +125,7 @@ exports[`should match snapshot, add new 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-menu-down"
+          class="CompassIcon icon-menu-right"
         />
       </button>
       <span
@@ -190,7 +190,7 @@ exports[`should match snapshot, edit title 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-menu-down"
+          class="CompassIcon icon-menu-right"
         />
       </button>
       <span
@@ -255,7 +255,7 @@ exports[`should match snapshot, hide group 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-menu-down"
+          class="CompassIcon icon-menu-right"
         />
       </button>
       <span
@@ -320,7 +320,7 @@ exports[`should match snapshot, no groups 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-menu-down"
+          class="CompassIcon icon-menu-right"
         />
       </button>
       <span

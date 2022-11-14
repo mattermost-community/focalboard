@@ -76,7 +76,7 @@ const ConfirmAddUserForNotifications = (props: Props): JSX.Element => {
             <p>
                 <FormattedMessage
                     id='person.add-user-to-board-warning'
-                    defaultMessage='{username} is not a member of the board, and will not received any notifications about it.'
+                    defaultMessage='{username} is not a member of the board, and will not receive any notifications about it.'
                     values={{username: props.user.username}}
                 />
             </p>

@@ -25,7 +25,7 @@ const (
 var errServiceTypeAssert = errors.New("type assertion failed")
 
 func init() {
-	app.RegisterProduct("boards", app.ProductManifest{
+	app.RegisterProduct(boardsProductName, app.ProductManifest{
 		Initializer: newBoardsProduct,
 		Dependencies: map[app.ServiceKey]struct{}{
 			app.TeamKey:          {},
@@ -68,6 +68,7 @@ type boardsProduct struct {
 	storeService         product.StoreService
 	systemService        product.SystemService
 	preferencesService   product.PreferencesService
+	hooksService         product.HooksService
 
 	boardsApp *boards.BoardsApp
 }
@@ -185,7 +186,12 @@ func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (a
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.preferencesService = preferencesService
-		case app.HooksKey: // not needed
+		case app.HooksKey:
+			hooksService, ok := service.(product.HooksService)
+			if !ok {
+				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
+			}
+			boards.hooksService = hooksService
 		}
 	}
 	return boards, nil
@@ -206,6 +212,10 @@ func (bp *boardsProduct) Start() error {
 	}
 
 	model.LogServerInfo(bp.logger)
+
+	if err := bp.hooksService.RegisterHooks(boardsProductName, bp); err != nil {
+		return fmt.Errorf("failed to register hooks: %w", err)
+	}
 
 	bp.boardsApp = boardsApp
 	if err := bp.boardsApp.Start(); err != nil {

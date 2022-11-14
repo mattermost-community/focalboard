@@ -69,9 +69,9 @@ func TestGetCards(t *testing.T) {
 	const cardCount = 25
 
 	// make some cards
-	blocks := make([]model.Block, 0, cardCount)
+	blocks := make([]*model.Block, 0, cardCount)
 	for i := 0; i < cardCount; i++ {
-		card := model.Block{
+		card := &model.Block{
 			ID:       utils.NewID(utils.IDTypeBlock),
 			ParentID: board.ID,
 			Schema:   1,

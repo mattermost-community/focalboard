@@ -37,7 +37,7 @@ exports[`src/components/gallery/GalleryCard with a comment content should match 
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -214,7 +214,7 @@ exports[`src/components/gallery/GalleryCard with an image content should match s
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -429,7 +429,7 @@ exports[`src/components/gallery/GalleryCard with many contents should match snap
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -610,7 +610,7 @@ exports[`src/components/gallery/GalleryCard with many images content should matc
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button
@@ -904,6 +904,77 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       </div>
     </div>
   </div>
+  <div
+    class="Dialog dialog-back confirmation-dialog-box"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            />
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="box-area"
+          title="Confirmation Dialog Box"
+        >
+          <h3
+            class="text-heading5"
+          >
+            Confirm card delete!
+          </h3>
+          <div
+            class="sub-text"
+          />
+          <div
+            class="action-buttons"
+          >
+            <button
+              title="Cancel"
+              type="button"
+            >
+              <span>
+                Cancel
+              </span>
+            </button>
+            <button
+              title="Delete"
+              type="submit"
+            >
+              <span>
+                Delete
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -957,7 +1028,7 @@ exports[`src/components/gallery/GalleryCard without block content should match s
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu"
+      class="MenuWrapper override menuOpened optionsMenu"
       role="button"
     >
       <button

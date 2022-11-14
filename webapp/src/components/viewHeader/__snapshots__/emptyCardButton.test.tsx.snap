@@ -96,7 +96,7 @@ exports[`components/viewHeader/emptyCardButton return EmptyCardButton and Set Te
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <button

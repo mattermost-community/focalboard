@@ -50,6 +50,14 @@ Contribute code, bug reports, and ideas to the future of the Focalboard project.
 
 Our [developer guide](https://developers.mattermost.com/contribute/focalboard/personal-server-setup-guide) has detailed instructions on how to set up your development environment for the **Personal Server**. It also provides more information about contributing to our open source community.
 
+Clone [mattermost-server](https://github.com/mattermost/mattermost-server) into sibling directory.
+
+Create an `.env` file in the focalboard directory that contains:
+
+```
+EXCLUDE_ENTERPRISE="1"
+```
+
 To build the server:
 
 ```

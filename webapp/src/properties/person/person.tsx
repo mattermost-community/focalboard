@@ -8,7 +8,7 @@ import {CSSObject} from '@emotion/serialize'
 
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
-import {getBoardUsersList, getBoardUsers} from '../../store/users'
+import {getBoardUsersList, getBoardUsers, getMe} from '../../store/users'
 import {BoardMember, BoardTypeOpen, MemberRole} from '../../blocks/board'
 import {useAppSelector} from '../../store/hooks'
 import mutator from '../../mutator'
@@ -63,10 +63,12 @@ const Person = (props: PropertyProps): JSX.Element => {
     const {card, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
+    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
+    const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
     const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
 
-    const me: IUser = boardUsersById[propertyValue as string]
+    const me = useAppSelector<IUser|null>(getMe)
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const intl = useIntl()
@@ -92,14 +94,15 @@ const Person = (props: PropertyProps): JSX.Element => {
     }
 
     const addUser = useCallback(async (userId: string, role: string) => {
-        const minimumRole = role || MemberRole.Viewer
+        const newRole = role || MemberRole.Viewer
         const newMember = {
             boardId: board.id,
             userId,
             roles: role,
-            schemeEditor: minimumRole === MemberRole.Editor,
-            schemeCommenter: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter,
-            schemeViewer: minimumRole === MemberRole.Editor || minimumRole === MemberRole.Commenter || minimumRole === MemberRole.Viewer,
+            schemeAdmin: newRole === MemberRole.Admin,
+            schemeEditor: newRole === MemberRole.Admin || newRole === MemberRole.Editor,
+            schemeCommenter: newRole === MemberRole.Admin || newRole === MemberRole.Editor || newRole === MemberRole.Commenter,
+            schemeViewer: newRole === MemberRole.Admin || newRole === MemberRole.Editor || newRole === MemberRole.Commenter || newRole === MemberRole.Viewer,
         } as BoardMember
 
         setConfirmAddUser(null)
@@ -108,10 +111,8 @@ const Person = (props: PropertyProps): JSX.Element => {
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
     }, [board, card, propertyTemplate])
 
-    const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
-
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
-    const allowAddUsers = allowManageBoardRoles || board.type === BoardTypeOpen
+    const allowAddUsers = !me?.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
 
     const loadOptions = useCallback(async (value: string) => {
         if (!allowAddUsers) {
@@ -137,7 +138,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     if (readOnly) {
         return (
             <div className={`Person ${props.property.valueClassName(true)}`}>
-                {me ? formatOptionLabel(me) : propertyValue}
+                {boardUsersById[propertyValue as string] ? formatOptionLabel(boardUsersById[propertyValue as string]) : propertyValue}
             </div>
         )
     }
@@ -153,6 +154,7 @@ const Person = (props: PropertyProps): JSX.Element => {
                 onClose={() => setConfirmAddUser(null)}
             />}
             <Select
+                key={boardUsersKey}
                 loadOptions={loadOptions}
                 defaultOptions={true}
                 isSearchable={true}

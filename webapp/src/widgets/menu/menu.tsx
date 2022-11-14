@@ -46,8 +46,9 @@ export default class Menu extends React.PureComponent<Props> {
         const {position, fixed, children} = this.props
 
         let style: CSSProperties = {}
-        if (position === 'auto' && this.props.parentRef) {
-            style = MenuUtil.openUp(this.props.parentRef).style
+        if (this.props.parentRef) {
+            const forceBottom = position ? ['bottom', 'left', 'right'].includes(position) : false
+            style = MenuUtil.openUp(this.props.parentRef, forceBottom).style
         }
 
         return (

@@ -1,7 +1,5 @@
 .Person {
     padding: 4px 8px;
-    margin-right: 20px;
-    min-width: 180px;
     display: flex;
     align-items: center;
     border-radius: 4px;
@@ -15,6 +13,7 @@
     .Person-item {
         display: flex;
         align-items: center;
+        color: rgba(var(--center-channel-color-rgb), 1);
 
         img {
             border-radius: 50px;
@@ -22,6 +21,10 @@
             height: 24px;
             margin-right: 6px;
         }
+    }
+
+    .react-select__input {
+        margin-left: -5px !important;
     }
 
     .react-select__menu {
@@ -42,7 +45,7 @@
         display: flex;
         align-items: center;
         height: 40px;
-        padding: 0 40px 0 20px;
+        padding: 0 40px 0 10px;
 
         &:hover {
             background: rgba(var(--center-channel-color-rgb), 0.08);

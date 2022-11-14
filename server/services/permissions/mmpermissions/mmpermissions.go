@@ -12,6 +12,7 @@ import (
 )
 
 type APIInterface interface {
+	HasPermissionTo(userID string, permission *mmModel.Permission) bool
 	HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool
 	HasPermissionToChannel(userID string, channelID string, permission *mmModel.Permission) bool
 }
@@ -24,9 +25,17 @@ type Service struct {
 
 func New(store permissions.Store, api APIInterface, logger mlog.LoggerIFace) *Service {
 	return &Service{
-		store: store,
-		api:   api,
+		store:  store,
+		api:    api,
+		logger: logger,
 	}
+}
+
+func (s *Service) HasPermissionTo(userID string, permission *mmModel.Permission) bool {
+	if userID == "" || permission == nil {
+		return false
+	}
+	return s.api.HasPermissionTo(userID, permission)
 }
 
 func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool {
