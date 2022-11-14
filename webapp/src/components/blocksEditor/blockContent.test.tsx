@@ -128,7 +128,7 @@ describe('components/blocksEditor/blockContent', () => {
                 </ReduxProvider>,
             ))
         })
-        let item = screen.getByTestId('add-action')
+        const item = screen.getByTestId('add-action')
         expect(setAfterBlock).not.toBeCalled()
         fireEvent.click(item)
         expect(setAfterBlock).toBeCalledWith(block)
