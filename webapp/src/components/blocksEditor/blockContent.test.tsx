@@ -152,7 +152,7 @@ describe('components/blocksEditor/blockContent', () => {
                 </ReduxProvider>,
             ))
         })
-        let input = screen.getByDisplayValue('Title')
+        const input = screen.getByDisplayValue('Title')
         expect(onSave).not.toBeCalled()
         fireEvent.change(input, {target: {value: 'test'}})
         fireEvent.keyDown(input, {key: 'Enter'})
