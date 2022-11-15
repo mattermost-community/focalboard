@@ -141,7 +141,7 @@ const CardDialog = (props: Props): JSX.Element => {
         return new Promise<AttachmentBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (attachment) => {
-                    if(attachment.size > clientConfig.maxFileSize) {
+                    if (attachment.size > clientConfig.maxFileSize) {
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                     } else {
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
