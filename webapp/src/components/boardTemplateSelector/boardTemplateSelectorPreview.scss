@@ -7,6 +7,10 @@
     border-radius: var(--modal-rad);
     pointer-events: none;
 
+    .ButtonWithMenu {
+        display: none;
+    }
+
     .Kanban {
         overflow: hidden;
     }

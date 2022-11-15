@@ -182,7 +182,7 @@ const BoardTemplateSelector = (props: Props) => {
                     <div className='templates-sidebar__footer'>
                         <Button
                             className='empty-board'
-                            emphasis={'tertiary'}
+                            emphasis={'secondary'}
                             size={'medium'}
                             onClick={async () => {
                                 const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
