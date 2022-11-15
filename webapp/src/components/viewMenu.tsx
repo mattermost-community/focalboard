@@ -246,7 +246,7 @@ const ViewMenu = (props: Props) => {
         page.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Page'})
         page.parentId = board.id
         page.boardId = board.id
-        page.fields = {contentOrder: []}
+        page.fields = {contentOrder: [], properties: {}, icon: ''}
 
         const oldViewId = activeView.id
 

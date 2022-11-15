@@ -34,7 +34,7 @@ const MainApp = () => {
 
     return (
         <WithWebSockets userId={me?.id}>
-            <App/>
+            <App pages={false}/>
         </WithWebSockets>
     )
 }

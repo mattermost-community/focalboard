@@ -257,19 +257,20 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
 
     if (match.params.teamId) {
         if (match.params.viewId) {
-        const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId?', {
-            boardId: match.params.boardId,
-            viewId: match.params.viewId,
-            teamId: match.params.teamId,
-        })
-        shareUrl.pathname = Utils.buildURL(newPath)
+            const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId?', {
+                boardId: match.params.boardId,
+                viewId: match.params.viewId,
+                teamId: match.params.teamId,
+            })
+            shareUrl.pathname = Utils.buildURL(newPath)
 
-        const boardPath = generatePath('/team/:teamId/:boardId/:viewId?', {
-            boardId: match.params.boardId,
-            viewId: match.params.viewId,
-            teamId: match.params.teamId,
-        })
-        boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
+            const boardPath = generatePath('/team/:teamId/:boardId/:viewId?', {
+                boardId: match.params.boardId,
+                viewId: match.params.viewId,
+                teamId: match.params.teamId,
+            })
+            boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
+        }
     } else {
         const newPath = generatePath('/shared/:boardId/:viewId?', {
             boardId: match.params.boardId,
@@ -281,7 +282,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 boardId: match.params.boardId,
                 viewId: match.params.viewId,
             },
-            ))
+        ))
     }
 
     let shareBoardTitle = (

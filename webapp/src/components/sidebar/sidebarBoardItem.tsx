@@ -79,7 +79,7 @@ type PageSidebarItemProps = {
     depth: number
 }
 
-const PageSidebarItem = (props: PageSidebarItemProps) {
+const PageSidebarItem = (props: PageSidebarItemProps) => {
     const intl = useIntl()
     const {page, pages, board, currentPageId, parentId, depth} = props
     const subpages = pages.filter((p) => p.parentId == page.id)

@@ -83,6 +83,7 @@ describe('components/sidebarBoardItem', () => {
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}
+                        showPage={jest.fn()}
                         onDeleteRequest={jest.fn()}
                     />
                 </Router>
@@ -110,6 +111,7 @@ describe('components/sidebarBoardItem', () => {
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}
+                        showPage={jest.fn()}
                         onDeleteRequest={jest.fn()}
                     />
                 </Router>
@@ -133,6 +135,7 @@ describe('components/sidebarBoardItem', () => {
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}
+                        showPage={jest.fn()}
                         onDeleteRequest={jest.fn()}
                     />
                 </Router>

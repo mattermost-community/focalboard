@@ -55,6 +55,8 @@ describe('components/cardBadges', () => {
             contentsByCard: {
                 [card.id]: [text, ...checkboxes],
             },
+            contentsByPage: {
+            },
         },
     }
     const store = mockStateStore([], state)
