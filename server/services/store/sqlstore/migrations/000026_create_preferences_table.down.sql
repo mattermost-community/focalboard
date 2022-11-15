@@ -1,1 +1,1 @@
-DROP TABLE {{.prefix}}preferences;
+SELECT 1;

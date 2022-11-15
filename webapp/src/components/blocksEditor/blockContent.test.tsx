@@ -104,7 +104,7 @@ describe('components/blocksEditor/blockContent', () => {
                 </ReduxProvider>,
             ))
         })
-        let item = screen.getByTestId('block-content')
+        const item = screen.getByTestId('block-content')
         expect(setEditing).not.toBeCalled()
         fireEvent.click(item)
         expect(setEditing).toBeCalledWith(block)
@@ -128,7 +128,7 @@ describe('components/blocksEditor/blockContent', () => {
                 </ReduxProvider>,
             ))
         })
-        let item = screen.getByTestId('add-action')
+        const item = screen.getByTestId('add-action')
         expect(setAfterBlock).not.toBeCalled()
         fireEvent.click(item)
         expect(setAfterBlock).toBeCalledWith(block)
@@ -152,7 +152,7 @@ describe('components/blocksEditor/blockContent', () => {
                 </ReduxProvider>,
             ))
         })
-        let input = screen.getByDisplayValue('Title')
+        const input = screen.getByDisplayValue('Title')
         expect(onSave).not.toBeCalled()
         fireEvent.change(input, {target: {value: 'test'}})
         fireEvent.keyDown(input, {key: 'Enter'})
