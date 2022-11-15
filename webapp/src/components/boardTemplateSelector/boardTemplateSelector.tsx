@@ -154,28 +154,47 @@ const BoardTemplateSelector = (props: Props) => {
             </div>
 
             <div className='templates'>
-                <div className='templates-list'>
-                    {allTemplates.map((boardTemplate) => (
-                        <BoardTemplateSelectorItem
-                            key={boardTemplate.id}
-                            isActive={activeTemplate?.id === boardTemplate.id}
-                            template={boardTemplate}
-                            onSelect={setActiveTemplate}
-                            onDelete={onBoardTemplateDelete}
-                            onEdit={showBoard}
-                        />
-                    ))}
-                    <div
-                        className='new-template'
-                        onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
-                    >
-                        <span className='template-icon'><AddIcon/></span>
-                        <span className='template-name'>
-                            <FormattedMessage
-                                id='BoardTemplateSelector.add-template'
-                                defaultMessage='New template'
+                <div className='templates-sidebar'>
+                    <div className='templates-list'>
+                        {allTemplates.map((boardTemplate) => (
+                            <BoardTemplateSelectorItem
+                                key={boardTemplate.id}
+                                isActive={activeTemplate?.id === boardTemplate.id}
+                                template={boardTemplate}
+                                onSelect={setActiveTemplate}
+                                onDelete={onBoardTemplateDelete}
+                                onEdit={showBoard}
                             />
-                        </span>
+                        ))}
+                        <div
+                            className='new-template'
+                            onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
+                        >
+                            <span className='template-icon'><AddIcon/></span>
+                            <span className='template-name'>
+                                <FormattedMessage
+                                    id='BoardTemplateSelector.add-template'
+                                    defaultMessage='New template'
+                                />
+                            </span>
+                        </div>
+                    </div>
+                    <div className='templates-sidebar__footer'>
+                        <Button
+                            className='empty-board'
+                            emphasis={'tertiary'}
+                            size={'medium'}
+                            onClick={async () => {
+                                const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                                const board = boardsAndBlocks.boards[0]
+                                await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
+                            }}
+                        >
+                            <FormattedMessage
+                                id='BoardTemplateSelector.create-empty-board'
+                                defaultMessage='Create empty board'
+                            />
+                        </Button>
                     </div>
                 </div>
                 <div className='template-preview-box'>
@@ -189,22 +208,6 @@ const BoardTemplateSelector = (props: Props) => {
                             <FormattedMessage
                                 id='BoardTemplateSelector.use-this-template'
                                 defaultMessage='Use this template'
-                            />
-                        </Button>
-                        <Button
-                            className='empty-board'
-                            filled={false}
-                            emphasis={'secondary'}
-                            size={'medium'}
-                            onClick={async () => {
-                                const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
-                                const board = boardsAndBlocks.boards[0]
-                                await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
-                            }}
-                        >
-                            <FormattedMessage
-                                id='BoardTemplateSelector.create-empty-board'
-                                defaultMessage='Create empty board'
                             />
                         </Button>
                     </div>

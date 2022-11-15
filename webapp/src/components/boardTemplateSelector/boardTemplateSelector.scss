@@ -9,7 +9,9 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    padding-bottom: 48px;
+    padding-bottom: 80px;
+    display: flex;
+    flex-direction: column;
 
     .toolbar {
         display: flex;
@@ -35,20 +37,36 @@
         }
     }
 
+    .templates-sidebar {
+        width: 300px;
+        margin-right: 32px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .templates-sidebar__footer {
+        padding: 16px;
+        display: flex;
+
+
+        button {
+            width: 100%;
+        }
+    }
+
     .templates {
         display: flex;
         width: 100%;
         padding: 0 32px;
         justify-content: center;
+        flex: 1;
 
         @media (min-width: 768px) {
             padding: 0 10%;
         }
 
         .templates-list {
-            margin-right: 32px;
-            width: 300px;
-            max-height: 500px;
+            flex: 1;
             overflow-y: auto;
 
             .new-template {
@@ -72,7 +90,7 @@
     }
 
     .template-preview-box {
-        padding-bottom: 32px;
+        padding: 32px;
         position: relative;
         background-color: rgb(var(--center-channel-bg-rgb));
         box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
@@ -81,38 +99,18 @@
         overflow: hidden;
         width: 100%;
         max-width: 1000px;
-        height: 512px;
 
         .buttons {
             display: flex;
             position: absolute;
-            bottom: 32px;
-            width: 100%;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 24px;
-
-            @media (min-width: 1024px) {
-                flex-direction: row;
-            }
+            right: 0;
+            top: 0;
+            padding: 32px;
+            background-color: rgb(var(--center-channel-bg-rgb));
         }
 
         .empty-board {
             background-color: rgb(var(--center-channel-bg-rgb));
-        }
-
-        .Button {
-            &:first-child {
-                margin-bottom: 16px;
-
-                @media (min-width: 1024px) {
-                    margin: 0 16px 0 0;
-                }
-            }
-
-            > .buttons:first-child {
-                padding-top: 32px;
-            }
         }
     }
 }
