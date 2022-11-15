@@ -1183,6 +1183,7 @@ class Mutator {
         const board = createBoard()
         board.teamId = teamId
         board.properties.isFolder = 'true'
+        board.cardProperties = []
 
         const noopBlock: any = createBlock()
         noopBlock.parentId = board.id
