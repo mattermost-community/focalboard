@@ -1,54 +1,87 @@
 @import '../../styles/z-index';
 
+.BoardTemplateSelector__container {
+    @include z-index(modal-permissions-label);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 120px;
+    background-color: rgba(0, 0, 0, 0.56);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 1280px) {
+        padding: 80px;
+    }
+}
+
 .BoardTemplateSelector {
     @include z-index(board-template-selector);
-    position: absolute;
+    position: relative;
     background-color: rgb(var(--center-channel-bg-rgb));
+    border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    padding-bottom: 80px;
     display: flex;
     flex-direction: column;
+    border-radius: 12px;
+    max-width: 1600px;
+    max-height: 1200px;
 
     .toolbar {
         display: flex;
-        width: 100%;
         justify-content: flex-end;
-        padding: 24px 24px 0;
+        padding: 20px;
+        position: absolute;
+        right: 0;
+        top: 0;
     }
 
     .header {
         width: 100%;
+        height: 80px;
         display: flex;
         align-items: center;
-        flex-direction: column;
+        justify-content: flex-start;
+        padding: 32px;
+        border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
 
         .title {
-            font-size: 25px;
+            font-size: 22px;
+            margin: 0;
         }
 
         .description {
             max-width: 640px;
             text-align: center;
-            margin: 0 0 32px;
+            color: rgba(var(--center-channel-color-rgb), 0.56);
+            border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.08);
+            padding-left: 8px;
+            margin: 0 0 0 8px;
         }
     }
 
     .templates-sidebar {
-        width: 300px;
-        margin-right: 32px;
+        flex: 0 0 294px;
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        background-color: rgba(var(--center-channel-color-rgb), 0.04);
+        border-right: 1px solid rgba(var(--center-channel-color-rgb), 0.08);
     }
 
     .templates-sidebar__footer {
-        padding: 16px;
         display: flex;
+        align-items: center;
         border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+        padding: 24px;
+        height: 89px;
 
         button {
             width: 100%;
@@ -73,35 +106,20 @@
     .templates {
         display: flex;
         width: 100%;
-        padding: 2px 32px;
         justify-content: center;
         flex: 1;
         overflow: hidden;
 
-        @media (min-width: 768px) {
-            padding: 2px 10%;
-        }
-
         .templates-list {
             flex: 1;
             overflow-y: auto;
+            padding: 16px;
 
             .new-template {
-                position: relative;
-                display: flex;
-                align-items: center;
-                padding: 8px 16px;
-                margin-bottom: 4px;
-                border-radius: var(--default-rad);
-                cursor: pointer;
-
-                .template-icon {
-                    margin-right: 10px;
-                }
-
-                &:hover {
-                    background-color: rgba(var(--center-channel-color-rgb), 0.1);
-                }
+                width: 100%;
+                justify-content: flex-start;
+                padding-left: 14px;
+                margin-bottom: 16px;
             }
         }
     }
@@ -110,9 +128,6 @@
         padding: 32px;
         position: relative;
         background-color: rgb(var(--center-channel-bg-rgb));
-        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
-            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
-        border-radius: var(--modal-rad);
         overflow: hidden;
         width: 100%;
         max-width: 1600px;
@@ -124,17 +139,9 @@
             bottom: 0;
             width: 100%;
             padding: 24px;
-            justify-content: center;
-
-            &::before {
-                content: '';
-                background: linear-gradient(rgba(var(--center-channel-bg-rgb), 0), rgb(var(--center-channel-bg-rgb)), rgb(var(--center-channel-bg-rgb)));
-                position: absolute;
-                top: -16px;
-                left: 0;
-                width: 100%;
-                height: calc(100% + 16px);
-            }
+            justify-content: flex-end;
+            height: 89px;
+            border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
         }
 
         .empty-board {

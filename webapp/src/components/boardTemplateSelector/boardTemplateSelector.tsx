@@ -126,91 +126,93 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     return (
-        <div className='BoardTemplateSelector'>
-            <div className='toolbar'>
-                {onClose &&
-                    <IconButton
-                        size='medium'
-                        onClick={onClose}
-                        icon={<CloseIcon/>}
-                        title={'Close'}
-                    />}
-            </div>
-            <div className='header'>
-                <h1 className='title'>
-                    {title || (
-                        <FormattedMessage
-                            id='BoardTemplateSelector.title'
-                            defaultMessage='Create a board'
-                        />
-                    )}
-                </h1>
-                <p className='description'>
-                    {description || (
-                        <FormattedMessage
-                            id='BoardTemplateSelector.description'
-                            defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
-                        />
-                    )}
-                </p>
-            </div>
-
-            <div className='templates'>
-                <div className='templates-sidebar'>
-                    <div className='templates-list'>
-                        {allTemplates.map((boardTemplate) => (
-                            <BoardTemplateSelectorItem
-                                key={boardTemplate.id}
-                                isActive={activeTemplate?.id === boardTemplate.id}
-                                template={boardTemplate}
-                                onSelect={setActiveTemplate}
-                                onDelete={onBoardTemplateDelete}
-                                onEdit={showBoard}
+        <div className='BoardTemplateSelector__container'>
+            <div className='BoardTemplateSelector'>
+                <div className='toolbar'>
+                    {onClose &&
+                        <IconButton
+                            size='medium'
+                            onClick={onClose}
+                            icon={<CloseIcon/>}
+                            title={'Close'}
+                        />}
+                </div>
+                <div className='header'>
+                    <h1 className='title'>
+                        {title || (
+                            <FormattedMessage
+                                id='BoardTemplateSelector.title'
+                                defaultMessage='Create a board'
                             />
-                        ))}
-                        <div
-                            className='new-template'
-                            onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
-                        >
-                            <span className='template-icon'><AddIcon/></span>
-                            <span className='template-name'>
+                        )}
+                    </h1>
+                    <p className='description'>
+                        {description || (
+                            <FormattedMessage
+                                id='BoardTemplateSelector.description'
+                                defaultMessage='Add a board to the sidebar using any of the templates defined below or start from scratch.'
+                            />
+                        )}
+                    </p>
+                </div>
+                <div className='templates'>
+                    <div className='templates-sidebar'>
+                        <div className='templates-list'>
+                            <Button
+                                emphasis='link'
+                                size='medium'
+                                icon={<CompassIcon icon='plus'/>}
+                                className='new-template'
+                                onClick={() => mutator.addEmptyBoardTemplate(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))}
+                            >
                                 <FormattedMessage
                                     id='BoardTemplateSelector.add-template'
-                                    defaultMessage='New template'
+                                    defaultMessage='Create new template'
                                 />
-                            </span>
+                            </Button>
+                            {allTemplates.map((boardTemplate) => (
+                                <BoardTemplateSelectorItem
+                                    key={boardTemplate.id}
+                                    isActive={activeTemplate?.id === boardTemplate.id}
+                                    template={boardTemplate}
+                                    onSelect={setActiveTemplate}
+                                    onDelete={onBoardTemplateDelete}
+                                    onEdit={showBoard}
+                                />
+                            ))}
+                        </div>
+                        <div className='templates-sidebar__footer'>
+                            <Button
+                                emphasis='secondary'
+                                size={'medium'}
+                                icon={<CompassIcon icon='kanban'/>}
+                                onClick={async () => {
+                                    const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                                    const board = boardsAndBlocks.boards[0]
+                                    await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
+                                }}
+                            >
+                                <FormattedMessage
+                                    id='BoardTemplateSelector.create-empty-board'
+                                    defaultMessage='Create empty board'
+                                />
+                            </Button>
                         </div>
                     </div>
-                    <div className='templates-sidebar__footer'>
-                        <button
-                            className='templates__empty-board'
-                            onClick={async () => {
-                                const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
-                                const board = boardsAndBlocks.boards[0]
-                                await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
-                            }}
-                        >
-                            <CompassIcon icon='kanban'/>
-                            <FormattedMessage
-                                id='BoardTemplateSelector.create-empty-board'
-                                defaultMessage='Create empty board'
-                            />
-                        </button>
-                    </div>
-                </div>
-                <div className='template-preview-box'>
-                    <BoardTemplateSelectorPreview activeTemplate={activeTemplate}/>
-                    <div className='buttons'>
-                        <Button
-                            filled={true}
-                            size={'medium'}
-                            onClick={handleUseTemplate}
-                        >
-                            <FormattedMessage
-                                id='BoardTemplateSelector.use-this-template'
-                                defaultMessage='Use this template'
-                            />
-                        </Button>
+                    <div className='template-preview-box'>
+                        <BoardTemplateSelectorPreview activeTemplate={activeTemplate}/>
+                        <div className='buttons'>
+                            <Button
+                                filled={true}
+                                size={'medium'}
+                                onClick={handleUseTemplate}
+                            >
+                                <FormattedMessage
+                                    id='BoardTemplateSelector.use-this-template'
+                                    defaultMessage='Use this template'
+                                />
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

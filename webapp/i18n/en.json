@@ -16,7 +16,7 @@
   "BoardMember.unlinkChannel": "Unlink",
   "BoardPage.newVersion": "A new version of Boards is available, click here to reload.",
   "BoardPage.syncFailed": "Board may be deleted or access revoked.",
-  "BoardTemplateSelector.add-template": "New template",
+  "BoardTemplateSelector.add-template": "Create new template",
   "BoardTemplateSelector.create-empty-board": "Create empty board",
   "BoardTemplateSelector.delete-template": "Delete",
   "BoardTemplateSelector.description": "Add a board to the sidebar using any of the templates defined below or start from scratch.",
