@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useIntl} from 'react'
+import React, {useState} from 'react'
+import {useIntl} from 'react-intl'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
