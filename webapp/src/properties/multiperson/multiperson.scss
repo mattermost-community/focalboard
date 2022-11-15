@@ -39,13 +39,20 @@
     }
 
     .react-select__value-container--is-multi {
+        gap: 4px;
         display: inline-flex;
+
+        .react-select__multi-value__label {
+            padding-left: 4px;
+        }
 
         .react-select__multi-value {
             background: rgba(var(--center-channel-color-rgb), 0.08);
             border-radius: 24px;
             display: inline-flex;
             color: rgb(var(--center-channel-color-rgb));
+            margin: 0;
+            align-items: center;
 
             .MultiPerson-item,
             .react-select__multi-value__label {
@@ -59,6 +66,13 @@
         color: rgba(var(--center-channel-color-rgb), 0.56);
         margin: 6px;
         border-radius: 100%;
+        margin-left: 0;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
             background: rgba(var(--center-channel-color-rgb), 0.26);

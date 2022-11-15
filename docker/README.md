@@ -2,33 +2,41 @@
 
 ## Docker
 
-The Dockerfile gives a quick and easy way to pull the latest Focalboard server and deploy it locally.
-Please note that if you wish to have persistence and mount a volume for the `/data` directory, the host directory must be owned by user `nobody`.
+The Dockerfile gives a quick and easy way to build the latest Focalboard server and deploy it locally. In the example below,
+the Focalboard database and files will be persisted in a named volumed called `fbdata`.
 
+From the Focalboard project root directory:
+
+```bash
+docker build -f docker/Dockerfile -t focalboard .
+docker run -it -v "fbdata:/opt/focalboard/data" -p 80:8000 focalboard
 ```
-sudo chown -R nobody /home/user/focalboard-data
-docker build -t focalboard .
-docker run -it -v "/home/user/focalboard-data:/data" -p 80:8000 focalboard
+
+Open a browser to [localhost](http://localhost) to start
+
+## Alternative architectures
+
+From the Focalboard project root directory:
+
+```bash
+docker build -f docker/Dockerfile --platform linux/arm64 -t focalboard .
+docker run -it -v "fbdata:/opt/focalboard/data" -p 80:8000 focalboard
 ```
-
-> The `-v` flag can be used to store Focalboard's database and uploaded files in a directory on the Docker host
-
-Open a browser to http://localhost to start
 
 ## Docker-Compose
 
 Docker-Compose provides the option to automate the build and run step, or even include some of the steps from the [personal server setup](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
-To start the server run
+To start the server, change directory to `focalboard/docker` and run:
 
-```
+```bash
 docker-compose up
 ```
 
-This will automatically build the focalboard image and start it with the http port mapping.
+This will automatically build the focalboard image and start it with the http port mapping. These examples also create a persistent named volume called `fbdata`.
 
-To run focalboard with a nginx proxy and a postgres backend run
+To run Focalboard with a nginx proxy and a postgres backend, change directory to `focalboard/docker` and run:
 
-```
+```bash
 docker-compose -f docker-compose-db-nginx.yml up
 ```
