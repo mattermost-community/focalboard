@@ -93,11 +93,6 @@ export default function RootInput(props: Props) {
             onFocus={(e: React.FocusEvent) => {
                 const target = e.currentTarget
                 target.scrollIntoView({block: 'center'})
-
-                // TODO: Fix this
-                setTimeout(() => {
-                    target.scrollIntoView({block: 'center'})
-                }, 100)
             }}
             onKeyDown={(e) => {
                 if (e.key === 'Escape') {
