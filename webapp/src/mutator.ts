@@ -646,11 +646,10 @@ class Mutator {
             newCard = createPage(card as any)
         }
         if (card.id.startsWith('b')) {
-            newCard = createBoard({...card, properties: {...card.fields}} as any)
             if (value) {
-                newCard.properties.properties[propertyId] = value
+                newCard = createBoard({...card, properties: {...card.fields, properties: {...card.fields.properties, [propertyId]: value}}} as any)
             } else {
-                delete newCard.properties.properties[propertyId]
+                newCard = createBoard({...card, properties: {...card.fields, properties: {...card.fields.properties, [propertyId]: undefined}}} as any)
             }
             await this.updateBoard(newCard, card as any, description)
             return
