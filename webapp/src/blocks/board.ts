@@ -139,7 +139,7 @@ function createBoard(board?: Board): Board {
         showDescription: board?.showDescription || false,
         isTemplate: board?.isTemplate || false,
         templateVersion: board?.templateVersion || 0,
-        properties: board?.properties || {},
+        properties: {...board?.properties} || {},
         cardProperties,
         createAt: board?.createAt || now,
         updateAt: board?.updateAt || now,

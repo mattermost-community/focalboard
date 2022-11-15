@@ -5,6 +5,8 @@ import {Block, createBlock} from './block'
 
 type PageFields = {
     contentOrder: Array<string | string[]>
+    properties: Record<string, any>
+    icon: string
 }
 
 type Page = Block & {
@@ -31,6 +33,7 @@ function createPage(block?: Block): Page {
         fields: {
             contentOrder,
             icon: block?.fields?.icon,
+            properties: {...block?.fields?.properties},
         },
     }
 }

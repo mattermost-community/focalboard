@@ -8,18 +8,29 @@ import {ClientConfig} from '../config/clientConfig'
 
 import {Block, ContentBlockTypes, createBlock} from '../blocks/block'
 import {Page, createPage} from '../blocks/page'
-import {Board} from '../blocks/board'
+import {Board, IPropertyTemplate} from '../blocks/board'
 import {IUser} from '../user'
 import mutator from '../mutator'
-import {Utils} from '../utils'
+import {IDType, Utils} from '../utils'
 import {getCurrentPageContents} from '../store/contents'
 import {getBoardUsers} from '../store/users'
 import {updateContents} from '../store/contents'
+import {getMySortedPageFolders} from '../store/boards'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 import CompassIcon from '../widgets/icons/compassIcon'
 import IconButton from '../widgets/buttons/iconButton'
 import Button from '../widgets/buttons/button'
 import GuestBadge from '../widgets/guestBadge'
+import MenuWrapper from '../widgets/menuWrapper'
+import Menu from '../widgets/menu'
+import PropertyMenu, {PropertyTypes} from '../widgets/propertyMenu'
+import {Permission} from '../constants'
+import {useHasCurrentBoardPermissions} from '../hooks/permissions'
+import PropertyValueElement from './propertyValueElement'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from './confirmationDialogBox'
+import propRegistry from '../properties'
+import {PropertyType} from '../properties/types'
+import {sendFlashMessage} from './flashMessages'
 
 import PageTitle from './pageTitle'
 import PageMenu from './pageMenu'
@@ -42,6 +53,7 @@ import BlocksEditor from './blocksEditor/blocksEditor'
 import {BlockData} from './blocksEditor/blocks/types'
 
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
+import Calculations from './calculations/calculations'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
@@ -106,8 +118,14 @@ const CenterPanelPages = (props: Props) => {
     const me = useAppSelector(getMe)
     const currentPageContents = useAppSelector(getCurrentPageContents)
     const folderUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
+    const pages = useAppSelector(getMySortedPageFolders)
+    const [newTemplateId, setNewTemplateId] = useState('')
     const dispatch = useAppDispatch()
     const [expanded, setExpanded] = useState(false)
+    const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
+    const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
@@ -167,10 +185,104 @@ const CenterPanelPages = (props: Props) => {
         profileImg = imageURLForUser(owner.id)
     }
 
+    let pseudoCard: any
+    if (props.activePage) {
+        pseudoCard = {
+            ...props.activePage,
+            fields: {...props.activePage.fields, properties: props.activePage.fields.properties || {}} as any,
+        }
+    } else {
+        pseudoCard = {
+            ...props.board,
+            fields: {...props.board.properties, properties: props.board.properties.properties || {}} as any,
+        }
+    }
+
+    function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate: IPropertyTemplate) {
+        const oldType = propRegistry.get(propertyTemplate.type)
+
+        // do nothing if no change
+        if (oldType === newType && propertyTemplate.name === newName) {
+            return
+        }
+
+        if (oldType === newType) {
+            mutator.changePropertyTypeAndName(props.board, pages as any, propertyTemplate, newType.type, newName)
+            return
+        }
+
+
+        const subTextString = intl.formatMessage({
+            id: 'CardDetailProperty.property-name-change-subtext',
+            defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
+        }, {oldPropType: oldType.displayName(intl), newPropType: newType.displayName(intl)})
+
+        setConfirmationDialogBox({
+            heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm property type change'}),
+            subText: intl.formatMessage({
+                id: 'CardDetailProperty.confirm-property-name-change-subtext',
+                defaultMessage: 'Are you sure you want to change property "{propertyName}" {customText}?',
+            },
+            {
+                propertyName: propertyTemplate.name,
+                customText: subTextString,
+            }),
+
+            confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.property-change-action-button', defaultMessage: 'Change property'}),
+            onConfirm: async () => {
+                setShowConfirmationDialog(false)
+                try {
+                    await mutator.changePropertyTypeAndName(props.board, pages as any, propertyTemplate, newType.type, newName)
+                } catch (err: any) {
+                    Utils.logError(`Error Changing Property And Name:${propertyTemplate.name}: ${err?.toString()}`)
+                }
+                sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-changed', defaultMessage: 'Changed property successfully!'}), severity: 'high'})
+            },
+            onClose: () => setShowConfirmationDialog(false),
+        })
+
+        // open confirmation dialog for property type change
+        setShowConfirmationDialog(true)
+    }
+
+    function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate: IPropertyTemplate) {
+        // set ConfirmationDialogBox Props
+        setConfirmationDialogBox({
+            heading: intl.formatMessage({id: 'CardDetailProperty.confirm-delete-heading', defaultMessage: 'Confirm delete property'}),
+            subText: intl.formatMessage({
+                id: 'CardDetailProperty.confirm-delete-subtext',
+                defaultMessage: 'Are you sure you want to delete the property "{propertyName}"? Deleting it will delete the property from all cards in this board.',
+            },
+            {propertyName: propertyTemplate.name}),
+            confirmButtonText: intl.formatMessage({id: 'CardDetailProperty.delete-action-button', defaultMessage: 'Delete'}),
+            onConfirm: async () => {
+                const deletingPropName = propertyTemplate.name
+                setShowConfirmationDialog(false)
+                try {
+                    await mutator.deleteProperty(props.board, [], pages as any, propertyTemplate.id)
+                    sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
+                } catch (err: any) {
+                    Utils.logError(`Error Deleting Property!: Could Not delete Property -" + ${deletingPropName} ${err?.toString()}`)
+                }
+            },
+
+            onClose: () => setShowConfirmationDialog(false),
+        })
+
+        // open confirmation dialog property delete
+        setShowConfirmationDialog(true)
+    }
+
     return (
         <div
             className='PageComponent'
         >
+            {showConfirmationDialog && (
+                <ConfirmationDialogBox
+                    dialogBox={confirmationDialogBox}
+                />
+            )}
+
             <div className='top-head'>
                 <div className='mid-head'>
                     <div className='formatting'>
@@ -384,6 +496,64 @@ const CenterPanelPages = (props: Props) => {
                             values={{date: Utils.relativeDisplayDateTime(new Date(activePage.updateAt), intl)}}
                         />
                     </div>
+                    <div className='add-property'>
+                        {!props.readonly && canEditBoardProperties &&
+                            <MenuWrapper>
+                                <Button>
+                                    <FormattedMessage
+                                        id='CardDetail.add-property'
+                                        defaultMessage='+ Add a property'
+                                    />
+                                </Button>
+                                <Menu>
+                                    <PropertyTypes
+                                        label={intl.formatMessage({id: 'PropertyMenu.selectType', defaultMessage: 'Select property type'})}
+                                        onTypeSelected={async (type) => {
+                                            const template: IPropertyTemplate = {
+                                                id: Utils.createGuid(IDType.BlockID),
+                                                name: type.displayName(intl),
+                                                type: type.type,
+                                                options: [],
+                                            }
+                                            const templateId = await mutator.insertPropertyTemplate(props.board, {fields: {}} as any, -1, template)
+                                            setNewTemplateId(templateId)
+                                        }}
+                                    />
+                                </Menu>
+                            </MenuWrapper>}
+                    </div>
+                </div>
+
+                <div className='properties'>
+                    {props.board.cardProperties.map((propertyTemplate: IPropertyTemplate) => {
+                        return (
+                            <div
+                                key={propertyTemplate.id + '-' + propertyTemplate.type}
+                                className='octo-propertyrow'
+                            >
+                                {(props.readonly || !canEditBoardProperties) && <div className='octo-propertyname octo-propertyname--readonly'>{propertyTemplate.name}</div>}
+                                {!props.readonly && canEditBoardProperties &&
+                                    <MenuWrapper isOpen={propertyTemplate.id === newTemplateId}>
+                                        <div className='octo-propertyname'><Button>{propertyTemplate.name}</Button></div>
+                                        <PropertyMenu
+                                            propertyId={propertyTemplate.id}
+                                            propertyName={propertyTemplate.name}
+                                            propertyType={propRegistry.get(propertyTemplate.type)}
+                                            onTypeAndNameChanged={(newType: PropertyType, newName: string) => onPropertyChangeSetAndOpenConfirmationDialog(newType, newName, propertyTemplate)}
+                                            onDelete={() => onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate)}
+                                        />
+                                    </MenuWrapper>
+                                }
+                                <PropertyValueElement
+                                    readOnly={props.readonly || !canEditBoardCards}
+                                    card={pseudoCard}
+                                    board={props.board}
+                                    propertyTemplate={propertyTemplate}
+                                    showEmptyPlaceholder={true}
+                                />
+                            </div>
+                        )
+                    })}
                 </div>
 
                 <BlocksEditor

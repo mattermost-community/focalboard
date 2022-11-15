@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo, useState, useCallback} from 'react'
+import React, {useMemo, useState, useCallback, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -57,6 +57,10 @@ function DateRange(props: PropertyProps): JSX.Element {
     const {propertyValue, propertyTemplate, showEmptyPlaceholder, readOnly, board, card} = props
     const [value, setValue] = useState(propertyValue)
     const intl = useIntl()
+
+    useEffect(() => {
+        setValue(propertyValue)
+    }, [props.card.id])
 
     const onChange = useCallback((newValue) => {
         if (value !== newValue) {

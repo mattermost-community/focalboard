@@ -73,13 +73,27 @@
                 align-items: center;
             }
         }
+        > .properties {
+            display: flex;
+            width: 768px;
+            flex-wrap: wrap;
+            .octo-propertyrow {
+                width: 200px;
+                flex-grow: 1;
+                display: flex;
+                border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
+                margin-bottom: 2px;
+            }
+        }
         > .page-author {
             margin-top: 16px;
             margin-bottom: 24px;
             margin-left: 16px;
             width: 768px;
+            display: flex;
             > .person {
                 display: flex;
+                flex-grow: 1;
                 align-items: center;
                 color: rgba(var(--center-channel-color-rgb), 0.5);
 

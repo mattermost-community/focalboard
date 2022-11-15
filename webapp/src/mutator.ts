@@ -9,7 +9,7 @@ import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks, createBlock} from './blocks/block'
 import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
-import {Page} from './blocks/page'
+import {Page, createPage} from './blocks/page'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
 import {CommentBlock} from './blocks/commentBlock'
@@ -542,10 +542,13 @@ class Mutator {
             }
         })
         cards.forEach((card) => {
-            if (card.fields.properties[propertyId]) {
+            if (card.fields?.properties[propertyId]) {
                 oldBlocks.push(card)
 
-                const newCard = createCard(card)
+                let newCard: any = createCard(card)
+                if (card.type === 'page') {
+                    newCard = createPage(card as any)
+                }
                 delete newCard.fields.properties[propertyId]
                 changedBlocks.push(newCard)
                 changedBlockIDs.push(newCard.id)
@@ -637,7 +640,22 @@ class Mutator {
             return
         }
 
-        const newCard = createCard(card)
+        // TODO: This is now using any to fake the page is a valid card (fix all the anys added in this POC)
+        let newCard: any = createCard(card)
+        if (card.type === 'page') {
+            newCard = createPage(card as any)
+        }
+        if (card.id.startsWith('b')) {
+            newCard = createBoard({...card, properties: {...card.fields}} as any)
+            if (value) {
+                newCard.properties.properties[propertyId] = value
+            } else {
+                delete newCard.properties.properties[propertyId]
+            }
+            await this.updateBoard(newCard, card as any, description)
+            return
+        }
+
         if (value) {
             newCard.fields.properties[propertyId] = value
         } else {

@@ -36,6 +36,10 @@ const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellC
         }
     }, [])
 
+    useEffect(() => {
+        setValue(props.card.fields.properties[props.propertyTemplate.id || ''] || '')
+    }, [props.card.id])
+
     if (!props.readOnly) {
         return (
             <Editable
