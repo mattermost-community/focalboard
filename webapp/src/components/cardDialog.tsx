@@ -24,6 +24,7 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/c
 import Button from '../widgets/buttons/button'
 
 import {getUserBlockSubscriptionList} from '../store/initialLoad'
+import {getClientConfig} from '../store/clientConfig'
 
 import {IUser} from '../user'
 import {getMe} from '../store/users'
@@ -56,6 +57,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const contents = useAppSelector(getCardContents(props.cardId))
     const comments = useAppSelector(getCardComments(props.cardId))
     const attachments = useAppSelector(getCardAttachments(props.cardId))
+    const clientConfig = useAppSelector(getClientConfig)
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
@@ -139,15 +141,19 @@ const CardDialog = (props: Props): JSX.Element => {
         return new Promise<AttachmentBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (attachment) => {
-                    sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
-                    const attachmentId = await octoClient.uploadFile(boardId, attachment)
-                    if (attachmentId) {
-                        const block = createAttachmentBlock()
-                        block.fields.attachmentId = attachmentId || ''
-                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
-                        resolve(block)
-                    } else {
+                    if(attachment.size > clientConfig.maxFileSize) {
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
+                    } else {
+                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
+                        const attachmentId = await octoClient.uploadFile(boardId, attachment)
+                        if (attachmentId) {
+                            const block = createAttachmentBlock()
+                            block.fields.attachmentId = attachmentId || ''
+                            sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
+                            resolve(block)
+                        } else {
+                            sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
+                        }
                     }
                 },
                 '')
