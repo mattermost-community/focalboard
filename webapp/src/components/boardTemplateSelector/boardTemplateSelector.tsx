@@ -4,6 +4,8 @@ import React, {useEffect, useState, useCallback, useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from 'react-router-dom'
 
+import CompassIcon from '../../widgets/icons/compassIcon'
+
 import {Board} from '../../blocks/board'
 import IconButton from '../../widgets/buttons/iconButton'
 import CloseIcon from '../../widgets/icons/close'
@@ -180,21 +182,20 @@ const BoardTemplateSelector = (props: Props) => {
                         </div>
                     </div>
                     <div className='templates-sidebar__footer'>
-                        <Button
-                            className='empty-board'
-                            emphasis={'secondary'}
-                            size={'medium'}
+                        <button
+                            className='templates__empty-board'
                             onClick={async () => {
                                 const boardsAndBlocks = await mutator.addEmptyBoard(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
                                 const board = boardsAndBlocks.boards[0]
                                 await mutator.updateBoard({...board, channelId: props.channelId || ''}, board, 'linked channel')
                             }}
                         >
+                            <CompassIcon icon='kanban'/>
                             <FormattedMessage
                                 id='BoardTemplateSelector.create-empty-board'
                                 defaultMessage='Create empty board'
                             />
-                        </Button>
+                        </button>
                     </div>
                 </div>
                 <div className='template-preview-box'>

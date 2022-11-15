@@ -17,7 +17,7 @@
         display: flex;
         width: 100%;
         justify-content: flex-end;
-        padding: 24px;
+        padding: 24px 24px 0;
     }
 
     .header {
@@ -42,27 +42,44 @@
         margin-right: 32px;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
 
     .templates-sidebar__footer {
         padding: 16px;
         display: flex;
-
+        border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
 
         button {
             width: 100%;
         }
     }
 
+    .templates__empty-board {
+        color: rgb(var(--button-bg-rgb));
+        padding: 0;
+        border: 0;
+        display: flex;
+        align-items: center;
+        background: transparent;
+        font-weight: 600;
+        gap: 10px;
+
+        i {
+            font-size: 16px;
+        }
+    }
+
     .templates {
         display: flex;
         width: 100%;
-        padding: 0 32px;
+        padding: 2px 32px;
         justify-content: center;
         flex: 1;
+        overflow: hidden;
 
         @media (min-width: 768px) {
-            padding: 0 10%;
+            padding: 2px 10%;
         }
 
         .templates-list {
@@ -98,15 +115,26 @@
         border-radius: var(--modal-rad);
         overflow: hidden;
         width: 100%;
-        max-width: 1000px;
+        max-width: 1600px;
 
         .buttons {
             display: flex;
             position: absolute;
-            right: 0;
-            top: 0;
-            padding: 32px 16px 0;
-            background-color: rgb(var(--center-channel-bg-rgb));
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            padding: 24px;
+            justify-content: center;
+
+            &::before {
+                content: '';
+                background: linear-gradient(rgba(var(--center-channel-bg-rgb), 0), rgb(var(--center-channel-bg-rgb)), rgb(var(--center-channel-bg-rgb)));
+                position: absolute;
+                top: -16px;
+                left: 0;
+                width: 100%;
+                height: calc(100% + 16px);
+            }
         }
 
         .empty-board {

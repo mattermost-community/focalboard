@@ -126,11 +126,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           class="templates-sidebar__footer"
         >
           <button
-            type="button"
+            class="templates__empty-board"
           >
-            <span>
-              Create empty board
-            </span>
+            <i
+              class="CompassIcon icon-kanban"
+            />
+            Create empty board
           </button>
         </div>
       </div>
@@ -273,11 +274,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           class="templates-sidebar__footer"
         >
           <button
-            type="button"
+            class="templates__empty-board"
           >
-            <span>
-              Create empty board
-            </span>
+            <i
+              class="CompassIcon icon-kanban"
+            />
+            Create empty board
           </button>
         </div>
       </div>
@@ -420,11 +422,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           class="templates-sidebar__footer"
         >
           <button
-            type="button"
+            class="templates__empty-board"
           >
-            <span>
-              Create empty board
-            </span>
+            <i
+              class="CompassIcon icon-kanban"
+            />
+            Create empty board
           </button>
         </div>
       </div>
@@ -577,11 +580,12 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
           class="templates-sidebar__footer"
         >
           <button
-            type="button"
+            class="templates__empty-board"
           >
-            <span>
-              Create empty board
-            </span>
+            <i
+              class="CompassIcon icon-kanban"
+            />
+            Create empty board
           </button>
         </div>
       </div>
