@@ -168,6 +168,8 @@ func (s *SQLStore) Migrate() error {
 			if pErr != nil {
 				return nil, pErr
 			}
+			tmpl.Funcs(s.getTemplateHelperFuncs())
+
 			buffer := bytes.NewBufferString("")
 
 			err = tmpl.Execute(buffer, params)
@@ -284,4 +286,22 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 	}
 
 	return nil
+}
+
+func (s *SQLStore) getTemplateHelperFuncs() template.FuncMap {
+	funcs := template.FuncMap{
+		"addColumnIfNeeded": func(schemaName, tableName, columnName, constraint string) (string, error) {
+			switch s.dbType {
+			case model.MysqlDBType:
+				return mysqlAddColumnIfNeeded(schemaName, tableName, columnName, constraint), nil
+			case model.PostgresDBType:
+				return postgresAddColumnIfNeeded(schemaName, tableName, columnName, constraint), nil
+			case model.SqliteDBType:
+				return sqliteAddColumnIfNeeded(schemaName, tableName, columnName, constraint), nil
+			default:
+				return "", ErrUnsupportedDatabaseType
+			}
+		},
+	}
+	return funcs
 }
