@@ -384,11 +384,11 @@ const SidebarBoardItem = (props: Props) => {
                             {!me?.is_guest &&
                                 <Menu.Text
                                     id='duplicateBoard'
-                                    name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                                    name={isPages ? intl.formatMessage({id: 'Sidebar.duplicate-page', defaultMessage: 'Duplicate page'}): intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                                     icon={<DuplicateIcon/>}
                                     onClick={() => handleDuplicateBoard(board.isTemplate)}
                                 />}
-                            {!me?.is_guest &&
+                            {!isPages && !me?.is_guest &&
                                 <Menu.Text
                                     id='templateFromBoard'
                                     name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
@@ -397,13 +397,13 @@ const SidebarBoardItem = (props: Props) => {
                                 />}
                             <Menu.Text
                                 id='exportBoardArchive'
-                                name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
+                                name={isPages ? intl.formatMessage({id: 'ViewHeader.export-page-archive', defaultMessage: 'Export page archive'}) : intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                                 icon={<CompassIcon icon='export-variant'/>}
                                 onClick={() => Archiver.exportBoardArchive(board)}
                             />
                             <Menu.Text
                                 id='hideBoard'
-                                name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
+                                name={isPages ? intl.formatMessage({id: 'HidePage.MenuOption', defaultMessage: 'Hide page'}) : intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
                                 icon={<CloseIcon/>}
                                 onClick={() => handleHideBoard()}
                             />
@@ -415,7 +415,7 @@ const SidebarBoardItem = (props: Props) => {
                                     key={`deleteBlock-${board.id}`}
                                     id='deleteBlock'
                                     className='text-danger'
-                                    name={intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
+                                    name={isPages ? intl.formatMessage({id: 'Sidebar.delete-pages', defaultMessage: 'Delete pages tree'}) : intl.formatMessage({id: 'Sidebar.delete-board', defaultMessage: 'Delete board'})}
                                     icon={<DeleteIcon/>}
                                     onClick={() => {
                                         props.onDeleteRequest(board)
