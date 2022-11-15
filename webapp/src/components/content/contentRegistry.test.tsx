@@ -5,9 +5,11 @@ import '../content/imageElement'
 import '../content/dividerElement'
 import '../content/checkboxElement'
 
-import {contentBlockTypes} from '../../blocks/block'
+import {ContentBlockTypes} from '../../blocks/block'
 
 import {contentRegistry} from './contentRegistry'
+
+const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as ContentBlockTypes[]
 
 describe('components/content/ContentRegistry', () => {
     test('have all contentTypes', () => {

@@ -7,6 +7,7 @@
 		"pack": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
 		"packdev": "cross-env NODE_ENV=dev webpack --config webpack.dev.js",
 		"watchdev": "cross-env NODE_ENV=dev webpack --watch --progress --config webpack.dev.js",
+		"deveditor": "cross-env NODE_ENV=dev webpack server --config webpack.editor.js",
 		"test": "jest",
 		"updatesnapshot": "jest --updateSnapshot",
 		"check": "eslint --ext .tsx,.ts . --quiet --cache && stylelint **/*.scss",
@@ -150,6 +151,7 @@
 		"typescript": "^4.6.3",
 		"webpack": "^5.70.0",
 		"webpack-cli": "^4.9.2",
+		"webpack-dev-server": "^4.11.1",
 		"webpack-merge": "^5.8.0"
 	},
 	"optionalDependencies": {

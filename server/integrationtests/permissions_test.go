@@ -151,19 +151,19 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 		true,
 	)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(&model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-1", Title: "Test", Type: "card", BoardID: customTemplate1.ID, Fields: map[string]interface{}{}}, userAdminID)
 	require.NoError(t, err)
 	customTemplate2, err := th.Server.App().CreateBoard(
 		&model.Board{Title: "Custom template 2", TeamID: "test-team", IsTemplate: true, Type: model.BoardTypePrivate, MinimumRole: "viewer"},
 		userAdminID,
 		true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(&model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-2", Title: "Test", Type: "card", BoardID: customTemplate2.ID, Fields: map[string]interface{}{}}, userAdminID)
 	require.NoError(t, err)
 
 	board1, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 1", TeamID: "test-team", Type: model.BoardTypeOpen, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
-	err = th.Server.App().InsertBlock(&model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-3", Title: "Test", Type: "card", BoardID: board1.ID, Fields: map[string]interface{}{}}, userAdminID)
 	require.NoError(t, err)
 	board2, err := th.Server.App().CreateBoard(&model.Board{Title: "Board 2", TeamID: "test-team", Type: model.BoardTypePrivate, MinimumRole: "viewer"}, userAdminID, true)
 	require.NoError(t, err)
@@ -179,7 +179,7 @@ func setupData(t *testing.T, th *TestHelper) TestData {
 	require.Equal(t, boardMember.UserID, userAdminID)
 	require.Equal(t, boardMember.BoardID, board2.ID)
 
-	err = th.Server.App().InsertBlock(&model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID}, userAdminID)
+	err = th.Server.App().InsertBlock(&model.Block{ID: "block-4", Title: "Test", Type: "card", BoardID: board2.ID, Fields: map[string]interface{}{}}, userAdminID)
 	require.NoError(t, err)
 
 	err = th.Server.App().UpsertSharing(model.Sharing{ID: board2.ID, Enabled: true, Token: "valid", ModifiedBy: userAdminID, UpdateAt: model.GetMillis()})
@@ -1469,6 +1469,93 @@ func TestPermissionsUndeleteBoardBlock(t *testing.T) {
 
 		// Invalid boardID/blockID combination
 		{"/boards/{PUBLIC_TEMPLATE_ID}/blocks/block-3/undelete", methodPost, "", userAdmin, http.StatusNotFound, 0},
+	}
+
+	t.Run("plugin", func(t *testing.T) {
+		th := SetupTestHelperPluginMode(t)
+		defer th.TearDown()
+		clients := setupClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+	t.Run("local", func(t *testing.T) {
+		th := SetupTestHelperLocalMode(t)
+		defer th.TearDown()
+		clients := setupLocalClients(th)
+		testData := setupData(t, th)
+		extraSetup(t, th, testData)
+		runTestCases(t, ttCases, testData, clients)
+	})
+}
+
+func TestPermissionsMoveContentBlock(t *testing.T) {
+	extraSetup := func(t *testing.T, th *TestHelper, testData TestData) {
+		err := th.Server.App().InsertBlock(&model.Block{ID: "content-1-1", Title: "Test", Type: "text", BoardID: testData.publicTemplate.ID, ParentID: "block-1"}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-1-2", Title: "Test", Type: "text", BoardID: testData.publicTemplate.ID, ParentID: "block-1"}, userAdmin)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBlock("block-1", &model.BlockPatch{UpdatedFields: map[string]interface{}{"contentOrder": []string{"content-1-1", "content-1-2"}}}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-2-1", Title: "Test", Type: "text", BoardID: testData.privateTemplate.ID, ParentID: "block-2"}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-2-2", Title: "Test", Type: "text", BoardID: testData.privateTemplate.ID, ParentID: "block-2"}, userAdmin)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBlock("block-2", &model.BlockPatch{UpdatedFields: map[string]interface{}{"contentOrder": []string{"content-2-1", "content-2-2"}}}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-3-1", Title: "Test", Type: "text", BoardID: testData.publicBoard.ID, ParentID: "block-3"}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-3-2", Title: "Test", Type: "text", BoardID: testData.publicBoard.ID, ParentID: "block-3"}, userAdmin)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBlock("block-3", &model.BlockPatch{UpdatedFields: map[string]interface{}{"contentOrder": []string{"content-3-1", "content-3-2"}}}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-4-1", Title: "Test", Type: "text", BoardID: testData.privateBoard.ID, ParentID: "block-4"}, userAdmin)
+		require.NoError(t, err)
+		err = th.Server.App().InsertBlock(&model.Block{ID: "content-4-2", Title: "Test", Type: "text", BoardID: testData.privateBoard.ID, ParentID: "block-4"}, userAdmin)
+		require.NoError(t, err)
+		_, err = th.Server.App().PatchBlock("block-4", &model.BlockPatch{UpdatedFields: map[string]interface{}{"contentOrder": []string{"content-4-1", "content-4-2"}}}, userAdmin)
+		require.NoError(t, err)
+	}
+
+	ttCases := []TestCase{
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userAnon, http.StatusUnauthorized, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userViewer, http.StatusForbidden, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userCommenter, http.StatusForbidden, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userEditor, http.StatusOK, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userAdmin, http.StatusOK, 0},
+		{"/content-blocks/content-4-1/moveto/after/content-4-2", methodPost, "{}", userGuest, http.StatusForbidden, 0},
+
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userAnon, http.StatusUnauthorized, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userViewer, http.StatusForbidden, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userCommenter, http.StatusForbidden, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userEditor, http.StatusOK, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userAdmin, http.StatusOK, 0},
+		{"/content-blocks/content-3-1/moveto/after/content-3-2", methodPost, "{}", userGuest, http.StatusForbidden, 0},
+
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userAnon, http.StatusUnauthorized, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userViewer, http.StatusForbidden, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userCommenter, http.StatusForbidden, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userEditor, http.StatusOK, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userAdmin, http.StatusOK, 0},
+		{"/content-blocks/content-2-1/moveto/after/content-2-2", methodPost, "{}", userGuest, http.StatusForbidden, 0},
+
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userAnon, http.StatusUnauthorized, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userNoTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userTeamMember, http.StatusForbidden, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userViewer, http.StatusForbidden, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userCommenter, http.StatusForbidden, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userEditor, http.StatusOK, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userAdmin, http.StatusOK, 0},
+		{"/content-blocks/content-1-1/moveto/after/content-1-2", methodPost, "{}", userGuest, http.StatusForbidden, 0},
+
+		// Invalid srcBlockID/dstBlockID combination
+		{"/content-blocks/content-1-1/moveto/after/content-2-1", methodPost, "{}", userAdmin, http.StatusBadRequest, 0},
 	}
 
 	t.Run("plugin", func(t *testing.T) {
