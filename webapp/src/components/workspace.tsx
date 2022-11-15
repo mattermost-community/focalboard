@@ -77,7 +77,7 @@ function CenterContent(props: Props) {
     }, [match, history])
 
     const showPage = useCallback((pageId?: string) => {
-        const params = {...match.params, viewId: pageId, cardId: undefined}
+        const params = {...match.params, viewId: pageId || undefined, cardId: undefined}
         let newPath = generatePath(Utils.getBoardPagePath(match.path), params)
         if (props.readonly) {
             newPath += `?r=${Utils.getReadToken()}`

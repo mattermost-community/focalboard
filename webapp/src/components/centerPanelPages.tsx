@@ -16,6 +16,7 @@ import {getCurrentPageContents} from '../store/contents'
 import {getBoardUsers} from '../store/users'
 import {updateContents} from '../store/contents'
 import {getMySortedPageFolders} from '../store/boards'
+import {getCurrentBoardPages} from '../store/pages'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 import CompassIcon from '../widgets/icons/compassIcon'
 import IconButton from '../widgets/buttons/iconButton'
@@ -112,6 +113,44 @@ async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fiel
     return newBlock
 }
 
+type BreadcrumbsProps = {
+    board: Board
+    pages: Page[]
+    activePage: Page
+    showPage: (pageId?: string) => void
+}
+
+const Breadcrumbs = (props: BreadcrumbsProps) => {
+    const intl = useIntl()
+    const breadcrumbs: Array<Page> = []
+    if (props.activePage && props.activePage.id !== props.board.id) {
+        const pagesById: {[key: string]: Page} = {}
+        for (const page of props.pages) {
+            pagesById[page.id] = page
+        }
+        let currentPage = props.activePage
+        while (true) {
+            breadcrumbs.unshift(currentPage)
+            currentPage = pagesById[currentPage.parentId]
+            if(!currentPage) {
+                break
+            }
+        }
+    }
+
+    return (
+        <div className='pages-breadcrumbs'>
+            <span onClick={() => props.showPage('')}>{props.board.title ? props.board.title: intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}</span>
+            {breadcrumbs.map((b) => (
+                <>
+                    <span>{' / '}</span>
+                    <span onClick={() => props.showPage(b.id)}>{b.title ? b.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}</span>
+                </>
+            ))}
+        </div>
+    )
+}
+
 
 const CenterPanelPages = (props: Props) => {
     const intl = useIntl()
@@ -121,6 +160,7 @@ const CenterPanelPages = (props: Props) => {
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const canEditBoardCards = useHasCurrentBoardPermissions([Permission.ManageBoardCards])
     const pages = useAppSelector(getMySortedPageFolders)
+    const currentBoardPages = useAppSelector(getCurrentBoardPages)
     const [newTemplateId, setNewTemplateId] = useState('')
     const dispatch = useAppDispatch()
     const [expanded, setExpanded] = useState(false)
@@ -454,10 +494,12 @@ const CenterPanelPages = (props: Props) => {
 
             <div className={expanded ? 'content expanded' :  'content'}>
                 <div className='doc-header'>
-                    <div className='pages-breadcrumbs'>
-                        {props.activePage && `${props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})} / ${activePage.title}`}
-                        {!props.activePage && `${props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}`}
-                    </div>
+                    <Breadcrumbs
+                        board={props.board}
+                        activePage={activePage}
+                        pages={currentBoardPages}
+                        showPage={props.showPage}
+                    />
                     <div className='expand-collapsed-button'>
                         <IconButton
                             size='small'
