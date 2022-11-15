@@ -103,7 +103,7 @@ function createBoard(board?: Board): Board {
     const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []
     const selectProperties = cardProperties.find((o) => o.type === 'select')
-    if (!selectProperties) {
+    if (!selectProperties && board?.properties?.isFolder !== 'true') {
         const property: IPropertyTemplate = {
             id: Utils.createGuid(IDType.BlockID),
             name: 'Status',

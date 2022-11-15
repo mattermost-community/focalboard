@@ -74,6 +74,7 @@
             }
         }
         > .properties {
+            @include z-index(center-panel);
             display: flex;
             width: 768px;
             flex-wrap: wrap;
