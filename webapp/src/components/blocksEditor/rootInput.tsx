@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState} from 'react'
+import React, {useState, useIntl} from 'react'
 import Select from 'react-select'
 import {CSSObject} from '@emotion/serialize'
 
@@ -55,14 +55,14 @@ const styles = {
 
 export default function RootInput(props: Props) {
     const [showMenu, setShowMenu] = useState(false)
-    // TODO: Add intl and use it where is needed
+    const intl = useIntl()
 
     return (
         <Select
             styles={styles}
             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
             className='RootInput'
-            placeholder='Add text or type "/" for commands'
+            placeholder={intl.formatMessage({id: 'BlocksEditor.root-input-placeholder', defaultMessage: 'Add text or type "/" for commands'})}
             autoFocus={true}
             menuIsOpen={showMenu}
             menuPortalTarget={document.getElementById('focalboard-root-portal')}
