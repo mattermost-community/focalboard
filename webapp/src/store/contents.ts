@@ -28,7 +28,6 @@ const contentsSlice = createSlice({
                     let existsInParent = false
                     state.contents[content.id] = content
                     if (content.parentId.startsWith('p') || content.parentId.startsWith('b')) {
-                        console.log("adding content in pages", content)
                         if (!state.contentsByPage[content.parentId]) {
                             state.contentsByPage[content.parentId] = [content]
                             return
@@ -44,7 +43,6 @@ const contentsSlice = createSlice({
                             state.contentsByPage[content.parentId].push(content)
                         }
                     } else {
-                        console.log("adding content in cards", content)
                         if (!state.contentsByCard[content.parentId]) {
                             state.contentsByCard[content.parentId] = [content]
                             return
@@ -61,8 +59,8 @@ const contentsSlice = createSlice({
                         }
                     }
                 } else {
-                    if (content.parentId.startsWith('p')) {
-                        const parentId = state.contents[content.id]?.parentId
+                    const parentId = state.contents[content.id]?.parentId
+                    if (parentId.startsWith('p') || parentId.startsWith('b')) {
                         if (!state.contentsByPage[parentId]) {
                             delete state.contents[content.id]
                             return
@@ -73,7 +71,6 @@ const contentsSlice = createSlice({
                             }
                         }
                     } else {
-                        const parentId = state.contents[content.id]?.parentId
                         if (!state.contentsByCard[parentId]) {
                             delete state.contents[content.id]
                             return
@@ -183,9 +180,6 @@ export const getCurrentPageContents = createSelector(
         if (!page) {
             return []
         }
-        console.log(currentPage)
-        console.log(currentBoard)
-        console.log(contentsByPage)
         let contents = contentsByPage[page.id]
         let contentOrder = currentPage?.fields?.contentOrder
         if (!currentPage) {
@@ -195,7 +189,6 @@ export const getCurrentPageContents = createSelector(
         if (!contents) {
             return []
         }
-        console.log(contentOrder)
         if (contentOrder) {
             for (const contentId of contentOrder) {
                 if (typeof contentId === 'string') {
