@@ -135,7 +135,11 @@ const FocalboardRouter = (props: Props): JSX.Element => {
     if (isPlugin) {
         useEffect(() => {
             if (window.frontendBaseURL) {
-                browserHistory.replace(window.location.pathname.replace(window.frontendBaseURL, ''))
+                if (isPages) {
+                    browserHistory.replace('/pages')
+                } else {
+                    browserHistory.replace('/boards')
+                }
             }
         }, [])
     }

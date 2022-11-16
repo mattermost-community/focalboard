@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React from 'react'
+import React, {useContext} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {useLocation, useHistory} from 'react-router-dom'
@@ -14,6 +14,7 @@ import {Utils} from '../../utils'
 
 import './welcomePage.scss'
 import mutator from '../../mutator'
+import isPagesContext from '../../isPages'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {IUser, UserConfigPatch} from '../../user'
 import {fetchMe, getMe, getMyConfig, patchProps} from '../../store/users'
@@ -30,6 +31,15 @@ const WelcomePage = () => {
     const myConfig = useAppSelector(getMyConfig)
     const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const dispatch = useAppDispatch()
+    const isPlugin = Utils.isFocalboardPlugin()
+    const isPages = useContext(isPagesContext)
+
+    let basePath = ''
+    if (isPlugin && isPages) {
+        basePath = '/pages'
+    } else if (isPlugin && !isPages) {
+        basePath = '/boards'
+    }
 
     const setWelcomePageViewed = async (userID: string): Promise<any> => {
         const patch: UserConfigPatch = {}
@@ -50,9 +60,9 @@ const WelcomePage = () => {
             return
         }
         if (currentTeam) {
-            history.replace(`/team/${currentTeam?.id}`)
+            history.replace(`${basePath}/team/${currentTeam?.id}`)
         } else {
-            history.replace('/')
+            history.replace(basePath+'/')
         }
     }
 
@@ -90,7 +100,7 @@ const WelcomePage = () => {
         await setWelcomePageViewed(me.id)
         const onboardingData = await octoClient.prepareOnboarding(currentTeam.id)
         await dispatch(fetchMe())
-        const newPath = `/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
+        const newPath = `${basePath}/team/${onboardingData?.teamID}/${onboardingData?.boardID}`
         history.replace(newPath)
     }
 
