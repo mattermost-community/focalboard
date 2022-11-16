@@ -3,13 +3,13 @@
 import React, {useEffect, useState, useCallback, useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from 'react-router-dom'
+import {useHotkeys} from 'react-hotkeys-hook'
 
 import CompassIcon from '../../widgets/icons/compassIcon'
 
 import {Board} from '../../blocks/board'
 import IconButton from '../../widgets/buttons/iconButton'
 import CloseIcon from '../../widgets/icons/close'
-import AddIcon from '../../widgets/icons/add'
 import Button from '../../widgets/buttons/button'
 import octoClient from '../../octoClient'
 import mutator from '../../mutator'
@@ -49,6 +49,8 @@ const BoardTemplateSelector = (props: Props) => {
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId?: string}>()
     const me = useAppSelector<IUser|null>(getMe)
+
+    useHotkeys('esc', () => props.onClose?.())
 
     const showBoard = useCallback(async (boardId) => {
         Utils.showBoard(boardId, match, history)
@@ -126,7 +128,12 @@ const BoardTemplateSelector = (props: Props) => {
     }
 
     return (
-        <div className='BoardTemplateSelector__container'>
+        <div className={`BoardTemplateSelector__container ${onClose ? '' : 'BoardTemplateSelector__container--page'}`}>
+            {onClose &&
+                <div
+                    onClick={onClose}
+                    className='BoardTemplateSelector__backdrop'
+                />}
             <div className='BoardTemplateSelector'>
                 <div className='toolbar'>
                     {onClose &&

@@ -8,7 +8,6 @@
     width: 100%;
     height: 100%;
     padding: 120px;
-    background-color: rgba(0, 0, 0, 0.56);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,6 +15,25 @@
     @media (max-width: 1440px) {
         padding: 80px;
     }
+}
+
+.BoardTemplateSelector__container--page {
+    position: absolute;
+    padding: 0;
+
+    .BoardTemplateSelector {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+.BoardTemplateSelector__backdrop {
+    background-color: rgba(0, 0, 0, 0.56);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .BoardTemplateSelector {
@@ -130,7 +148,6 @@
         background-color: rgb(var(--center-channel-bg-rgb));
         overflow: hidden;
         width: 100%;
-        max-width: 1600px;
 
         .buttons {
             display: flex;
