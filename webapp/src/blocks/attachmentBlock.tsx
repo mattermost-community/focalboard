@@ -9,6 +9,7 @@ type AttachmentBlockFields = {
 type AttachmentBlock = Block & {
     type: 'attachment'
     fields: AttachmentBlockFields
+    isUploading: boolean
 }
 
 function createAttachmentBlock(block?: Block): AttachmentBlock {
@@ -18,6 +19,7 @@ function createAttachmentBlock(block?: Block): AttachmentBlock {
         fields: {
             attachmentId: block?.fields.attachmentId || '',
         },
+        isUploading: false,
     }
 }
 

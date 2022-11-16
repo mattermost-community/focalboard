@@ -41,6 +41,14 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
     useEffect(() => {
         if (!fileDataUrl) {
             const loadFile = async () => {
+                if (block.isUploading) {
+                    setFileInfo({
+                        name: block.title,
+                        extension: block.title.split('.').slice(0, -1).join('.'),
+                    })
+                    setFileDataUrl(block.title)
+                    return
+                }
                 const attachment = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
                 setFileDataUrl(attachment.url || '')
                 const attachmentInfo = await octoClient.getFileInfo(block.boardId, block.fields.attachmentId)
@@ -127,10 +135,14 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                         {fileName}
                     </div>
                 </Tooltip>
-                <div className='fileElement-file-ext-and-size'>
+                {!block.isUploading && <div className='fileElement-file-ext-and-size'>
                     {fileInfo.extension?.substring(1)} {fileSize}
-                </div>
+                </div> }
+                {block.isUploading && <div className='fileElement-file-uploading'>
+                    {'Uploading...'}
+                </div>}
             </div>
+            {!block.isUploading &&
             <div className='fileElement-delete-download'>
                 <MenuWrapper className='mt-3 fileElement-menu-icon'>
                     <IconButton
@@ -167,7 +179,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                         />
                     </a>
                 </Tooltip>
-            </div>
+            </div> }
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )

@@ -43,6 +43,7 @@ describe('component/content/FileBlock', () => {
         updateAt: 0,
         deleteAt: 0,
         limited: false,
+        isUploading: false,
     }
 
     test('should match snapshot', async () => {

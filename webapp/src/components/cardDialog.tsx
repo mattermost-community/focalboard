@@ -11,8 +11,8 @@ import mutator from '../mutator'
 import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
-import {useAppSelector} from '../store/hooks'
-import {getCardAttachments} from '../store/attachments'
+import {useAppDispatch, useAppSelector} from '../store/hooks'
+import {getCardAttachments, updateAttachments} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -29,7 +29,7 @@ import {getClientConfig} from '../store/clientConfig'
 import {IUser} from '../user'
 import {getMe} from '../store/users'
 import {Permission} from '../constants'
-import {Block} from '../blocks/block'
+import {Block, createBlock} from '../blocks/block'
 import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
@@ -59,8 +59,10 @@ const CardDialog = (props: Props): JSX.Element => {
     const attachments = useAppSelector(getCardAttachments(props.cardId))
     const clientConfig = useAppSelector(getClientConfig)
     const intl = useIntl()
+    const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
+    console.log("Attachments in CardDialog", attachments)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -137,21 +139,40 @@ const CardDialog = (props: Props): JSX.Element => {
         </CardActionsMenu>
     )
 
+    const removeUploadingAttachment = (uploadingBlock: Block) => {
+        uploadingBlock.deleteAt = 1
+        const removeUploadingAttachmentBlock = createAttachmentBlock(uploadingBlock)
+        dispatch(updateAttachments([removeUploadingAttachmentBlock]))
+    }
+
     const selectAttachment = (boardId: string) => {
         return new Promise<AttachmentBlock>(
             (resolve) => {
                 Utils.selectLocalFile(async (attachment) => {
+                    const uploadingBlock = createBlock()
+                    uploadingBlock.title = attachment.name
+                    uploadingBlock.fields.attachmentId = attachment.name
+                    uploadingBlock.boardId = boardId
+                    if (card) {
+                        uploadingBlock.parentId = card.id
+                    }
+                    const attachmentBlock = createAttachmentBlock(uploadingBlock)
+                    attachmentBlock.isUploading = true
+                    dispatch(updateAttachments([attachmentBlock]))
                     if (attachment.size > clientConfig.maxFileSize) {
+                        removeUploadingAttachment(uploadingBlock)
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                     } else {
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
                         const attachmentId = await octoClient.uploadFile(boardId, attachment)
                         if (attachmentId) {
+                            removeUploadingAttachment(uploadingBlock)
                             const block = createAttachmentBlock()
                             block.fields.attachmentId = attachmentId || ''
                             sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
                             resolve(block)
                         } else {
+                            removeUploadingAttachment(uploadingBlock)
                             sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                         }
                     }
