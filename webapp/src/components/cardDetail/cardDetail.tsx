@@ -33,7 +33,6 @@ import {ClientConfig} from '../../config/clientConfig'
 import {getClientConfig} from '../../store/clientConfig'
 
 import CardSkeleton from '../../svg/card-skeleton'
-import {Block} from '../../blocks/block'
 
 import CommentsList from './commentsList'
 import {CardDetailProvider} from './cardDetailContext'
