@@ -3,9 +3,8 @@
 import React from 'react'
 import {useDrag, useDrop} from 'react-dnd'
 
-import GripIcon from '../../widgets/icons/grip'
-
-import AddIcon from '../../widgets/icons/add'
+import CompassIcon from '../../widgets/icons/compassIcon'
+import IconButton from '../../widgets/buttons/iconButton'
 
 import Editor from './editor'
 import * as registry from './blocks'
@@ -86,23 +85,25 @@ function BlockContent(props: Props) {
                     setEditing(block)
                 }}
             >
-                <span
-                    className='action'
-                    data-testid='add-action'
-                    onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        props.setAfterBlock(block)
-                    }}
-                >
-                    <AddIcon/>
-                </span>
-                <span
-                    className='action'
-                    ref={drag}
-                >
-                    <GripIcon/>
-                </span>
+                <div className='block-actions'>
+                    <IconButton
+                        size={'small'}
+                        icon={<CompassIcon icon='plus'/>}
+                        data-testid='add-action'
+                        onClick={(e: any) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            props.setAfterBlock(block)
+                        }}
+                    />
+                    <div ref={drag}>
+                        <IconButton
+                            size={'small'}
+                            icon={<CompassIcon icon='drag-vertical'/>}
+                            data-testid='add-action'
+                        />
+                    </div>
+                </div>
                 <div
                     className='content'
                     ref={preview}

@@ -41,7 +41,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorPreview should ma
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"

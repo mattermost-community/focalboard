@@ -84,19 +84,19 @@ exports[`components/blocksEditor/editor should match snapshot on empty 1`] = `
         class="css-1f43avz-a11yText-A11yText"
       />
       <div
-        class=" css-4bb158-control"
+        class="RootInput__control css-9fsvdt-control"
       >
         <div
-          class=" css-30zlo3-ValueContainer"
+          class="RootInput__value-container css-30zlo3-ValueContainer"
         >
           <div
-            class=" css-14el2xx-placeholder"
+            class="RootInput__placeholder css-vinljo-placeholder"
             id="react-select-2-placeholder"
           >
-            Introduce your text or your slash command
+            Add text or type "/" for commands
           </div>
           <div
-            class=" css-g5309v-Input"
+            class="RootInput__input-container css-g5309v-Input"
             data-value=""
           >
             <input
@@ -107,7 +107,7 @@ exports[`components/blocksEditor/editor should match snapshot on empty 1`] = `
               autocapitalize="none"
               autocomplete="off"
               autocorrect="off"
-              class=""
+              class="RootInput__input"
               id="react-select-2-input"
               role="combobox"
               spellcheck="false"
@@ -119,7 +119,7 @@ exports[`components/blocksEditor/editor should match snapshot on empty 1`] = `
           </div>
         </div>
         <div
-          class=" css-1hb7zxy-IndicatorsContainer"
+          class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
         />
       </div>
     </div>

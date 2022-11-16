@@ -89,6 +89,20 @@
         }
     }
 
+    &.emphasis--quaternary {
+        background-color: transparent;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+
+        &:hover {
+            background-color: rgb(var(--button-bg-rgb), 0.08);
+        }
+
+        &:active {
+            background-color: rgb(var(--button-bg-rgb), 0.16);
+            color: rgb(var(--button-bg-rgb));
+        }
+    }
+
     &.emphasis--danger {
         color: rgb(var(--button-danger-color-rgb));
         background-color: rgb(var(--button-danger-bg-rgb));

@@ -63,6 +63,7 @@ export default function RootInput(props: Props) {
             styles={styles}
             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}
             className='RootInput'
+            classNamePrefix={'RootInput'}
             placeholder={intl.formatMessage({id: 'BlocksEditor.root-input-placeholder', defaultMessage: 'Add text or type "/" for commands'})}
             autoFocus={true}
             menuIsOpen={showMenu}

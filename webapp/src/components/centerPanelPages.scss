@@ -19,8 +19,9 @@
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
+    align-items: center;
 
-    > * {
+    >* {
         padding: 0 32px;
 
         @media screen and (max-width: 768px) {
@@ -40,58 +41,97 @@
         }
     }
 
-    > .content {
+    >.content {
         display: flex;
         flex-direction: column;
         width: 100%;
+        max-width: 768px;
         justify-content: center;
-        align-items: center;
-        > .doc-header {
-            margin-left: 16px;
-            width: 768px;
+
+        >.doc-header {
             display: flex;
             align-items: center;
-            margin-top: 60px;
-            margin-bottom: 10px;
+            margin-top: 32px;
+
             .pages-breadcrumbs {
                 flex-grow: 1;
             }
         }
-        > .BlocksEditor {
+
+        >.BlocksEditor {
             position: relative;
-            right: 32px;
-            width: 800px;
+            width: 100%;
+
+            .Editor {
+                margin-left: 0;
+
+                input {
+                    padding: 0;
+                }
+
+                .H1 {
+                    margin-top: 20px;
+                    margin-bottom: 10px;
+                    font-family: Metropolis, sans-serif;
+                    font-size: 36px;
+                }
+            }
         }
-        > .PageTitle {
-            margin-left: 16px;
-            width: 768px;
+
+        >.PageTitle {
             .Editable {
                 font-size: 36px;
             }
-            > div {
+
+            >div {
                 align-items: center;
             }
         }
-        > .properties {
+
+        >.properties {
             @include z-index(center-panel);
             display: flex;
-            width: 768px;
             flex-wrap: wrap;
+            margin-bottom: 24px;
+
+            &:empty {
+                display: none;
+            }
+
             .octo-propertyrow {
-                width: 200px;
-                flex-grow: 1;
                 display: flex;
-                border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
-                margin-bottom: 2px;
+                align-items: center;
+                border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+                margin-right: 12px;
+                padding-left: 12px;
+                gap: 4px;
+
+                &:first-child {
+                    margin-left: -10px;
+                    padding-left: 0;
+                    border: 0;
+                }
+
+                .Label {
+                    margin: 0;
+                }
             }
         }
-        > .page-author {
+
+        .RootInput__control {
+            box-shadow: none;
+        }
+
+        .RootInput__value-container {
+            padding: 0;
+        }
+
+        >.page-author {
             margin-top: 16px;
             margin-bottom: 24px;
-            margin-left: 16px;
-            width: 768px;
             display: flex;
-            > .person {
+
+            >.person {
                 display: flex;
                 flex-grow: 1;
                 align-items: center;
@@ -110,53 +150,34 @@
                 }
             }
         }
+
         &.expanded {
-            > .doc-header {
-                margin-left: 16px;
-                width: 100%;
-                .expand-collapsed-button {
-                    position: relative;
-                    right: 60px;
-                }
-            }
-            > .BlocksEditor {
-                position: relative;
-                right: 32px;
-                width: 100%;
-            }
-            > .PageTitle {
-                margin-left: 16px;
-                width: 100%;
-            }
-            > .page-author {
-                margin-left: 16px;
-                width: 100%;
-            }
-            > .properties {
-                margin-left: 16px;
-                width: 100%;
-            }
+            max-width: 100%;
         }
     }
-    > .top-head {
+
+    >.top-head {
         @include z-index(center-panel);
+        width: 100%;
         position: sticky;
         top: 0;
         left: 0;
         background: rgb(var(--center-channel-bg-rgb));
         padding: 0;
 
-        > .mid-head {
-            margin-top: 0px;
+        >.mid-head {
+            margin-top: 0;
             flex: 0 0 auto;
             display: flex;
             flex-direction: row;
             justify-content: end;
             align-items: center;
             border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
-            > div {
+
+            >div {
                 margin: 10px;
             }
+
             .formatting {
                 flex-grow: 1;
                 display: flex;
@@ -166,13 +187,15 @@
                 .CompassIcon {
                     cursor: pointer;
                 }
+
                 .divider {
                     border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
                     height: 18px;
-                    width: 0px;
+                    width: 0;
                     margin: 0 8px;
                 }
             }
+
             .Button {
                 .CompassIcon: {
                     color: rgba(var(--center-channel-color-rgb), 0.5);
@@ -183,7 +206,7 @@
     }
 
 
-    > div:nth-child(2) {
+    >div:nth-child(2) {
         padding: 0 32px;
 
         @media (max-width: 768px) {
@@ -205,4 +228,3 @@
         }
     }
 }
-

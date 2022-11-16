@@ -27,10 +27,13 @@ import Menu from '../widgets/menu'
 import PropertyMenu, {PropertyTypes} from '../widgets/propertyMenu'
 import {Permission} from '../constants'
 import {useHasCurrentBoardPermissions} from '../hooks/permissions'
+
 import PropertyValueElement from './propertyValueElement'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from './confirmationDialogBox'
+
 import propRegistry from '../properties'
 import {PropertyType} from '../properties/types'
+
 import {sendFlashMessage} from './flashMessages'
 
 import PageTitle from './pageTitle'
@@ -122,7 +125,7 @@ type BreadcrumbsProps = {
 
 const Breadcrumbs = (props: BreadcrumbsProps) => {
     const intl = useIntl()
-    const breadcrumbs: Array<Page> = []
+    const breadcrumbs: Page[] = []
     if (props.activePage && props.activePage.id !== props.board.id) {
         const pagesById: {[key: string]: Page} = {}
         for (const page of props.pages) {
@@ -132,7 +135,7 @@ const Breadcrumbs = (props: BreadcrumbsProps) => {
         while (true) {
             breadcrumbs.unshift(currentPage)
             currentPage = pagesById[currentPage.parentId]
-            if(!currentPage) {
+            if (!currentPage) {
                 break
             }
         }
@@ -140,7 +143,7 @@ const Breadcrumbs = (props: BreadcrumbsProps) => {
 
     return (
         <div className='pages-breadcrumbs'>
-            <span onClick={() => props.showPage('')}>{props.board.title ? props.board.title: intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}</span>
+            <span onClick={() => props.showPage('')}>{props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}</span>
             {breadcrumbs.map((b) => (
                 <>
                     <span>{' / '}</span>
@@ -150,7 +153,6 @@ const Breadcrumbs = (props: BreadcrumbsProps) => {
         </div>
     )
 }
-
 
 const CenterPanelPages = (props: Props) => {
     const intl = useIntl()
@@ -251,7 +253,6 @@ const CenterPanelPages = (props: Props) => {
             return
         }
 
-
         const subTextString = intl.formatMessage({
             id: 'CardDetailProperty.property-name-change-subtext',
             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
@@ -328,90 +329,90 @@ const CenterPanelPages = (props: Props) => {
                     <div className='formatting'>
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-header-1'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-header-2'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-header-3'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-header-4'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-header-5'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-header-6'/>}
                         />
                         <span className='divider'/>
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-bold'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-italic'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-strikethrough-variant'/>}
                         />
                         <span className='divider'/>
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='link-variant'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='code-tags'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='code-block'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-quote-open'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-list-bulleted'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='format-list-numbered'/>}
                         />
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='table-plus'/>}
                         />
                         <span className='divider'/>
                         <IconButton
                             size='small'
-                            onClick={() => console.log("TODO")}
+                            onClick={() => console.log('TODO')}
                             icon={<CompassIcon icon='plus'/>}
                         />
                     </div>
@@ -425,7 +426,7 @@ const CenterPanelPages = (props: Props) => {
                         <ShareBoardTourStep/>
                     </div>
                     <Button
-                        onClick={() => console.log("TODO")}
+                        onClick={() => console.log('TODO')}
                         size='small'
                         icon={<CompassIcon icon='message-text-outline'/>}
                     >
@@ -433,12 +434,12 @@ const CenterPanelPages = (props: Props) => {
                     </Button>
                     <IconButton
                         size='small'
-                        onClick={() => console.log("TODO")}
+                        onClick={() => console.log('TODO')}
                         icon={<CompassIcon icon='star-outline'/>}
                     />
                     <IconButton
                         size='small'
-                        onClick={() => console.log("TODO")}
+                        onClick={() => console.log('TODO')}
                         icon={<CompassIcon icon='information-outline'/>}
                     />
                     <PageMenu
@@ -492,7 +493,7 @@ const CenterPanelPages = (props: Props) => {
                 </div>
             </div>
 
-            <div className={expanded ? 'content expanded' :  'content'}>
+            <div className={expanded ? 'content expanded' : 'content'}>
                 <div className='doc-header'>
                     <Breadcrumbs
                         board={props.board}
@@ -541,7 +542,10 @@ const CenterPanelPages = (props: Props) => {
                     <div className='add-property'>
                         {!props.readonly && canEditBoardProperties &&
                             <MenuWrapper>
-                                <Button>
+                                <Button
+                                    emphasis='quaternary'
+                                    size='medium'
+                                >
                                     <FormattedMessage
                                         id='CardDetail.add-property'
                                         defaultMessage='+ Add a property'
@@ -640,7 +644,7 @@ const CenterPanelPages = (props: Props) => {
                     }}
                     onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
                         if (block.id) {
-                            let contentOrder: Array<string|Array<string>> = props.board.properties.contentOrder as Array<string>
+                            let contentOrder: Array<string|string[]> = props.board.properties.contentOrder as string[]
                             if (props.activePage) {
                                 contentOrder = props.activePage.fields.contentOrder
                             }
