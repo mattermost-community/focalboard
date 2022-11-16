@@ -3,8 +3,11 @@
 exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector__container"
+    class="BoardTemplateSelector__container "
   >
+    <div
+      class="BoardTemplateSelector__backdrop"
+    />
     <div
       class="BoardTemplateSelector"
     >
@@ -161,7 +164,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
 exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot with custom title and description 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector__container"
+    class="BoardTemplateSelector__container BoardTemplateSelector__container--page"
   >
     <div
       class="BoardTemplateSelector"
@@ -309,7 +312,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
 exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot without close 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector__container"
+    class="BoardTemplateSelector__container BoardTemplateSelector__container--page"
   >
     <div
       class="BoardTemplateSelector"
@@ -457,8 +460,11 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
 exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard Plugin should match snapshot 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector__container"
+    class="BoardTemplateSelector__container "
   >
+    <div
+      class="BoardTemplateSelector__backdrop"
+    />
     <div
       class="BoardTemplateSelector"
     >
