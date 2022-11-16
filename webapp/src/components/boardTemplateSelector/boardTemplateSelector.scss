@@ -13,7 +13,7 @@
     align-items: center;
     justify-content: center;
 
-    @media (max-width: 1280px) {
+    @media (max-width: 1440px) {
         padding: 80px;
     }
 }
@@ -142,6 +142,7 @@
             justify-content: flex-end;
             height: 89px;
             border-top: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+            background-color: rgb(var(--center-channel-bg-rgb));
         }
 
         .empty-board {
