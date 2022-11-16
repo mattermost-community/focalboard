@@ -48,7 +48,7 @@ function FBRoute(props: RouteProps) {
     const showWelcomePage = !disableTour &&
         Utils.isFocalboardPlugin() &&
         (me?.id !== 'single-user') &&
-        props.path !== '/welcome' &&
+        props.path !== basePath+'/welcome' &&
         loggedIn === true &&
         !myConfig[UserSettingKey.WelcomePageViewed]
 

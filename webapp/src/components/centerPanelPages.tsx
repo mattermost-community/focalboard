@@ -635,7 +635,7 @@ const CenterPanelPages = (props: Props) => {
                             newBlock.title = block.value.value
                             newBlock.fields = {...newBlock.fields, value: block.value.checked}
                         }
-                        mutator.updateBlock(activePage.boardId, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
+                        mutator.updateBlock(props.board.id, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
                         return block
                     }}
                     onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {

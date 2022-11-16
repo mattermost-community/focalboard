@@ -19,7 +19,6 @@
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 
     > * {
         padding: 0 32px;
@@ -181,8 +180,7 @@
 
 
     > div:nth-child(2) {
-        padding: 0 0 0 1px;
-        margin-left: 32px;
+        padding: 0 32px;
 
         @media (max-width: 768px) {
             margin-left: 0;
