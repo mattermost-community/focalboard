@@ -99,7 +99,7 @@ async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fie
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
-    const {card, contents, comments, attachments, onDelete, addAttachment} = props
+    const {card, comments, attachments, onDelete, addAttachment} = props
     const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
