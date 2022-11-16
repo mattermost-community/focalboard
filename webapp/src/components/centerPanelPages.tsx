@@ -640,7 +640,11 @@ const CenterPanelPages = (props: Props) => {
                     }}
                     onBlockMoved={async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
                         if (block.id) {
-                            const idx = activePage.fields.contentOrder.indexOf(block.id)
+                            let contentOrder: Array<string|Array<string>> = props.board.properties.contentOrder as Array<string>
+                            if (props.activePage) {
+                                contentOrder = props.activePage.fields.contentOrder
+                            }
+                            const idx = contentOrder.indexOf(block.id)
                             let sourceBlockId: string
                             let sourceWhere: 'after'|'before'
                             if (idx === -1) {
@@ -648,10 +652,10 @@ const CenterPanelPages = (props: Props) => {
                                 return
                             }
                             if (idx === 0) {
-                                sourceBlockId = activePage.fields.contentOrder[1] as string
+                                sourceBlockId = contentOrder[1] as string
                                 sourceWhere = 'before'
                             } else {
-                                sourceBlockId = activePage.fields.contentOrder[idx - 1] as string
+                                sourceBlockId = contentOrder[idx - 1] as string
                                 sourceWhere = 'after'
                             }
                             if (afterBlock && afterBlock.id) {
