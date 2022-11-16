@@ -62,7 +62,6 @@ const CardDialog = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
-    console.log("Attachments in CardDialog", attachments)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
