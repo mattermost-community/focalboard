@@ -94,7 +94,7 @@
         min-height: 32px;
 
         .Switch {
-            margin-left: 8px;
+            margin: 4px 0 0 8px;
             width: 40px;
             height: 24px;
             box-sizing: border-box;
@@ -224,5 +224,9 @@
 
     &__limited-button {
         margin-top: 24px;
+    }
+
+    .BlocksEditor {
+        width: 100%;
     }
 }

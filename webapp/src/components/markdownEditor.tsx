@@ -17,11 +17,15 @@ type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
+    onKeyDown?: (e: React.KeyboardEvent) => void
+    onEditorCancel?: () => void
+    autofocus?: boolean
+    saveOnEnter?: boolean
 }
 
 const MarkdownEditor = (props: Props): JSX.Element => {
-    const {placeholderText, onFocus, onBlur, onChange, text, id} = props
-    const [isEditing, setIsEditing] = useState(false)
+    const {placeholderText, onFocus, onEditorCancel, onBlur, onChange, text, id, saveOnEnter} = props
+    const [isEditing, setIsEditing] = useState(Boolean(props.autofocus))
     const html: string = Utils.htmlFromMarkdown(text || placeholderText || '')
 
     const previewElement = (
@@ -55,9 +59,11 @@ const MarkdownEditor = (props: Props): JSX.Element => {
                 id={id}
                 onChange={onChange}
                 onFocus={onFocus}
+                onEditorCancel={onEditorCancel}
                 onBlur={editorOnBlur}
                 initialText={text}
                 isEditing={isEditing}
+                saveOnEnter={saveOnEnter}
             />
         </Suspense>
     )

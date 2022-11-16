@@ -153,6 +153,7 @@ type Store interface {
 	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
 
 	DBType() string
+	DBVersion() string
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)
@@ -165,6 +166,10 @@ type Store interface {
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+
+	// For unit testing only
+	DeleteBoardRecord(boardID, modifiedBy string) error
+	DeleteBlockRecord(blockID, modifiedBy string) error
 }
 
 type NotSupportedError struct {

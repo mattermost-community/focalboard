@@ -156,6 +156,11 @@ describe('components/cardDetail/CardDetail', () => {
                     'user-id-1': {username: 'username_1'},
                 },
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const component = (
@@ -554,6 +559,11 @@ describe('components/cardDetail/CardDetail', () => {
                     [limitedCard.id]: limitedCard,
                 },
                 current: limitedCard.id,
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
