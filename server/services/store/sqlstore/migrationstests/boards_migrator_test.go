@@ -71,7 +71,6 @@ func (bm *BoardsMigrator) runMattermostMigrations() error {
 	}
 
 	options := []morph.EngineOption{
-		morph.SetMigrationTableName(""),
 		morph.SetStatementTimeoutInSeconds(1000000),
 	}
 
