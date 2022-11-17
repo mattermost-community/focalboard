@@ -1,0 +1,45 @@
+@import '../styles/z-index';
+
+.NoPages {
+    @include z-index(board-template-selector);
+    position: absolute;
+    background-color: rgb(var(--center-channel-bg-rgb));
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 48px;
+
+    .header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .title {
+            font-size: 25px;
+        }
+
+        .description {
+            max-width: 640px;
+            text-align: center;
+            margin: 0 0 32px;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        position: absolute;
+        bottom: 32px;
+        width: 100%;
+        justify-content: center;
+        flex-direction: column;
+        padding: 0 24px;
+
+        @media (min-width: 1024px) {
+            flex-direction: row;
+        }
+    }
+}
+

@@ -32,6 +32,7 @@ import CenterPanel from './centerPanel'
 import CenterPanelPages from './centerPanelPages'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 import GuestNoBoards from './guestNoBoards'
+import NoPages from './noPages'
 
 import Sidebar from './sidebar/sidebar'
 
@@ -171,6 +172,10 @@ function CenterContent(props: Props) {
 
     if ((board && !isBoardHidden()) || isLoading) {
         return null
+    }
+
+    if (isPages) {
+        return <NoPages/>
     }
 
     if (me?.is_guest) {
