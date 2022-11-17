@@ -363,12 +363,17 @@ const SidebarBoardItem = (props: Props) => {
                             parentRef={boardItemRef}
                         >
                             {isPages &&
-                                <Menu.Text
-                                    id='addPage'
-                                    name={intl.formatMessage({id: 'ViewHeader.addSubpage', defaultMessage: 'Add subpage'})}
-                                    icon={<AddIcon/>}
-                                    onClick={addPage}
-                                />}
+                                <BoardPermissionGate
+                                    boardId={board.id}
+                                    permissions={[Permission.ManageBoardCards]}
+                                >
+                                    <Menu.Text
+                                        id='addPage'
+                                        name={intl.formatMessage({id: 'ViewHeader.addSubpage', defaultMessage: 'Add subpage'})}
+                                        icon={<AddIcon/>}
+                                        onClick={addPage}
+                                    />
+                                </BoardPermissionGate>}
                             <Menu.SubMenu
                                 key={`moveBlock-${board.id}`}
                                 id='moveBlock'
