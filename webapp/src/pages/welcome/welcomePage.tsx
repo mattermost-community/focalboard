@@ -7,6 +7,7 @@ import {useLocation, useHistory} from 'react-router-dom'
 
 import BoardWelcomePNG from '../../../static/boards-welcome.png'
 import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
+import PagesWelcomePNG from '../../../static/pagesProduct2x.png'
 
 import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
@@ -62,7 +63,7 @@ const WelcomePage = () => {
         if (currentTeam) {
             history.replace(`${basePath}/team/${currentTeam?.id}`)
         } else {
-            history.replace(basePath+'/')
+            history.replace(basePath + '/')
         }
     }
 
@@ -125,33 +126,63 @@ const WelcomePage = () => {
         <div className='WelcomePage'>
             <div className='wrapper'>
                 <h1 className='text-heading9'>
-                    <FormattedMessage
-                        id='WelcomePage.Heading'
-                        defaultMessage='Welcome To Boards'
-                    />
+                    {isPages ? (
+                        <FormattedMessage
+                            id='WelcomePage.Pages.Heading'
+                            defaultMessage='Welcome to Pages'
+                        />
+                    ) : (
+                        <FormattedMessage
+                            id='WelcomePage.Heading'
+                            defaultMessage='Welcome To Boards'
+                        />
+                    )}
                 </h1>
                 <div className='WelcomePage__subtitle'>
-                    <FormattedMessage
-                        id='WelcomePage.Description'
-                        defaultMessage='Boards is a project management tool that helps define, organize, track, and manage work across teams using a familiar Kanban board view.'
-                    />
+                    {isPages ? (
+                        <FormattedMessage
+                            id='WelcomePage.Pages.Description'
+                            defaultMessage='Pages is a knowledge management tool that helps team collaborate and store documents.'
+                        />
+                    ) : (
+                        <FormattedMessage
+                            id='WelcomePage.Pages.Description'
+                            defaultMessage='Boards is a project management tool that helps define, organize, track, and manage work across teams using a familiar Kanban board view.'
+                        />
+                    )}
                 </div>
 
                 {/* This image will be rendered on large screens over 2000px */}
-                <img
-                    src={Utils.buildURL(BoardWelcomePNG, true)}
-                    className='WelcomePage__image WelcomePage__image--large'
-                    alt='Boards Welcome Image'
-                />
+                {isPages ? (
+                    <img
+                        src={Utils.buildURL(PagesWelcomePNG, true)}
+                        className='WelcomePage__image WelcomePage__image--large'
+                        alt='Boards Welcome Image'
+                    />
+                ) : (
+                    <img
+                        src={Utils.buildURL(BoardWelcomePNG, true)}
+                        className='WelcomePage__image WelcomePage__image--large'
+                        alt='Boards Welcome Image'
+                    />
+                )}
 
                 {/* This image will be rendered on small screens below 2000px */}
-                <img
-                    src={Utils.buildURL(BoardWelcomeSmallPNG, true)}
-                    className='WelcomePage__image WelcomePage__image--small'
-                    alt='Boards Welcome Image'
-                />
+                {isPages ? (
+                    <img
+                        src={Utils.buildURL(PagesWelcomePNG, true)}
+                        className='WelcomePage__image WelcomePage__image--small'
+                        alt='Boards Welcome Image'
+                    />
+                ) : (
+                    <img
+                        src={Utils.buildURL(BoardWelcomeSmallPNG, true)}
+                        className='WelcomePage__image WelcomePage__image--small'
+                        alt='Boards Welcome Image'
+                    />
+                )}
 
-                {me?.is_guest !== true &&
+                {(me?.is_guest !== true && !isPages) &&
                     <Button
                         onClick={startTour}
                         filled={true}
@@ -169,7 +200,24 @@ const WelcomePage = () => {
                         />
                     </Button>}
 
-                {me?.is_guest !== true &&
+                {(me?.is_guest !== true && isPages) &&
+                    <Button
+                        onClick={skipTour}
+                        filled={true}
+                        size='large'
+                        icon={
+                            <CompassIcon
+                                icon='chevron-right'
+                                className='Icon Icon--right'
+                            />}
+                        rightIcon={true}
+                    >
+                        <FormattedMessage
+                            id='WelcomePage.Pages.Explore.Button'
+                            defaultMessage='Get started'
+                        />
+                    </Button>}
+                {(me?.is_guest !== true && !isPages) &&
                     <a
                         className='skip'
                         onClick={skipTour}
