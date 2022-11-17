@@ -138,11 +138,15 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
-          class="template-preview-box"
+          class="templates-content"
         >
           <div
-            class="BoardTemplateSelectorPreview"
-          />
+            class="template-preview-box"
+          >
+            <div
+              class="BoardTemplateSelectorPreview"
+            />
+          </div>
           <div
             class="buttons"
           >
@@ -286,11 +290,15 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
-          class="template-preview-box"
+          class="templates-content"
         >
           <div
-            class="BoardTemplateSelectorPreview"
-          />
+            class="template-preview-box"
+          >
+            <div
+              class="BoardTemplateSelectorPreview"
+            />
+          </div>
           <div
             class="buttons"
           >
@@ -434,11 +442,15 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
           </div>
         </div>
         <div
-          class="template-preview-box"
+          class="templates-content"
         >
           <div
-            class="BoardTemplateSelectorPreview"
-          />
+            class="template-preview-box"
+          >
+            <div
+              class="BoardTemplateSelectorPreview"
+            />
+          </div>
           <div
             class="buttons"
           >
@@ -595,11 +607,15 @@ exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard
           </div>
         </div>
         <div
-          class="template-preview-box"
+          class="templates-content"
         >
           <div
-            class="BoardTemplateSelectorPreview"
-          />
+            class="template-preview-box"
+          >
+            <div
+              class="BoardTemplateSelectorPreview"
+            />
+          </div>
           <div
             class="buttons"
           >

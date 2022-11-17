@@ -206,8 +206,10 @@ const BoardTemplateSelector = (props: Props) => {
                             </Button>
                         </div>
                     </div>
-                    <div className='template-preview-box'>
-                        <BoardTemplateSelectorPreview activeTemplate={activeTemplate}/>
+                    <div className='templates-content'>
+                        <div className='template-preview-box'>
+                            <BoardTemplateSelectorPreview activeTemplate={activeTemplate}/>
+                        </div>
                         <div className='buttons'>
                             <Button
                                 filled={true}
