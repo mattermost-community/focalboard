@@ -603,6 +603,7 @@ const CenterPanelPages = (props: Props) => {
                 </div>
 
                 <BlocksEditor
+                    readonly={props.readonly || !canEditBoardCards}
                     onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {
                         if (block.contentType === 'text' && block.value === '') {
                             return null

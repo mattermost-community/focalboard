@@ -45,9 +45,6 @@ import octoClient from '../octoClient'
 import ShareBoardButton from './shareBoard/shareBoardButton'
 import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
 
-import BlocksEditor from './blocksEditor/blocksEditor'
-import {BlockData} from './blocksEditor/blocks/types'
-
 import CardDialog from './cardDialog'
 import RootPortal from './rootPortal'
 import TopBar from './topBar'
@@ -79,43 +76,6 @@ type Props = {
     hiddenCardsCount: number
 }
 
-async function addBlockNewEditor(page: Page, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
-    const block = createBlock()
-    block.parentId = page.id
-    block.boardId = page.boardId
-    block.title = title
-    block.type = contentType
-    block.fields = {...block.fields, ...fields}
-
-    const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add page text'})
-
-    const afterRedo = async (newBlock: Block) => {
-        const contentOrder = page.fields.contentOrder.slice()
-        if (afterBlockId) {
-            const idx = contentOrder.indexOf(afterBlockId)
-            if (idx === -1) {
-                contentOrder.push(newBlock.id)
-            } else {
-                contentOrder.splice(idx + 1, 0, newBlock.id)
-            }
-        } else {
-            contentOrder.push(newBlock.id)
-        }
-        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
-        dispatch(updatePages([{...page, fields: {...page.fields, contentOrder}}]))
-    }
-
-    const beforeUndo = async () => {
-        const contentOrder = page.fields.contentOrder.slice()
-        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
-    }
-
-    const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
-    dispatch(updateContents([newBlock]))
-    return newBlock
-}
-
-
 const CenterPanel = (props: Props) => {
     const intl = useIntl()
     const [selectedCardIds, setSelectedCardIds] = useState<string[]>([])
@@ -128,7 +88,6 @@ const CenterPanel = (props: Props) => {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const me = useAppSelector(getMe)
     const currentCard = useAppSelector(getCurrentCard)
-    const currentPageContents = useAppSelector(getCurrentPageContents)
     const dispatch = useAppDispatch()
 
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
@@ -424,46 +383,6 @@ const CenterPanel = (props: Props) => {
         () => getVisibleAndHiddenGroups(cards, activeView?.fields.visibleOptionIds || [], activeView?.fields.hiddenOptionIds || [], groupByProperty),
         [cards, activeView?.fields.visibleOptionIds, activeView?.fields.hiddenOptionIds, groupByProperty],
     )
-
-    const pageBlocks = useMemo(() => {
-        return currentPageContents.flatMap((value: Block | Block[]): BlockData<any> => {
-            const v: Block = Array.isArray(value) ? value[0] : value
-
-            let data: any = v?.title
-            if (v?.type === 'image') {
-                data = {
-                    file: v?.fields.fileId,
-                }
-            }
-
-            if (v?.type === 'attachment') {
-                data = {
-                    file: v?.fields.fileId,
-                    filename: v?.fields.filename,
-                }
-            }
-
-            if (v?.type === 'video') {
-                data = {
-                    file: v?.fields.fileId,
-                    filename: v?.fields.filename,
-                }
-            }
-
-            if (v?.type === 'checkbox') {
-                data = {
-                    value: v?.title,
-                    checked: v?.fields.value,
-                }
-            }
-
-            return {
-                id: v?.id,
-                value: data,
-                contentType: v?.type,
-            }
-        })
-    }, [currentPageContents])
 
     return (
         <div

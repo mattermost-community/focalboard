@@ -21,6 +21,7 @@ type Props = {
     setAfterBlock: (block: BlockData|null) => void
     onSave: (block: BlockData) => Promise<BlockData|null>
     onMove: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>
+    readonly: boolean
 }
 
 function BlockContent(props: Props) {
@@ -53,7 +54,7 @@ function BlockContent(props: Props) {
         [block, props.onMove, contentOrder],
     )
 
-    if (editing && editing.id === block.id) {
+    if (!props.readonly && editing && editing.id === block.id) {
         return (
             <Editor
                 onSave={async (b) => {
@@ -85,25 +86,26 @@ function BlockContent(props: Props) {
                     setEditing(block)
                 }}
             >
-                <div className='block-actions'>
-                    <IconButton
-                        size={'small'}
-                        icon={<CompassIcon icon='plus'/>}
-                        data-testid='add-action'
-                        onClick={(e: any) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            props.setAfterBlock(block)
-                        }}
-                    />
-                    <div ref={drag}>
+                {!props.readonly &&
+                    <div className='block-actions'>
                         <IconButton
                             size={'small'}
-                            icon={<CompassIcon icon='drag-vertical'/>}
+                            icon={<CompassIcon icon='plus'/>}
                             data-testid='add-action'
+                            onClick={(e: any) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                props.setAfterBlock(block)
+                            }}
                         />
-                    </div>
-                </div>
+                        <div ref={drag}>
+                            <IconButton
+                                size={'small'}
+                                icon={<CompassIcon icon='drag-vertical'/>}
+                                data-testid='add-action'
+                            />
+                        </div>
+                    </div>}
                 <div
                     className='content'
                     ref={preview}

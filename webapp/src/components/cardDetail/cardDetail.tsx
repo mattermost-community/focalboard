@@ -303,6 +303,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
             {!limited && <div className='CardDetail content fullwidth content-blocks'>
                 {newBoardsEditor && (
                     <BlocksEditor
+                        readonly={props.readonly || !canEditBoardCards}
                         boardId={card.boardId}
                         blocks={blocks}
                         onBlockCreated={async (block: any, afterBlock: any): Promise<BlockData|null> => {

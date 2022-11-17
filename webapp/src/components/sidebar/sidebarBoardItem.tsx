@@ -136,7 +136,6 @@ const PageSidebarItem = (props: PageSidebarItemProps) => {
                         const subpage = createPage()
                         subpage.parentId = page.id
                         subpage.boardId = board.id
-                        subpage.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Sub Page'})
                         await mutator.insertBlock(
                             board.id,
                             subpage,
@@ -251,7 +250,6 @@ const SidebarBoardItem = (props: Props) => {
         const page = createPage()
         page.parentId = board.id
         page.boardId = board.id
-        page.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Page'})
         await mutator.insertBlock(
             board.id,
             page,
