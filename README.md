@@ -18,7 +18,7 @@ It helps define, organize, track and manage work across individuals and teams. F
 
 * **[Mattermost Boards](https://www.focalboard.com/download/mattermost/)**: A self-hosted or **[free cloud server](https://mattermost.com/sign-up/?utm_source=github&utm_campaign=focalboard)** for your team to plan and collaborate.
 
-* **[Personal Desktop](https://www.focalboard.com/download/personal-edition/desktop/)**: A standalone, single-user [Mac](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8), [Windows](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website), or [Linux](https://www.focalboard.com/download/personal-edition/desktop/#linux-desktop) desktop app for your own todos and personal projects.
+* **[Personal Desktop](https://www.focalboard.com/download/personal-edition/desktop/)**: A standalone, single-user [macOS](https://apps.apple.com/app/apple-store/id1556908618?pt=2114704&ct=website&mt=8), [Windows](https://www.microsoft.com/store/apps/9NLN2T0SX9VF?cid=website), or [Linux](https://www.focalboard.com/download/personal-edition/desktop/#linux-desktop) desktop app for your own todos and personal projects.
 
 Focalboard can also be installed as a standalone **[Personal Server](https://www.focalboard.com/download/personal-edition/ubuntu/)** for development and personal use.
 
