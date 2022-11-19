@@ -1,1 +1,2 @@
-ALTER TABLE {{.prefix}}categories ADD collapsed boolean default false;
+{{- /* addColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) */ -}}
+{{ addColumnIfNeeded .schemaName "categories" "collapsed" "boolean" "default false"}}

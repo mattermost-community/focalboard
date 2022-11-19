@@ -1,4 +1,4 @@
-create table {{.prefix}}preferences
+CREATE TABLE IF NOT EXISTS {{.prefix}}preferences
 (
     userid   varchar(36) not null,
     category varchar(32) not null,
@@ -7,8 +7,6 @@ create table {{.prefix}}preferences
     primary key (userid, category, name)
     );
 
-create index idx_{{.prefix}}preferences_category
-    on {{.prefix}}preferences (category);
-
-create index idx_{{.prefix}}preferences_name
-    on {{.prefix}}preferences (name);
+{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{ createIndexIfNeeded .schemaName "preferences" "category" }}
+{{ createIndexIfNeeded .schemaName "preferences" "name" }}

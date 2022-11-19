@@ -1,3 +1,9 @@
+{{if doesTableExist .schemaName "blocks_history"}}
+
+SELECT 1;
+
+{{else}}
+
 ALTER TABLE {{.prefix}}blocks RENAME TO {{.prefix}}blocks_history;
 CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
 	id VARCHAR(36),
@@ -28,3 +34,5 @@ INSERT INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_history ORDER BY 
 INSERT OR IGNORE INTO {{.prefix}}blocks SELECT * FROM {{.prefix}}blocks_history ORDER BY insert_at DESC;
 {{end}}
 DELETE FROM {{.prefix}}blocks where delete_at > 0;
+
+{{end}}

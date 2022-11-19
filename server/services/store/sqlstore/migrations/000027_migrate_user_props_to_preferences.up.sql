@@ -48,7 +48,7 @@
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'version72MessageCanceled', replace((Props->'focalboard_version72MessageCanceled')::varchar, '"', '') from {{.prefix}}users WHERE Props->'focalboard_version72MessageCanceled' IS NOT NULL ON CONFLICT DO NOTHING;
         INSERT INTO {{.prefix}}preferences (UserId, Category, Name, Value) SELECT Id, 'focalboard', 'lastWelcomeVersion', replace((Props->'focalboard_lastWelcomeVersion')::varchar, '"', '') from {{.prefix}}users WHERE Props->'focalboard_lastWelcomeVersion' IS NOT NULL ON CONFLICT DO NOTHING;
 
-UPDATE {{.prefix}}users SET props = (props::jsonb - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion')::json WHERE jsonb_typeof(props::jsonb) = 'object';
+        UPDATE {{.prefix}}users SET props = (props::jsonb - 'focalboard_welcomePageViewed' - 'hiddenBoardIDs' - 'focalboard_tourCategory' - 'focalboard_onboardingTourStep' - 'focalboard_onboardingTourStarted' - 'focalboard_version72MessageCanceled' - 'focalboard_lastWelcomeVersion')::json WHERE jsonb_typeof(props::jsonb) = 'object';
     {{end}}
 
     {{if .mysql}}

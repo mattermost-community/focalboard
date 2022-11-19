@@ -7,8 +7,11 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"strings"
 
 	"text/template"
+
+	sq "github.com/Masterminds/squirrel"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
@@ -147,6 +150,11 @@ func (s *SQLStore) Migrate() error {
 		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
+	schemaName, err := s.getSchemaName()
+	if err != nil {
+		return fmt.Errorf("error getting schema name: %w", err)
+	}
+
 	params := map[string]interface{}{
 		"prefix":     s.tablePrefix,
 		"postgres":   s.dbType == model.PostgresDBType,
@@ -154,6 +162,7 @@ func (s *SQLStore) Migrate() error {
 		"mysql":      s.dbType == model.MysqlDBType,
 		"plugin":     s.isPlugin,
 		"singleUser": s.isSingleUser,
+		"schemaName": schemaName,
 	}
 
 	migrationAssets := &embedded.AssetSource{
@@ -164,11 +173,10 @@ func (s *SQLStore) Migrate() error {
 				return nil, mErr
 			}
 
-			tmpl, pErr := template.New("sql").Parse(string(asset))
+			tmpl, pErr := template.New("sql").Funcs(s.getTemplateHelperFuncs()).Parse(string(asset))
 			if pErr != nil {
 				return nil, pErr
 			}
-			tmpl.Funcs(s.getTemplateHelperFuncs())
 
 			buffer := bytes.NewBufferString("")
 
@@ -290,18 +298,285 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 
 func (s *SQLStore) getTemplateHelperFuncs() template.FuncMap {
 	funcs := template.FuncMap{
-		"addColumnIfNeeded": func(schemaName, tableName, columnName, constraint string) (string, error) {
-			switch s.dbType {
-			case model.MysqlDBType:
-				return mysqlAddColumnIfNeeded(schemaName, tableName, columnName, constraint), nil
-			case model.PostgresDBType:
-				return postgresAddColumnIfNeeded(schemaName, tableName, columnName, constraint), nil
-			case model.SqliteDBType:
-				return sqliteAddColumnIfNeeded(schemaName, tableName, columnName, constraint), nil
-			default:
-				return "", ErrUnsupportedDatabaseType
-			}
-		},
+		"addColumnIfNeeded":    s.genAddColumnIfNeeded,
+		"dropColumnIfNeeded":   s.genDropColumnIfNeeded,
+		"createIndexIfNeeded":  s.genCreateIndexIfNeeded,
+		"renameTableIfNeeded":  s.genRenameTableIfNeeded,
+		"renameColumnIfNeeded": s.genRenameColumnIfNeeded,
+		"doesTableExist":       s.doesTableExist,
+		"doesColumnExist":      s.doesColumnExist,
 	}
 	return funcs
+}
+
+func (s *SQLStore) genAddColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(schemaName, tableName)
+
+	exists, err := s.doesColumnExist(schemaName, tableName, columnName)
+	if err != nil {
+		return "", err
+	}
+
+	if exists {
+		return fmt.Sprintf("\n-- column '%s' already exists in table '%s'; add column skipped\n", columnName, tableName), nil
+	}
+
+	return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
+}
+
+func (s *SQLStore) genDropColumnIfNeeded(schemaName, tableName, columnName string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(schemaName, tableName)
+
+	exists, err := s.doesColumnExist(schemaName, tableName, columnName)
+	if err != nil {
+		return "", err
+	}
+
+	if !exists {
+		return fmt.Sprintf("\n-- column '%s' already dropped in table '%s'; drop column skipped\n", columnName, tableName), nil
+	}
+
+	if s.dbType == model.SqliteDBType {
+		return fmt.Sprintf("\n-- Sqlite3 cannot drop columns for versions less than 3.35.0; drop column '%s' in table '%s' skipped\n", columnName, tableName), nil
+	}
+
+	return fmt.Sprintf("\nALTER TABLE %s DROP COLUMN %s;\n", normTableName, columnName), nil
+}
+
+func (s *SQLStore) genCreateIndexIfNeeded(schemaName, tableName, columns string) (string, error) {
+	indexName := getIndexName(tableName, columns)
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(schemaName, tableName)
+
+	exists, err := s.doesIndexExist(schemaName, tableName, indexName)
+	if err != nil {
+		return "", err
+	}
+
+	if exists {
+		return fmt.Sprintf("\n-- index '%s' already exists for table '%s'; create index skipped\n", indexName, tableName), nil
+	}
+
+	return fmt.Sprintf("\nCREATE INDEX %s ON %s (%s);\n", indexName, normTableName, columns), nil
+}
+
+func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName string) (string, error) {
+	oldTableName = addPrefixIfNeeded(oldTableName, s.tablePrefix)
+	newTableName = addPrefixIfNeeded(newTableName, s.tablePrefix)
+
+	exists, err := s.doesTableExist(schemaName, newTableName)
+	if err != nil {
+		return "", err
+	}
+
+	if exists {
+		return fmt.Sprintf("\n-- table '%s' already exists; rename skipped\n", newTableName), nil
+	}
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		return fmt.Sprintf("\nRENAME TABLE %s TO %s;\n", oldTableName, newTableName), nil
+	case model.PostgresDBType, model.SqliteDBType:
+		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", oldTableName, newTableName), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName, newColumnName, dataType string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+
+	exists, err := s.doesColumnExist(schemaName, tableName, newColumnName)
+	if err != nil {
+		return "", err
+	}
+
+	if exists {
+		return fmt.Sprintf("\n-- column '%s' already exists for table '%s'; rename column skipped\n", newColumnName, tableName), nil
+	}
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		return fmt.Sprintf("\nALTER TABLE %s CHANGE %s %s %s;\n", tableName, oldColumnName, newColumnName, dataType), nil
+	case model.PostgresDBType, model.SqliteDBType:
+		return fmt.Sprintf("\nALTER TABLE %s RENAME COLUMN %s TO %s;\n", tableName, oldColumnName, newColumnName), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
+	tableName = removePrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("column_name").
+			From("INFORMATION_SCHEMA.TABLES").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": schemaName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From("sqlite_master").
+			Where(sq.Eq{
+				"name": tableName,
+				"type": "table",
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesTableExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Debug("doesTableExist",
+		mlog.String("table", tableName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func (s *SQLStore) doesColumnExist(schemaName, tableName, columnName string) (bool, error) {
+	tableName = removePrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("column_name").
+			From("INFORMATION_SCHEMA.COLUMNS").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": schemaName,
+				"column_name":  columnName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From(fmt.Sprintf("pragma_table_info('%s')", tableName)).
+			Where(sq.Eq{
+				"name": columnName,
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesColumnExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Debug("doesColumnExist",
+		mlog.String("table", tableName),
+		mlog.String("column", columnName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func (s *SQLStore) doesIndexExist(schemaName, tableName, indexName string) (bool, error) {
+	tableName = removePrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("column_name").
+			From("INFORMATION_SCHEMA.STATISTICS").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": schemaName,
+				"index_name":   indexName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From(fmt.Sprintf("pragma_index_list('%s')", tableName)).
+			Where(sq.Eq{
+				"name": indexName,
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesIndexExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Debug("doesIndexExist",
+		mlog.String("table", tableName),
+		mlog.String("index", indexName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func addPrefixIfNeeded(s, prefix string) string {
+	if !strings.HasPrefix(s, prefix) {
+		return prefix + s
+	}
+	return s
+}
+
+func removePrefixIfNeeded(s, prefix string) string {
+	if strings.HasPrefix(s, prefix) {
+		return s[len(prefix):]
+	}
+	return s
+}
+
+func normalizeTablename(schemaName, tableName string) string {
+	if schemaName != "" && !strings.HasPrefix(tableName, schemaName+".") {
+		tableName = schemaName + "." + tableName
+	}
+	return tableName
+}
+
+func getIndexName(tableName string, columns string) string {
+	var sb strings.Builder
+
+	_, _ = sb.WriteString("idx_")
+	_, _ = sb.WriteString(tableName)
+
+	// allow developers to separate column names with spaces and/or commas
+	columns = strings.ReplaceAll(columns, ",", " ")
+	cols := strings.Split(columns, " ")
+
+	for _, s := range cols {
+		sub := strings.TrimSpace(s)
+		if sub == "" {
+			continue
+		}
+
+		_, _ = sb.WriteString("_")
+		_, _ = sb.WriteString(s)
+	}
+	return sb.String()
 }

@@ -9,4 +9,5 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}category_boards (
     PRIMARY KEY (id)
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
-CREATE INDEX idx_categoryboards_category_id ON {{.prefix}}category_boards(category_id);
+{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{ createIndexIfNeeded .schemaName "category_boards" "category_id" }}

@@ -1,4 +1,6 @@
-ALTER TABLE {{.prefix}}boards ADD COLUMN minimum_role VARCHAR(36) NOT NULL DEFAULT '';
-ALTER TABLE {{.prefix}}boards_history ADD COLUMN minimum_role VARCHAR(36) NOT NULL DEFAULT '';
-UPDATE {{.prefix}}boards SET minimum_role = 'editor';
-UPDATE {{.prefix}}boards_history SET minimum_role = 'editor';
+{{- /* addColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) */ -}}
+{{ addColumnIfNeeded .schemaName "boards" "minimum_role" "varchar(36)" "NOT NULL DEFAULT ''"}}
+{{ addColumnIfNeeded .schemaName "boards_history" "minimum_role" "varchar(36)" "NOT NULL DEFAULT ''"}}
+
+UPDATE {{.prefix}}boards SET minimum_role = 'editor' WHERE minimum_role IS NULL OR minimum_role='';
+UPDATE {{.prefix}}boards_history SET minimum_role = 'editor' WHERE minimum_role IS NULL OR minimum_role='';
