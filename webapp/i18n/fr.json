@@ -392,6 +392,7 @@
   "rhs-boards.no-boards-linked-to-channel": "Aucun tableau n'est lié à {channelName} pour le moment",
   "rhs-boards.no-boards-linked-to-channel-description": "Boards est un outil de gestion de projet qui permet d'organiser, de suivre et de gérer le travail entre équipes en utilisant des tableaux Kanban.",
   "rhs-boards.unlink-board": "Dissocier le tableau",
+  "rhs-boards.unlink-board1": "Dissocier le tableau",
   "rhs-channel-boards-header.title": "Tableaux",
   "share-board.publish": "Publier",
   "share-board.share": "Partager",
