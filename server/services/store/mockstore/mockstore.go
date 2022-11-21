@@ -182,6 +182,20 @@ func (mr *MockStoreMockRecorder) DBType() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DBType", reflect.TypeOf((*MockStore)(nil).DBType))
 }
 
+// DBVersion mocks base method.
+func (m *MockStore) DBVersion() string {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DBVersion")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// DBVersion indicates an expected call of DBVersion.
+func (mr *MockStoreMockRecorder) DBVersion() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DBVersion", reflect.TypeOf((*MockStore)(nil).DBVersion))
+}
+
 // DeleteBlock mocks base method.
 func (m *MockStore) DeleteBlock(arg0, arg1 string) error {
 	m.ctrl.T.Helper()

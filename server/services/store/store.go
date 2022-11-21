@@ -158,6 +158,7 @@ type Store interface {
 	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
 
 	DBType() string
+	DBVersion() string
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)

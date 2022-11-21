@@ -52,9 +52,11 @@ type Props = {
     onChange?: (text: string) => void
     onFocus?: () => void
     onBlur?: (text: string) => void
+    onEditorCancel?: () => void
     initialText?: string
     id?: string
     isEditing: boolean
+    saveOnEnter?: boolean
 }
 
 const MarkdownEditorInput = (props: Props): ReactElement => {
@@ -198,6 +200,10 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return 'editor-blur'
         }
 
+        if (e.key === 'Backspace') {
+            return 'backspace'
+        }
+
         if (getDefaultKeyBinding(e) === 'undo') {
             return 'editor-undo'
         }
@@ -229,8 +235,15 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
             return 'handled'
         }
 
+        if (command === 'backspace') {
+            if (props.onEditorCancel && editorState.getCurrentContent().getPlainText().length === 0) {
+                props.onEditorCancel()
+                return 'handled'
+            }
+        }
+
         return 'not-handled'
-    }, [])
+    }, [props.onEditorCancel, editorState])
 
     const onEditorStateBlur = useCallback(() => {
         if (confirmAddUser) {
@@ -238,7 +251,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
         }
         const text = editorState.getCurrentContent().getPlainText()
         onBlur && onBlur(text)
-    }, [editorState, onBlur])
+    }, [editorState.getCurrentContent().getPlainText(), onBlur, confirmAddUser])
 
     const onMentionPopoverOpenChange = useCallback((open: boolean) => {
         setIsMentionPopoverOpen(open)
@@ -258,9 +271,23 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
 
     const className = 'MarkdownEditorInput'
 
+    const handleReturn = (e: any, state: EditorState): DraftHandleValue => {
+        if (!e.shiftKey) {
+            const text = state.getCurrentContent().getPlainText()
+            onBlur && onBlur(text)
+            return 'handled'
+        }
+        return 'not-handled'
+    }
+
     return (
         <div
             className={className}
+            onKeyDown={(e: React.KeyboardEvent) => {
+                if (isMentionPopoverOpen || isEmojiPopoverOpen) {
+                    e.stopPropagation()
+                }
+            }}
         >
             <Editor
                 editorKey={id}
@@ -272,6 +299,7 @@ const MarkdownEditorInput = (props: Props): ReactElement => {
                 onFocus={onFocus}
                 keyBindingFn={customKeyBindingFn}
                 handleKeyCommand={handleKeyCommand}
+                handleReturn={props.saveOnEnter ? handleReturn : undefined}
             />
             <MentionSuggestions
                 open={isMentionPopoverOpen}
