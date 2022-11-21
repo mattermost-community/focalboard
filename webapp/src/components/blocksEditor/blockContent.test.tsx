@@ -56,6 +56,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -78,6 +79,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -100,6 +102,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -124,6 +127,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={setAfterBlock}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -148,6 +152,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={onSave}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
