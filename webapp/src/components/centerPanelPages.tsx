@@ -143,11 +143,21 @@ const Breadcrumbs = (props: BreadcrumbsProps) => {
 
     return (
         <div className='pages-breadcrumbs'>
-            <span onClick={() => props.showPage('')}>{props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}</span>
+            <span
+                className='page-breadcrumb'
+                onClick={() => props.showPage('')}
+            >
+                {props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}
+            </span>
             {breadcrumbs.map((b) => (
                 <>
                     <span>{' / '}</span>
-                    <span onClick={() => props.showPage(b.id)}>{b.title ? b.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}</span>
+                    <span
+                        className='page-breadcrumb'
+                        onClick={() => props.showPage(b.id)}
+                    >
+                        {b.title ? b.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}
+                    </span>
                 </>
             ))}
         </div>
