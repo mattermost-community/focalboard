@@ -23,6 +23,12 @@
 
 .RootInput__option {
     padding: 0;
+
+    &:first-child {
+        .slash-command {
+            margin: 12px 0 0 !important;
+        }
+    }
 }
 
 .slash-command {
@@ -30,10 +36,6 @@
     align-items: flex-start;
     padding: 1rem 2.4rem;
     margin: 0 !important;
-
-    &:first-child {
-        margin: 12px 0 0 !important;
-    }
 }
 
 .slash-command__icon {
