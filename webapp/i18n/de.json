@@ -398,7 +398,7 @@
   "rhs-boards.no-boards-linked-to-channel": "Bisher sind keine Boards mit {channelName} verknüpft",
   "rhs-boards.no-boards-linked-to-channel-description": "Boards ist ein Projektmanagement Werkzeug, das hilft Aufgaben über Teams hinweg zu definieren, organisieren, verfolgen und verwalten, ähnlich den bekannten Kanban Boards.",
   "rhs-boards.unlink-board": "Board Verknüpfung aufheben",
-  "rhs-boards.unlink-board1": "Boardverknüpfung Hallo aufheben",
+  "rhs-boards.unlink-board1": "Board Verknüpfung aufheben",
   "rhs-channel-boards-header.title": "Boards",
   "share-board.publish": "Veröffentlichen",
   "share-board.share": "Teilen",
