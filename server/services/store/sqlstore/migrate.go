@@ -98,13 +98,8 @@ func (s *SQLStore) Migrate() error {
 	var driver drivers.Driver
 	var err error
 
-	migrationConfig := drivers.Config{
-		StatementTimeoutInSecs: 1000000,
-		MigrationsTable:        fmt.Sprintf("%sschema_migrations", s.tablePrefix),
-	}
-
 	if s.dbType == model.SqliteDBType {
-		driver, err = sqlite.WithInstance(s.db, &sqlite.Config{Config: migrationConfig})
+		driver, err = sqlite.WithInstance(s.db)
 		if err != nil {
 			return err
 		}
@@ -125,14 +120,14 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if s.dbType == model.PostgresDBType {
-		driver, err = postgres.WithInstance(db, &postgres.Config{Config: migrationConfig})
+		driver, err = postgres.WithInstance(db)
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.dbType == model.MysqlDBType {
-		driver, err = mysql.WithInstance(db, &mysql.Config{Config: migrationConfig})
+		driver, err = mysql.WithInstance(db)
 		if err != nil {
 			return err
 		}
@@ -186,6 +181,8 @@ func (s *SQLStore) Migrate() error {
 
 	opts := []morph.EngineOption{
 		morph.WithLock("boards-lock-key"),
+		morph.SetMigrationTableName(fmt.Sprintf("%sschema_migrations", s.tablePrefix)),
+		morph.SetStatementTimeoutInSeconds(1000000),
 	}
 
 	if s.dbType == model.SqliteDBType {
