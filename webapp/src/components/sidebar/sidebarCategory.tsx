@@ -21,6 +21,7 @@ import ChevronDown from '../../widgets/icons/chevronDown'
 import ChevronRight from '../../widgets/icons/chevronRight'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import CreateCategory from '../createCategory/createCategory'
+import {UserSettings} from '../../userSettings'
 import {useAppSelector} from '../../store/hooks'
 import {
     getMyConfig,
@@ -199,6 +200,13 @@ const SidebarCategory = (props: Props) => {
                     setTimeout(() => {
                         showBoard(props.boards[nextBoardId as number].id)
                     }, 120)
+                }
+                if (props.isPages) {
+                    UserSettings.setLastFolderID(deleteBoard.teamId, null)
+                    UserSettings.setLastPageId(deleteBoard.id, null)
+                } else {
+                    UserSettings.setLastBoardID(deleteBoard.teamId, null)
+                    UserSettings.setLastViewId(deleteBoard.id, null)
                 }
             },
             async () => {
