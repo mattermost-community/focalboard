@@ -294,12 +294,20 @@ func testReorderCategoryBoards(t *testing.T, store store.Store) {
 	})
 	assert.NoError(t, err)
 
-	err = store.AddUpdateCategoryBoard("user_id", map[string]string{
-		"board_id_1": "category_id_1",
-		"board_id_2": "category_id_1",
-		"board_id_3": "category_id_1",
-		"board_id_4": "category_id_1",
-	})
+	// adding board to category.
+	// Even though we can add multiple boards to a category in a single call to `AddUpdateCategoryBoard`,
+	// we're doing this separately to make the order deterministic.
+	// Since boards in a category are sorted by most recent first
+	err = store.AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "category_id_1"})
+	assert.NoError(t, err)
+
+	err = store.AddUpdateCategoryBoard("user_id", map[string]string{"board_id_2": "category_id_1"})
+	assert.NoError(t, err)
+
+	err = store.AddUpdateCategoryBoard("user_id", map[string]string{"board_id_3": "category_id_1"})
+	assert.NoError(t, err)
+
+	err = store.AddUpdateCategoryBoard("user_id", map[string]string{"board_id_4": "category_id_1"})
 	assert.NoError(t, err)
 
 	// verify current order
