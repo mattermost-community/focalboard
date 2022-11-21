@@ -250,9 +250,16 @@ const SidebarCategory = (props: Props) => {
         </div>
     )
 
+    const delayedSetBoardDraggingOver = (isDraggingOver: boolean) => {
+        setTimeout(() => {
+            setBoardDraggingOver(isDraggingOver)
+        }, 200)
+    }
+
     return (
         <Draggable
             draggableId={props.categoryBoards.id}
+            key={props.categoryBoards.id}
             index={props.index}
         >
             {(provided, snapshot) => (
@@ -270,7 +277,7 @@ const SidebarCategory = (props: Props) => {
                         >
                             {(categoryProvided, categorySnapshot) => {
                                 if (boardDraggingOver !== categorySnapshot.isDraggingOver) {
-                                    setBoardDraggingOver(categorySnapshot.isDraggingOver)
+                                    delayedSetBoardDraggingOver(categorySnapshot.isDraggingOver)
                                 }
 
                                 return (

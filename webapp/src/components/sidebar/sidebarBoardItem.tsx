@@ -202,6 +202,7 @@ const SidebarBoardItem = (props: Props) => {
     return (
         <Draggable
             draggableId={props.board.id}
+            key={props.board.id}
             index={props.index}
         >
             {(provided, snapshot) => (
