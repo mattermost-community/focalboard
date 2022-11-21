@@ -4,6 +4,7 @@ import React, {useCallback} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from 'react-router-dom'
 
+import NoPagesPNG from '../../static/noPages.png'
 import Button from '../widgets/buttons/button'
 import mutator from '../mutator'
 import {getCurrentBoardId} from '../store/boards'
@@ -31,13 +32,18 @@ const NoPages = () => {
     return (
         <div className='NoPages'>
             <div className='header'>
-                <h1 className='title'>
+                <img
+                    src={Utils.buildURL(NoPagesPNG, true)}
+                    className='noPagesImage'
+                    alt='No Pages Image'
+                />
+                <h1 className='title text-heading6'>
                     <FormattedMessage
                         id='NoPages.title'
                         defaultMessage='No pages yet'
                     />
                 </h1>
-                <p className='description'>
+                <p className='description text-base'>
                     {!me?.is_guest &&
                         <FormattedMessage
                             id='NoPages.description'
@@ -53,7 +59,7 @@ const NoPages = () => {
             <div className='buttons'>
                 <Button
                     filled={true}
-                    size={'medium'}
+                    size={'large'}
                     onClick={async () => {
                         await mutator.addEmptyFolder(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
                     }}

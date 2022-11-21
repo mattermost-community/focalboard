@@ -113,7 +113,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -811,7 +811,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -1364,7 +1364,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -1992,7 +1992,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -2421,7 +2421,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -3069,7 +3069,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -3717,7 +3717,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -4365,7 +4365,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -5013,7 +5013,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -5661,7 +5661,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -6309,7 +6309,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -6957,7 +6957,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -7605,7 +7605,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -8253,7 +8253,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -8528,7 +8528,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -9047,7 +9047,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"
@@ -9566,7 +9566,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
         </div>
       </div>
       <div
-        class="ViewHeader"
+        class="ViewHeader viewHeaderView"
       >
         <div
           class="viewSelector"

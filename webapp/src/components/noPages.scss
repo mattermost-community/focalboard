@@ -10,6 +10,15 @@
     height: 100%;
     overflow: auto;
     padding-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .noPagesImage {
+        max-width: 320px;
+        margin: 0 -100px -56px 0;
+    }
 
     .header {
         width: 100%;
@@ -17,28 +26,10 @@
         align-items: center;
         flex-direction: column;
 
-        .title {
-            font-size: 25px;
-        }
-
         .description {
             max-width: 640px;
             text-align: center;
             margin: 0 0 32px;
-        }
-    }
-
-    .buttons {
-        display: flex;
-        position: absolute;
-        bottom: 32px;
-        width: 100%;
-        justify-content: center;
-        flex-direction: column;
-        padding: 0 24px;
-
-        @media (min-width: 1024px) {
-            flex-direction: row;
         }
     }
 }

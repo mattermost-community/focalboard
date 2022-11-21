@@ -20,6 +20,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-bottom: 48px;
+    overflow: auto;
 
     >* {
         padding: 0 32px;
