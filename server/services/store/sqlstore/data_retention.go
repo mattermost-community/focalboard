@@ -12,7 +12,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
-	_ "github.com/mattn/go-sqlite3" // sqlite driver
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
