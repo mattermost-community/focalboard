@@ -353,6 +353,7 @@ describe('components/sidebarSidebar', () => {
         board2.id = 'board2'
 
         const categoryAttribute2 = TestBlockFactory.createCategoryBoards()
+        categoryAttribute2.id = 'category2'
         categoryAttribute2.name = 'Category 2'
         categoryAttribute2.boardIDs = [board2.id]
 
