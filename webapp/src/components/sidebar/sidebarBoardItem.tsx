@@ -267,8 +267,13 @@ const SidebarBoardItem = (props: Props) => {
         // if the same board, reuse the match params
         // otherwise remove viewId and cardId, results in first view being selected
         const params = {teamId: match.params.teamId}
-        const newPath = generatePath('/team/:teamId?', params)
-        history.push(newPath)
+        if (isPages) {
+            const newPath = generatePath('/pages/team/:teamId?', params)
+            history.push(newPath)
+        } else {
+            const newPath = generatePath('/boards/team/:teamId?', params)
+            history.push(newPath)
+        }
     }
 
     const handleHideBoard = async () => {
@@ -302,7 +307,12 @@ const SidebarBoardItem = (props: Props) => {
 
             // Empty board ID navigates to template picker, which is
             // fine if there are no more visible boards to switch to.
-            const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
+            let visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
+            if (isPages) {
+                visibleBoards = visibleBoards.filter((b) => b.properties?.isFolder === 'true')
+            } else {
+                visibleBoards = visibleBoards.filter((b) => b.properties?.isFolder !== 'true')
+            }
 
             if (visibleBoards.length === 0) {
                 if (isPages) {
