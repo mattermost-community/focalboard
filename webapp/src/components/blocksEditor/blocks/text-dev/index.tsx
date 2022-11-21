@@ -4,6 +4,7 @@ import React, {useRef, useEffect} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import {Utils} from '../../../../utils'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './text.scss'
 
@@ -14,6 +15,7 @@ const Text: ContentType = {
     prefix: '',
     runSlashCommand: (): void => {},
     editable: true,
+    icon: <CompassIcon icon='text-box-outline'/>,
     Display: (props: BlockInputProps) => {
         const html: string = Utils.htmlFromMarkdown(props.value || '')
         return (

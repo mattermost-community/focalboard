@@ -60,7 +60,7 @@ export default function RootInput(props: Props) {
 
     const formatOptionLabel = (ct: ContentType) => (
         <div className='slash-command'>
-            <div className='slash-command__icon'><span>{'/'}</span></div>
+            <div className='slash-command__icon'>{ct.icon}</div>
             <div className='slash-command__info'>
                 <div className='slash-command__title'>{ct.slashCommand}</div>
                 <div className='slash-command__desc'>

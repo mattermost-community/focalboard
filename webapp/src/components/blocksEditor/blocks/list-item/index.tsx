@@ -3,6 +3,7 @@
 import React, {useRef, useEffect} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './list-item.scss'
 
@@ -14,6 +15,7 @@ const ListItem: ContentType = {
     nextType: 'list-item',
     runSlashCommand: (): void => {},
     editable: true,
+    icon: <CompassIcon icon='format-list-bulleted'/>,
     Display: (props: BlockInputProps) => <ul><li>{props.value}</li></ul>,
     Input: (props: BlockInputProps) => {
         const ref = useRef<HTMLInputElement|null>(null)

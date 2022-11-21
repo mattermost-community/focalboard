@@ -4,6 +4,7 @@ import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './attachment.scss'
 
@@ -19,6 +20,7 @@ const Attachment: ContentType<FileInfo> = {
     prefix: '',
     runSlashCommand: (): void => {},
     editable: false,
+    icon: <CompassIcon icon='file-text-outline'/>,
     Display: (props: BlockInputProps<FileInfo>) => {
         const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
 

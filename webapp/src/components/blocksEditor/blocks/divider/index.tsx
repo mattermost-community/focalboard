@@ -13,6 +13,7 @@ const Divider: ContentType = {
     prefix: '--- ',
     runSlashCommand: (): void => {},
     editable: false,
+    icon: <span>{'-'}</span>,
     Display: () => <hr className='Divider'/>,
     Input: (props: BlockInputProps) => {
         useEffect(() => {
