@@ -8,7 +8,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getMySortedBoards} from '../../store/boards'
+import {getCurrentBoard, getMySortedBoards} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
@@ -34,6 +34,8 @@ import {Constants} from '../../constants'
 
 import {getMe} from '../../store/users'
 import {getCurrentViewId} from '../../store/views'
+
+import octoClient from '../../octoClient'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -62,6 +64,7 @@ const Sidebar = (props: Props) => {
     const sidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
     const activeViewID = useAppSelector(getCurrentViewId)
+    const currentBoard = useAppSelector(getCurrentBoard)
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {
@@ -97,6 +100,37 @@ const Sidebar = (props: Props) => {
     useEffect(() => {
         hideSidebar()
     }, [windowDimensions])
+
+    // This handles the case when a user opens a linked board from Channels RHS
+    // and thats the first time that user is opening that board.
+    // Here we check if that board has a associated category for the user. If not,
+    // we assign it to the default "Boards" category.
+    // We do this on the client side rather than the server side live for all other cases
+    // is because there is no good, explicit API call to add this logic to when opening
+    // a board that you have implicit access to.
+    useEffect(() => {
+        if (!sidebarCategories || sidebarCategories.length === 0 || !currentBoard || !team || currentBoard.isTemplate) {
+            return
+        }
+
+        // find the category the current board belongs to
+        const category = sidebarCategories.find((c) => c.boardIDs.indexOf(currentBoard.id) >= 0)
+        if (category) {
+            // Boards does belong to a category.
+            // All good here. Nothing to do
+            return
+        }
+
+        // if the board doesn't belong to a category
+        // we need to move it to the default "Boards" category
+        const boardsCategory = sidebarCategories.find((c) => c.name === 'Boards')
+        if (!boardsCategory) {
+            Utils.logError('Boards category not found for user')
+            return
+        }
+
+        octoClient.moveBoardToCategory(team.id, currentBoard.id, boardsCategory.id, '')
+    }, [sidebarCategories, currentBoard, team])
 
     if (!boards) {
         return <div/>
