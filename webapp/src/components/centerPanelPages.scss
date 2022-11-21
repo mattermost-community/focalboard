@@ -96,7 +96,7 @@
             @include z-index(center-panel);
             display: flex;
             flex-wrap: wrap;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
 
             &:empty {
                 display: none;
@@ -109,6 +109,7 @@
                 margin-right: 12px;
                 padding-left: 12px;
                 gap: 4px;
+                margin-bottom: 8px;
 
                 &:first-child {
                     margin-left: -10px;
