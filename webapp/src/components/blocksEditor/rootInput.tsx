@@ -58,6 +58,18 @@ export default function RootInput(props: Props) {
     const [showMenu, setShowMenu] = useState(false)
     const intl = useIntl()
 
+    const formatOptionLabel = (ct: ContentType) => (
+        <div className='slash-command'>
+            <div className='slash-command__icon'><span>{'/'}</span></div>
+            <div className='slash-command__info'>
+                <div className='slash-command__title'>{ct.slashCommand}</div>
+                <div className='slash-command__desc'>
+                    {`Creates a new ${ct.displayName} block.`}
+                </div>
+            </div>
+        </div>
+    )
+
     return (
         <Select
             styles={styles}
@@ -70,8 +82,8 @@ export default function RootInput(props: Props) {
             menuPortalTarget={document.getElementById('focalboard-root-portal')}
             menuPosition={'fixed'}
             options={registry.list()}
+            formatOptionLabel={formatOptionLabel}
             getOptionValue={(ct: ContentType) => ct.slashCommand}
-            getOptionLabel={(ct: ContentType) => ct.slashCommand + ' Creates a new ' + ct.displayName + ' block.'}
             filterOption={(option: any, inputValue: string): boolean => {
                 return inputValue.startsWith(option.value) || option.value.startsWith(inputValue)
             }}
