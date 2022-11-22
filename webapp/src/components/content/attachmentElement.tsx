@@ -12,6 +12,8 @@ import FileIcons from '../../fileIcons'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../../components/confirmationDialogBox'
 import {Utils} from '../../utils'
+import {getUploadPercent} from '../../store/attachments'
+import {useAppSelector} from '../../store/hooks'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
@@ -35,6 +37,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
     const [fileIcon, setFileIcon] = useState<string>('file-text-outline-larg')
     const [fileName, setFileName] = useState<string>()
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
+    const uploadPercent = useAppSelector(getUploadPercent(block.id))
 
     const intl = useIntl()
 
@@ -139,9 +142,18 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                     {fileInfo.extension?.substring(1)} {fileSize}
                 </div> }
                 {block.isUploading && <div className='fileElement-file-uploading'>
-                    {'Uploading...'}
+                    {'Uploading...('}{uploadPercent}{'%)'}
                 </div>}
             </div>
+            {block.isUploading &&
+                <div className='progress'>
+                    <span
+                        className='progress-bar'
+                        style={{width: uploadPercent + '%'}}
+                    >
+                        {''}
+                    </span>
+                </div>}
             {!block.isUploading &&
             <div className='fileElement-delete-download'>
                 <MenuWrapper className='mt-3 fileElement-menu-icon'>

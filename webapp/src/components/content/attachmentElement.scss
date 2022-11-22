@@ -68,4 +68,23 @@
         }
     }
 
+    .progress {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 7px;
+        margin-bottom: 0;
+        border-radius: 0;
+    }
+
+    .progress-bar {
+        float: left;
+        width: 0%;
+        height: 100%;
+        line-height: 20px;
+        color: #fff;
+        text-align: center;
+        background-color: #285ab9;
+    }
+
 }

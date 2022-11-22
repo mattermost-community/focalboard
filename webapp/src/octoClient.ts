@@ -590,6 +590,27 @@ class OctoClient {
         return undefined
     }
 
+    async uploadAttachment(rootID: string, file: File): Promise<XMLHttpRequest | undefined> {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const xhr = new XMLHttpRequest()
+
+        xhr.open('POST', this.getBaseURL() + this.teamPath() + '/' + rootID + '/files', true)
+        const headers = this.headers() as Record<string, string>
+        delete headers['Content-Type']
+
+        xhr.setRequestHeader('Accept', 'application/json')
+        xhr.setRequestHeader('Authorization', this.token ? 'Bearer ' + this.token : '')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+        if (xhr.upload) {
+            xhr.upload.onprogress = () => {}
+        }
+        xhr.send(formData)
+        return xhr
+    }
+
     async getFileInfo(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId + '/info'
         const readToken = Utils.getReadToken()

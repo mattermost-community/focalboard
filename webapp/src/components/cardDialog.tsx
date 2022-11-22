@@ -12,7 +12,7 @@ import {getCard} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
-import {getCardAttachments, updateAttachments} from '../store/attachments'
+import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../store/attachments'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -163,16 +163,32 @@ const CardDialog = (props: Props): JSX.Element => {
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                     } else {
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.upload', defaultMessage: 'Attachment uploading.'}), severity: 'normal'})
-                        const attachmentId = await octoClient.uploadFile(boardId, attachment)
-                        if (attachmentId) {
-                            removeUploadingAttachment(uploadingBlock)
-                            const block = createAttachmentBlock()
-                            block.fields.attachmentId = attachmentId || ''
-                            sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
-                            resolve(block)
-                        } else {
-                            removeUploadingAttachment(uploadingBlock)
-                            sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
+                        const xhr = await octoClient.uploadAttachment(boardId, attachment)
+                        if (xhr) {
+                            xhr.upload.onprogress = (event) => {
+                                const percent = Math.floor((event.loaded / event.total) * 100)
+                                dispatch(updateUploadPrecent({
+                                    blockId: attachmentBlock.id,
+                                    uploadPercent: percent,
+                                }))
+                            }
+
+                            xhr.onload = () => {
+                                if (xhr.status === 200 && xhr.readyState === 4) {
+                                    const json = JSON.parse(xhr.response)
+                                    const attachmentId = json.fileId
+                                    if (attachmentId) {
+                                        removeUploadingAttachment(uploadingBlock)
+                                        const block = createAttachmentBlock()
+                                        block.fields.attachmentId = attachmentId || ''
+                                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.uploadSuccess', defaultMessage: 'Attachment uploaded successfull.'}), severity: 'normal'})
+                                        resolve(block)
+                                    } else {
+                                        removeUploadingAttachment(uploadingBlock)
+                                        sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
+                                    }
+                                }
+                            }
                         }
                     }
                 },

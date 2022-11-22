@@ -42,6 +42,9 @@ const attachmentSlice = createSlice({
                 }
             }
         },
+        updateUploadPrecent: (state, action: PayloadAction<{blockId: string, uploadPercent: number}>) => {
+            state.attachments[action.payload.blockId].uploadingPercent = action.payload.uploadPercent
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(initialReadOnlyLoad.fulfilled, (state, action) => {
@@ -71,11 +74,17 @@ const attachmentSlice = createSlice({
     },
 })
 
-export const {updateAttachments} = attachmentSlice.actions
+export const {updateAttachments, updateUploadPrecent} = attachmentSlice.actions
 export const {reducer} = attachmentSlice
 
 export function getCardAttachments(cardId: string): (state: RootState) => AttachmentBlock[] {
     return (state: RootState): AttachmentBlock[] => {
         return (state.attachments?.attachmentsByCard && state.attachments.attachmentsByCard[cardId]) || []
+    }
+}
+
+export function getUploadPercent(blockId: string): (state: RootState) => number {
+    return (state: RootState): number => {
+        return (state.attachments.attachments[blockId].uploadingPercent)
     }
 }

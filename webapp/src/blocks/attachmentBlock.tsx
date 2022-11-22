@@ -10,6 +10,7 @@ type AttachmentBlock = Block & {
     type: 'attachment'
     fields: AttachmentBlockFields
     isUploading: boolean
+    uploadingPercent: number
 }
 
 function createAttachmentBlock(block?: Block): AttachmentBlock {
@@ -20,6 +21,7 @@ function createAttachmentBlock(block?: Block): AttachmentBlock {
             attachmentId: block?.fields.attachmentId || '',
         },
         isUploading: false,
+        uploadingPercent: 0,
     }
 }
 

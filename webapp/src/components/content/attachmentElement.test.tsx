@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react'
+import {Provider as ReduxProvider} from 'react-redux'
 
 import {render} from '@testing-library/react'
 
@@ -11,7 +12,7 @@ import {mocked} from 'jest-mock'
 
 import {AttachmentBlock} from '../../blocks/attachmentBlock'
 
-import {wrapIntl} from '../../testUtils'
+import {mockStateStore, wrapIntl} from '../../testUtils'
 
 import octoClient from '../../octoClient'
 
@@ -44,13 +45,28 @@ describe('component/content/FileBlock', () => {
         deleteAt: 0,
         limited: false,
         isUploading: false,
+        uploadingPercent: 0,
     }
+
+    const state = {
+        attachments: {
+            attachments: {
+                'test-id': {
+                    uploadPercent: 0,
+                },
+            },
+        },
+    }
+
+    const store = mockStateStore([], state)
 
     test('should match snapshot', async () => {
         const component = wrapIntl(
-            <AttachmentElement
-                block={defaultBlock}
-            />,
+            <ReduxProvider store={store}>
+                <AttachmentElement
+                    block={defaultBlock}
+                />
+            </ReduxProvider>,
         )
         let fileContainer: Element | undefined
         await act(async () => {
@@ -69,9 +85,11 @@ describe('component/content/FileBlock', () => {
         })
 
         const component = wrapIntl(
-            <AttachmentElement
-                block={defaultBlock}
-            />,
+            <ReduxProvider store={store}>
+                <AttachmentElement
+                    block={defaultBlock}
+                />
+            </ReduxProvider>,
         )
         let fileContainer: Element | undefined
         await act(async () => {
