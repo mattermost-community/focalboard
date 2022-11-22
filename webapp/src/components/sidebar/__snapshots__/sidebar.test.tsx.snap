@@ -231,9 +231,9 @@ exports[`components/sidebarSidebar should assign default category if current boa
                   >
                     <div
                       class="version"
-                      title="v7.6.0"
+                      title="v7.5.2"
                     >
-                      v7.6.0
+                      v7.5.2
                     </div>
                   </div>
                 </div>
@@ -449,9 +449,9 @@ exports[`components/sidebarSidebar shouldnt do any category assignment is board 
                   >
                     <div
                       class="version"
-                      title="v7.6.0"
+                      title="v7.5.2"
                     >
-                      v7.6.0
+                      v7.5.2
                     </div>
                   </div>
                 </div>
