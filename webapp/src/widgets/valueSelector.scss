@@ -5,6 +5,7 @@
     border-radius: var(--default-rad);
     color: rgb(var(--center-channel-color-rgb));
     display: flex;
+    min-width: 180px;
 
     > .Label {
         margin: 0 10px;
@@ -21,6 +22,10 @@
         overflow: hidden;
         border-radius: var(--default-rad);
         max-width: 100%;
+
+        .Label-text {
+            flex-grow: 1;
+        }
 
         .IconButton.delete-value {
             @include z-index(value-selector-delete);

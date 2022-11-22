@@ -283,7 +283,7 @@ func (a *API) handleUpdateUserConfig(w http.ResponseWriter, r *http.Request) {
 	//   description: User config patch to apply
 	//   required: true
 	//   schema:
-	//     "$ref": "#/definitions/UserPropPatch"
+	//     "$ref": "#/definitions/UserPreferencesPatch"
 	// security:
 	// - BearerAuth: []
 	// responses:

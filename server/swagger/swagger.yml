@@ -39,6 +39,15 @@ definitions:
             BoardsCloudLimits is the representation of the limits for the
             Boards server
         x-go-package: github.com/mattermost/focalboard/server/model
+    BoardsStatistics:
+        description: BoardsStatistics is the representation of the statistics for the Boards server
+        x-go-package: github.com/mattermost/focalboard/server/model
+    Card:
+        title: Card represents a group of content blocks and properties.
+        x-go-package: github.com/mattermost/focalboard/server/model
+    CardPatch:
+        description: CardPatch is a patch for modifying cards
+        x-go-package: github.com/mattermost/focalboard/server/model
     Category:
         description: Category is a board category
         x-go-package: github.com/mattermost/focalboard/server/model
@@ -96,8 +105,8 @@ definitions:
     User:
         description: User is a user
         x-go-package: github.com/mattermost/focalboard/server/model
-    UserPropPatch:
-        description: UserPropPatch is a user property patch
+    UserPreferencesPatch:
+        description: UserPreferencesPatch is a user property patch
         x-go-package: github.com/mattermost/focalboard/server/model
 host: localhost
 info:
@@ -559,6 +568,71 @@ paths:
                         $ref: '#/definitions/ErrorResponse'
             security:
                 - BearerAuth: []
+    /boards/{boardID}/cards:
+        get:
+            operationId: getCards
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: The page to select (default=0)
+                  in: query
+                  name: page
+                  type: integer
+                - description: Number of cards to return per page(default=100)
+                  in: query
+                  name: per_page
+                  type: integer
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        items:
+                            $ref: '#/definitions/Card'
+                        type: array
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Fetches cards for the specified board.
+        post:
+            operationId: createCard
+            parameters:
+                - description: Board ID
+                  in: path
+                  name: boardID
+                  required: true
+                  type: string
+                - description: the card to create
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/Card'
+                - description: Disables notifications (for bulk data inserting)
+                  in: query
+                  name: disable_notify
+                  type: bool
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Card'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Creates a new card for the specified board.
     /boards/{boardID}/duplicate:
         post:
             description: Returns the new created board and all the blocks
@@ -876,6 +950,62 @@ paths:
                         $ref: '#/definitions/ErrorResponse'
             security:
                 - BearerAuth: []
+    /cards/{cardID}:
+        get:
+            operationId: getCard
+            parameters:
+                - description: Card ID
+                  in: path
+                  name: cardID
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Card'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Fetches the specified card.
+    /cards/{cardID}/cards:
+        patch:
+            operationId: patchCard
+            parameters:
+                - description: Card ID
+                  in: path
+                  name: cardID
+                  required: true
+                  type: string
+                - description: the card patch
+                  in: body
+                  name: Body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/CardPatch'
+                - description: Disables notifications (for bulk data patching)
+                  in: query
+                  name: disable_notify
+                  type: bool
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/Card'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Patches the specified card.
     /clientConfig:
         get:
             description: Returns the client configuration
@@ -994,6 +1124,15 @@ paths:
                         $ref: '#/definitions/ErrorResponse'
             security:
                 - BearerAuth: []
+    /ping:
+        get:
+            operationId: ping
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+            summary: Responds with server metadata if the web service is running.
     /register:
         post:
             description: Register new user
@@ -1016,6 +1155,23 @@ paths:
                     description: internal error
                     schema:
                         $ref: '#/definitions/ErrorResponse'
+    /statistics:
+        get:
+            operationId: handleStatistics
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: success
+                    schema:
+                        $ref: '#/definitions/BoardStatistics'
+                default:
+                    description: internal error
+                    schema:
+                        $ref: '#/definitions/ErrorResponse'
+            security:
+                - BearerAuth: []
+            summary: Fetches the statistic  of the server.
     /subscriptions:
         post:
             operationId: createSubscription
@@ -1748,7 +1904,7 @@ paths:
                   name: Body
                   required: true
                   schema:
-                    $ref: '#/definitions/UserPropPatch'
+                    $ref: '#/definitions/UserPreferencesPatch'
             produces:
                 - application/json
             responses:
