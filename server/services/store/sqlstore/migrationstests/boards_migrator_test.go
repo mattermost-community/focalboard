@@ -65,12 +65,16 @@ func (bm *BoardsMigrator) runMattermostMigrations() error {
 		return err
 	}
 
-	driver, err := bm.getDriver("")
+	driver, err := bm.getDriver()
 	if err != nil {
 		return err
 	}
 
-	engine, err := morph.New(context.Background(), driver, src)
+	options := []morph.EngineOption{
+		morph.SetStatementTimeoutInSeconds(1000000),
+	}
+
+	engine, err := morph.New(context.Background(), driver, src, options...)
 	if err != nil {
 		return err
 	}
@@ -79,27 +83,22 @@ func (bm *BoardsMigrator) runMattermostMigrations() error {
 	return engine.ApplyAll()
 }
 
-func (bm *BoardsMigrator) getDriver(migrationsTable string) (drivers.Driver, error) {
-	migrationConfig := drivers.Config{
-		StatementTimeoutInSecs: 1000000,
-		MigrationsTable:        migrationsTable,
-	}
-
+func (bm *BoardsMigrator) getDriver() (drivers.Driver, error) {
 	var driver drivers.Driver
 	var err error
 	switch bm.driverName {
 	case model.PostgresDBType:
-		driver, err = postgres.WithInstance(bm.db, &postgres.Config{Config: migrationConfig})
+		driver, err = postgres.WithInstance(bm.db)
 		if err != nil {
 			return nil, err
 		}
 	case model.MysqlDBType:
-		driver, err = mysql.WithInstance(bm.db, &mysql.Config{Config: migrationConfig})
+		driver, err = mysql.WithInstance(bm.db)
 		if err != nil {
 			return nil, err
 		}
 	case model.SqliteDBType:
-		driver, err = sqlite.WithInstance(bm.db, &sqlite.Config{Config: migrationConfig})
+		driver, err = sqlite.WithInstance(bm.db)
 		if err != nil {
 			return nil, err
 		}
@@ -109,7 +108,7 @@ func (bm *BoardsMigrator) getDriver(migrationsTable string) (drivers.Driver, err
 }
 
 func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, error) {
-	driver, err := bm.getDriver(fmt.Sprintf("%sschema_migrations", tablePrefix))
+	driver, err := bm.getDriver()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -160,7 +159,7 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 		return nil, nil, err
 	}
 
-	engine, err := morph.New(context.Background(), driver, src)
+	engine, err := morph.New(context.Background(), driver, src, morph.SetMigrationTableName(fmt.Sprintf("%sschema_migrations", tablePrefix)))
 	if err != nil {
 		return nil, nil, err
 	}

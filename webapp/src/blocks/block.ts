@@ -5,7 +5,7 @@ import difference from 'lodash/difference'
 
 import {Utils} from '../utils'
 
-const contentBlockTypes = ['text', 'image', 'divider', 'checkbox'] as const
+const contentBlockTypes = ['text', 'image', 'divider', 'checkbox', 'h1', 'h2', 'h3', 'list-item', 'attachment', 'quote', 'video'] as const
 
 // ToDo: remove type board
 const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'unknown'] as const
