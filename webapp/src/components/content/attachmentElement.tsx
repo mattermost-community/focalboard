@@ -39,7 +39,6 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
     const [fileName, setFileName] = useState<string>()
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const uploadPercent = useAppSelector(getUploadPercent(block.id))
-
     const intl = useIntl()
 
     useEffect(() => {
@@ -96,7 +95,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
 
     const confirmDialogProps: ConfirmationDialogBoxProps = {
         heading: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-attachment', defaultMessage: 'Confirm Attachment delete!'}),
-        confirmButtonText: intl.formatMessage({id: 'CardDialog.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
+        confirmButtonText: intl.formatMessage({id: 'AttachmentElement.delete-confirmation-dialog-button-text', defaultMessage: 'Delete'}),
         onConfirm: deleteAttachment,
         onClose: () => {
             setShowConfirmationDialogBox(false)
@@ -113,9 +112,6 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
         )
     }
 
-    /* if (!fileDataUrl) {
-     *     return null
-     * } */
 
     const attachmentDownloadHandler = async () => {
         const attachment = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
@@ -148,7 +144,12 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                     {fileInfo.extension?.substring(1)} {fileSize}
                 </div> }
                 {block.isUploading && <div className='fileElement-file-uploading'>
-                    {'Uploading...('}{uploadPercent}{'%)'}
+                    {intl.formatMessage({
+                        id: 'AttachmentElement.upload-percentage',
+                        defaultMessage: 'Uploading...({uploadPercent}%)',
+                    }, {
+                        uploadPercent,
+                    })}
                 </div>}
             </div>
             {block.isUploading &&
@@ -184,7 +185,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                     </MenuWrapper>
                 </BoardPermissionGate>
                 <Tooltip
-                    title='Download'
+                    title={intl.formatMessage({id: 'AttachmentElement.download', defaultMessage: 'Download'})}
                     placement='bottom'
                 >
                     <div

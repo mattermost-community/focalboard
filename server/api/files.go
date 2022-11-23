@@ -49,7 +49,7 @@ func FileInfoResponseFromJSON(data io.Reader) (*mmModel.FileInfo, error) {
 func (a *API) registerFilesRoutes(r *mux.Router) {
 	// Files API
 	r.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}", a.attachSession(a.handleServeFile, false)).Methods("GET")
-	r.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}/info", a.attachSession(a.handleFileInfo, false)).Methods("GET")
+	r.HandleFunc("/files/teams/{teamID}/{boardID}/{filename}/info", a.attachSession(a.getFileInfo, false)).Methods("GET")
 	r.HandleFunc("/teams/{teamID}/{boardID}/files", a.sessionRequired(a.handleUploadFile)).Methods("POST")
 }
 
@@ -188,7 +188,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	auditRec.Success()
 }
 
-func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
+func (a *API) getFileInfo(w http.ResponseWriter, r *http.Request) {
 	// swagger:operation GET /files/teams/{teamID}/{boardID}/{filename}/info getFile
 	//
 	// Returns the metadata of an uploaded file
@@ -246,7 +246,6 @@ func (a *API) handleFileInfo(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("teamID", teamID)
 	auditRec.AddMeta("filename", filename)
-	w.Header().Set("Content-Type", "application/json")
 
 	fileInfo, err := a.app.GetFileInfo(filename)
 	if err != nil && !model.IsErrNotFound(err) {
