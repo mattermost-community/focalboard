@@ -29,7 +29,7 @@ import propsRegistry from '../properties'
 import {getMe, getMyConfig} from '../store/users'
 
 import CenterPanel from './centerPanel'
-import CenterPanelPages from './centerPanelPages'
+import CenterPanelPages from './centerPanelPages/centerPanelPages'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
 import GuestNoBoards from './guestNoBoards'
 import NoPages from './noPages'

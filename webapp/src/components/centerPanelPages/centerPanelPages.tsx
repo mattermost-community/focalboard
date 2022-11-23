@@ -4,60 +4,60 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import {useIntl, IntlShape, FormattedMessage} from 'react-intl'
 
-import {ClientConfig} from '../config/clientConfig'
+import {ClientConfig} from '../../config/clientConfig'
 
-import {Block, ContentBlockTypes, createBlock} from '../blocks/block'
-import {Page, createPage} from '../blocks/page'
-import {Board, IPropertyTemplate} from '../blocks/board'
-import {IUser} from '../user'
-import mutator from '../mutator'
-import {IDType, Utils} from '../utils'
-import {getCurrentPageContents} from '../store/contents'
-import {getBoardUsers} from '../store/users'
-import {updateContents} from '../store/contents'
-import {getMySortedPageFolders} from '../store/boards'
-import {getCurrentBoardPages} from '../store/pages'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
-import CompassIcon from '../widgets/icons/compassIcon'
-import IconButton from '../widgets/buttons/iconButton'
-import Button from '../widgets/buttons/button'
-import GuestBadge from '../widgets/guestBadge'
-import MenuWrapper from '../widgets/menuWrapper'
-import Menu from '../widgets/menu'
-import PropertyMenu, {PropertyTypes} from '../widgets/propertyMenu'
-import {Permission} from '../constants'
-import {useHasCurrentBoardPermissions} from '../hooks/permissions'
+import {Block, ContentBlockTypes, createBlock} from '../../blocks/block'
+import {Page, createPage} from '../../blocks/page'
+import {Board, IPropertyTemplate} from '../../blocks/board'
+import {IUser} from '../../user'
+import mutator from '../../mutator'
+import {IDType, Utils} from '../../utils'
+import {getCurrentPageContents} from '../../store/contents'
+import {getBoardUsers} from '../../store/users'
+import {updateContents} from '../../store/contents'
+import {getMySortedPageFolders} from '../../store/boards'
+import {getCurrentBoardPages} from '../../store/pages'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
+import CompassIcon from '../../widgets/icons/compassIcon'
+import IconButton from '../../widgets/buttons/iconButton'
+import Button from '../../widgets/buttons/button'
+import GuestBadge from '../../widgets/guestBadge'
+import MenuWrapper from '../../widgets/menuWrapper'
+import Menu from '../../widgets/menu'
+import PropertyMenu, {PropertyTypes} from '../../widgets/propertyMenu'
+import {Permission} from '../../constants'
+import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
-import PropertyValueElement from './propertyValueElement'
-import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from './confirmationDialogBox'
+import PropertyValueElement from '../propertyValueElement'
+import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 
-import propRegistry from '../properties'
-import {PropertyType} from '../properties/types'
+import propRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
-import {sendFlashMessage} from './flashMessages'
+import {sendFlashMessage} from '../flashMessages'
 
-import PageTitle from './pageTitle'
-import PageMenu from './pageMenu'
+import PageTitle from '../pageTitle'
+import PageMenu from '../pageMenu'
+
+import {useAppSelector, useAppDispatch} from '../../store/hooks'
+import {updatePages} from '../../store/pages'
+
+import {getMe} from '../../store/users'
+
+import octoClient from '../../octoClient'
+
+import ShareBoardButton from '../shareBoard/shareBoardButton'
+import ShareBoardLoginButton from '../shareBoard/shareBoardLoginButton'
+
+import BlocksEditor from '../blocksEditor/blocksEditor'
+import {BlockData} from '../blocksEditor/blocks/types'
+
+import ShareBoardTourStep from '../onboardingTour/shareBoard/shareBoard'
+
+import FormattingMenu from './formattingMenu'
+import Breadcrumbs from './breadcrumbs'
 
 import './centerPanelPages.scss'
-
-import {useAppSelector, useAppDispatch} from '../store/hooks'
-import {updatePages} from '../store/pages'
-
-import {
-    getMe,
-} from '../store/users'
-
-import octoClient from '../octoClient'
-
-import ShareBoardButton from './shareBoard/shareBoardButton'
-import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
-
-import BlocksEditor from './blocksEditor/blocksEditor'
-import {BlockData} from './blocksEditor/blocks/types'
-
-import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
-import Calculations from './calculations/calculations'
 
 const imageURLForUser = (window as any).Components?.imageURLForUser
 
@@ -114,54 +114,6 @@ async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fiel
     const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
     dispatch(updateContents([newBlock]))
     return newBlock
-}
-
-type BreadcrumbsProps = {
-    board: Board
-    pages: Page[]
-    activePage: Page
-    showPage: (pageId?: string) => void
-}
-
-const Breadcrumbs = (props: BreadcrumbsProps) => {
-    const intl = useIntl()
-    const breadcrumbs: Page[] = []
-    if (props.activePage && props.activePage.id !== props.board.id) {
-        const pagesById: {[key: string]: Page} = {}
-        for (const page of props.pages) {
-            pagesById[page.id] = page
-        }
-        let currentPage = props.activePage
-        while (true) {
-            breadcrumbs.unshift(currentPage)
-            currentPage = pagesById[currentPage.parentId]
-            if (!currentPage) {
-                break
-            }
-        }
-    }
-
-    return (
-        <div className='pages-breadcrumbs'>
-            <span
-                className='page-breadcrumb'
-                onClick={() => props.showPage('')}
-            >
-                {props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}
-            </span>
-            {breadcrumbs.map((b) => (
-                <>
-                    <span>{' / '}</span>
-                    <span
-                        className='page-breadcrumb'
-                        onClick={() => props.showPage(b.id)}
-                    >
-                        {b.title ? b.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}
-                    </span>
-                </>
-            ))}
-        </div>
-    )
 }
 
 const CenterPanelPages = (props: Props) => {
@@ -336,96 +288,7 @@ const CenterPanelPages = (props: Props) => {
 
             <div className='top-head'>
                 <div className='mid-head'>
-                    <div className='formatting'>
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-header-1'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-header-2'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-header-3'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-header-4'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-header-5'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-header-6'/>}
-                        />
-                        <span className='divider'/>
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-bold'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-italic'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-strikethrough-variant'/>}
-                        />
-                        <span className='divider'/>
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='link-variant'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='code-tags'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='code-block'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-quote-open'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-list-bulleted'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='format-list-numbered'/>}
-                        />
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='table-plus'/>}
-                        />
-                        <span className='divider'/>
-                        <IconButton
-                            size='small'
-                            onClick={() => console.log('TODO')}
-                            icon={<CompassIcon icon='plus'/>}
-                        />
-                    </div>
+                    <FormattingMenu/>
                     <div className='shareButtonWrapper'>
                         {showShareButton &&
                             <ShareBoardButton

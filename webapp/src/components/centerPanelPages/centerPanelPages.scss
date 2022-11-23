@@ -1,4 +1,4 @@
-@import '../styles/z-index';
+@import '../../styles/z-index';
 
 .CenterPanelPages {
     flex: 1 1 auto;
@@ -107,12 +107,6 @@
             align-items: center;
             margin-top: 32px;
 
-            .pages-breadcrumbs {
-                flex-grow: 1;
-            }
-            .page-breadcrumb {
-                cursor: pointer;
-            }
         }
 
         >.BlocksEditor {
@@ -234,24 +228,6 @@
 
             >div {
                 margin: 10px;
-            }
-
-            .formatting {
-                flex-grow: 1;
-                display: flex;
-                align-items: center;
-                color: rgba(var(--center-channel-color-rgb), 0.5);
-
-                .CompassIcon {
-                    cursor: pointer;
-                }
-
-                .divider {
-                    border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
-                    height: 18px;
-                    width: 0;
-                    margin: 0 8px;
-                }
             }
 
             .Button {

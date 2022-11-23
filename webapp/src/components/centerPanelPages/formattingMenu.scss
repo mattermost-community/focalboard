@@ -1,0 +1,17 @@
+.FormattingMenu {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    color: rgba(var(--center-channel-color-rgb), 0.5);
+
+    .CompassIcon {
+        cursor: pointer;
+    }
+
+    .divider {
+        border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
+        height: 18px;
+        width: 0;
+        margin: 0 8px;
+    }
+}
