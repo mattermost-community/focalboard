@@ -104,6 +104,10 @@
         }
     }
 
+    &.emphasis--link {
+        color: rgb(var(--button-bg-rgb));
+    }
+
     &.active {
         background: rgba(var(--button-bg-rgb), 0.08);
         color: rgb(var(--button-bg-rgb));
