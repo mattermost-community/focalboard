@@ -358,7 +358,7 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
                     if (options?.includes(searchText)) {
                         return true
                     }
-                } else if ((propertyValue as string).toLowerCase().includes(searchText)) {
+                } else if ((propertyValue.toString()).toLowerCase().includes(searchText)) {
                     return true
                 }
             }
