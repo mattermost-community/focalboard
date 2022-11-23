@@ -413,6 +413,9 @@ func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
 	auditRec := a.makeAuditRecord(r, "reorderCategories", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
 
+	auditRec.AddMeta("TeamID", teamID)
+	auditRec.AddMeta("CategoryCount", len(newCategoryOrder))
+
 	updatedCategoryOrder, err := a.app.ReorderCategories(userID, teamID, newCategoryOrder)
 	if err != nil {
 		a.errorResponse(w, r, err)

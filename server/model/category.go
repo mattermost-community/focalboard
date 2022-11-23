@@ -79,7 +79,7 @@ func (c *Category) Hydrate() {
 		c.SortOrder = 0
 	}
 
-	if c.Type == "" {
+	if strings.TrimSpace(c.Type) == "" {
 		c.Type = CategoryTypeCustom
 	}
 }

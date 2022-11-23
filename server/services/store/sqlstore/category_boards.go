@@ -60,7 +60,7 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID string, board
 		boardIDs = append(boardIDs, boardID)
 	}
 
-	if err := s.deleteUserCategoryBoard(db, userID, boardIDs); err != nil {
+	if err := s.deleteUserCategoryBoards(db, userID, boardIDs); err != nil {
 		return err
 	}
 
@@ -107,7 +107,7 @@ func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCa
 	return nil
 }
 
-func (s *SQLStore) deleteUserCategoryBoard(db sq.BaseRunner, userID string, boardIDs []string) error {
+func (s *SQLStore) deleteUserCategoryBoards(db sq.BaseRunner, userID string, boardIDs []string) error {
 	if len(boardIDs) == 0 {
 		return nil
 	}
@@ -123,7 +123,7 @@ func (s *SQLStore) deleteUserCategoryBoard(db sq.BaseRunner, userID string, boar
 
 	if err != nil {
 		s.logger.Error(
-			"deleteUserCategoryBoard delete error",
+			"deleteUserCategoryBoards delete error",
 			mlog.String("userID", userID),
 			mlog.Array("boardID", boardIDs),
 			mlog.Err(err),
