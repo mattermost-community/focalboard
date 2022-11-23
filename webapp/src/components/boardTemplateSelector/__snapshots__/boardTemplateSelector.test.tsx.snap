@@ -3,145 +3,161 @@
 exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector"
+    class="BoardTemplateSelector__container "
   >
     <div
-      class="toolbar"
-    >
-      <button
-        aria-label="Close"
-        title="Close"
-        type="button"
-      >
-        <i
-          class="CompassIcon icon-close CloseIcon"
-        />
-      </button>
-    </div>
+      class="BoardTemplateSelector__backdrop"
+    />
     <div
-      class="header"
-    >
-      <h1
-        class="title"
-      >
-        Create a board
-      </h1>
-      <p
-        class="description"
-      >
-        Add a board to the sidebar using any of the templates defined below or start from scratch.
-      </p>
-    </div>
-    <div
-      class="templates"
+      class="BoardTemplateSelector"
     >
       <div
-        class="templates-list"
+        class="toolbar"
+      >
+        <button
+          aria-label="Close"
+          title="Close"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-close CloseIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="header"
+      >
+        <h1
+          class="title"
+        >
+          Create a board
+        </h1>
+        <p
+          class="description"
+        >
+          Add a board to the sidebar using any of the templates defined below or start from scratch.
+        </p>
+      </div>
+      <div
+        class="templates"
       >
         <div
-          class="BoardTemplateSelectorItem active"
+          class="templates-sidebar"
         >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template Global
-          </span>
-        </div>
-        <div
-          class="BoardTemplateSelectorItem"
-        >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template 1
-          </span>
           <div
-            class="actions"
+            class="templates-list"
           >
             <button
-              aria-label="Delete"
-              title="Delete"
               type="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                class="CompassIcon icon-plus"
               />
+              <span>
+                Create new template
+              </span>
             </button>
+            <div
+              class="BoardTemplateSelectorItem active"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template Global
+              </span>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template 1
+              </span>
+              <div
+                class="actions"
+              >
+                <button
+                  aria-label="Delete"
+                  title="Delete"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </button>
+                <button
+                  aria-label="Edit"
+                  title="Edit"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                ❄️
+              </span>
+              <span
+                class="template-name"
+              >
+                Welcome to Boards!
+              </span>
+            </div>
+          </div>
+          <div
+            class="templates-sidebar__footer"
+          >
             <button
-              aria-label="Edit"
-              title="Edit"
               type="button"
             >
               <i
-                class="CompassIcon icon-pencil-outline EditIcon"
+                class="CompassIcon icon-kanban"
               />
+              <span>
+                Create empty board
+              </span>
             </button>
           </div>
         </div>
         <div
-          class="BoardTemplateSelectorItem"
+          class="templates-content"
         >
-          <span
-            class="template-icon"
+          <div
+            class="template-preview-box"
           >
-            ❄️
-          </span>
-          <span
-            class="template-name"
-          >
-            Welcome to Boards!
-          </span>
-        </div>
-        <div
-          class="new-template"
-        >
-          <span
-            class="template-icon"
-          >
-            <i
-              class="CompassIcon icon-plus AddIcon"
+            <div
+              class="BoardTemplateSelectorPreview"
             />
-          </span>
-          <span
-            class="template-name"
+          </div>
+          <div
+            class="buttons"
           >
-            New template
-          </span>
-        </div>
-      </div>
-      <div
-        class="template-preview-box"
-      >
-        <div
-          class="BoardTemplateSelectorPreview"
-        />
-        <div
-          class="buttons"
-        >
-          <button
-            type="button"
-          >
-            <span>
-              Use this template
-            </span>
-          </button>
-          <button
-            type="button"
-          >
-            <span>
-              Create empty board
-            </span>
-          </button>
+            <button
+              type="button"
+            >
+              <span>
+                Use this template
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -152,135 +168,148 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
 exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot with custom title and description 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector"
+    class="BoardTemplateSelector__container BoardTemplateSelector__container--page"
   >
     <div
-      class="toolbar"
-    />
-    <div
-      class="header"
-    >
-      <h1
-        class="title"
-      >
-        test-title
-      </h1>
-      <p
-        class="description"
-      >
-        test-description
-      </p>
-    </div>
-    <div
-      class="templates"
+      class="BoardTemplateSelector"
     >
       <div
-        class="templates-list"
+        class="toolbar"
+      />
+      <div
+        class="header"
+      >
+        <h1
+          class="title"
+        >
+          test-title
+        </h1>
+        <p
+          class="description"
+        >
+          test-description
+        </p>
+      </div>
+      <div
+        class="templates"
       >
         <div
-          class="BoardTemplateSelectorItem active"
+          class="templates-sidebar"
         >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template Global
-          </span>
-        </div>
-        <div
-          class="BoardTemplateSelectorItem"
-        >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template 1
-          </span>
           <div
-            class="actions"
+            class="templates-list"
           >
             <button
-              aria-label="Delete"
-              title="Delete"
               type="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                class="CompassIcon icon-plus"
               />
+              <span>
+                Create new template
+              </span>
             </button>
+            <div
+              class="BoardTemplateSelectorItem active"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template Global
+              </span>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template 1
+              </span>
+              <div
+                class="actions"
+              >
+                <button
+                  aria-label="Delete"
+                  title="Delete"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </button>
+                <button
+                  aria-label="Edit"
+                  title="Edit"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                ❄️
+              </span>
+              <span
+                class="template-name"
+              >
+                Welcome to Boards!
+              </span>
+            </div>
+          </div>
+          <div
+            class="templates-sidebar__footer"
+          >
             <button
-              aria-label="Edit"
-              title="Edit"
               type="button"
             >
               <i
-                class="CompassIcon icon-pencil-outline EditIcon"
+                class="CompassIcon icon-kanban"
               />
+              <span>
+                Create empty board
+              </span>
             </button>
           </div>
         </div>
         <div
-          class="BoardTemplateSelectorItem"
+          class="templates-content"
         >
-          <span
-            class="template-icon"
+          <div
+            class="template-preview-box"
           >
-            ❄️
-          </span>
-          <span
-            class="template-name"
-          >
-            Welcome to Boards!
-          </span>
-        </div>
-        <div
-          class="new-template"
-        >
-          <span
-            class="template-icon"
-          >
-            <i
-              class="CompassIcon icon-plus AddIcon"
+            <div
+              class="BoardTemplateSelectorPreview"
             />
-          </span>
-          <span
-            class="template-name"
+          </div>
+          <div
+            class="buttons"
           >
-            New template
-          </span>
-        </div>
-      </div>
-      <div
-        class="template-preview-box"
-      >
-        <div
-          class="BoardTemplateSelectorPreview"
-        />
-        <div
-          class="buttons"
-        >
-          <button
-            type="button"
-          >
-            <span>
-              Use this template
-            </span>
-          </button>
-          <button
-            type="button"
-          >
-            <span>
-              Create empty board
-            </span>
-          </button>
+            <button
+              type="button"
+            >
+              <span>
+                Use this template
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -291,135 +320,148 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
 exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plugin should match snapshot without close 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector"
+    class="BoardTemplateSelector__container BoardTemplateSelector__container--page"
   >
     <div
-      class="toolbar"
-    />
-    <div
-      class="header"
-    >
-      <h1
-        class="title"
-      >
-        Create a board
-      </h1>
-      <p
-        class="description"
-      >
-        Add a board to the sidebar using any of the templates defined below or start from scratch.
-      </p>
-    </div>
-    <div
-      class="templates"
+      class="BoardTemplateSelector"
     >
       <div
-        class="templates-list"
+        class="toolbar"
+      />
+      <div
+        class="header"
+      >
+        <h1
+          class="title"
+        >
+          Create a board
+        </h1>
+        <p
+          class="description"
+        >
+          Add a board to the sidebar using any of the templates defined below or start from scratch.
+        </p>
+      </div>
+      <div
+        class="templates"
       >
         <div
-          class="BoardTemplateSelectorItem active"
+          class="templates-sidebar"
         >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template Global
-          </span>
-        </div>
-        <div
-          class="BoardTemplateSelectorItem"
-        >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template 1
-          </span>
           <div
-            class="actions"
+            class="templates-list"
           >
             <button
-              aria-label="Delete"
-              title="Delete"
               type="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                class="CompassIcon icon-plus"
               />
+              <span>
+                Create new template
+              </span>
             </button>
+            <div
+              class="BoardTemplateSelectorItem active"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template Global
+              </span>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template 1
+              </span>
+              <div
+                class="actions"
+              >
+                <button
+                  aria-label="Delete"
+                  title="Delete"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </button>
+                <button
+                  aria-label="Edit"
+                  title="Edit"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                ❄️
+              </span>
+              <span
+                class="template-name"
+              >
+                Welcome to Boards!
+              </span>
+            </div>
+          </div>
+          <div
+            class="templates-sidebar__footer"
+          >
             <button
-              aria-label="Edit"
-              title="Edit"
               type="button"
             >
               <i
-                class="CompassIcon icon-pencil-outline EditIcon"
+                class="CompassIcon icon-kanban"
               />
+              <span>
+                Create empty board
+              </span>
             </button>
           </div>
         </div>
         <div
-          class="BoardTemplateSelectorItem"
+          class="templates-content"
         >
-          <span
-            class="template-icon"
+          <div
+            class="template-preview-box"
           >
-            ❄️
-          </span>
-          <span
-            class="template-name"
-          >
-            Welcome to Boards!
-          </span>
-        </div>
-        <div
-          class="new-template"
-        >
-          <span
-            class="template-icon"
-          >
-            <i
-              class="CompassIcon icon-plus AddIcon"
+            <div
+              class="BoardTemplateSelectorPreview"
             />
-          </span>
-          <span
-            class="template-name"
+          </div>
+          <div
+            class="buttons"
           >
-            New template
-          </span>
-        </div>
-      </div>
-      <div
-        class="template-preview-box"
-      >
-        <div
-          class="BoardTemplateSelectorPreview"
-        />
-        <div
-          class="buttons"
-        >
-          <button
-            type="button"
-          >
-            <span>
-              Use this template
-            </span>
-          </button>
-          <button
-            type="button"
-          >
-            <span>
-              Create empty board
-            </span>
-          </button>
+            <button
+              type="button"
+            >
+              <span>
+                Use this template
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -430,145 +472,161 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
 exports[`components/boardTemplateSelector/boardTemplateSelector not a focalboard Plugin should match snapshot 1`] = `
 <div>
   <div
-    class="BoardTemplateSelector"
+    class="BoardTemplateSelector__container "
   >
     <div
-      class="toolbar"
-    >
-      <button
-        aria-label="Close"
-        title="Close"
-        type="button"
-      >
-        <i
-          class="CompassIcon icon-close CloseIcon"
-        />
-      </button>
-    </div>
+      class="BoardTemplateSelector__backdrop"
+    />
     <div
-      class="header"
-    >
-      <h1
-        class="title"
-      >
-        Create a board
-      </h1>
-      <p
-        class="description"
-      >
-        Add a board to the sidebar using any of the templates defined below or start from scratch.
-      </p>
-    </div>
-    <div
-      class="templates"
+      class="BoardTemplateSelector"
     >
       <div
-        class="templates-list"
+        class="toolbar"
+      >
+        <button
+          aria-label="Close"
+          title="Close"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-close CloseIcon"
+          />
+        </button>
+      </div>
+      <div
+        class="header"
+      >
+        <h1
+          class="title"
+        >
+          Create a board
+        </h1>
+        <p
+          class="description"
+        >
+          Add a board to the sidebar using any of the templates defined below or start from scratch.
+        </p>
+      </div>
+      <div
+        class="templates"
       >
         <div
-          class="BoardTemplateSelectorItem active"
+          class="templates-sidebar"
         >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template Global
-          </span>
-        </div>
-        <div
-          class="BoardTemplateSelectorItem"
-        >
-          <span
-            class="template-icon"
-          >
-            🚴🏻‍♂️
-          </span>
-          <span
-            class="template-name"
-          >
-            Template 1
-          </span>
           <div
-            class="actions"
+            class="templates-list"
           >
             <button
-              aria-label="Delete"
-              title="Delete"
               type="button"
             >
               <i
-                class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                class="CompassIcon icon-plus"
               />
+              <span>
+                Create new template
+              </span>
             </button>
+            <div
+              class="BoardTemplateSelectorItem active"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template Global
+              </span>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                🚴🏻‍♂️
+              </span>
+              <span
+                class="template-name"
+              >
+                Template 1
+              </span>
+              <div
+                class="actions"
+              >
+                <button
+                  aria-label="Delete"
+                  title="Delete"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                  />
+                </button>
+                <button
+                  aria-label="Edit"
+                  title="Edit"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-pencil-outline EditIcon"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              class="BoardTemplateSelectorItem"
+            >
+              <span
+                class="template-icon"
+              >
+                ❄️
+              </span>
+              <span
+                class="template-name"
+              >
+                Welcome to Boards!
+              </span>
+            </div>
+          </div>
+          <div
+            class="templates-sidebar__footer"
+          >
             <button
-              aria-label="Edit"
-              title="Edit"
               type="button"
             >
               <i
-                class="CompassIcon icon-pencil-outline EditIcon"
+                class="CompassIcon icon-kanban"
               />
+              <span>
+                Create empty board
+              </span>
             </button>
           </div>
         </div>
         <div
-          class="BoardTemplateSelectorItem"
+          class="templates-content"
         >
-          <span
-            class="template-icon"
+          <div
+            class="template-preview-box"
           >
-            ❄️
-          </span>
-          <span
-            class="template-name"
-          >
-            Welcome to Boards!
-          </span>
-        </div>
-        <div
-          class="new-template"
-        >
-          <span
-            class="template-icon"
-          >
-            <i
-              class="CompassIcon icon-plus AddIcon"
+            <div
+              class="BoardTemplateSelectorPreview"
             />
-          </span>
-          <span
-            class="template-name"
+          </div>
+          <div
+            class="buttons"
           >
-            New template
-          </span>
-        </div>
-      </div>
-      <div
-        class="template-preview-box"
-      >
-        <div
-          class="BoardTemplateSelectorPreview"
-        />
-        <div
-          class="buttons"
-        >
-          <button
-            type="button"
-          >
-            <span>
-              Use this template
-            </span>
-          </button>
-          <button
-            type="button"
-          >
-            <span>
-              Create empty board
-            </span>
-          </button>
+            <button
+              type="button"
+            >
+              <span>
+                Use this template
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
