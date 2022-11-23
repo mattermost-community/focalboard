@@ -220,7 +220,7 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const attachBtn = (): React.ReactNode => {
         return (
-            <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+            <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                 <Button
                     icon={<CompassIcon icon='paperclip'/>}
                     className='cardFollowBtn attach'

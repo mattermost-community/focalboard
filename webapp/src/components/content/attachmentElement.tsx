@@ -162,7 +162,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                 </div>}
             {!block.isUploading &&
             <div className='fileElement-delete-download'>
-                <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                     <MenuWrapper className='mt-3 fileElement-menu-icon'>
                         <IconButton
                             size='medium'
