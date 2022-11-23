@@ -14,6 +14,7 @@ export type ContentType<ValueType = string> = {
     slashCommand: string
     prefix: string
     editable: boolean
+    icon: React.ReactNode
     Input: React.FunctionComponent<BlockInputProps<ValueType>>
     Display: React.FunctionComponent<BlockInputProps<ValueType>>
     runSlashCommand: (changeType: (contentType: ContentType<ValueType>) => void, changeValue: (value: ValueType) => void, ...args: string[]) => void

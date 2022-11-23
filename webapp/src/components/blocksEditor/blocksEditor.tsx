@@ -15,6 +15,7 @@ type Props = {
     onBlockModified: (block: BlockData) => Promise<BlockData|null>
     onBlockMoved: (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null) => Promise<void>
     blocks: BlockData[]
+    readonly: boolean
 }
 
 function BlocksEditor(props: Props) {
@@ -100,8 +101,9 @@ function BlocksEditor(props: Props) {
                                 return newBlock
                             }}
                             onMove={props.onBlockMoved}
+                            readonly={props.readonly}
                         />
-                        {afterBlock && afterBlock.id === d.id && (
+                        {!props.readonly && afterBlock && afterBlock.id === d.id && (
                             <Editor
                                 initialValue=''
                                 initialContentType={nextType}
@@ -114,7 +116,7 @@ function BlocksEditor(props: Props) {
                             />)}
                     </div>
                 ))}
-                {!editing && !afterBlock && <Editor onSave={props.onBlockCreated}/>}
+                {!props.readonly && !editing && !afterBlock && <Editor onSave={props.onBlockCreated}/>}
             </DndProvider>
         </div>
     )

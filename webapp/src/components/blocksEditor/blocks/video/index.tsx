@@ -4,6 +4,7 @@ import React, {useRef, useEffect, useState} from 'react'
 
 import {BlockInputProps, ContentType} from '../types'
 import octoClient from '../../../../octoClient'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './video.scss'
 
@@ -21,6 +22,7 @@ const Video: ContentType<FileInfo> = {
     prefix: '',
     runSlashCommand: (): void => {},
     editable: false,
+    icon: <CompassIcon icon='video-outline'/>,
     Display: (props: BlockInputProps<FileInfo>) => {
         const [videoDataUrl, setVideoDataUrl] = useState<string|null>(null)
 

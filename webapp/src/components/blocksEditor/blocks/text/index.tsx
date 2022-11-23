@@ -6,6 +6,7 @@ import {MarkdownEditor} from '../../../markdownEditor'
 import {Utils} from '../../../../utils'
 
 import {BlockInputProps, ContentType} from '../types'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './text.scss'
 
@@ -16,6 +17,7 @@ const TextContent: ContentType = {
     prefix: '',
     runSlashCommand: (): void => {},
     editable: true,
+    icon: <CompassIcon icon='text-box-outline'/>,
     Display: (props: BlockInputProps) => {
         const html: string = Utils.htmlFromMarkdown(props.value || '')
         return (
