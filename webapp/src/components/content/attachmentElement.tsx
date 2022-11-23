@@ -112,7 +112,6 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
         )
     }
 
-
     const attachmentDownloadHandler = async () => {
         const attachment = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
         const anchor = document.createElement('a')
