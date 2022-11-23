@@ -55,7 +55,7 @@ exports[`component/content/FileBlock archived file 1`] = `
         data-tooltip="Download"
       >
         <div
-          class="fileElement-download-btn mt-5 mr-2"
+          class="fileElement-download-btn mt-3 mr-2"
         >
           <i
             class="CompassIcon icon-download-outline"
@@ -122,7 +122,7 @@ exports[`component/content/FileBlock should match snapshot 1`] = `
         data-tooltip="Download"
       >
         <div
-          class="fileElement-download-btn mt-5 mr-2"
+          class="fileElement-download-btn mt-3 mr-2"
         >
           <i
             class="CompassIcon icon-download-outline"
