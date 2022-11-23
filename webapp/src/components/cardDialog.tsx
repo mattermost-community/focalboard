@@ -220,14 +220,16 @@ const CardDialog = (props: Props): JSX.Element => {
 
     const attachBtn = (): React.ReactNode => {
         return (
-            <Button
-                icon={<CompassIcon icon='paperclip'/>}
-                className='cardFollowBtn attach'
-                size='medium'
-                onClick={addElement}
-            >
-                {intl.formatMessage({id: 'CardDetail.Attach', defaultMessage: 'Attach'})}
-            </Button>
+            <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                <Button
+                    icon={<CompassIcon icon='paperclip'/>}
+                    className='cardFollowBtn attach'
+                    size='medium'
+                    onClick={addElement}
+                >
+                    {intl.formatMessage({id: 'CardDetail.Attach', defaultMessage: 'Attach'})}
+                </Button>
+            </BoardPermissionGate>
         )
     }
 

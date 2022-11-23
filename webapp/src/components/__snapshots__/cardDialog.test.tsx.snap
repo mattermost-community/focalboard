@@ -1370,16 +1370,6 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
               <button
                 type="button"
               >
-                <i
-                  class="CompassIcon icon-paperclip"
-                />
-                <span>
-                  Attach
-                </span>
-              </button>
-              <button
-                type="button"
-              >
                 <span>
                   Follow
                 </span>

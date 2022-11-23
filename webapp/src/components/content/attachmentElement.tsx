@@ -15,6 +15,7 @@ import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../../component
 import {Utils} from '../../utils'
 import {getUploadPercent} from '../../store/attachments'
 import {useAppSelector} from '../../store/hooks'
+import {Permission} from '../../constants'
 
 import ArchivedFile from './archivedFile/archivedFile'
 
@@ -24,7 +25,6 @@ import MenuWrapper from './../../widgets/menuWrapper'
 import IconButton from './../../widgets/buttons/iconButton'
 import Menu from './../../widgets/menu'
 import Tooltip from './../../widgets/tooltip'
-import {Permission} from '../../constants'
 
 type Props = {
     block: AttachmentBlock

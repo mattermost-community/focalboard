@@ -10,6 +10,8 @@ import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import './attachment.scss'
 import {Block} from '../../blocks/block'
 import CompassIcon from '../../widgets/icons/compassIcon'
+import BoardPermissionGate from '../../components/permissions/boardPermissionGate'
+import {Permission} from '../../constants'
 
 type Props = {
     attachments: AttachmentBlock[]
@@ -25,15 +27,17 @@ const AttachmentList = (props: Props): JSX.Element => {
         <div className='Attachment'>
             <div className='attachment-header'>
                 <div className='attachment-title mb-2'>{intl.formatMessage({id: 'Attachment.Attachment-title', defaultMessage: 'Attachment'})} {`(${attachments.length})`}</div>
-                <div
-                    className='attachment-plus-btn'
-                    onClick={addAttachment}
-                >
-                    <CompassIcon
-                        icon='plus'
-                        className='attachment-plus-icon'
-                    />
-                </div>
+                <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                    <div
+                        className='attachment-plus-btn'
+                        onClick={addAttachment}
+                    >
+                        <CompassIcon
+                            icon='plus'
+                            className='attachment-plus-icon'
+                        />
+                    </div>
+                </BoardPermissionGate>
             </div>
             <div className='attachment-content'>
                 {attachments.map((block: AttachmentBlock) => {
