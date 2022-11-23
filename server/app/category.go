@@ -13,6 +13,10 @@ var errCategoriesLengthMismatch = errors.New("cannot update category order, pass
 var ErrCannotDeleteSystemCategory = errors.New("cannot delete a system category")
 var ErrCannotUpdateSystemCategory = errors.New("cannot update a system category")
 
+func (a *App) GetCategory(categoryID string) (*model.Category, error) {
+	return a.store.GetCategory(categoryID)
+}
+
 func (a *App) CreateCategory(category *model.Category) (*model.Category, error) {
 	category.Hydrate()
 	if err := category.IsValid(); err != nil {

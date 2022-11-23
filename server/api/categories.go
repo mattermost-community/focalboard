@@ -396,6 +396,11 @@ func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
 
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
 		a.errorResponse(w, r, err)
@@ -468,6 +473,22 @@ func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request
 	ctx := r.Context()
 	session := ctx.Value(sessionContextKey).(*model.Session)
 	userID := session.UserID
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	category, err := a.app.GetCategory(categoryID)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	if category.UserID != userID {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
 
 	requestBody, err := io.ReadAll(r.Body)
 	if err != nil {
