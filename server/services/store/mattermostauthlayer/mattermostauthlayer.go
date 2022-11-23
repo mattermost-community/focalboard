@@ -673,7 +673,6 @@ func (s *MattermostAuthLayer) baseUserQuery(showEmail, showName bool) sq.SelectB
 func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder().
 		Select(boardFields("b.")...).
-		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
@@ -739,7 +738,9 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 	}
 	defer s.CloseRows(rows)
 
-	return s.boardsFromRows(rows)
+	// de-duplicate manually since adding `distinct` to the query increased cost by 15X.
+	// the result set for any user should be reasonably small as its based on their channel membership.
+	return s.boardsFromRows(rows, true)
 }
 
 // searchBoardsForUserInTeam returns all boards that match with the
@@ -749,7 +750,6 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
 	query := s.getQueryBuilder().
 		Select(boardFields("b.")...).
-		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
@@ -784,11 +784,14 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 	}
 	defer s.CloseRows(rows)
 
-	return s.boardsFromRows(rows)
+	// de-duplicate manually since adding `distinct` to the query increased cost by 15X.
+	// the result set for any user should be reasonably small as its based on their channel membership.
+	return s.boardsFromRows(rows, true)
 }
 
-func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
+func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows, removeDuplicates bool) ([]*model.Board, error) {
 	boards := []*model.Board{}
+	idMap := make(map[string]struct{})
 
 	for rows.Next() {
 		var board model.Board
@@ -818,6 +821,14 @@ func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, er
 		if err != nil {
 			s.logger.Error("boardsFromRows scan error", mlog.Err(err))
 			return nil, err
+		}
+
+		if removeDuplicates {
+			if _, ok := idMap[board.ID]; ok {
+				continue
+			} else {
+				idMap[board.ID] = struct{}{}
+			}
 		}
 
 		err = json.Unmarshal(propertiesBytes, &board.Properties)
