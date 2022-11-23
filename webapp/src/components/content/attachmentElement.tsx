@@ -10,6 +10,7 @@ import {Block, FileInfo} from '../../blocks/block'
 import Files from '../../file'
 import FileIcons from '../../fileIcons'
 
+import BoardPermissionGate from '../../components/permissions/boardPermissionGate'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../../components/confirmationDialogBox'
 import {Utils} from '../../utils'
 import {getUploadPercent} from '../../store/attachments'
@@ -23,6 +24,7 @@ import MenuWrapper from './../../widgets/menuWrapper'
 import IconButton from './../../widgets/buttons/iconButton'
 import Menu from './../../widgets/menu'
 import Tooltip from './../../widgets/tooltip'
+import {Permission} from '../../constants'
 
 type Props = {
     block: AttachmentBlock
@@ -31,7 +33,6 @@ type Props = {
 
 const AttachmentElement = (props: Props): JSX.Element|null => {
     const {block, onDelete} = props
-    const [fileDataUrl, setFileDataUrl] = useState<string|null>(null)
     const [fileInfo, setFileInfo] = useState<FileInfo>({})
     const [fileSize, setFileSize] = useState<string>()
     const [fileIcon, setFileIcon] = useState<string>('file-text-outline-larg')
@@ -42,23 +43,18 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
     const intl = useIntl()
 
     useEffect(() => {
-        if (!fileDataUrl) {
-            const loadFile = async () => {
-                if (block.isUploading) {
-                    setFileInfo({
-                        name: block.title,
-                        extension: block.title.split('.').slice(0, -1).join('.'),
-                    })
-                    setFileDataUrl(block.title)
-                    return
-                }
-                const attachment = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
-                setFileDataUrl(attachment.url || '')
-                const attachmentInfo = await octoClient.getFileInfo(block.boardId, block.fields.attachmentId)
-                setFileInfo(attachmentInfo)
+        const loadFile = async () => {
+            if (block.isUploading) {
+                setFileInfo({
+                    name: block.title,
+                    extension: block.title.split('.').slice(0, -1).join('.'),
+                })
+                return
             }
-            loadFile()
+            const attachmentInfo = await octoClient.getFileInfo(block.boardId, block.fields.attachmentId)
+            setFileInfo(attachmentInfo)
         }
+        loadFile()
     }, [])
 
     useEffect(() => {
@@ -117,8 +113,18 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
         )
     }
 
-    if (!fileDataUrl) {
-        return null
+    /* if (!fileDataUrl) {
+     *     return null
+     * } */
+
+    const attachmentDownloadHandler = async () => {
+        const attachment = await octoClient.getFileAsDataUrl(block.boardId, block.fields.attachmentId)
+        const anchor = document.createElement('a')
+        anchor.href = attachment.url || ''
+        anchor.download = fileInfo.name || ''
+        document.body.appendChild(anchor)
+        anchor.click()
+        document.body.removeChild(anchor)
     }
 
     return (
@@ -156,40 +162,39 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                 </div>}
             {!block.isUploading &&
             <div className='fileElement-delete-download'>
-                <MenuWrapper className='mt-3 fileElement-menu-icon'>
-                    <IconButton
-                        size='medium'
-                        icon={<CompassIcon icon='dots-vertical'/>}
-                    />
-                    <div className='delete-menu'>
-                        <Menu position='left'>
-                            <Menu.Text
-                                id='makeTemplate'
-                                icon={
-                                    <CompassIcon
-                                        icon='trash-can-outline'
-                                    />}
-                                name='Delete'
-                                onClick={handleDeleteButtonClick}
-                            />
-                        </Menu>
-                    </div>
-                </MenuWrapper>
+                <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
+                    <MenuWrapper className='mt-3 fileElement-menu-icon'>
+                        <IconButton
+                            size='medium'
+                            icon={<CompassIcon icon='dots-vertical'/>}
+                        />
+                        <div className='delete-menu'>
+                            <Menu position='left'>
+                                <Menu.Text
+                                    id='makeTemplate'
+                                    icon={
+                                        <CompassIcon
+                                            icon='trash-can-outline'
+                                        />}
+                                    name='Delete'
+                                    onClick={handleDeleteButtonClick}
+                                />
+                            </Menu>
+                        </div>
+                    </MenuWrapper>
+                </BoardPermissionGate>
                 <Tooltip
                     title='Download'
                     placement='bottom'
                 >
-                    <a
-                        href={fileDataUrl}
-                        download={fileInfo.name}
-                        target='_blank'
-                        rel='noopener noreferrer'
+                    <div
                         className='fileElement-download-btn mt-5 mr-2'
+                        onClick={attachmentDownloadHandler}
                     >
                         <CompassIcon
                             icon='download-outline'
                         />
-                    </a>
+                    </div>
                 </Tooltip>
             </div> }
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
