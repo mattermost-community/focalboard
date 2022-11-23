@@ -16,7 +16,7 @@
   "BoardMember.unlinkChannel": "Verknüpfung aufheben",
   "BoardPage.newVersion": "Eine neue Version von Boards ist verfügbar, klicke hier, um neu zu laden.",
   "BoardPage.syncFailed": "Das Board kann gelöscht oder der Zugang entzogen werden.",
-  "BoardTemplateSelector.add-template": "Neue Vorlage",
+  "BoardTemplateSelector.add-template": "Neue Vorlage erstellen",
   "BoardTemplateSelector.create-empty-board": "Leeres Board erstellen",
   "BoardTemplateSelector.delete-template": "Löschen",
   "BoardTemplateSelector.description": "Füge ein Board hinzu, indem du eine der unten definierten Vorlagen verwendest oder ganz neu beginnst.",
