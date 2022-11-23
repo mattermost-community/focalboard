@@ -40,7 +40,13 @@
     .fileElement-download-btn {
         display: none;
         font-size: 20px;
-        color: rgb(193, 193, 193);
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+        padding: 8px;
+
+        &:hover {
+            background-color: rgba(var(--center-channel-color-rgb), 0.08);
+            border-radius: 5px;
+        }
     }
 
     .fileElement-menu-icon {

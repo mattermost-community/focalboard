@@ -188,7 +188,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                     placement='bottom'
                 >
                     <div
-                        className='fileElement-download-btn mt-5 mr-2'
+                        className='fileElement-download-btn mt-3 mr-2'
                         onClick={attachmentDownloadHandler}
                     >
                         <CompassIcon
