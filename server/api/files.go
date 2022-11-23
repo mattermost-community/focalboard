@@ -5,7 +5,6 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -119,23 +118,6 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	auditRec.AddMeta("boardID", boardID)
 	auditRec.AddMeta("teamID", board.TeamID)
 	auditRec.AddMeta("filename", filename)
-
-	contentType := "image/jpg"
-
-	fileExtension := strings.ToLower(filepath.Ext(filename))
-	if fileExtension == "png" {
-		contentType = "image/png"
-	}
-
-	if fileExtension == "gif" {
-		contentType = "image/gif"
-	}
-
-	if fileExtension == "pdf" {
-		contentType = "application/pdf"
-	}
-
-	w.Header().Set("Content-Type", contentType)
 
 	fileInfo, err := a.app.GetFileInfo(filename)
 	if err != nil && !model.IsErrNotFound(err) {
