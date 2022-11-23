@@ -124,6 +124,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
 
     return (
         <div className='FileElement mr-4'>
+            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
             <div className='fileElement-icon-division'>
                 <CompassIcon
                     icon={fileIcon}
@@ -197,7 +198,6 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                     </div>
                 </Tooltip>
             </div> }
-            {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
         </div>
     )
 }
