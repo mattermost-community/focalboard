@@ -19,7 +19,7 @@
   "BoardTemplateSelector.add-template": "Новый шаблон",
   "BoardTemplateSelector.create-empty-board": "Создать пустую доску",
   "BoardTemplateSelector.delete-template": "Удалить",
-  "BoardTemplateSelector.description": "Выберите шаблон, который поможет Вам начать работу. Легко настройте шаблон в соответствии со своими потребностями или создайте пустую доску, чтобы начать с нуля.",
+  "BoardTemplateSelector.description": "Добавьте доску на боковую панель, используя любой из шаблонов, описанных ниже, или начните с нуля.",
   "BoardTemplateSelector.edit-template": "Изменить",
   "BoardTemplateSelector.plugin.no-content-description": "Добавьте доску на боковую панель, используя любой из указанных ниже шаблонов, или начните с нуля.{lineBreak} Участники \"{teamName}\" будут иметь доступ к созданным здесь доскам.",
   "BoardTemplateSelector.plugin.no-content-title": "Создать доску",
