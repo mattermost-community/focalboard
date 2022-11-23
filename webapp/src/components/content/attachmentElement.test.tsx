@@ -3,18 +3,15 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-
 import {render} from '@testing-library/react'
-
 import {act} from 'react-dom/test-utils'
-
 import {mocked} from 'jest-mock'
 
 import {AttachmentBlock} from '../../blocks/attachmentBlock'
-
 import {mockStateStore, wrapIntl} from '../../testUtils'
-
 import octoClient from '../../octoClient'
+import {TestBlockFactory} from '../../test/testBlockFactory'
+import {IUser} from '../../user'
 
 import AttachmentElement from './attachmentElement'
 
@@ -26,6 +23,11 @@ mockedOcto.getFileInfo.mockResolvedValue({
     size: 2300,
     extension: '.txt',
 })
+
+const board = TestBlockFactory.createBoard()
+board.id = '1'
+board.teamId = 'team-id'
+board.channelId = 'channel_1'
 
 describe('component/content/FileBlock', () => {
     const defaultBlock: AttachmentBlock = {
@@ -48,7 +50,44 @@ describe('component/content/FileBlock', () => {
         uploadingPercent: 0,
     }
 
+    const me: IUser = {
+        id: 'user-id-1',
+        username: 'username_1',
+        email: '',
+        nickname: '',
+        firstname: '',
+        lastname: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
+        is_bot: false,
+        is_guest: false,
+        roles: 'system_user',
+    }
+
     const state = {
+        teams: {
+            current: {id: 'team-id', title: 'Test Team'},
+        },
+        users: {
+            me,
+            boardUsers: [me],
+            blockSubscriptions: [],
+        },
+        boards: {
+            current: board.id,
+            boards: {
+                [board.id]: board,
+            },
+            templates: [],
+            membersInBoards: {
+                [board.id]: {},
+            },
+            myBoardMemberships: {
+                [board.id]: {userId: me.id, schemeAdmin: true},
+            },
+        },
+
         attachments: {
             attachments: {
                 'test-id': {
