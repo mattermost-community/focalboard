@@ -1,0 +1,83 @@
+.PageBlocks {
+    >.BlocksEditor {
+        position: relative;
+        width: 100%;
+
+        .Editor {
+            margin-left: 0;
+
+            input {
+                padding: 0;
+            }
+
+            .H1 {
+                margin-top: 20px;
+                margin-bottom: 10px;
+                font-family: Metropolis, sans-serif;
+                font-size: 36px;
+            }
+        }
+    }
+
+    .RootInput__menu {
+        border: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+        /* Elevation 4 */
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        border-radius: 4px;
+    }
+
+    .RootInput__option {
+        padding: 0;
+
+        &:first-child {
+            .slash-command {
+                margin: 12px 0 0 !important;
+            }
+        }
+    }
+
+    .RootInput__control {
+        box-shadow: none;
+    }
+
+    .RootInput__value-container {
+        padding: 0;
+    }
+
+
+    .slash-command {
+        display: flex;
+        align-items: flex-start;
+        padding: 1rem 2.4rem;
+        margin: 0 !important;
+    }
+
+    .slash-command__icon {
+        display: flex;
+        width: 3.2rem;
+        height: 3.2rem;
+        flex: 0 0 3.2rem;
+        align-items: center;
+        justify-content: center;
+        background: rgba(var(--center-channel-color-rgb), 0.08);
+        border-radius: 4px;
+        font-size: 20px;
+        font-weight: 600;
+
+        span {
+            opacity: 0.56;
+        }
+    }
+
+    .slash-command__info {
+        margin-left: 12px;
+        line-height: 1;
+    }
+
+    .slash-command__desc {
+        margin: 2px 0 0;
+        font-size: 12px;
+        line-height: 1.6;
+        opacity: 0.56;
+    }
+}
