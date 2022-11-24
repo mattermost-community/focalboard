@@ -433,7 +433,7 @@ func TestBoardCategory(t *testing.T) {
 				ID:   "default_category_id",
 				Name: "Boards",
 			}, nil)
-			th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
+			th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
 			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_1").Return(nil)
 			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_2").Return(nil)
 			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_3").Return(nil)

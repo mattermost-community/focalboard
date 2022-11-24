@@ -21,19 +21,20 @@ func TestGetUserCategoryBoards(t *testing.T) {
 			Name: "Boards",
 		}, nil)
 
-		board1 := &model.Board{
-			ID: "board_id_1",
-		}
-
-		board2 := &model.Board{
-			ID: "board_id_2",
-		}
-
-		board3 := &model.Board{
-			ID: "board_id_3",
-		}
-
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{board1, board2, board3}, nil)
+		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{
+			{
+				BoardID:   "board_id_1",
+				Synthetic: false,
+			},
+			{
+				BoardID:   "board_id_2",
+				Synthetic: false,
+			},
+			{
+				BoardID:   "board_id_3",
+				Synthetic: false,
+			},
+		}, nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_1").Return(nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_2").Return(nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_3").Return(nil)
@@ -56,7 +57,7 @@ func TestGetUserCategoryBoards(t *testing.T) {
 			Name: "Boards",
 		}, nil)
 
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
+		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
 
 		categoryBoards, err := th.App.GetUserCategoryBoards("user_id", "team_id")
 		assert.NoError(t, err)
