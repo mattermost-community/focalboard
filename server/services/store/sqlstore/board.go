@@ -264,9 +264,6 @@ func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID stri
 		})
 	}
 
-	q, p, _ := query.ToSql()
-	s.logger.Error(fmt.Sprintf("%s %v", q, p))
-
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`getBoardsForUserAndTeam ERROR`, mlog.Err(err))

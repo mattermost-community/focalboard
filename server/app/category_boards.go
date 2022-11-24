@@ -63,7 +63,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	// belong to any category, into this category.
 	boardMembers, err := a.GetMembersForUser(userID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's board memberships: %w", err)
 	}
 
 	createdCategoryBoards := &model.CategoryBoards{
