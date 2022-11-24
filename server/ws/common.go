@@ -6,10 +6,10 @@ import (
 
 // UpdateCategoryMessage is sent on block updates.
 type UpdateCategoryMessage struct {
-	Action          string                            `json:"action"`
-	TeamID          string                            `json:"teamId"`
-	Category        *model.Category                   `json:"category,omitempty"`
-	BoardCategories *model.BoardCategoryWebsocketData `json:"blockCategories,omitempty"`
+	Action          string                              `json:"action"`
+	TeamID          string                              `json:"teamId"`
+	Category        *model.Category                     `json:"category,omitempty"`
+	BoardCategories []*model.BoardCategoryWebsocketData `json:"blockCategories,omitempty"`
 }
 
 // UpdateBlockMsg is sent on block updates.
@@ -58,4 +58,17 @@ type WebsocketCommand struct {
 	Token     string   `json:"token"`
 	ReadToken string   `json:"readToken"`
 	BlockIDs  []string `json:"blockIds"`
+}
+
+type CategoryReorderMessage struct {
+	Action        string   `json:"action"`
+	CategoryOrder []string `json:"categoryOrder"`
+	TeamID        string   `json:"teamId"`
+}
+
+type CategoryBoardReorderMessage struct {
+	Action     string   `json:"action"`
+	CategoryID string   `json:"CategoryId"`
+	BoardOrder []string `json:"BoardOrder"`
+	TeamID     string   `json:"teamId"`
 }

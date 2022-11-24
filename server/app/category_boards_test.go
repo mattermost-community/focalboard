@@ -35,9 +35,9 @@ func TestGetUserCategoryBoards(t *testing.T) {
 				Synthetic: false,
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_1").Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_2").Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_3").Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_2": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_3": "boards_category_id"}).Return(nil)
 
 		categoryBoards, err := th.App.GetUserCategoryBoards("user_id", "team_id")
 		assert.NoError(t, err)
@@ -157,9 +157,9 @@ func TestCreateBoardsCategory(t *testing.T) {
 				Synthetic: false,
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_1").Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_2").Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_3").Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_2": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_3": "boards_category_id"}).Return(nil)
 
 		existingCategoryBoards := []model.CategoryBoards{}
 		boardsCategory, err := th.App.createBoardsCategory("user_id", "team_id", existingCategoryBoards)
@@ -193,7 +193,7 @@ func TestCreateBoardsCategory(t *testing.T) {
 				Synthetic: true,
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_1").Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
 
 		existingCategoryBoards := []model.CategoryBoards{}
 		boardsCategory, err := th.App.createBoardsCategory("user_id", "team_id", existingCategoryBoards)
@@ -205,5 +205,56 @@ func TestCreateBoardsCategory(t *testing.T) {
 		// and so only that one should end up in the
 		// default category
 		assert.Equal(t, 1, len(boardsCategory.BoardIDs))
+	})
+}
+
+func TestReorderCategoryBoards(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("base case", func(t *testing.T) {
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+				BoardIDs: []string{"board_id_1", "board_id_2"},
+			},
+			{
+				Category: model.Category{ID: "category_id_2", Name: "Boards", Type: "system"},
+				BoardIDs: []string{"board_id_3"},
+			},
+			{
+				Category: model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardIDs: []string{},
+			},
+		}, nil)
+
+		th.Store.EXPECT().ReorderCategoryBoards("category_id_1", []string{"board_id_2", "board_id_1"}).Return([]string{"board_id_2", "board_id_1"}, nil)
+
+		newOrder, err := th.App.ReorderCategoryBoards("user_id", "team_id", "category_id_1", []string{"board_id_2", "board_id_1"})
+		assert.NoError(t, err)
+		assert.Equal(t, 2, len(newOrder))
+		assert.Equal(t, "board_id_2", newOrder[0])
+		assert.Equal(t, "board_id_1", newOrder[1])
+	})
+
+	t.Run("not specifying all boards", func(t *testing.T) {
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+				BoardIDs: []string{"board_id_1", "board_id_2", "board_id_3"},
+			},
+			{
+				Category: model.Category{ID: "category_id_2", Name: "Boards", Type: "system"},
+				BoardIDs: []string{"board_id_3"},
+			},
+			{
+				Category: model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardIDs: []string{},
+			},
+		}, nil)
+
+		newOrder, err := th.App.ReorderCategoryBoards("user_id", "team_id", "category_id_1", []string{"board_id_2", "board_id_1"})
+		assert.Error(t, err)
+		assert.Nil(t, newOrder)
 	})
 }
