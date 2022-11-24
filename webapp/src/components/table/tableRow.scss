@@ -62,4 +62,9 @@
     .URLProperty:hover .Button_Copy {
         display: none;
     }
+
+    .octo-propertyvalue--readonly {
+        flex-wrap: nowrap;
+        overflow: hidden !important;
+    }
 }
