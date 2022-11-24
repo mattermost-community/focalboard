@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 const (
@@ -821,6 +822,19 @@ func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.Fi
 	}
 
 	return fileUploadResponse, BuildResponse(r)
+}
+
+func (c *Client) TeamUploadFileInfo(teamID, boardID string, fileName string) (*mmModel.FileInfo, *Response) {
+	r, err := c.DoAPIGet(fmt.Sprintf("/files/teams/%s/%s/%s/info", teamID, boardID, fileName), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+	fileInfoResponse, error := api.FileInfoResponseFromJSON(r.Body)
+	if error != nil {
+		return nil, BuildErrorResponse(r, error)
+	}
+	return fileInfoResponse, BuildResponse(r)
 }
 
 func (c *Client) GetSubscriptionsRoute() string {

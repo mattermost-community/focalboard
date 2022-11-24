@@ -108,8 +108,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={card}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -171,8 +174,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={card}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={true}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -262,8 +268,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -368,8 +377,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -478,8 +490,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[text]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -563,8 +578,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={limitedCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>

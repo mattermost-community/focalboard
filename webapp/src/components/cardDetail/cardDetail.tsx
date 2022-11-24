@@ -8,6 +8,7 @@ import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 import {Board} from '../../blocks/board'
 import {CommentBlock} from '../../blocks/commentBlock'
+import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {Block, ContentBlockTypes, createBlock} from '../../blocks/block'
 import mutator from '../../mutator'
@@ -39,6 +40,7 @@ import CardDetailContents from './cardDetailContents'
 import CardDetailContentsMenu from './cardDetailContentsMenu'
 import CardDetailProperties from './cardDetailProperties'
 import useImagePaste from './imagePaste'
+import AttachmentList from './attachment'
 
 import './cardDetail.scss'
 
@@ -52,9 +54,12 @@ type Props = {
     cards: Card[]
     card: Card
     comments: CommentBlock[]
+    attachments: AttachmentBlock[]
     contents: Array<ContentBlock|ContentBlock[]>
     readonly: boolean
     onClose: () => void
+    onDelete: (block: Block) => void
+    addAttachment: () => void
 }
 
 async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
@@ -94,7 +99,7 @@ async function addBlockNewEditor(card: Card, intl: IntlShape, title: string, fie
 }
 
 const CardDetail = (props: Props): JSX.Element|null => {
-    const {card, comments} = props
+    const {card, comments, attachments, onDelete, addAttachment} = props
     const {limited} = card
     const [title, setTitle] = useState(card.title)
     const [serverTitle, setServerTitle] = useState(card.title)
@@ -284,6 +289,15 @@ const CardDetail = (props: Props): JSX.Element|null => {
                     views={props.views}
                     readonly={props.readonly}
                 />}
+
+                {attachments.length !== 0 && <Fragment>
+                    <hr/>
+                    <AttachmentList
+                        attachments={attachments}
+                        onDelete={onDelete}
+                        addAttachment={addAttachment}
+                    />
+                </Fragment>}
 
                 {/* Comments */}
 

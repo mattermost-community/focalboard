@@ -10,6 +10,14 @@
 }
 
 .cardFollowBtn {
+    display: inline-flex;
+
+    &.attach {
+        margin-right: 20px;
+        color: rgba(var(--center-channel-color-rgb), 0.64);
+        background-color: rgba(var(--center-channel-color-rgb), 0.08);
+    }
+
     &.follow {
         color: rgba(var(--center-channel-color-rgb), 0.64);
         background-color: rgba(var(--center-channel-color-rgb), 0.08);

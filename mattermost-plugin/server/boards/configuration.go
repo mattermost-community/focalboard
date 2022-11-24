@@ -107,6 +107,11 @@ func (b *BoardsApp) OnConfigurationChange() error {
 		showFullName = *mmconfig.PrivacySettings.ShowFullName
 	}
 	b.server.Config().ShowFullName = showFullName
+	maxFileSize := int64(0)
+	if mmconfig.FileSettings.MaxFileSize != nil {
+		maxFileSize = *mmconfig.FileSettings.MaxFileSize
+	}
+	b.server.Config().MaxFileSize = maxFileSize
 
 	b.server.UpdateAppConfig()
 	b.wsPluginAdapter.BroadcastConfigChange(*b.server.App().GetClientConfig())

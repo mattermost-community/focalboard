@@ -11,5 +11,6 @@ func (a *App) GetClientConfig() *model.ClientConfig {
 		EnablePublicSharedBoards: a.config.EnablePublicSharedBoards,
 		TeammateNameDisplay:      a.config.TeammateNameDisplay,
 		FeatureFlags:             a.config.FeatureFlags,
+		MaxFileSize:              a.config.MaxFileSize,
 	}
 }
