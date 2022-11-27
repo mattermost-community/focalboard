@@ -1,3 +1,4 @@
+{{- /* Only perform this migration if the board_members_history table does not already exist */ -}}
 {{if doesTableExist .schemaName "board_members_history" }}
 
 SELECT 1;

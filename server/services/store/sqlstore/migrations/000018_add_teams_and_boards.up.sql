@@ -292,7 +292,7 @@ UPDATE {{.prefix}}blocks_history SET board_id=root_id WHERE board_id IS NULL OR 
 DELETE FROM {{.prefix}}blocks WHERE type = 'board';
 DELETE FROM {{.prefix}}blocks_history WHERE type = 'board';
 
-{{- /* add board_members */ -}}
+{{- /* add board_members (only if boards_members doesn't already exist) */ -}}
 {{if not (doesTableExist .schemaName "board_members") }}
 CREATE TABLE IF NOT EXISTS {{.prefix}}board_members (
     board_id VARCHAR(36) NOT NULL,

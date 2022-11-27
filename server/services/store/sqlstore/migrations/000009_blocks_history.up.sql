@@ -1,3 +1,5 @@
+{{- /* Only perform this migration if the blocks_history table does not already exist */ -}}
+
 {{- /* doesTableExist schemaName tableName */ -}}
 {{if doesTableExist .schemaName "blocks_history" }}
 
