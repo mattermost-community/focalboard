@@ -1,15 +1,15 @@
-{{- /* renameTableIfNeeded(schemaName, oldTableName, newTableName string) */ -}}
+{{- /* renameTableIfNeeded schemaName oldTableName newTableName string */ -}}
 {{ renameTableIfNeeded .schemaName "workspaces" "teams" }}
 
-{{- /* renameColumnIfNeeded(schemaName, tableName, oldColumnName, newColumnName, dataType string) */ -}}
+{{- /* renameColumnIfNeeded schemaName tableName oldColumnName newColumnName dataType */ -}}
 {{ renameColumnIfNeeded .schemaName "blocks" "workspace_id" "channel_id" "varchar(36)" }}
 {{ renameColumnIfNeeded .schemaName "blocks_history" "workspace_id" "channel_id" "varchar(36)" }}
 
-{{- /* dropColumnIfNeeded(schemaName, tableName, columnName string) */ -}}
+{{- /* dropColumnIfNeeded schemaName tableName columnName */ -}}
 {{ dropColumnIfNeeded .schemaName "blocks" "workspace_id" }}
 {{ dropColumnIfNeeded .schemaName "blocks_history" "workspace_id" }}
 
-{{- /* addColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) */ -}}
+{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint */ -}}
 {{ addColumnIfNeeded .schemaName "blocks" "board_id" "varchar(36)" ""}}
 {{ addColumnIfNeeded .schemaName "blocks_history" "board_id" "varchar(36)" ""}}
 
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
     minimum_role VARCHAR(36) NOT NULL DEFAULT ''
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
-{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
 {{ createIndexIfNeeded .schemaName "boards" "team_id, is_template" }}
 {{ createIndexIfNeeded .schemaName "boards" "channel_id" }}
 
@@ -332,5 +332,5 @@ INSERT INTO {{.prefix}}board_members
 {{end}}
 {{end}}
 
-{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
 {{ createIndexIfNeeded .schemaName "board_members" "user_id" }}

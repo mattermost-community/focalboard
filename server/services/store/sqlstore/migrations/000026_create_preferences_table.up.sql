@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}preferences
     primary key (userid, category, name)
     );
 
-{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
 {{ createIndexIfNeeded .schemaName "preferences" "category" }}
 {{ createIndexIfNeeded .schemaName "preferences" "name" }}

@@ -10,6 +10,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}categories (
     PRIMARY KEY (id)
     ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
-{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
 {{ createIndexIfNeeded .schemaName "categories" "user_id, team_id" }}
 

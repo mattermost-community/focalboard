@@ -1,4 +1,4 @@
-{{- /* addColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) */ -}}
+{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint */ -}}
 {{ addColumnIfNeeded .schemaName "blocks" "workspace_id" "varchar(36)" ""}}
 
 {{ addColumnIfNeeded .schemaName "sharing" "workspace_id" "varchar(36)" ""}}

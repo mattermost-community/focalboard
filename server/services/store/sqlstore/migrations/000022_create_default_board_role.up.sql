@@ -1,4 +1,4 @@
-{{- /* addColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) */ -}}
+{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint */ -}}
 {{ addColumnIfNeeded .schemaName "boards" "minimum_role" "varchar(36)" "NOT NULL DEFAULT ''"}}
 {{ addColumnIfNeeded .schemaName "boards_history" "minimum_role" "varchar(36)" "NOT NULL DEFAULT ''"}}
 

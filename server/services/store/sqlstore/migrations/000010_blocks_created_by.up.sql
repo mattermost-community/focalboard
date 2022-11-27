@@ -1,4 +1,4 @@
-{{- /* addColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) */ -}}
+{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint) */ -}}
 {{ addColumnIfNeeded .schemaName "blocks" "created_by" "varchar(36)" ""}}
 {{ addColumnIfNeeded .schemaName "blocks_history" "created_by" "varchar(36)" ""}}
 

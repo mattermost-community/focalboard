@@ -18,6 +18,6 @@ INSERT INTO {{.prefix}}board_members_history (board_id, user_id, action) SELECT 
 
 {{end}}
 
-{{- /* createIndexIfNeeded(schemaName, tableName, columns string) */ -}}
+{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
 {{ createIndexIfNeeded .schemaName "board_members_history" "user_id" }}
 {{ createIndexIfNeeded .schemaName "board_members_history" "board_id, user_id" }}
