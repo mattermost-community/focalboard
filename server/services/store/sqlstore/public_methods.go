@@ -46,6 +46,16 @@ func (s *SQLStore) AddUpdateCategoryBoard(userID string, boardCategoryMapping ma
 
 }
 
+func (s *SQLStore) BlocksComplianceExport(cursor model.ComplianceExportCursor, limit int) ([]*model.BlockExport, model.ComplianceExportCursor, error) {
+	return s.blocksComplianceExport(s.db, cursor, limit)
+
+}
+
+func (s *SQLStore) BoardsComplianceExport(cursor model.ComplianceExportCursor, limit int) ([]*model.BoardExport, model.ComplianceExportCursor, error) {
+	return s.boardsComplianceExport(s.db, cursor, limit)
+
+}
+
 func (s *SQLStore) CanSeeUser(seerID string, seenID string) (bool, error) {
 	return s.canSeeUser(s.db, seerID, seenID)
 

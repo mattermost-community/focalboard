@@ -72,11 +72,7 @@ func (a *App) GetFileInfo(filename string) (*mmModel.FileInfo, error) {
 		return nil, errEmptyFilename
 	}
 
-	// filename is in the format 7<some-alphanumeric-string>.<extension>
-	// we want to extract the <some-alphanumeric-string> part of this as this
-	// will be the fileinfo id.
-	parts := strings.Split(filename, ".")
-	fileInfoID := parts[0][1:]
+	fileInfoID := utils.GetFileInfoFromFilename(filename)
 	fileInfo, err := a.store.GetFileInfo(fileInfoID)
 	if err != nil {
 		return nil, err

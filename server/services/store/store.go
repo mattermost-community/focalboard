@@ -167,6 +167,10 @@ type Store interface {
 	PostMessage(message, postType, channelID string) error
 	SendMessage(message, postType string, receipts []string) error
 
+	// Compliance Export
+	BlocksComplianceExport(cursor model.ComplianceExportCursor, limit int) ([]*model.BlockExport, model.ComplianceExportCursor, error)
+	BoardsComplianceExport(cursor model.ComplianceExportCursor, limit int) ([]*model.BoardExport, model.ComplianceExportCursor, error)
+
 	// Insights
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)

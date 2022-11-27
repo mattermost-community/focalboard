@@ -954,3 +954,72 @@ func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, paren
 
 	return nil
 }
+
+func (s *SQLStore) blocksComplianceExport(db sq.BaseRunner, cursor model.ComplianceExportCursor, limit int) ([]*model.BlockExport, model.ComplianceExportCursor, error) {
+	query := s.getQueryBuilder(db).
+		Select(
+			"B.id",
+			"B.board_id",
+			"B.parent_id",
+			"B.modified_by",
+			"COALESCE(U.Email, '')",
+			"COALESCE(U.Username, '')",
+			"B.type",
+			"B.title",
+			"COALESCE(B.fields, '{}')",
+			"B.create_at",
+			"B.update_at",
+			"B.delete_at",
+		).
+		From(s.tablePrefix + "blocks_history B").
+		LeftJoin("Users U ON B.modified_by = U.Id").
+		Where(sq.Or{
+			sq.Gt{"B.update_at": cursor.LastUpdateAt},
+			sq.And{
+				sq.Eq{"B.update_at": cursor.LastUpdateAt},
+				sq.Gt{"B.id": cursor.LastID},
+			},
+		}).
+		OrderBy("B.update_at, B.id").
+		Limit(uint64(limit))
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`BlocksComplianceExport ERROR`, mlog.Err(err))
+		return nil, model.ComplianceExportCursor{}, err
+	}
+	defer s.CloseRows(rows)
+
+	blocks := []*model.BlockExport{}
+	for rows.Next() {
+		var block model.BlockExport
+
+		err := rows.Scan(
+			&block.ID,
+			&block.BoardID,
+			&block.ParentID,
+			&block.ModifiedBy,
+			&block.ModifiedByEmail,
+			&block.ModifiedByUsername,
+			&block.Type,
+			&block.Title,
+			&block.Fields,
+			&block.CreateAt,
+			&block.UpdateAt,
+			&block.DeleteAt,
+		)
+		if err != nil {
+			s.logger.Error(`BlocksComplianceExportScan ERROR`, mlog.Err(err))
+			return nil, model.ComplianceExportCursor{}, err
+		}
+
+		blocks = append(blocks, &block)
+	}
+
+	if len(blocks) > 0 {
+		cursor.LastUpdateAt = blocks[len(blocks)-1].UpdateAt
+		cursor.LastID = blocks[len(blocks)-1].ID
+	}
+
+	return blocks, cursor, nil
+}

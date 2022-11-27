@@ -909,3 +909,82 @@ func (s *SQLStore) getBoardMemberHistory(db sq.BaseRunner, boardID, userID strin
 
 	return memberHistory, nil
 }
+
+func (s *SQLStore) boardsComplianceExport(db sq.BaseRunner, cursor model.ComplianceExportCursor, limit int) ([]*model.BoardExport, model.ComplianceExportCursor, error) {
+	query := s.getQueryBuilder(db).
+		Select(
+			"B.id",
+			"B.team_id",
+			"B.channel_id",
+			"B.modified_by",
+			"COALESCE(U.Email, '')",
+			"COALESCE(U.Username, '')",
+			"B.type",
+			"B.minimum_role",
+			"B.title",
+			"B.description",
+			"B.icon",
+			"B.is_template",
+			"COALESCE(B.properties, '{}')",
+			"COALESCE(B.card_properties, '{}')",
+			"B.create_at",
+			"B.update_at",
+			"B.delete_at",
+		).
+		From(s.tablePrefix + "boards_history B").
+		LeftJoin("Users U ON B.modified_by = U.Id").
+		Where(sq.Or{
+			sq.Gt{"B.update_at": cursor.LastUpdateAt},
+			sq.And{
+				sq.Eq{"B.update_at": cursor.LastUpdateAt},
+				sq.Gt{"B.id": cursor.LastID},
+			},
+		}).
+		OrderBy("B.update_at, B.id").
+		Limit(uint64(limit))
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`BoardsComplianceExport ERROR`, mlog.Err(err))
+		return nil, model.ComplianceExportCursor{}, err
+	}
+	defer s.CloseRows(rows)
+
+	boards := []*model.BoardExport{}
+	for rows.Next() {
+		var board model.BoardExport
+
+		err := rows.Scan(
+			&board.ID,
+			&board.TeamID,
+			&board.ChannelID,
+			&board.ModifiedBy,
+			&board.ModifiedByEmail,
+			&board.ModifiedByUsername,
+			&board.Type,
+			&board.MinimumRole,
+			&board.Title,
+			&board.Description,
+			&board.Icon,
+			&board.IsTemplate,
+			&board.Properties,
+			&board.CardProperties,
+			&board.CreateAt,
+			&board.UpdateAt,
+			&board.DeleteAt,
+		)
+		if err != nil {
+			s.logger.Error(`BoardsComplianceExportScan ERROR`, mlog.Err(err))
+			return nil, model.ComplianceExportCursor{}, err
+		}
+
+		boards = append(boards, &board)
+	}
+
+	if len(boards) > 0 {
+		cursor.LastUpdateAt = boards[len(boards)-1].UpdateAt
+		cursor.LastID = boards[len(boards)-1].ID
+	}
+
+	return boards, cursor, nil
+}

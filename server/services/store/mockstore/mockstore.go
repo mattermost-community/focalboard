@@ -50,6 +50,38 @@ func (mr *MockStoreMockRecorder) AddUpdateCategoryBoard(arg0, arg1 interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBoard", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBoard), arg0, arg1)
 }
 
+// BlocksComplianceExport mocks base method.
+func (m *MockStore) BlocksComplianceExport(arg0 model.ComplianceExportCursor, arg1 int) ([]*model.BlockExport, model.ComplianceExportCursor, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BlocksComplianceExport", arg0, arg1)
+	ret0, _ := ret[0].([]*model.BlockExport)
+	ret1, _ := ret[1].(model.ComplianceExportCursor)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// BlocksComplianceExport indicates an expected call of BlocksComplianceExport.
+func (mr *MockStoreMockRecorder) BlocksComplianceExport(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlocksComplianceExport", reflect.TypeOf((*MockStore)(nil).BlocksComplianceExport), arg0, arg1)
+}
+
+// BoardsComplianceExport mocks base method.
+func (m *MockStore) BoardsComplianceExport(arg0 model.ComplianceExportCursor, arg1 int) ([]*model.BoardExport, model.ComplianceExportCursor, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BoardsComplianceExport", arg0, arg1)
+	ret0, _ := ret[0].([]*model.BoardExport)
+	ret1, _ := ret[1].(model.ComplianceExportCursor)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// BoardsComplianceExport indicates an expected call of BoardsComplianceExport.
+func (mr *MockStoreMockRecorder) BoardsComplianceExport(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BoardsComplianceExport", reflect.TypeOf((*MockStore)(nil).BoardsComplianceExport), arg0, arg1)
+}
+
 // CanSeeUser mocks base method.
 func (m *MockStore) CanSeeUser(arg0, arg1 string) (bool, error) {
 	m.ctrl.T.Helper()

@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"reflect"
+	"strings"
 	"time"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -101,4 +102,21 @@ func IsCloudLicense(license *mmModel.License) bool {
 		license.Features != nil &&
 		license.Features.Cloud != nil &&
 		*license.Features.Cloud
+}
+
+// GetFileInfoFromFilename strips the initial 7 from the filename as
+// it is in the format 7<some-alphanumeric-string>.<extension>,
+// extracting the <some-alphanumeric-string> which corresponds to the
+// fileinfo id.
+func GetFileInfoFromFilename(filename string) string {
+	if !strings.HasPrefix(filename, "7") {
+		return filename
+	}
+
+	parts := strings.Split(filename, ".")
+	if len(parts) != 2 {
+		return filename
+	}
+
+	return parts[0][1:]
 }
