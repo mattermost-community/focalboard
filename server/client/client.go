@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 const (
@@ -442,6 +443,15 @@ func (c *Client) CreateCategory(category model.Category) (*model.Category, *Resp
 	return model.CategoryFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) DeleteCategory(teamID, categoryID string) *Response {
+	r, err := c.DoAPIDelete(c.GetTeamRoute(teamID)+"/categories/"+categoryID, "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
 func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
 	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
 	if err != nil {
@@ -462,6 +472,30 @@ func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *
 	var categoryBoards []model.CategoryBoards
 	_ = json.NewDecoder(r.Body).Decode(&categoryBoards)
 	return categoryBoards, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategories(teamID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedCategoryOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedCategoryOrder)
+	return updatedCategoryOrder, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategoryBoards(teamID, categoryID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedBoardsOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedBoardsOrder)
+	return updatedBoardsOrder, BuildResponse(r)
 }
 
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
@@ -788,6 +822,19 @@ func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.Fi
 	}
 
 	return fileUploadResponse, BuildResponse(r)
+}
+
+func (c *Client) TeamUploadFileInfo(teamID, boardID string, fileName string) (*mmModel.FileInfo, *Response) {
+	r, err := c.DoAPIGet(fmt.Sprintf("/files/teams/%s/%s/%s/info", teamID, boardID, fileName), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+	fileInfoResponse, error := api.FileInfoResponseFromJSON(r.Body)
+	if error != nil {
+		return nil, BuildErrorResponse(r, error)
+	}
+	return fileInfoResponse, BuildResponse(r)
 }
 
 func (c *Client) GetSubscriptionsRoute() string {
