@@ -58,9 +58,9 @@ const commentsSlice = createSlice({
                     state.comments[block.id] = block as CommentBlock
                     state.commentsByCard[block.parentId] = state.commentsByCard[block.parentId] || []
                     state.commentsByCard[block.parentId].push(block as CommentBlock)
-                    state.commentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
             }
+            Object.values(state.commentsByCard).forEach((comment) => comment.sort((a, b) => a.createAt - b.createAt))
         })
         builder.addCase(loadBoardData.fulfilled, (state, action) => {
             state.comments = {}
@@ -70,9 +70,9 @@ const commentsSlice = createSlice({
                     state.comments[block.id] = block as CommentBlock
                     state.commentsByCard[block.parentId] = state.commentsByCard[block.parentId] || []
                     state.commentsByCard[block.parentId].push(block as CommentBlock)
-                    state.commentsByCard[block.parentId].sort((a, b) => a.createAt - b.createAt)
                 }
             }
+            Object.values(state.commentsByCard).forEach((comment) => comment.sort((a, b) => a.createAt - b.createAt))
         })
     },
 })
