@@ -165,11 +165,11 @@ func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, erro
 //
 
 func (a *serviceAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
-	a.api.clusterService.PublishWebSocketEvent(boardsProductID, event, payload, broadcast)
+	a.api.clusterService.PublishWebSocketEvent(boardsProductName, event, payload, broadcast)
 }
 
 func (a *serviceAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error {
-	return a.api.clusterService.PublishPluginClusterEvent(boardsProductID, ev, opts)
+	return a.api.clusterService.PublishPluginClusterEvent(boardsProductName, ev, opts)
 }
 
 //
@@ -201,7 +201,7 @@ func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 //
 
 func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
-	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
+	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductName, key, value, options)
 	return b, normalizeAppErr(appErr)
 }
 
