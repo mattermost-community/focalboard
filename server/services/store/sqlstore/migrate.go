@@ -318,27 +318,31 @@ func (s *SQLStore) genAddColumnIfNeeded(schemaName, tableName, columnName, datat
 	case model.SqliteDBType:
 		// Sqlite does not support any conditionals that can contain DDL commands. No idempotent migrations for Sqlite :-(
 		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
-	case model.MysqlDBType, model.PostgresDBType:
-		return fmt.Sprintf(`
-			SET @schema = '%s';
-			SET @table_name = '%s';
-			SET @norm_table_name = '%s';
-			SET @column_name = '%s';
-			SET @data_type = '%s';
-			SET @constraint = '%s';
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"column_name":     columnName,
+			"data_type":       datatype,
+			"constraint":      constraint,
+		}
+		return replaceVars(`
 			SET @stmt = (SELECT IF(
 				(
 				  SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
-				  WHERE table_name = @table_name
-				  AND table_schema = @schema
-				  AND column_name = @column_name
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND column_name = '[[column_name]]'
 				) > 0,
 				'SELECT 1;',
-				CONCAT('ALTER TABLE ', @norm_table_name, ' ADD COLUMN ', @column_name, ' ', @data_type, ' ', @constraint, ';')));
+				'ALTER TABLE [[norm_table_name]] ADD COLUMN [[column_name]] [[data_type]] [[constraint]];'));
 			PREPARE addColumnIfNeeded FROM @stmt;
 			EXECUTE addColumnIfNeeded;
 			DEALLOCATE PREPARE addColumnIfNeeded;
-		`, schemaName, tableName, normTableName, columnName, datatype, constraint), nil
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN IF NOT EXISTS %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}
@@ -351,25 +355,29 @@ func (s *SQLStore) genDropColumnIfNeeded(schemaName, tableName, columnName strin
 	switch s.dbType {
 	case model.SqliteDBType:
 		return fmt.Sprintf("\n-- Sqlite3 cannot drop columns for versions less than 3.35.0; drop column '%s' in table '%s' skipped\n", columnName, tableName), nil
-	case model.MysqlDBType, model.PostgresDBType:
-		return fmt.Sprintf(`
-			SET @schema = '%s';
-			SET @table_name = '%s';
-			SET @norm_table_name = '%s';
-			SET @column_name = '%s';
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"column_name":     columnName,
+		}
+		return replaceVars(`
 			SET @stmt = (SELECT IF(
 				(
 				  SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
-				  WHERE table_name = @table_name
-				  AND table_schema = @schema
-				  AND column_name = @column_name
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND column_name = '[[column_name]]'
 				) > 0,
-				CONCAT('ALTER TABLE ', @norm_table_name, ' DROP COLUMN ', @column_name, ';'),
+				'ALTER TABLE [[norm_table_name]] DROP COLUMN [[column_name]];',
 				'SELECT 1;'));
 			PREPARE dropColumnIfNeeded FROM @stmt;
 			EXECUTE dropColumnIfNeeded;
 			DEALLOCATE PREPARE dropColumnIfNeeded;
-		`, schemaName, tableName, normTableName, columnName), nil
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nALTER TABLE %s DROP COLUMN IF EXISTS %s;\n", normTableName, columnName), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}
@@ -384,26 +392,30 @@ func (s *SQLStore) genCreateIndexIfNeeded(schemaName, tableName, columns string)
 	case model.SqliteDBType:
 		// No support for idempotent index creation in Sqlite.
 		return fmt.Sprintf("\nCREATE INDEX %s ON %s (%s);\n", indexName, normTableName, columns), nil
-	case model.MysqlDBType, model.PostgresDBType:
-		return fmt.Sprintf(`
-			SET @schema = '%s';
-			SET @table_name = '%s';
-			SET @norm_table_name = '%s';
-			SET @index_name = '%s';
-			SET @columns = '%s';
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"index_name":      indexName,
+			"columns":         columns,
+		}
+		return replaceVars(`
 			SET @stmt = (SELECT IF(
 				(
 				  SELECT COUNT(index_name) FROM INFORMATION_SCHEMA.STATISTICS
-				  WHERE table_name = @table_name
-				  AND table_schema = @schema
-				  AND index_name = @index_name
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND index_name = '[[index_name]]'
 				) > 0,
 				'SELECT 1;',
-				CONCAT('CREATE INDEX ', @index_name, ' ON ', @norm_table_name, ' (', @columns, ');')));
+				'CREATE INDEX [[index_name]] ON [[norm_table_name]] ([[columns]]);'));
 			PREPARE createIndexIfNeeded FROM @stmt;
 			EXECUTE createIndexIfNeeded;
 			DEALLOCATE PREPARE createIndexIfNeeded;
-		`, schemaName, tableName, normTableName, indexName, columns), nil
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nCREATE INDEX IF NOT EXISTS %s ON %s (%s);\n", indexName, normTableName, columns), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}
@@ -416,72 +428,97 @@ func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName
 	normOldTableName := normalizeTablename(schemaName, oldTableName)
 	normNewTableName := normalizeTablename(schemaName, newTableName)
 
-	var stmt string
+	vars := map[string]string{
+		"schema":              schemaName,
+		"table_name":          newTableName,
+		"norm_old_table_name": normOldTableName,
+		"norm_new_table_name": normNewTableName,
+	}
 
 	switch s.dbType {
 	case model.SqliteDBType:
 		// No support for idempotent table renaming in Sqlite.
 		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", normOldTableName, normNewTableName), nil
 	case model.MysqlDBType:
-		stmt = fmt.Sprintf("RENAME TABLE %s TO %s;", normOldTableName, normNewTableName)
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
+				WHERE table_name = '[[table_name]]'
+				AND table_schema = '[[schema]]'
+				) > 0,
+				'SELECT 1;',
+				'RENAME TABLE [[norm_old_table_name]] TO [[norm_new_table_name]];'));
+			PREPARE renameTableIfNeeded FROM @stmt;
+			EXECUTE renameTableIfNeeded;
+			DEALLOCATE PREPARE renameTableIfNeeded;
+		`, vars), nil
 	case model.PostgresDBType:
-		stmt = fmt.Sprintf("ALTER TABLE %s RENAME TO %s;", normOldTableName, normNewTableName)
+		return replaceVars(`
+			do $$
+			begin 
+				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
+							WHERE table_name = '[[table_name]]'
+							AND table_schema = '[[schema]]'
+							) > 0 then 
+					ALTER TABLE [[norm_old_table_name]] RENAME TO [[norm_new_table_name]];
+				end if;
+			end$$;		
+		`, vars), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}
-
-	return fmt.Sprintf(`
-		SET @schema = '%s';
-		SET @table_name = '%s';
-		SET @stmt = (SELECT IF(
-			(
-			SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
-			WHERE table_name = @table_name
-			AND table_schema = @schema
-			) > 0,
-			'SELECT 1;',
-			'%s'));
-		PREPARE renameTableIfNeeded FROM @stmt;
-		EXECUTE renameTableIfNeeded;
-		DEALLOCATE PREPARE renameTableIfNeeded;
-	`, schemaName, newTableName, stmt), nil
 }
 
 func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName, newColumnName, dataType string) (string, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
 	normTableName := normalizeTablename(schemaName, tableName)
-	var stmt string
+
+	vars := map[string]string{
+		"schema":          schemaName,
+		"table_name":      tableName,
+		"norm_table_name": normTableName,
+		"old_column_name": oldColumnName,
+		"new_column_name": newColumnName,
+		"data_type":       dataType,
+	}
 
 	switch s.dbType {
 	case model.SqliteDBType:
 		// No support for idempotent column renaming in Sqlite.
 		return fmt.Sprintf("\nALTER TABLE %s RENAME COLUMN %s TO %s;\n", normTableName, oldColumnName, newColumnName), nil
 	case model.MysqlDBType:
-		stmt = fmt.Sprintf("ALTER TABLE %s CHANGE %s %s %s;", normTableName, oldColumnName, newColumnName, dataType)
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				WHERE table_name = '[[table_name]]'
+				AND table_schema = '[[schema]]'
+				AND column_name = '[[new_column_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] CHANGE [[old_column_name]] [[new_column_name]] [[data_type]];'));
+			PREPARE renameColumnIfNeeded FROM @stmt;
+			EXECUTE renameColumnIfNeeded;
+			DEALLOCATE PREPARE renameColumnIfNeeded;
+		`, vars), nil
 	case model.PostgresDBType:
-		stmt = fmt.Sprintf("ALTER TABLE %s RENAME COLUMN %s TO %s;", normTableName, oldColumnName, newColumnName)
+		return replaceVars(`
+			do $$
+			begin 
+				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.COLUMNS
+							WHERE table_name = '[[table_name]]'
+							AND table_schema = '[[schema]]'
+							AND column_name = '[[new_column_name]]'
+							) > 0 then 
+					ALTER TABLE [[norm_table_name]] RENAME COLUMN [[old_column_name]] TO [[new_column_name]];
+				end if;
+			end$$;		
+		`, vars), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}
 
-	return fmt.Sprintf(`
-		SET @schema = '%s';
-		SET @table_name = '%s';
-		SET @old_column_name = '%s';
-		SET @new_column_name = '%s';
-		SET @stmt = (SELECT IF(
-			(
-			SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
-			WHERE table_name = @table_name
-			AND table_schema = @schema
-			AND column_name = @new_column_name
-			) > 0,
-			'SELECT 1;',
-			'%s'));
-		PREPARE renameColumnIfNeeded FROM @stmt;
-		EXECUTE renameColumnIfNeeded;
-		DEALLOCATE PREPARE renameColumnIfNeeded;
-	`, schemaName, tableName, oldColumnName, newColumnName, stmt), nil
 }
 
 func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
@@ -568,4 +605,15 @@ func getIndexName(tableName string, columns string) string {
 		_, _ = sb.WriteString(s)
 	}
 	return sb.String()
+}
+
+// replaceVars replaces instances of variable placeholders with the
+// values provided via a map.  Variable placeholders are of the form
+// `[[var_name]]`.
+func replaceVars(s string, vars map[string]string) string {
+	for key, val := range vars {
+		placeholder := "[[" + key + "]]"
+		s = strings.ReplaceAll(s, placeholder, val)
+	}
+	return s
 }
