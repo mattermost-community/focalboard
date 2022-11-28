@@ -6,8 +6,9 @@ package sqlstore
 import (
 	"testing"
 
-	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/store/storetests"
+
+	"github.com/mattermost/focalboard/server/model"
 	"github.com/stretchr/testify/require"
 )
 

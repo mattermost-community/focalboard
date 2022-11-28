@@ -14,9 +14,11 @@ import (
 func (a *API) registerCategoriesRoutes(r *mux.Router) {
 	// Category APIs
 	r.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleCreateCategory)).Methods(http.MethodPost)
+	r.HandleFunc("/teams/{teamID}/categories/reorder", a.sessionRequired(a.handleReorderCategories)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleUpdateCategory)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}", a.sessionRequired(a.handleDeleteCategory)).Methods(http.MethodDelete)
 	r.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBoards)).Methods(http.MethodGet)
+	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/reorder", a.sessionRequired(a.handleReorderCategoryBoards)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}", a.sessionRequired(a.handleUpdateCategoryBoard)).Methods(http.MethodPost)
 }
 
@@ -353,12 +355,169 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 	userID := session.UserID
 
 	// TODO: Check the category and the team matches
-	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, categoryID, boardID)
+	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{boardID: categoryID})
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
 	}
 
 	jsonBytesResponse(w, http.StatusOK, []byte("ok"))
+	auditRec.Success()
+}
+
+func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PUT /teams/{teamID}/categories/reorder handleReorderCategories
+	//
+	// Updated sidebar category order
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	var newCategoryOrder []string
+
+	err = json.Unmarshal(requestBody, &newCategoryOrder)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "reorderCategories", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	auditRec.AddMeta("TeamID", teamID)
+	auditRec.AddMeta("CategoryCount", len(newCategoryOrder))
+
+	updatedCategoryOrder, err := a.app.ReorderCategories(userID, teamID, newCategoryOrder)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	data, err := json.Marshal(updatedCategoryOrder)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation PUT /teams/{teamID}/categories/{categoryID}/boards/reorder handleReorderCategoryBoards
+	//
+	// Updates order of boards inside a sidebar category
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: categoryID
+	//   in: path
+	//   description: Category ID
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	categoryID := vars["categoryID"]
+
+	ctx := r.Context()
+	session := ctx.Value(sessionContextKey).(*model.Session)
+	userID := session.UserID
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	category, err := a.app.GetCategory(categoryID)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	if category.UserID != userID {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	requestBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	var newBoardsOrder []string
+	err = json.Unmarshal(requestBody, &newBoardsOrder)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "reorderCategoryBoards", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+
+	updatedBoardsOrder, err := a.app.ReorderCategoryBoards(userID, teamID, categoryID, newBoardsOrder)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	data, err := json.Marshal(updatedBoardsOrder)
+	if err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonBytesResponse(w, http.StatusOK, data)
 	auditRec.Success()
 }

@@ -32,6 +32,16 @@ exports[`components/cardDialog already following card 1`] = `
               <button
                 type="button"
               >
+                <i
+                  class="CompassIcon icon-paperclip"
+                />
+                <span>
+                  Attach
+                </span>
+              </button>
+              <button
+                type="button"
+              >
                 <span>
                   Following
                 </span>
@@ -464,6 +474,16 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
               <button
                 type="button"
               >
+                <i
+                  class="CompassIcon icon-paperclip"
+                />
+                <span>
+                  Attach
+                </span>
+              </button>
+              <button
+                type="button"
+              >
                 <span>
                   Follow
                 </span>
@@ -580,6 +600,16 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
             class="toolbar--right"
           >
             <div>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-paperclip"
+                />
+                <span>
+                  Attach
+                </span>
+              </button>
               <button
                 type="button"
               >
@@ -920,6 +950,16 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
               <button
                 type="button"
               >
+                <i
+                  class="CompassIcon icon-paperclip"
+                />
+                <span>
+                  Attach
+                </span>
+              </button>
+              <button
+                type="button"
+              >
                 <span>
                   Follow
                 </span>
@@ -1117,6 +1157,16 @@ exports[`components/cardDialog should match snapshot 1`] = `
             class="toolbar--right"
           >
             <div>
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-paperclip"
+                />
+                <span>
+                  Attach
+                </span>
+              </button>
               <button
                 type="button"
               >
