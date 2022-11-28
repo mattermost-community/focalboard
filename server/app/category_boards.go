@@ -66,10 +66,9 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 
 	// once the category is created, we need to move all boards which do not
 	// belong to any category, into this category.
-
-	userBoards, err := a.GetBoardsForUserAndTeam(userID, teamID, false)
+	boardMembers, err := a.GetMembersForUser(userID)
 	if err != nil {
-		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's board memberships: %w", err)
 	}
 
 	createdCategoryBoards := &model.CategoryBoards{
@@ -77,12 +76,21 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		BoardIDs: []string{},
 	}
 
-	for _, board := range userBoards {
+	for _, bm := range boardMembers {
+		// boards with implicit access (aka synthetic membership),
+		// should show up in LHS only when openign them explicitelly.
+		// So we don't process any synthetic membership boards
+		// and only add boards with explicit access to, to the the LHS,
+		// for example, if a user explicitelly added another user to a board.
+		if bm.Synthetic {
+			continue
+		}
+
 		belongsToCategory := false
 
 		for _, categoryBoard := range existingCategoryBoards {
 			for _, boardID := range categoryBoard.BoardIDs {
-				if boardID == board.ID {
+				if boardID == bm.BoardID {
 					belongsToCategory = true
 					break
 				}
@@ -96,11 +104,11 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		}
 
 		if !belongsToCategory {
-			if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{board.ID: createdCategory.ID}); err != nil {
+			if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{bm.BoardID: createdCategory.ID}); err != nil {
 				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
 			}
 
-			createdCategoryBoards.BoardIDs = append(createdCategoryBoards.BoardIDs, board.ID)
+			createdCategoryBoards.BoardIDs = append(createdCategoryBoards.BoardIDs, bm.BoardID)
 		}
 	}
 
