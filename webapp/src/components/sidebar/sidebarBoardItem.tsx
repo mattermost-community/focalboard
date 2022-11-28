@@ -79,7 +79,6 @@ type PageSidebarItemProps = {
     currentPageId: string
     showPage: (pageId: string, boardId: string) => void
     showBoard: (boardId: string) => void
-    parentId: string
     depth: number
 }
 
@@ -477,7 +476,6 @@ const SidebarBoardItem = (props: Props) => {
                             currentPageId={currentPageId}
                             showPage={props.showPage}
                             showBoard={props.showBoard}
-                            parentId={board.id}
                             depth={0}
                         />
                     ))}

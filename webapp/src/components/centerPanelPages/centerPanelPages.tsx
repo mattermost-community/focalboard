@@ -179,6 +179,7 @@ const CenterPanelPages = (props: Props) => {
                     canEditBoardProperties={canEditBoardProperties}
                     canEditBoardCards={canEditBoardCards}
                     newTemplateId={newTemplateId}
+                    pseudoCard={pseudoCard}
                 />
 
                 <PageBlocks

@@ -86,7 +86,7 @@ const PageBlocks = (props: Props) => {
         if (block.contentType === 'checkbox') {
             newBlock = await addBlockNewEditor(props.activePage, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
         } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
-            const newFileId = await octoClient.uploadFile(props.activePage.boardId, block.value.file)
+            const newFileId = await octoClient.uploadFile(props.activePage?.boardId || props.board.id, block.value.file)
             newBlock = await addBlockNewEditor(props.activePage, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
         } else {
             newBlock = await addBlockNewEditor(props.activePage, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
