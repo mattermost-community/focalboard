@@ -38,7 +38,7 @@ type Configuration struct {
 	FilesDriver              string            `json:"filesdriver" mapstructure:"filesdriver"`
 	FilesS3Config            AmazonS3Config    `json:"filess3config" mapstructure:"filess3config"`
 	FilesPath                string            `json:"filespath" mapstructure:"filespath"`
-	MaxFileSize              int64             `json:"maxfilesize" mapstructure:"mafilesize"`
+	MaxFileSize              int64             `json:"maxfilesize" mapstructure:"maxfilesize"`
 	Telemetry                bool              `json:"telemetry" mapstructure:"telemetry"`
 	TelemetryID              string            `json:"telemetryid" mapstructure:"telemetryid"`
 	PrometheusAddress        string            `json:"prometheusaddress" mapstructure:"prometheusaddress"`
