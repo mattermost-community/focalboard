@@ -426,19 +426,18 @@ func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName
 	newTableName = addPrefixIfNeeded(newTableName, s.tablePrefix)
 
 	normOldTableName := normalizeTablename(schemaName, oldTableName)
-	normNewTableName := normalizeTablename(schemaName, newTableName)
 
 	vars := map[string]string{
 		"schema":              schemaName,
 		"table_name":          newTableName,
 		"norm_old_table_name": normOldTableName,
-		"norm_new_table_name": normNewTableName,
+		"new_table_name":      newTableName,
 	}
 
 	switch s.dbType {
 	case model.SqliteDBType:
 		// No support for idempotent table renaming in Sqlite.
-		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", normOldTableName, normNewTableName), nil
+		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", normOldTableName, newTableName), nil
 	case model.MysqlDBType:
 		return replaceVars(`
 			SET @stmt = (SELECT IF(
@@ -448,7 +447,7 @@ func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName
 				AND table_schema = '[[schema]]'
 				) > 0,
 				'SELECT 1;',
-				'RENAME TABLE [[norm_old_table_name]] TO [[norm_new_table_name]];'));
+				'RENAME TABLE [[norm_old_table_name]] TO [[new_table_name]];'));
 			PREPARE renameTableIfNeeded FROM @stmt;
 			EXECUTE renameTableIfNeeded;
 			DEALLOCATE PREPARE renameTableIfNeeded;
@@ -458,10 +457,10 @@ func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName
 			do $$
 			begin 
 				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
-							WHERE table_name = '[[table_name]]'
+							WHERE table_name = '[[new_table_name]]'
 							AND table_schema = '[[schema]]'
-							) > 0 then 
-					ALTER TABLE [[norm_old_table_name]] RENAME TO [[norm_new_table_name]];
+				) = 0 then 
+					ALTER TABLE [[norm_old_table_name]] RENAME TO [[new_table_name]];
 				end if;
 			end$$;		
 		`, vars), nil
@@ -510,7 +509,7 @@ func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName,
 							WHERE table_name = '[[table_name]]'
 							AND table_schema = '[[schema]]'
 							AND column_name = '[[new_column_name]]'
-							) > 0 then 
+				) = 0 then 
 					ALTER TABLE [[norm_table_name]] RENAME COLUMN [[old_column_name]] TO [[new_column_name]];
 				end if;
 			end$$;		
