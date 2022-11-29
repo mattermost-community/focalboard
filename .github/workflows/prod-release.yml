@@ -123,7 +123,6 @@ jobs:
 
     - name: npm ci
       run: cd focalboard/webapp; npm ci --no-optional
-      run: cd focalboard/mattermost-plugin/webapp && npm ci
 
     - name: Set up Go
       uses: actions/setup-go@v3
