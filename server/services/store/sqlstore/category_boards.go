@@ -54,17 +54,19 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 	return s.categoryBoardsFromRows(rows)
 }
 
-func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
-	boardIDs := []string{}
-	for boardID := range boardCategoryMapping {
-		boardIDs = append(boardIDs, boardID)
-	}
+func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID string, boardIDs []string) error {
+	// boardIDs := []string{}
+	// for boardID := range boardCategoryMapping {
+	// 	boardIDs = append(boardIDs, boardID)
+	// }
 
-	if err := s.deleteUserCategoryBoards(db, userID, boardIDs); err != nil {
-		return err
-	}
+	// if err := s.deleteUserCategoryBoards(db, userID, boardIDs); err != nil {
+	// 	return err
+	// }
 
-	return s.addUserCategoryBoard(db, userID, boardCategoryMapping)
+	// return s.addUserCategoryBoard(db, userID, boardCategoryMapping)
+
+	return nil
 }
 
 func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {

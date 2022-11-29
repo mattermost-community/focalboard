@@ -154,8 +154,8 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 	var destinationCategoryID string
 
 	for _, categoryBoard := range userCategoryBoards {
-		for _, boardID := range categoryBoard.BoardIDs {
-			if boardID == sourceBoardID {
+		for _, metadata := range categoryBoard.BoardMetadata {
+			if metadata.BoardID == sourceBoardID {
 				// category found!
 				destinationCategoryID = categoryBoard.ID
 				break

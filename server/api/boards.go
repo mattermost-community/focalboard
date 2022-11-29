@@ -21,6 +21,8 @@ func (a *API) registerBoardsRoutes(r *mux.Router) {
 	r.HandleFunc("/boards/{boardID}/duplicate", a.sessionRequired(a.handleDuplicateBoard)).Methods("POST")
 	r.HandleFunc("/boards/{boardID}/undelete", a.sessionRequired(a.handleUndeleteBoard)).Methods("POST")
 	r.HandleFunc("/boards/{boardID}/metadata", a.sessionRequired(a.handleGetBoardMetadata)).Methods("GET")
+	r.HandleFunc("/boards/{boardID}/hide", a.sessionRequired(a.handleHideBoard)).Methods("PUT")
+	r.HandleFunc("/boards/{boardID}/unhide", a.sessionRequired(a.handleUnhideBoard)).Methods("PUT")
 }
 
 func (a *API) handleGetBoards(w http.ResponseWriter, r *http.Request) {
@@ -671,5 +673,43 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 	// response
 	jsonBytesResponse(w, http.StatusOK, data)
 
+	auditRec.Success()
+}
+
+func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
+	userID := getUserID(r)
+	vars := mux.Vars(r)
+	boardID := vars["teamID"]
+
+	auditRec := a.makeAuditRecord(r, "hideBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	if err := a.app.SetBoardVisibility(userID, boardID, false); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
+	a.logger.Debug("Hide Board", mlog.String("boardID", boardID))
+	auditRec.Success()
+}
+
+func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
+	userID := getUserID(r)
+	vars := mux.Vars(r)
+	boardID := vars["teamID"]
+
+	auditRec := a.makeAuditRecord(r, "unhideBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	if err := a.app.SetBoardVisibility(userID, boardID, true); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
+	a.logger.Debug("Hide Board", mlog.String("boardID", boardID))
 	auditRec.Success()
 }
