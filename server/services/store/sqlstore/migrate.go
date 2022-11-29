@@ -28,7 +28,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
-//go:embed migrations
+//go:embed migrations/*.sql
 var Assets embed.FS
 
 const (
@@ -145,7 +145,7 @@ func (s *SQLStore) Migrate() error {
 		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
-	schemaName, err := s.getSchemaName()
+	schemaName, err := s.GetSchemaName()
 	if err != nil {
 		return fmt.Errorf("error getting schema name: %w", err)
 	}
@@ -168,7 +168,7 @@ func (s *SQLStore) Migrate() error {
 				return nil, mErr
 			}
 
-			tmpl, pErr := template.New("sql").Funcs(s.getTemplateHelperFuncs()).Parse(string(asset))
+			tmpl, pErr := template.New("sql").Funcs(s.GetTemplateHelperFuncs()).Parse(string(asset))
 			if pErr != nil {
 				return nil, pErr
 			}
@@ -298,7 +298,7 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 	return nil
 }
 
-func (s *SQLStore) getTemplateHelperFuncs() template.FuncMap {
+func (s *SQLStore) GetTemplateHelperFuncs() template.FuncMap {
 	funcs := template.FuncMap{
 		"addColumnIfNeeded":    s.genAddColumnIfNeeded,
 		"dropColumnIfNeeded":   s.genDropColumnIfNeeded,

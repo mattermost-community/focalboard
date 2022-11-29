@@ -139,7 +139,7 @@ func (s *SQLStore) castInt(val int64, as string) string {
 	return fmt.Sprintf("cast(%d as bigint) AS %s", val, as)
 }
 
-func (s *SQLStore) getSchemaName() (string, error) {
+func (s *SQLStore) GetSchemaName() (string, error) {
 	var query sq.SelectBuilder
 
 	switch s.dbType {
