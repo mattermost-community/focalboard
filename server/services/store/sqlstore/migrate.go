@@ -306,6 +306,7 @@ func (s *SQLStore) getTemplateHelperFuncs() template.FuncMap {
 		"renameTableIfNeeded":  s.genRenameTableIfNeeded,
 		"renameColumnIfNeeded": s.genRenameColumnIfNeeded,
 		"doesTableExist":       s.doesTableExist,
+		"doesColumnExist":      s.doesColumnExist,
 	}
 	return funcs
 }
@@ -336,7 +337,8 @@ func (s *SQLStore) genAddColumnIfNeeded(schemaName, tableName, columnName, datat
 				  AND column_name = '[[column_name]]'
 				) > 0,
 				'SELECT 1;',
-				'ALTER TABLE [[norm_table_name]] ADD COLUMN [[column_name]] [[data_type]] [[constraint]];'));
+				'ALTER TABLE [[norm_table_name]] ADD COLUMN [[column_name]] [[data_type]] [[constraint]];'
+			));
 			PREPARE addColumnIfNeeded FROM @stmt;
 			EXECUTE addColumnIfNeeded;
 			DEALLOCATE PREPARE addColumnIfNeeded;
@@ -371,7 +373,8 @@ func (s *SQLStore) genDropColumnIfNeeded(schemaName, tableName, columnName strin
 				  AND column_name = '[[column_name]]'
 				) > 0,
 				'ALTER TABLE [[norm_table_name]] DROP COLUMN [[column_name]];',
-				'SELECT 1;'));
+				'SELECT 1;'
+			));
 			PREPARE dropColumnIfNeeded FROM @stmt;
 			EXECUTE dropColumnIfNeeded;
 			DEALLOCATE PREPARE dropColumnIfNeeded;
@@ -409,7 +412,8 @@ func (s *SQLStore) genCreateIndexIfNeeded(schemaName, tableName, columns string)
 				  AND index_name = '[[index_name]]'
 				) > 0,
 				'SELECT 1;',
-				'CREATE INDEX [[index_name]] ON [[norm_table_name]] ([[columns]]);'));
+				'CREATE INDEX [[index_name]] ON [[norm_table_name]] ([[columns]]);'
+			));
 			PREPARE createIndexIfNeeded FROM @stmt;
 			EXECUTE createIndexIfNeeded;
 			DEALLOCATE PREPARE createIndexIfNeeded;
@@ -447,7 +451,8 @@ func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName
 				AND table_schema = '[[schema]]'
 				) > 0,
 				'SELECT 1;',
-				'RENAME TABLE [[norm_old_table_name]] TO [[new_table_name]];'));
+				'RENAME TABLE [[norm_old_table_name]] TO [[new_table_name]];'
+			));
 			PREPARE renameTableIfNeeded FROM @stmt;
 			EXECUTE renameTableIfNeeded;
 			DEALLOCATE PREPARE renameTableIfNeeded;
@@ -496,7 +501,8 @@ func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName,
 				AND column_name = '[[new_column_name]]'
 				) > 0,
 				'SELECT 1;',
-				'ALTER TABLE [[norm_table_name]] CHANGE [[old_column_name]] [[new_column_name]] [[data_type]];'));
+				'ALTER TABLE [[norm_table_name]] CHANGE [[old_column_name]] [[new_column_name]] [[data_type]];'
+			));
 			PREPARE renameColumnIfNeeded FROM @stmt;
 			EXECUTE renameColumnIfNeeded;
 			DEALLOCATE PREPARE renameColumnIfNeeded;
@@ -555,8 +561,52 @@ func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
 	exists := rows.Next()
 	sql, _, _ := query.ToSql()
 
-	s.logger.Debug("doesTableExist",
+	s.logger.Trace("doesTableExist",
 		mlog.String("table", tableName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func (s *SQLStore) doesColumnExist(schemaName, tableName, columnName string) (bool, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("table_name").
+			From("INFORMATION_SCHEMA.COLUMNS").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": schemaName,
+				"column_name":  columnName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From(fmt.Sprintf("pragma_table_info('%s')", tableName)).
+			Where(sq.Eq{
+				"name": columnName,
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesColumnExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Trace("doesColumnExist",
+		mlog.String("table", tableName),
+		mlog.String("column", columnName),
 		mlog.Bool("exists", exists),
 		mlog.String("sql", sql),
 	)
@@ -566,13 +616,6 @@ func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
 func addPrefixIfNeeded(s, prefix string) string {
 	if !strings.HasPrefix(s, prefix) {
 		return prefix + s
-	}
-	return s
-}
-
-func removePrefixIfNeeded(s, prefix string) string {
-	if strings.HasPrefix(s, prefix) {
-		return s[len(prefix):]
 	}
 	return s
 }
@@ -612,6 +655,7 @@ func getIndexName(tableName string, columns string) string {
 func replaceVars(s string, vars map[string]string) string {
 	for key, val := range vars {
 		placeholder := "[[" + key + "]]"
+		val = strings.ReplaceAll(val, "'", "\\'")
 		s = strings.ReplaceAll(s, placeholder, val)
 	}
 	return s
