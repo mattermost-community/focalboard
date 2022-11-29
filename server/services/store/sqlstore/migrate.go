@@ -523,7 +523,6 @@ func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName,
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}
-
 }
 
 func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
