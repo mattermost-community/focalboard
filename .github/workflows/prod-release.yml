@@ -3,7 +3,6 @@ name: Production-Release
 on: workflow_dispatch
 
 env:
- EXCLUDE_SERVER: true
  EXCLUDE_ENTERPRISE: true
  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
 
