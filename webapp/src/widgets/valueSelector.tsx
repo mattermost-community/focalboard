@@ -71,7 +71,10 @@ const ValueSelectorLabel = (props: LabelProps): JSX.Element => {
         )
     }
     return (
-        <div className='value-menu-option'>
+        <div
+            className='value-menu-option'
+            role='menuitem'
+        >
             <div className='label-container'>
                 <Label color={option.color}>{option.value}</Label>
             </div>
@@ -162,7 +165,6 @@ function ValueSelector(props: Props): JSX.Element {
             captureMenuScroll={true}
             maxMenuHeight={1200}
             isMulti={props.isMulti}
-            menuIsOpen={true}
             isClearable={true}
             styles={valueSelectorStyle}
             formatOptionLabel={(option: IPropertyOption, meta: FormatOptionLabelMeta<IPropertyOption>) => (
@@ -181,24 +183,32 @@ function ValueSelector(props: Props): JSX.Element {
             getOptionLabel={(o: IPropertyOption) => o.value}
             getOptionValue={(o: IPropertyOption) => o.id}
             onChange={(value: OnChangeValue<IPropertyOption, true | false>, action: ActionMeta<IPropertyOption>): void => {
-                if (action.action === 'select-option') {
+                if (action.action === 'select-option' || action.action === 'pop-value') {
                     if (Array.isArray(value)) {
                         props.onChange((value as IPropertyOption[]).map((option) => option.id))
                     } else {
                         props.onChange((value as IPropertyOption).id)
+                        props.onBlur?.()
                     }
                 } else if (action.action === 'clear') {
                     props.onChange('')
+                }
+            }}
+            onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                    props.onBlur?.()
                 }
             }}
             onBlur={props.onBlur}
             onCreateOption={props.onCreate}
             autoFocus={true}
             value={props.value || null}
-            closeMenuOnSelect={true}
+            closeMenuOnSelect={!props.isMulti}
             placeholder={props.emptyValue}
             hideSelectedOptions={false}
             defaultMenuIsOpen={true}
+            menuIsOpen={props.isMulti}
+            blurInputOnSelect={!props.isMulti}
         />
     )
 }

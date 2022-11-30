@@ -57,6 +57,12 @@ describe('properties/multiSelect', () => {
     const board = createBoard()
     const card = createCard()
 
+    const expectOptionsMenuToBeVisible = (template: IPropertyTemplate) => {
+        for (const option of template.options) {
+            expect(screen.getByRole('menuitem', {name: option.value})).toBeInTheDocument()
+        }
+    }
+
     beforeEach(() => {
         jest.resetAllMocks()
     })
@@ -128,6 +134,7 @@ describe('properties/multiSelect', () => {
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'b{enter}')
 
         expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['multi-option-1', 'multi-option-2'])
+        expectOptionsMenuToBeVisible(propertyTemplate)
     })
 
     it('can unselect a option', async () => {
@@ -152,6 +159,58 @@ describe('properties/multiSelect', () => {
         userEvent.click(screen.getAllByRole('button', {name: /clear/i})[0])
 
         expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['multi-option-2'])
+        expectOptionsMenuToBeVisible(propertyTemplate)
+    })
+
+    it('can unselect a option via backspace', async () => {
+        const propertyTemplate = buildMultiSelectPropertyTemplate()
+        const propertyValue = ['multi-option-1', 'multi-option-2']
+
+        render(
+            <MultiSelect
+                property={new MultiSelectProperty()}
+                readOnly={false}
+                showEmptyPlaceholder={false}
+                propertyTemplate={propertyTemplate}
+                propertyValue={propertyValue}
+                board={{...board}}
+                card={{...card}}
+            />,
+            {wrapper: Wrapper},
+        )
+
+        userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
+
+        userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), '{backspace}')
+
+        expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, ['multi-option-1'])
+        expectOptionsMenuToBeVisible(propertyTemplate)
+    })
+
+    it('can close menu on escape', async () => {
+        const propertyTemplate = buildMultiSelectPropertyTemplate()
+        const propertyValue = ['multi-option-1', 'multi-option-2']
+
+        render(
+            <MultiSelect
+                property={new MultiSelectProperty()}
+                readOnly={false}
+                showEmptyPlaceholder={false}
+                propertyTemplate={propertyTemplate}
+                propertyValue={propertyValue}
+                board={{...board}}
+                card={{...card}}
+            />,
+            {wrapper: Wrapper},
+        )
+
+        userEvent.click(screen.getByTestId(nonEditableMultiSelectTestId))
+
+        userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), '{escape}')
+
+        for (const option of propertyTemplate.options) {
+            expect(screen.queryByRole('menuitem', {name: option.value})).toBeNull()
+        }
     })
 
     it('can create a new option', async () => {
@@ -177,6 +236,7 @@ describe('properties/multiSelect', () => {
         userEvent.type(screen.getByRole('combobox', {name: /value selector/i}), 'new-value{enter}')
 
         expect(mockedMutator.insertPropertyOption).toHaveBeenCalledWith(board.id, board.cardProperties, propertyTemplate, expect.objectContaining({value: 'new-value'}), 'add property option')
+        expectOptionsMenuToBeVisible(propertyTemplate)
     })
 
     it('can delete a option', () => {
