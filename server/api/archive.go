@@ -9,6 +9,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -54,10 +55,27 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
 	userID := getUserID(r)
+	isSysAdmin := false
 
-	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
-		a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
-		return
+	// Valid authorization (`manage_system`)?
+	if a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem) {
+		isSysAdmin = true
+	}
+
+	// Don't need to check permission for a board if it's a sysadmin w/ `manage_system`
+	if !isSysAdmin {
+		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
+			return
+		}
+		// ... but do need to check the license
+	} else {
+		// Valid license feature (Compliance)?
+		license := a.app.GetLicense()
+		if license == nil || !(*license.Features.Compliance) {
+			a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license"))
+			return
+		}
 	}
 
 	auditRec := a.makeAuditRecord(r, "archiveExportBoard", audit.Fail)
