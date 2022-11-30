@@ -13,7 +13,7 @@ SET @preparedStatement = (SELECT IF(
         AND constraint_type = 'UNIQUE'
     ) > 0,
     'SELECT 1;',
-    'ALTER TABLE {{.prefix}}category_boards ADD CONSTRAINT UNIQUE(user_id, category_id, board_id);',
+    'ALTER TABLE {{.prefix}}category_boards ADD CONSTRAINT UNIQUE(user_id, category_id, board_id);'
 ));
 
 PREPARE addUniqueConstraintIfNotExist FROM @preparedStatement;

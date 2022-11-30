@@ -115,8 +115,7 @@ func (s *SQLStore) deleteUserCategoryBoards(db sq.BaseRunner, userID string, boa
 	}
 
 	_, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("delete_at", utils.GetMillis()).
+		Delete(s.tablePrefix + "category_boards").
 		Where(sq.Eq{
 			"user_id":   userID,
 			"board_id":  boardIDs,
