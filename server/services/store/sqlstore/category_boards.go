@@ -19,14 +19,14 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 
 	userCategoryBoards := []model.CategoryBoards{}
 	for _, category := range categories {
-		boardIDs, err := s.getCategoryBoardAttributes(db, category.ID)
+		boardMetadata, err := s.getCategoryBoardAttributes(db, category.ID)
 		if err != nil {
 			return nil, err
 		}
 
 		userCategoryBoard := model.CategoryBoards{
-			Category: category,
-			BoardIDs: boardIDs,
+			Category:      category,
+			BoardMetadata: boardMetadata,
 		}
 
 		userCategoryBoards = append(userCategoryBoards, userCategoryBoard)
@@ -35,13 +35,12 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 	return userCategoryBoards, nil
 }
 
-func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID string) ([]string, error) {
+func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID string) ([]model.CategoryBoardMetadata, error) {
 	query := s.getQueryBuilder(db).
-		Select("board_id").
+		Select("board_id, hidden").
 		From(s.tablePrefix + "category_boards").
 		Where(sq.Eq{
 			"category_id": categoryID,
-			"delete_at":   0,
 		}).
 		OrderBy("sort_order")
 
@@ -115,86 +114,48 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 	return nil
 }
 
-func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
-	if len(boardCategoryMapping) == 0 {
-		return nil
-	}
+// func (s *SQLStore) deleteUserCategoryBoards(db sq.BaseRunner, userID string, boardIDs []string) error {
+// 	if len(boardIDs) == 0 {
+// 		return nil
+// 	}
 
-	query := s.getQueryBuilder(db).
-		Insert(s.tablePrefix+"category_boards").
-		Columns(
-			"id",
-			"user_id",
-			"category_id",
-			"board_id",
-			"create_at",
-			"update_at",
-			"delete_at",
-			"sort_order",
-		)
+// 	_, err := s.getQueryBuilder(db).
+// 		Delete(s.tablePrefix + "category_boards").
+// 		Where(sq.Eq{
+// 			"user_id":   userID,
+// 			"board_id":  boardIDs,
+// 			"delete_at": 0,
+// 		}).Exec()
 
-	now := utils.GetMillis()
-	for boardID, categoryID := range boardCategoryMapping {
-		query = query.
-			Values(
-				utils.NewID(utils.IDTypeNone),
-				userID,
-				categoryID,
-				boardID,
-				now,
-				now,
-				0,
-				0,
-			)
-	}
+// 	if err != nil {
+// 		s.logger.Error(
+// 			"deleteUserCategoryBoards delete error",
+// 			mlog.String("userID", userID),
+// 			mlog.Array("boardID", boardIDs),
+// 			mlog.Err(err),
+// 		)
+// 		return err
+// 	}
 
-	if _, err := query.Exec(); err != nil {
-		s.logger.Error("addUserCategoryBoard error", mlog.Err(err))
-		return err
-	}
-	return nil
-}
+// 	return nil
+// }
 
-func (s *SQLStore) deleteUserCategoryBoards(db sq.BaseRunner, userID string, boardIDs []string) error {
-	if len(boardIDs) == 0 {
-		return nil
-	}
-
-	_, err := s.getQueryBuilder(db).
-		Delete(s.tablePrefix + "category_boards").
-		Where(sq.Eq{
-			"user_id":   userID,
-			"board_id":  boardIDs,
-			"delete_at": 0,
-		}).Exec()
-
-	if err != nil {
-		s.logger.Error(
-			"deleteUserCategoryBoards delete error",
-			mlog.String("userID", userID),
-			mlog.Array("boardID", boardIDs),
-			mlog.Err(err),
-		)
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) categoryBoardsFromRows(rows *sql.Rows) ([]string, error) {
-	blocks := []string{}
+func (s *SQLStore) categoryBoardsFromRows(rows *sql.Rows) ([]model.CategoryBoardMetadata, error) {
+	metadata := []model.CategoryBoardMetadata{}
 
 	for rows.Next() {
-		boardID := ""
-		if err := rows.Scan(&boardID); err != nil {
+		datum := model.CategoryBoardMetadata{}
+		err := rows.Scan(&datum.BoardID, &datum.Hidden)
+
+		if err != nil {
 			s.logger.Error("categoryBoardsFromRows row scan error", mlog.Err(err))
 			return nil, err
 		}
 
-		blocks = append(blocks, boardID)
+		metadata = append(metadata, datum)
 	}
 
-	return blocks, nil
+	return metadata, nil
 }
 
 func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, newBoardsOrder []string) ([]string, error) {
@@ -213,7 +174,6 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 		Set("sort_order", updateCase).
 		Where(sq.Eq{
 			"category_id": categoryID,
-			"delete_at":   0,
 		})
 
 	if _, err := query.Exec(); err != nil {

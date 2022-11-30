@@ -25,8 +25,13 @@ interface Category {
     isNew: boolean
 }
 
+interface CategoryBoardMetadata {
+    boardID: string
+    hidden: boolean
+}
+
 interface CategoryBoards extends Category {
-    boardIDs: string[]
+    boardMetadata: CategoryBoardMetadata[]
 }
 
 interface BoardCategoryWebsocketData {
@@ -68,7 +73,7 @@ const sidebarSlice = createSlice({
                     // new categories should always show up on the top
                     state.categoryAttributes.unshift({
                         ...updatedCategory,
-                        boardIDs: [],
+                        boardMetadata: [],
                         isNew: true,
                     })
                 } else if (updatedCategory.deleteAt) {
@@ -96,7 +101,7 @@ const sidebarSlice = createSlice({
                         // if board is already in the right category, don't do anything
                         // and let the board stay in its right order.
                         // Only if its not in the right category, do add it.
-                        if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) < 0) {
+                        if (!categoryAttribute.boardMetadata.find((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)) {
                             categoryAttribute.boardIDs.unshift(boardCategory.boardID)
                             categoryAttribute.isNew = false
                         }
