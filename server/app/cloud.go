@@ -71,7 +71,6 @@ func (a *App) IsCloudLimited() bool {
 	// ToDo: Cloud Limits have been disabled by design. We should
 	// revisit the decision and update the related code accordingly
 
-
 	// return a.CardLimit() != 0 && a.IsCloud()
 
 	return false
