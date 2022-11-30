@@ -294,11 +294,11 @@ func testReorderCategoryBoards(t *testing.T, store store.Store) {
 	})
 	assert.NoError(t, err)
 
-	err = store.AddUpdateCategoryBoard("user_id", map[string]string{
-		"board_id_1": "category_id_1",
-		"board_id_2": "category_id_1",
-		"board_id_3": "category_id_1",
-		"board_id_4": "category_id_1",
+	err = store.AddUpdateCategoryBoard("user_id", "category_id_1", []string{
+		"board_id_1",
+		"board_id_2",
+		"board_id_3",
+		"board_id_4",
 	})
 	assert.NoError(t, err)
 

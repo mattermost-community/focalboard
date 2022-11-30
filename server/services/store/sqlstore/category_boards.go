@@ -66,6 +66,52 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 
 	// return s.addUserCategoryBoard(db, userID, boardCategoryMapping)
 
+	query := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"category_boards").
+		Columns(
+			"user_id",
+			"category_id",
+			"board_id",
+			"create_at",
+			"update_at",
+			"sort_order",
+			"hidden",
+		)
+
+	now := utils.GetMillis()
+	for _, boardID := range boardIDs {
+		query = query.Values(
+			userID,
+			categoryID,
+			boardID,
+			now,
+			now,
+			0,
+			false,
+		)
+	}
+
+	if s.dbType == model.MysqlDBType {
+		query = query.Suffix(
+			"ON DUPLICATE KEY UPDATE category_id = ?",
+			categoryID,
+		)
+	} else {
+		query = query.Suffix(
+			`ON CONFLICT (user_id, board_id)
+			 DO UPDATE SET category_id = EXCLUDED.category_id, update_at = EXCLUDED.update_at`,
+		)
+	}
+
+	// TODO write for SQLite
+
+	if _, err := query.Exec(); err != nil {
+		return fmt.Errorf(
+			"store addUpdateCategoryBoard: failed to upsert user-board-category userID: %s, categoryID: %s, board_count: %d, error: %e",
+			userID, categoryID, len(boardIDs), err,
+		)
+	}
+
 	return nil
 }
 

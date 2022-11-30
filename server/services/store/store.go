@@ -131,7 +131,7 @@ type Store interface {
 	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
-	AddUpdateCategoryBoard(userID, category string, boardCategoryMapping map[string]string) error
+	AddUpdateCategoryBoard(userID, categoryID string, boardIDs []string) error
 	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
 	SetBoardVisibility(userID, boardID string, visible bool) error
 

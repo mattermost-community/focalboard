@@ -355,7 +355,7 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 	userID := session.UserID
 
 	// TODO: Check the category and the team matches
-	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{boardID: categoryID})
+	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, categoryID, []string{boardID})
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return

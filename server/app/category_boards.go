@@ -90,7 +90,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 
 		for _, categoryBoard := range existingCategoryBoards {
 			for _, metadata := range categoryBoard.BoardMetadata {
-				if metadata.BoardID == board.ID {
+				if metadata.BoardID == bm.BoardID {
 					belongsToCategory = true
 					break
 				}
@@ -104,12 +104,12 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		}
 
 		if !belongsToCategory {
-			if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{bm.BoardID: createdCategory.ID}); err != nil {
+			if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, []string{bm.BoardID}); err != nil {
 				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
 			}
 
 			newBoardMetadata := model.CategoryBoardMetadata{
-				BoardID: board.ID,
+				BoardID: bm.BoardID,
 				Hidden:  false,
 			}
 			createdCategoryBoards.BoardMetadata = append(createdCategoryBoards.BoardMetadata, newBoardMetadata)
@@ -119,30 +119,32 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	return createdCategoryBoards, nil
 }
 
-func (a *App) AddUpdateUserCategoryBoard(teamID, userID string, boardCategoryMapping map[string]string) error {
-	err := a.store.AddUpdateCategoryBoard(userID, boardCategoryMapping)
+func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID string, boardIDs []string) error {
+	err := a.store.AddUpdateCategoryBoard(userID, categoryID, boardIDs)
 	if err != nil {
 		return err
 	}
 
-	wsPayload := make([]*model.BoardCategoryWebsocketData, len(boardCategoryMapping))
-	i := 0
-	for boardID, categoryID := range boardCategoryMapping {
-		wsPayload[i] = &model.BoardCategoryWebsocketData{
-			BoardID:    boardID,
-			CategoryID: categoryID,
-		}
-		i++
-	}
+	// TODO: revisit this
 
-	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastCategoryBoardChange(
-			teamID,
-			userID,
-			wsPayload,
-		)
-		return nil
-	})
+	// wsPayload := make([]*model.BoardCategoryWebsocketData, len(boardIDs))
+	// i := 0
+	// for boardID, categoryID := range boardCategoryMapping {
+	// 	wsPayload[i] = &model.BoardCategoryWebsocketData{
+	// 		BoardID:    boardID,
+	// 		CategoryID: categoryID,
+	// 	}
+	// 	i++
+	// }
+
+	// a.blockChangeNotifier.Enqueue(func() error {
+	// 	a.wsAdapter.BroadcastCategoryBoardChange(
+	// 		teamID,
+	// 		userID,
+	// 		wsPayload,
+	// 	)
+	// 	return nil
+	// })
 
 	return nil
 }
