@@ -68,7 +68,13 @@ func (a *App) IsCloud() bool {
 // IsCloudLimited returns true if the server is running in cloud mode
 // and the card limit has been set.
 func (a *App) IsCloudLimited() bool {
-	return a.CardLimit() != 0 && a.IsCloud()
+	// ToDo: Cloud Limits have been disabled by design. We should
+	// revisit the decision and update the related code accordingly
+
+
+	// return a.CardLimit() != 0 && a.IsCloud()
+
+	return false
 }
 
 // SetCloudLimits sets the limits of the server.

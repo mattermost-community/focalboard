@@ -192,6 +192,11 @@ func (a *App) InsertBlockAndNotify(block *model.Block, modifiedByID string, disa
 }
 
 func (a *App) isWithinViewsLimit(boardID string, block *model.Block) (bool, error) {
+	// ToDo: Cloud Limits have been disabled by design. We should
+	// revisit the decision and update the related code accordingly
+
+
+	/*
 	limits, err := a.GetBoardsCloudLimits()
 	if err != nil {
 		return false, err
@@ -211,6 +216,9 @@ func (a *App) isWithinViewsLimit(boardID string, block *model.Block) (bool, erro
 	// That's why we need to check for if existing + the being-created
 	// view doesn't exceed the limit.
 	return len(views) < limits.Views, nil
+	*/
+
+	return true, nil
 }
 
 func (a *App) InsertBlocks(blocks []*model.Block, modifiedByID string) ([]*model.Block, error) {
