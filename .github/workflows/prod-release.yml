@@ -276,7 +276,7 @@ jobs:
         BUILD_NUMBER: ${{ github.run_id }}
 
     - name: Rename plugin file
-      run: cd mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
+      run: cd focalboard/mattermost-plugin/dist; mv focalboard-*.tar.gz mattermost-plugin-focalboard.tar.gz
 
     - name: Upload plugin artifact
       uses: actions/upload-artifact@v3
