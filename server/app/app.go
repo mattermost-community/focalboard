@@ -108,3 +108,7 @@ func (a *App) SetCardLimit(cardLimit int) {
 	defer a.cardLimitMux.Unlock()
 	a.cardLimit = cardLimit
 }
+
+func (a *App) GetLicense() *mm_model.License {
+	return a.store.GetLicense()
+}
