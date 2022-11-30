@@ -196,7 +196,7 @@ jobs:
         nuget-version: '5.x'
 
     - name: NuGet Restore
-      run: nuget restore win-wpf\Focalboard.sln
+      run: nuget restore focalboard\win-wpf\Focalboard.sln
 
     - name: Build Windows WPF app
       run: cd focalboard; make win-wpf-app
@@ -271,7 +271,7 @@ jobs:
       run: cd focalboard/mattermost-plugin/webapp && npm ci
 
     - name: Build plugin
-      run: cd mattermost-plugin; make dist
+      run: cd focalboard/mattermost-plugin; make dist
       env:
         BUILD_NUMBER: ${{ github.run_id }}
 
