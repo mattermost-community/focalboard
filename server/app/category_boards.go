@@ -125,26 +125,42 @@ func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID string, boar
 		return err
 	}
 
-	// TODO: revisit this
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
 
-	// wsPayload := make([]*model.BoardCategoryWebsocketData, len(boardIDs))
-	// i := 0
-	// for boardID, categoryID := range boardCategoryMapping {
-	// 	wsPayload[i] = &model.BoardCategoryWebsocketData{
-	// 		BoardID:    boardID,
-	// 		CategoryID: categoryID,
-	// 	}
-	// 	i++
-	// }
+	var updatedCategory *model.CategoryBoards
+	for i := range userCategoryBoards {
+		if userCategoryBoards[i].ID == categoryID {
+			updatedCategory = &userCategoryBoards[i]
+			break
+		}
+	}
 
-	// a.blockChangeNotifier.Enqueue(func() error {
-	// 	a.wsAdapter.BroadcastCategoryBoardChange(
-	// 		teamID,
-	// 		userID,
-	// 		wsPayload,
-	// 	)
-	// 	return nil
-	// })
+	if updatedCategory == nil {
+		return errCategoryNotFound
+	}
+
+	wsPayload := make([]*model.BoardCategoryWebsocketData, len(updatedCategory.BoardMetadata))
+	i := 0
+	for _, categoryBoardMetadata := range updatedCategory.BoardMetadata {
+		wsPayload[i] = &model.BoardCategoryWebsocketData{
+			BoardID:    categoryBoardMetadata.BoardID,
+			CategoryID: categoryID,
+			Hidden:     categoryBoardMetadata.Hidden,
+		}
+		i++
+	}
+
+	a.blockChangeNotifier.Enqueue(func() error {
+		a.wsAdapter.BroadcastCategoryBoardChange(
+			teamID,
+			userID,
+			wsPayload,
+		)
+		return nil
+	})
 
 	return nil
 }

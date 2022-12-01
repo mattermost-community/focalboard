@@ -116,8 +116,8 @@ const Sidebar = (props: Props) => {
     // and thats the first time that user is opening that board.
     // Here we check if that board has a associated category for the user. If not,
     // we assign it to the default "Boards" category.
-    // We do this on the client side rather than the server side live for all other cases
-    // is because there is no good, explicit API call to add this logic to when opening
+    // We do this on the client side rather than the server side like for all other cases
+    // because there is no good, explicit API call to add this logic to when opening
     // a board that you have implicit access to.
     useEffect(() => {
         if (!sidebarCategories || sidebarCategories.length === 0 || !currentBoard || !team || currentBoard.isTemplate) {
@@ -125,7 +125,8 @@ const Sidebar = (props: Props) => {
         }
 
         // find the category the current board belongs to
-        const category = sidebarCategories.find((c) => c.boardIDs.indexOf(currentBoard.id) >= 0)
+        // const category = sidebarCategories.find((c) => c.boardIDs.indexOf(currentBoard.id) >= 0)
+        const category = sidebarCategories.find((c) => c.boardMetadata.find((boardMetadata) => boardMetadata.boardID === currentBoard.id))
         if (category) {
             // Boards does belong to a category.
             // All good here. Nothing to do
@@ -193,48 +194,50 @@ const Sidebar = (props: Props) => {
     }, [team, sidebarCategories])
 
     const handleCategoryBoardDND = useCallback(async (result: DropResult) => {
-        const {source, destination, draggableId} = result
+        // TODO
 
-        if (!team || !destination) {
-            return
-        }
+        // const {source, destination, draggableId} = result
 
-        const fromCategoryID = source.droppableId
-        const toCategoryID = destination.droppableId
-        const boardID = draggableId
+        // if (!team || !destination) {
+        //     return
+        // }
 
-        if (fromCategoryID === toCategoryID) {
-            // board re-arranged withing the same category
-            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
-            if (!toSidebarCategory) {
-                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
-                return
-            }
+        // const fromCategoryID = source.droppableId
+        // const toCategoryID = destination.droppableId
+        // const boardID = draggableId
 
-            const boardIDs = [...toSidebarCategory.boardIDs]
-            boardIDs.splice(source.index, 1)
-            boardIDs.splice(destination.index, 0, toSidebarCategory.boardIDs[source.index])
+        // if (fromCategoryID === toCategoryID) {
+        //     // board re-arranged withing the same category
+        //     const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
+        //     if (!toSidebarCategory) {
+        //         Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
+        //         return
+        //     }
 
-            dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
-            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
-        } else {
-            // board moved to a different category
-            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
-            if (!toSidebarCategory) {
-                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
-                return
-            }
+        //     const boardIDs = [...toSidebarCategory.boardIDs]
+        //     boardIDs.splice(source.index, 1)
+        //     boardIDs.splice(destination.index, 0, toSidebarCategory.boardIDs[source.index])
 
-            const boardIDs = [...toSidebarCategory.boardIDs]
-            boardIDs.splice(destination.index, 0, boardID)
+        //     dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
+        //     await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
+        // } else {
+        //     // board moved to a different category
+        //     const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
+        //     if (!toSidebarCategory) {
+        //         Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
+        //         return
+        //     }
 
-            // optimistically updating the store to create a lag-free UI.
-            await dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
-            dispatch(updateBoardCategories([{boardID, categoryID: toCategoryID}]))
+        //     const boardIDs = [...toSidebarCategory.boardIDs]
+        //     boardIDs.splice(destination.index, 0, boardID)
 
-            await mutator.moveBoardToCategory(team.id, boardID, toCategoryID, fromCategoryID)
-            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
-        }
+        //     // optimistically updating the store to create a lag-free UI.
+        //     await dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
+        //     dispatch(updateBoardCategories([{boardID, categoryID: toCategoryID}]))
+
+        //     await mutator.moveBoardToCategory(team.id, boardID, toCategoryID, fromCategoryID)
+        //     await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
+        // }
     }, [team, sidebarCategories])
 
     const onDragEnd = useCallback(async (result: DropResult) => {
@@ -305,7 +308,7 @@ const Sidebar = (props: Props) => {
     const getSortedCategoryBoards = (category: CategoryBoards): Board[] => {
         const categoryBoardsByID = new Map<string, Board>()
         boards.forEach((board) => {
-            if (!category.boardIDs.includes(board.id)) {
+            if (!category.boardMetadata.find((m) => m.boardID === board.id)) {
                 return
             }
 
@@ -313,8 +316,8 @@ const Sidebar = (props: Props) => {
         })
 
         const sortedBoards: Board[] = []
-        category.boardIDs.forEach((boardID) => {
-            const b = categoryBoardsByID.get(boardID)
+        category.boardMetadata.forEach((boardMetadata) => {
+            const b = categoryBoardsByID.get(boardMetadata.boardID)
             if (b) {
                 sortedBoards.push(b)
             }

@@ -19,6 +19,7 @@ type CategoryBoards struct {
 type BoardCategoryWebsocketData struct {
 	BoardID    string `json:"boardID"`
 	CategoryID string `json:"categoryID"`
+	Hidden     bool   `json:"hidden"`
 }
 
 type CategoryBoardMetadata struct {

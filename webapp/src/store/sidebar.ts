@@ -37,6 +37,7 @@ interface CategoryBoards extends Category {
 interface BoardCategoryWebsocketData {
     boardID: string
     categoryID: string
+    hidden: boolean
 }
 
 interface CategoryBoardsReorderData {
@@ -102,12 +103,12 @@ const sidebarSlice = createSlice({
                         // and let the board stay in its right order.
                         // Only if its not in the right category, do add it.
                         if (!categoryAttribute.boardMetadata.find((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)) {
-                            categoryAttribute.boardIDs.unshift(boardCategory.boardID)
+                            categoryAttribute.boardMetadata.unshift({boardID: boardCategory.boardID, hidden: boardCategory.hidden})
                             categoryAttribute.isNew = false
                         }
                     } else {
                         // remove the board from other categories
-                        categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
+                        categoryAttribute.boardMetadata = categoryAttribute.boardMetadata.filter((metadata) => metadata.boardID !== boardCategory.boardID)
                     }
 
                     updatedCategoryAttributes[i] = categoryAttribute
@@ -176,5 +177,5 @@ export const {reducer} = sidebarSlice
 
 export const {updateCategories, updateBoardCategories, updateCategoryOrder, updateCategoryBoardsOrder} = sidebarSlice.actions
 
-export {Category, CategoryBoards, BoardCategoryWebsocketData, CategoryBoardsReorderData}
+export {Category, CategoryBoards, BoardCategoryWebsocketData, CategoryBoardsReorderData, CategoryBoardMetadata}
 

@@ -20,7 +20,7 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import './sidebarCategory.scss'
-import {Category, CategoryBoards} from '../../store/sidebar'
+import {Category, CategoryBoardMetadata, CategoryBoards} from '../../store/sidebar'
 import ChevronDown from '../../widgets/icons/chevronDown'
 import ChevronRight from '../../widgets/icons/chevronRight'
 import CreateNewFolder from '../../widgets/icons/newFolder'
@@ -76,7 +76,8 @@ const SidebarCategory = (props: Props) => {
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
-    const myConfig = useAppSelector(getMyConfig)
+
+    // const myConfig = useAppSelector(getMyConfig)
 
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
@@ -129,19 +130,25 @@ const SidebarCategory = (props: Props) => {
         props.hideSidebar()
     }, [match, history])
 
-    const isBoardVisible = (boardID: string): boolean => {
+    const isBoardVisible = (boardID: string, existingBoardMetadata?: CategoryBoardMetadata): boolean => {
+        const categoryBoardMetadata = existingBoardMetadata || sidebarBoardMetadata.find((metadata) => metadata.boardID === boardID)
+
         // hide if board doesn't belong to current category
-        if (!blocks.includes(boardID)) {
+        if (!categoryBoardMetadata) {
             return false
         }
 
         // hide if board was hidden by the user
-        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        return !hiddenBoardIDs[boardID]
+        // const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
+        // return !hiddenBoardIDs[boardID]
+
+        return !categoryBoardMetadata.hidden
     }
 
-    const blocks = props.categoryBoards.boardIDs || []
-    const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
+    const sidebarBoardMetadata = props.categoryBoards.boardMetadata || []
+
+    // const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
+    const visibleBlocks = props.categoryBoards.boardMetadata.filter((boardMetadata) => isBoardVisible(boardMetadata.boardID, boardMetadata))
 
     const handleCreateNewCategory = () => {
         setShowCreateCategoryModal(true)

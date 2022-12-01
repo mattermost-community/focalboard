@@ -136,6 +136,7 @@ const SidebarBoardItem = (props: Props) => {
             await dispatch(updateBoardCategories([{
                 boardID: boardId,
                 categoryID: props.categoryBoards.id,
+                hidden: false,
             }]))
         }
 
