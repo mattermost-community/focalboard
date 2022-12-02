@@ -8,7 +8,7 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {PropertyTypeEnum, DatePropertyType} from '../types'
 
 import DateComponent, {createDatePropertyFromString} from './date'
 
@@ -18,11 +18,10 @@ const timeZoneOffset = (date: number): number => {
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
 
-export default class DateProperty extends PropertyType {
+export default class DateProperty extends DatePropertyType {
     Editor = DateComponent
     name = 'Date'
     type = 'date' as PropertyTypeEnum
-    isDate = true
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,

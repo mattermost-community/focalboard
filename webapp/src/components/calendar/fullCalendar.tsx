@@ -9,6 +9,8 @@ import FullCalendar, {EventChangeArg, EventInput, EventContentArg, DayCellConten
 import interactionPlugin from '@fullcalendar/interaction'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
+import {DatePropertyType} from '../../properties/types'
+
 import mutator from '../../mutator'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
@@ -96,9 +98,11 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
     const myEventsList = useMemo(() => (
         cards.flatMap((card): EventInput[] => {
             const property = propsRegistry.get(dateDisplayProperty?.type || 'unknown')
-            let dateFrom = new Date(card.createAt || 0)
-            let dateTo = new Date(card.createAt || 0)
-            if (property.isDate && property.getDateFrom && property.getDateTo) {
+
+            if (property instanceof DatePropertyType) {
+                let dateFrom = new Date(card.createAt || 0)
+                let dateTo = new Date(card.createAt || 0)
+
                 const dateFromValue = property.getDateFrom(card.fields.properties[dateDisplayProperty?.id || ''], card)
                 if (!dateFromValue) {
                     return []
@@ -110,16 +114,18 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                     return []
                 }
                 dateTo = dateToValue
+
+                return [{
+                    id: card.id,
+                    title: card.title,
+                    extendedProps: {icon: card.fields.icon},
+                    properties: card.fields.properties,
+                    allDay: true,
+                    start: dateFrom,
+                    end: dateTo,
+                }]
             }
-            return [{
-                id: card.id,
-                title: card.title,
-                extendedProps: {icon: card.fields.icon},
-                properties: card.fields.properties,
-                allDay: true,
-                start: dateFrom,
-                end: dateTo,
-            }]
+            return []
         })
     ), [cards, dateDisplayProperty])
 

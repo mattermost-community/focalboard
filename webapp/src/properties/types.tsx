@@ -42,14 +42,10 @@ export abstract class PropertyType {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue]
     displayValue: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined
-    getDateFrom: (value: string | string[] | undefined, card: Card) => Date | undefined
-    getDateTo: (value: string | string[] | undefined, card: Card) => Date | undefined
     valueLength: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number) => number
 
     constructor() {
         this.displayValue = (value: string | string[] | undefined) => value
-        this.getDateFrom = () => undefined
-        this.getDateTo = () => undefined
         this.valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
             const displayValue = this.displayValue(value, card, template, intl) || ''
             return Utils.getTextWidth(displayValue.toString(), fontDescriptor)
@@ -74,4 +70,23 @@ export abstract class PropertyType {
     abstract name: string
     abstract type: PropertyTypeEnum
     abstract displayName: (intl: IntlShape) => string
+}
+
+export abstract class DatePropertyType extends PropertyType {
+    isDate = true
+    canGroup = false
+    canFilter = false
+    filterValueType: FilterValueType = 'none'
+    isReadOnly = false
+    calculationOptions = [Options.none, Options.count, Options.countEmpty,
+        Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
+        Options.countValue, Options.countUniqueValue]
+    getDateFrom: (value: string | string[] | undefined, card: Card) => Date | undefined
+    getDateTo: (value: string | string[] | undefined, card: Card) => Date | undefined
+
+    constructor() {
+        super()
+        this.getDateFrom = () => undefined
+        this.getDateTo = () => undefined
+    }
 }
