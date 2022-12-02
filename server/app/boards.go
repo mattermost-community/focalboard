@@ -256,6 +256,18 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	return bab, members, err
 }
 
+func (a *App) GetBoardsForTeam(teamID string, page, perPage int) ([]*model.Board, error) {
+	return a.store.GetBoardsForTeam(teamID, page, perPage)
+}
+
+func (a *App) GetBoardsHistory(modifiedSince int, includeDeleted bool, teamID string, page, perPage int) ([]*model.Board, error) {
+	return a.store.GetBoardsHistory(modifiedSince, includeDeleted, teamID, page, perPage)
+}
+
+func (a *App) GetBlocksHistory(modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) ([]*model.Block, error) {
+	return a.store.GetBlocksHistory(modifiedSince, includeDeleted, teamID, boardID, page, perPage)
+}
+
 func (a *App) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
 	return a.store.GetBoardsForUserAndTeam(userID, teamID, includePublicBoards)
 }
