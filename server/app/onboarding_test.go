@@ -77,6 +77,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 			ID:   "boards_category",
 			Name: "Boards",
 		}, nil)
+		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id_1", teamID, false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_2": "boards_category_id"}).Return(nil)
 
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
