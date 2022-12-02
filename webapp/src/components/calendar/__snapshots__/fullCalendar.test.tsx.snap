@@ -715,51 +715,6 @@ exports[`components/calendar/toolbar return calendar, no date property 1`] = `
                                     class="fc-daygrid-day-events"
                                   >
                                     <div
-                                      class="fc-daygrid-event-harness"
-                                      style="margin-top: 0px;"
-                                    >
-                                      <a
-                                        class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-start fc-event-end fc-event-past"
-                                      >
-                                        <div
-                                          class="fc-event-main"
-                                        >
-                                          <div
-                                            class="EventContent"
-                                          >
-                                            <div
-                                              aria-label="menuwrapper"
-                                              class="MenuWrapper optionsMenu"
-                                              role="button"
-                                            >
-                                              <button
-                                                class="IconButton CardActionsMenuIcon"
-                                                type="button"
-                                              >
-                                                <i
-                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                                                />
-                                              </button>
-                                            </div>
-                                            <div
-                                              class="octo-icontitle"
-                                            >
-                                              <div
-                                                class="octo-icon"
-                                              >
-                                                i
-                                              </div>
-                                              <div
-                                                class="fc-event-title"
-                                              >
-                                                title
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </a>
-                                    </div>
-                                    <div
                                       class="fc-daygrid-day-bottom"
                                       style="margin-top: 0px;"
                                     />
@@ -2988,51 +2943,6 @@ exports[`components/calendar/toolbar return calendar, with date property not set
                                   <div
                                     class="fc-daygrid-day-events"
                                   >
-                                    <div
-                                      class="fc-daygrid-event-harness"
-                                      style="margin-top: 0px;"
-                                    >
-                                      <a
-                                        class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-start fc-event-end fc-event-past"
-                                      >
-                                        <div
-                                          class="fc-event-main"
-                                        >
-                                          <div
-                                            class="EventContent"
-                                          >
-                                            <div
-                                              aria-label="menuwrapper"
-                                              class="MenuWrapper optionsMenu"
-                                              role="button"
-                                            >
-                                              <button
-                                                class="IconButton CardActionsMenuIcon"
-                                                type="button"
-                                              >
-                                                <i
-                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                                                />
-                                              </button>
-                                            </div>
-                                            <div
-                                              class="octo-icontitle"
-                                            >
-                                              <div
-                                                class="octo-icon"
-                                              >
-                                                i
-                                              </div>
-                                              <div
-                                                class="fc-event-title"
-                                              >
-                                                title
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </a>
-                                    </div>
                                     <div
                                       class="fc-daygrid-day-bottom"
                                       style="margin-top: 0px;"
@@ -7542,51 +7452,6 @@ exports[`components/calendar/toolbar return calendar, without permissions 1`] = 
                                   <div
                                     class="fc-daygrid-day-events"
                                   >
-                                    <div
-                                      class="fc-daygrid-event-harness"
-                                      style="margin-top: 0px;"
-                                    >
-                                      <a
-                                        class="fc-daygrid-event fc-daygrid-block-event fc-h-event fc-event fc-event-start fc-event-end fc-event-past"
-                                      >
-                                        <div
-                                          class="fc-event-main"
-                                        >
-                                          <div
-                                            class="EventContent"
-                                          >
-                                            <div
-                                              aria-label="menuwrapper"
-                                              class="MenuWrapper optionsMenu"
-                                              role="button"
-                                            >
-                                              <button
-                                                class="IconButton CardActionsMenuIcon"
-                                                type="button"
-                                              >
-                                                <i
-                                                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                                                />
-                                              </button>
-                                            </div>
-                                            <div
-                                              class="octo-icontitle"
-                                            >
-                                              <div
-                                                class="octo-icon"
-                                              >
-                                                i
-                                              </div>
-                                              <div
-                                                class="fc-event-title"
-                                              >
-                                                title
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </a>
-                                    </div>
                                     <div
                                       class="fc-daygrid-day-bottom"
                                       style="margin-top: 0px;"
