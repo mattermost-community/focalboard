@@ -1074,6 +1074,7 @@ func (s *MattermostAuthLayer) GetBoardsHistory(modifiedSince int, includeDeleted
 		Select("*"). // TODO: specify
 		From(s.tablePrefix + "boards_history as bh").
 		Where(sq.Gt{"bh.update_at": modifiedSince})
+		// TODO: order_by
 
 	if !includeDeleted {
 		query = query.Where(sq.Eq{"bh.delete_at": 0})
@@ -1107,6 +1108,7 @@ func (s *MattermostAuthLayer) GetBlocksHistory(modifiedSince int, includeDeleted
 		Select("*"). // TODO: specify
 		From(s.tablePrefix + "blocks_history as bh").
 		Where(sq.Gt{"bh.update_at": modifiedSince})
+		// TODO: order_by
 
 	if !includeDeleted {
 		query = query.Where(sq.Eq{"bh.delete_at": 0})
@@ -1131,7 +1133,7 @@ func (s *MattermostAuthLayer) GetBlocksHistory(modifiedSince int, includeDeleted
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`GetBoardsHistory ERROR`, mlog.Err(err))
+		s.logger.Error(`GetBlocksHistory ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
