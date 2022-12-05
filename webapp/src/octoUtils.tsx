@@ -104,41 +104,25 @@ class OctoUtils {
         return [newBlocks, newSourceBlock, idMap]
     }
 
-    static filterConditionDisplayString(filterCondition: FilterCondition, intl: IntlShape, filterValueType: string): string {
-        if (filterValueType === 'options') {
-            switch (filterCondition) {
-            case 'includes': return intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})
-            case 'notIncludes': return intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})
-            case 'isEmpty': return intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})
-            case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
-            default: {
-                return intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})
-            }
-            }
-        } else if (filterValueType === 'boolean') {
-            switch (filterCondition) {
-            case 'isSet': return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
-            case 'isNotSet': return intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})
-            default: {
-                return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
-            }
-            }
-        } else if (filterValueType === 'text') {
-            switch (filterCondition) {
-            case 'is': return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
-            case 'contains': return intl.formatMessage({id: 'Filter.contains', defaultMessage: 'contains'})
-            case 'notContains': return intl.formatMessage({id: 'Filter.not-contains', defaultMessage: 'doesn\'t contain'})
-            case 'startsWith': return intl.formatMessage({id: 'Filter.starts-with', defaultMessage: 'starts with'})
-            case 'notStartsWith': return intl.formatMessage({id: 'Filter.not-starts-with', defaultMessage: 'doesn\'t start with'})
-            case 'endsWith': return intl.formatMessage({id: 'Filter.ends-with', defaultMessage: 'ends with'})
-            case 'notEndsWith': return intl.formatMessage({id: 'Filter.not-ends-with', defaultMessage: 'doesn\'t end with'})
-            default: {
-                return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
-            }
-            }
-        } else {
+    static filterConditionDisplayString(filterCondition: FilterCondition, intl: IntlShape): string {
+        switch (filterCondition) {
+        case 'includes': return intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})
+        case 'notIncludes': return intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})
+        case 'isEmpty': return intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})
+        case 'isNotEmpty': return intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})
+        case 'isSet': return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
+        case 'isNotSet': return intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})
+        case 'is': return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
+        case 'contains': return intl.formatMessage({id: 'Filter.contains', defaultMessage: 'contains'})
+        case 'notContains': return intl.formatMessage({id: 'Filter.not-contains', defaultMessage: 'doesn\'t contain'})
+        case 'startsWith': return intl.formatMessage({id: 'Filter.starts-with', defaultMessage: 'starts with'})
+        case 'notStartsWith': return intl.formatMessage({id: 'Filter.not-starts-with', defaultMessage: 'doesn\'t start with'})
+        case 'endsWith': return intl.formatMessage({id: 'Filter.ends-with', defaultMessage: 'ends with'})
+        case 'notEndsWith': return intl.formatMessage({id: 'Filter.not-ends-with', defaultMessage: 'doesn\'t end with'})
+        default: {
             Utils.assertFailure()
             return '(unknown)'
+        }
         }
     }
 }

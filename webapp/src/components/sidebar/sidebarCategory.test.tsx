@@ -14,36 +14,28 @@ import configureStore from 'redux-mock-store'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
-import {wrapIntl, wrapRBDNDDroppable} from '../../testUtils'
+import {wrapIntl} from '../../testUtils'
 
 import SidebarCategory from './sidebarCategory'
 
 describe('components/sidebarCategory', () => {
     const board = TestBlockFactory.createBoard()
-    board.id = 'board_id'
 
     const view = TestBlockFactory.createBoardView(board)
     view.fields.sortOptions = []
     const history = createMemoryHistory()
 
     const board1 = TestBlockFactory.createBoard()
-    board1.id = 'board_1_id'
-
     const board2 = TestBlockFactory.createBoard()
-    board2.id = 'board_2_id'
-
     const boards = [board1, board2]
     const categoryBoards1 = TestBlockFactory.createCategoryBoards()
-    categoryBoards1.id = 'category_1_id'
     categoryBoards1.name = 'Category 1'
     categoryBoards1.boardIDs = [board1.id, board2.id]
 
     const categoryBoards2 = TestBlockFactory.createCategoryBoards()
-    categoryBoards2.id = 'category_2_id'
     categoryBoards2.name = 'Category 2'
 
     const categoryBoards3 = TestBlockFactory.createCategoryBoards()
-    categoryBoards3.id = 'category_id_3'
     categoryBoards3.name = 'Category 3'
 
     const allCategoryBoards = [
@@ -88,7 +80,7 @@ describe('components/sidebarCategory', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapRBDNDDroppable(wrapIntl(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarCategory
@@ -100,7 +92,7 @@ describe('components/sidebarCategory', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        ))
+        )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
 
@@ -115,7 +107,7 @@ describe('components/sidebarCategory', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapRBDNDDroppable(wrapIntl(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarCategory
@@ -127,7 +119,7 @@ describe('components/sidebarCategory', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        ))
+        )
         const {container} = render(component)
 
         const subItems = container.querySelectorAll('.category-title')
@@ -140,7 +132,7 @@ describe('components/sidebarCategory', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
 
-        const component = wrapRBDNDDroppable(wrapIntl(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarCategory
@@ -153,7 +145,7 @@ describe('components/sidebarCategory', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        ))
+        )
         const {container} = render(component)
 
         const subItems = container.querySelectorAll('.category-title')
@@ -168,7 +160,7 @@ describe('components/sidebarCategory', () => {
 
         const mockTemplateClose = jest.fn()
 
-        const component = wrapRBDNDDroppable(wrapIntl(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarCategory
@@ -182,7 +174,7 @@ describe('components/sidebarCategory', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        ))
+        )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
 
@@ -199,7 +191,7 @@ describe('components/sidebarCategory', () => {
 
         const mockTemplateClose = jest.fn()
 
-        const component = wrapRBDNDDroppable(wrapIntl(
+        const component = wrapIntl(
             <ReduxProvider store={store}>
                 <Router history={history}>
                     <SidebarCategory
@@ -213,7 +205,7 @@ describe('components/sidebarCategory', () => {
                     />
                 </Router>
             </ReduxProvider>,
-        ))
+        )
         const {container} = render(component)
         expect(container).toMatchSnapshot()
 
