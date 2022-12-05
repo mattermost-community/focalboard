@@ -100,6 +100,9 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 
 		if !belongsToCategory {
 			if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, bm.BoardID); err != nil {
+				// ToDo: por siaca
+				// if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, board.ID); err != nil {
+				// ---
 				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
 			}
 

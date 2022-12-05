@@ -35,6 +35,7 @@ func TestGetUserCategoryBoards(t *testing.T) {
 				Synthetic: false,
 			},
 		}, nil)
+
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_1").Return(nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_2").Return(nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", "board_id_3").Return(nil)
