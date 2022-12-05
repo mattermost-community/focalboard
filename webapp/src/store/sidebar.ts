@@ -42,7 +42,7 @@ interface BoardCategoryWebsocketData {
 
 interface CategoryBoardsReorderData {
     categoryID: string
-    boardIDs: string[]
+    boardsMetadata: CategoryBoardMetadata[]
 }
 
 export const DefaultCategory: CategoryBoards = {
@@ -140,7 +140,8 @@ const sidebarSlice = createSlice({
             state.categoryAttributes = newOrderedCategories
         },
         updateCategoryBoardsOrder: (state, action: PayloadAction<CategoryBoardsReorderData>) => {
-            if (action.payload.boardIDs.length === 0) {
+            // if (action.payload.boardIDs.length === 0) {
+            if (action.payload.boardsMetadata.length === 0) {
                 return
             }
 
@@ -151,9 +152,11 @@ const sidebarSlice = createSlice({
             }
 
             const category = state.categoryAttributes[categoryIndex]
-            const updatedCategory = {
+            const updatedCategory: CategoryBoards = {
                 ...category,
-                boardIDs: action.payload.boardIDs,
+
+                // boardIDs: action.payload.boardIDs,
+                boardMetadata: action.payload.boardsMetadata,
                 isNew: false,
             }
 

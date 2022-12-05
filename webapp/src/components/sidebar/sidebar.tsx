@@ -194,50 +194,60 @@ const Sidebar = (props: Props) => {
     }, [team, sidebarCategories])
 
     const handleCategoryBoardDND = useCallback(async (result: DropResult) => {
-        // TODO
+        const {source, destination, draggableId} = result
 
-        // const {source, destination, draggableId} = result
+        if (!team || !destination) {
+            return
+        }
 
-        // if (!team || !destination) {
-        //     return
-        // }
+        const fromCategoryID = source.droppableId
+        const toCategoryID = destination.droppableId
+        const boardID = draggableId
 
-        // const fromCategoryID = source.droppableId
-        // const toCategoryID = destination.droppableId
-        // const boardID = draggableId
+        if (fromCategoryID === toCategoryID) {
+            // board re-arranged withing the same category
+            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
+            if (!toSidebarCategory) {
+                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
+                return
+            }
 
-        // if (fromCategoryID === toCategoryID) {
-        //     // board re-arranged withing the same category
-        //     const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
-        //     if (!toSidebarCategory) {
-        //         Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
-        //         return
-        //     }
+            const categoryBoardMetadata = [...toSidebarCategory.boardMetadata]
+            categoryBoardMetadata.splice(source.index, 1)
+            categoryBoardMetadata.splice(destination.index, 0, toSidebarCategory.boardMetadata[source.index])
 
-        //     const boardIDs = [...toSidebarCategory.boardIDs]
-        //     boardIDs.splice(source.index, 1)
-        //     boardIDs.splice(destination.index, 0, toSidebarCategory.boardIDs[source.index])
+            dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardsMetadata: categoryBoardMetadata}))
 
-        //     dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
-        //     await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
-        // } else {
-        //     // board moved to a different category
-        //     const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
-        //     if (!toSidebarCategory) {
-        //         Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
-        //         return
-        //     }
+            const reorderedBoardIDs = categoryBoardMetadata.map((m) => m.boardID)
+            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, reorderedBoardIDs)
+        } else {
+            // board moved to a different category
+            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
+            const fromSidebarCategory = sidebarCategories.find((category) => category.id === fromCategoryID)
 
-        //     const boardIDs = [...toSidebarCategory.boardIDs]
-        //     boardIDs.splice(destination.index, 0, boardID)
+            if (!toSidebarCategory) {
+                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
+                return
+            }
 
-        //     // optimistically updating the store to create a lag-free UI.
-        //     await dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
-        //     dispatch(updateBoardCategories([{boardID, categoryID: toCategoryID}]))
+            if (!fromSidebarCategory) {
+                Utils.logError(`fromCategoryID not found in list of sidebar categories. fromCategoryID: ${fromCategoryID}`)
+                return
+            }
 
-        //     await mutator.moveBoardToCategory(team.id, boardID, toCategoryID, fromCategoryID)
-        //     await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
-        // }
+            const categoryBoardMetadata = [...toSidebarCategory.boardMetadata]
+            const fromCategoryBoardMetadata = fromSidebarCategory.boardMetadata[source.index]
+            categoryBoardMetadata.splice(destination.index, 0, fromCategoryBoardMetadata)
+
+            // optimistically updating the store to create a lag-free UI.
+            await dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardsMetadata: categoryBoardMetadata}))
+            dispatch(updateBoardCategories([{...fromCategoryBoardMetadata, categoryID: toCategoryID}]))
+
+            await mutator.moveBoardToCategory(team.id, boardID, toCategoryID, fromCategoryID)
+
+            const reorderedBoardIDs = categoryBoardMetadata.map((m) => m.boardID)
+            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, reorderedBoardIDs)
+        }
     }, [team, sidebarCategories])
 
     const onDragEnd = useCallback(async (result: DropResult) => {
