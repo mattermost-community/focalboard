@@ -1,8 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
-import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -21,18 +20,15 @@ import {
     Category,
     CategoryBoards,
     fetchSidebarCategories,
-    getSidebarCategories,
-    updateBoardCategories,
+    getSidebarCategories, updateBoardCategories,
     updateCategories,
-    updateCategoryBoardsOrder,
-    updateCategoryOrder,
 } from '../../store/sidebar'
 
 import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import wsClient, {WSClient} from '../../wsclient'
 
-import {getCurrentTeam, getCurrentTeamId} from '../../store/teams'
+import {getCurrentTeam} from '../../store/teams'
 
 import {Constants} from '../../constants'
 
@@ -40,12 +36,6 @@ import {getMe} from '../../store/users'
 import {getCurrentViewId} from '../../store/views'
 
 import octoClient from '../../octoClient'
-
-import {useWebsockets} from '../../hooks/websockets'
-
-import mutator from '../../mutator'
-
-import {Board} from '../../blocks/board'
 
 import SidebarCategory from './sidebarCategory'
 import SidebarSettingsMenu from './sidebarSettingsMenu'
@@ -86,7 +76,6 @@ const Sidebar = (props: Props) => {
         }, 'blockCategories')
     }, [])
 
-    const teamId = useAppSelector(getCurrentTeamId)
     const team = useAppSelector(getCurrentTeam)
 
     useEffect(() => {
@@ -143,17 +132,6 @@ const Sidebar = (props: Props) => {
         octoClient.moveBoardToCategory(team.id, currentBoard.id, boardsCategory.id, '')
     }, [sidebarCategories, currentBoard, team])
 
-    useWebsockets(teamId, (websocketClient: WSClient) => {
-        const onCategoryReorderHandler = (_: WSClient, newCategoryOrder: string[]): void => {
-            dispatch(updateCategoryOrder(newCategoryOrder))
-        }
-
-        websocketClient.addOnChange(onCategoryReorderHandler, 'categoryOrder')
-        return () => {
-            websocketClient.removeOnChange(onCategoryReorderHandler, 'categoryOrder')
-        }
-    }, [teamId])
-
     if (!boards) {
         return <div/>
     }
@@ -166,109 +144,6 @@ const Sidebar = (props: Props) => {
                 setHidden(false)
             }
         }
-    }
-
-    const handleCategoryDND = useCallback(async (result: DropResult) => {
-        const {destination, source} = result
-        if (!team || !destination) {
-            return
-        }
-
-        const categories = sidebarCategories
-
-        // creating a mutable copy
-        const newCategories = Array.from(categories)
-
-        // remove category from old index
-        newCategories.splice(source.index, 1)
-
-        // add it to new index
-        newCategories.splice(destination.index, 0, categories[source.index])
-
-        const newCategoryOrder = newCategories.map((category) => category.id)
-
-        // optimistically updating the store to produce a lag-free UI
-        await dispatch(updateCategoryOrder(newCategoryOrder))
-        await octoClient.reorderSidebarCategories(team.id, newCategoryOrder)
-    }, [team, sidebarCategories])
-
-    const handleCategoryBoardDND = useCallback(async (result: DropResult) => {
-        const {source, destination, draggableId} = result
-
-        if (!team || !destination) {
-            return
-        }
-
-        const fromCategoryID = source.droppableId
-        const toCategoryID = destination.droppableId
-        const boardID = draggableId
-
-        if (fromCategoryID === toCategoryID) {
-            // board re-arranged withing the same category
-            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
-            if (!toSidebarCategory) {
-                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
-                return
-            }
-
-            const boardIDs = [...toSidebarCategory.boardIDs]
-            boardIDs.splice(source.index, 1)
-            boardIDs.splice(destination.index, 0, toSidebarCategory.boardIDs[source.index])
-
-            dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
-            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
-        } else {
-            // board moved to a different category
-            const toSidebarCategory = sidebarCategories.find((category) => category.id === toCategoryID)
-            if (!toSidebarCategory) {
-                Utils.logError(`toCategoryID not found in list of sidebar categories. toCategoryID: ${toCategoryID}`)
-                return
-            }
-
-            const boardIDs = [...toSidebarCategory.boardIDs]
-            boardIDs.splice(destination.index, 0, boardID)
-
-            // optimistically updating the store to create a lag-free UI.
-            await dispatch(updateCategoryBoardsOrder({categoryID: toCategoryID, boardIDs}))
-            dispatch(updateBoardCategories([{boardID, categoryID: toCategoryID}]))
-
-            await mutator.moveBoardToCategory(team.id, boardID, toCategoryID, fromCategoryID)
-            await octoClient.reorderSidebarCategoryBoards(team.id, toCategoryID, boardIDs)
-        }
-    }, [team, sidebarCategories])
-
-    const onDragEnd = useCallback(async (result: DropResult) => {
-        const {destination, source, type} = result
-
-        if (!team || !destination) {
-            setDraggedItemID('')
-            setIsCategoryBeingDragged(false)
-            return
-        }
-
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            setDraggedItemID('')
-            setIsCategoryBeingDragged(false)
-            return
-        }
-
-        if (type === 'category') {
-            handleCategoryDND(result)
-        } else if (type === 'board') {
-            handleCategoryBoardDND(result)
-        } else {
-            Utils.logWarn(`unknown drag type encountered, type: ${type}`)
-        }
-
-        setDraggedItemID('')
-        setIsCategoryBeingDragged(false)
-    }, [team, sidebarCategories])
-
-    const [draggedItemID, setDraggedItemID] = useState<string>('')
-    const [isCategoryBeingDragged, setIsCategoryBeingDragged] = useState<boolean>(false)
-
-    if (!boards) {
-        return <div/>
     }
 
     if (!me) {
@@ -300,26 +175,6 @@ const Sidebar = (props: Props) => {
                 </div>
             </div>
         )
-    }
-
-    const getSortedCategoryBoards = (category: CategoryBoards): Board[] => {
-        const categoryBoardsByID = new Map<string, Board>()
-        boards.forEach((board) => {
-            if (!category.boardIDs.includes(board.id)) {
-                return
-            }
-
-            categoryBoardsByID.set(board.id, board)
-        })
-
-        const sortedBoards: Board[] = []
-        category.boardIDs.forEach((boardID) => {
-            const b = categoryBoardsByID.get(boardID)
-            if (b) {
-                sortedBoards.push(b)
-            }
-        })
-        return sortedBoards
     }
 
     return (
@@ -366,42 +221,23 @@ const Sidebar = (props: Props) => {
                 userIsGuest={me?.is_guest}
             />
 
-            <DragDropContext
-                onDragEnd={onDragEnd}
-            >
-                <Droppable
-                    droppableId='lhs-categories'
-                    type='category'
-                    key={sidebarCategories.length}
-                >
-                    {(provided) => (
-                        <div
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                            className='octo-sidebar-list'
-                        >
-                            {
-                                sidebarCategories.map((category, index) => (
-                                    <SidebarCategory
-                                        hideSidebar={hideSidebar}
-                                        key={category.id}
-                                        activeBoardID={props.activeBoardId}
-                                        activeViewID={activeViewID}
-                                        categoryBoards={category}
-                                        boards={getSortedCategoryBoards(category)}
-                                        allCategories={sidebarCategories}
-                                        index={index}
-                                        onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
-                                        draggedItemID={draggedItemID}
-                                        forceCollapse={isCategoryBeingDragged}
-                                    />
-                                ))
-                            }
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+            <div className='octo-sidebar-list'>
+                {
+                    sidebarCategories.map((category, index) => (
+                        <SidebarCategory
+                            hideSidebar={hideSidebar}
+                            key={category.id}
+                            activeBoardID={props.activeBoardId}
+                            activeViewID={activeViewID}
+                            categoryBoards={category}
+                            boards={boards}
+                            allCategories={sidebarCategories}
+                            index={index}
+                            onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
+                        />
+                    ))
+                }
+            </div>
 
             <div className='octo-spacer'/>
 

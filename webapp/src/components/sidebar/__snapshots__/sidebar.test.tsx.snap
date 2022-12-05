@@ -108,69 +108,48 @@ exports[`components/sidebarSidebar dont show hidden boards 1`] = `
     </div>
     <div
       class="octo-sidebar-list"
-      data-rbd-droppable-context-id="2"
-      data-rbd-droppable-id="lhs-categories"
     >
       <div
-        data-rbd-draggable-context-id="2"
-        data-rbd-draggable-id="category1"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="2"
-            data-rbd-droppable-id="category1"
+            class="octo-sidebar-title category-title"
+            title="Category 1"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-2-hidden-text-10"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="2"
-                data-rbd-drag-handle-draggable-id="category1"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 1"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 1
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div
-                class="octo-sidebar-item subitem no-views"
-              >
-                No boards inside
-              </div>
+              </button>
             </div>
           </div>
+        </div>
+        <div
+          class="octo-sidebar-item subitem no-views"
+        >
+          No boards inside
         </div>
       </div>
     </div>
@@ -309,124 +288,86 @@ exports[`components/sidebarSidebar should assign default category if current boa
     </div>
     <div
       class="octo-sidebar-list"
-      data-rbd-droppable-context-id="4"
-      data-rbd-droppable-id="lhs-categories"
     >
       <div
-        data-rbd-draggable-context-id="4"
-        data-rbd-draggable-id="category1"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="4"
-            data-rbd-droppable-id="category1"
+            class="octo-sidebar-title category-title"
+            title="Category 1"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-4-hidden-text-21"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="4"
-                data-rbd-drag-handle-draggable-id="category1"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 1"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 1
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
       <div
-        data-rbd-draggable-context-id="4"
-        data-rbd-draggable-id="default_category"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="4"
-            data-rbd-droppable-id="default_category"
+            class="octo-sidebar-title category-title"
+            title="Boards"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Boards
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-4-hidden-text-21"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="4"
-                data-rbd-drag-handle-draggable-id="default_category"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Boards"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Boards
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div
-                class="octo-sidebar-item subitem no-views"
-              >
-                No boards inside
-              </div>
+              </button>
             </div>
           </div>
+        </div>
+        <div
+          class="octo-sidebar-item subitem no-views"
+        >
+          No boards inside
         </div>
       </div>
     </div>
@@ -565,221 +506,155 @@ exports[`components/sidebarSidebar shouldnt do any category assignment is board 
     </div>
     <div
       class="octo-sidebar-list"
-      data-rbd-droppable-context-id="5"
-      data-rbd-droppable-id="lhs-categories"
     >
       <div
-        data-rbd-draggable-context-id="5"
-        data-rbd-draggable-id="category1"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="5"
-            data-rbd-droppable-id="category1"
+            class="octo-sidebar-title category-title"
+            title="Category 1"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-5-hidden-text-27"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="5"
-                data-rbd-drag-handle-draggable-id="category1"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 1"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 1
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
       <div
-        data-rbd-draggable-context-id="5"
-        data-rbd-draggable-id="category2"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="5"
-            data-rbd-droppable-id="category2"
+            class="octo-sidebar-title category-title"
+            title="Category 2"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Category 2
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-5-hidden-text-27"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="5"
-                data-rbd-drag-handle-draggable-id="category2"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 2"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 2
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarBoardItem subitem "
+        >
+          <div
+            class="octo-sidebar-icon"
+          >
+            i
+          </div>
+          <div
+            class="octo-sidebar-title"
+            title="board title"
+          >
+            board title
+          </div>
+          <div>
             <div
-              data-rbd-draggable-context-id="5"
-              data-rbd-draggable-id="board2"
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-5-hidden-text-27"
-                class="SidebarBoardItem subitem "
-                data-rbd-drag-handle-context-id="5"
-                data-rbd-drag-handle-draggable-id="board2"
-                draggable="false"
-                role="button"
-                tabindex="0"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <div
-                  class="octo-sidebar-icon"
-                >
-                  i
-                </div>
-                <div
-                  class="octo-sidebar-title"
-                  title="board title"
-                >
-                  board title
-                </div>
-                <div>
-                  <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper x"
-                    role="button"
-                  >
-                    <button
-                      class="IconButton"
-                      type="button"
-                    >
-                      <i
-                        class="CompassIcon icon-dots-horizontal OptionsIcon"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
       </div>
       <div
-        data-rbd-draggable-context-id="5"
-        data-rbd-draggable-id="default_category"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="5"
-            data-rbd-droppable-id="default_category"
+            class="octo-sidebar-title category-title"
+            title="Boards"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Boards
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-5-hidden-text-27"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="5"
-                data-rbd-drag-handle-draggable-id="default_category"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Boards"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Boards
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div>
-              <div
-                class="octo-sidebar-item subitem no-views"
-              >
-                No boards inside
-              </div>
+              </button>
             </div>
           </div>
+        </div>
+        <div
+          class="octo-sidebar-item subitem no-views"
+        >
+          No boards inside
         </div>
       </div>
     </div>
@@ -976,102 +851,72 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
     </div>
     <div
       class="octo-sidebar-list"
-      data-rbd-droppable-context-id="0"
-      data-rbd-droppable-id="lhs-categories"
     >
       <div
-        data-rbd-draggable-context-id="0"
-        data-rbd-draggable-id="category1"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="0"
-            data-rbd-droppable-id="category1"
+            class="octo-sidebar-title category-title"
+            title="Category 1"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-0-hidden-text-0"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="0"
-                data-rbd-drag-handle-draggable-id="category1"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 1"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 1
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarBoardItem subitem "
+        >
+          <div
+            class="octo-sidebar-icon"
+          >
+            i
+          </div>
+          <div
+            class="octo-sidebar-title"
+            title="board title"
+          >
+            board title
+          </div>
+          <div>
             <div
-              data-rbd-draggable-context-id="0"
-              data-rbd-draggable-id="board1"
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-0-hidden-text-0"
-                class="SidebarBoardItem subitem "
-                data-rbd-drag-handle-context-id="0"
-                data-rbd-drag-handle-draggable-id="board1"
-                draggable="false"
-                role="button"
-                tabindex="0"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <div
-                  class="octo-sidebar-icon"
-                >
-                  i
-                </div>
-                <div
-                  class="octo-sidebar-title"
-                  title="board title"
-                >
-                  board title
-                </div>
-                <div>
-                  <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper x"
-                    role="button"
-                  >
-                    <button
-                      class="IconButton"
-                      type="button"
-                    >
-                      <i
-                        class="CompassIcon icon-dots-horizontal OptionsIcon"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -1270,157 +1115,110 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
     </div>
     <div
       class="octo-sidebar-list"
-      data-rbd-droppable-context-id="3"
-      data-rbd-droppable-id="lhs-categories"
     >
       <div
-        data-rbd-draggable-context-id="3"
-        data-rbd-draggable-id="category1"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' expanded "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="3"
-            data-rbd-droppable-id="category1"
+            class="octo-sidebar-title category-title"
+            title="Category 1"
+          >
+            <i
+              class="CompassIcon icon-chevron-down ChevronDownIcon"
+            />
+            Category 1
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category expanded "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-3-hidden-text-14"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="3"
-                data-rbd-drag-handle-draggable-id="category1"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 1"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 1
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
+          </div>
+        </div>
+        <div
+          class="SidebarBoardItem subitem "
+        >
+          <div
+            class="octo-sidebar-icon"
+          >
+            i
+          </div>
+          <div
+            class="octo-sidebar-title"
+            title="board title"
+          >
+            board title
+          </div>
+          <div>
             <div
-              data-rbd-draggable-context-id="3"
-              data-rbd-draggable-id="board1"
+              aria-label="menuwrapper"
+              class="MenuWrapper x"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-3-hidden-text-14"
-                class="SidebarBoardItem subitem "
-                data-rbd-drag-handle-context-id="3"
-                data-rbd-drag-handle-draggable-id="board1"
-                draggable="false"
-                role="button"
-                tabindex="0"
+              <button
+                class="IconButton"
+                type="button"
               >
-                <div
-                  class="octo-sidebar-icon"
-                >
-                  i
-                </div>
-                <div
-                  class="octo-sidebar-title"
-                  title="board title"
-                >
-                  board title
-                </div>
-                <div>
-                  <div
-                    aria-label="menuwrapper"
-                    class="MenuWrapper x"
-                    role="button"
-                  >
-                    <button
-                      class="IconButton"
-                      type="button"
-                    >
-                      <i
-                        class="CompassIcon icon-dots-horizontal OptionsIcon"
-                      />
-                    </button>
-                  </div>
-                </div>
-              </div>
+                <i
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
+                />
+              </button>
             </div>
           </div>
         </div>
       </div>
       <div
-        data-rbd-draggable-context-id="3"
-        data-rbd-draggable-id="categoryCollapsed"
+        class="SidebarCategory"
       >
         <div
-          class="SidebarCategory"
+          class="octo-sidebar-item category ' collapsed "
         >
           <div
-            class="categoryBoardsDroppableArea"
-            data-rbd-droppable-context-id="3"
-            data-rbd-droppable-id="categoryCollapsed"
+            class="octo-sidebar-title category-title"
+            title="Category 2"
+          >
+            <i
+              class="CompassIcon icon-chevron-right ChevronRightIcon"
+            />
+            Category 2
+            <div
+              class="sidebarCategoriesTour"
+            />
+          </div>
+          <div
+            class=""
           >
             <div
-              class="octo-sidebar-item category collapsed "
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
             >
-              <div
-                aria-describedby="rbd-hidden-text-3-hidden-text-14"
-                class="octo-sidebar-title category-title"
-                data-rbd-drag-handle-context-id="3"
-                data-rbd-drag-handle-draggable-id="categoryCollapsed"
-                draggable="false"
-                role="button"
-                tabindex="0"
-                title="Category 2"
+              <button
+                class="IconButton"
+                type="button"
               >
                 <i
-                  class="CompassIcon icon-chevron-right ChevronRightIcon"
+                  class="CompassIcon icon-dots-horizontal OptionsIcon"
                 />
-                Category 2
-                <div
-                  class="sidebarCategoriesTour"
-                />
-              </div>
-              <div
-                class=""
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    class="IconButton"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-              </div>
+              </button>
             </div>
           </div>
         </div>

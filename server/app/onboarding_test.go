@@ -77,8 +77,7 @@ func TestPrepareOnboardingTour(t *testing.T) {
 			ID:   "boards_category",
 			Name: "Boards",
 		}, nil)
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id_1", teamID, false).Return([]*model.Board{}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_2": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "boards_category_id", "board_id_2").Return(nil)
 
 		teamID, boardID, err := th.App.PrepareOnboardingTour(userID, teamID)
 		assert.NoError(t, err)
@@ -121,7 +120,7 @@ func TestCreateWelcomeBoard(t *testing.T) {
 				Category: model.Category{ID: "boards_category_id", Name: "Boards"},
 			},
 		}, nil).Times(2)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "boards_category_id", "board_id_1").Return(nil)
 
 		boardID, err := th.App.createWelcomeBoard(userID, teamID)
 		assert.Nil(t, err)
