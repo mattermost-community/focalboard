@@ -192,11 +192,16 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 func (s *SQLStore) setBoardVisibility(db sq.BaseRunner, userID string, boardID string, visible bool) error {
 	query := s.getQueryBuilder(db).
 		Update(s.tablePrefix+"category_boards").
-		Set("hidden", visible).
+		Set("hidden", !visible).
 		Where(sq.Eq{
 			"user_id":  userID,
 			"board_id": boardID,
 		})
+
+	q, p, _ := query.ToSql()
+	fmt.Println(fmt.Sprintf("%s %v", q, p))
+
+	s.logger.Error(fmt.Sprintf("userID: %s boardID: %s visible: %t", userID, boardID, visible))
 
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error(

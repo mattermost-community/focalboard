@@ -188,28 +188,29 @@ const SidebarBoardItem = (props: Props) => {
 
             // find the first visible board
 
-            let visibleBoardID: string
+            let visibleBoardID: string | null = null
 
             for (const iterBoard of myAllBoards) {
-                props.allCategories.find((category) => {
-                    const categoryBoardMetadata = category.boardMetadata.find((categoryBoardMetadata) => categoryBoardMetadata.boardID === iterBoard.id)
+                for (const category of props.allCategories) {
+                    const categoryBoardMetadata = category.boardMetadata.find((m) => m.boardID === iterBoard.id)
                     if (categoryBoardMetadata) {
                         visibleBoardID = categoryBoardMetadata.boardID
+                        break
                     }
+                }
 
-                    return Boolean(categoryBoardMetadata)
-                })
+                // if a visible board was found,
+                // no need to continue searching furthur
+                if (visibleBoardID !== undefined) {
+                    break
+                }
             }
 
-            if (visibleBoards.length === 0) {
+            if (visibleBoardID === null) {
                 UserSettings.setLastBoardID(match.params.teamId!, null)
                 showTemplatePicker()
             } else {
-                let nextBoardID = ''
-                if (visibleBoards.length > 0) {
-                    nextBoardID = visibleBoards[0].id
-                }
-                props.showBoard(nextBoardID)
+                props.showBoard(visibleBoardID)
             }
         }
     }

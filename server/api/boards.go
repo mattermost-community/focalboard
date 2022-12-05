@@ -678,8 +678,11 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
+
+	a.logger.Error("AAAAA " + userID)
+
 	vars := mux.Vars(r)
-	boardID := vars["teamID"]
+	boardID := vars["boardID"]
 
 	auditRec := a.makeAuditRecord(r, "hideBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
@@ -698,7 +701,7 @@ func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
 func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
 	vars := mux.Vars(r)
-	boardID := vars["teamID"]
+	boardID := vars["boardID"]
 
 	auditRec := a.makeAuditRecord(r, "unhideBoard", audit.Fail)
 	defer a.audit.LogRecord(audit.LevelModify, auditRec)
