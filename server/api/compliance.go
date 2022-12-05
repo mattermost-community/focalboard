@@ -83,17 +83,10 @@ func (a *API) handleGetAllBoards(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("boardsCount", len(boards)),
 	)
 
-	response := struct {
-		hasNext bool
-		results []*model.Board
-	}{
-		hasNext: hasNext,
-		results: boards,
+	response := model.ComplianceResponse{
+		HasNext: hasNext,
+		Results: boards,
 	}
-	// response := model.ComplianceResponse{
-	// 	HasNext: hasNext,
-	// 	Results: boards,
-	// }
 	data, err := json.Marshal(response)
 	if err != nil {
 		a.errorResponse(w, r, err)
@@ -175,12 +168,9 @@ func (a *API) handleGetBoardsHistory(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("boardsCount", len(boards)),
 	)
 
-	response := struct {
-		hasNext bool
-		results []*model.Board // ish
-	}{
-		hasNext: hasNext,
-		results: boards,
+	response := model.ComplianceResponse{
+		HasNext: hasNext,
+		Results: boards,
 	}
 	data, err := json.Marshal(response)
 	if err != nil {
@@ -265,12 +255,9 @@ func (a *API) handleGetBlocksHistory(w http.ResponseWriter, r *http.Request) {
 		mlog.Int("blocksCount", len(blocks)),
 	)
 
-	response := struct {
-		hasNext bool
-		results []*model.Block // ish
-	}{
-		hasNext: hasNext,
-		results: blocks,
+	response := model.ComplianceResponse{
+		HasNext: hasNext,
+		Results: blocks,
 	}
 	data, err := json.Marshal(response)
 	if err != nil {

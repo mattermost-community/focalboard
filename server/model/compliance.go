@@ -11,5 +11,5 @@ type ComplianceResponse struct {
 
 	// The array of results
 	// required: true
-	Results []interface{} `json:"results"`
+	Results interface{} `json:"results"`
 }
