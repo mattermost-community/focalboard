@@ -31,9 +31,8 @@ const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
 
 export const SYSTEM_ADMIN_ROLE = 'system_admin'
 export const TEAM_ADMIN_ROLE = 'team_admin'
-export type CategoryOrder = string[]
 
-export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData[] | BoardType | BoardMember | null | CategoryOrder
+export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData | BoardType | BoardMember | null
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -628,8 +627,6 @@ class Utils {
             return [message.blockCategories, 'blockCategories']
         } else if (message.member) {
             return [message.member, 'boardMembers']
-        } else if (message.categoryOrder) {
-            return [message.categoryOrder, 'categoryOrder']
         }
         return [null, 'block']
     }

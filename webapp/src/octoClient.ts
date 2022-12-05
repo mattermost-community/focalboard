@@ -835,38 +835,6 @@ class OctoClient {
         })
     }
 
-    async reorderSidebarCategories(teamID: string, newCategoryOrder: string[]): Promise<string[]> {
-        const path = `/api/v2/teams/${teamID}/categories/reorder`
-        const body = JSON.stringify(newCategoryOrder)
-        const response = await fetch(this.getBaseURL() + path, {
-            method: 'PUT',
-            headers: this.headers(),
-            body,
-        })
-
-        if (response.status !== 200) {
-            return []
-        }
-
-        return (await this.getJson(response, [])) as string[]
-    }
-
-    async reorderSidebarCategoryBoards(teamID: string, categoryID: string, newBoardsOrder: string[]): Promise<string[]> {
-        const path = `/api/v2/teams/${teamID}/categories/${categoryID}/boards/reorder`
-        const body = JSON.stringify(newBoardsOrder)
-        const response = await fetch(this.getBaseURL() + path, {
-            method: 'PUT',
-            headers: this.headers(),
-            body,
-        })
-
-        if (response.status !== 200) {
-            return []
-        }
-
-        return (await this.getJson(response, [])) as string[]
-    }
-
     async moveBoardToCategory(teamID: string, boardID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
         const url = `/api/v2/teams/${teamID}/categories/${toCategoryID || '0'}/boards/${boardID}`
         const payload = {

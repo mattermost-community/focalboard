@@ -92,7 +92,7 @@ func LoadData(t *testing.T, store store.Store) {
 	err = store.UpsertSharing(sharing)
 	require.NoError(t, err)
 
-	err = store.AddUpdateCategoryBoard(testUserID, map[string]string{boardID: categoryID})
+	err = store.AddUpdateCategoryBoard(testUserID, categoryID, boardID)
 	require.NoError(t, err)
 }
 
