@@ -1074,7 +1074,8 @@ func (s *MattermostAuthLayer) GetBoardsHistory(modifiedSince int, includeDeleted
 		Select("*"). // TODO: specify
 		From(s.tablePrefix + "boards_history as bh").
 		Where(sq.Gt{"bh.update_at": modifiedSince})
-		// TODO: order_by
+		// TODO: order by, do after creating BoardMetadata struct
+		// maybe could just do a variation of app.GetBoardMetadata()
 
 	if !includeDeleted {
 		query = query.Where(sq.Eq{"bh.delete_at": 0})
@@ -1103,12 +1104,12 @@ func (s *MattermostAuthLayer) GetBoardsHistory(modifiedSince int, includeDeleted
 	return s.boardsFromRows(rows, true)
 }
 
-func (s *MattermostAuthLayer) GetBlocksHistory(modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) ([]*model.Block, error) {
+func (s *MattermostAuthLayer) GetBlocksHistory(modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) ([]*model.Board, error) {
 	query := s.getQueryBuilder().
 		Select("*"). // TODO: specify
 		From(s.tablePrefix + "blocks_history as bh").
-		Where(sq.Gt{"bh.update_at": modifiedSince})
-		// TODO: order_by
+		Where(sq.Gt{"bh.update_at": modifiedSince}).
+		OrderBy("bh.update_at DESC")
 
 	if !includeDeleted {
 		query = query.Where(sq.Eq{"bh.delete_at": 0})
@@ -1138,8 +1139,8 @@ func (s *MattermostAuthLayer) GetBlocksHistory(modifiedSince int, includeDeleted
 	}
 	defer s.CloseRows(rows)
 
-	// TODO: copy implementation from SQLStore?
-	return s.blocksFromRows(rows)
+	// TODO: blocks, not boards: copy implementation from SQLStore?
+	return s.boardsFromRows(rows, true)
 }
 
 func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
