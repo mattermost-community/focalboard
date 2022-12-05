@@ -1033,6 +1033,20 @@ class OctoClient {
             body: '{}',
         })
     }
+
+    async hideBoard(boardID: string): Promise<Response> {
+        return fetch(`${this.getBaseURL()}/api/v2/${boardID}/hide`, {
+            method: 'PUT',
+            headers: this.headers(),
+        })
+    }
+
+    async unhideBoard(boardID: string): Promise<Response> {
+        return fetch(`${this.getBaseURL()}/api/v2/${boardID}/unhide`, {
+            method: 'PUT',
+            headers: this.headers(),
+        })
+    }
 }
 
 const octoClient = new OctoClient()

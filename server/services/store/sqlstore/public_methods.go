@@ -851,8 +851,7 @@ func (s *SQLStore) SendMessage(message string, postType string, receipts []strin
 }
 
 func (s *SQLStore) SetBoardVisibility(userID string, boardID string, visible bool) error {
-	// return s.setBoardVisibility(s.db, userID, boardID, visible)
-	return nil
+	return s.setBoardVisibility(s.db, userID, boardID, visible)
 
 }
 

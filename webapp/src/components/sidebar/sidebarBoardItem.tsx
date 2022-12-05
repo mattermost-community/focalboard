@@ -156,23 +156,25 @@ const SidebarBoardItem = (props: Props) => {
             return
         }
 
-        // creating new array as myConfig.hiddenBoardIDs.value
-        // belongs to Redux state and so is immutable.
-        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
+        // // creating new array as myConfig.hiddenBoardIDs.value
+        // // belongs to Redux state and so is immutable.
+        // const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
 
-        hiddenBoards[board.id] = true
-        const hiddenBoardsArray = Object.keys(hiddenBoards)
-        const patch: UserConfigPatch = {
-            updatedFields: {
-                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
-            },
-        }
-        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        if (!patchedProps) {
-            return
-        }
+        // hiddenBoards[board.id] = true
+        // const hiddenBoardsArray = Object.keys(hiddenBoards)
+        // const patch: UserConfigPatch = {
+        //     updatedFields: {
+        //         hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
+        //     },
+        // }
+        // const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        // if (!patchedProps) {
+        //     return
+        // }
 
-        await dispatch(patchProps(patchedProps))
+        // await dispatch(patchProps(patchedProps))
+
+        await octoClient.hideBoard(board.id)
 
         // If we're hiding the board we're currently on,
         // we need to switch to a different board once its hidden.
@@ -182,7 +184,22 @@ const SidebarBoardItem = (props: Props) => {
 
             // Empty board ID navigates to template picker, which is
             // fine if there are no more visible boards to switch to.
-            const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
+            // const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
+
+            // find the first visible board
+
+            let visibleBoardID: string
+
+            for (const iterBoard of myAllBoards) {
+                props.allCategories.find((category) => {
+                    const categoryBoardMetadata = category.boardMetadata.find((categoryBoardMetadata) => categoryBoardMetadata.boardID === iterBoard.id)
+                    if (categoryBoardMetadata) {
+                        visibleBoardID = categoryBoardMetadata.boardID
+                    }
+
+                    return Boolean(categoryBoardMetadata)
+                })
+            }
 
             if (visibleBoards.length === 0) {
                 UserSettings.setLastBoardID(match.params.teamId!, null)
