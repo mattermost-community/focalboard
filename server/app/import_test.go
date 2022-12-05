@@ -55,7 +55,6 @@ func TestApp_ImportArchive(t *testing.T) {
 			ID:   "boards_category_id",
 			Name: "Boards",
 		}, nil)
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user", "test-team", false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().GetMembersForUser("user").Return([]*model.BoardMember{}, nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user", utils.Anything).Return(nil)
 

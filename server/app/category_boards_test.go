@@ -21,20 +21,6 @@ func TestGetUserCategoryBoards(t *testing.T) {
 			Name: "Boards",
 		}, nil)
 
-		board1 := &model.Board{
-			ID: "board_id_1",
-		}
-
-		board2 := &model.Board{
-			ID: "board_id_2",
-		}
-
-		board3 := &model.Board{
-			ID: "board_id_3",
-		}
-
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{board1, board2, board3}, nil)
-
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{
 			{
 				BoardID:   "board_id_1",
@@ -72,7 +58,6 @@ func TestGetUserCategoryBoards(t *testing.T) {
 		}, nil)
 
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
 
 		categoryBoards, err := th.App.GetUserCategoryBoards("user_id", "team_id")
 		assert.NoError(t, err)
@@ -108,7 +93,6 @@ func TestCreateBoardsCategory(t *testing.T) {
 			Type: "system",
 			Name: "Boards",
 		}, nil)
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
 
 		existingCategoryBoards := []model.CategoryBoards{}
@@ -126,7 +110,6 @@ func TestCreateBoardsCategory(t *testing.T) {
 			Type: "system",
 			Name: "Boards",
 		}, nil)
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{
 			{
 				BoardID:   "board_id_1",
@@ -160,17 +143,6 @@ func TestCreateBoardsCategory(t *testing.T) {
 			Type: "system",
 			Name: "Boards",
 		}, nil)
-
-		board1 := &model.Board{
-			ID: "board_id_1",
-		}
-		board2 := &model.Board{
-			ID: "board_id_2",
-		}
-		board3 := &model.Board{
-			ID: "board_id_3",
-		}
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{board1, board2, board3}, nil)
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{
 			{
 				BoardID:   "board_id_1",
@@ -207,11 +179,6 @@ func TestCreateBoardsCategory(t *testing.T) {
 			Type: "system",
 			Name: "Boards",
 		}, nil)
-
-		board1 := &model.Board{
-			ID: "board_id_1",
-		}
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{board1}, nil)
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{
 			{
 				BoardID:   "board_id_1",
