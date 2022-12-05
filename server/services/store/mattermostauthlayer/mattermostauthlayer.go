@@ -717,13 +717,14 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model
 
 	if term != "" {
 		if searchField == model.BoardSearchFieldPropertyName {
-			if s.dbType == model.PostgresDBType {
+			switch s.dbType {
+			case model.PostgresDBType:
 				where := "b.properties->? is not null"
 				query = query.Where(where, term)
-			} else if s.dbType == model.MysqlDBType {
+			case model.MysqlDBType:
 				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
 				query = query.Where(where, "$."+term)
-			} else {
+			default:
 				where := "b.properties LIKE ?"
 				query = query.Where(where, "%\""+term+"\"%")
 			}
