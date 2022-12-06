@@ -55,9 +55,8 @@ func TestApp_ImportArchive(t *testing.T) {
 			ID:   "boards_category_id",
 			Name: "Boards",
 		}, nil)
-		th.Store.EXPECT().GetBoardsForUserAndTeam("user", "test-team", false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().GetMembersForUser("user").Return([]*model.BoardMember{}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user", utils.Anything).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user", "boards_category_id", utils.Anything).Return(nil)
 
 		err := th.App.ImportArchive(r, opts)
 		require.NoError(t, err, "import archive should not fail")
