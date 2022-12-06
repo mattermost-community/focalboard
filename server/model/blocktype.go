@@ -14,13 +14,13 @@ import (
 type BlockType string
 
 const (
-	TypeUnknown = "unknown"
-	TypeBoard   = "board"
-	TypeCard    = "card"
-	TypeView    = "view"
-	TypeText    = "text"
-	TypeComment = "comment"
-	TypeImage   = "image"
+	TypeUnknown    = "unknown"
+	TypeBoard      = "board"
+	TypeCard       = "card"
+	TypeView       = "view"
+	TypeText       = "text"
+	TypeComment    = "comment"
+	TypeImage      = "image"
 	TypeAttachment = "attachment"
 )
 
