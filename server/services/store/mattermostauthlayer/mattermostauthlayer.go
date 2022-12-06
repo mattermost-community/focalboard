@@ -676,7 +676,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
-		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
+		LeftJoin("ChannelMembers as cme on cme.channelId=b.channel_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"tm.userID": userID}).
 		Where(sq.Eq{"tm.deleteAt": 0})
@@ -685,12 +685,12 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		query = query.Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.Eq{"bm.user_id": userID},
-			sq.Eq{"cm.userId": userID},
+			sq.Eq{"cme.userId": userID},
 		})
 	} else {
 		query = query.Where(sq.Or{
 			sq.Eq{"bm.user_id": userID},
-			sq.Eq{"cm.userId": userID},
+			sq.Eq{"cme.userId": userID},
 		})
 	}
 
@@ -731,6 +731,8 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		query = query.Where(conditions)
 	}
 
+	mlog.Info("SearchBoardsForUser called")
+
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
@@ -752,13 +754,13 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
+		LeftJoin("ChannelMembers as cms on cms.channelId=b.channel_id").
 		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"b.team_id": teamID}).
 		Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.Eq{"bm.user_id": userID},
-			sq.Eq{"cm.userId": userID},
+			sq.Eq{"cms.userId": userID},
 		})
 
 	if term != "" {
@@ -776,6 +778,8 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 
 		query = query.Where(conditions)
 	}
+
+	mlog.Info("SearchBoardsForUserInTeam called")
 
 	rows, err := query.Query()
 	if err != nil {
