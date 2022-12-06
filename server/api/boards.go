@@ -678,9 +678,6 @@ func (a *API) handleGetBoardMetadata(w http.ResponseWriter, r *http.Request) {
 
 func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
 	userID := getUserID(r)
-
-	a.logger.Error("AAAAA " + userID)
-
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
 
