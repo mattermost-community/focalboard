@@ -1,0 +1,1 @@
+UPDATE {{.prefix}}blocks SET board_id=root_id;

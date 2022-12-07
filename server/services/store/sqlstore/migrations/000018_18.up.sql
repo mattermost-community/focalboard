@@ -1,0 +1,1 @@
+RENAME TABLE {{.prefix}}workspaces TO {{.prefix}}teams;

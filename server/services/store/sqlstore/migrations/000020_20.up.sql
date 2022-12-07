@@ -1,0 +1,1 @@
+ALTER TABLE {{.prefix}}blocks_history CHANGE workspace_id channel_id VARCHAR(36);

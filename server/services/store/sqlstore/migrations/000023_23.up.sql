@@ -1,0 +1,1 @@
+UPDATE {{.prefix}}blocks SET fields = JSON_SET(fields, '$.columnCalculations', cast('{}' as json)) WHERE fields->'$.columnCalculations' = cast('[]' as json);

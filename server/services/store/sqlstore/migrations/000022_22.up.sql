@@ -1,0 +1,1 @@
+ALTER TABLE {{.prefix}}blocks_history ADD COLUMN board_id VARCHAR(36);

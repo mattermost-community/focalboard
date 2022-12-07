@@ -1,0 +1,1 @@
+DELETE FROM {{.prefix}}blocks_history WHERE type = 'board';
