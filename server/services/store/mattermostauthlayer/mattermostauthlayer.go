@@ -747,7 +747,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
 func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
-	s.logger.Info("++++++ Calling the new SearchBoardsForUserInTeam implementation")
+	s.logger.Info("!!!!!! Calling the new SearchBoardsForUserInTeam implementation")
 	plainQuery := `
 (SELECT
     b.id,
@@ -821,7 +821,7 @@ FROM
 		conditions := []string{}
 
 		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-			conditions = append(conditions, "WHERE lower(b.title) LIKE %" + strings.ToLower(word) + "%")
+			conditions = append(conditions, "WHERE lower(b.title) LIKE %"+strings.ToLower(word)+"%")
 		}
 
 		conditionsStr := strings.Join(conditions, " AND ")
