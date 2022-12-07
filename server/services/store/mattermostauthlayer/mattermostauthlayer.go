@@ -795,22 +795,22 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 		channelMemberBoardsQ = channelMemberBoardsQ.Where(conditions)
 	}
 
-	memberBoardsSql, memberBoardsArgs, err := memberBoardsQ.ToSql()
+	memberBoardsSQL, memberBoardsArgs, err := memberBoardsQ.ToSql()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUser ERROR getting memberBoardsSql`, mlog.Err(err))
+		s.logger.Error(`searchBoardsForUser ERROR getting memberBoardsSQL`, mlog.Err(err))
 		return nil, err
 	}
 
-	channelMemberBoardsSql, channelMemberBoardsArgs, err := channelMemberBoardsQ.ToSql()
+	channelMemberBoardsSQL, channelMemberBoardsArgs, err := channelMemberBoardsQ.ToSql()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUser ERROR getting channelMemberBoardsSql`, mlog.Err(err))
+		s.logger.Error(`searchBoardsForUser ERROR getting channelMemberBoardsSQL`, mlog.Err(err))
 		return nil, err
 	}
 
 	unionQ := openBoardsQ.
 		Prefix("(").
-		Suffix(") UNION ("+memberBoardsSql, memberBoardsArgs...).
-		Suffix(") UNION ("+channelMemberBoardsSql+")", channelMemberBoardsArgs...)
+		Suffix(") UNION ("+memberBoardsSQL, memberBoardsArgs...).
+		Suffix(") UNION ("+channelMemberBoardsSQL+")", channelMemberBoardsArgs...)
 
 	rows, err := unionQ.Query()
 	if err != nil {
