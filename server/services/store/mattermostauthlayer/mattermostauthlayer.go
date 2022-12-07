@@ -748,17 +748,33 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
 func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
-	query := s.getQueryBuilder().
+	openBoardsQ := s.getQueryBuilder().
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
-		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Or{
-			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.Eq{"bm.user_id": userID},
-			sq.Eq{"cm.userId": userID},
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"b.type":        model.BoardTypeOpen,
+		})
+
+	memberBoardsQ := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards AS b").
+		Join(s.tablePrefix + "board_members AS bm on b.id = bm.board_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"bm.user_id":    userID,
+		})
+
+	channelMemberBoardsQ := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards AS b").
+		Join("ChannelMembers AS cm on cm.channelId = b.channel_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"cm.userId":     userID,
 		})
 
 	if term != "" {
@@ -774,10 +790,29 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
 		}
 
-		query = query.Where(conditions)
+		openBoardsQ = openBoardsQ.Where(conditions)
+		memberBoardsQ = memberBoardsQ.Where(conditions)
+		channelMemberBoardsQ = channelMemberBoardsQ.Where(conditions)
 	}
 
-	rows, err := query.Query()
+	memberBoardsSQL, memberBoardsArgs, err := memberBoardsQ.ToSql()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR getting memberBoardsSQL`, mlog.Err(err))
+		return nil, err
+	}
+
+	channelMemberBoardsSQL, channelMemberBoardsArgs, err := channelMemberBoardsQ.ToSql()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR getting channelMemberBoardsSQL`, mlog.Err(err))
+		return nil, err
+	}
+
+	unionQ := openBoardsQ.
+		Prefix("(").
+		Suffix(") UNION ("+memberBoardsSQL, memberBoardsArgs...).
+		Suffix(") UNION ("+channelMemberBoardsSQL+")", channelMemberBoardsArgs...)
+
+	rows, err := unionQ.Query()
 	if err != nil {
 		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
 		return nil, err
