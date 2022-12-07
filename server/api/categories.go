@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
+	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func (a *API) registerCategoriesRoutes(r *mux.Router) {
@@ -20,6 +21,8 @@ func (a *API) registerCategoriesRoutes(r *mux.Router) {
 	r.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBoards)).Methods(http.MethodGet)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/reorder", a.sessionRequired(a.handleReorderCategoryBoards)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}", a.sessionRequired(a.handleUpdateCategoryBoard)).Methods(http.MethodPost)
+	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}/hide", a.sessionRequired(a.handleHideBoard)).Methods(http.MethodPut)
+	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}/unhide", a.sessionRequired(a.handleUnhideBoard)).Methods(http.MethodPut)
 }
 
 func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
@@ -309,6 +312,8 @@ func (a *API) handleGetUserCategoryBoards(w http.ResponseWriter, r *http.Request
 }
 
 func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("AAAAAAAAA")
+
 	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/{boardID} updateCategoryBoard
 	//
 	// Set the category of a board
@@ -519,5 +524,60 @@ func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("BBBBBBBBBB")
+	userID := getUserID(r)
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	boardID := vars["boardID"]
+	categoryID := vars["categoryID"]
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "hideBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("board_id", boardID)
+	auditRec.AddMeta("team_id", teamID)
+	auditRec.AddMeta("category_id", categoryID)
+
+	if err := a.app.SetBoardVisibility(teamID, userID, categoryID, boardID, false); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
+	a.logger.Debug("Hide Board", mlog.String("boardID", boardID))
+	auditRec.Success()
+}
+
+func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
+	userID := getUserID(r)
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	boardID := vars["boardID"]
+	categoryID := vars["categoryID"]
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "unhideBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	if err := a.app.SetBoardVisibility(teamID, userID, categoryID, boardID, true); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
+	a.logger.Debug("Hide Board", mlog.String("boardID", boardID))
 	auditRec.Success()
 }

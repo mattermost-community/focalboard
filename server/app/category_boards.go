@@ -253,10 +253,20 @@ func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID st
 	return nil
 }
 
-func (a *App) SetBoardVisibility(userID, boardID string, visible bool) error {
-	if err := a.store.SetBoardVisibility(userID, boardID, visible); err != nil {
+func (a *App) SetBoardVisibility(teamID, userID, categoryID, boardID string, visible bool) error {
+	if err := a.store.SetBoardVisibility(userID, categoryID, boardID, visible); err != nil {
 		return fmt.Errorf("SetBoardVisibility: failed to update board visibility: %e", err)
 	}
+
+	go func() {
+		a.wsAdapter.BroadcastCategoryBoardChange(teamID, userID, []*model.BoardCategoryWebsocketData{
+			{
+				BoardID:    boardID,
+				CategoryID: categoryID,
+				Hidden:     !visible,
+			},
+		})
+	}()
 
 	return nil
 }

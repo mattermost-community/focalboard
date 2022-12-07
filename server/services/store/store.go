@@ -133,7 +133,7 @@ type Store interface {
 	// @withTransaction
 	AddUpdateCategoryBoard(userID, categoryID string, boardIDs []string) error
 	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
-	SetBoardVisibility(userID, boardID string, visible bool) error
+	SetBoardVisibility(userID, categoryID, boardID string, visible bool) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error
