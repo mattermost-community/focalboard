@@ -99,10 +99,9 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
         cards.flatMap((card): EventInput[] => {
             const property = propsRegistry.get(dateDisplayProperty?.type || 'unknown')
 
+            let dateFrom = new Date(card.createAt || 0)
+            let dateTo = new Date(card.createAt || 0)
             if (property instanceof DatePropertyType) {
-                let dateFrom = new Date(card.createAt || 0)
-                let dateTo = new Date(card.createAt || 0)
-
                 const dateFromValue = property.getDateFrom(card.fields.properties[dateDisplayProperty?.id || ''], card)
                 if (!dateFromValue) {
                     return []
@@ -114,18 +113,16 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                     return []
                 }
                 dateTo = dateToValue
-
-                return [{
-                    id: card.id,
-                    title: card.title,
-                    extendedProps: {icon: card.fields.icon},
-                    properties: card.fields.properties,
-                    allDay: true,
-                    start: dateFrom,
-                    end: dateTo,
-                }]
             }
-            return []
+            return [{
+                id: card.id,
+                title: card.title,
+                extendedProps: {icon: card.fields.icon},
+                properties: card.fields.properties,
+                allDay: true,
+                start: dateFrom,
+                end: dateTo,
+            }]
         })
     ), [cards, dateDisplayProperty])
 
