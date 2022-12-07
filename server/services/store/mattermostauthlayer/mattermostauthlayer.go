@@ -821,7 +821,7 @@ FROM
 		conditions := []string{}
 
 		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-			conditions = append(conditions, "WHERE lower(b.title) LIKE %" + strings.ToLower(word) + "%")
+			conditions = append(conditions, "WHERE lower(b.title) LIKE %"+strings.ToLower(word)+"%")
 		}
 
 		conditionsStr := strings.Join(conditions, " AND ")
