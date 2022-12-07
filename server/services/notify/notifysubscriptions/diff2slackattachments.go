@@ -283,7 +283,7 @@ func appendAttachmentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *
 			if format != "" {
 				fields = append(fields, &mm_model.SlackAttachmentField{
 					Short: false,
-					Title: "Attachment By " + makeAuthorsList(child.Authors, "unknow_user"),
+					Title: "Attachment By " + makeAuthorsList(child.Authors, "unknow_user"), // TODO:  localize this when server has i18n
 					Value: fmt.Sprintf(format, msg),
 				})
 			}
