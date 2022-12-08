@@ -82,6 +82,7 @@ const Sidebar = (props: Props) => {
         }, 'category')
 
         wsClient.addOnChange((_: WSClient, blockCategories: BoardCategoryWebsocketData[]) => {
+            console.log('AAAAAAA')
             dispatch(updateBoardCategories(blockCategories))
         }, 'blockCategories')
     }, [])

@@ -92,17 +92,23 @@ const sidebarSlice = createSlice({
             })
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
+            console.log('updateBoardCategories')
+
             const updatedCategoryAttributes: CategoryBoards[] = []
 
             action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
+                    console.log('asjmdhgajshgdjashgdj')
                     if (categoryAttribute.id === boardCategory.categoryID) {
-                        // if board is already in the right category, don't do anything
-                        // and let the board stay in its right order.
-                        // Only if its not in the right category, do add it.
-                        if (!categoryAttribute.boardMetadata.find((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)) {
+                        const categoryBoardMetadataIndex = categoryAttribute.boardMetadata.findIndex((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)
+                        if (categoryBoardMetadataIndex >= 0) {
+                            categoryAttribute.boardMetadata[categoryBoardMetadataIndex] = {
+                                ...categoryAttribute.boardMetadata[categoryBoardMetadataIndex],
+                                hidden: boardCategory.hidden,
+                            }
+                        } else {
                             categoryAttribute.boardMetadata.unshift({boardID: boardCategory.boardID, hidden: boardCategory.hidden})
                             categoryAttribute.isNew = false
                         }
@@ -110,6 +116,19 @@ const sidebarSlice = createSlice({
                         // remove the board from other categories
                         categoryAttribute.boardMetadata = categoryAttribute.boardMetadata.filter((metadata) => metadata.boardID !== boardCategory.boardID)
                     }
+
+                    // if (categoryAttribute.id === boardCategory.categoryID) {
+                    //     // if board is already in the right category, don't do anything
+                    //     // and let the board stay in its right order.
+                    //     // Only if its not in the right category, do add it.
+                    //     if (!categoryAttribute.boardMetadata.find((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)) {
+                    //         categoryAttribute.boardMetadata.unshift({boardID: boardCategory.boardID, hidden: boardCategory.hidden})
+                    //         categoryAttribute.isNew = false
+                    //     }
+                    // } else {
+                    //     // remove the board from other categories
+                    //     categoryAttribute.boardMetadata = categoryAttribute.boardMetadata.filter((metadata) => metadata.boardID !== boardCategory.boardID)
+                    // }
 
                     updatedCategoryAttributes[i] = categoryAttribute
                 }
@@ -140,6 +159,8 @@ const sidebarSlice = createSlice({
             state.categoryAttributes = newOrderedCategories
         },
         updateCategoryBoardsOrder: (state, action: PayloadAction<CategoryBoardsReorderData>) => {
+            console.log('updateCategoryBoardsOrder')
+
             // if (action.payload.boardIDs.length === 0) {
             if (action.payload.boardsMetadata.length === 0) {
                 return

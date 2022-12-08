@@ -26,6 +26,7 @@ func (a *API) registerCategoriesRoutes(r *mux.Router) {
 }
 
 func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleCreateCategory")
 	// swagger:operation POST /teams/{teamID}/categories createCategory
 	//
 	// Create a category for boards
@@ -110,6 +111,7 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleUpdateCategory")
 	// swagger:operation PUT /teams/{teamID}/categories/{categoryID} updateCategory
 	//
 	// Create a category for boards
@@ -202,6 +204,7 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleDeleteCategory")
 	// swagger:operation DELETE /teams/{teamID}/categories/{categoryID} deleteCategory
 	//
 	// Delete a category
@@ -258,6 +261,7 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetUserCategoryBoards(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleGetUserCategoryBoards")
 	// swagger:operation GET /teams/{teamID}/categories getUserCategoryBoards
 	//
 	// Gets the user's board categories
@@ -371,6 +375,7 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 }
 
 func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleReorderCategories")
 	// swagger:operation PUT /teams/{teamID}/categories/reorder handleReorderCategories
 	//
 	// Updated sidebar category order
@@ -443,6 +448,7 @@ func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleReorderCategoryBoards")
 	// swagger:operation PUT /teams/{teamID}/categories/{categoryID}/boards/reorder handleReorderCategoryBoards
 	//
 	// Updates order of boards inside a sidebar category
@@ -528,7 +534,7 @@ func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request
 }
 
 func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("BBBBBBBBBB")
+	a.logger.Error("handleHideBoard")
 	userID := getUserID(r)
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -557,6 +563,7 @@ func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
+	a.logger.Error("handleUnhideBoard")
 	userID := getUserID(r)
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]

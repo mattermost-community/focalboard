@@ -1035,8 +1035,8 @@ class OctoClient {
     }
 
     async hideBoard(categoryID: string, boardID: string): Promise<Response> {
-        const url = `${this.teamPath()}/categories/${categoryID}/boards/${boardID}/hide`
-        return fetch(url, {
+        const path = `${this.teamPath()}/categories/${categoryID}/boards/${boardID}/hide`
+        return fetch(this.getBaseURL() + path, {
             method: 'PUT',
             headers: this.headers(),
         })

@@ -258,15 +258,15 @@ func (a *App) SetBoardVisibility(teamID, userID, categoryID, boardID string, vis
 		return fmt.Errorf("SetBoardVisibility: failed to update board visibility: %e", err)
 	}
 
-	go func() {
-		a.wsAdapter.BroadcastCategoryBoardChange(teamID, userID, []*model.BoardCategoryWebsocketData{
-			{
-				BoardID:    boardID,
-				CategoryID: categoryID,
-				Hidden:     !visible,
-			},
-		})
-	}()
+	// go func() {
+	a.wsAdapter.BroadcastCategoryBoardChange(teamID, userID, []*model.BoardCategoryWebsocketData{
+		{
+			BoardID:    boardID,
+			CategoryID: categoryID,
+			Hidden:     !visible,
+		},
+	})
+	// }()
 
 	return nil
 }
