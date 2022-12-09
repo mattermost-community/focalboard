@@ -5,6 +5,7 @@
 
 .homepage header {
     position: fixed;
+    z-index: 555;
 }
 
 .homepage #wrapper {

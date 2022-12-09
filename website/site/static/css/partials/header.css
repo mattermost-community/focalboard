@@ -18,6 +18,10 @@ header.with-notification-bar {
     margin-top: 64px;
 }
 
+.header__logo {
+    margin-top: -8px;
+}
+
 .header__feedback {
     position: absolute;
     right: 32px;
