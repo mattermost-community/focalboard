@@ -249,10 +249,6 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 		return err
 	}
 
-	// always run the collations & charset fix-ups
-	if mErr := s.RunFixCollationsAndCharsetsMigration(); mErr != nil {
-		return fmt.Errorf("error running fix collations and charsets migration: %w", mErr)
-	}
 	return nil
 }
 
