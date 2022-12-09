@@ -124,6 +124,11 @@ func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 
 }
 
+func (s *SQLStore) DBVersion() string {
+	return s.dBVersion(s.db)
+
+}
+
 func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBlock(s.db, blockID, modifiedBy)
@@ -148,6 +153,11 @@ func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 
 }
 
+func (s *SQLStore) DeleteBlockRecord(blockID string, modifiedBy string) error {
+	return s.deleteBlockRecord(s.db, blockID, modifiedBy)
+
+}
+
 func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBoard(s.db, boardID, userID)
@@ -169,6 +179,11 @@ func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) DeleteBoardRecord(boardID string, modifiedBy string) error {
+	return s.deleteBoardRecord(s.db, boardID, modifiedBy)
 
 }
 
@@ -539,13 +554,13 @@ func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
 
 }
 
-func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
-	return s.getUsersByTeam(s.db, teamID, asGuestID)
+func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID, asGuestID, showEmail, showName)
 
 }
 
-func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
-	return s.getUsersList(s.db, userIDs)
+func (s *SQLStore) GetUsersList(userIDs []string, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs, showEmail, showName)
 
 }
 
@@ -791,8 +806,8 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots, showEmail, showName)
 
 }
 

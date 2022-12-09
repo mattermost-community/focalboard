@@ -590,6 +590,45 @@ class OctoClient {
         return undefined
     }
 
+    async uploadAttachment(rootID: string, file: File): Promise<XMLHttpRequest | undefined> {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const xhr = new XMLHttpRequest()
+
+        xhr.open('POST', this.getBaseURL() + this.teamPath() + '/' + rootID + '/files', true)
+        const headers = this.headers() as Record<string, string>
+        delete headers['Content-Type']
+
+        xhr.setRequestHeader('Accept', 'application/json')
+        xhr.setRequestHeader('Authorization', this.token ? 'Bearer ' + this.token : '')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+        if (xhr.upload) {
+            xhr.upload.onprogress = () => {}
+        }
+        xhr.send(formData)
+        return xhr
+    }
+
+    async getFileInfo(boardId: string, fileId: string): Promise<FileInfo> {
+        let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId + '/info'
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `?read_token=${readToken}`
+        }
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        let fileInfo: FileInfo = {}
+
+        if (response.status === 200) {
+            fileInfo = this.getJson(response, {}) as FileInfo
+        } else if (response.status === 400) {
+            fileInfo = await this.getJson(response, {}) as FileInfo
+        }
+
+        return fileInfo
+    }
+
     async getFileAsDataUrl(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
@@ -953,6 +992,14 @@ class OctoClient {
         }
 
         return (await this.getJson(response, {})) as TopBoardResponse
+    }
+
+    async moveBlockTo(blockId: string, where: 'before'|'after', dstBlockId: string): Promise<Response> {
+        return fetch(`${this.getBaseURL()}/api/v2/content-blocks/${blockId}/moveto/${where}/${dstBlockId}`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: '{}',
+        })
     }
 }
 

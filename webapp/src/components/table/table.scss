@@ -3,7 +3,6 @@
 .Table {
     margin-top: 16px;
     margin-left: 0 !important;
-    padding: 0 20px !important;
     overflow: auto;
     position: relative;
     flex: 1;
@@ -91,8 +90,8 @@
         }
 
         &.expanded {
-            .icon-menu-down {
-                transform: rotate(270deg);
+            .icon-menu-right {
+                transform: rotate(90deg);
             }
         }
     }
@@ -112,9 +111,9 @@
         flex-direction: row;
         color: rgb(var(--center-channel-color-rgb));
         border-right: solid 1px rgba(var(--center-channel-color-rgb), 0.08);
+        border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.08);
         border-left: 1px solid transparent;
         border-top: 1px solid transparent;
-        border-bottom: 1px solid transparent;
         box-sizing: border-box;
         padding: 8px;
         height: 44px;
@@ -214,19 +213,23 @@
         display: flex;
         flex-direction: column;
         width: fit-content;
-        padding-left: 12px;
     }
 
     .octo-table-header,
-    .octo-table-row,
     .octo-table-footer {
         display: flex;
         flex-direction: row;
         border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.09);
+        margin-left: 32px;
 
         &.hidden {
             display: none;
         }
+    }
+
+    .octo-table-row {
+        display: flex;
+        flex-direction: row;
     }
 
     .octo-table-header {

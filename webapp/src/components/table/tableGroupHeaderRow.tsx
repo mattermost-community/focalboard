@@ -69,7 +69,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                 <IconButton
                     icon={
                         <CompassIcon
-                            icon='menu-down'
+                            icon='menu-right'
                         />}
                     onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
                     className={`octo-table-cell__expand ${props.readonly ? 'readonly' : ''}`}

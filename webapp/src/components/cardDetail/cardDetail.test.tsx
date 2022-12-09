@@ -108,8 +108,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={card}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -153,6 +156,11 @@ describe('components/cardDetail/CardDetail', () => {
                     'user-id-1': {username: 'username_1'},
                 },
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const component = (
@@ -166,8 +174,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={card}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={true}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -257,8 +268,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -363,8 +377,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -473,8 +490,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[text]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -540,6 +560,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: limitedCard.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const component = (
@@ -553,8 +578,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={limitedCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>

@@ -221,13 +221,13 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             expect(onClose).toBeCalledTimes(1)
         })
         test('return BoardTemplateSelector and click new template', () => {
-            const {container} = render(wrapDNDIntl(
+            render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BoardTemplateSelector onClose={jest.fn()}/>
                 </ReduxProvider>
                 ,
             ), {wrapper: MemoryRouter})
-            const divNewTemplate = container.querySelector('div.new-template')
+            const divNewTemplate = screen.getByText('Create new template').parentElement
             expect(divNewTemplate).not.toBeNull()
             userEvent.click(divNewTemplate!)
             expect(mockedMutator.addEmptyBoardTemplate).toBeCalledTimes(1)

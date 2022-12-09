@@ -20,7 +20,7 @@ const manifestStr = `
   "support_url": "https://github.com/mattermost/focalboard/issues",
   "release_notes_url": "https://github.com/mattermost/focalboard/releases",
   "icon_path": "assets/starter-template-icon.svg",
-  "version": "7.5.0",
+  "version": "7.7.0",
   "min_server_version": "7.2.0",
   "server": {
     "executables": {
@@ -45,7 +45,8 @@ const manifestStr = `
         "type": "bool",
         "help_text": "This allows board editors to share boards that can be accessed by anyone with the link.",
         "placeholder": "",
-        "default": false
+        "default": false,
+        "hosting": ""
       }
     ]
   }

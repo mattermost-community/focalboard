@@ -331,12 +331,8 @@ func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	return builder.RunWith(s.mmDB)
 }
 
-func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
-	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
-		From("Users as u").
-		LeftJoin("Bots b ON ( b.UserID = u.id )").
+func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error) {
+	query := s.baseUserQuery(showEmail, showName).
 		Where(sq.Eq{"u.deleteAt": 0})
 
 	if asGuestID == "" {
@@ -372,12 +368,8 @@ func (s *MattermostAuthLayer) GetUsersByTeam(teamID string, asGuestID string) ([
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, error) {
-	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
-		From("Users as u").
-		LeftJoin("Bots b ON ( b.UserId = u.id )").
+func (s *MattermostAuthLayer) GetUsersList(userIDs []string, showEmail, showName bool) ([]*model.User, error) {
+	query := s.baseUserQuery(showEmail, showName).
 		Where(sq.Eq{"u.id": userIDs})
 
 	rows, err := query.Query()
@@ -398,12 +390,8 @@ func (s *MattermostAuthLayer) GetUsersList(userIDs []string) ([]*model.User, err
 	return users, nil
 }
 
-func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	query := s.getQueryBuilder().
-		Select("u.id", "u.username", "u.email", "u.nickname", "u.firstname", "u.lastname", "u.CreateAt as create_at", "u.UpdateAt as update_at",
-			"u.DeleteAt as delete_at", "b.UserId IS NOT NULL AS is_bot, u.roles = 'system_guest' as is_guest").
-		From("Users as u").
-		LeftJoin("Bots b ON ( b.UserId = u.id )").
+func (s *MattermostAuthLayer) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots, showEmail, showName bool) ([]*model.User, error) {
+	query := s.baseUserQuery(showEmail, showName).
 		Where(sq.Eq{"u.deleteAt": 0}).
 		Where(sq.Or{
 			sq.Like{"u.username": "%" + searchQuery + "%"},
@@ -619,6 +607,7 @@ func boardFields(prefix string) []string {
 		"COALESCE(created_by, '')",
 		"modified_by",
 		"type",
+		"minimum_role",
 		"title",
 		"description",
 		"icon",
@@ -647,6 +636,36 @@ func boardFields(prefix string) []string {
 	return prefixedFields
 }
 
+func (s *MattermostAuthLayer) baseUserQuery(showEmail, showName bool) sq.SelectBuilder {
+	emailField := "''"
+	if showEmail {
+		emailField = "u.email"
+	}
+	firstNameField := "''"
+	lastNameField := "''"
+	if showName {
+		firstNameField = "u.firstname"
+		lastNameField = "u.lastname"
+	}
+
+	return s.getQueryBuilder().
+		Select(
+			"u.id",
+			"u.username",
+			emailField,
+			"u.nickname",
+			firstNameField,
+			lastNameField,
+			"u.CreateAt as create_at",
+			"u.UpdateAt as update_at",
+			"u.DeleteAt as delete_at",
+			"b.UserId IS NOT NULL AS is_bot",
+			"u.roles = 'system_guest' as is_guest",
+		).
+		From("Users as u").
+		LeftJoin("Bots b ON ( b.UserID = u.id )")
+}
+
 // SearchBoardsForUser returns all boards that match with the
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
@@ -654,7 +673,6 @@ func boardFields(prefix string) []string {
 func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder().
 		Select(boardFields("b.")...).
-		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
@@ -720,11 +738,95 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 	}
 	defer s.CloseRows(rows)
 
-	return s.boardsFromRows(rows)
+	// de-duplicate manually since adding `distinct` to the query increased cost by 15X.
+	// the result set for any user should be reasonably small as its based on their channel membership.
+	return s.boardsFromRows(rows, true)
 }
 
-func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
+// searchBoardsForUserInTeam returns all boards that match with the
+// term that are either private and which the user is a member of, or
+// they're open, regardless of the user membership.
+// Search is case-insensitive.
+func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
+	openBoardsQ := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"b.type":        model.BoardTypeOpen,
+		})
+
+	memberBoardsQ := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards AS b").
+		Join(s.tablePrefix + "board_members AS bm on b.id = bm.board_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"bm.user_id":    userID,
+		})
+
+	channelMemberBoardsQ := s.getQueryBuilder().
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards AS b").
+		Join("ChannelMembers AS cm on cm.channelId = b.channel_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"cm.userId":     userID,
+		})
+
+	if term != "" {
+		// break search query into space separated words
+		// and search for all words.
+		// This should later be upgraded to industrial-strength
+		// word tokenizer, that uses much more than space
+		// to break words.
+
+		conditions := sq.And{}
+
+		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		}
+
+		openBoardsQ = openBoardsQ.Where(conditions)
+		memberBoardsQ = memberBoardsQ.Where(conditions)
+		channelMemberBoardsQ = channelMemberBoardsQ.Where(conditions)
+	}
+
+	memberBoardsSQL, memberBoardsArgs, err := memberBoardsQ.ToSql()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR getting memberBoardsSQL`, mlog.Err(err))
+		return nil, err
+	}
+
+	channelMemberBoardsSQL, channelMemberBoardsArgs, err := channelMemberBoardsQ.ToSql()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR getting channelMemberBoardsSQL`, mlog.Err(err))
+		return nil, err
+	}
+
+	unionQ := openBoardsQ.
+		Prefix("(").
+		Suffix(") UNION ("+memberBoardsSQL, memberBoardsArgs...).
+		Suffix(") UNION ("+channelMemberBoardsSQL+")", channelMemberBoardsArgs...)
+
+	rows, err := unionQ.Query()
+	if err != nil {
+		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	// de-duplicate manually since adding `distinct` to the query increased cost by 15X.
+	// the result set for any user should be reasonably small as its based on their channel membership.
+	return s.boardsFromRows(rows, true)
+}
+
+func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows, removeDuplicates bool) ([]*model.Board, error) {
 	boards := []*model.Board{}
+	idMap := make(map[string]struct{})
 
 	for rows.Next() {
 		var board model.Board
@@ -738,6 +840,7 @@ func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, er
 			&board.CreatedBy,
 			&board.ModifiedBy,
 			&board.Type,
+			&board.MinimumRole,
 			&board.Title,
 			&board.Description,
 			&board.Icon,
@@ -753,6 +856,14 @@ func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows) ([]*model.Board, er
 		if err != nil {
 			s.logger.Error("boardsFromRows scan error", mlog.Err(err))
 			return nil, err
+		}
+
+		if removeDuplicates {
+			if _, ok := idMap[board.ID]; ok {
+				continue
+			} else {
+				idMap[board.ID] = struct{}{}
+			}
 		}
 
 		err = json.Unmarshal(propertiesBytes, &board.Properties)
@@ -966,31 +1077,26 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 }
 
 func (s *MattermostAuthLayer) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	if includePublicBoards {
+		boards, err := s.SearchBoardsForUserInTeam(teamID, "", userID)
+		if err != nil {
+			return nil, err
+		}
+		return boards, nil
+	}
+
+	// retrieve only direct memberships for user
+	// this is usually done for guests.
 	members, err := s.GetMembersForUser(userID)
 	if err != nil {
 		return nil, err
 	}
-
 	boardIDs := []string{}
 	for _, m := range members {
 		boardIDs = append(boardIDs, m.BoardID)
 	}
 
-	if includePublicBoards {
-		var boards []*model.Board
-		boards, err = s.SearchBoardsForUserInTeam(teamID, "", userID)
-		if err != nil {
-			return nil, err
-		}
-		for _, b := range boards {
-			boardIDs = append(boardIDs, b.ID)
-		}
-	}
-
 	boards, err := s.Store.GetBoardsInTeamByIds(boardIDs, teamID)
-	// ToDo: check if the query is being used appropriately from the
-	//       interface, as we're getting ID sets on request that
-	//       return partial results that seem to be valid
 	if model.IsErrNotFound(err) {
 		if boards == nil {
 			boards = []*model.Board{}

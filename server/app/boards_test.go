@@ -27,6 +27,7 @@ func TestAddMemberToBoard(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     "board_id_1",
 			TeamID: "team_id_1",
 		}, nil)
 
@@ -41,6 +42,17 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "default_category_id",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", "board_id_1").Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -83,6 +95,7 @@ func TestAddMemberToBoard(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     "board_id_1",
 			TeamID: "team_id_1",
 		}, nil)
 
@@ -103,6 +116,17 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "default_category_id",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", "board_id_1").Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -159,7 +183,7 @@ func TestPatchBoard(t *testing.T) {
 		}, nil)
 
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -197,7 +221,7 @@ func TestPatchBoard(t *testing.T) {
 		}, nil)
 
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -234,7 +258,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -272,7 +296,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -310,7 +334,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -348,7 +372,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -409,7 +433,7 @@ func TestBoardCategory(t *testing.T) {
 				ID:   "default_category_id",
 				Name: "Boards",
 			}, nil)
-			th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
+			th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
 			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_1").Return(nil)
 			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_2").Return(nil)
 			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_3").Return(nil)

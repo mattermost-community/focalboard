@@ -56,15 +56,15 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
-	GetUsersList(userIDs []string) ([]*model.User, error)
+	GetUsersList(userIDs []string, showEmail, showName bool) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) (*model.User, error)
 	UpdateUser(user *model.User) (*model.User, error)
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
-	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error)
+	GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error)
 	PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error)
 	GetUserPreferences(userID string) (mmModel.Preferences, error)
 
@@ -153,6 +153,7 @@ type Store interface {
 	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
 
 	DBType() string
+	DBVersion() string
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)
@@ -165,6 +166,10 @@ type Store interface {
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+
+	// For unit testing only
+	DeleteBoardRecord(boardID, modifiedBy string) error
+	DeleteBlockRecord(blockID, modifiedBy string) error
 }
 
 type NotSupportedError struct {

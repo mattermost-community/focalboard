@@ -311,7 +311,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -371,7 +371,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -571,7 +571,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -1562,7 +1562,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -1622,7 +1622,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -1822,7 +1822,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2089,7 +2089,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2127,7 +2127,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2153,7 +2153,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </button>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
@@ -2194,7 +2194,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </div>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
@@ -2252,7 +2252,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2619,7 +2619,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2679,7 +2679,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2879,7 +2879,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3267,7 +3267,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3327,7 +3327,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3527,7 +3527,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3915,7 +3915,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3975,7 +3975,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4175,7 +4175,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4563,7 +4563,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4623,7 +4623,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4823,7 +4823,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5211,7 +5211,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5271,7 +5271,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5471,7 +5471,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5859,7 +5859,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5919,7 +5919,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6119,7 +6119,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6507,7 +6507,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6567,7 +6567,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6767,7 +6767,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7155,7 +7155,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7215,7 +7215,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7415,7 +7415,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7803,7 +7803,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7863,7 +7863,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -8063,7 +8063,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -9764,7 +9764,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -9824,7 +9824,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -9956,7 +9956,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span

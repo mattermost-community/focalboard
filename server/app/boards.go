@@ -300,7 +300,7 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil
 	})
 
-	if board.TeamID != "0" {
+	if !board.IsTemplate {
 		if err := a.addBoardsToDefaultCategory(userID, newBoard.TeamID, []*model.Board{newBoard}); err != nil {
 			return nil, err
 		}
@@ -517,6 +517,12 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 	newMember, err := a.store.SaveMember(member)
 	if err != nil {
 		return nil, err
+	}
+
+	if !board.IsTemplate {
+		if err = a.addBoardsToDefaultCategory(member.UserID, board.TeamID, []*model.Board{board}); err != nil {
+			return nil, err
+		}
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {

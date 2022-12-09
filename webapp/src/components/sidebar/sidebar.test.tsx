@@ -12,17 +12,27 @@ import userEvent from '@testing-library/user-event'
 
 import thunk from 'redux-thunk'
 
+import {mocked} from 'jest-mock'
+
 import {mockMatchMedia, wrapIntl} from '../../testUtils'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
+import octoClient from '../../../../webapp/src/octoClient'
 
 import Sidebar from './sidebar'
+
+jest.mock('../../../../webapp/src/octoClient')
+const mockedOctoClient = mocked(octoClient, true)
 
 beforeAll(() => {
     mockMatchMedia({matches: true})
 })
 
 describe('components/sidebarSidebar', () => {
+    beforeEach(() => {
+        jest.clearAllMocks()
+    })
+
     const mockStore = configureStore([thunk])
 
     const board = TestBlockFactory.createBoard()
@@ -31,6 +41,10 @@ describe('components/sidebarSidebar', () => {
     const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
     categoryAttribute1.name = 'Category 1'
     categoryAttribute1.boardIDs = [board.id]
+
+    const defaultCategory = TestBlockFactory.createCategoryBoards()
+    defaultCategory.id = 'default_category'
+    defaultCategory.name = 'Boards'
 
     test('sidebar hidden', () => {
         const store = mockStore({
@@ -272,6 +286,125 @@ describe('components/sidebarSidebar', () => {
 
         const sidebarCollapsedCategory = container.querySelectorAll('.octo-sidebar-item.category.collapsed')
         expect(sidebarCollapsedCategory.length).toBe(1)
+    })
+
+    test('should assign default category if current board doesnt have a category', () => {
+        const board2 = TestBlockFactory.createBoard()
+        board2.id = 'board2'
+
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board2.id,
+                boards: {
+                    [board2.id]: board2,
+                },
+                myBoardMemberships: {
+                    [board2.id]: board2,
+                },
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                    defaultCategory,
+                ],
+            },
+        })
+
+        const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
+
+        mockedOctoClient.moveBoardToCategory.mockResolvedValueOnce({} as Response)
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        expect(mockedOctoClient.moveBoardToCategory).toBeCalledWith('team-id', 'board2', 'default_category', '')
+    })
+
+    test('shouldnt do any category assignment is board is in a category', () => {
+        const board2 = TestBlockFactory.createBoard()
+        board2.id = 'board2'
+
+        const categoryAttribute2 = TestBlockFactory.createCategoryBoards()
+        categoryAttribute2.name = 'Category 2'
+        categoryAttribute2.boardIDs = [board2.id]
+
+        const store = mockStore({
+            teams: {
+                current: {id: 'team-id'},
+            },
+            boards: {
+                current: board2.id,
+                boards: {
+                    [board2.id]: board2,
+                },
+                myBoardMemberships: {
+                    [board2.id]: board2,
+                },
+            },
+            cards: {
+                cards: {
+                    card_id_1: {title: 'Card'},
+                },
+                current: 'card_id_1',
+            },
+            views: {
+                views: [],
+            },
+            users: {
+                me: {
+                    id: 'user_id_1',
+                    props: {},
+                },
+            },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                    categoryAttribute2,
+                    defaultCategory,
+                ],
+            },
+        })
+
+        const history = createMemoryHistory()
+        const onBoardTemplateSelectorOpen = jest.fn()
+
+        const component = wrapIntl(
+            <ReduxProvider store={store}>
+                <Router history={history}>
+                    <Sidebar onBoardTemplateSelectorOpen={onBoardTemplateSelectorOpen}/>
+                </Router>
+            </ReduxProvider>,
+        )
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+
+        expect(mockedOctoClient.moveBoardToCategory).toBeCalledTimes(0)
     })
 
     // TODO: Fix this later

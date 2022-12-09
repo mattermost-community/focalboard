@@ -200,7 +200,7 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
 
-        const productID = process.env.TARGET_IS_PRODUCT ? 'com.mattermost.boards' : manifest.id
+        const productID = process.env.TARGET_IS_PRODUCT ? 'boards' : manifest.id
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
@@ -261,6 +261,14 @@ export default class Plugin {
                 store.dispatch(setTeam(currentTeamID))
                 octoClient.teamId = currentTeamID
                 store.dispatch(initialLoad())
+            }
+
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                let theme = mmStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
+                if (!theme) {
+                    theme = mmStore.getState().entities.preferences.myPreferences['theme--'] || mmStore.getState().entities.preferences.myPreferences.theme
+                }
+                setMattermostTheme(theme)
             }
         })
 
