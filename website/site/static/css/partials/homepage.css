@@ -3,6 +3,10 @@
     font-size: 1.8rem;
 }
 
+.homepage header {
+    position: fixed;
+}
+
 .homepage #wrapper {
     overflow: hidden;
 }
@@ -16,7 +20,7 @@
     overflow: hidden;
     background-color: var(--denim05);
     color: white;
-    padding: 64px 0;
+    padding: 160px 0 64px;
 }
 
 .homepage__intro .container-fluid {

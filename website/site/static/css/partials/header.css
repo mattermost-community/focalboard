@@ -4,6 +4,7 @@ header {
     font-size: 15px;
     height: 100px;
     line-height: 100px;
+    width: 100%;
     position: relative;
     z-index: 5;
 }
