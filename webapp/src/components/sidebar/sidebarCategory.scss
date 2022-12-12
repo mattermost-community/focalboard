@@ -1,6 +1,5 @@
 .SidebarCategory {
     margin-top: 12px;
-    width: calc(100% - 4px);
 
     &:first-child {
         margin-top: 0;
@@ -113,10 +112,6 @@
                 .MenuWrapper {
                     display: block;
                 }
-
-                .badge.newCategoryBadge {
-                    display: none;
-                }
             }
         }
 
@@ -185,47 +180,4 @@
         background: rgba(var(--sidebar-text-rgb), 0.08);
     }
 
-    .badge.newCategoryBadge {
-
-        background-color: rgba(var(--sidebar-text-rgb));
-        color: rgb(var(--sidebar-bg-rgb));
-        display: flex;
-        width: 32px;
-        height: 16px;
-        align-items: center;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.01em;
-        line-height: 16px;
-        text-transform: uppercase;
-
-        &:hover {
-            display: none;
-        }
-    }
-
-    .newCategoryDragArea {
-        display: flex;
-        align-items: center;
-        padding: 10px;
-        border: 1px dashed rgba(var(--sidebar-text-rgb), 0.3);
-        margin: 0 16px;
-        border-radius: 4px;
-        opacity: 1;
-        color: rgba(var(--sidebar-text-rgb), 0.72);
-        font-size: 12px;
-        line-height: 16px;
-        gap: 12px;
-
-        svg {
-            height: 18px;
-        }
-    }
-    
-    &.draggingOver {
-        border: 1px solid rgba(var(--sidebar-text-rgb), 1);
-        border-radius: 4px;
-    }
 }

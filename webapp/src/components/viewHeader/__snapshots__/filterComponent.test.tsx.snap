@@ -1013,7 +1013,7 @@ exports[`components/viewHeader/filterComponent return filterComponent and filter
             type="button"
           >
             <span>
-              (unknown)
+              includes
             </span>
           </button>
         </div>

@@ -49,37 +49,16 @@ type Category struct {
 	// required: true
 	Collapsed bool `json:"collapsed"`
 
-	// Inter-category sort order per user
-	// required: true
-	SortOrder int `json:"sortOrder"`
-
-	// The sorting method applied on this category
-	// required: true
-	Sorting string `json:"sorting"`
-
 	// Category's type
 	// required: true
 	Type string `json:"type"`
 }
 
 func (c *Category) Hydrate() {
-	if c.ID == "" {
-		c.ID = utils.NewID(utils.IDTypeNone)
-	}
-
-	if c.CreateAt == 0 {
-		c.CreateAt = utils.GetMillis()
-	}
-
-	if c.UpdateAt == 0 {
-		c.UpdateAt = c.CreateAt
-	}
-
-	if c.SortOrder < 0 {
-		c.SortOrder = 0
-	}
-
-	if strings.TrimSpace(c.Type) == "" {
+	c.ID = utils.NewID(utils.IDTypeNone)
+	c.CreateAt = utils.GetMillis()
+	c.UpdateAt = c.CreateAt
+	if c.Type == "" {
 		c.Type = CategoryTypeCustom
 	}
 }
