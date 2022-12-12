@@ -38,7 +38,7 @@ DROP TABLE {{.prefix}}blocks_tmp;
 {{end}}
 
 {{- /* most block searches use board_id or a combination of board and parent ids */ -}}
-{{ createIndexIfNeeded .schemaName "blocks" "board_id, parent_id" }}
+{{ createIndexIfNeeded "blocks" "board_id, parent_id" }}
 
 {{- /* get subscriptions is used once per board page load */ -}}
-{{ createIndexIfNeeded .schemaName "subscriptions" "subscriber_id" }}
+{{ createIndexIfNeeded "subscriptions" "subscriber_id" }}

@@ -145,11 +145,6 @@ func (s *SQLStore) Migrate() error {
 		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
-	schemaName, err := s.GetSchemaName()
-	if err != nil {
-		return fmt.Errorf("error getting schema name: %w", err)
-	}
-
 	params := map[string]interface{}{
 		"prefix":     s.tablePrefix,
 		"postgres":   s.dbType == model.PostgresDBType,
@@ -157,7 +152,6 @@ func (s *SQLStore) Migrate() error {
 		"mysql":      s.dbType == model.MysqlDBType,
 		"plugin":     s.isPlugin,
 		"singleUser": s.isSingleUser,
-		"schemaName": schemaName,
 	}
 
 	migrationAssets := &embedded.AssetSource{
@@ -311,9 +305,9 @@ func (s *SQLStore) GetTemplateHelperFuncs() template.FuncMap {
 	return funcs
 }
 
-func (s *SQLStore) genAddColumnIfNeeded(schemaName, tableName, columnName, datatype, constraint string) (string, error) {
+func (s *SQLStore) genAddColumnIfNeeded(tableName, columnName, datatype, constraint string) (string, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
-	normTableName := normalizeTablename(schemaName, tableName)
+	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	switch s.dbType {
 	case model.SqliteDBType:
@@ -321,7 +315,7 @@ func (s *SQLStore) genAddColumnIfNeeded(schemaName, tableName, columnName, datat
 		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
 	case model.MysqlDBType:
 		vars := map[string]string{
-			"schema":          schemaName,
+			"schema":          s.schemaName,
 			"table_name":      tableName,
 			"norm_table_name": normTableName,
 			"column_name":     columnName,
@@ -350,16 +344,16 @@ func (s *SQLStore) genAddColumnIfNeeded(schemaName, tableName, columnName, datat
 	}
 }
 
-func (s *SQLStore) genDropColumnIfNeeded(schemaName, tableName, columnName string) (string, error) {
+func (s *SQLStore) genDropColumnIfNeeded(tableName, columnName string) (string, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
-	normTableName := normalizeTablename(schemaName, tableName)
+	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	switch s.dbType {
 	case model.SqliteDBType:
 		return fmt.Sprintf("\n-- Sqlite3 cannot drop columns for versions less than 3.35.0; drop column '%s' in table '%s' skipped\n", columnName, tableName), nil
 	case model.MysqlDBType:
 		vars := map[string]string{
-			"schema":          schemaName,
+			"schema":          s.schemaName,
 			"table_name":      tableName,
 			"norm_table_name": normTableName,
 			"column_name":     columnName,
@@ -386,10 +380,10 @@ func (s *SQLStore) genDropColumnIfNeeded(schemaName, tableName, columnName strin
 	}
 }
 
-func (s *SQLStore) genCreateIndexIfNeeded(schemaName, tableName, columns string) (string, error) {
+func (s *SQLStore) genCreateIndexIfNeeded(tableName, columns string) (string, error) {
 	indexName := getIndexName(tableName, columns)
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
-	normTableName := normalizeTablename(schemaName, tableName)
+	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	switch s.dbType {
 	case model.SqliteDBType:
@@ -397,7 +391,7 @@ func (s *SQLStore) genCreateIndexIfNeeded(schemaName, tableName, columns string)
 		return fmt.Sprintf("\nCREATE INDEX %s ON %s (%s);\n", indexName, normTableName, columns), nil
 	case model.MysqlDBType:
 		vars := map[string]string{
-			"schema":          schemaName,
+			"schema":          s.schemaName,
 			"table_name":      tableName,
 			"norm_table_name": normTableName,
 			"index_name":      indexName,
@@ -425,14 +419,14 @@ func (s *SQLStore) genCreateIndexIfNeeded(schemaName, tableName, columns string)
 	}
 }
 
-func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName string) (string, error) {
+func (s *SQLStore) genRenameTableIfNeeded(oldTableName, newTableName string) (string, error) {
 	oldTableName = addPrefixIfNeeded(oldTableName, s.tablePrefix)
 	newTableName = addPrefixIfNeeded(newTableName, s.tablePrefix)
 
-	normOldTableName := normalizeTablename(schemaName, oldTableName)
+	normOldTableName := normalizeTablename(s.schemaName, oldTableName)
 
 	vars := map[string]string{
-		"schema":              schemaName,
+		"schema":              s.schemaName,
 		"table_name":          newTableName,
 		"norm_old_table_name": normOldTableName,
 		"new_table_name":      newTableName,
@@ -474,12 +468,12 @@ func (s *SQLStore) genRenameTableIfNeeded(schemaName, oldTableName, newTableName
 	}
 }
 
-func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName, newColumnName, dataType string) (string, error) {
+func (s *SQLStore) genRenameColumnIfNeeded(tableName, oldColumnName, newColumnName, dataType string) (string, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
-	normTableName := normalizeTablename(schemaName, tableName)
+	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	vars := map[string]string{
-		"schema":          schemaName,
+		"schema":          s.schemaName,
 		"table_name":      tableName,
 		"norm_table_name": normTableName,
 		"old_column_name": oldColumnName,
@@ -525,7 +519,7 @@ func (s *SQLStore) genRenameColumnIfNeeded(schemaName, tableName, oldColumnName,
 	}
 }
 
-func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
+func (s *SQLStore) doesTableExist(tableName string) (bool, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
 	var query sq.SelectBuilder
 
@@ -536,7 +530,7 @@ func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
 			From("INFORMATION_SCHEMA.TABLES").
 			Where(sq.Eq{
 				"table_name":   tableName,
-				"table_schema": schemaName,
+				"table_schema": s.schemaName,
 			})
 	case model.SqliteDBType:
 		query = s.getQueryBuilder(s.db).
@@ -568,7 +562,7 @@ func (s *SQLStore) doesTableExist(schemaName, tableName string) (bool, error) {
 	return exists, nil
 }
 
-func (s *SQLStore) doesColumnExist(schemaName, tableName, columnName string) (bool, error) {
+func (s *SQLStore) doesColumnExist(tableName, columnName string) (bool, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
 	var query sq.SelectBuilder
 
@@ -579,7 +573,7 @@ func (s *SQLStore) doesColumnExist(schemaName, tableName, columnName string) (bo
 			From("INFORMATION_SCHEMA.COLUMNS").
 			Where(sq.Eq{
 				"table_name":   tableName,
-				"table_schema": schemaName,
+				"table_schema": s.schemaName,
 				"column_name":  columnName,
 			})
 	case model.SqliteDBType:

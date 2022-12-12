@@ -1,14 +1,14 @@
 {{- /* Only perform this migration if the blocks_history table does not already exist */ -}}
 
-{{- /* doesTableExist schemaName tableName */ -}}
-{{if doesTableExist .schemaName "blocks_history" }}
+{{- /* doesTableExist tableName */ -}}
+{{if doesTableExist "blocks_history" }}
 
     SELECT 1;
 
 {{else}}
 
-{{- /* renameTableIfNeeded schemaName oldTableName newTableName */ -}}
-{{ renameTableIfNeeded .schemaName "blocks" "blocks_history" }}
+{{- /* renameTableIfNeeded oldTableName newTableName */ -}}
+{{ renameTableIfNeeded "blocks" "blocks_history" }}
 
 CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
     id VARCHAR(36),

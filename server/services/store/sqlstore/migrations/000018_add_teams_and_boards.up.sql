@@ -1,17 +1,17 @@
-{{- /* renameTableIfNeeded schemaName oldTableName newTableName string */ -}}
-{{ renameTableIfNeeded .schemaName "workspaces" "teams" }}
+{{- /* renameTableIfNeeded oldTableName newTableName string */ -}}
+{{ renameTableIfNeeded "workspaces" "teams" }}
 
-{{- /* renameColumnIfNeeded schemaName tableName oldColumnName newColumnName dataType */ -}}
-{{ renameColumnIfNeeded .schemaName "blocks" "workspace_id" "channel_id" "varchar(36)" }}
-{{ renameColumnIfNeeded .schemaName "blocks_history" "workspace_id" "channel_id" "varchar(36)" }}
+{{- /* renameColumnIfNeeded tableName oldColumnName newColumnName dataType */ -}}
+{{ renameColumnIfNeeded "blocks" "workspace_id" "channel_id" "varchar(36)" }}
+{{ renameColumnIfNeeded "blocks_history" "workspace_id" "channel_id" "varchar(36)" }}
 
-{{- /* dropColumnIfNeeded schemaName tableName columnName */ -}}
-{{ dropColumnIfNeeded .schemaName "blocks" "workspace_id" }}
-{{ dropColumnIfNeeded .schemaName "blocks_history" "workspace_id" }}
+{{- /* dropColumnIfNeeded tableName columnName */ -}}
+{{ dropColumnIfNeeded "blocks" "workspace_id" }}
+{{ dropColumnIfNeeded "blocks_history" "workspace_id" }}
 
-{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint */ -}}
-{{ addColumnIfNeeded .schemaName "blocks" "board_id" "varchar(36)" ""}}
-{{ addColumnIfNeeded .schemaName "blocks_history" "board_id" "varchar(36)" ""}}
+{{- /* addColumnIfNeeded tableName columnName datatype constraint */ -}}
+{{ addColumnIfNeeded "blocks" "board_id" "varchar(36)" ""}}
+{{ addColumnIfNeeded "blocks_history" "board_id" "varchar(36)" ""}}
 
 {{- /* cleanup incorrect data format in column calculations */ -}}
 {{- /* then move from 'board' type to 'view' type*/ -}}
@@ -93,9 +93,9 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
     delete_at BIGINT
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
-{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
-{{ createIndexIfNeeded .schemaName "boards" "team_id, is_template" }}
-{{ createIndexIfNeeded .schemaName "boards" "channel_id" }}
+{{- /* createIndexIfNeeded tableName columns */ -}}
+{{ createIndexIfNeeded "boards" "team_id, is_template" }}
+{{ createIndexIfNeeded "boards" "channel_id" }}
 
 CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
                  '{}', B.fields->'cardProperties', B.create_at,
-                 B.update_at, B.delete_at {{if doesColumnExist .schemaName "boards" "minimum_role"}} ,'' {{end}}
+                 B.update_at, B.delete_at {{if doesColumnExist "boards" "minimum_role"}} ,'' {{end}}
           FROM {{.prefix}}blocks AS B
           INNER JOIN channels AS C ON C.Id=B.channel_id
           WHERE B.type='board'
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
                  '{}', B.fields->'cardProperties', B.create_at,
-                 B.update_at, B.delete_at {{if doesColumnExist .schemaName "boards_history" "minimum_role"}} ,'' {{end}}
+                 B.update_at, B.delete_at {{if doesColumnExist "boards_history" "minimum_role"}} ,'' {{end}}
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN channels AS C ON C.Id=B.channel_id
           WHERE B.type='board'
@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
                  '{}', JSON_EXTRACT(B.fields, '$.cardProperties'), B.create_at,
-                 B.update_at, B.delete_at {{if doesColumnExist .schemaName "boards" "minimum_role"}} ,'' {{end}}
+                 B.update_at, B.delete_at {{if doesColumnExist "boards" "minimum_role"}} ,'' {{end}}
           FROM {{.prefix}}blocks AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
           WHERE B.type='board'
@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
                  '{}', JSON_EXTRACT(B.fields, '$.cardProperties'), B.create_at,
-                 B.update_at, B.delete_at {{if doesColumnExist .schemaName "boards_history" "minimum_role"}} ,'' {{end}}
+                 B.update_at, B.delete_at {{if doesColumnExist "boards_history" "minimum_role"}} ,'' {{end}}
           FROM {{.prefix}}blocks_history AS B
           INNER JOIN Channels AS C ON C.Id=B.channel_id
           WHERE B.type='board'
@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
                  '{}', fields->'cardProperties', create_at,
-                 update_at, delete_at {{if doesColumnExist .schemaName "boards" "minimum_role"}} ,'editor' {{end}}
+                 update_at, delete_at {{if doesColumnExist "boards" "minimum_role"}} ,'editor' {{end}}
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
   );
@@ -221,7 +221,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE((fields->'isTemplate')::text::boolean, false),
                  COALESCE((B.fields->'templateVer')::text::int, 0),
                  '{}', fields->'cardProperties', create_at,
-                 update_at, delete_at {{if doesColumnExist .schemaName "boards_history" "minimum_role"}} ,'editor' {{end}}
+                 update_at, delete_at {{if doesColumnExist "boards_history" "minimum_role"}} ,'editor' {{end}}
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
   );
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
                  '{}', JSON_EXTRACT(fields, '$.cardProperties'), create_at,
-                 update_at, delete_at {{if doesColumnExist .schemaName "boards" "minimum_role"}} ,'editor' {{end}}
+                 update_at, delete_at {{if doesColumnExist "boards" "minimum_role"}} ,'editor' {{end}}
           FROM {{.prefix}}blocks AS B
           WHERE type='board'
   );
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  COALESCE(JSON_EXTRACT(B.fields, '$.isTemplate'), 'false') = 'true',
                  COALESCE(JSON_EXTRACT(B.fields, '$.templateVer'), 0),
                  '{}', JSON_EXTRACT(fields, '$.cardProperties'), create_at,
-                 update_at, delete_at {{if doesColumnExist .schemaName "boards_history" "minimum_role"}} ,'editor' {{end}}
+                 update_at, delete_at {{if doesColumnExist "boards_history" "minimum_role"}} ,'editor' {{end}}
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
   );
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
                  COALESCE(json_extract(fields, '$.templateVer'), 0),
                  '{}', json_extract(fields, '$.cardProperties'), create_at,
-                 update_at, delete_at {{if doesColumnExist .schemaName "boards" "minimum_role"}} ,'editor' {{end}}
+                 update_at, delete_at {{if doesColumnExist "boards" "minimum_role"}} ,'editor' {{end}}
           FROM {{.prefix}}blocks
           WHERE type='board'
   ;
@@ -275,7 +275,7 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
                  json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
                  COALESCE(json_extract(fields, '$.templateVer'), 0),
                  '{}', json_extract(fields, '$.cardProperties'), create_at,
-                 update_at, delete_at {{if doesColumnExist .schemaName "boards_history" "minimum_role"}} ,'editor' {{end}}
+                 update_at, delete_at {{if doesColumnExist "boards_history" "minimum_role"}} ,'editor' {{end}}
           FROM {{.prefix}}blocks_history
           WHERE type='board'
   ;
@@ -292,7 +292,7 @@ DELETE FROM {{.prefix}}blocks WHERE type = 'board';
 DELETE FROM {{.prefix}}blocks_history WHERE type = 'board';
 
 {{- /* add board_members (only if boards_members doesn't already exist) */ -}}
-{{if not (doesTableExist .schemaName "board_members") }}
+{{if not (doesTableExist "board_members") }}
 CREATE TABLE IF NOT EXISTS {{.prefix}}board_members (
     board_id VARCHAR(36) NOT NULL,
     user_id VARCHAR(36) NOT NULL,
@@ -331,5 +331,5 @@ INSERT INTO {{.prefix}}board_members
 {{end}}
 {{end}}
 
-{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
-{{ createIndexIfNeeded .schemaName "board_members" "user_id" }}
+{{- /* createIndexIfNeeded tableName columns */ -}}
+{{ createIndexIfNeeded "board_members" "user_id" }}

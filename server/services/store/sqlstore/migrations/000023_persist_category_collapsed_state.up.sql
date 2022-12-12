@@ -1,2 +1,2 @@
-{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint */ -}}
-{{ addColumnIfNeeded .schemaName "categories" "collapsed" "boolean" "default false"}}
+{{- /* addColumnIfNeeded tableName columnName datatype constraint */ -}}
+{{ addColumnIfNeeded "categories" "collapsed" "boolean" "default false"}}

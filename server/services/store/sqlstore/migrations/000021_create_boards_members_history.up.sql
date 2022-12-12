@@ -1,5 +1,5 @@
 {{- /* Only perform this migration if the board_members_history table does not already exist */ -}}
-{{if doesTableExist .schemaName "board_members_history" }}
+{{if doesTableExist "board_members_history" }}
 
 SELECT 1;
 
@@ -19,6 +19,6 @@ INSERT INTO {{.prefix}}board_members_history (board_id, user_id, action) SELECT 
 
 {{end}}
 
-{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
-{{ createIndexIfNeeded .schemaName "board_members_history" "user_id" }}
-{{ createIndexIfNeeded .schemaName "board_members_history" "board_id, user_id" }}
+{{- /* createIndexIfNeeded tableName columns */ -}}
+{{ createIndexIfNeeded "board_members_history" "user_id" }}
+{{ createIndexIfNeeded "board_members_history" "board_id, user_id" }}

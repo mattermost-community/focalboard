@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}category_boards (
     PRIMARY KEY (id)
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
-{{- /* createIndexIfNeeded schemaName tableName columns */ -}}
-{{ createIndexIfNeeded .schemaName "category_boards" "category_id" }}
+{{- /* createIndexIfNeeded tableName columns */ -}}
+{{ createIndexIfNeeded "category_boards" "category_id" }}

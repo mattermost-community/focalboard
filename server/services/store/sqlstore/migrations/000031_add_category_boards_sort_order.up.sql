@@ -1,3 +1,3 @@
-{{- /* addColumnIfNeeded schemaName tableName columnName datatype constraint */ -}}
-{{ addColumnIfNeeded .schemaName "category_boards" "sort_order" "BIGINT" "DEFAULT 0"}}
+{{- /* addColumnIfNeeded tableName columnName datatype constraint */ -}}
+{{ addColumnIfNeeded "category_boards" "sort_order" "BIGINT" "DEFAULT 0"}}
 

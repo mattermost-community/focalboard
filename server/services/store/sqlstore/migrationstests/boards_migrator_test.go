@@ -122,11 +122,6 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
-	schemaName, err := bm.store.GetSchemaName()
-	if err != nil {
-		return nil, nil, fmt.Errorf("error getting schema name: %w", err)
-	}
-
 	params := map[string]interface{}{
 		"prefix":     tablePrefix,
 		"postgres":   bm.driverName == model.PostgresDBType,
@@ -134,7 +129,6 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 		"mysql":      bm.driverName == model.MysqlDBType,
 		"plugin":     bm.withMattermostMigrations,
 		"singleUser": false,
-		"schemaName": schemaName,
 	}
 
 	migrationAssets := &embedded.AssetSource{
