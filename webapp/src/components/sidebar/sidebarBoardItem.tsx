@@ -216,9 +216,9 @@ const SidebarBoardItem = (props: Props) => {
             // fine if there are no more visible boards to switch to.
             let visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
             if (isPages) {
-                visibleBoards = visibleBoards.filter((b) => b.properties?.isFolder === 'true')
+                visibleBoards = visibleBoards.filter((b) => b.isPagesFolder === true)
             } else {
-                visibleBoards = visibleBoards.filter((b) => b.properties?.isFolder !== 'true')
+                visibleBoards = visibleBoards.filter((b) => b.isPagesFolder !== true)
             }
 
             if (visibleBoards.length === 0) {

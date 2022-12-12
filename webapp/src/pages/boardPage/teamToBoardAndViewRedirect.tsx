@@ -42,11 +42,11 @@ const TeamToBoardAndViewRedirect = (): null => {
                 for (const category of categories) {
                     for (const categoryBoardID of category.boardIDs) {
                         if (boards[categoryBoardID]) {
-                            if (isPages && boards[categoryBoardID].properties.isFolder === 'true') {
+                            if (isPages && boards[categoryBoardID].isPagesFolder === true) {
                                 // pick the first category board that exists
                                 goToBoardID = categoryBoardID
                                 break
-                            } else if (!isPages && boards[categoryBoardID].properties.isFolder !== 'true') {
+                            } else if (!isPages && boards[categoryBoardID].isPagesFolder !== true) {
                                 goToBoardID = categoryBoardID
                                 break
                             }

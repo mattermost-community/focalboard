@@ -238,14 +238,14 @@ export const getAllMySortedBoards = createSelector(
 export const getMySortedBoards = createSelector(
     getAllMySortedBoards,
     (boards) => {
-        return boards.filter((b) => !b.properties?.isFolder)
+        return boards.filter((b) => !b.isPagesFolder)
     },
 )
 
 export const getMySortedPageFolders = createSelector(
     getAllMySortedBoards,
     (boards) => {
-        return boards.filter((b) => b.properties?.isFolder)
+        return boards.filter((b) => b.isPagesFolder)
     },
 )
 

@@ -69,6 +69,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         type: 'board',
         minimumRole: MemberRole.Editor,
         isTemplate: true,
+        isPagesFolder: false,
         templateVersion: 0,
         icon: '🚴🏻‍♂️',
         cardProperties: [groupProperty],
@@ -91,6 +92,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         showDescription: false,
         cardProperties: [groupProperty],
         isTemplate: true,
+        isPagesFolder: false,
         templateVersion: 2,
         properties: {},
     }

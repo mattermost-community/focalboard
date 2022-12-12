@@ -1181,7 +1181,7 @@ class Mutator {
     ): Promise<BoardsAndBlocks> {
         const board = createBoard()
         board.teamId = teamId
-        board.properties.isFolder = 'true'
+        board.isPagesFolder = true
         board.cardProperties = []
 
         const folderPage: any = createPage()
