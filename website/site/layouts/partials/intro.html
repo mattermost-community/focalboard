@@ -38,10 +38,10 @@
         </div>
         <div class="section-half__visual" data-aos="fade-left">
             <div class="view-tabs">
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 1 }" @click='boardView = 1'>Board</button>
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 2 }" @click='boardView = 2'>List</button>
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 3 }" @click='boardView = 3'>Calendar</button>
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 4 }" @click='boardView = 4'>Gallery</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 1 }" @click='boardView = 1, clearInterval(viewsInterval)'>Board</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 2 }" @click='boardView = 2, clearInterval(viewsInterval)'>List</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 3 }" @click='boardView = 3, clearInterval(viewsInterval)'>Calendar</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 4 }" @click='boardView = 4, clearInterval(viewsInterval)'>Gallery</button>
             </div>
             <div class='view-content'>
                 <img x-cloak x-transition.duration.300 x-show='boardView == 1' src="img/views/boardview.png" alt="Board View">
@@ -172,12 +172,12 @@
             <img src="img/3d-icons/firstbump.svg" alt="Fistbump Icon">
             <h2>What’s next for Boards</h2>
             <p>
-                Here are some things that we have on our roadmap and plan to release soon!
+                Here are some things that we have on our <a href="https://community.mattermost.com/plugins/focalboard/team/qghzt68dq7bopgqamcnziq69ao/shared/b4ctmm917q3rzdfi451qtuxjzcw/vsyng4ghehbgsmp7gxfxk81bxxa?r=k995q65fg14cop75s8wkzxr76cc" target="_blank">roadmap</a> and plan to release soon!
             </p>
             <div class="view-tabs">
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 1 }" @click='roadmapItem = 1'>Standard Properties</button>
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 2 }" @click='roadmapItem = 2'>Card Dependencies</button>
-                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 3 }" @click='roadmapItem = 3'>Analytics and Reporting</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 1 }" @click='roadmapItem = 1, clearInterval(roadmapInterval)'>Standard Properties</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 2 }" @click='roadmapItem = 2, clearInterval(roadmapInterval)'>Card Dependencies</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 3 }" @click='roadmapItem = 3, clearInterval(roadmapInterval)'>Analytics and Reporting</button>
             </div>
         </div>
         <div class="section-half__visual" data-aos="fade-right">
