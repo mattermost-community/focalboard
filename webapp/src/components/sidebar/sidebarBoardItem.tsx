@@ -242,7 +242,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const title = board.title || (isPages ? intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'}) : intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'}))
 
-    const isPageSelected = isPages && currentPage
+    const isPageSelected = isPages && currentPage?.parentId !== ''
     const isBoardHighlighted = props.isActive && !isPageSelected
 
     return (

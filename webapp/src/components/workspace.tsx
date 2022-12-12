@@ -88,6 +88,12 @@ function CenterContent(props: Props) {
     }, [match, history])
 
     useEffect(() => {
+        if (activePage && !match.params.viewId) {
+            showPage(activePage.id)
+        }
+    }, [match.params.viewId, activePage, showPage])
+
+    useEffect(() => {
         const onConfigChangeHandler = (_: WSClient, config: ClientConfig) => {
             dispatch(setClientConfig(config))
         }
