@@ -24,11 +24,11 @@ import {PropertyTypes} from '../../widgets/propertyMenu'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
-import PageTitle from '../pageTitle'
 
 import {useAppSelector} from '../../store/hooks'
 
 import Breadcrumbs from './breadcrumbs'
+import PageTitle from './pageTitle'
 import PageHeader from './pageHeader'
 import PageBlocks from './pageBlocks'
 import PageProperties from './pageProperties'
