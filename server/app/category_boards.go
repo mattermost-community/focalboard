@@ -11,6 +11,7 @@ const defaultCategoryBoards = "Boards"
 
 var errCategoryBoardsLengthMismatch = errors.New("cannot update category boards order, passed list of categories boards different size than in database")
 var errBoardNotFoundInCategory = errors.New("specified board ID not found in specified category ID")
+var errBoardMembershipNotFound = errors.New("board membership not found for user's board")
 
 func (a *App) GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error) {
 	categoryBoards, err := a.store.GetUserCategoryBoards(userID, teamID)
@@ -67,9 +68,14 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	// once the category is created, we need to move all boards which do not
 	// belong to any category, into this category.
 
-	userBoards, err := a.GetBoardsForUserAndTeam(userID, teamID, false)
+	boardMembers, err := a.GetMembersForUser(userID)
 	if err != nil {
-		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's board memberships: %w", err)
+	}
+
+	boardMemberByBoardID := map[string]*model.BoardMember{}
+	for _, boardMember := range boardMembers {
+		boardMemberByBoardID[boardMember.BoardID] = boardMember
 	}
 
 	createdCategoryBoards := &model.CategoryBoards{
@@ -77,7 +83,27 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		BoardIDs: []string{},
 	}
 
-	for _, board := range userBoards {
+	// get user's current team's baords
+	userTeamBoards, err := a.GetBoardsForUserAndTeam(userID, teamID, false)
+	if err != nil {
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
+	}
+
+	for _, board := range userTeamBoards {
+		boardMembership, ok := boardMemberByBoardID[board.ID]
+		if !ok {
+			return nil, fmt.Errorf("createBoardsCategory: %w", errBoardMembershipNotFound)
+		}
+
+		// boards with implicit access (aka synthetic membership),
+		// should show up in LHS only when openign them explicitelly.
+		// So we don't process any synthetic membership boards
+		// and only add boards with explicit access to, to the the LHS,
+		// for example, if a user explicitelly added another user to a board.
+		if boardMembership.Synthetic {
+			continue
+		}
+
 		belongsToCategory := false
 
 		for _, categoryBoard := range existingCategoryBoards {

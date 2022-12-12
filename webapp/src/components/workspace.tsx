@@ -199,8 +199,10 @@ const Workspace = (props: Props) => {
         setBoardTemplateSelectorOpen(false)
     }, [])
     const openBoardTemplateSelector = useCallback(() => {
-        setBoardTemplateSelectorOpen(true)
-    }, [])
+        if (board) {
+            setBoardTemplateSelectorOpen(true)
+        }
+    }, [board])
     useEffect(() => {
         setBoardTemplateSelectorOpen(false)
     }, [board, viewId])
