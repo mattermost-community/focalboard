@@ -32,7 +32,6 @@ const SidebarPageItem = (props: Props) => {
     return (
         <>
             <div
-                key={page.id}
                 className={`SidebarBoardItem sidebar-page-item ${page.id === currentPageId ? 'active' : ''} depth-${depth}`}
                 onClick={() => props.showPage(page.id, board.id)}
             >
@@ -97,6 +96,7 @@ const SidebarPageItem = (props: Props) => {
             </div>
             {subpages.map((page: Page) => (
                 <SidebarPageItem
+                    key={page.id}
                     depth={props.depth+1}
                     page={page}
                     pages={pages}

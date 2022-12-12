@@ -143,15 +143,19 @@ function CenterContent(props: Props) {
         }
 
         if (isPages) {
-            return (
-                <CenterPanelPages
-                    clientConfig={clientConfig}
-                    readonly={props.readonly}
-                    board={board}
-                    activePage={activePage}
-                    showPage={showPage}
-                />
-            )
+            if (activePage) {
+                return (
+                    <CenterPanelPages
+                        clientConfig={clientConfig}
+                        readonly={props.readonly}
+                        board={board}
+                        activePage={activePage}
+                        showPage={showPage}
+                    />
+                )
+            } else {
+                return null
+            }
         }
         return (
             <CenterPanel

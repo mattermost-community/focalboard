@@ -62,26 +62,16 @@ const CenterPanelPages = (props: Props) => {
     }, [])
 
 
-    const activePage = props.activePage || props.board
-
-    const owner = folderUsersById[activePage.createdBy]
+    const owner = folderUsersById[props.activePage.createdBy]
 
     let profileImg
     if (owner?.id) {
         profileImg = imageURLForUser(owner.id)
     }
 
-    let pseudoCard: any
-    if (props.activePage) {
-        pseudoCard = {
-            ...props.activePage,
-            fields: {...props.activePage.fields, properties: props.activePage.fields.properties || {}} as any,
-        }
-    } else {
-        pseudoCard = {
-            ...props.board,
-            fields: {...props.board.properties, properties: props.board.properties.properties || {}} as any,
-        }
+    const pseudoCard = {
+        ...props.activePage,
+        fields: {...props.activePage.fields, properties: props.activePage.fields.properties || {}} as any,
     }
 
     return (
@@ -91,7 +81,7 @@ const CenterPanelPages = (props: Props) => {
             <PageHeader
                 showPage={props.showPage}
                 readonly={props.readonly}
-                activePage={activePage}
+                activePage={props.activePage}
                 enablePublicSharedBoards={props.clientConfig?.enablePublicSharedBoards || false}
                 boardId={props.board.id}
             />
@@ -100,7 +90,7 @@ const CenterPanelPages = (props: Props) => {
                 <div className='doc-header'>
                     <Breadcrumbs
                         board={props.board}
-                        activePage={activePage}
+                        activePage={props.activePage}
                         pages={currentBoardPages}
                         showPage={props.showPage}
                     />
@@ -139,7 +129,7 @@ const CenterPanelPages = (props: Props) => {
                         <FormattedMessage
                             id='Page.author'
                             defaultMessage='Last updated: {date}'
-                            values={{date: Utils.relativeDisplayDateTime(new Date(activePage.updateAt), intl)}}
+                            values={{date: Utils.relativeDisplayDateTime(new Date(props.activePage.updateAt), intl)}}
                         />
                     </div>
                     <div className='add-property'>
@@ -184,7 +174,7 @@ const CenterPanelPages = (props: Props) => {
 
                 <PageBlocks
                     readonly={props.readonly}
-                    activePage={activePage}
+                    activePage={props.activePage}
                     canEditBoardCards={canEditBoardCards}
                     board={props.board}
                 />

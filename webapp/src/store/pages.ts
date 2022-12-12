@@ -2,13 +2,12 @@
 // See LICENSE.txt for license information.
 
 import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit'
-import isEqual from 'lodash/isEqual'
 
 import {Page, createPage} from '../blocks/page'
 import {Utils} from '../utils'
 
 import {initialReadOnlyLoad, loadBoardData} from './initialLoad'
-import {getCurrentBoard} from './boards'
+import {getCurrentBoard, getCurrentBoardId} from './boards'
 
 import {RootState} from './index'
 
@@ -103,7 +102,13 @@ export const getCurrentPageId = (state: RootState): string => state.pages.curren
 export const getCurrentPage = createSelector(
     getPages,
     getCurrentPageId,
-    (pages, pageId) => pages[pageId],
+    getCurrentBoardPages,
+    (pages, pageId, boardPages) => pages[pageId] || boardPages.find((p) => p.parentId === ''),
+)
+
+export const getCurrentFolderPage = createSelector(
+    getCurrentBoardPages,
+    (boardPages) => boardPages.find((p) => p.parentId === ''),
 )
 
 export const getCurrentPageGroupBy = createSelector(

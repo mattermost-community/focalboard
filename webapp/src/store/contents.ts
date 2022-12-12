@@ -174,40 +174,35 @@ export function getCardContents(cardId: string): (state: RootState) => Array<Con
 export const getCurrentPageContents = createSelector(
     (state: RootState) => state.contents?.contentsByPage,
     getCurrentPage,
-    getCurrentBoard,
-    (contentsByPage, currentPage, currentBoard): Array<ContentBlock|ContentBlock[]> => {
-        const page = currentPage || currentBoard
+    (contentsByPage, currentPage): Array<ContentBlock|ContentBlock[]> => {
+        const page = currentPage
         if (!page) {
             return []
         }
         let contents = contentsByPage[page.id]
         let contentOrder = currentPage?.fields?.contentOrder
-        if (!currentPage) {
-            contentOrder = currentBoard?.properties?.contentOrder as string[]
-        }
-        const result: Array<ContentBlock|ContentBlock[]> = []
-        if (!contents) {
+        if (!contents || !contentOrder) {
             return []
         }
-        if (contentOrder) {
-            for (const contentId of contentOrder) {
-                if (typeof contentId === 'string') {
-                    const content = contents.find((c) => c.id === contentId)
-                    if (content) {
-                        result.push(content)
-                    }
-                } else if (typeof contentId === 'object' && contentId) {
-                    const subResult: ContentBlock[] = []
-                    for (const subContentId of contentId) {
-                        if (typeof subContentId === 'string') {
-                            const subContent = contents.find((c) => c.id === subContentId)
-                            if (subContent) {
-                                subResult.push(subContent)
-                            }
+
+        const result: Array<ContentBlock|ContentBlock[]> = []
+        for (const contentId of contentOrder) {
+            if (typeof contentId === 'string') {
+                const content = contents.find((c) => c.id === contentId)
+                if (content) {
+                    result.push(content)
+                }
+            } else if (typeof contentId === 'object' && contentId) {
+                const subResult: ContentBlock[] = []
+                for (const subContentId of contentId) {
+                    if (typeof subContentId === 'string') {
+                        const subContent = contents.find((c) => c.id === subContentId)
+                        if (subContent) {
+                            subResult.push(subContent)
                         }
                     }
-                    result.push(subResult)
                 }
+                result.push(subResult)
             }
         }
         return result

@@ -1184,11 +1184,10 @@ class Mutator {
         board.properties.isFolder = 'true'
         board.cardProperties = []
 
-        const noopBlock: any = createBlock()
-        noopBlock.parentId = board.id
-        noopBlock.boardId = board.id
-        noopBlock.title = ''
-        noopBlock.type = 'noop'
+        const folderPage: any = createPage()
+        folderPage.parentId = ''
+        folderPage.boardId = board.id
+        folderPage.title = ''
 
         // TODO: We need at least a block here, I'm adding an empty block. This
         // is a hack so we should removed this before merge in main and find
@@ -1196,7 +1195,7 @@ class Mutator {
         // is a page board)
 
         return mutator.createBoardsAndBlocks(
-            {boards: [board], blocks: [noopBlock]},
+            {boards: [board], blocks: [folderPage]},
             'add page',
             async (bab: BoardsAndBlocks) => {
                 const newFolder = bab.boards[0]

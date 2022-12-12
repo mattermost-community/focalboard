@@ -16,7 +16,6 @@ import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
-import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './sidebarBoardItem.scss'
 import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
@@ -32,11 +31,10 @@ import GalleryIcon from '../../widgets/icons/gallery'
 import CalendarIcon from '../../widgets/icons/calendar'
 import DuplicateIcon from '../../widgets/icons/duplicate'
 import isPagesContext from '../../isPages'
-import {getCurrentBoardPages, getCurrentPageId} from '../../store/pages'
+import {getCurrentBoardPages, getCurrentPage, getCurrentFolderPage} from '../../store/pages'
 
 import {getCurrentTeam} from '../../store/teams'
 import {Permission} from '../../constants'
-import PageMenu from '../pageMenu'
 import {Utils} from '../../utils'
 import SidebarPageItem from './sidebarPageItem'
 
@@ -83,7 +81,8 @@ const SidebarBoardItem = (props: Props) => {
     const boardViews = useAppSelector(getCurrentBoardViews)
     const pages = useAppSelector(getCurrentBoardPages)
     const currentViewId = useAppSelector(getCurrentViewId)
-    const currentPageId = useAppSelector(getCurrentPageId)
+    const currentPage = useAppSelector(getCurrentPage)
+    const currentFolderPage = useAppSelector(getCurrentFolderPage)
     const teamID = team?.id || ''
     const me = useAppSelector(getMe)
     const myConfig = useAppSelector(getMyConfig)
@@ -155,7 +154,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const addPage = useCallback(async () => {
         const page = createPage()
-        page.parentId = board.id
+        page.parentId = currentPage?.id
         page.boardId = board.id
         await mutator.insertBlock(
             board.id,
@@ -165,10 +164,10 @@ const SidebarBoardItem = (props: Props) => {
                 props.showPage(newBlock.id, board.id)
             },
             async () => {
-                props.showPage(currentPageId, board.id)
+                props.showPage(currentPage?.id, board.id)
             },
         )
-    }, [board.id, currentPageId])
+    }, [board.id, currentPage?.id])
 
 
     const showTemplatePicker = () => {
@@ -243,7 +242,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const title = board.title || (isPages ? intl.formatMessage({id: 'Sidebar.untitled-page', defaultMessage: '(Untitled Page)'}) : intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'}))
 
-    const isPageSelected = isPages && currentPageId
+    const isPageSelected = isPages && currentPage
     const isBoardHighlighted = props.isActive && !isPageSelected
 
     return (
@@ -373,12 +372,12 @@ const SidebarBoardItem = (props: Props) => {
                         </div>
                     ))}
 
-                    {props.isActive && pages.filter((p) => p.parentId === board.id).map((page: Page) => (
+                    {props.isActive && pages.filter((p) => p.parentId === currentFolderPage?.id).map((page: Page) => (
                         <SidebarPageItem
                             page={page}
                             pages={pages}
                             board={board}
-                            currentPageId={currentPageId}
+                            currentPageId={currentPage?.id}
                             showPage={props.showPage}
                             showBoard={props.showBoard}
                             depth={0}

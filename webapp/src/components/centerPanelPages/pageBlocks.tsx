@@ -22,7 +22,7 @@ import './pageBlocks.scss'
 async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
     const block = createBlock()
     block.parentId = page.id
-    block.boardId = page.boardId || page.id
+    block.boardId = page.boardId
     block.title = title
     block.type = contentType
     block.fields = {...block.fields, ...fields}
@@ -30,10 +30,7 @@ async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fiel
     const description = intl.formatMessage({id: 'CardDetail.addCardText', defaultMessage: 'add page text'})
 
     const afterRedo = async (newBlock: Block) => {
-        let contentOrder = page.fields?.contentOrder.slice()
-        if (!page.boardId) {
-            contentOrder = page.properties?.contentOrder?.slice() || []
-        }
+        const contentOrder = page.fields?.contentOrder.slice()
         if (afterBlockId) {
             const idx = contentOrder.indexOf(afterBlockId)
             if (idx === -1) {
@@ -44,21 +41,13 @@ async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fiel
         } else {
             contentOrder.push(newBlock.id)
         }
-        if (page.boardId) {
-            await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
-        } else {
-            await octoClient.patchBoard(page.id, {updatedProperties: {contentOrder}})
-        }
+        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
         dispatch(updatePages([{...page, fields: {...page.fields, contentOrder}}]))
     }
 
     const beforeUndo = async () => {
         const contentOrder = page.fields.contentOrder.slice()
-        if (page.boardId) {
-            await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
-        } else {
-            await octoClient.patchBoard(page.id, {updatedProperties: {contentOrder}})
-        }
+        await octoClient.patchBlock(page.boardId, page.id, {updatedFields: {contentOrder}})
     }
 
     const newBlock = await mutator.insertBlock(block.boardId, block, description, afterRedo, beforeUndo)
@@ -67,7 +56,7 @@ async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fiel
 }
 
 type Props = {
-    activePage?: Page
+    activePage: Page
     board: Board
     readonly: boolean
     canEditBoardCards: boolean
@@ -86,13 +75,13 @@ const PageBlocks = (props: Props) => {
         if (block.contentType === 'checkbox') {
             newBlock = await addBlockNewEditor(props.activePage, intl, block.value.value, {value: block.value.checked}, block.contentType, afterBlock?.id, dispatch)
         } else if (block.contentType === 'image' || block.contentType === 'attachment' || block.contentType === 'video') {
-            const newFileId = await octoClient.uploadFile(props.activePage?.boardId || props.board.id, block.value.file)
+            const newFileId = await octoClient.uploadFile(props.activePage.boardId, block.value.file)
             newBlock = await addBlockNewEditor(props.activePage, intl, '', {fileId: newFileId, filename: block.value.filename}, block.contentType, afterBlock?.id, dispatch)
         } else {
             newBlock = await addBlockNewEditor(props.activePage, intl, block.value, {}, block.contentType, afterBlock?.id, dispatch)
         }
         return {...block, id: newBlock.id}
-    }, [])
+    }, [props.activePage])
 
     const onBlockModified = useCallback(async (block: any): Promise<BlockData<any>|null> => {
         const originalContentBlock = currentPageContents.flatMap((b) => b).find((b) => b.id === block.id)
@@ -117,7 +106,7 @@ const PageBlocks = (props: Props) => {
         }
         mutator.updateBlock(props.board.id, newBlock, originalContentBlock, intl.formatMessage({id: 'ContentBlock.editCardText', defaultMessage: 'edit card content'}))
         return block
-    }, [])
+    }, [props.board.id, currentPageContents])
 
     const pageBlocks = useMemo(() => {
         return currentPageContents.flatMap((value: Block | Block[]): BlockData<any> => {
@@ -161,10 +150,7 @@ const PageBlocks = (props: Props) => {
 
     const onBlockMoved = useCallback(async (block: BlockData, beforeBlock: BlockData|null, afterBlock: BlockData|null): Promise<void> => {
         if (block.id) {
-            let contentOrder: Array<string|string[]> = props.board.properties.contentOrder as string[]
-            if (props.activePage) {
-                contentOrder = props.activePage.fields.contentOrder
-            }
+            const contentOrder = props.activePage.fields.contentOrder
             const idx = contentOrder.indexOf(block.id)
             let sourceBlockId: string
             let sourceWhere: 'after'|'before'
@@ -187,7 +173,7 @@ const PageBlocks = (props: Props) => {
                 await mutator.moveContentBlock(block.id, beforeBlock.id, 'before', sourceBlockId, sourceWhere, intl.formatMessage({id: 'ContentBlock.moveBlock', defaultMessage: 'move card content'}))
             }
         }
-    }, [])
+    }, [props.activePage])
 
     return (
         <div className='PageBlocks'>

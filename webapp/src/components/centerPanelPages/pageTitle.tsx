@@ -18,31 +18,38 @@ import PageIconSelector from './pageIconSelector'
 import './pageTitle.scss'
 
 type Props = {
-    page?: Page
+    page: Page
     board: Board
     readonly: boolean
 }
 
 const PageTitle = (props: Props) => {
-    const page = props.page || props.board
+    const {page, board} = props
+    if (!page) {
+        return null
+    }
+    let initialTitle = page.title
+    if (page.parentId === '') {
+        initialTitle = board.title
+    }
 
-    const [title, setTitle] = useState(page.title)
+    const [title, setTitle] = useState(initialTitle)
+
     const onEditTitleSave = useCallback(() => {
-        if (props.page) {
-            mutator.changeBlockTitle(props.page.boardId, page.id, page.title, title)
-        } else {
-            mutator.changeBoardTitle(page.id, page.title, title)
+        if (page.parentId === '') {
+            mutator.changeBoardTitle(board.id, board.title, title)
         }
-    }, [props.page?.boardId, page.id, page.title, title])
-    const onEditTitleCancel = useCallback(() => setTitle(page.title), [page.title])
+        mutator.changeBlockTitle(board.id, page.id, page.title, title)
+    }, [board.id, board.title, page.id, page.title, title])
+
+    const onEditTitleCancel = useCallback(() => setTitle(initialTitle), [initialTitle])
     const onAddRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
-        if (props.page) {
-            mutator.changeBlockIcon(props.page.boardId, page.id, props.page.fields?.icon, newIcon)
-        } else {
+        if (page.parentId === '') {
             mutator.changeBoardIcon(props.board.id, props.board.icon, newIcon)
         }
-    }, [props.page?.boardId, page.id, props.page?.fields?.icon, props.board.icon])
+        mutator.changeBlockIcon(page.boardId, page.id, page.fields?.icon, newIcon)
+    }, [page?.boardId, page.id, page?.fields?.icon, props.board.icon])
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
     const isPages = useContext(isPagesContext)
 
@@ -54,7 +61,10 @@ const PageTitle = (props: Props) => {
 
     const intl = useIntl()
 
-    const hasIcon = Boolean((props.page && props.page.fields?.icon) || (!props.page && props.board.icon))
+    let hasIcon = Boolean(page.fields.icon)
+    if (page.parentId === '') {
+        hasIcon = Boolean(board.icon)
+    }
 
     return (
         <div className='PageTitle'>

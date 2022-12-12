@@ -23,6 +23,9 @@ const Breadcrumbs = (props: Props) => {
         }
         let currentPage = props.activePage
         while (true) {
+            if (currentPage.parentId === '') {
+                break
+            }
             breadcrumbs.unshift(currentPage)
             currentPage = pagesById[currentPage.parentId]
             if (!currentPage) {
@@ -40,7 +43,7 @@ const Breadcrumbs = (props: Props) => {
                 {props.board.title ? props.board.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}
             </span>
             {breadcrumbs.map((b) => (
-                <>
+                <React.Fragment key={b.id}>
                     <span>{' / '}</span>
                     <span
                         className='page-breadcrumb'
@@ -48,7 +51,7 @@ const Breadcrumbs = (props: Props) => {
                     >
                         {b.title ? b.title : intl.formatMessage({id: 'Breadcrumbs.untitled-page', defaultMessage: 'Untitled page'})}
                     </span>
-                </>
+                </React.Fragment>
             ))}
         </div>
     )
