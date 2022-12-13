@@ -689,8 +689,8 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchFiel
 				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
 				query = query.Where(where, "$."+term)
 			default:
-				where := "b.properties LIKE ?"
-				query = query.Where(where, "%\""+term+"\"%")
+				where := "json_extract(b.properties, '$.?') IS NOT NULL"
+				query = query.Where(where, term)
 			}
 		} else { // model.BoardSearchFieldTitle
 			// break search query into space separated words
