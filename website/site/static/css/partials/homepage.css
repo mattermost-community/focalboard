@@ -307,3 +307,41 @@
         top: initial;
     }
 }
+
+.homepage__threecol {
+    gap: 24px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.homepage__threecol .threecol__image {
+    margin-bottom: 2.9rem;
+}
+
+.homepage__threecol h4 {
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+@media (max-width: 1280px) {
+    .homepage__threecol {
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 768px) {
+    .homepage__threecol .threecol__single {
+        flex: 0 0 calc(33.33% - 3rem);
+        max-width: 33.33%;
+    }
+    .homepage__threecol p {
+        max-width: 27.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .homepage__threecol .threecol__single {
+        flex: 0 0 270px;
+    }
+}
