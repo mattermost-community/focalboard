@@ -721,7 +721,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model
 			case model.PostgresDBType:
 				where := "b.properties->? is not null"
 				query = query.Where(where, term)
-			case model.MysqlDBType:
+			case model.MysqlDBType, model.SqliteDBType:
 				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
 				query = query.Where(where, "$."+term)
 			default:

@@ -685,12 +685,12 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchFiel
 			case model.PostgresDBType:
 				where := "b.properties->? is not null"
 				query = query.Where(where, term)
-			case model.MysqlDBType:
+			case model.MysqlDBType, model.SqliteDBType:
 				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
 				query = query.Where(where, "$."+term)
 			default:
-				where := "json_extract(b.properties, '$.?') IS NOT NULL"
-				query = query.Where(where, term)
+				where := "b.properties LIKE ?"
+				query = query.Where(where, "%\""+term+"\"%")
 			}
 		} else { // model.BoardSearchFieldTitle
 			// break search query into space separated words
@@ -705,9 +705,6 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchFiel
 			query = query.Where(conditions)
 		}
 	}
-
-	sql := sq.DebugSqlizer(query)
-	s.logger.Debug("!!!!! searchBoardsForUser", mlog.String("sql", sql))
 
 	rows, err := query.Query()
 	if err != nil {
