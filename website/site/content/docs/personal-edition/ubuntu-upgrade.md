@@ -1,7 +1,7 @@
 ---
 title: "Upgrading Personal Server"
 date: "2021-04-13T12:02:23-08:00"
-subsection: "docs"
+subsection: Personal Edition
 weight: 3
 ---
 
