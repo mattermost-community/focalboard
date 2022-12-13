@@ -791,7 +791,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		var rErr error
 		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
 		if rErr != nil {
-			return nil, fmt.Errorf("SearchBoardsForUser unable to replace unionSQL placeholders: %w", err)
+			return nil, fmt.Errorf("SearchBoardsForUser unable to replace unionSQL placeholders: %w", rErr)
 		}
 	}
 
@@ -889,7 +889,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 		var rErr error
 		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
 		if rErr != nil {
-			return nil, fmt.Errorf("SearchBoardsForUserInTeam unable to replace unionSQL placeholders: %w", err)
+			return nil, fmt.Errorf("SearchBoardsForUserInTeam unable to replace unionSQL placeholders: %w", rErr)
 		}
 	}
 
