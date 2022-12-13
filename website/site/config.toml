@@ -81,7 +81,7 @@ pygmentsStyle = "manni"
 
     # postpended links
     [[menu.postpend]]
-      url = "/download/personal-edition"
+      url = "/download"
       name = "Download"
       weight = 6
 
