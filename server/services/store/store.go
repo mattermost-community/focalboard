@@ -117,13 +117,9 @@ type Store interface {
 	DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID string) error
 
 	GetCategory(id string) (*model.Category, error)
-
-	GetUserCategories(userID, teamID string) ([]model.Category, error)
-	// @withTransaction
 	CreateCategory(category model.Category) error
 	UpdateCategory(category model.Category) error
 	DeleteCategory(categoryID, userID, teamID string) error
-	ReorderCategories(userID, teamID string, newCategoryOrder []string) ([]string, error)
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
 
@@ -131,8 +127,7 @@ type Store interface {
 	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
-	AddUpdateCategoryBoard(userID string, boardCategoryMapping map[string]string) error
-	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
+	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error

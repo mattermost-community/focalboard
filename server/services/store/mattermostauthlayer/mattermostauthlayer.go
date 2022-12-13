@@ -671,28 +671,108 @@ func (s *MattermostAuthLayer) baseUserQuery(showEmail, showName bool) sq.SelectB
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
 func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	query := s.getQueryBuilder().
-		Select(boardFields("b.")...).
-		From(s.tablePrefix + "boards as b").
-		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		LeftJoin("TeamMembers as tm on tm.teamid=b.team_id").
-		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Eq{"tm.userID": userID}).
-		Where(sq.Eq{"tm.deleteAt": 0})
+	// as we're joining three queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder().PlaceholderFormat(sq.Question)
+
+	var boardMembersWhere sq.Or
+	var channelMembersWhere sq.Or
 
 	if includePublicBoards {
-		query = query.Where(sq.Or{
+		boardMembersWhere = sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.Eq{"bm.user_id": userID},
+		}
+		channelMembersWhere = sq.Or{
+			sq.Eq{"b.type": model.BoardTypeOpen},
 			sq.Eq{"cm.userId": userID},
-		})
+		}
 	} else {
-		query = query.Where(sq.Or{
+		boardMembersWhere = sq.Or{
 			sq.Eq{"bm.user_id": userID},
+		}
+		channelMembersWhere = sq.Or{
 			sq.Eq{"cm.userId": userID},
-		})
+		}
 	}
+
+	boardMembersQ := builder.
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Join(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+		}).
+		Where(boardMembersWhere)
+
+	teamMembersQ := builder.
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Join("TeamMembers as tm on tm.teamid=b.team_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"tm.userID":     userID,
+			"tm.deleteAt":   0,
+		})
+
+	channelMembersQ := builder.
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards as b").
+		Join("ChannelMembers as cm on cm.channelId=b.channel_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+		}).
+		Where(channelMembersWhere)
+
+	if term != "" {
+		if searchField == model.BoardSearchFieldPropertyName {
+			var where, whereTerm string
+			switch s.dbType {
+			case model.PostgresDBType:
+				where = "b.properties->? is not null"
+				whereTerm = term
+			case model.MysqlDBType, model.SqliteDBType:
+				where = "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
+				whereTerm = "$." + term
+			default:
+				where = "b.properties LIKE ?"
+				whereTerm = "%\"" + term + "\"%"
+			}
+			boardMembersQ = boardMembersQ.Where(where, whereTerm)
+			teamMembersQ = teamMembersQ.Where(where, whereTerm)
+			channelMembersQ = channelMembersQ.Where(where, whereTerm)
+		} else { // model.BoardSearchFieldTitle
+			// break search query into space separated words
+			// and search for all words.
+			// This should later be upgraded to industrial-strength
+			// word tokenizer, that uses much more than space
+			// to break words.
+			conditions := sq.And{}
+			for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+				conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+			}
+
+			boardMembersQ = boardMembersQ.Where(conditions)
+			teamMembersQ = teamMembersQ.Where(conditions)
+			channelMembersQ = channelMembersQ.Where(conditions)
+		}
+	}
+
+	teamMembersSQL, teamMembersArgs, err := teamMembersQ.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("SearchBoardsForUser error getting teamMembersSQL: %w", err)
+	}
+
+	channelMembersSQL, channelMembersArgs, err := channelMembersQ.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("SearchBoardsForUser error getting channelMembersSQL: %w", err)
+	}
+
+	unionQ := boardMembersQ.
+		Prefix("(").
+		Suffix(") UNION ("+teamMembersSQL, teamMembersArgs...).
+		Suffix(") UNION ("+channelMembersSQL+")", channelMembersArgs...)
 
 	user, err := s.GetUserByID(userID)
 	if err != nil {
@@ -712,46 +792,33 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model
 			boardIDs = append(boardIDs, m.BoardID)
 		}
 		// Only explicit memberships for guests
-		query = query.Where(sq.Eq{"b.id": boardIDs})
+		unionQ = unionQ.Where(sq.Eq{"b.id": boardIDs})
 	}
 
-	if term != "" {
-		if searchField == model.BoardSearchFieldPropertyName {
-			switch s.dbType {
-			case model.PostgresDBType:
-				where := "b.properties->? is not null"
-				query = query.Where(where, term)
-			case model.MysqlDBType, model.SqliteDBType:
-				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
-				query = query.Where(where, "$."+term)
-			default:
-				where := "b.properties LIKE ?"
-				query = query.Where(where, "%\""+term+"\"%")
-			}
-		} else { // model.BoardSearchFieldTitle
-			// break search query into space separated words
-			// and search for all words.
-			// This should later be upgraded to industrial-strength
-			// word tokenizer, that uses much more than space
-			// to break words.
-			conditions := sq.And{}
-			for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-				conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
-			}
-			query = query.Where(conditions)
+	unionSQL, unionArgs, err := unionQ.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("SearchBoardsForUser error getting unionSQL: %w", err)
+	}
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
+		if rErr != nil {
+			return nil, fmt.Errorf("SearchBoardsForUser unable to replace unionSQL placeholders: %w", rErr)
 		}
 	}
 
-	rows, err := query.Query()
+	rows, err := s.mmDB.Query(unionSQL, unionArgs...)
 	if err != nil {
 		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
 
-	// de-duplicate manually since adding `distinct` to the query increased cost by 15X.
-	// the result set for any user should be reasonably small as its based on their channel membership.
-	return s.boardsFromRows(rows, true)
+	return s.boardsFromRows(rows, false)
 }
 
 // searchBoardsForUserInTeam returns all boards that match with the
@@ -759,17 +826,38 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
 func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
-	query := s.getQueryBuilder().
+	// as we're joining three queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder().PlaceholderFormat(sq.Question)
+
+	openBoardsQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
-		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		LeftJoin("ChannelMembers as cm on cm.channelId=b.channel_id").
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Or{
-			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.Eq{"bm.user_id": userID},
-			sq.Eq{"cm.userId": userID},
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"b.type":        model.BoardTypeOpen,
+		})
+
+	memberBoardsQ := builder.
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards AS b").
+		Join(s.tablePrefix + "board_members AS bm on b.id = bm.board_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"bm.user_id":    userID,
+		})
+
+	channelMemberBoardsQ := builder.
+		Select(boardFields("b.")...).
+		From(s.tablePrefix + "boards AS b").
+		Join("ChannelMembers AS cm on cm.channelId = b.channel_id").
+		Where(sq.Eq{
+			"b.is_template": false,
+			"b.team_id":     teamID,
+			"cm.userId":     userID,
 		})
 
 	if term != "" {
@@ -785,19 +873,50 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
 		}
 
-		query = query.Where(conditions)
+		openBoardsQ = openBoardsQ.Where(conditions)
+		memberBoardsQ = memberBoardsQ.Where(conditions)
+		channelMemberBoardsQ = channelMemberBoardsQ.Where(conditions)
 	}
 
-	rows, err := query.Query()
+	memberBoardsSQL, memberBoardsArgs, err := memberBoardsQ.ToSql()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
+		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting memberBoardsSQL: %w", err)
+	}
+
+	channelMemberBoardsSQL, channelMemberBoardsArgs, err := channelMemberBoardsQ.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting channelMemberBoardsSQL: %w", err)
+	}
+
+	unionQ := openBoardsQ.
+		Prefix("(").
+		Suffix(") UNION ("+memberBoardsSQL, memberBoardsArgs...).
+		Suffix(") UNION ("+channelMemberBoardsSQL+")", channelMemberBoardsArgs...)
+
+	unionSQL, unionArgs, err := unionQ.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting unionSQL: %w", err)
+	}
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
+		if rErr != nil {
+			return nil, fmt.Errorf("SearchBoardsForUserInTeam unable to replace unionSQL placeholders: %w", rErr)
+		}
+	}
+
+	rows, err := s.mmDB.Query(unionSQL, unionArgs...)
+	if err != nil {
+		s.logger.Error(`searchBoardsForUserInTeam ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
 
-	// de-duplicate manually since adding `distinct` to the query increased cost by 15X.
-	// the result set for any user should be reasonably small as its based on their channel membership.
-	return s.boardsFromRows(rows, true)
+	return s.boardsFromRows(rows, false)
 }
 
 func (s *MattermostAuthLayer) boardsFromRows(rows *sql.Rows, removeDuplicates bool) ([]*model.Board, error) {
