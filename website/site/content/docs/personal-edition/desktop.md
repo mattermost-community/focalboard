@@ -1,7 +1,7 @@
 ---
 title: "Personal Desktop"
 date: "2020-12-15T12:02:23-04:00"
-subsection: Personal Edition
+subsection: "docs"
 weight: 1
 ---
 

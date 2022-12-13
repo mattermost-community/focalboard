@@ -309,7 +309,7 @@
 }
 
 .homepage__threecol {
-    margin-top: 100px;
+    margin-top: 80px;
     gap: 24px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);

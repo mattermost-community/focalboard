@@ -31,8 +31,8 @@ pygmentsStyle = "manni"
     enable = false
 
   [[params.sidebar.item]]
-    name = "download"
-    displayName = "Download"
+    name = "docs"
+    displayName = "Docs"
     draft = false
 
   [[params.sidebar.item]]
@@ -106,7 +106,7 @@ pygmentsStyle = "manni"
   # Available icons: http://simplelineicons.com/
   [params.intro]
   [[params.intro.item]]
-    title = "Docs"
+    title = "Download"
     description = "Download Focalboard here."
     url = "docs/personal-edition"
     button = "Download Now"
