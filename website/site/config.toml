@@ -106,9 +106,9 @@ pygmentsStyle = "manni"
   # Available icons: http://simplelineicons.com/
   [params.intro]
   [[params.intro.item]]
-    title = "Download"
+    title = "Docs"
     description = "Download Focalboard here."
-    url = "download/personal-edition"
+    url = "docs/personal-edition"
     button = "Download Now"
     icon = "/img/download-icon.svg"
     draft = false
