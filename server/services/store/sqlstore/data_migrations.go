@@ -689,7 +689,7 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 			continue
 		}
 
-		s.logger.Debug(
+		s.logger.Warn(
 			"found collation/charset mismatch, fixing table",
 			mlog.String("tableName", name),
 			mlog.String("tableCollation", tableCollation),
