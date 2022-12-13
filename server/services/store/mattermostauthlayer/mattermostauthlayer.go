@@ -788,9 +788,9 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 	// question mark placeholder with the numbered dollar one, now
 	// that the full query is built
 	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
-		var err error
-		unionSQL, err = sq.Dollar.ReplacePlaceholders(unionSQL)
-		if err != nil {
+		var rErr error
+		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
+		if rErr != nil {
 			return nil, fmt.Errorf("SearchBoardsForUser unable to replace unionSQL placeholders: %w", err)
 		}
 	}
@@ -886,9 +886,9 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 	// question mark placeholder with the numbered dollar one, now
 	// that the full query is built
 	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
-		var err error
-		unionSQL, err = sq.Dollar.ReplacePlaceholders(unionSQL)
-		if err != nil {
+		var rErr error
+		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
+		if rErr != nil {
 			return nil, fmt.Errorf("SearchBoardsForUserInTeam unable to replace unionSQL placeholders: %w", err)
 		}
 	}
