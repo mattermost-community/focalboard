@@ -64,25 +64,25 @@ pygmentsStyle = "manni"
       name = "GitHub"
       weight = 2
 
-    # postpended links
     [[menu.postpend]]
-      url = "/download/personal-edition"
-      name = "Download"
+      url = "https://docs.mattermost.com/guides/boards.html"
+      name = "Help Docs"
       weight = 3
-
-    [[menu.postpend]]
-      url = "/guide/user"
-      name = "User Guide"
-      weight = 4
 
     [[menu.postpend]]
       url = "/feedback"
       name = "Feedback"
-      weight = 5
+      weight = 4
 
     [[menu.postpend]]
       url = "https://mattermost.com/"
       name = "Mattermost"
+      weight = 5
+
+    # postpended links
+    [[menu.postpend]]
+      url = "/download/personal-edition"
+      name = "Download"
       weight = 6
 
     # Workaround to add draft status to menu items
