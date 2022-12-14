@@ -78,26 +78,17 @@ const TeamToBoardAndViewRedirect = (): null => {
             // but the data is available, try opening a view
             if ((!viewID || viewID === '0') && boardId && boardId === match.params.boardId && ((boardPages && boardPages.length > 0) || (boardViews && boardViews.length > 0))) {
                 // most recent view gets the first preference
-                if (isPages) {
-                    viewID = UserSettings.lastPageId[boardID]
-                } else {
-                    viewID = UserSettings.lastViewId[boardID]
-                }
+                viewID = UserSettings.lastViewId[boardID]
                 if (viewID) {
-                    if (isPages) {
-                        UserSettings.setLastPageId(boardID, viewID)
-                        dispatch(setCurrentPage(viewID))
-                    } else {
-                        UserSettings.setLastViewId(boardID, viewID)
-                        dispatch(setCurrentView(viewID))
-                    }
-                } else if (!isPages && boardViews.length > 0) {
+                    UserSettings.setLastViewId(boardID, viewID)
+                    dispatch(setCurrentView(viewID))
+                } else if (boardViews.length > 0) {
                     // if most recent view is unavailable, pick the first view
                     viewID = boardViews[0].id
                     UserSettings.setLastViewId(boardID, viewID)
                     dispatch(setCurrentView(viewID))
                     dispatch(setCurrentPage(''))
-                } else if (isPages && boardPages.length > 0) {
+                } else if (boardPages.length > 0) {
                     // if most recent page is unavailable, pick the first page
                     viewID = boardPages[0].id
                     UserSettings.setLastPageId(boardID, viewID)

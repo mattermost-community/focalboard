@@ -52,9 +52,21 @@ function HomeToCurrentTeam(props: {path: string, exact: boolean, basePath: strin
                 }
                 teamID = teamID || lastTeamID || firstTeam?.id || ''
 
-                if ((!props.isPages && UserSettings.lastBoardId) || (props.isPages && UserSettings.lastFolderId)) {
-                    const lastBoardID = props.isPages ? UserSettings.lastFolderId[teamID] : UserSettings.lastBoardId[teamID]
-                    const lastViewID = props.isPages ? UserSettings.lastPageId[lastBoardID] : UserSettings.lastViewId[lastBoardID]
+                if (!props.isPages && UserSettings.lastBoardId) {
+                    const lastBoardID = UserSettings.lastBoardId[teamID]
+                    const lastViewID = UserSettings.lastViewId[lastBoardID]
+
+                    if (lastBoardID && lastViewID) {
+                        return <Redirect to={props.basePath + `/team/${teamID}/${lastBoardID}/${lastViewID}`}/>
+                    }
+                    if (lastBoardID) {
+                        return <Redirect to={props.basePath + `/team/${teamID}/${lastBoardID}`}/>
+                    }
+                }
+
+                if (props.isPages && UserSettings.lastFolderId) {
+                    const lastBoardID = UserSettings.lastFolderId[teamID]
+                    const lastViewID = UserSettings.lastPageId[lastBoardID]
 
                     if (lastBoardID && lastViewID) {
                         return <Redirect to={props.basePath + `/team/${teamID}/${lastBoardID}/${lastViewID}`}/>

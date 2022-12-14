@@ -244,6 +244,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const isPageSelected = isPages && currentPage?.parentId !== ''
     const isBoardHighlighted = props.isActive && !isPageSelected
+    const mainPage = pages.find((p) => p.parentId === '')
 
     return (
         <Draggable
@@ -259,7 +260,13 @@ const SidebarBoardItem = (props: Props) => {
                     <div
                         {...provided.dragHandleProps}
                         className={`SidebarBoardItem subitem ${isBoardHighlighted ? 'active' : ''}`}
-                        onClick={() => props.showBoard(board.id)}
+                        onClick={() => {
+                            if (isPages && mainPage) {
+                                props.showPage(mainPage.id, board.id)
+                            } else {
+                                props.showBoard(board.id)}
+                            }
+                        }
                         ref={boardItemRef}
                     >
                         <div className='octo-sidebar-icon'>
