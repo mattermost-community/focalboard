@@ -1881,6 +1881,9 @@ exports[`components/table/Table limited card in table view 1`] = `
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          />
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -1959,6 +1962,9 @@ exports[`components/table/Table limited card in table view 1`] = `
           draggable="true"
           style="opacity: 1;"
         >
+          <div
+            class="action-cell octo-table-cell-btn"
+          />
           <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
@@ -2715,6 +2721,9 @@ exports[`components/table/Table should match snapshot without permissions 1`] = 
           style="opacity: 1;"
         >
           <div
+            class="action-cell octo-table-cell-btn"
+          />
+          <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
             style="width: 100px;"
@@ -2949,6 +2958,9 @@ exports[`components/table/Table should match snapshot, read-only 1`] = `
           draggable="true"
           style="opacity: 1;"
         >
+          <div
+            class="action-cell octo-table-cell-btn"
+          />
           <div
             class="octo-table-cell title-cell"
             id="mainBoardHeader"
