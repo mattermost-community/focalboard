@@ -10,7 +10,7 @@ require (
 	github.com/krolaw/zipstream v0.0.0-20180621105154-0a2661891f94
 	github.com/lib/pq v1.10.7
 	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20221130200243-06e964b86b0d
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20221214122404-8d90c7042f93
 	github.com/mattermost/morph v1.0.5-0.20221115094356-4c18a75b1f5e
 	github.com/mattn/go-sqlite3 v2.0.3+incompatible
 	github.com/mgdelacroix/foundation v0.0.0-20220812143423-0bfc18f73538
