@@ -36,10 +36,6 @@ const PageHeader = (props: Props) => {
     const intl = useIntl()
 
     const onDelete = useCallback(() => {
-        if (!props.activePage) {
-            Utils.assertFailure()
-            return
-        }
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeletePage, {board: props.boardId, page: props.activePage.id})
         mutator.deleteBlock(props.activePage, 'delete page').then(() => {
             props.showPage(undefined)
@@ -48,10 +44,6 @@ const PageHeader = (props: Props) => {
 
 
     const onDuplicate = useCallback(() => {
-        if (!props.activePage) {
-            Utils.assertFailure()
-            return
-        }
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.boardId, page: props.activePage.id})
         mutator.duplicatePage(
             props.activePage.id,
@@ -67,9 +59,9 @@ const PageHeader = (props: Props) => {
     }, [props.showPage, props.boardId, props.activePage.id])
 
     const onAddSubpage = useCallback(() => {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateSubpage, {board: props.boardId, page: props.activePage?.id})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateSubpage, {board: props.boardId, page: props.activePage.id})
         const subpage = createPage()
-        subpage.parentId = props.activePage?.id || props.boardId
+        subpage.parentId = props.activePage.id || props.boardId
         subpage.boardId = props.boardId
         subpage.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Sub Page'})
         mutator.insertBlock(
@@ -80,7 +72,7 @@ const PageHeader = (props: Props) => {
                 props.showPage(newBlock.id)
             },
             async () => {
-                props.showPage(props.activePage?.id)
+                props.showPage(props.activePage.id)
             },
         )
     }, [])
@@ -115,7 +107,7 @@ const PageHeader = (props: Props) => {
                     icon={<CompassIcon icon='information-outline'/>}
                 />
                 <PageMenu
-                    pageId={props.activePage?.id}
+                    pageId={props.activePage.id}
                     onClickDelete={onDelete}
                     onClickDuplicate={onDuplicate}
                     onClickAddSubpage={onAddSubpage}
