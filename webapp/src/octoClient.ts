@@ -807,14 +807,16 @@ class OctoClient {
         return (await this.getJson(response, [])) as CategoryBoards[]
     }
 
-    async createSidebarCategory(category: Category): Promise<Response> {
+    async createSidebarCategory(category: Category): Promise<Category> {
         const path = `/api/v2/teams/${category.teamID}/categories`
         const body = JSON.stringify(category)
-        return fetch(this.getBaseURL() + path, {
+        const response = await fetch(this.getBaseURL() + path, {
             method: 'POST',
             headers: this.headers(),
             body,
         })
+
+        return await response.json() as Category
     }
 
     async deleteSidebarCategory(teamID: string, categoryID: string): Promise<Response> {

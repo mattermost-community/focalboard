@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useCallback, useRef, useState} from 'react'
-import {useIntl} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board} from '../../blocks/board'
@@ -15,7 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
 import './sidebarBoardItem.scss'
-import {CategoryBoards, updateBoardCategories} from '../../store/sidebar'
+import {Category, CategoryBoards, updateBoardCategories} from '../../store/sidebar'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {getCurrentBoardViews, getCurrentViewId} from '../../store/views'
@@ -40,6 +40,10 @@ import octoClient from '../../octoClient'
 import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
+
+import SeparatorOption from '../../widgets/menu/separatorOption'
+
+import CreateCategory from '../../components/createCategory/createCategory'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -78,6 +82,8 @@ const SidebarBoardItem = (props: Props) => {
     const dispatch = useAppDispatch()
     const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
+    const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
+    const [selectedBoardId, setSelectedBoardId] = useState<string>()
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
@@ -192,6 +198,14 @@ const SidebarBoardItem = (props: Props) => {
         }
     }
 
+    const handleOnCreate = async (toCategory: Category) => {
+        if (!toCategory || !selectedBoardId) {
+            return
+        }
+
+        await mutator.moveBoardToCategory(teamID, selectedBoardId, toCategory.id, props.categoryBoards.id)
+    }
+
     const boardItemRef = useRef<HTMLDivElement>(null)
 
     const title = board.title || intl.formatMessage({id: 'Sidebar.untitled-board', defaultMessage: '(Untitled Board)'})
@@ -238,6 +252,16 @@ const SidebarBoardItem = (props: Props) => {
                                 position='auto'
                             >
                                 {generateMoveToCategoryOptions(board.id)}
+                                <SeparatorOption/>
+                                <Menu.Text
+                                    id='createNewCategory'
+                                    icon={<CreateNewFolder/>}
+                                    name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
+                                    onClick={() => {
+                                        setSelectedBoardId(board.id)
+                                        setShowCreateCategoryModal(true)
+                                    }}
+                                />
                             </Menu.SubMenu>
                             {!me?.is_guest &&
                                 <Menu.Text
@@ -299,6 +323,19 @@ const SidebarBoardItem = (props: Props) => {
                     </div>
                 </div>
             ))}
+            {showCreateCategoryModal &&
+                <CreateCategory
+                    onClose={() => {
+                        setShowCreateCategoryModal(false)
+                    }}
+                    title={(
+                        <FormattedMessage
+                            id='SidebarCategories.CategoryMenu.CreateNew'
+                            defaultMessage='Create New Category'
+                        />
+                    )}
+                    onCreate={handleOnCreate}
+                />}
         </>
     )
 }
