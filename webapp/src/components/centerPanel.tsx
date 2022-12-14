@@ -2,15 +2,14 @@
 // See LICENSE.txt for license information.
 /* eslint-disable max-lines */
 import React, {useState, useCallback, useEffect, useMemo} from 'react'
-import {useIntl, IntlShape} from 'react-intl'
+import {useIntl} from 'react-intl'
 import {useHotkeys} from 'react-hotkeys-hook'
 
 import {ClientConfig} from '../config/clientConfig'
 
-import {Block, ContentBlockTypes, createBlock} from '../blocks/block'
+import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
-import {Page} from '../blocks/page'
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
@@ -18,9 +17,7 @@ import mutator from '../mutator'
 import {Utils} from '../utils'
 import {UserSettings} from '../userSettings'
 import {getCurrentCard, addCard as addCardAction, addTemplate as addTemplateAction, showCardHiddenWarning} from '../store/cards'
-import {getCurrentPageContents} from '../store/contents'
 import {getCardLimitTimestamp} from '../store/limits'
-import {updateContents} from '../store/contents'
 import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
@@ -28,7 +25,6 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../web
 import './centerPanel.scss'
 
 import {useAppSelector, useAppDispatch} from '../store/hooks'
-import {updatePages} from '../store/pages'
 
 import {
     getMe,
@@ -66,7 +62,7 @@ type Props = {
     clientConfig?: ClientConfig
     board: Board
     cards: Card[]
-    activeView?: BoardView
+    activeView: BoardView
     views: BoardView[]
     groupByProperty?: IPropertyTemplate
     dateDisplayProperty?: IPropertyTemplate
@@ -93,7 +89,7 @@ const CenterPanel = (props: Props) => {
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
     useEffect(() => {
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView?.id, viewType: props.activeView?.fields.viewType})
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, view: props.activeView.id, viewType: props.activeView.fields.viewType})
     }, [])
 
     useHotkeys('esc', (e: KeyboardEvent) => {
@@ -171,11 +167,6 @@ const CenterPanel = (props: Props) => {
 
     const addCard = useCallback(async (groupByOptionId?: string, show = false, properties: Record<string, string> = {}): Promise<void> => {
         const {activeView, board, groupByProperty} = props
-
-        if (!activeView) {
-            // TODO: Log here an error, it shouldn't happen ever
-            return
-        }
 
         const card = createCard()
 
@@ -270,10 +261,6 @@ const CenterPanel = (props: Props) => {
 
     const addCardFromTemplate = useCallback(async (cardTemplateId: string, groupByOptionId?: string) => {
         const {activeView, board, groupByProperty} = props
-        if (!activeView) {
-            // TODO: Log here an error, it shouldn't happen ever
-            return
-        }
 
         const propertiesThatMeetFilters = CardFilter.propertiesThatMeetFilterGroup(activeView.fields.filter, board.cardProperties)
         if ((activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table') && groupByProperty) {
@@ -293,12 +280,8 @@ const CenterPanel = (props: Props) => {
                 false,
                 propertiesThatMeetFilters,
                 async (cardId) => {
-                    if (!activeView) {
-                        // TODO: Log here an error, it shouldn't happen ever
-                        return
-                    }
                     dispatch(updateView({...activeView, fields: {...activeView.fields, cardOrder: [...activeView.fields.cardOrder, cardId]}}))
-                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: props.board.id, view: activeView.id, card: cardId, cardTemplateId})
+                    TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardViaTemplate, {board: props.board.id, view: props.activeView.id, card: cardId, cardTemplateId})
                     showCard(cardId)
                 },
                 async () => {
@@ -323,7 +306,7 @@ const CenterPanel = (props: Props) => {
             'add card template',
             async (newBlock: Block) => {
                 const newTemplate = createCard(newBlock)
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView?.id, card: newTemplate.id})
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateCardTemplate, {board: board.id, view: activeView.id, card: newTemplate.id})
                 dispatch(addTemplateAction(newTemplate))
                 showCard(newTemplate.id)
             }, async () => {
@@ -363,7 +346,7 @@ const CenterPanel = (props: Props) => {
                 }
                 setSelectedCardIds(newSelectedCardIds)
             }
-        } else if (activeView?.fields.viewType === 'board' || activeView?.fields.viewType === 'gallery') {
+        } else if (activeView.fields.viewType === 'board' || activeView.fields.viewType === 'gallery') {
             showCard(card.id)
         }
 
@@ -378,18 +361,16 @@ const CenterPanel = (props: Props) => {
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
 
     const {groupByProperty, activeView, board, views, cards} = props
-
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(
-        () => getVisibleAndHiddenGroups(cards, activeView?.fields.visibleOptionIds || [], activeView?.fields.hiddenOptionIds || [], groupByProperty),
-        [cards, activeView?.fields.visibleOptionIds, activeView?.fields.hiddenOptionIds, groupByProperty],
+        () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds || [], activeView.fields.hiddenOptionIds || [], groupByProperty),
+        [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
     )
-
     return (
         <div
             className='BoardComponent'
             onClick={backgroundClicked}
         >
-            {props.shownCardId && activeView &&
+            {props.shownCardId &&
                 <RootPortal>
                     <CardDialog
                         board={board}
@@ -426,7 +407,7 @@ const CenterPanel = (props: Props) => {
                 </div>
                 <ViewHeader
                     board={props.board}
-                    activeView={activeView}
+                    activeView={props.activeView}
                     cards={props.cards}
                     views={props.views}
                     groupByProperty={props.groupByProperty}
@@ -439,10 +420,10 @@ const CenterPanel = (props: Props) => {
                 />
             </div>
 
-            {activeView && activeView.fields.viewType === 'board' &&
+            {activeView.fields.viewType === 'board' &&
             <Kanban
                 board={props.board}
-                activeView={activeView}
+                activeView={props.activeView}
                 cards={props.cards}
                 groupByProperty={props.groupByProperty}
                 visibleGroups={visibleGroups}
@@ -456,10 +437,10 @@ const CenterPanel = (props: Props) => {
                 hiddenCardsCount={props.hiddenCardsCount}
                 showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
             />}
-            {activeView && activeView.fields.viewType === 'table' &&
+            {activeView.fields.viewType === 'table' &&
                 <Table
                     board={props.board}
-                    activeView={activeView}
+                    activeView={props.activeView}
                     cards={props.cards}
                     groupByProperty={props.groupByProperty}
                     views={props.views}
@@ -473,11 +454,11 @@ const CenterPanel = (props: Props) => {
                     hiddenCardsCount={props.hiddenCardsCount}
                     showHiddenCardCountNotification={hiddenCardCountNotifyHandler}
                 />}
-            {activeView && activeView.fields.viewType === 'calendar' &&
+            {activeView.fields.viewType === 'calendar' &&
                 <CalendarFullView
                     board={props.board}
                     cards={props.cards}
-                    activeView={activeView}
+                    activeView={props.activeView}
                     readonly={props.readonly}
                     dateDisplayProperty={props.dateDisplayProperty}
                     showCard={showCard}
@@ -486,11 +467,11 @@ const CenterPanel = (props: Props) => {
                     }}
                 />}
 
-            {activeView && activeView.fields.viewType === 'gallery' &&
+            {activeView.fields.viewType === 'gallery' &&
                 <Gallery
                     board={props.board}
                     cards={props.cards}
-                    activeView={activeView}
+                    activeView={props.activeView}
                     readonly={props.readonly}
                     onCardClicked={cardClicked}
                     selectedCardIds={selectedCardIds}

@@ -163,21 +163,25 @@ function CenterContent(props: Props) {
                 return null
             }
         }
-        return (
-            <CenterPanel
-                clientConfig={clientConfig}
-                readonly={props.readonly}
-                board={board}
-                cards={cards}
-                shownCardId={match.params.cardId}
-                showCard={showCard}
-                activeView={activeView}
-                groupByProperty={property}
-                dateDisplayProperty={displayProperty}
-                views={views}
-                hiddenCardsCount={hiddenCardsCount}
-            />
-        )
+        if (activeView) {
+            return (
+                <CenterPanel
+                    clientConfig={clientConfig}
+                    readonly={props.readonly}
+                    board={board}
+                    cards={cards}
+                    shownCardId={match.params.cardId}
+                    showCard={showCard}
+                    activeView={activeView}
+                    groupByProperty={property}
+                    dateDisplayProperty={displayProperty}
+                    views={views}
+                    hiddenCardsCount={hiddenCardsCount}
+                />
+            )
+        } else {
+            return null
+        }
     }
 
     if ((board && !isBoardHidden()) || isLoading) {
