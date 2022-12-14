@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Page} from '../../blocks/page'
@@ -15,24 +15,32 @@ type Props = {
 
 const Breadcrumbs = (props: Props) => {
     const intl = useIntl()
-    const breadcrumbs: Page[] = []
-    if (props.activePage && props.activePage.id !== props.board.id) {
-        const pagesById: {[key: string]: Page} = {}
+
+    const pagesById = useMemo(() => {
+        const result: {[key: string]: Page} = {}
         for (const page of props.pages) {
-            pagesById[page.id] = page
+            result[page.id] = page
         }
-        let currentPage = props.activePage
-        while (true) {
-            if (currentPage.parentId === '') {
-                break
-            }
-            breadcrumbs.unshift(currentPage)
-            currentPage = pagesById[currentPage.parentId]
-            if (!currentPage) {
-                break
+        return result
+    }, [props.pages])
+
+    const breadcrumbs = useMemo(() => {
+        const result = []
+        if (props.activePage && props.activePage.id !== props.board.id) {
+            let currentPage = props.activePage
+            while (true) {
+                if (currentPage.parentId === '') {
+                    break
+                }
+                result.unshift(currentPage)
+                currentPage = pagesById[currentPage.parentId]
+                if (!currentPage) {
+                    break
+                }
             }
         }
-    }
+        return result
+    }, [pagesById, props.activePage, props.board.id])
 
     return (
         <div className='Breadcrumbs'>
