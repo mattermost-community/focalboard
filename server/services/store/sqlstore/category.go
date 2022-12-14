@@ -172,6 +172,8 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 
 	for rows.Next() {
 		category := model.Category{}
+		var nullableSortOrder *int
+
 		err := rows.Scan(
 			&category.ID,
 			&category.Name,
@@ -181,13 +183,19 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 			&category.UpdateAt,
 			&category.DeleteAt,
 			&category.Collapsed,
-			&category.SortOrder,
+			&nullableSortOrder,
 			&category.Type,
 		)
 
 		if err != nil {
 			s.logger.Error("categoriesFromRows row parsing error", mlog.Err(err))
 			return nil, err
+		}
+
+		if nullableSortOrder == nil {
+			category.SortOrder = 0
+		} else {
+			category.SortOrder = *nullableSortOrder
 		}
 
 		categories = append(categories, category)
