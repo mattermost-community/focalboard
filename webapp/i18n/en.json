@@ -257,6 +257,8 @@
   "Sidebar.template-from-board": "New template from board",
   "Sidebar.untitled-board": "(Untitled Board)",
   "Sidebar.untitled-view": "(Untitled View)",
+  "Sidebar.new-category.badge": "New",
+  "Sidebar.new-category.drag-boards-cta": "Drag boards here...",
   "SidebarCategories.BlocksMenu.Move": "Move To...",
   "SidebarCategories.CategoryMenu.CreateNew": "Create New Category",
   "SidebarCategories.CategoryMenu.Delete": "Delete Category",
