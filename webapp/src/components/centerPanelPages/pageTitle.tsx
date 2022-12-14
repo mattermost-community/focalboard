@@ -25,14 +25,15 @@ type Props = {
 
 const PageTitle = (props: Props) => {
     const {page, board} = props
-    if (!page) {
-        return null
-    }
+    const intl = useIntl()
+    const isPages = useContext(isPagesContext)
+    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const readonly = props.readonly || !canEditBoardProperties
+
     let initialTitle = page.title
     if (page.parentId === '') {
         initialTitle = board.title
     }
-
     const [title, setTitle] = useState(initialTitle)
 
     const onEditTitleSave = useCallback(() => {
@@ -43,23 +44,18 @@ const PageTitle = (props: Props) => {
     }, [board.id, board.title, page.id, page.title, title])
 
     const onEditTitleCancel = useCallback(() => setTitle(initialTitle), [initialTitle])
+
     const onAddRandomIcon = useCallback(() => {
         const newIcon = BlockIcons.shared.randomIcon()
         if (page.parentId === '') {
             mutator.changeBoardIcon(props.board.id, props.board.icon, newIcon)
         }
         mutator.changeBlockIcon(page.boardId, page.id, page.fields?.icon, newIcon)
-    }, [page?.boardId, page.id, page?.fields?.icon, props.board.icon])
-    const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
-    const isPages = useContext(isPagesContext)
+    }, [page.boardId, page.id, page.fields?.icon, props.board.icon])
 
     useEffect(() => {
         setTitle(page.title)
     }, [page.id])
-
-    const readonly = props.readonly || !canEditBoardProperties
-
-    const intl = useIntl()
 
     let hasIcon = Boolean(page.fields.icon)
     if (page.parentId === '') {
