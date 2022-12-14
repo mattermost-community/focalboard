@@ -769,11 +769,6 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		}
 	}
 
-	s.logger.Debug(unionSQL)
-	for index := 0; index < len(unionArgs); index++ {
-		s.logger.Debug(fmt.Sprintf("%v", unionArgs[index]), mlog.Int("index", index))
-	}
-
 	rows, err := s.mmDB.Query(unionSQL, unionArgs...)
 	if err != nil {
 		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
