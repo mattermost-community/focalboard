@@ -42,6 +42,10 @@ See the [plugin setup guide](https://www.focalboard.com/download/mattermost/) fo
 
 **Ubuntu**: You can download and run the compiled Focalboard **Personal Server** on Ubuntu by following [our latest install guide](https://www.focalboard.com/download/personal-edition/ubuntu/).
 
+### API Docs
+
+Boards API docs can be found over at https://htmlpreview.github.io/?https://github.com/mattermost/focalboard/blob/main/server/swagger/docs/html/index.html
+
 ## Contribute to Focalboard
 
 Contribute code, bug reports, and ideas to the future of the Focalboard project. We welcome your input! Please see [CONTRIBUTING](CONTRIBUTING.md) for details on how to get involved.
