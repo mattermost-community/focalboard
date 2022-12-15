@@ -64,14 +64,11 @@ export default class DateProperty extends DatePropertyType {
 
     getDateTo = (value: string | string[] | undefined) => {
         const dateProperty = createDatePropertyFromString(value as string)
-        if (!dateProperty.from) {
+        if (!dateProperty.to) {
             return undefined
         }
-        const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
-        dateFrom.setHours(0, 0, 0, 0)
-
-        const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
-        const dateTo = new Date(dateToNumber + oneDay) // Add one day.
+        const dateToNumber = dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to))
+        const dateTo = new Date(dateToNumber)
         dateTo.setHours(0, 0, 0, 0)
         return dateTo
     }
