@@ -108,7 +108,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                 }
                 dateFrom = dateFromValue
                 const dateToValue = property.getDateTo(card.fields.properties[dateDisplayProperty?.id || ''], card)
-                dateTo = dateToValue || dateFrom
+                dateTo = dateToValue || new Date(dateFrom)
 
                 //full calendar end date is exclusive, so increment by 1 day.
                 dateTo.setDate(dateTo.getDate() + 1)
