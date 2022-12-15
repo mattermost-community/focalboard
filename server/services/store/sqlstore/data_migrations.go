@@ -663,7 +663,7 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 		collation = "utf8mb4_general_ci"
 		charSet = "utf8mb4"
 	} else {
-		collation, charSet, err = s.getCollationAndCharset()
+		collation, charSet, err = s.getCollationAndCharset("Channels")
 		if err != nil {
 			return err
 		}
@@ -677,8 +677,27 @@ func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
 
 	merr := merror.New()
 
-	// alter each table; this is idempotent
+	// alter each table if there is a collation or charset mismatch
 	for _, name := range tableNames {
+		tableCollation, tableCharSet, err := s.getCollationAndCharset(name)
+		if err != nil {
+			return err
+		}
+
+		if collation == tableCollation && charSet == tableCharSet {
+			// nothing to do
+			continue
+		}
+
+		s.logger.Warn(
+			"found collation/charset mismatch, fixing table",
+			mlog.String("tableName", name),
+			mlog.String("tableCollation", tableCollation),
+			mlog.String("tableCharSet", tableCharSet),
+			mlog.String("collation", collation),
+			mlog.String("charSet", charSet),
+		)
+
 		sql := fmt.Sprintf("ALTER TABLE %s CONVERT TO CHARACTER SET '%s' COLLATE '%s'", name, charSet, collation)
 		result, err := s.db.Exec(sql)
 		if err != nil {
@@ -731,7 +750,7 @@ func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
 	return names, nil
 }
 
-func (s *SQLStore) getCollationAndCharset() (string, string, error) {
+func (s *SQLStore) getCollationAndCharset(tableName string) (string, string, error) {
 	if s.dbType != model.MysqlDBType {
 		return "", "", newErrInvalidDBType("getCollationAndCharset requires MySQL")
 	}
@@ -739,7 +758,7 @@ func (s *SQLStore) getCollationAndCharset() (string, string, error) {
 	query := s.getQueryBuilder(s.db).
 		Select("table_collation").
 		From("information_schema.tables").
-		Where(sq.Eq{"table_name": "Channels"}).
+		Where(sq.Eq{"table_name": tableName}).
 		Where("table_schema=(SELECT DATABASE())")
 
 	row := query.QueryRow()
@@ -747,17 +766,19 @@ func (s *SQLStore) getCollationAndCharset() (string, string, error) {
 	var collation string
 	err := row.Scan(&collation)
 	if err != nil {
-		return "", "", fmt.Errorf("error fetching collation: %w", err)
+		return "", "", fmt.Errorf("error fetching collation for table %s: %w", tableName, err)
 	}
 
+	// obtains the charset from the first column that has it set
 	query = s.getQueryBuilder(s.db).
 		Select("CHARACTER_SET_NAME").
 		From("information_schema.columns").
 		Where(sq.Eq{
-			"table_name":  "Channels",
-			"COLUMN_NAME": "Name",
+			"table_name": tableName,
 		}).
-		Where("table_schema=(SELECT DATABASE())")
+		Where("table_schema=(SELECT DATABASE())").
+		Where(sq.NotEq{"CHARACTER_SET_NAME": "NULL"}).
+		Limit(1)
 
 	row = query.QueryRow()
 
