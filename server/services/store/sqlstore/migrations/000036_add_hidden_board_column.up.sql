@@ -1,17 +1,17 @@
 {{if .postgres}}
-ALTER TABLE focalboard_category_boards ADD COLUMN IF NOT EXISTS hidden boolean default false;
+ALTER TABLE {{.prefix}}category_boards ADD COLUMN IF NOT EXISTS hidden boolean;
 {{end}}
 
 {{if .mysql}}
 SET @preparedStatement = (SELECT IF(
     (
         SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE table_name = 'focalboard_category_boards'
+        WHERE table_name = '{{.prefix}}category_boards'
         AND table_schema = DATABASE()
         AND column_name = 'hidden'
     ) > 0,
     'SELECT 1',
-    'ALTER TABLE focalboard_category_boards ADD COLUMN hidden boolean DEFAULT false;'
+    'ALTER TABLE {{.prefix}}category_boards ADD COLUMN hidden boolean;'
 ));
 
 PREPARE alterIfNotExists FROM @preparedStatement;

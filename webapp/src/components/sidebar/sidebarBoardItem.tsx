@@ -190,18 +190,27 @@ const SidebarBoardItem = (props: Props) => {
 
             let visibleBoardID: string | null = null
 
-            for (const iterBoard of myAllBoards) {
-                for (const category of props.allCategories) {
-                    const categoryBoardMetadata = category.boardMetadata.find((m) => m.boardID === iterBoard.id)
-                    if (categoryBoardMetadata) {
-                        visibleBoardID = categoryBoardMetadata.boardID
-                        break
-                    }
-                }
+            // for (const iterBoard of myAllBoards) {
+            //     for (const category of props.allCategories) {
+            //         const categoryBoardMetadata = category.boardMetadata.find((m) => m.boardID === iterBoard.id)
+            //         if (categoryBoardMetadata) {
+            //             visibleBoardID = categoryBoardMetadata.boardID
+            //             break
+            //         }
+            //     }
 
-                // if a visible board was found,
-                // no need to continue searching furthur
-                if (visibleBoardID !== undefined) {
+            //     // if a visible board was found,
+            //     // no need to continue searching furthur
+            //     if (visibleBoardID !== undefined) {
+            //         break
+            //     }
+            // }
+
+            console.log('askdjaskdh')
+            for (const iterCategory of props.allCategories) {
+                const visibleBoardMetadata = iterCategory.boardMetadata.find((categoryBoardMetadata) => !categoryBoardMetadata.hidden && categoryBoardMetadata.boardID !== props.board.id)
+                if (visibleBoardMetadata) {
+                    visibleBoardID = visibleBoardMetadata.boardID
                     break
                 }
             }

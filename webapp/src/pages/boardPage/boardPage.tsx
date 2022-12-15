@@ -59,6 +59,7 @@ import BackwardCompatibilityQueryParamsRedirect from './backwardCompatibilityQue
 import WebsocketConnection from './websocketConnection'
 
 import './boardPage.scss'
+import {getCategoryOfBoard, getHiddenBoardIDs, updateBoardCategories} from '../../store/sidebar'
 
 type Props = {
     readonly?: boolean
@@ -76,6 +77,8 @@ const BoardPage = (props: Props): JSX.Element => {
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
     const myConfig = useAppSelector(getMyConfig)
+    const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
+    const category = useAppSelector(getCategoryOfBoard(activeBoardId))
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -220,28 +223,35 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
-        Utils.log('handleUnhideBoard called')
         if (!me) {
             return
         }
 
-        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
+        // const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
 
-        // const index = hiddenBoards.indexOf(boardID)
-        // hiddenBoards.splice(index, 1)
-        delete hiddenBoards[boardID]
-        const hiddenBoardsArray = Object.keys(hiddenBoards)
-        const patch: UserConfigPatch = {
-            updatedFields: {
-                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
-            },
-        }
-        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        if (!patchedProps) {
+        // // const index = hiddenBoards.indexOf(boardID)
+        // // hiddenBoards.splice(index, 1)
+        // delete hiddenBoards[boardID]
+        // const hiddenBoardsArray = Object.keys(hiddenBoards)
+        // const patch: UserConfigPatch = {
+        //     updatedFields: {
+        //         hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
+        //     },
+        // }
+        // const patchedProps = await octoClient.patchUserConfig(me.id, patch)
+        // if (!patchedProps) {
+        //     return
+        // }
+
+        // await dispatch(patchProps(patchedProps))
+
+        if (!category) {
             return
         }
 
-        await dispatch(patchProps(patchedProps))
+        await octoClient.unhideBoard(category.id, boardID)
+
+        // useAppDispatch(updateBoardCategories)
     }
 
     useEffect(() => {
@@ -249,11 +259,16 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        if (hiddenBoardIDs[match.params.boardId]) {
+        // const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
+        // if (hiddenBoardIDs[match.params.boardId]) {
+        //     handleUnhideBoard(match.params.boardId)
+        // }
+
+        console.log('asdasd')
+        if (hiddenBoardIDs.indexOf(match.params.boardId) >= 0) {
             handleUnhideBoard(match.params.boardId)
         }
-    }, [me?.id, teamId, match.params.boardId])
+    }, [me?.id, teamId, match.params.boardId, hiddenBoardIDs])
 
     if (props.readonly) {
         useEffect(() => {

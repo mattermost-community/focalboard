@@ -37,7 +37,7 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 
 func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID string) ([]model.CategoryBoardMetadata, error) {
 	query := s.getQueryBuilder(db).
-		Select("board_id, hidden").
+		Select("board_id, COALESCE(hidden, false)").
 		From(s.tablePrefix + "category_boards").
 		Where(sq.Eq{
 			"category_id": categoryID,

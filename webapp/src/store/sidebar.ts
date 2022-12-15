@@ -2,6 +2,8 @@
 // See LICENSE.txt for license information.
 
 import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import sidebar from 'components/sidebar/sidebar'
+import sidebarCategory from 'components/sidebar/sidebarCategory'
 
 import {default as client} from '../octoClient'
 
@@ -59,11 +61,12 @@ export const fetchSidebarCategories = createAsyncThunk(
 
 type Sidebar = {
     categoryAttributes: CategoryBoards[]
+    hiddenBoardIDs: string[]
 }
 
 const sidebarSlice = createSlice({
     name: 'sidebar',
-    initialState: {categoryAttributes: []} as Sidebar,
+    initialState: {categoryAttributes: [], hiddenBoardIDs: []} as Sidebar,
     reducers: {
         updateCategories: (state, action: PayloadAction<Category[]>) => {
             action.payload.forEach((updatedCategory) => {
@@ -92,15 +95,13 @@ const sidebarSlice = createSlice({
             })
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
-            console.log('updateBoardCategories')
-
             const updatedCategoryAttributes: CategoryBoards[] = []
+            let updatedHiddenBoardIDs = state.hiddenBoardIDs
 
             action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
-                    console.log('asjmdhgajshgdjashgdj')
                     if (categoryAttribute.id === boardCategory.categoryID) {
                         const categoryBoardMetadataIndex = categoryAttribute.boardMetadata.findIndex((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)
                         if (categoryBoardMetadataIndex >= 0) {
@@ -131,12 +132,21 @@ const sidebarSlice = createSlice({
                     // }
 
                     updatedCategoryAttributes[i] = categoryAttribute
+
+                    if (boardCategory.hidden) {
+                        if (updatedHiddenBoardIDs.indexOf(boardCategory.boardID) < 0) {
+                            updatedHiddenBoardIDs.push(boardCategory.boardID)
+                        }
+                    } else {
+                        updatedHiddenBoardIDs = updatedHiddenBoardIDs.filter((hiddenBoardID) => hiddenBoardID !== boardCategory.boardID)
+                    }
                 }
             })
 
             if (updatedCategoryAttributes.length > 0) {
                 state.categoryAttributes = updatedCategoryAttributes
             }
+            state.hiddenBoardIDs = updatedHiddenBoardIDs
         },
         updateCategoryOrder: (state, action: PayloadAction<string[]>) => {
             if (action.payload.length === 0) {
@@ -188,6 +198,17 @@ const sidebarSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchSidebarCategories.fulfilled, (state, action) => {
             state.categoryAttributes = action.payload || []
+            state.hiddenBoardIDs = state.categoryAttributes.flatMap(
+                (ca) => {
+                    return ca.boardMetadata.reduce((collector, m) => {
+                        if (m.hidden) {
+                            collector.push(m.boardID)
+                        }
+
+                        return collector
+                    }, [] as string[])
+                },
+            )
         })
     },
 })
@@ -196,6 +217,15 @@ export const getSidebarCategories = createSelector(
     (state: RootState): CategoryBoards[] => state.sidebar.categoryAttributes,
     (sidebarCategories) => sidebarCategories,
 )
+
+export const getHiddenBoardIDs = (state: RootState): string[] => state.sidebar.hiddenBoardIDs
+
+export function getCategoryOfBoard(boardID: string): (state: RootState) => CategoryBoards | undefined {
+    return createSelector(
+        (state: RootState): CategoryBoards[] => state.sidebar.categoryAttributes,
+        (sidebarCategories) => sidebarCategories.find((category) => category.boardMetadata.findIndex((m) => m.boardID === boardID) >= 0),
+    )
+}
 
 export const {reducer} = sidebarSlice
 
