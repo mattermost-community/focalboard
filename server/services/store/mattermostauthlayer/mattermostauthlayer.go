@@ -671,37 +671,21 @@ func (s *MattermostAuthLayer) baseUserQuery(showEmail, showName bool) sq.SelectB
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
 func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	var boardMembersWhere sq.Or
-	var channelMembersWhere sq.Or
+	// as we're joining three queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder().PlaceholderFormat(sq.Question)
 
-	if includePublicBoards {
-		boardMembersWhere = sq.Or{
-			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.Eq{"bm.user_id": userID},
-		}
-		channelMembersWhere = sq.Or{
-			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.Eq{"cm.userId": userID},
-		}
-	} else {
-		boardMembersWhere = sq.Or{
-			sq.Eq{"bm.user_id": userID},
-		}
-		channelMembersWhere = sq.Or{
-			sq.Eq{"cm.userId": userID},
-		}
-	}
-
-	boardMembersQ := s.getQueryBuilder().
+	boardMembersQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Join(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{
 			"b.is_template": false,
-		}).
-		Where(boardMembersWhere)
+			"bm.user_id":    userID,
+		})
 
-	teamMembersQ := s.getQueryBuilder().
+	teamMembersQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Join("TeamMembers as tm on tm.teamid=b.team_id").
@@ -709,16 +693,17 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 			"b.is_template": false,
 			"tm.userID":     userID,
 			"tm.deleteAt":   0,
+			"b.type":        model.BoardTypeOpen,
 		})
 
-	channelMembersQ := s.getQueryBuilder().
+	channelMembersQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Join("ChannelMembers as cm on cm.channelId=b.channel_id").
 		Where(sq.Eq{
 			"b.is_template": false,
-		}).
-		Where(channelMembersWhere)
+			"cm.userId":     userID,
+		})
 
 	if term != "" {
 		// break search query into space separated words
@@ -748,33 +733,43 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		return nil, fmt.Errorf("SearchBoardsForUser error getting channelMembersSQL: %w", err)
 	}
 
-	unionQ := boardMembersQ.
-		Prefix("(").
-		Suffix(") UNION ("+teamMembersSQL, teamMembersArgs...).
-		Suffix(") UNION ("+channelMembersSQL+")", channelMembersArgs...)
-
+	unionQ := boardMembersQ
 	user, err := s.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
 	// NOTE: theoretically, could do e.g. `isGuest := !includePublicBoards`
 	// but that introduces some tight coupling + fragility
-	if user.IsGuest {
-		var explicitMembers []*model.BoardMember
-		explicitMembers, err = s.Store.GetMembersForUser(userID)
-		if err != nil {
-			s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
-			return nil, err
+	if !user.IsGuest {
+		unionQ = unionQ.
+			Prefix("(").
+			Suffix(") UNION ("+channelMembersSQL+")", channelMembersArgs...)
+		if includePublicBoards {
+			unionQ = unionQ.Suffix(" UNION ("+teamMembersSQL+")", teamMembersArgs...)
 		}
-		boardIDs := []string{}
-		for _, m := range explicitMembers {
-			boardIDs = append(boardIDs, m.BoardID)
-		}
-		// Only explicit memberships for guests
-		unionQ = unionQ.Where(sq.Eq{"b.id": boardIDs})
+	} else if includePublicBoards {
+		unionQ = unionQ.
+			Prefix("(").
+			Suffix(") UNION ("+teamMembersSQL+")", teamMembersArgs...)
 	}
 
-	rows, err := unionQ.Query()
+	unionSQL, unionArgs, err := unionQ.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("SearchBoardsForUser error getting unionSQL: %w", err)
+	}
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
+		if rErr != nil {
+			return nil, fmt.Errorf("SearchBoardsForUser unable to replace unionSQL placeholders: %w", rErr)
+		}
+	}
+
+	rows, err := s.mmDB.Query(unionSQL, unionArgs...)
 	if err != nil {
 		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
 		return nil, err
@@ -789,7 +784,12 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
 func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {
-	openBoardsQ := s.getQueryBuilder().
+	// as we're joining three queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder().PlaceholderFormat(sq.Question)
+
+	openBoardsQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Where(sq.Eq{
@@ -798,7 +798,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 			"b.type":        model.BoardTypeOpen,
 		})
 
-	memberBoardsQ := s.getQueryBuilder().
+	memberBoardsQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards AS b").
 		Join(s.tablePrefix + "board_members AS bm on b.id = bm.board_id").
@@ -808,7 +808,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 			"bm.user_id":    userID,
 		})
 
-	channelMemberBoardsQ := s.getQueryBuilder().
+	channelMemberBoardsQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards AS b").
 		Join("ChannelMembers AS cm on cm.channelId = b.channel_id").
@@ -838,14 +838,12 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 
 	memberBoardsSQL, memberBoardsArgs, err := memberBoardsQ.ToSql()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUser ERROR getting memberBoardsSQL`, mlog.Err(err))
-		return nil, err
+		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting memberBoardsSQL: %w", err)
 	}
 
 	channelMemberBoardsSQL, channelMemberBoardsArgs, err := channelMemberBoardsQ.ToSql()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUser ERROR getting channelMemberBoardsSQL`, mlog.Err(err))
-		return nil, err
+		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting channelMemberBoardsSQL: %w", err)
 	}
 
 	unionQ := openBoardsQ.
@@ -853,9 +851,25 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 		Suffix(") UNION ("+memberBoardsSQL, memberBoardsArgs...).
 		Suffix(") UNION ("+channelMemberBoardsSQL+")", channelMemberBoardsArgs...)
 
-	rows, err := unionQ.Query()
+	unionSQL, unionArgs, err := unionQ.ToSql()
 	if err != nil {
-		s.logger.Error(`searchBoardsForUser ERROR`, mlog.Err(err))
+		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting unionSQL: %w", err)
+	}
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
+		if rErr != nil {
+			return nil, fmt.Errorf("SearchBoardsForUserInTeam unable to replace unionSQL placeholders: %w", rErr)
+		}
+	}
+
+	rows, err := s.mmDB.Query(unionSQL, unionArgs...)
+	if err != nil {
+		s.logger.Error(`searchBoardsForUserInTeam ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
