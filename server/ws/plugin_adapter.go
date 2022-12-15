@@ -496,68 +496,19 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
 }
 
-func (pa *PluginAdapter) BroadcastCategoryReorder(teamID, userID string, categoryOrder []string) {
-	pa.logger.Debug("BroadcastCategoryReorder",
-		mlog.String("userID", userID),
-		mlog.String("teamID", teamID),
-	)
-
-	message := CategoryReorderMessage{
-		Action:        websocketActionReorderCategories,
-		CategoryOrder: categoryOrder,
-		TeamID:        teamID,
-	}
-	payload := utils.StructToMap(message)
-	go func() {
-		clusterMessage := &ClusterMessage{
-			Payload: payload,
-			UserID:  userID,
-		}
-
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
-	}()
-
-	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
-}
-
-func (pa *PluginAdapter) BroadcastCategoryBoardsReorder(teamID, userID, categoryID string, boardsOrder []string) {
-	pa.logger.Debug("BroadcastCategoryBoardsReorder",
-		mlog.String("userID", userID),
-		mlog.String("teamID", teamID),
-		mlog.String("categoryID", categoryID),
-	)
-
-	message := CategoryBoardReorderMessage{
-		Action:     websocketActionReorderCategoryBoards,
-		CategoryID: categoryID,
-		BoardOrder: boardsOrder,
-		TeamID:     teamID,
-	}
-	payload := utils.StructToMap(message)
-	go func() {
-		clusterMessage := &ClusterMessage{
-			Payload: payload,
-			UserID:  userID,
-		}
-
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
-	}()
-
-	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
-}
-
-func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategories []*model.BoardCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
 		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
-		mlog.Int("numEntries", len(boardCategories)),
+		mlog.String("categoryID", boardCategory.CategoryID),
+		mlog.String("blockID", boardCategory.BoardID),
 	)
 
 	message := UpdateCategoryMessage{
 		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
-		BoardCategories: boardCategories,
+		BoardCategories: &boardCategory,
 	}
 
 	payload := utils.StructToMap(message)

@@ -1499,7 +1499,7 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on statu
         type="button"
       >
         <span>
-          (unknown)
+          includes
         </span>
       </button>
     </div>
