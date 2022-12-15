@@ -13,9 +13,24 @@ import (
 
 const categorySortOrderGap = 10
 
+func (s *SQLStore) categoryFields() []string {
+	return []string{
+		"id",
+		"name",
+		"user_id",
+		"team_id",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"collapsed",
+		"COALESCE(sort_order, 0)",
+		"type",
+	}
+}
+
 func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "sort_order", "type").
+		Select(s.categoryFields()...).
 		From(s.tablePrefix + "categories").
 		Where(sq.Eq{"id": id})
 
@@ -149,7 +164,7 @@ func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID s
 
 func (s *SQLStore) getUserCategories(db sq.BaseRunner, userID, teamID string) ([]model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "sort_order", "type").
+		Select(s.categoryFields()...).
 		From(s.tablePrefix+"categories").
 		Where(sq.Eq{
 			"user_id":   userID,
@@ -172,8 +187,6 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 
 	for rows.Next() {
 		category := model.Category{}
-		var nullableSortOrder *int
-
 		err := rows.Scan(
 			&category.ID,
 			&category.Name,
@@ -183,19 +196,13 @@ func (s *SQLStore) categoriesFromRows(rows *sql.Rows) ([]model.Category, error) 
 			&category.UpdateAt,
 			&category.DeleteAt,
 			&category.Collapsed,
-			&nullableSortOrder,
+			&category.SortOrder,
 			&category.Type,
 		)
 
 		if err != nil {
 			s.logger.Error("categoriesFromRows row parsing error", mlog.Err(err))
 			return nil, err
-		}
-
-		if nullableSortOrder == nil {
-			category.SortOrder = 0
-		} else {
-			category.SortOrder = *nullableSortOrder
 		}
 
 		categories = append(categories, category)
