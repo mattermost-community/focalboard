@@ -45,16 +45,21 @@ exports[`components/table/TableRows should match snapshot, fire events 1`] = `
         class="MenuWrapper optionsMenu ml-2 mr-2"
         role="button"
       >
-        <button
-          aria-label="MenuBtn"
-          class="IconButton"
-          title="MenuBtn"
-          type="button"
+        <div
+          class="octo-tooltip tooltip-top"
+          data-tooltip="More actions"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            aria-label="MenuBtn"
+            class="IconButton"
+            title="MenuBtn"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="open-button"

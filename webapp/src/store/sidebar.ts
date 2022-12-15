@@ -5,6 +5,8 @@ import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@red
 
 import {default as client} from '../octoClient'
 
+import {Utils} from '../utils'
+
 import {RootState} from './index'
 
 export type CategoryType = 'system' | 'custom'
@@ -18,7 +20,9 @@ interface Category {
     updateAt: number
     deleteAt: number
     collapsed: boolean
+    sortOrder: number
     type: CategoryType
+    isNew: boolean
 }
 
 interface CategoryBoards extends Category {
@@ -30,6 +34,11 @@ interface BoardCategoryWebsocketData {
     categoryID: string
 }
 
+interface CategoryBoardsReorderData {
+    categoryID: string
+    boardIDs: string[]
+}
+
 export const DefaultCategory: CategoryBoards = {
     id: '',
     name: 'Boards',
@@ -38,14 +47,7 @@ export const DefaultCategory: CategoryBoards = {
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
     async (teamID: string) => {
-        // TODO All this logic should remove once LHS DND PR gets merged
-        const allCategories = await client.getSidebarCategories(teamID)
-        const boardSystemCategoies = allCategories.filter((category) => category.name === 'Boards' && category.type === 'system')
-        const categoriesWithoutSystemBoard = allCategories.filter((category) => category.name !== 'Boards' && category.type !== 'system')
-        const categories = categoriesWithoutSystemBoard
-        categories.sort((a, b) => a.name.localeCompare(b.name))
-        categories.push(boardSystemCategoies[0])
-        return categories
+        return client.getSidebarCategories(teamID)
     },
 )
 
@@ -61,11 +63,13 @@ const sidebarSlice = createSlice({
             action.payload.forEach((updatedCategory) => {
                 const index = state.categoryAttributes.findIndex((c) => c.id === updatedCategory.id)
 
-                // when new category got created
+                // when new category got created,
                 if (index === -1) {
-                    state.categoryAttributes.push({
+                    // new categories should always show up on the top
+                    state.categoryAttributes.unshift({
                         ...updatedCategory,
                         boardIDs: [],
+                        isNew: true,
                     })
                 } else if (updatedCategory.deleteAt) {
                     // when category is deleted
@@ -76,33 +80,79 @@ const sidebarSlice = createSlice({
                         ...state.categoryAttributes[index],
                         name: updatedCategory.name,
                         updateAt: updatedCategory.updateAt,
+                        isNew: false,
                     }
                 }
             })
-
-            // sort categories alphabetically only keeping board system category at the end
-            // TODO All this logic should remove once LHS DND PR gets merged
-            const boardsSystemCategories = state.categoryAttributes.filter((category) => category.name === 'Boards' && category.type === 'system')
-            const categoriesWithoutSystemBoard = state.categoryAttributes.filter((category) => category.name !== 'Baords' && category.type !== 'system')
-            const categories = categoriesWithoutSystemBoard
-            categories.sort((a, b) => a.name.localeCompare(b.name))
-            categories.push(boardsSystemCategories[0])
-            state.categoryAttributes = categories
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
+            const updatedCategoryAttributes: CategoryBoards[] = []
+
             action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
-                    // first we remove the board from list of boards
-                    categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
-
-                    // then we add it if this is the target category
                     if (categoryAttribute.id === boardCategory.categoryID) {
-                        categoryAttribute.boardIDs.push(boardCategory.boardID)
+                        // if board is already in the right category, don't do anything
+                        // and let the board stay in its right order.
+                        // Only if its not in the right category, do add it.
+                        if (categoryAttribute.boardIDs.indexOf(boardCategory.boardID) < 0) {
+                            categoryAttribute.boardIDs.unshift(boardCategory.boardID)
+                            categoryAttribute.isNew = false
+                        }
+                    } else {
+                        // remove the board from other categories
+                        categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
                     }
+
+                    updatedCategoryAttributes[i] = categoryAttribute
                 }
             })
+
+            if (updatedCategoryAttributes.length > 0) {
+                state.categoryAttributes = updatedCategoryAttributes
+            }
+        },
+        updateCategoryOrder: (state, action: PayloadAction<string[]>) => {
+            if (action.payload.length === 0) {
+                return
+            }
+
+            const categoryById = new Map<string, CategoryBoards>()
+            state.categoryAttributes.forEach((categoryBoards: CategoryBoards) => categoryById.set(categoryBoards.id, categoryBoards))
+
+            const newOrderedCategories: CategoryBoards[] = []
+            action.payload.forEach((categoryId) => {
+                const category = categoryById.get(categoryId)
+                if (!category) {
+                    Utils.logError('Category ID from updated category order not found in store. CategoryID: ' + categoryId)
+                    return
+                }
+                newOrderedCategories.push(category)
+            })
+
+            state.categoryAttributes = newOrderedCategories
+        },
+        updateCategoryBoardsOrder: (state, action: PayloadAction<CategoryBoardsReorderData>) => {
+            if (action.payload.boardIDs.length === 0) {
+                return
+            }
+
+            const categoryIndex = state.categoryAttributes.findIndex((categoryBoards) => categoryBoards.id === action.payload.categoryID)
+            if (categoryIndex < 0) {
+                Utils.logError('Category ID from updated category boards order not found in store. CategoryID: ' + action.payload.categoryID)
+                return
+            }
+
+            const category = state.categoryAttributes[categoryIndex]
+            const updatedCategory = {
+                ...category,
+                boardIDs: action.payload.boardIDs,
+                isNew: false,
+            }
+
+            // creating a new reference of array so redux knows it changed
+            state.categoryAttributes = state.categoryAttributes.map((original, i) => (i === categoryIndex ? updatedCategory : original))
         },
     },
     extraReducers: (builder) => {
@@ -119,7 +169,7 @@ export const getSidebarCategories = createSelector(
 
 export const {reducer} = sidebarSlice
 
-export const {updateCategories, updateBoardCategories} = sidebarSlice.actions
+export const {updateCategories, updateBoardCategories, updateCategoryOrder, updateCategoryBoardsOrder} = sidebarSlice.actions
 
-export {Category, CategoryBoards, BoardCategoryWebsocketData}
+export {Category, CategoryBoards, BoardCategoryWebsocketData, CategoryBoardsReorderData}
 

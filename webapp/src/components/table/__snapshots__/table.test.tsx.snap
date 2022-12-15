@@ -174,16 +174,21 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -290,16 +295,21 @@ exports[`components/table/Table extended should match snapshot with CreatedAt 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -614,16 +624,21 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -734,16 +749,21 @@ exports[`components/table/Table extended should match snapshot with CreatedBy 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -1062,16 +1082,21 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -1178,16 +1203,21 @@ exports[`components/table/Table extended should match snapshot with UpdatedAt 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -1502,16 +1532,21 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -1622,16 +1657,21 @@ exports[`components/table/Table extended should match snapshot with UpdatedBy 1`
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
@@ -2259,16 +2299,21 @@ exports[`components/table/Table should match snapshot 1`] = `
               class="MenuWrapper optionsMenu ml-2 mr-2"
               role="button"
             >
-              <button
-                aria-label="MenuBtn"
-                class="IconButton"
-                title="MenuBtn"
-                type="button"
+              <div
+                class="octo-tooltip tooltip-top"
+                data-tooltip="More actions"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <button
+                  aria-label="MenuBtn"
+                  class="IconButton"
+                  title="MenuBtn"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-dots-horizontal OptionsIcon"
+                  />
+                </button>
+              </div>
             </div>
             <div
               class="open-button"
