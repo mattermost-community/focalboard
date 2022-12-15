@@ -4,6 +4,7 @@
 import {Board, IPropertyOption, IPropertyTemplate, createBoard} from '../blocks/board'
 import {BoardView, createBoardView} from '../blocks/boardView'
 import {Card, createCard} from '../blocks/card'
+import {Page, createPage} from '../blocks/page'
 import {CommentBlock, createCommentBlock} from '../blocks/commentBlock'
 import {DividerBlock, createDividerBlock} from '../blocks/dividerBlock'
 import {createFilterClause} from '../blocks/filterClause'
@@ -119,6 +120,16 @@ class TestBlockFactory {
         card.fields.icon = 'i'
         card.fields.properties.property1 = 'value1'
         return card
+    }
+
+    static createPage(board?: Board): Page {
+        const page = createPage()
+        page.boardId = board ? board.id : 'board'
+        page.title = 'title'
+        page.parentId = ''
+        page.fields.icon = 'i'
+        page.fields.properties.property1 = 'value1'
+        return page
     }
 
     private static addToCard<BlockType extends Block>(block: BlockType, card: Card, isContent = true): BlockType {
