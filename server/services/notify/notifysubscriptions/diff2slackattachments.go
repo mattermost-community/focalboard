@@ -273,7 +273,7 @@ func appendAttachmentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *
 			var format string
 			var msg string
 			if child.NewBlock != nil && child.OldBlock == nil {
-				format = "Added the attachment by name: **`%s`**"
+				format = "Added an attachment: **`%s`**"
 				msg = child.NewBlock.Title
 			} else {
 				format = "Removed ~~`%s`~~ attachment"
@@ -283,7 +283,7 @@ func appendAttachmentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *
 			if format != "" {
 				fields = append(fields, &mm_model.SlackAttachmentField{
 					Short: false,
-					Title: "Attachment by " + makeAuthorsList(child.Authors, "unknow_user"), // TODO:  localize this when server has i18n
+					Title: "Changed by " + makeAuthorsList(child.Authors, "unknow_user"), // TODO:  localize this when server has i18n
 					Value: fmt.Sprintf(format, msg),
 				})
 			}
