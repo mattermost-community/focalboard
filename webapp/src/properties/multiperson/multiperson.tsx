@@ -60,7 +60,7 @@ const selectStyles = {
 }
 
 const MultiPerson = (props: PropertyProps): JSX.Element => {
-    const {card, board, propertyTemplate, propertyValue, readOnly} = props
+    const {item, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
@@ -75,7 +75,7 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const allowAddUsers = !me?.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
 
-    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, item, propertyTemplate.id, newValue), [board.id, item, propertyTemplate.id])
 
     const formatOptionLabel = (user: any): JSX.Element => {
         if (!user) {
@@ -128,11 +128,11 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
 
         if (users) {
             const userIds = users.map((a) => a.id)
-            await mutator.changePropertyValue(board.id, card, propertyTemplate.id, [...userIds, newMember.userId])
+            await mutator.changePropertyValue(board.id, item, propertyTemplate.id, [...userIds, newMember.userId])
         } else {
-            await mutator.changePropertyValue(board.id, card, propertyTemplate.id, newMember.userId)
+            await mutator.changePropertyValue(board.id, item, propertyTemplate.id, newMember.userId)
         }
-    }, [board, card, propertyTemplate, users])
+    }, [board, item, propertyTemplate, users])
 
     const loadOptions = useCallback(async (value: string) => {
         if (!allowAddUsers) {

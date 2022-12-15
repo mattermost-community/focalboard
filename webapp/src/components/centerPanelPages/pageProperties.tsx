@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {Page} from '../../blocks/page'
 import PageProperty from './pageProperty'
 
 import './pageProperties.scss'
@@ -12,7 +12,7 @@ type Props = {
     canEditBoardCards: boolean
     board: Board
     newTemplateId: string
-    pseudoCard: Card
+    page: Page
 }
 
 const PageProperties = (props: Props) => {
@@ -20,12 +20,13 @@ const PageProperties = (props: Props) => {
         <div className='PageProperties'>
             {props.board.cardProperties.map((propertyTemplate: IPropertyTemplate) => (
                 <PageProperty
+                    key={props.page.id + propertyTemplate.id}
                     readonly={props.readonly}
                     canEditBoardCards={props.canEditBoardCards}
                     canEditBoardProperties={props.canEditBoardProperties}
                     board={props.board}
                     newTemplateId={props.newTemplateId}
-                    pseudoCard={props.pseudoCard}
+                    page={props.page}
                     propertyTemplate={propertyTemplate}
                 />)
             )}

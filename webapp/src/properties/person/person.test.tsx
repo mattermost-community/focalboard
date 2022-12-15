@@ -53,7 +53,7 @@ describe('properties/person', () => {
                     showEmptyPlaceholder={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -79,7 +79,7 @@ describe('properties/person', () => {
                     showEmptyPlaceholder={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -105,7 +105,7 @@ describe('properties/person', () => {
                     showEmptyPlaceholder={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -131,7 +131,7 @@ describe('properties/person', () => {
                     showEmptyPlaceholder={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -157,7 +157,7 @@ describe('properties/person', () => {
                     showEmptyPlaceholder={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )

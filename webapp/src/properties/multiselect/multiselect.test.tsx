@@ -79,7 +79,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -102,7 +102,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={[]}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -124,7 +124,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -149,7 +149,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -174,7 +174,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -199,7 +199,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -225,7 +225,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -251,7 +251,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )
@@ -281,7 +281,7 @@ describe('properties/multiSelect', () => {
                 propertyTemplate={propertyTemplate}
                 propertyValue={propertyValue}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
             />,
             {wrapper: Wrapper},
         )

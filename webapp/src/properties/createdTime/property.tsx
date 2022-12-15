@@ -5,6 +5,7 @@ import {IntlShape} from 'react-intl'
 import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {Page} from '../../blocks/page'
 import {Utils} from '../../utils'
 
 import {PropertyType, PropertyTypeEnum} from '../types'
@@ -22,5 +23,5 @@ export default class CreatedAtProperty extends PropertyType {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue, Options.earliest,
         Options.latest, Options.dateRange]
-    displayValue = (_1: string | string[] | undefined, card: Card, _2: IPropertyTemplate, intl: IntlShape) => Utils.displayDateTime(new Date(card.createAt), intl)
+    displayValue = (_1: string | string[] | undefined, item: Card|Page, _2: IPropertyTemplate, intl: IntlShape) => Utils.displayDateTime(new Date(item.createAt), intl)
 }

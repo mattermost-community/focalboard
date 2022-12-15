@@ -15,14 +15,14 @@ import ValueSelector from '../../widgets/valueSelector'
 import {PropertyProps} from '../types'
 
 const MultiSelectProperty = (props: PropertyProps): JSX.Element => {
-    const {propertyTemplate, propertyValue, board, card} = props
+    const {propertyTemplate, propertyValue, board, item} = props
     const isEditable = !props.readOnly && Boolean(board)
     const [open, setOpen] = useState(false)
     const intl = useIntl()
 
     const emptyDisplayValue = props.showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
 
-    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate])
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, item, propertyTemplate.id, newValue), [board.id, item, propertyTemplate])
     const onChangeColor = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
     const onDeleteOption = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
 
@@ -30,8 +30,8 @@ const MultiSelectProperty = (props: PropertyProps): JSX.Element => {
         const newValues = currentValues.
             filter((currentValue) => currentValue.id !== valueToDelete.id).
             map((currentValue) => currentValue.id)
-        mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValues)
-    }, [board.id, card, propertyTemplate.id])
+        mutator.changePropertyValue(board.id, item, propertyTemplate.id, newValues)
+    }, [board.id, item, propertyTemplate.id])
 
     const onCreateValue = useCallback((newValue: string, currentValues: IPropertyOption[]) => {
         const option: IPropertyOption = {
@@ -41,9 +41,9 @@ const MultiSelectProperty = (props: PropertyProps): JSX.Element => {
         }
         currentValues.push(option)
         mutator.insertPropertyOption(board.id, board.cardProperties, propertyTemplate, option, 'add property option').then(() => {
-            mutator.changePropertyValue(board.id, card, propertyTemplate.id, currentValues.map((v: IPropertyOption) => v.id))
+            mutator.changePropertyValue(board.id, item, propertyTemplate.id, currentValues.map((v: IPropertyOption) => v.id))
         })
-    }, [board, board.id, card, propertyTemplate])
+    }, [board, board.id, item, propertyTemplate])
 
     const values = Array.isArray(propertyValue) && propertyValue.length > 0 ? propertyValue.map((v) => propertyTemplate.options.find((o) => o!.id === v)).filter((v): v is IPropertyOption => Boolean(v)) : []
 

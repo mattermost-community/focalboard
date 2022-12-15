@@ -2,7 +2,7 @@ import React, {useState, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
-import {Card} from '../../blocks/card'
+import {Page} from '../../blocks/page'
 import PropertyMenu from '../../widgets/propertyMenu'
 import propRegistry from '../../properties'
 import {PropertyType} from '../../properties/types'
@@ -25,7 +25,7 @@ type Props = {
     canEditBoardCards: boolean
     board: Board
     newTemplateId: string
-    pseudoCard: Card
+    page: Page
     propertyTemplate: IPropertyTemplate
 }
 
@@ -135,7 +135,7 @@ const PageProperty = (props: Props) => {
             }
             <PropertyValueElement
                 readOnly={props.readonly || !props.canEditBoardCards}
-                card={props.pseudoCard}
+                item={props.page}
                 board={props.board}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}

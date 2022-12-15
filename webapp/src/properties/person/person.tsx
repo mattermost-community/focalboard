@@ -60,13 +60,13 @@ const selectStyles = {
 }
 
 const Person = (props: PropertyProps): JSX.Element => {
-    const {card, board, propertyTemplate, propertyValue, readOnly} = props
+    const {item, board, propertyTemplate, propertyValue, readOnly} = props
     const [confirmAddUser, setConfirmAddUser] = useState<IUser|null>(null)
 
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
-    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, item, propertyTemplate.id, newValue), [board.id, item, propertyTemplate.id])
 
     const me = useAppSelector<IUser|null>(getMe)
 
@@ -107,9 +107,9 @@ const Person = (props: PropertyProps): JSX.Element => {
 
         setConfirmAddUser(null)
         await mutator.createBoardMember(newMember)
-        await mutator.changePropertyValue(board.id, card, propertyTemplate.id, newMember.userId)
+        await mutator.changePropertyValue(board.id, item, propertyTemplate.id, newMember.userId)
         mutator.updateBoardMember(newMember, {...newMember, schemeAdmin: false, schemeEditor: true, schemeCommenter: true, schemeViewer: true})
-    }, [board, card, propertyTemplate])
+    }, [board, item, propertyTemplate])
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const allowAddUsers = !me?.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)

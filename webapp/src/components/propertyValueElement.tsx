@@ -5,21 +5,22 @@ import React from 'react'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {Card} from '../blocks/card'
+import {Page} from '../blocks/page'
 
 import propsRegistry from '../properties'
 
 type Props = {
     board: Board
     readOnly: boolean
-    card: Card
+    item: Card|Page
     propertyTemplate: IPropertyTemplate
     showEmptyPlaceholder: boolean
 }
 
 const PropertyValueElement = (props: Props): JSX.Element => {
-    const {card, propertyTemplate, readOnly, showEmptyPlaceholder, board} = props
+    const {item, propertyTemplate, readOnly, showEmptyPlaceholder, board} = props
 
-    let propertyValue = card.fields.properties[propertyTemplate.id]
+    let propertyValue = item.fields.properties[propertyTemplate.id]
     if (propertyValue === undefined) {
         propertyValue = ''
     }
@@ -28,7 +29,7 @@ const PropertyValueElement = (props: Props): JSX.Element => {
     return (
         <Editor
             property={property}
-            card={card}
+            item={item}
             board={board}
             readOnly={readOnly}
             showEmptyPlaceholder={showEmptyPlaceholder}

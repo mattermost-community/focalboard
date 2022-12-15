@@ -59,7 +59,7 @@ describe('properties/select', () => {
             <Select
                 property={new SelectProperty()}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={option.id}
                 readOnly={true}
@@ -81,7 +81,7 @@ describe('properties/select', () => {
             <Select
                 property={new SelectProperty()}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 showEmptyPlaceholder={true}
                 propertyTemplate={propertyTemplate}
                 propertyValue={''}
@@ -103,7 +103,7 @@ describe('properties/select', () => {
             <Select
                 property={new SelectProperty()}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={selected.id}
                 showEmptyPlaceholder={false}
@@ -133,7 +133,7 @@ describe('properties/select', () => {
             <Select
                 property={new SelectProperty()}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={''}
                 showEmptyPlaceholder={false}
@@ -156,7 +156,7 @@ describe('properties/select', () => {
             <Select
                 property={new SelectProperty()}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={selected.id}
                 showEmptyPlaceholder={false}
@@ -182,7 +182,7 @@ describe('properties/select', () => {
             <Select
                 property={new SelectProperty()}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
                 propertyValue={initialOption.id}
                 showEmptyPlaceholder={false}

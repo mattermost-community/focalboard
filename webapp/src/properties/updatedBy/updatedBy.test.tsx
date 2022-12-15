@@ -55,7 +55,7 @@ describe('properties/updatedBy', () => {
             <ReduxProvider store={store}>
                 <UpdatedBy
                     property={new UpdatedByProperty()}
-                    card={card}
+                    item={card}
                     board={board}
                     propertyTemplate={{} as IPropertyTemplate}
                     propertyValue={''}

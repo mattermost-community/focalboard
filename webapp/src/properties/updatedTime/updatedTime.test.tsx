@@ -44,7 +44,7 @@ describe('properties/updatedTime', () => {
             <ReduxProvider store={store}>
                 <UpdatedTime
                     property={new UpdatedTimeProperty()}
-                    card={card}
+                    item={card}
                     board={{} as Board}
                     propertyTemplate={{} as IPropertyTemplate}
                     propertyValue={''}

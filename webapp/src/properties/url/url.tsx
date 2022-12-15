@@ -22,7 +22,7 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
         return <></>
     }
 
-    const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id || ''] || '')
+    const [value, setValue] = useState(props.item.fields.properties[props.propertyTemplate.id || ''] || '')
     const [isEditing, setIsEditing] = useState(false)
     const isEmpty = !(props.propertyValue as string)?.trim()
     const showEditable = !props.readOnly && (isEditing || isEmpty)
@@ -32,10 +32,10 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
     const emptyDisplayValue = props.showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
 
     const saveTextProperty = useCallback(() => {
-        if (value !== (props.card.fields.properties[props.propertyTemplate?.id || ''] || '')) {
-            mutator.changePropertyValue(props.board.id, props.card, props.propertyTemplate?.id || '', value)
+        if (value !== (props.item.fields.properties[props.propertyTemplate?.id || ''] || '')) {
+            mutator.changePropertyValue(props.board.id, props.item, props.propertyTemplate?.id || '', value)
         }
-    }, [props.card, props.propertyTemplate, value])
+    }, [props.item, props.propertyTemplate, value])
 
     const saveTextPropertyRef = useRef<() => void>(saveTextProperty)
     saveTextPropertyRef.current = saveTextProperty

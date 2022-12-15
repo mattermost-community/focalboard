@@ -10,7 +10,7 @@ const CreatedBy = (props: PropertyProps): JSX.Element => {
     return (
         <Person
             {...props}
-            propertyValue={props.card.createdBy}
+            propertyValue={props.item.createdBy}
             readOnly={true} // created by is an immutable property, so will always be readonly
         />
     )

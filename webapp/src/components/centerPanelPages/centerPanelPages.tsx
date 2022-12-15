@@ -69,11 +69,6 @@ const CenterPanelPages = (props: Props) => {
         profileImg = imageURLForUser(owner.id)
     }
 
-    const pseudoCard = {
-        ...props.activePage,
-        fields: {...props.activePage.fields, properties: props.activePage.fields.properties || {}} as any,
-    }
-
     return (
         <div
             className='CenterPanelPages'
@@ -169,7 +164,7 @@ const CenterPanelPages = (props: Props) => {
                     canEditBoardProperties={canEditBoardProperties}
                     canEditBoardCards={canEditBoardCards}
                     newTemplateId={newTemplateId}
-                    pseudoCard={pseudoCard}
+                    page={props.activePage}
                 />
 
                 <PageBlocks
