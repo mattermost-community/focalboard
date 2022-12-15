@@ -33,7 +33,6 @@ export type PropertyProps = {
 }
 
 export abstract class PropertyType {
-    isDate = false
     canGroup = false
     canFilter = false
     filterValueType: FilterValueType = 'none'
@@ -73,14 +72,6 @@ export abstract class PropertyType {
 }
 
 export abstract class DatePropertyType extends PropertyType {
-    isDate = true
-    canGroup = false
-    canFilter = false
-    filterValueType: FilterValueType = 'none'
-    isReadOnly = false
-    calculationOptions = [Options.none, Options.count, Options.countEmpty,
-        Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
-        Options.countValue, Options.countUniqueValue]
     getDateFrom: (value: string | string[] | undefined, card: Card) => Date | undefined
     getDateTo: (value: string | string[] | undefined, card: Card) => Date | undefined
 
