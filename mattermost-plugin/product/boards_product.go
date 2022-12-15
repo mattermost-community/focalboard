@@ -10,7 +10,6 @@ import (
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
 	"github.com/mattermost/focalboard/server/model"
 
-	"github.com/mattermost/mattermost-server/v6/app"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
 	"github.com/mattermost/mattermost-server/v6/product"
@@ -25,26 +24,26 @@ const (
 var errServiceTypeAssert = errors.New("type assertion failed")
 
 func init() {
-	app.RegisterProduct(boardsProductName, app.ProductManifest{
+	product.RegisterProduct(boardsProductName, product.Manifest{
 		Initializer: newBoardsProduct,
-		Dependencies: map[app.ServiceKey]struct{}{
-			app.TeamKey:          {},
-			app.ChannelKey:       {},
-			app.UserKey:          {},
-			app.PostKey:          {},
-			app.BotKey:           {},
-			app.ClusterKey:       {},
-			app.ConfigKey:        {},
-			app.LogKey:           {},
-			app.LicenseKey:       {},
-			app.FilestoreKey:     {},
-			app.FileInfoStoreKey: {},
-			app.RouterKey:        {},
-			app.CloudKey:         {},
-			app.KVStoreKey:       {},
-			app.StoreKey:         {},
-			app.SystemKey:        {},
-			app.PreferencesKey:   {},
+		Dependencies: map[product.ServiceKey]struct{}{
+			product.TeamKey:          {},
+			product.ChannelKey:       {},
+			product.UserKey:          {},
+			product.PostKey:          {},
+			product.BotKey:           {},
+			product.ClusterKey:       {},
+			product.ConfigKey:        {},
+			product.LogKey:           {},
+			product.LicenseKey:       {},
+			product.FilestoreKey:     {},
+			product.FileInfoStoreKey: {},
+			product.RouterKey:        {},
+			product.CloudKey:         {},
+			product.KVStoreKey:       {},
+			product.StoreKey:         {},
+			product.SystemKey:        {},
+			product.PreferencesKey:   {},
 		},
 	})
 }
@@ -73,120 +72,120 @@ type boardsProduct struct {
 	boardsApp *boards.BoardsApp
 }
 
-func newBoardsProduct(_ *app.Server, services map[app.ServiceKey]interface{}) (app.Product, error) {
+func newBoardsProduct(services map[product.ServiceKey]interface{}) (product.Product, error) {
 	boards := &boardsProduct{}
 
 	for key, service := range services {
 		switch key {
-		case app.TeamKey:
+		case product.TeamKey:
 			teamService, ok := service.(product.TeamService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.teamService = teamService
-		case app.ChannelKey:
+		case product.ChannelKey:
 			channelService, ok := service.(product.ChannelService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.channelService = channelService
-		case app.UserKey:
+		case product.UserKey:
 			userService, ok := service.(product.UserService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.userService = userService
-		case app.PostKey:
+		case product.PostKey:
 			postService, ok := service.(product.PostService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.postService = postService
-		case app.PermissionsKey:
+		case product.PermissionsKey:
 			permissionsService, ok := service.(product.PermissionService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.permissionsService = permissionsService
-		case app.BotKey:
+		case product.BotKey:
 			botService, ok := service.(product.BotService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.botService = botService
-		case app.ClusterKey:
+		case product.ClusterKey:
 			clusterService, ok := service.(product.ClusterService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.clusterService = clusterService
-		case app.ConfigKey:
+		case product.ConfigKey:
 			configService, ok := service.(product.ConfigService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.configService = configService
-		case app.LogKey:
+		case product.LogKey:
 			logger, ok := service.(mlog.LoggerIFace)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.logger = logger.With(mlog.String("product", boardsProductName))
-		case app.LicenseKey:
+		case product.LicenseKey:
 			licenseService, ok := service.(product.LicenseService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.licenseService = licenseService
-		case app.FilestoreKey:
+		case product.FilestoreKey:
 			filestoreService, ok := service.(product.FilestoreService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.filestoreService = filestoreService
-		case app.FileInfoStoreKey:
+		case product.FileInfoStoreKey:
 			fileInfoStoreService, ok := service.(product.FileInfoStoreService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.fileInfoStoreService = fileInfoStoreService
-		case app.RouterKey:
+		case product.RouterKey:
 			routerService, ok := service.(product.RouterService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.routerService = routerService
-		case app.CloudKey:
+		case product.CloudKey:
 			cloudService, ok := service.(product.CloudService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.cloudService = cloudService
-		case app.KVStoreKey:
+		case product.KVStoreKey:
 			kvStoreService, ok := service.(product.KVStoreService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.kvStoreService = kvStoreService
-		case app.StoreKey:
+		case product.StoreKey:
 			storeService, ok := service.(product.StoreService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.storeService = storeService
-		case app.SystemKey:
+		case product.SystemKey:
 			systemService, ok := service.(product.SystemService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.systemService = systemService
-		case app.PreferencesKey:
+		case product.PreferencesKey:
 			preferencesService, ok := service.(product.PreferencesService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
 			}
 			boards.preferencesService = preferencesService
-		case app.HooksKey:
+		case product.HooksKey:
 			hooksService, ok := service.(product.HooksService)
 			if !ok {
 				return nil, fmt.Errorf("invalid service key '%s': %w", key, errServiceTypeAssert)
