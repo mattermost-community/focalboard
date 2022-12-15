@@ -676,35 +676,14 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 	// question mark placeholder here
 	builder := s.getQueryBuilder().PlaceholderFormat(sq.Question)
 
-	var boardMembersWhere sq.Or
-	var channelMembersWhere sq.Or
-
-	if includePublicBoards {
-		boardMembersWhere = sq.Or{
-			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.Eq{"bm.user_id": userID},
-		}
-		channelMembersWhere = sq.Or{
-			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.Eq{"cm.userId": userID},
-		}
-	} else {
-		boardMembersWhere = sq.Or{
-			sq.Eq{"bm.user_id": userID},
-		}
-		channelMembersWhere = sq.Or{
-			sq.Eq{"cm.userId": userID},
-		}
-	}
-
 	boardMembersQ := builder.
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Join(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{
 			"b.is_template": false,
-		}).
-		Where(boardMembersWhere)
+			"bm.user_id":    userID,
+		})
 
 	teamMembersQ := builder.
 		Select(boardFields("b.")...).
@@ -714,6 +693,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 			"b.is_template": false,
 			"tm.userID":     userID,
 			"tm.deleteAt":   0,
+			"b.type":        model.BoardTypeOpen,
 		})
 
 	channelMembersQ := builder.
@@ -722,8 +702,8 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		Join("ChannelMembers as cm on cm.channelId=b.channel_id").
 		Where(sq.Eq{
 			"b.is_template": false,
-		}).
-		Where(channelMembersWhere)
+			"cm.userId":     userID,
+		})
 
 	if term != "" {
 		// break search query into space separated words
@@ -753,30 +733,24 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		return nil, fmt.Errorf("SearchBoardsForUser error getting channelMembersSQL: %w", err)
 	}
 
-	unionQ := boardMembersQ.
-		Prefix("(").
-		Suffix(") UNION ("+teamMembersSQL, teamMembersArgs...).
-		Suffix(") UNION ("+channelMembersSQL+")", channelMembersArgs...)
-
+	unionQ := boardMembersQ
 	user, err := s.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}
 	// NOTE: theoretically, could do e.g. `isGuest := !includePublicBoards`
 	// but that introduces some tight coupling + fragility
-	if user.IsGuest {
-		var explicitMembers []*model.BoardMember
-		explicitMembers, err = s.Store.GetMembersForUser(userID)
-		if err != nil {
-			s.logger.Error(`getMembersForUser ERROR`, mlog.Err(err))
-			return nil, err
+	if !user.IsGuest {
+		unionQ = unionQ.
+			Prefix("(").
+			Suffix(") UNION ("+channelMembersSQL+")", channelMembersArgs...)
+		if includePublicBoards {
+			unionQ = unionQ.Suffix(" UNION ("+teamMembersSQL+")", teamMembersArgs...)
 		}
-		boardIDs := []string{}
-		for _, m := range explicitMembers {
-			boardIDs = append(boardIDs, m.BoardID)
-		}
-		// Only explicit memberships for guests
-		unionQ = unionQ.Where(sq.Eq{"b.id": boardIDs})
+	} else if includePublicBoards {
+		unionQ = unionQ.
+			Prefix("(").
+			Suffix(") UNION ("+teamMembersSQL+")", teamMembersArgs...)
 	}
 
 	unionSQL, unionArgs, err := unionQ.ToSql()
