@@ -7,7 +7,7 @@ require (
 	github.com/gorilla/mux v1.8.0
 	github.com/mattermost/focalboard/server v0.0.0-20220818150333-feb49eaf197a
 	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
-	github.com/mattermost/mattermost-server/v6 v6.0.0-20221130200243-06e964b86b0d
+	github.com/mattermost/mattermost-server/v6 v6.0.0-20221214122404-8d90c7042f93
 	github.com/stretchr/testify v1.8.1
 )
 
