@@ -12,8 +12,6 @@ import {PropertyTypeEnum, DatePropertyType} from '../types'
 
 import DateComponent, {createDatePropertyFromString} from './date'
 
-const oneDay = 60 * 60 * 24 * 1000
-
 const timeZoneOffset = (date: number): number => {
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
