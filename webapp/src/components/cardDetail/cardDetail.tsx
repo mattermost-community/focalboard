@@ -195,7 +195,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
     return (
         <>
-            <div className={`CardDetail content${limited ? ' is-limited' : ''}`}>
+            <div className={`CardDetail ${limited ? ' CardDetail--is-limited' : ''}`}>
                 <BlockIconSelector
                     block={card}
                     size='l'
@@ -314,7 +314,7 @@ const CardDetail = (props: Props): JSX.Element|null => {
 
             {/* Content blocks */}
 
-            {!limited && <div className='CardDetail content fullwidth content-blocks'>
+            {!limited && <div className='CardDetail CardDetail--fullwidth content-blocks'>
                 {newBoardsEditor && (
                     <BlocksEditor
                         boardId={card.boardId}
