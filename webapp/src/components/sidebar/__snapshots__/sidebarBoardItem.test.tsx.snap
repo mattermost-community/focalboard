@@ -35,7 +35,7 @@ exports[`components/sidebarBoardItem renders default icon if no custom icon set 
         <div>
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper x"
+            class="MenuWrapper SidebarBoardMenu x"
             role="button"
           >
             <button
@@ -116,7 +116,7 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
         <div>
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper override menuOpened menuOpen"
+            class="MenuWrapper override menuOpened SidebarBoardMenu menuOpen"
             role="button"
           >
             <button
@@ -137,6 +137,7 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
                 <div
                   class="menu-options"
                 >
+                  <div />
                   <div>
                     <div
                       class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"
@@ -419,7 +420,7 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
         <div>
           <div
             aria-label="menuwrapper"
-            class="MenuWrapper override menuOpened menuOpen"
+            class="MenuWrapper override menuOpened SidebarBoardMenu menuOpen"
             role="button"
           >
             <button
@@ -440,6 +441,7 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
                 <div
                   class="menu-options"
                 >
+                  <div />
                   <div>
                     <div
                       class="MenuOption SubMenuOption menu-option boardMoveToCategorySubmenu"

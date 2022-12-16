@@ -77,6 +77,9 @@ describe('components/sidebarCategory', () => {
                 [view.id]: view,
             },
         },
+        pages: {
+            pages: {},
+        },
         teams: {
             current: {
                 id: 'team-id',

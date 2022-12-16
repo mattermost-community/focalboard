@@ -63,6 +63,9 @@ describe('components/sidebarBoardItem', () => {
                 [view.id]: view,
             },
         },
+        pages: {
+            pages: {},
+        },
         teams: {
             current: {
                 id: 'team-id',
