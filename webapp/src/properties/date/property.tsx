@@ -52,10 +52,10 @@ export default class DateProperty extends PropertyType {
         return displayValue
     }
 
-    getDateFrom = (value: string | string[] | undefined, item: Card|Page) => {
+    getDateFrom = (value: string | string[] | undefined) => {
         const dateProperty = createDatePropertyFromString(value as string)
         if (!dateProperty.from) {
-            return new Date(item.createAt || 0)
+            return undefined
         }
 
         // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
@@ -64,10 +64,10 @@ export default class DateProperty extends PropertyType {
         return dateFrom
     }
 
-    getDateTo = (value: string | string[] | undefined, item: Card|Page) => {
+    getDateTo = (value: string | string[] | undefined) => {
         const dateProperty = createDatePropertyFromString(value as string)
         if (!dateProperty.from) {
-            return new Date(item.createAt || 0)
+            return undefined
         }
         const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
         dateFrom.setHours(0, 0, 0, 0)

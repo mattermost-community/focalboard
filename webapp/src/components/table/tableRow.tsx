@@ -20,6 +20,7 @@ import IconButton from '../../widgets/buttons/iconButton'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
 import DeleteIcon from '../../widgets/icons/delete'
+import Tooltip from '../../widgets/tooltip'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -143,11 +144,11 @@ const TableRow = (props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
         >
 
-            {!props.readonly && (
-                <div className='action-cell octo-table-cell-btn'>
+            <div className='action-cell octo-table-cell-btn'>
+                {!props.readonly && (
                     <IconButton icon={<CompassIcon icon='drag-vertical'/>}/>
-                </div>
-            )}
+                )}
+            </div>
 
             {/* Name / title */}
             <div
@@ -175,10 +176,14 @@ const TableRow = (props: Props) => {
                         className='optionsMenu ml-2 mr-2'
                         stopPropagationOnToggle={true}
                     >
-                        <IconButton
-                            title='MenuBtn'
-                            icon={<OptionsIcon/>}
-                        />
+                        <Tooltip
+                            title={intl.formatMessage({id: 'TableRow.MoreOption', defaultMessage: 'More actions'})}
+                        >
+                            <IconButton
+                                title='MenuBtn'
+                                icon={<OptionsIcon/>}
+                            />
+                        </Tooltip>
                         <Menu>
                             <Menu.Text
                                 icon={<DeleteIcon/>}

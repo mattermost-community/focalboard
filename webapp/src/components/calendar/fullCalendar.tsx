@@ -99,8 +99,17 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
             let dateFrom = new Date(card.createAt || 0)
             let dateTo = new Date(card.createAt || 0)
             if (property.isDate && property.getDateFrom && property.getDateTo) {
-                dateFrom = property.getDateFrom(card.fields.properties[dateDisplayProperty?.id || ''], card)
-                dateTo = property.getDateTo(card.fields.properties[dateDisplayProperty?.id || ''], card)
+                const dateFromValue = property.getDateFrom(card.fields.properties[dateDisplayProperty?.id || ''], card)
+                if (!dateFromValue) {
+                    return []
+                }
+                dateFrom = dateFromValue
+
+                const dateToValue = property.getDateTo(card.fields.properties[dateDisplayProperty?.id || ''], card)
+                if (!dateToValue) {
+                    return []
+                }
+                dateTo = dateToValue
             }
             return [{
                 id: card.id,
