@@ -10,7 +10,7 @@
   "BoardMember.schemeAdmin": "مدیر",
   "BoardMember.schemeEditor": "ویرایشگر",
   "BoardMember.schemeNone": "هیچکدام",
-  "BoardMember.schemeViewer": "نمایشگر",
+  "BoardMember.schemeViewer": "بیننده",
   "BoardPage.newVersion": "نسخه جدیدی از برنامه Boards موجود است، برای بارگیری مجدد اینجا را کلیک کنید.",
   "BoardPage.syncFailed": "تابلو ممکن است حذف شود یا دسترسی آن لغو شود.",
   "BoardTemplateSelector.add-template": "قالب جدید",

@@ -69,3 +69,20 @@ func TestUploadFile(t *testing.T) {
 		require.NotNil(t, file.FileID)
 	})
 }
+
+func TestFileInfo(t *testing.T) {
+	const (
+		testTeamID = "team-id"
+	)
+
+	t.Run("Retrieving file info", func(t *testing.T) {
+		th := SetupTestHelper(t).InitBasic()
+		defer th.TearDown()
+		testBoard := th.CreateBoard(testTeamID, model.BoardTypeOpen)
+
+		fileInfo, resp := th.Client.TeamUploadFileInfo(testTeamID, testBoard.ID, "test")
+		th.CheckOK(resp)
+		require.NotNil(t, fileInfo)
+		require.NotNil(t, fileInfo.Id)
+	})
+}

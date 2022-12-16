@@ -57,9 +57,15 @@
         display: flex;
         visibility: hidden;
         margin-left: 8px;
+        width: 24px;
     }
 
     .URLProperty:hover .Button_Copy {
         display: none;
+    }
+
+    .octo-propertyvalue--readonly {
+        flex-wrap: nowrap;
+        overflow: hidden !important;
     }
 }
