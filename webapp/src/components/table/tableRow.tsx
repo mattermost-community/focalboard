@@ -144,11 +144,11 @@ const TableRow = (props: Props) => {
             style={{opacity: isDragging ? 0.5 : 1}}
         >
 
-            {!props.readonly && (
-                <div className='action-cell octo-table-cell-btn'>
+            <div className='action-cell octo-table-cell-btn'>
+                {!props.readonly && (
                     <IconButton icon={<CompassIcon icon='drag-vertical'/>}/>
-                </div>
-            )}
+                )}
+            </div>
 
             {/* Name / title */}
             <div
