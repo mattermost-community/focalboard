@@ -22,38 +22,11 @@
         font-weight: 400;
     }
 
-    &.sidebar-view-item, &.sidebar-page-item {
+    &.sidebar-view-item {
         padding-left: 42px;
         color: rgba(var(--sidebar-text-rgb), 0.64);
         fill: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
-    }
-    &.sidebar-page-item.depth-0 {
-        padding-left: 42px;
-    }
-    &.sidebar-page-item.depth-1 {
-        padding-left: 52px;
-    }
-    &.sidebar-page-item.depth-2 {
-        padding-left: 62px;
-    }
-    &.sidebar-page-item.depth-3 {
-        padding-left: 72px;
-    }
-    &.sidebar-page-item.depth-4 {
-        padding-left: 82px;
-    }
-    &.sidebar-page-item.depth-5 {
-        padding-left: 92px;
-    }
-    &.sidebar-page-item.depth-6 {
-        padding-left: 102px;
-    }
-    &.sidebar-page-item.depth-7 {
-        padding-left: 112px;
-    }
-    &.sidebar-page-item.depth-8 {
-        padding-left: 122px;
     }
 
     &.active {
@@ -198,23 +171,6 @@
         @media only screen and (max-height: 768px) {
             .menu-options {
                 max-height: min(350px, 50vh);
-            }
-        }
-    }
-
-    &:hover {
-        .PageMenu {
-            display: block;
-        }
-    }
-    .PageMenu {
-        display: none;
-
-        .MenuWrapper {
-            .IconButton {
-                font-size: 14px;
-                height: 24px;
-                width: 24px;
             }
         }
     }
