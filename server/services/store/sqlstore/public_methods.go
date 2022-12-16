@@ -825,8 +825,8 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 }
 
-func (s *SQLStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return s.searchBoardsForUser(s.db, term, userID, includePublicBoards)
+func (s *SQLStore) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return s.searchBoardsForUser(s.db, term, searchField, userID, includePublicBoards)
 
 }
 
