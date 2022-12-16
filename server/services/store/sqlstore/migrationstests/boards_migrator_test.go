@@ -139,7 +139,7 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 				return nil, mErr
 			}
 
-			tmpl, pErr := template.New("sql").Parse(string(asset))
+			tmpl, pErr := template.New("sql").Funcs(bm.store.GetTemplateHelperFuncs()).Parse(string(asset))
 			if pErr != nil {
 				return nil, pErr
 			}
