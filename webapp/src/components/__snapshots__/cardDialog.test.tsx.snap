@@ -72,7 +72,7 @@ exports[`components/cardDialog already following card 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content"
+          class="CardDetail "
         >
           <div
             class="IconSelector"
@@ -165,7 +165,7 @@ exports[`components/cardDialog already following card 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content fullwidth content-blocks"
+          class="CardDetail CardDetail--fullwidth content-blocks"
         >
           <div
             class="octo-content CardDetailContents"
@@ -250,7 +250,7 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
           </div>
         </div>
         <div
-          class="CardDetail content is-limited"
+          class="CardDetail  CardDetail--is-limited"
         >
           <div
             class="IconSelector"
@@ -501,7 +501,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content"
+          class="CardDetail "
         >
           <div
             class="IconSelector"
@@ -551,7 +551,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
           />
         </div>
         <div
-          class="CardDetail content fullwidth content-blocks"
+          class="CardDetail CardDetail--fullwidth content-blocks"
         >
           <div
             class="octo-content CardDetailContents"
@@ -780,7 +780,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content"
+          class="CardDetail "
         >
           <div
             class="IconSelector"
@@ -873,7 +873,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content fullwidth content-blocks"
+          class="CardDetail CardDetail--fullwidth content-blocks"
         >
           <div
             class="octo-content CardDetailContents"
@@ -990,7 +990,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
           </div>
         </div>
         <div
-          class="CardDetail content"
+          class="CardDetail "
         >
           <div
             class="IconSelector"
@@ -1083,7 +1083,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
           </div>
         </div>
         <div
-          class="CardDetail content fullwidth content-blocks"
+          class="CardDetail CardDetail--fullwidth content-blocks"
         >
           <div
             class="octo-content CardDetailContents"
@@ -1200,7 +1200,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content"
+          class="CardDetail "
         >
           <div
             class="IconSelector"
@@ -1293,7 +1293,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content fullwidth content-blocks"
+          class="CardDetail CardDetail--fullwidth content-blocks"
         >
           <div
             class="octo-content CardDetailContents"
@@ -1400,7 +1400,7 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
           </div>
         </div>
         <div
-          class="CardDetail content"
+          class="CardDetail "
         >
           <div
             class="IconSelector"
@@ -1450,7 +1450,7 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
           />
         </div>
         <div
-          class="CardDetail content fullwidth content-blocks"
+          class="CardDetail CardDetail--fullwidth content-blocks"
         >
           <div
             class="octo-content CardDetailContents"

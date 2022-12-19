@@ -637,8 +637,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (a *App) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, searchField, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

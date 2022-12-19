@@ -8,6 +8,7 @@ import (
 
 type BoardType string
 type BoardRole string
+type BoardSearchField string
 
 const (
 	BoardTypeOpen    BoardType = "O"
@@ -20,6 +21,12 @@ const (
 	BoardRoleCommenter BoardRole = "commenter"
 	BoardRoleEditor    BoardRole = "editor"
 	BoardRoleAdmin     BoardRole = "admin"
+)
+
+const (
+	BoardSearchFieldNone         BoardSearchField = ""
+	BoardSearchFieldTitle        BoardSearchField = "title"
+	BoardSearchFieldPropertyName BoardSearchField = "property_name"
 )
 
 // Board groups a set of blocks and its layout
@@ -391,4 +398,14 @@ type BoardMemberHistoryEntry struct {
 	// The insertion time
 	// required: true
 	InsertAt time.Time `json:"insertAt"`
+}
+
+func BoardSearchFieldFromString(field string) (BoardSearchField, error) {
+	switch field {
+	case string(BoardSearchFieldTitle):
+		return BoardSearchFieldTitle, nil
+	case string(BoardSearchFieldPropertyName):
+		return BoardSearchFieldPropertyName, nil
+	}
+	return BoardSearchFieldNone, ErrInvalidBoardSearchField
 }

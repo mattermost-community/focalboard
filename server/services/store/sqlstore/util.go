@@ -138,3 +138,28 @@ func (s *SQLStore) castInt(val int64, as string) string {
 	}
 	return fmt.Sprintf("cast(%d as bigint) AS %s", val, as)
 }
+
+func (s *SQLStore) GetSchemaName() (string, error) {
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		query = s.getQueryBuilder(s.db).Select("DATABASE()")
+	case model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).Select("current_schema()")
+	case model.SqliteDBType:
+		return "", nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+
+	scanner := query.QueryRow()
+
+	var result string
+	err := scanner.Scan(&result)
+	if err != nil && !model.IsErrNotFound(err) {
+		return "", err
+	}
+
+	return result, nil
+}

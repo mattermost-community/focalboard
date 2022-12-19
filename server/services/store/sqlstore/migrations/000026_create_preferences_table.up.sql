@@ -1,4 +1,4 @@
-CREATE TABLE {{.prefix}}preferences
+CREATE TABLE IF NOT EXISTS {{.prefix}}preferences
 (
     userid   VARCHAR(36) NOT NULL,
     category VARCHAR(32) NOT NULL,
@@ -7,8 +7,6 @@ CREATE TABLE {{.prefix}}preferences
     PRIMARY KEY (userid, category, name)
 ) {{if .mysql}}DEFAULT CHARACTER SET utf8mb4{{end}};
 
-CREATE index idx_{{.prefix}}preferences_category
-    ON {{.prefix}}preferences (category);
-
-CREATE index idx_{{.prefix}}preferences_name
-    ON {{.prefix}}preferences (name);
+{{- /* createIndexIfNeeded tableName columns */ -}}
+{{ createIndexIfNeeded "preferences" "category" }}
+{{ createIndexIfNeeded "preferences" "name" }}
