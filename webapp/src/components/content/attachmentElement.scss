@@ -56,6 +56,7 @@
     }
 
     .delete-menu {
+        display: none;
         margin-top: -30px;
     }
 
@@ -71,6 +72,10 @@
         }
 
         .fileElement-menu-icon {
+            display: block;
+        }
+
+        .delete-menu {
             display: block;
         }
     }
