@@ -31,7 +31,9 @@ exports[`components/boardSelector escape button should unmount the component 1`]
             <div
               class="toolbar--right"
             >
-              <div>
+              <div
+                class="d-flex"
+              >
                 <button
                   class="Button emphasis--secondary"
                   type="button"
@@ -134,7 +136,9 @@ exports[`components/boardSelector renders with no results 1`] = `
             <div
               class="toolbar--right"
             >
-              <div>
+              <div
+                class="d-flex"
+              >
                 <button
                   class="Button emphasis--secondary"
                   type="button"
@@ -238,7 +242,9 @@ exports[`components/boardSelector renders with some results 1`] = `
             <div
               class="toolbar--right"
             >
-              <div>
+              <div
+                class="d-flex"
+              >
                 <button
                   class="Button emphasis--secondary"
                   type="button"
@@ -440,7 +446,9 @@ exports[`components/boardSelector renders without start searching 1`] = `
             <div
               class="toolbar--right"
             >
-              <div>
+              <div
+                class="d-flex"
+              >
                 <button
                   class="Button emphasis--secondary"
                   type="button"
