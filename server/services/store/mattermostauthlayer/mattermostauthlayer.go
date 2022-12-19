@@ -670,7 +670,7 @@ func (s *MattermostAuthLayer) baseUserQuery(showEmail, showName bool) sq.SelectB
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
+func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	// as we're joining three queries, we need to avoid numbered
 	// placeholders until the join is done, so we use the default
 	// question mark placeholder here
@@ -706,21 +706,37 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term, userID string, includePu
 		})
 
 	if term != "" {
-		// break search query into space separated words
-		// and search for all words.
-		// This should later be upgraded to industrial-strength
-		// word tokenizer, that uses much more than space
-		// to break words.
+		if searchField == model.BoardSearchFieldPropertyName {
+			var where, whereTerm string
+			switch s.dbType {
+			case model.PostgresDBType:
+				where = "b.properties->? is not null"
+				whereTerm = term
+			case model.MysqlDBType, model.SqliteDBType:
+				where = "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
+				whereTerm = "$." + term
+			default:
+				where = "b.properties LIKE ?"
+				whereTerm = "%\"" + term + "\"%"
+			}
+			boardMembersQ = boardMembersQ.Where(where, whereTerm)
+			teamMembersQ = teamMembersQ.Where(where, whereTerm)
+			channelMembersQ = channelMembersQ.Where(where, whereTerm)
+		} else { // model.BoardSearchFieldTitle
+			// break search query into space separated words
+			// and search for all words.
+			// This should later be upgraded to industrial-strength
+			// word tokenizer, that uses much more than space
+			// to break words.
+			conditions := sq.And{}
+			for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+				conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+			}
 
-		conditions := sq.And{}
-
-		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+			boardMembersQ = boardMembersQ.Where(conditions)
+			teamMembersQ = teamMembersQ.Where(conditions)
+			channelMembersQ = channelMembersQ.Where(conditions)
 		}
-
-		boardMembersQ = boardMembersQ.Where(conditions)
-		teamMembersQ = teamMembersQ.Where(conditions)
-		channelMembersQ = channelMembersQ.Where(conditions)
 	}
 
 	teamMembersSQL, teamMembersArgs, err := teamMembersQ.ToSql()
