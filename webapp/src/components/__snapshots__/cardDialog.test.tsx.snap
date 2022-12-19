@@ -28,9 +28,7 @@ exports[`components/cardDialog already following card 1`] = `
           <div
             class="toolbar--right"
           >
-            <div
-              class="d-flex"
-            >
+            <div>
               <button
                 type="button"
               >
@@ -472,9 +470,7 @@ exports[`components/cardDialog return a cardDialog readonly 1`] = `
           <div
             class="toolbar--right"
           >
-            <div
-              class="d-flex"
-            >
+            <div>
               <button
                 type="button"
               >
@@ -603,9 +599,7 @@ exports[`components/cardDialog return cardDialog menu content 1`] = `
           <div
             class="toolbar--right"
           >
-            <div
-              class="d-flex"
-            >
+            <div>
               <button
                 type="button"
               >
@@ -952,9 +946,7 @@ exports[`components/cardDialog return cardDialog menu content and cancel delete 
           <div
             class="toolbar--right"
           >
-            <div
-              class="d-flex"
-            >
+            <div>
               <button
                 type="button"
               >
@@ -1164,9 +1156,7 @@ exports[`components/cardDialog should match snapshot 1`] = `
           <div
             class="toolbar--right"
           >
-            <div
-              class="d-flex"
-            >
+            <div>
               <button
                 type="button"
               >
@@ -1376,9 +1366,7 @@ exports[`components/cardDialog should match snapshot without permissions 1`] = `
           <div
             class="toolbar--right"
           >
-            <div
-              class="d-flex"
-            >
+            <div>
               <button
                 type="button"
               >
