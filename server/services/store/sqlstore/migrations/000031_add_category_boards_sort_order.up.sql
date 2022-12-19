@@ -1,3 +1,2 @@
 {{- /* addColumnIfNeeded tableName columnName datatype constraint */ -}}
-{{ addColumnIfNeeded "category_boards" "sort_order" "BIGINT" "DEFAULT 0"}}
-
+{{ addColumnIfNeeded "category_boards" "sort_order" "BIGINT" ""}}
