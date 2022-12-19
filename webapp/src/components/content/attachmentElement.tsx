@@ -62,8 +62,8 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
         }
         if (fileInfo.name && !fileName) {
             const generateFileName = (fName: string) => {
-                if (fName.length > 21) {
-                    let result = fName.slice(0, 18)
+                if (fName.length > 18) {
+                    let result = fName.slice(0, 15)
                     result += '...'
                     return result
                 }

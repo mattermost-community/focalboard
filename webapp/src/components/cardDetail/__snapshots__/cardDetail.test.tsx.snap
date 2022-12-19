@@ -3,7 +3,7 @@
 exports[`components/cardDetail/CardDetail should render hidden view if limited 1`] = `
 <div>
   <div
-    class="CardDetail content is-limited"
+    class="CardDetail  CardDetail--is-limited"
   >
     <div
       class="IconSelector"

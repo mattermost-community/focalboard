@@ -720,6 +720,17 @@ func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {
 	return model.BoardsFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) SearchBoardsForUser(teamID, term string, field model.BoardSearchField) ([]*model.Board, *Response) {
+	query := fmt.Sprintf("q=%s&field=%s", term, field)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) SearchBoardsForTeam(teamID, term string) ([]*model.Board, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?q="+term, "")
 	if err != nil {

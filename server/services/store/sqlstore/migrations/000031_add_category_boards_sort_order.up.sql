@@ -1,1 +1,2 @@
-ALTER TABLE {{.prefix}}category_boards ADD COLUMN sort_order BIGINT;
+{{- /* addColumnIfNeeded tableName columnName datatype constraint */ -}}
+{{ addColumnIfNeeded "category_boards" "sort_order" "BIGINT"}}
