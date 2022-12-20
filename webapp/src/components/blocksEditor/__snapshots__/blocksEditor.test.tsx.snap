@@ -79,6 +79,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
       >
         <div
           class="block-actions"
+          data-testid="block-actions"
         >
           <button
             class="IconButton size--small"
@@ -122,6 +123,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
       >
         <div
           class="block-actions"
+          data-testid="block-actions"
         >
           <button
             class="IconButton size--small"
@@ -165,6 +167,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
       >
         <div
           class="block-actions"
+          data-testid="block-actions"
         >
           <button
             class="IconButton size--small"
@@ -208,6 +211,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
       >
         <div
           class="block-actions"
+          data-testid="block-actions"
         >
           <button
             class="IconButton size--small"
@@ -255,6 +259,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
       >
         <div
           class="block-actions"
+          data-testid="block-actions"
         >
           <button
             class="IconButton size--small"
@@ -331,6 +336,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
       >
         <div
           class="block-actions"
+          data-testid="block-actions"
         >
           <button
             class="IconButton size--small"
