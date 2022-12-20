@@ -9,6 +9,7 @@ exports[`components/blocksEditor/blockContent should match snapshot 1`] = `
   >
     <div
       class="block-actions"
+      data-testid="block-actions"
     >
       <button
         class="IconButton size--small"
