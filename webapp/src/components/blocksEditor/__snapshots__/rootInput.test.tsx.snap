@@ -16,13 +16,13 @@ exports[`components/blocksEditor/rootInput should match Display snapshot 1`] = `
       class="css-1f43avz-a11yText-A11yText"
     />
     <div
-      class=" css-4bb158-control"
+      class="RootInput__control css-9fsvdt-control"
     >
       <div
-        class=" css-30zlo3-ValueContainer"
+        class="RootInput__value-container css-30zlo3-ValueContainer"
       >
         <div
-          class=" css-nkozic-Input"
+          class="RootInput__input-container css-nkozic-Input"
           data-value="test-value"
         >
           <input
@@ -33,7 +33,7 @@ exports[`components/blocksEditor/rootInput should match Display snapshot 1`] = `
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
-            class=""
+            class="RootInput__input"
             id="react-select-2-input"
             role="combobox"
             spellcheck="false"
@@ -45,7 +45,7 @@ exports[`components/blocksEditor/rootInput should match Display snapshot 1`] = `
         </div>
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
       />
     </div>
   </div>
@@ -68,13 +68,13 @@ exports[`components/blocksEditor/rootInput should match Input snapshot 1`] = `
       class="css-1f43avz-a11yText-A11yText"
     />
     <div
-      class=" css-4bb158-control"
+      class="RootInput__control css-9fsvdt-control"
     >
       <div
-        class=" css-30zlo3-ValueContainer"
+        class="RootInput__value-container css-30zlo3-ValueContainer"
       >
         <div
-          class=" css-nkozic-Input"
+          class="RootInput__input-container css-nkozic-Input"
           data-value="test-value"
         >
           <input
@@ -85,7 +85,7 @@ exports[`components/blocksEditor/rootInput should match Input snapshot 1`] = `
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
-            class=""
+            class="RootInput__input"
             id="react-select-3-input"
             role="combobox"
             spellcheck="false"
@@ -97,7 +97,7 @@ exports[`components/blocksEditor/rootInput should match Input snapshot 1`] = `
         </div>
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
       />
     </div>
   </div>
@@ -120,19 +120,19 @@ exports[`components/blocksEditor/rootInput should match Input snapshot with menu
       class="css-1f43avz-a11yText-A11yText"
     />
     <div
-      class=" css-4bb158-control"
+      class="RootInput__control RootInput__control--menu-is-open css-9fsvdt-control"
     >
       <div
-        class=" css-30zlo3-ValueContainer"
+        class="RootInput__value-container css-30zlo3-ValueContainer"
       >
         <div
-          class=" css-14el2xx-placeholder"
+          class="RootInput__placeholder css-vinljo-placeholder"
           id="react-select-4-placeholder"
         >
-          Introduce your text or your slash command
+          Add text or type "/" for commands
         </div>
         <div
-          class=" css-g5309v-Input"
+          class="RootInput__input-container css-g5309v-Input"
           data-value=""
         >
           <input
@@ -145,7 +145,7 @@ exports[`components/blocksEditor/rootInput should match Input snapshot with menu
             autocapitalize="none"
             autocomplete="off"
             autocorrect="off"
-            class=""
+            class="RootInput__input"
             id="react-select-4-input"
             role="combobox"
             spellcheck="false"
@@ -157,106 +157,370 @@ exports[`components/blocksEditor/rootInput should match Input snapshot with menu
         </div>
       </div>
       <div
-        class=" css-1hb7zxy-IndicatorsContainer"
+        class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
       />
     </div>
     <div
-      class=" css-1aj7brc"
+      class="RootInput__menu-portal css-1aj7brc"
     >
       <div
-        class=" css-1rsmi4x-menu"
+        class="RootInput__menu css-1rsmi4x-menu"
         id="react-select-4-listbox"
       >
         <div
-          class=" css-g29tl0-MenuList"
+          class="RootInput__menu-list css-g29tl0-MenuList"
         >
           <div
             aria-disabled="false"
-            class=" css-erqggd-option"
+            class="RootInput__option RootInput__option--is-focused css-erqggd-option"
             id="react-select-4-option-0"
             tabindex="-1"
           >
-            /title Creates a new Title block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-format-header-1"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /title
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Title block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-1"
             tabindex="-1"
           >
-            /subtitle Creates a new Sub title block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-format-header-2"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /subtitle
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Sub title block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-2"
             tabindex="-1"
           >
-            /subsubtitle Creates a new Sub Sub title block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-format-header-3"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /subsubtitle
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Sub Sub title block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-3"
             tabindex="-1"
           >
-            /image Creates a new Image block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-image-outline"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /image
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Image block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-4"
             tabindex="-1"
           >
-            /text Creates a new Text block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-text-box-outline"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /text
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Text block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-5"
             tabindex="-1"
           >
-            /divider Creates a new Divider block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <span>
+                  -
+                </span>
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /divider
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Divider block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-6"
             tabindex="-1"
           >
-            /list-item Creates a new List item block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-format-list-bulleted"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /list-item
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new List item block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-7"
             tabindex="-1"
           >
-            /attachment Creates a new Attachment block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-file-text-outline"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /attachment
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Attachment block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-8"
             tabindex="-1"
           >
-            /quote Creates a new Quote block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-format-quote-open"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /quote
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Quote block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-9"
             tabindex="-1"
           >
-            /video Creates a new Video block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-video-outline"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /video
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Video block.
+                </div>
+              </div>
+            </div>
           </div>
           <div
             aria-disabled="false"
-            class=" css-14xsrqy-option"
+            class="RootInput__option css-14xsrqy-option"
             id="react-select-4-option-10"
             tabindex="-1"
           >
-            /checkbox Creates a new Checkbox block.
+            <div
+              class="slash-command"
+            >
+              <div
+                class="slash-command__icon"
+              >
+                <i
+                  class="CompassIcon icon-checkbox-marked"
+                />
+              </div>
+              <div
+                class="slash-command__info"
+              >
+                <div
+                  class="slash-command__title"
+                >
+                  /checkbox
+                </div>
+                <div
+                  class="slash-command__desc"
+                >
+                  Creates a new Checkbox block.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
