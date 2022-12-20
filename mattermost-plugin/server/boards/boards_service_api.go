@@ -38,7 +38,8 @@ func (bs *boardsServiceAPI) DeleteBoard(boardID string, userID string) error {
 	return bs.app.DeleteBoard(boardID, userID)
 }
 
-func (bs *boardsServiceAPI) SearchBoards(searchTerm string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+func (bs *boardsServiceAPI) SearchBoards(searchTerm string, searchField model.BoardSearchField,
+	userID string, includePublicBoards bool) ([]*model.Board, error) {
 	return bs.app.SearchBoardsForUser(searchTerm, searchField, userID, includePublicBoards)
 }
 
@@ -69,5 +70,5 @@ func (bs *boardsServiceAPI) DeleteCard(cardID string, userID string) error {
 	return bs.app.DeleteBlock(cardID, userID)
 }
 
-// Ensure boardsServiceAPI implements product.BoardsService interface
+// Ensure boardsServiceAPI implements product.BoardsService interface.
 var _ product.BoardsService = (*boardsServiceAPI)(nil)
