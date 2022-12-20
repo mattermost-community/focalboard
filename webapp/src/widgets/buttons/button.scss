@@ -89,6 +89,34 @@
         }
     }
 
+    &.emphasis--quaternary {
+        background: transparent;
+        color: rgb(var(--button-bg-rgb));
+
+        &:hover {
+            background: rgba(var(--button-bg-rgb), 0.08);
+        }
+
+        &:active {
+            background-color: rgb(var(--button-bg-rgb), 0.12);
+        }
+    }
+
+    &.emphasis--gray {
+        background: transparent;
+        color: rgba(var(--center-channel-color-rgb), 0.64);
+
+        &:hover {
+            color: rgba(var(--center-channel-color-rgb), 0.72);
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+        }
+
+        &:active {
+            color: rgb(var(--button-bg-rgb));
+            background-color: rgb(var(--button-bg-rgb), 0.12);
+        }
+    }
+
     &.emphasis--danger {
         color: rgb(var(--button-danger-color-rgb));
         background-color: rgb(var(--button-danger-bg-rgb));
