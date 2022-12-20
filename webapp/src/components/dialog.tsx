@@ -63,7 +63,7 @@ const Dialog = (props: Props) => {
                             {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
                         </div>
                         <div className='toolbar--right'>
-                            {toolbar && <div>{toolbar}</div>}
+                            {toolbar && <div className='d-flex'>{toolbar}</div>}
                             {toolsMenu && <MenuWrapper>
                                 <IconButton
                                     size='medium'
