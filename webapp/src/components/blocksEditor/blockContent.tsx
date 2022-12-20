@@ -87,11 +87,13 @@ function BlockContent(props: Props) {
                 }}
             >
                 {!props.readonly &&
-                    <div className='block-actions'>
+                    <div
+                        className='block-actions'
+                        data-testid='block-actions'
+                    >
                         <IconButton
                             size={'small'}
                             icon={<CompassIcon icon='plus'/>}
-                            data-testid='add-action'
                             onClick={(e: any) => {
                                 e.preventDefault()
                                 e.stopPropagation()
@@ -102,7 +104,6 @@ function BlockContent(props: Props) {
                             <IconButton
                                 size={'small'}
                                 icon={<CompassIcon icon='drag-vertical'/>}
-                                data-testid='add-action'
                             />
                         </div>
                     </div>}
