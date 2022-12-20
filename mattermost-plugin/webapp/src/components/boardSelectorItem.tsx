@@ -25,11 +25,11 @@ const BoardSelectorItem = (props: Props) => {
     return (
         <div className='BoardSelectorItem'>
             <div className='BoardSelectorItem-info'>
-                <span className='icon'>{item.icon || <CompassIcon icon='product-boards'/>}</span>
-                <div className='resultLine'>
+                <div className='d-flex'>
+                    <span className='icon'>{item.icon || <CompassIcon icon='product-boards'/>}</span>
                     <div className='resultTitle'>{resultTitle}</div>
-                    <div className='resultDescription'>{item.description}</div>
                 </div>
+                <div className='resultDescription'>{item.description}</div>
             </div>
             <div className='linkUnlinkButton'>
                 {item.channelId === currentChannel &&
