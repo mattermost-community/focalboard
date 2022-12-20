@@ -19,7 +19,12 @@ func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract s
 		return "", fmt.Errorf("cannot find user: %w", err)
 	}
 
-	channel, err := pd.getDirectChannel(evt.TeamID, mentionedUser.Id, pd.botID)
+	botID, err := pd.ensureBoardsBot()
+	if err != nil {
+		return "", err
+	}
+
+	channel, err := pd.getDirectChannel(evt.TeamID, mentionedUser.Id, botID)
 	if err != nil {
 		return "", fmt.Errorf("cannot get direct channel: %w", err)
 	}
@@ -27,7 +32,7 @@ func (pd *PluginDelivery) MentionDeliver(mentionedUser *mm_model.User, extract s
 	boardLink := utils.MakeBoardLink(pd.serverRoot, evt.Board.TeamID, evt.Board.ID)
 
 	post := &mm_model.Post{
-		UserId:    pd.botID,
+		UserId:    botID,
 		ChannelId: channel.Id,
 		Message:   formatMessage(author.Username, extract, evt.Card.Title, link, evt.BlockChanged, boardLink, evt.Board.Title),
 	}
