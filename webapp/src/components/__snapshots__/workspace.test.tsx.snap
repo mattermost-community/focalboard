@@ -188,7 +188,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   <div>
                     <div
                       aria-label="menuwrapper"
-                      class="MenuWrapper x"
+                      class="MenuWrapper SidebarBoardMenu x"
                       role="button"
                     >
                       <button
@@ -371,7 +371,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
             </div>
           </div>
           <div
-            class="ViewHeader"
+            class="ViewHeader viewHeaderView"
           >
             <div
               class="viewSelector"
@@ -890,7 +890,7 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
             </div>
           </div>
           <div
-            class="ViewHeader"
+            class="ViewHeader viewHeaderView"
           >
             <div
               class="viewSelector"
@@ -1314,7 +1314,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   <div>
                     <div
                       aria-label="menuwrapper"
-                      class="MenuWrapper x"
+                      class="MenuWrapper SidebarBoardMenu x"
                       role="button"
                     >
                       <button
@@ -1497,7 +1497,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
             </div>
           </div>
           <div
-            class="ViewHeader"
+            class="ViewHeader viewHeaderView"
           >
             <div
               class="viewSelector"
@@ -2016,7 +2016,7 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
             </div>
           </div>
           <div
-            class="ViewHeader"
+            class="ViewHeader viewHeaderView"
           >
             <div
               class="viewSelector"
