@@ -5,6 +5,7 @@ import React from 'react'
 import {render, screen, fireEvent} from '@testing-library/react'
 
 import {wrapIntl} from '../../testUtils'
+
 import RootInput from './rootInput'
 
 describe('components/blocksEditor/rootInput', () => {
