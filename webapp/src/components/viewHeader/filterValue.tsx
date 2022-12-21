@@ -16,6 +16,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import {PropertyType} from '../../properties/types'
 
 import './filterValue.scss'
+import MultiPersonFilterValue from './multipersonFilterValue'
 
 type Props = {
     view: BoardView
@@ -37,7 +38,7 @@ const filterValue = (props: Props): JSX.Element|null => {
         return null
     }
 
-    if (propertyType.filterValueType === 'options' && filter.condition !== 'includes' && filter.condition !== 'notIncludes') {
+    if ((propertyType.filterValueType === 'options' || propertyType.filterValueType === 'person') && filter.condition !== 'includes' && filter.condition !== 'notIncludes') {
         return null
     }
 
@@ -62,6 +63,15 @@ const filterValue = (props: Props): JSX.Element|null => {
         )
     }
 
+    if (propertyType.filterValueType === 'person') {
+        return (
+            <MultiPersonFilterValue
+                view={view}
+                filter={filter}
+            />
+        )
+    }
+
     let displayValue: string
     if (filter.values.length > 0) {
         displayValue = filter.values.map((id) => {
@@ -75,6 +85,7 @@ const filterValue = (props: Props): JSX.Element|null => {
     return (
         <MenuWrapper className='filterValue'>
             <Button>{displayValue}</Button>
+
             <Menu>
                 {template?.options.map((o) => (
                     <Menu.Switch

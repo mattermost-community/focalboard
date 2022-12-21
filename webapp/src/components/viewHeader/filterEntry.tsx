@@ -86,7 +86,7 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{OctoUtils.filterConditionDisplayString(filter.condition, intl, propertyType.filterValueType)}</Button>
                 <Menu>
-                    {propertyType.filterValueType === 'options' &&
+                    {(propertyType.filterValueType === 'options' || propertyType.filterValueType === 'person') &&
                         <>
                             <Menu.Text
                                 id='includes'

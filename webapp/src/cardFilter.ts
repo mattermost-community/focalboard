@@ -48,6 +48,14 @@ class CardFilter {
         if (filter.propertyId === 'title') {
             value = card.title.toLowerCase()
         }
+        if (!value) {
+            const template = templates.find((o) => o.id === filter.propertyId)
+            if (template && template.type === 'createdBy') {
+                value = card.createdBy
+            } else if (template && template.type === 'updatedBy') {
+                value = card.modifiedBy
+            }
+        }
         switch (filter.condition) {
         case 'includes': {
             if (filter.values?.length < 1) {

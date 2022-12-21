@@ -15,7 +15,7 @@ function encodeText(text: string): string {
 
 export type PropertyTypeEnum = BoardPropertyTypeEnum
 
-export type FilterValueType = 'none'|'options'|'boolean'|'text'
+export type FilterValueType = 'none'|'options'|'boolean'|'text'|'person'
 
 export type FilterCondition = {
     id: string
