@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/pageIconSelector should be empty for not root page without icon 1`] = `<div />`;
+
+exports[`components/pageIconSelector should be empty for root page without icon in the board 1`] = `<div />`;
+
+exports[`components/pageIconSelector should match snapshot in non root page with icon 1`] = `
+<div>
+  <div
+    class="IconSelector"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <div
+        class="octo-icon size-m"
+      >
+        <span>
+          i
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageIconSelector should match snapshot in root page 1`] = `
+<div>
+  <div
+    class="IconSelector"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <div
+        class="octo-icon size-m"
+      >
+        <span>
+          i
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
