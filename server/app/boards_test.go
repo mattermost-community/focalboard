@@ -503,4 +503,39 @@ func TestDuplicateBoard(t *testing.T) {
 		assert.NotNil(t, bab)
 		assert.NotNil(t, members)
 	})
+
+	t.Run("duplicating board as template should not set it's category", func(t *testing.T) {
+		board := &model.Board{
+			ID:    "board_id_2",
+			Title: "Duplicated Board",
+		}
+
+		block := &model.Block{
+			ID:   "block_id_1",
+			Type: "image",
+		}
+
+		th.Store.EXPECT().DuplicateBoard("board_id_1", "user_id_1", "team_id_1", true).Return(
+			&model.BoardsAndBlocks{
+				Boards: []*model.Board{
+					board,
+				},
+				Blocks: []*model.Block{
+					block,
+				},
+			},
+			[]*model.BoardMember{},
+			nil,
+		)
+
+		th.Store.EXPECT().GetBoard("board_id_1").Return(&model.Board{}, nil)
+
+		// for WS change broadcast
+		th.Store.EXPECT().GetMembersForBoard(utils.Anything).Return([]*model.BoardMember{}, nil).Times(2)
+
+		bab, members, err := th.App.DuplicateBoard("board_id_1", "user_id_1", "team_id_1", true)
+		assert.NoError(t, err)
+		assert.NotNil(t, bab)
+		assert.NotNil(t, members)
+	})
 }
