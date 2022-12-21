@@ -56,20 +56,21 @@ const NoPages = () => {
                         />}
                 </p>
             </div>
-            <div className='buttons'>
-                <Button
-                    filled={true}
-                    size={'large'}
-                    onClick={async () => {
-                        await mutator.addEmptyFolder(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
-                    }}
-                >
-                    <FormattedMessage
-                        id='NoPages.create-empty-page'
-                        defaultMessage='Create new page'
-                    />
-                </Button>
-            </div>
+            {!me?.is_guest &&
+                <div className='buttons'>
+                    <Button
+                        filled={true}
+                        size={'large'}
+                        onClick={async () => {
+                            await mutator.addEmptyFolder(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                        }}
+                    >
+                        <FormattedMessage
+                            id='NoPages.create-empty-page'
+                            defaultMessage='Create new page'
+                        />
+                    </Button>
+                </div>}
         </div>
     )
 }
