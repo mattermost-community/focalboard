@@ -12,13 +12,7 @@ import {wrapIntl} from '../../testUtils'
 
 import Breadcrumbs from './breadcrumbs'
 
-jest.mock('../../mutator')
-jest.mock('../../utils')
-jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
-
-beforeAll(() => {})
-
-describe('components/viewTitle', () => {
+describe('components/breadcrumbs', () => {
     const board = TestBlockFactory.createBoard()
     board.title = "BoardTitle"
     board.id = 'test-id'
