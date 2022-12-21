@@ -90,16 +90,30 @@
     }
 
     &.emphasis--quaternary {
-        background-color: transparent;
-        color: rgba(var(--center-channel-color-rgb), 0.56);
+        background: transparent;
+        color: rgb(var(--button-bg-rgb));
 
         &:hover {
-            background-color: rgb(var(--button-bg-rgb), 0.08);
+            background: rgba(var(--button-bg-rgb), 0.08);
         }
 
         &:active {
-            background-color: rgb(var(--button-bg-rgb), 0.16);
+            background-color: rgb(var(--button-bg-rgb), 0.12);
+        }
+    }
+
+    &.emphasis--gray {
+        background: transparent;
+        color: rgba(var(--center-channel-color-rgb), 0.64);
+
+        &:hover {
+            color: rgba(var(--center-channel-color-rgb), 0.72);
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+        }
+
+        &:active {
             color: rgb(var(--button-bg-rgb));
+            background-color: rgb(var(--button-bg-rgb), 0.12);
         }
     }
 
