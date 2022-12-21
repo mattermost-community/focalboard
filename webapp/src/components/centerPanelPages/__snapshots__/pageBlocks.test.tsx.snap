@@ -1,0 +1,506 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/pageBlocks should match snapshot 1`] = `
+<div>
+  <div
+    class="PageBlocks"
+  >
+    <div
+      class="BlocksEditor"
+    >
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="block-actions"
+            data-testid="block-actions"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-plus"
+              />
+            </button>
+            <div
+              draggable="true"
+            >
+              <button
+                class="IconButton size--small"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-drag-vertical"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 1
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="block-actions"
+            data-testid="block-actions"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-plus"
+              />
+            </button>
+            <div
+              draggable="true"
+            >
+              <button
+                class="IconButton size--small"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-drag-vertical"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 2
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="block-actions"
+            data-testid="block-actions"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-plus"
+              />
+            </button>
+            <div
+              draggable="true"
+            >
+              <button
+                class="IconButton size--small"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-drag-vertical"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 3
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="Editor"
+      >
+        <div
+          class="RootInput css-b62m3t-container"
+        >
+          <span
+            class="css-1f43avz-a11yText-A11yText"
+            id="react-select-2-live-region"
+          />
+          <span
+            aria-atomic="false"
+            aria-live="polite"
+            aria-relevant="additions text"
+            class="css-1f43avz-a11yText-A11yText"
+          />
+          <div
+            class="RootInput__control css-9fsvdt-control"
+          >
+            <div
+              class="RootInput__value-container css-30zlo3-ValueContainer"
+            >
+              <div
+                class="RootInput__placeholder css-vinljo-placeholder"
+                id="react-select-2-placeholder"
+              >
+                Add text or type "/" for commands
+              </div>
+              <div
+                class="RootInput__input-container css-g5309v-Input"
+                data-value=""
+              >
+                <input
+                  aria-autocomplete="list"
+                  aria-describedby="react-select-2-placeholder"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                  autocapitalize="none"
+                  autocomplete="off"
+                  autocorrect="off"
+                  class="RootInput__input"
+                  id="react-select-2-input"
+                  role="combobox"
+                  spellcheck="false"
+                  style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                  tabindex="0"
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageBlocks should match snapshot after click one content block 1`] = `
+<div>
+  <div
+    class="PageBlocks"
+  >
+    <div
+      class="BlocksEditor"
+    >
+      <div>
+        <div
+          class="Editor"
+        >
+          <div
+            class="TextContent"
+            data-testid="text"
+          >
+            <div
+              class="MarkdownEditor octo-editor  active"
+            >
+              <div
+                class="MarkdownEditorInput"
+              >
+                <div
+                  class="DraftEditor-root"
+                >
+                  <div
+                    class="DraftEditor-editorContainer"
+                  >
+                    <div
+                      aria-autocomplete="list"
+                      aria-expanded="false"
+                      class="notranslate public-DraftEditor-content"
+                      contenteditable="true"
+                      role="combobox"
+                      spellcheck="false"
+                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
+                    >
+                      <div
+                        data-contents="true"
+                      >
+                        <div
+                          class=""
+                          data-block="true"
+                          data-editor="123"
+                          data-offset-key="123-0-0"
+                        >
+                          <div
+                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
+                            data-offset-key="123-0-0"
+                          >
+                            <span
+                              data-offset-key="123-0-0"
+                            >
+                              <span
+                                data-text="true"
+                              >
+                                text content 1
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="block-actions"
+            data-testid="block-actions"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-plus"
+              />
+            </button>
+            <div
+              draggable="true"
+            >
+              <button
+                class="IconButton size--small"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-drag-vertical"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 2
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="block-actions"
+            data-testid="block-actions"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-plus"
+              />
+            </button>
+            <div
+              draggable="true"
+            >
+              <button
+                class="IconButton size--small"
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-drag-vertical"
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 3
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageBlocks should match snapshot when readonly 1`] = `
+<div>
+  <div
+    class="PageBlocks"
+  >
+    <div
+      class="BlocksEditor"
+    >
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 1
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 2
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 3
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageBlocks should match snapshot without edit board cards permission 1`] = `
+<div>
+  <div
+    class="PageBlocks"
+  >
+    <div
+      class="BlocksEditor"
+    >
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 1
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 2
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div
+          class="BlockContent   "
+          data-testid="block-content"
+          style="opacity: 1;"
+        >
+          <div
+            class="content"
+          >
+            <div
+              class="octo-editor-preview"
+            >
+              <p>
+                text content 3
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
