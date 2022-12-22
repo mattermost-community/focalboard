@@ -104,7 +104,7 @@ type Store interface {
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	CanSeeUser(seerID string, seenID string) (bool, error)
-	SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error)
+	SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error)
 	SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
@@ -117,9 +117,13 @@ type Store interface {
 	DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID string) error
 
 	GetCategory(id string) (*model.Category, error)
+
+	GetUserCategories(userID, teamID string) ([]model.Category, error)
+	// @withTransaction
 	CreateCategory(category model.Category) error
 	UpdateCategory(category model.Category) error
 	DeleteCategory(categoryID, userID, teamID string) error
+	ReorderCategories(userID, teamID string, newCategoryOrder []string) ([]string, error)
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
 
@@ -127,7 +131,8 @@ type Store interface {
 	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
-	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
+	AddUpdateCategoryBoard(userID string, boardCategoryMapping map[string]string) error
+	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error

@@ -443,6 +443,15 @@ func (c *Client) CreateCategory(category model.Category) (*model.Category, *Resp
 	return model.CategoryFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) DeleteCategory(teamID, categoryID string) *Response {
+	r, err := c.DoAPIDelete(c.GetTeamRoute(teamID)+"/categories/"+categoryID, "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
 func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
 	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
 	if err != nil {
@@ -463,6 +472,30 @@ func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *
 	var categoryBoards []model.CategoryBoards
 	_ = json.NewDecoder(r.Body).Decode(&categoryBoards)
 	return categoryBoards, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategories(teamID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedCategoryOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedCategoryOrder)
+	return updatedCategoryOrder, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategoryBoards(teamID, categoryID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedBoardsOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedBoardsOrder)
+	return updatedBoardsOrder, BuildResponse(r)
 }
 
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
@@ -679,6 +712,17 @@ func (c *Client) GetBoardMetadata(boardID, readToken string) (*model.BoardMetada
 
 func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) SearchBoardsForUser(teamID, term string, field model.BoardSearchField) ([]*model.Board, *Response) {
+	query := fmt.Sprintf("q=%s&field=%s", term, field)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?"+query, "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
