@@ -4,6 +4,7 @@ import (
 	"github.com/mattermost/focalboard/server/app"
 	"github.com/mattermost/focalboard/server/model"
 
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/product"
 )
 
@@ -68,6 +69,10 @@ func (bs *boardsServiceAPI) PatchCard(cardPatch *model.CardPatch, cardID string,
 
 func (bs *boardsServiceAPI) DeleteCard(cardID string, userID string) error {
 	return bs.app.DeleteBlock(cardID, userID)
+}
+
+func (bs *boardsServiceAPI) HasPermissionToBoard(userID, boardID string, permission *mm_model.Permission) bool {
+	return bs.app.HasPermissionToBoard(userID, boardID, permission)
 }
 
 // Ensure boardsServiceAPI implements product.BoardsService interface.
