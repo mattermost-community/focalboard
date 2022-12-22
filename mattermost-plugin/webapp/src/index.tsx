@@ -115,6 +115,7 @@ function customHistory() {
     return {
         ...history,
         push: (path: string, state?: unknown) => {
+            console.log(`history.push: ${path} sttae: ${JSON.stringify(state)}`)
             if (Utils.isDesktop()) {
                 windowAny.postMessage(
                     {
@@ -129,6 +130,10 @@ function customHistory() {
                 history.push(path, state as Record<string, never>)
             }
         },
+        replace: (path: string, state?: unknown) => {
+            console.log(`history.replace: ${path} state: ${JSON.stringify(state)}`)
+            history.replace(path, state)
+        }
     }
 }
 

@@ -32,6 +32,7 @@ import GuestNoBoards from './guestNoBoards'
 import Sidebar from './sidebar/sidebar'
 
 import './workspace.scss'
+import {getHiddenBoardIDs} from '../store/sidebar'
 
 type Props = {
     readonly: boolean
@@ -54,10 +55,10 @@ function CenterContent(props: Props) {
     const dispatch = useAppDispatch()
     const myConfig = useAppSelector(getMyConfig)
     const me = useAppSelector<IUser|null>(getMe)
+    const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
 
     const isBoardHidden = () => {
-        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        return hiddenBoardIDs[board.id]
+        return hiddenBoardIDs.includes(board.id)
     }
 
     const showCard = useCallback((cardId?: string) => {

@@ -72,6 +72,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const activeViewId = useAppSelector(getCurrentViewId)
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
+    console.log(`match: ${match.url}`)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
@@ -79,6 +80,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const myConfig = useAppSelector(getMyConfig)
     const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
     const category = useAppSelector(getCategoryOfBoard(activeBoardId))
+    const [previousBoardID, setPreviousBoardID] = useState<string>('')
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -223,6 +225,8 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
+        console.log(`handleUnhideBoard: ${boardID}`)
+
         if (!me) {
             return
         }

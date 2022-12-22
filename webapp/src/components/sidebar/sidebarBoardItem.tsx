@@ -175,6 +175,13 @@ const SidebarBoardItem = (props: Props) => {
         // await dispatch(patchProps(patchedProps))
 
         await octoClient.hideBoard(props.categoryBoards.id, board.id)
+        dispatch(updateBoardCategories([
+            {
+                boardID: board.id,
+                categoryID: props.categoryBoards.id,
+                hidden: true,
+            },
+        ]))
 
         // If we're hiding the board we're currently on,
         // we need to switch to a different board once its hidden.
