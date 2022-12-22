@@ -42,14 +42,14 @@ export abstract class PropertyType {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue]
     displayValue: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined
-    getDateFrom: (value: string | string[] | undefined, card: Card) => Date
-    getDateTo: (value: string | string[] | undefined, card: Card) => Date
+    getDateFrom: (value: string | string[] | undefined, card: Card) => Date | undefined
+    getDateTo: (value: string | string[] | undefined, card: Card) => Date | undefined
     valueLength: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number) => number
 
     constructor() {
         this.displayValue = (value: string | string[] | undefined) => value
-        this.getDateFrom = (_: string | string[] | undefined, card: Card) => new Date(card.createAt || 0)
-        this.getDateTo = (_: string | string[] | undefined, card: Card) => new Date(card.createAt || 0)
+        this.getDateFrom = () => undefined
+        this.getDateTo = () => undefined
         this.valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
             const displayValue = this.displayValue(value, card, template, intl) || ''
             return Utils.getTextWidth(displayValue.toString(), fontDescriptor)

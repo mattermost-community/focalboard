@@ -189,9 +189,11 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
-	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
-			return nil, nil, categoryErr
+	if !asTemplate {
+		for _, board := range bab.Boards {
+			if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
+				return nil, nil, categoryErr
+			}
 		}
 	}
 
@@ -637,8 +639,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (a *App) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, searchField, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

@@ -13,7 +13,7 @@ ALTER TABLE {{.prefix}}blocks ADD PRIMARY KEY (id);
 {{if .sqlite}}
 ALTER TABLE {{.prefix}}blocks RENAME TO {{.prefix}}blocks_tmp;
 
-CREATE TABLE {{.prefix}}blocks (
+CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
         id VARCHAR(36),
         insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
         parent_id VARCHAR(36),
@@ -38,7 +38,7 @@ DROP TABLE {{.prefix}}blocks_tmp;
 {{end}}
 
 {{- /* most block searches use board_id or a combination of board and parent ids */ -}}
-CREATE INDEX idx_blocks_board_id_parent_id ON {{.prefix}}blocks (board_id, parent_id);
+{{ createIndexIfNeeded "blocks" "board_id, parent_id" }}
 
 {{- /* get subscriptions is used once per board page load */ -}}
-CREATE INDEX idx_subscriptions_subscriber_id ON {{.prefix}}subscriptions (subscriber_id);
+{{ createIndexIfNeeded "subscriptions" "subscriber_id" }}
