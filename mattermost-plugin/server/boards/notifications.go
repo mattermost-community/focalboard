@@ -1,6 +1,7 @@
 package boards
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -62,7 +63,14 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscr
 }
 
 func createDelivery(servicesAPI model.ServicesAPI, serverRoot string) (*plugindelivery.PluginDelivery, error) {
-	return plugindelivery.New(serverRoot, servicesAPI), nil
+	bot := model.FocalboardBot
+
+	botID, err := servicesAPI.EnsureBot(bot)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ensure %s bot: %w", bot.DisplayName, err)
+	}
+
+	return plugindelivery.New(botID, serverRoot, servicesAPI), nil
 }
 
 type appIface interface {

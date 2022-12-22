@@ -29,18 +29,13 @@ func (pd *PluginDelivery) SubscriptionDeliverSlackAttachments(teamID string, sub
 		return fmt.Errorf("cannot fetch channel member for user %s: %w", subscriberID, err)
 	}
 
-	botID, err := pd.ensureBoardsBot()
-	if err != nil {
-		return err
-	}
-
-	channelID, err := pd.getDirectChannelID(teamID, subscriberID, subscriptionType, botID)
+	channelID, err := pd.getDirectChannelID(teamID, subscriberID, subscriptionType, pd.botID)
 	if err != nil {
 		return err
 	}
 
 	post := &mm_model.Post{
-		UserId:    botID,
+		UserId:    pd.botID,
 		ChannelId: channelID,
 	}
 

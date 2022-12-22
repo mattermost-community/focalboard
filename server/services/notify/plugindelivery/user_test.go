@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/utils"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
@@ -47,7 +46,7 @@ var (
 
 func Test_userByUsername(t *testing.T) {
 	servicesAPI := newServicesAPIMock(mockUsers)
-	delivery := New("server_root", servicesAPI)
+	delivery := New("bot_id", "server_root", servicesAPI)
 
 	tests := []struct {
 		name    string
@@ -146,8 +145,4 @@ func (m servicesAPIMock) CreateMember(teamID string, userID string) (*mm_model.T
 		TeamId: teamID,
 	}
 	return member, nil
-}
-
-func (m servicesAPIMock) EnsureBot(bot *mm_model.Bot) (string, error) {
-	return utils.NewID(utils.IDTypeUser), nil
 }

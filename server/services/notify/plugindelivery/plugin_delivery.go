@@ -4,11 +4,6 @@
 package plugindelivery
 
 import (
-	"fmt"
-	"sync/atomic"
-
-	"github.com/mattermost/focalboard/server/model"
-
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -38,40 +33,20 @@ type servicesAPI interface {
 	// CreateMember adds a user to the specified team. Safe to call if the user is
 	// already a member of the team.
 	CreateMember(teamID string, userID string) (*mm_model.TeamMember, error)
-
-	// EnsureBot ensures the specified bot is created as a bot user, and added to team.
-	EnsureBot(bot *mm_model.Bot) (string, error)
 }
 
 // PluginDelivery provides ability to send notifications to direct message channels via Mattermost plugin API.
 type PluginDelivery struct {
 	botID      string
-	botEnsured uint32
 	serverRoot string
 	api        servicesAPI
 }
 
 // New creates a PluginDelivery instance.
-func New(serverRoot string, api servicesAPI) *PluginDelivery {
+func New(botID string, serverRoot string, api servicesAPI) *PluginDelivery {
 	return &PluginDelivery{
-		botID:      "",
-		botEnsured: 0,
+		botID:      botID,
 		serverRoot: serverRoot,
 		api:        api,
 	}
-}
-
-func (pd *PluginDelivery) ensureBoardsBot() (string, error) {
-	if !atomic.CompareAndSwapUint32(&pd.botEnsured, 0, 1) {
-		return pd.botID, nil
-	}
-
-	bot := model.FocalboardBot
-	var err error
-
-	pd.botID, err = pd.api.EnsureBot(bot)
-	if err != nil {
-		return "", fmt.Errorf("failed to ensure board bot: %w", err)
-	}
-	return pd.botID, nil
 }
