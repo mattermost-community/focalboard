@@ -69,5 +69,5 @@ func (bs *boardsServiceAPI) DeleteCard(cardID string, userID string) error {
 	return bs.app.DeleteBlock(cardID, userID)
 }
 
-// Ensure boardsServiceAPI implements product.BoardsService interface
+// Ensure boardsServiceAPI implements product.BoardsService interface.
 var _ product.BoardsService = (*boardsServiceAPI)(nil)
