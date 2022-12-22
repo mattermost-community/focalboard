@@ -83,6 +83,9 @@ class CsvExporter {
                 if (property.type === 'createdBy') {
                     propertyValue = card.createdBy
                 }
+                if (property.type === 'updatedBy') {
+                    propertyValue = card.modifiedBy
+                }
                 row.push(property.exportValue(propertyValue, card, template, intl))
             })
             rows.push(row)
