@@ -13,9 +13,24 @@ import (
 
 const categorySortOrderGap = 10
 
+func (s *SQLStore) categoryFields() []string {
+	return []string{
+		"id",
+		"name",
+		"user_id",
+		"team_id",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"collapsed",
+		"COALESCE(sort_order, 0)",
+		"type",
+	}
+}
+
 func (s *SQLStore) getCategory(db sq.BaseRunner, id string) (*model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "sort_order", "type").
+		Select(s.categoryFields()...).
 		From(s.tablePrefix + "categories").
 		Where(sq.Eq{"id": id})
 
@@ -149,7 +164,7 @@ func (s *SQLStore) deleteCategory(db sq.BaseRunner, categoryID, userID, teamID s
 
 func (s *SQLStore) getUserCategories(db sq.BaseRunner, userID, teamID string) ([]model.Category, error) {
 	query := s.getQueryBuilder(db).
-		Select("id", "name", "user_id", "team_id", "create_at", "update_at", "delete_at", "collapsed", "sort_order", "type").
+		Select(s.categoryFields()...).
 		From(s.tablePrefix+"categories").
 		Where(sq.Eq{
 			"user_id":   userID,
