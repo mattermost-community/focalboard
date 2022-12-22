@@ -20,39 +20,45 @@ var ErrNilPluginAPI = errors.New("server not running in plugin mode")
 // GetBoardsCloudLimits returns the limits of the server, and an empty
 // limits struct if there are no limits set.
 func (a *App) GetBoardsCloudLimits() (*model.BoardsCloudLimits, error) {
-	if !a.IsCloud() {
-		return &model.BoardsCloudLimits{}, nil
-	}
-
-	productLimits, err := a.store.GetCloudLimits()
-	if err != nil {
-		return nil, err
-	}
-
-	usedCards, err := a.store.GetUsedCardsCount()
-	if err != nil {
-		return nil, err
-	}
-
-	cardLimitTimestamp, err := a.store.GetCardLimitTimestamp()
-	if err != nil {
-		return nil, err
-	}
-
-	boardsCloudLimits := &model.BoardsCloudLimits{
-		UsedCards:          usedCards,
-		CardLimitTimestamp: cardLimitTimestamp,
-	}
-	if productLimits != nil && productLimits.Boards != nil {
-		if productLimits.Boards.Cards != nil {
-			boardsCloudLimits.Cards = *productLimits.Boards.Cards
+	// ToDo: Cloud Limits have been disabled by design. We should
+	// revisit the decision and update the related code accordingly
+	/*
+		if !a.IsCloud() {
+			return &model.BoardsCloudLimits{}, nil
 		}
-		if productLimits.Boards.Views != nil {
-			boardsCloudLimits.Views = *productLimits.Boards.Views
-		}
-	}
 
-	return boardsCloudLimits, nil
+		productLimits, err := a.store.GetCloudLimits()
+		if err != nil {
+			return nil, err
+		}
+
+		usedCards, err := a.store.GetUsedCardsCount()
+		if err != nil {
+			return nil, err
+		}
+
+		cardLimitTimestamp, err := a.store.GetCardLimitTimestamp()
+		if err != nil {
+			return nil, err
+		}
+
+		boardsCloudLimits := &model.BoardsCloudLimits{
+			UsedCards:          usedCards,
+			CardLimitTimestamp: cardLimitTimestamp,
+		}
+		if productLimits != nil && productLimits.Boards != nil {
+			if productLimits.Boards.Cards != nil {
+				boardsCloudLimits.Cards = *productLimits.Boards.Cards
+			}
+			if productLimits.Boards.Views != nil {
+				boardsCloudLimits.Views = *productLimits.Boards.Views
+			}
+		}
+
+		return boardsCloudLimits, nil
+	*/
+
+	return &model.BoardsCloudLimits{}, nil
 }
 
 func (a *App) GetUsedCardsCount() (int, error) {
@@ -68,7 +74,12 @@ func (a *App) IsCloud() bool {
 // IsCloudLimited returns true if the server is running in cloud mode
 // and the card limit has been set.
 func (a *App) IsCloudLimited() bool {
-	return a.CardLimit() != 0 && a.IsCloud()
+	// ToDo: Cloud Limits have been disabled by design. We should
+	// revisit the decision and update the related code accordingly
+
+	// return a.CardLimit() != 0 && a.IsCloud()
+
+	return false
 }
 
 // SetCloudLimits sets the limits of the server.

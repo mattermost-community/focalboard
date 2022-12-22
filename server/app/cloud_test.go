@@ -68,6 +68,8 @@ func TestIsCloud(t *testing.T) {
 }
 
 func TestIsCloudLimited(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	t.Run("if no limit has been set, it should be false", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
@@ -91,6 +93,8 @@ func TestIsCloudLimited(t *testing.T) {
 }
 
 func TestSetCloudLimits(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	t.Run("if the limits are empty, it should do nothing", func(t *testing.T) {
 		t.Run("limits empty", func(t *testing.T) {
 			th, tearDown := SetupTestHelper(t)
@@ -179,6 +183,8 @@ func TestSetCloudLimits(t *testing.T) {
 }
 
 func TestUpdateCardLimitTimestamp(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	fakeLicense := &mmModel.License{
 		Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
 	}
@@ -215,6 +221,8 @@ func TestUpdateCardLimitTimestamp(t *testing.T) {
 }
 
 func TestGetTemplateMapForBlocks(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	t.Run("should fetch the necessary boards from the database", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
@@ -301,6 +309,8 @@ func TestGetTemplateMapForBlocks(t *testing.T) {
 }
 
 func TestApplyCloudLimits(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	fakeLicense := &mmModel.License{
 		Features: &mmModel.Features{Cloud: mmModel.NewBool(true)},
 	}
@@ -395,6 +405,8 @@ func TestApplyCloudLimits(t *testing.T) {
 }
 
 func TestContainsLimitedBlocks(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	// for all the following tests, the timestamp will be set to 150,
 	// which means that blocks with an UpdateAt set to 100 will be
 	// outside the active window and possibly limited, and blocks with

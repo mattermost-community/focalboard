@@ -16,7 +16,6 @@ import (
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/mattermostauthlayer"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
-	"github.com/mattermost/focalboard/server/utils"
 	"github.com/mattermost/focalboard/server/ws"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
@@ -147,16 +146,20 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 
 	backendParams.appAPI.init(db, server.App())
 
-	if utils.IsCloudLicense(api.GetLicense()) {
-		limits, err := api.GetCloudLimits()
-		if err != nil {
-			return nil, fmt.Errorf("error fetching cloud limits when starting Boards: %w", err)
-		}
+	// ToDo: Cloud Limits have been disabled by design. We should
+	// revisit the decision and update the related code accordingly
+	/*
+		if utils.IsCloudLicense(api.GetLicense()) {
+			limits, err := api.GetCloudLimits()
+			if err != nil {
+				return nil, fmt.Errorf("error fetching cloud limits when starting Boards: %w", err)
+			}
 
-		if err := server.App().SetCloudLimits(limits); err != nil {
-			return nil, fmt.Errorf("error setting cloud limits when starting Boards: %w", err)
+			if err := server.App().SetCloudLimits(limits); err != nil {
+				return nil, fmt.Errorf("error setting cloud limits when starting Boards: %w", err)
+			}
 		}
-	}
+	*/
 
 	return &BoardsApp{
 		server:          server,
