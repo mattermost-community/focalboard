@@ -7,7 +7,6 @@ import {ContentBlock} from '../blocks/contentBlock'
 
 import {getCards, getTemplates} from './cards'
 import {getCurrentPage} from './pages'
-import {getCurrentBoard} from './boards'
 import {loadBoardData, initialReadOnlyLoad} from './initialLoad'
 
 import {RootState} from './index'
@@ -27,7 +26,7 @@ const contentsSlice = createSlice({
                 if (content.deleteAt === 0) {
                     let existsInParent = false
                     state.contents[content.id] = content
-                    if (content.parentId.startsWith('p') || content.parentId.startsWith('b')) {
+                    if (content.parentId && (content.parentId.startsWith('p') || content.parentId.startsWith('b'))) {
                         if (!state.contentsByPage[content.parentId]) {
                             state.contentsByPage[content.parentId] = [content]
                             return
@@ -60,7 +59,7 @@ const contentsSlice = createSlice({
                     }
                 } else {
                     const parentId = state.contents[content.id]?.parentId
-                    if (parentId.startsWith('p') || parentId.startsWith('b')) {
+                    if (parentId && (parentId.startsWith('p') || parentId.startsWith('b'))) {
                         if (!state.contentsByPage[parentId]) {
                             delete state.contents[content.id]
                             return
@@ -93,7 +92,7 @@ const contentsSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment' && block.type !== 'page') {
                     state.contents[block.id] = block as ContentBlock
-                    if (block.parentId.startsWith('p') || block.parentId.startsWith('b')) {
+                    if (block.parentId && (block.parentId.startsWith('p') || block.parentId.startsWith('b'))) {
                         state.contentsByPage[block.parentId] = state.contentsByPage[block.parentId] || []
                         state.contentsByPage[block.parentId].push(block as ContentBlock)
                         state.contentsByPage[block.parentId].sort((a, b) => a.createAt - b.createAt)
@@ -111,7 +110,7 @@ const contentsSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type !== 'board' && block.type !== 'view' && block.type !== 'comment' && block.type !== 'page') {
                     state.contents[block.id] = block as ContentBlock
-                    if (block.parentId.startsWith('p') || block.parentId.startsWith('b')) {
+                    if (block.parentId && (block.parentId.startsWith('p') || block.parentId.startsWith('b'))) {
                         state.contentsByPage[block.parentId] = state.contentsByPage[block.parentId] || []
                         state.contentsByPage[block.parentId].push(block as ContentBlock)
                         state.contentsByPage[block.parentId].sort((a, b) => a.createAt - b.createAt)

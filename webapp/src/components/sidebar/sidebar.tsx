@@ -421,7 +421,7 @@ const Sidebar = (props: Props) => {
             <div className='octo-spacer'/>
 
             {
-                (!Utils.isFocalboardPlugin()) &&
+                (!Utils.isFocalboardPlugin() && !isPages) &&
                 <div
                     className='add-board'
                     onClick={props.onBoardTemplateSelectorOpen}
@@ -429,6 +429,20 @@ const Sidebar = (props: Props) => {
                     <FormattedMessage
                         id='Sidebar.add-board'
                         defaultMessage='+ Add board'
+                    />
+                </div>
+            }
+            {
+                (!Utils.isFocalboardPlugin() && isPages) &&
+                <div
+                    className='add-page'
+                    onClick={() => {
+                        mutator.addEmptyFolder(currentTeam?.id || '', intl, showFolder, () => showFolder(currentBoardId))
+                    }}
+                >
+                    <FormattedMessage
+                        id='Sidebar.add-page'
+                        defaultMessage='+ Add page'
                     />
                 </div>
             }

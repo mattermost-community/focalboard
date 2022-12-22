@@ -62,7 +62,7 @@ const NoPages = () => {
                         filled={true}
                         size={'large'}
                         onClick={async () => {
-                            await mutator.addEmptyFolder(currentTeam?.id || '', intl, showBoard, () => showBoard(currentBoardId))
+                            await mutator.addEmptyFolder(currentTeam?.id || '0', intl, showBoard, () => showBoard(currentBoardId))
                         }}
                     >
                         <FormattedMessage

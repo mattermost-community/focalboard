@@ -66,7 +66,7 @@ const CenterPanelPages = (props: Props) => {
 
     let profileImg
     if (owner?.id) {
-        profileImg = imageURLForUser(owner.id)
+        profileImg = `${imageURLForUser ? imageURLForUser(owner.id) : ''}`
     }
 
     return (
