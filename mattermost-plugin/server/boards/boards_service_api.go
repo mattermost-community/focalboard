@@ -38,7 +38,8 @@ func (bs *boardsServiceAPI) DeleteBoard(boardID string, userID string) error {
 	return bs.app.DeleteBoard(boardID, userID)
 }
 
-func (bs *boardsServiceAPI) SearchBoards(searchTerm string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+func (bs *boardsServiceAPI) SearchBoards(searchTerm string, searchField model.BoardSearchField,
+	userID string, includePublicBoards bool) ([]*model.Board, error) {
 	return bs.app.SearchBoardsForUser(searchTerm, searchField, userID, includePublicBoards)
 }
 
