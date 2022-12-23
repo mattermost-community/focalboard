@@ -26,6 +26,7 @@ type Params struct {
 	NewMutexFn       MutexFactory
 	ServicesAPI      servicesAPI
 	SkipMigrations   bool
+	ConfigFn         func() *mmModel.Config
 }
 
 func (p Params) CheckValid() error {
