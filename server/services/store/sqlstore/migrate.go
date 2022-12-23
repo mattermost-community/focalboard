@@ -65,6 +65,7 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	if s.configFn != nil {
 		settings = s.configFn().SqlSettings
 	}
+	*settings.DriverName = s.dbType
 
 	db := sqlstore.SetupConnection("master", connectionString, &settings)
 
