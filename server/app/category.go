@@ -66,7 +66,7 @@ func (a *App) UpdateCategory(category *model.Category) (*model.Category, error) 
 
 	// in case type was defaulted above, set to existingCategory.Type
 	category.Type = existingCategory.Type
-	if existingCategory.Type == model.CategoryTypeSystem {
+	if existingCategory.Type == model.CategoryTypeSystem || existingCategory.Type == model.CategoryTypePagesSystem {
 		// You cannot rename or delete a system category,
 		// So restoring its name and undeleting it if set so.
 		category.Name = existingCategory.Name
@@ -115,7 +115,7 @@ func (a *App) DeleteCategory(categoryID, userID, teamID string) (*model.Category
 		return nil, model.NewErrInvalidCategory("category doesn't belong to the team")
 	}
 
-	if existingCategory.Type == model.CategoryTypeSystem {
+	if existingCategory.Type == model.CategoryTypeSystem || existingCategory.Type == model.CategoryTypePagesSystem {
 		return nil, ErrCannotDeleteSystemCategory
 	}
 
@@ -148,6 +148,8 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 	}
 
 	var sourceCategoryBoards *model.CategoryBoards
+	defaultBoardsCategoryID := ""
+	defaultPagesCategoryID := ""
 	defaultCategoryID := ""
 
 	// iterate user's categories to find the source category
@@ -160,13 +162,24 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 			sourceCategoryBoards = &categoryBoards[i]
 		}
 
-		if categoryBoards[i].Name == defaultCategoryBoards {
-			defaultCategoryID = categoryBoards[i].ID
+		if categoryBoards[i].Type == model.CategoryTypeSystem && categoryBoards[i].Name == defaultCategoryBoards {
+			defaultBoardsCategoryID = categoryBoards[i].ID
+		}
+
+		if categoryBoards[i].Type == model.CategoryTypePagesSystem && categoryBoards[i].Name == defaultCategoryPages {
+			defaultPagesCategoryID = categoryBoards[i].ID
 		}
 
 		// if both categories are found, no need to iterate furthur.
-		if sourceCategoryBoards != nil && defaultCategoryID != "" {
-			break
+		if sourceCategoryBoards != nil {
+			if defaultPagesCategoryID != "" && sourceCategoryBoards.Type == model.CategoryTypePagesCustom {
+				defaultCategoryID = defaultPagesCategoryID
+				break
+			}
+			if defaultBoardsCategoryID != "" && sourceCategoryBoards.Type == model.CategoryTypeCustom {
+				defaultCategoryID = defaultBoardsCategoryID
+				break
+			}
 		}
 	}
 

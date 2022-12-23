@@ -8,32 +8,46 @@ import (
 )
 
 const defaultCategoryBoards = "Boards"
+const defaultCategoryPages = "Pages"
 
 var errCategoryBoardsLengthMismatch = errors.New("cannot update category boards order, passed list of categories boards different size than in database")
 var errBoardNotFoundInCategory = errors.New("specified board ID not found in specified category ID")
 var errBoardMembershipNotFound = errors.New("board membership not found for user's board")
 
 func (a *App) GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error) {
-	categoryBoards, err := a.store.GetUserCategoryBoards(userID, teamID)
+	categories, err := a.store.GetUserCategoryBoards(userID, teamID)
 	if err != nil {
 		return nil, err
 	}
 
-	createdCategoryBoards, err := a.createDefaultCategoriesIfRequired(categoryBoards, userID, teamID)
+	categoryBoards := []model.CategoryBoards{}
+	categoryPages := []model.CategoryBoards{}
+	for _, category := range categories {
+		if category.Type == model.CategoryTypeSystem || category.Type == model.CategoryTypeCustom {
+			categoryBoards = append(categoryBoards, category)
+		} else if category.Type == model.CategoryTypePagesSystem || category.Type == model.CategoryTypePagesCustom {
+			categoryPages = append(categoryPages, category)
+		}
+	}
+
+	createdCategoryBoards, err := a.createDefaultCategoriesIfRequired(categoryBoards, categoryPages, userID, teamID)
 	if err != nil {
 		return nil, err
 	}
 
-	categoryBoards = append(categoryBoards, createdCategoryBoards...)
-	return categoryBoards, nil
+	resultCategories := append(categoryBoards, categoryPages...)
+	resultCategories = append(resultCategories, createdCategoryBoards...)
+	return resultCategories, nil
 }
 
-func (a *App) createDefaultCategoriesIfRequired(existingCategoryBoards []model.CategoryBoards, userID, teamID string) ([]model.CategoryBoards, error) {
+func (a *App) createDefaultCategoriesIfRequired(existingCategoryBoards []model.CategoryBoards, existingCategoryPages []model.CategoryBoards, userID, teamID string) ([]model.CategoryBoards, error) {
 	createdCategories := []model.CategoryBoards{}
+	fmt.Println("BOARDS", existingCategoryBoards)
+	fmt.Println("PAGES", existingCategoryPages)
 
 	boardsCategoryExist := false
 	for _, categoryBoard := range existingCategoryBoards {
-		if categoryBoard.Name == defaultCategoryBoards {
+		if categoryBoard.Type == model.CategoryTypeSystem && categoryBoard.Name == defaultCategoryBoards {
 			boardsCategoryExist = true
 		}
 	}
@@ -45,6 +59,22 @@ func (a *App) createDefaultCategoriesIfRequired(existingCategoryBoards []model.C
 		}
 
 		createdCategories = append(createdCategories, *createdCategoryBoards)
+	}
+
+	pagesCategoryExist := false
+	for _, categoryPage := range existingCategoryPages {
+		if categoryPage.Type == model.CategoryTypePagesSystem && categoryPage.Name == defaultCategoryPages {
+			pagesCategoryExist = true
+		}
+	}
+
+	if !pagesCategoryExist {
+		createdCategoryPages, err := a.createPagesCategory(userID, teamID, existingCategoryPages)
+		if err != nil {
+			return nil, err
+		}
+
+		createdCategories = append(createdCategories, *createdCategoryPages)
 	}
 
 	return createdCategories, nil
@@ -104,13 +134,108 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 			continue
 		}
 
+		if board.IsPagesFolder {
+			continue
+		}
+
 		belongsToCategory := false
 
 		for _, categoryBoard := range existingCategoryBoards {
-			for _, boardID := range categoryBoard.BoardIDs {
-				if boardID == board.ID {
-					belongsToCategory = true
-					break
+			if categoryBoard.Type != model.CategoryTypeSystem && categoryBoard.Type != model.CategoryTypeCustom {
+				for _, boardID := range categoryBoard.BoardIDs {
+					if boardID == board.ID {
+						belongsToCategory = true
+						break
+					}
+				}
+			}
+
+			// stop looking into other categories if
+			// the board was found in a category
+			if belongsToCategory {
+				break
+			}
+		}
+
+		if !belongsToCategory {
+			if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{board.ID: createdCategory.ID}); err != nil {
+				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
+			}
+
+			createdCategoryBoards.BoardIDs = append(createdCategoryBoards.BoardIDs, board.ID)
+		}
+	}
+
+	return createdCategoryBoards, nil
+}
+
+func (a *App) createPagesCategory(userID, teamID string, existingCategoryBoards []model.CategoryBoards) (*model.CategoryBoards, error) {
+	// create the category
+	category := model.Category{
+		Name:      defaultCategoryPages,
+		UserID:    userID,
+		TeamID:    teamID,
+		Collapsed: false,
+		Type:      model.CategoryTypePagesSystem,
+		SortOrder: len(existingCategoryBoards) * model.CategoryBoardsSortOrderGap,
+	}
+	createdCategory, err := a.CreateCategory(&category)
+	if err != nil {
+		return nil, fmt.Errorf("createBoardsCategory default category creation failed: %w", err)
+	}
+
+	// once the category is created, we need to move all boards which do not
+	// belong to any category, into this category.
+
+	boardMembers, err := a.GetMembersForUser(userID)
+	if err != nil {
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's board memberships: %w", err)
+	}
+
+	boardMemberByBoardID := map[string]*model.BoardMember{}
+	for _, boardMember := range boardMembers {
+		boardMemberByBoardID[boardMember.BoardID] = boardMember
+	}
+
+	createdCategoryBoards := &model.CategoryBoards{
+		Category: *createdCategory,
+		BoardIDs: []string{},
+	}
+
+	// get user's current team's baords
+	userTeamBoards, err := a.GetBoardsForUserAndTeam(userID, teamID, false)
+	if err != nil {
+		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
+	}
+
+	for _, board := range userTeamBoards {
+		boardMembership, ok := boardMemberByBoardID[board.ID]
+		if !ok {
+			return nil, fmt.Errorf("createBoardsCategory: %w", errBoardMembershipNotFound)
+		}
+
+		// boards with implicit access (aka synthetic membership),
+		// should show up in LHS only when openign them explicitelly.
+		// So we don't process any synthetic membership boards
+		// and only add boards with explicit access to, to the the LHS,
+		// for example, if a user explicitelly added another user to a board.
+		if boardMembership.Synthetic {
+			continue
+		}
+
+		if !board.IsPagesFolder {
+			continue
+		}
+
+		belongsToCategory := false
+
+		for _, categoryBoard := range existingCategoryBoards {
+			if categoryBoard.Type != model.CategoryTypePagesSystem && categoryBoard.Type != model.CategoryTypePagesCustom {
+				for _, boardID := range categoryBoard.BoardIDs {
+					if boardID == board.ID {
+						belongsToCategory = true
+						break
+					}
 				}
 			}
 

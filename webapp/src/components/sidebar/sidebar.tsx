@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useState, useContext} from 'react'
+import React, {useCallback, useEffect, useState, useContext, useMemo} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useHistory, useRouteMatch} from 'react-router-dom'
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
@@ -76,13 +76,26 @@ const Sidebar = (props: Props) => {
     const pages = useAppSelector(getMySortedPageFolders)
     const isPages = useContext(isPagesContext)
     const dispatch = useAppDispatch()
-    const sidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
+    const allSidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
     const activeViewID = useAppSelector(getCurrentViewId)
     const history = useHistory()
     const match = useRouteMatch<{boardId: string, viewId?: string}>()
     const intl = useIntl()
     const currentBoard = useAppSelector(getCurrentBoard)
+
+    const pagesSidebarCategories = useMemo(() => {
+        return allSidebarCategories.filter((c) => c.type === 'pages-system' || c.type === 'pages-custom')
+    }, [allSidebarCategories])
+
+    const boardsSidebarCategories = useMemo(() => {
+        return allSidebarCategories.filter((c) => c.type === 'system' || c.type === 'custom')
+    }, [allSidebarCategories])
+
+    let sidebarCategories = boardsSidebarCategories
+    if (isPages) {
+        sidebarCategories = pagesSidebarCategories
+    }
 
     useEffect(() => {
         wsClient.addOnChange((_: WSClient, categories: Category[]) => {

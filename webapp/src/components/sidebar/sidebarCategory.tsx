@@ -317,8 +317,7 @@ const SidebarCategory = (props: Props) => {
                                                 {...provided.dragHandleProps}
                                             >
                                                 {collapsed || snapshot.isDragging || props.forceCollapse ? <ChevronRight/> : <ChevronDown/>}
-                                                {props.isPages && props.categoryBoards.type !== 'custom' && 'Pages'}
-                                                {!(props.isPages && props.categoryBoards.type !== 'custom') && props.categoryBoards.name}
+                                                {props.categoryBoards.name}
                                                 <div className='sidebarCategoriesTour'>
                                                     {props.index === 0 && shouldViewSidebarTour && <SidebarCategoriesTourStep/>}
                                                 </div>
@@ -339,7 +338,7 @@ const SidebarCategory = (props: Props) => {
                                                         parentRef={menuWrapperRef}
                                                     >
                                                         {
-                                                            props.categoryBoards.type === 'custom' &&
+                                                            (props.categoryBoards.type === 'custom' || props.categoryBoards.type === 'pages-custom') &&
                                                             <React.Fragment>
                                                                 <Menu.Text
                                                                     id='updateCategory'

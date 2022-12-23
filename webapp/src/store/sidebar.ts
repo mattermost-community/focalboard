@@ -9,7 +9,7 @@ import {Utils} from '../utils'
 
 import {RootState} from './index'
 
-export type CategoryType = 'system' | 'custom'
+export type CategoryType = 'system' | 'custom' | 'pages-system' | 'pages-custom'
 
 interface Category {
     id: string
