@@ -282,7 +282,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                 boardId: match.params.boardId,
                 viewId: match.params.viewId,
             },
-        ))
+            ))
     }
 
     let shareBoardTitle = (
@@ -354,14 +354,12 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             confirmSubtext = intl.formatMessage({id: 'sharePage.confirm-link-channel-subtext', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.'})
             confirmButtonText = intl.formatMessage({id: 'sharePage.confirm-link-channel-button', defaultMessage: 'Link channel'})
         }
+    } else if (isPages) {
+        confirmSubtext = intl.formatMessage({id: 'shareFolder.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a page, all members of the channel (existing and new) will be able to edit it and any of its subpages. This excludes members who are guests.{lineBreak}This page is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
+        confirmButtonText = intl.formatMessage({id: 'shareFolder.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
     } else {
-        if (isPages) {
-            confirmSubtext = intl.formatMessage({id: 'shareFolder.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a page, all members of the channel (existing and new) will be able to edit it and any of its subpages. This excludes members who are guests.{lineBreak}This page is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
-            confirmButtonText = intl.formatMessage({id: 'shareFolder.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
-        } else {
-            confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
-            confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
-        }
+        confirmSubtext = intl.formatMessage({id: 'shareBoard.confirm-link-channel-subtext-with-other-channel', defaultMessage: 'When you link a channel to a board, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak}This board is currently linked to another channel.\nIt will be unlinked if you choose to link it here.'}, {lineBreak: <p/>})
+        confirmButtonText = intl.formatMessage({id: 'shareBoard.confirm-link-channel-button-with-other-channel', defaultMessage: 'Unlink and link here'})
     }
 
     return (

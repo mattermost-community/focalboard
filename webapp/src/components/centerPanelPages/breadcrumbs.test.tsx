@@ -14,7 +14,7 @@ import Breadcrumbs from './breadcrumbs'
 
 describe('components/breadcrumbs', () => {
     const board = TestBlockFactory.createBoard()
-    board.title = "BoardTitle"
+    board.title = 'BoardTitle'
     board.id = 'test-id'
 
     const page1 = TestBlockFactory.createPage(board)
@@ -52,7 +52,7 @@ describe('components/breadcrumbs', () => {
                     board={board}
                     pages={pages}
                     showPage={jest.fn()}
-                />
+                />,
             ))
             container = result.container
         })
@@ -67,11 +67,11 @@ describe('components/breadcrumbs', () => {
                 board={board}
                 pages={pages}
                 showPage={showPage}
-            />
+            />,
         ))
         const boardLink = screen.getByText(board.title)
         userEvent.click(boardLink)
-        expect(showPage).toBeCalledWith("")
+        expect(showPage).toBeCalledWith('')
     })
 
     test('click the page name should show the that page', async () => {
@@ -82,7 +82,7 @@ describe('components/breadcrumbs', () => {
                 board={board}
                 pages={pages}
                 showPage={showPage}
-            />
+            />,
         ))
         const pageLink = screen.getByText(page2.title)
         userEvent.click(pageLink)

@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useMemo} from 'react'
 import {useIntl} from 'react-intl'
 
@@ -28,10 +30,7 @@ const Breadcrumbs = (props: Props) => {
         const result = []
         if (props.activePage && props.activePage.id !== props.board.id) {
             let currentPage = props.activePage
-            while (true) {
-                if (currentPage.parentId === '') {
-                    break
-                }
+            while (currentPage.parentId !== '') {
                 result.unshift(currentPage)
                 currentPage = pagesById[currentPage.parentId]
                 if (!currentPage) {

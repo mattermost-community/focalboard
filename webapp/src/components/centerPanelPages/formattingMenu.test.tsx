@@ -15,7 +15,7 @@ describe('components/formattingMenu', () => {
         let container
         await act(async () => {
             const result = render(wrapIntl(
-                <FormattingMenu/>
+                <FormattingMenu/>,
             ))
             container = result.container
         })

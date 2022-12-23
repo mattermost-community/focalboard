@@ -6,7 +6,6 @@ import {DateUtils} from 'react-day-picker'
 import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
-import {Page} from '../../blocks/page'
 import {Utils} from '../../utils'
 
 import {PropertyType, PropertyTypeEnum} from '../types'

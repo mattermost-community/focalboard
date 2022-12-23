@@ -24,7 +24,6 @@ import {PropertyTypes} from '../../widgets/propertyMenu'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
-
 import {useAppSelector} from '../../store/hooks'
 
 import Breadcrumbs from './breadcrumbs'
@@ -45,7 +44,6 @@ type Props = {
     showPage: (pageId?: string) => void
 }
 
-
 const CenterPanelPages = (props: Props) => {
     const intl = useIntl()
     const folderUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
@@ -60,7 +58,6 @@ const CenterPanelPages = (props: Props) => {
     useEffect(() => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewBoard, {board: props.board.id, page: props.activePage?.id})
     }, [])
-
 
     const owner = folderUsersById[props.activePage.createdBy]
 

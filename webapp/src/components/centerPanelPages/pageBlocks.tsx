@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useCallback, useMemo} from 'react'
 import {useIntl, IntlShape} from 'react-intl'
 
@@ -6,8 +8,7 @@ import {Board} from '../../blocks/board'
 import {Page} from '../../blocks/page'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {updatePages} from '../../store/pages'
-import {getCurrentPageContents} from '../../store/contents'
-import {updateContents} from '../../store/contents'
+import {updateContents, getCurrentPageContents} from '../../store/contents'
 import mutator from '../../mutator'
 import {Utils} from '../../utils'
 
@@ -17,7 +18,6 @@ import BlocksEditor from '../blocksEditor/blocksEditor'
 import {BlockData} from '../blocksEditor/blocks/types'
 
 import './pageBlocks.scss'
-
 
 async function addBlockNewEditor(page: any, intl: IntlShape, title: string, fields: any, contentType: ContentBlockTypes, afterBlockId: string, dispatch: any): Promise<Block> {
     const block = createBlock()

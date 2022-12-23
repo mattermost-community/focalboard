@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
@@ -11,7 +13,6 @@ import ShareBoardLoginButton from '../shareBoard/shareBoardLoginButton'
 import PageMenu from '../pageMenu'
 
 import mutator from '../../mutator'
-import {Utils} from '../../utils'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import IconButton from '../../widgets/buttons/iconButton'
@@ -41,7 +42,6 @@ const PageHeader = (props: Props) => {
             props.showPage(undefined)
         })
     }, [props.showPage, props.activePage, props.boardId])
-
 
     const onDuplicate = useCallback(() => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicatePage, {board: props.boardId, page: props.activePage.id})
@@ -90,20 +90,20 @@ const PageHeader = (props: Props) => {
                         <ShareBoardLoginButton/>}
                 </div>
                 <Button
-                    onClick={() => console.log('TODO')}
+                    onClick={() => 'TODO'}
                     size='small'
                     icon={<CompassIcon icon='message-text-outline'/>}
                 >
-                    8
+                    {'8'}
                 </Button>
                 <IconButton
                     size='small'
-                    onClick={() => console.log('TODO')}
+                    onClick={() => 'TODO'}
                     icon={<CompassIcon icon='star-outline'/>}
                 />
                 <IconButton
                     size='small'
-                    onClick={() => console.log('TODO')}
+                    onClick={() => 'TODO'}
                     icon={<CompassIcon icon='information-outline'/>}
                 />
                 <PageMenu

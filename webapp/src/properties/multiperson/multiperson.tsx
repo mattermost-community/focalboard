@@ -192,11 +192,11 @@ const MultiPerson = (props: PropertyProps): JSX.Element => {
                 onChange={(items, action) => {
                     if (action.action === 'select-option') {
                         const confirmedIds: string[] = []
-                        items.forEach((item) => {
-                            if (boardUsersById[item.id]) {
-                                confirmedIds.push(item.id)
+                        items.forEach((i) => {
+                            if (boardUsersById[i.id]) {
+                                confirmedIds.push(i.id)
                             } else {
-                                setConfirmAddUser(item)
+                                setConfirmAddUser(i)
                             }
                         })
                         onChange(confirmedIds)

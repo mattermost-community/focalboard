@@ -5,8 +5,7 @@ import React from 'react'
 import {useIntl} from 'react-intl'
 
 import {Utils} from '../utils'
-import BoardPermissionGate from './permissions/boardPermissionGate'
-import {sendFlashMessage} from './flashMessages'
+
 import {Permission} from '../constants'
 import IconButton from '../widgets/buttons/iconButton'
 import DeleteIcon from '../widgets/icons/delete'
@@ -16,6 +15,9 @@ import DuplicateIcon from '../widgets/icons/duplicate'
 import OptionsIcon from '../widgets/icons/options'
 import MenuWrapper from '../widgets/menuWrapper'
 import Menu from '../widgets/menu'
+
+import {sendFlashMessage} from './flashMessages'
+import BoardPermissionGate from './permissions/boardPermissionGate'
 
 type Props = {
     pageId: string

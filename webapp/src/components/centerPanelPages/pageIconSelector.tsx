@@ -32,7 +32,7 @@ const PageIconSelector = React.memo((props: Props) => {
         if (page.parentId === '') {
             mutator.changeBoardIcon(board.id, board.icon, BlockIcons.shared.randomIcon())
         }
-        mutator.changeBlockIcon(page.boardId, page.id, page.fields?.icon, BlockIcons.shared.randomIcon()), [page.boardId, page.id, page.fields?.icon]
+        mutator.changeBlockIcon(page.boardId, page.id, page.fields?.icon, BlockIcons.shared.randomIcon())
     }, [page?.boardId, page?.id, page?.fields?.icon, board.id, board.icon])
 
     const onRemoveIcon = useCallback(() => {

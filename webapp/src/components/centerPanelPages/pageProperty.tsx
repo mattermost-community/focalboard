@@ -1,3 +1,5 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React, {useState, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 
@@ -105,6 +107,7 @@ const PageProperty = (props: Props) => {
 
             onClose: () => setShowConfirmationDialog(false),
         })
+
         // open confirmation dialog property delete
         setShowConfirmationDialog(true)
     }, [propertyTemplate, props.board, pages])

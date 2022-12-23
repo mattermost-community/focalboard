@@ -6,7 +6,7 @@ import {batch} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
-import {Block, BlockPatch, createPatchesFromBlocks, createBlock} from './blocks/block'
+import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Page, createPage} from './blocks/page'
@@ -1036,7 +1036,7 @@ class Mutator {
             },
             async (newBlocks: [Block[], string]) => {
                 await beforeUndo?.()
-                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id == newBlocks[1])
+                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id === newBlocks[1])
                 if (newRootBlock) {
                     await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
                 }
@@ -1077,7 +1077,7 @@ class Mutator {
             },
             async (newBlocks: [Block[], string]) => {
                 await beforeUndo?.()
-                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id == newBlocks[1])
+                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id === newBlocks[1])
                 if (newRootBlock) {
                     await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
                 }

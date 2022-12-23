@@ -45,6 +45,7 @@
         position: relative;
         right: 30px;
     }
+
     > .top-head {
         @include z-index(center-panel);
         position: sticky;

@@ -22,7 +22,7 @@ describe('components/pageIconSelector', () => {
                 <PageIconSelector
                     board={board}
                     page={page}
-                />
+                />,
             ))
             container = result.container
         })
@@ -39,7 +39,7 @@ describe('components/pageIconSelector', () => {
                 <PageIconSelector
                     board={board}
                     page={page}
-                />
+                />,
             ))
             container = result.container
         })
@@ -58,7 +58,7 @@ describe('components/pageIconSelector', () => {
                 <PageIconSelector
                     page={page}
                     board={board}
-                />
+                />,
             ))
             container = result.container
         })
@@ -77,7 +77,7 @@ describe('components/pageIconSelector', () => {
                 <PageIconSelector
                     page={page}
                     board={board}
-                />
+                />,
             ))
             container = result.container
         })

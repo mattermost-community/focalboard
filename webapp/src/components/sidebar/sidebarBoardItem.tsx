@@ -86,8 +86,9 @@ const SidebarBoardItem = (props: Props) => {
                             if (isPages && mainPage) {
                                 props.showPage(mainPage.id, board.id)
                             } else {
-                                props.showBoard(board.id)}
+                                props.showBoard(board.id)
                             }
+                        }
                         }
                         ref={boardItemRef}
                     >
@@ -130,6 +131,7 @@ const SidebarBoardItem = (props: Props) => {
 
                     {props.isActive && pages.filter((p) => p.parentId === currentFolderPage?.id).map((page: Page) => (
                         <SidebarPageItem
+                            key={page.id}
                             page={page}
                             pages={pages}
                             currentPageId={currentPage?.id}

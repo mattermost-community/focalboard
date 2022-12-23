@@ -26,9 +26,6 @@ describe('Create and delete page / subpage / subsubpage', () => {
     })
 
     it('Can create and delete a page and subpage', () => {
-        const isMAC = navigator.userAgent.indexOf('Mac') !== -1
-        const ctrlKey = isMAC ? 'meta' : 'ctrl'
-
         // Visit a page and create new empty board
         cy.visit('/')
 
@@ -182,7 +179,7 @@ describe('Create and delete page / subpage / subsubpage', () => {
         cy.contains('Type: Email').should('exist')
     })
 
-    it.only('Add contents', () => {
+    it('Add contents', () => {
         cy.visit('/')
 
         // Create new page
@@ -190,58 +187,58 @@ describe('Create and delete page / subpage / subsubpage', () => {
 
         // Add title
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("/title Title{enter}")
-        cy.focused().type("{enter}")
+        cy.focused().type('/title Title{enter}')
+        cy.focused().type('{enter}')
 
         // Add subtitle
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("/subtitle SubTitle{enter}{enter}")
+        cy.focused().type('/subtitle SubTitle{enter}{enter}')
 
         // Add subsubtitle
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("/subsubtitle SubSubTitle{enter}{enter}")
+        cy.focused().type('/subsubtitle SubSubTitle{enter}{enter}')
 
         // Add divider
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("/divider{enter}")
+        cy.focused().type('/divider{enter}')
 
         // Add checkbox with prefix
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("[ ] Checkbox 1{enter}")
-        cy.focused().type("Checkbox2{enter}")
-        cy.focused().type("Checkbox3{enter}")
-        cy.focused().type("{backspace}")
+        cy.focused().type('[ ] Checkbox 1{enter}')
+        cy.focused().type('Checkbox2{enter}')
+        cy.focused().type('Checkbox3{enter}')
+        cy.focused().type('{backspace}')
 
         // Add quote with prefix
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("> Quote{enter}")
+        cy.focused().type('> Quote{enter}')
 
         // Add list-item
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("/list-item List item 1{enter}{enter}")
-        cy.focused().type("List item 2{enter}")
-        cy.focused().type("List item 3{enter}")
-        cy.focused().type("{backspace}")
+        cy.focused().type('/list-item List item 1{enter}{enter}')
+        cy.focused().type('List item 2{enter}')
+        cy.focused().type('List item 3{enter}')
+        cy.focused().type('{backspace}')
 
         // Add text item
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("r")
+        cy.focused().type('r')
         cy.get('.MarkdownEditorInput').should('exist').click()
-        cy.focused().type("egular text{enter}")
+        cy.focused().type('egular text{enter}')
 
         // Modify item
         cy.contains('regular text').click()
-        cy.focused().type(" modified{enter}")
+        cy.focused().type(' modified{enter}')
 
         // Add divider
         cy.contains('Add text or type "/" for commands').click()
-        cy.focused().type("/divider{enter}")
+        cy.focused().type('/divider{enter}')
 
         // Delete item
         const modifiedText = 'regular text modified'
         cy.contains(modifiedText).click()
-        cy.focused().type("{backspace}".repeat(modifiedText.length))
-        cy.focused().type("{enter}")
+        cy.focused().type('{backspace}'.repeat(modifiedText.length))
+        cy.focused().type('{enter}')
         cy.contains('regular text modified').should('not.exist')
     })
 })

@@ -7,7 +7,7 @@ import {Page, createPage} from '../blocks/page'
 import {Utils} from '../utils'
 
 import {initialReadOnlyLoad, loadBoardData} from './initialLoad'
-import {getCurrentBoard, getCurrentBoardId} from './boards'
+import {getCurrentBoard} from './boards'
 
 import {RootState} from './index'
 

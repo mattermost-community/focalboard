@@ -3,12 +3,10 @@
 import React from 'react'
 import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
-import {fireEvent, render, within, screen} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import {render} from '@testing-library/react'
 
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 import {TestBlockFactory} from '../../test/testBlockFactory'
-import {createTextBlock} from '../../blocks/textBlock'
 import {IUser} from '../../user'
 import octoClient from '../../octoClient'
 import {Constants} from '../../constants'
@@ -142,7 +140,6 @@ describe('components/pageHeader', () => {
         ))
         expect(container).toMatchSnapshot()
     })
-
 
     test('should match snapshot public share boards', () => {
         const {container} = render(wrapDNDIntl(

@@ -159,9 +159,8 @@ function CenterContent(props: Props) {
                         showPage={showPage}
                     />
                 )
-            } else {
-                return null
             }
+            return null
         }
         if (activeView) {
             return (
@@ -179,9 +178,8 @@ function CenterContent(props: Props) {
                     hiddenCardsCount={hiddenCardsCount}
                 />
             )
-        } else {
-            return null
         }
+        return null
     }
 
     if ((board && !isBoardHidden()) || isLoading) {

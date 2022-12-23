@@ -168,12 +168,12 @@ const Person = (props: PropertyProps): JSX.Element => {
                 getOptionLabel={(o: IUser) => o.username}
                 getOptionValue={(a: IUser) => a.id}
                 value={boardUsersById[propertyValue as string] || null}
-                onChange={(item, action) => {
+                onChange={(i, action) => {
                     if (action.action === 'select-option') {
-                        if (boardUsersById[item?.id || '']) {
-                            onChange(item?.id || '')
+                        if (boardUsersById[i?.id || '']) {
+                            onChange(i?.id || '')
                         } else {
-                            setConfirmAddUser(item)
+                            setConfirmAddUser(i)
                         }
                     } else if (action.action === 'clear') {
                         onChange('')

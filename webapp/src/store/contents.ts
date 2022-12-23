@@ -178,8 +178,8 @@ export const getCurrentPageContents = createSelector(
         if (!page) {
             return []
         }
-        let contents = contentsByPage[page.id]
-        let contentOrder = currentPage?.fields?.contentOrder
+        const contents = contentsByPage[page.id]
+        const contentOrder = currentPage?.fields?.contentOrder
         if (!contents || !contentOrder) {
             return []
         }

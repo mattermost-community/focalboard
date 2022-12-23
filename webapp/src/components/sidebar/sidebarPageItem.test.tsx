@@ -59,7 +59,6 @@ describe('components/sidebarPageItem', () => {
         },
     }
 
-
     test('sidebar page item with root active', () => {
         const mockStore = configureStore([])
         const store = mockStore(state)
@@ -112,12 +111,11 @@ describe('components/sidebarPageItem', () => {
         const noIconPage = TestBlockFactory.createPage()
         noIconPage.boardId = 'board_id_1'
         noIconPage.fields.icon = ''
-        const pages = [noIconPage]
 
         const component = wrapRBDNDDroppable(wrapIntl(
             <ReduxProvider store={store}>
                 <SidebarPageItem
-                    pages={pages}
+                    pages={[noIconPage]}
                     page={noIconPage}
                     currentPageId={noIconPage.id}
                     showBoard={jest.fn()}

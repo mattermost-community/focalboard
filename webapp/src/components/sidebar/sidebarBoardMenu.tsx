@@ -145,7 +145,6 @@ const SidebarBoardMenu = (props: Props) => {
         )
     }, [board.id, currentPage?.id])
 
-
     const showTemplatePicker = () => {
         // if the same board, reuse the match params
         // otherwise remove viewId and cardId, results in first view being selected
@@ -257,7 +256,7 @@ const SidebarBoardMenu = (props: Props) => {
                 {!me?.is_guest &&
                     <Menu.Text
                         id='duplicateBoard'
-                        name={isPages ? intl.formatMessage({id: 'Sidebar.duplicate-page', defaultMessage: 'Duplicate page'}): intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
+                        name={isPages ? intl.formatMessage({id: 'Sidebar.duplicate-page', defaultMessage: 'Duplicate page'}) : intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                         icon={<DuplicateIcon/>}
                         onClick={() => handleDuplicateBoard(board.isTemplate)}
                     />}

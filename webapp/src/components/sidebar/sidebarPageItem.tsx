@@ -26,7 +26,7 @@ type Props = {
 const SidebarPageItem = (props: Props) => {
     const intl = useIntl()
     const {page, pages, currentPageId, depth} = props
-    const subpages = pages.filter((p) => p.parentId == page.id)
+    const subpages = pages.filter((p) => p.parentId === page.id)
 
     const onItemClick = useCallback(() => props.showPage(page.id, page.boardId), [page.id, page.boardId, props.showPage])
 
@@ -89,11 +89,11 @@ const SidebarPageItem = (props: Props) => {
                     onClickAddSubpage={onAddSubpageClick}
                 />
             </div>
-            {subpages.map((page: Page) => (
+            {subpages.map((subpage: Page) => (
                 <SidebarPageItem
-                    key={page.id}
-                    depth={props.depth+1}
-                    page={page}
+                    key={subpage.id}
+                    depth={props.depth + 1}
+                    page={subpage}
                     pages={pages}
                     currentPageId={currentPageId}
                     showPage={props.showPage}

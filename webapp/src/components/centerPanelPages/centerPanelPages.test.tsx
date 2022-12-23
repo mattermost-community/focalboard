@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {fireEvent, render, within} from '@testing-library/react'
+import {render} from '@testing-library/react'
 import React from 'react'
 import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
@@ -37,15 +37,15 @@ describe('components/centerPanelPages', () => {
     activePage.id = '1'
 
     const content1 = createTextBlock()
-    content1.title = "text content 1"
+    content1.title = 'text content 1'
     content1.boardId = board.id
     content1.parentId = activePage.id
     const content2 = createTextBlock()
-    content2.title = "text content 2"
+    content2.title = 'text content 2'
     content2.boardId = board.id
     content2.parentId = activePage.id
     const content3 = createTextBlock()
-    content3.title = "text content 3"
+    content3.title = 'text content 3'
     content3.boardId = board.id
     content3.parentId = activePage.id
 

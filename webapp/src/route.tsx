@@ -48,7 +48,7 @@ function FBRoute(props: RouteProps) {
     const showWelcomePage = !disableTour &&
         Utils.isFocalboardPlugin() &&
         (me?.id !== 'single-user') &&
-        props.path !== basePath+'/welcome' &&
+        props.path !== basePath + '/welcome' &&
         loggedIn === true &&
         !myConfig[UserSettingKey.WelcomePageViewed]
 
@@ -57,7 +57,7 @@ function FBRoute(props: RouteProps) {
             if (props.getOriginalPath) {
                 return <Redirect to={`${basePath}/welcome?r=${props.getOriginalPath!(match)}`}/>
             }
-            return <Redirect to={basePath+'/welcome'}/>
+            return <Redirect to={basePath + '/welcome'}/>
         }
     }
 
@@ -71,7 +71,7 @@ function FBRoute(props: RouteProps) {
                 const loginUrl = `${basePath}/error?id=not-logged-in&r=${encodeURIComponent(redirectUrl)}`
                 return <Redirect to={loginUrl}/>
             }
-            return <Redirect to={basePath+'/error?id=not-logged-in'}/>
+            return <Redirect to={basePath + '/error?id=not-logged-in'}/>
         }
     }
 

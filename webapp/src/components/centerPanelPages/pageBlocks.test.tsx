@@ -3,7 +3,7 @@
 import React from 'react'
 import {mocked} from 'jest-mock'
 import {Provider as ReduxProvider} from 'react-redux'
-import {fireEvent, render, within, screen} from '@testing-library/react'
+import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
@@ -38,15 +38,15 @@ describe('components/pageBlocks', () => {
     activePage.id = '1'
 
     const content1 = createTextBlock()
-    content1.title = "text content 1"
+    content1.title = 'text content 1'
     content1.boardId = board.id
     content1.parentId = activePage.id
     const content2 = createTextBlock()
-    content2.title = "text content 2"
+    content2.title = 'text content 2'
     content2.boardId = board.id
     content2.parentId = activePage.id
     const content3 = createTextBlock()
-    content3.title = "text content 3"
+    content3.title = 'text content 3'
     content3.boardId = board.id
     content3.parentId = activePage.id
 
@@ -171,7 +171,6 @@ describe('components/pageBlocks', () => {
         ))
         expect(container).toMatchSnapshot()
     })
-
 
     test('should match snapshot without edit board cards permission', () => {
         const {container} = render(wrapDNDIntl(

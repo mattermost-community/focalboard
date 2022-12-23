@@ -266,13 +266,11 @@ const Sidebar = (props: Props) => {
 
         if (!team || !destination) {
             setDraggedItemID('')
-            setIsCategoryBeingDragged(false)
             return
         }
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
             setDraggedItemID('')
-            setIsCategoryBeingDragged(false)
             return
         }
 
@@ -285,11 +283,9 @@ const Sidebar = (props: Props) => {
         }
 
         setDraggedItemID('')
-        setIsCategoryBeingDragged(false)
     }, [team, sidebarCategories])
 
     const [draggedItemID, setDraggedItemID] = useState<string>('')
-    const [isCategoryBeingDragged, setIsCategoryBeingDragged] = useState<boolean>(false)
 
     if (!boards) {
         return <div/>

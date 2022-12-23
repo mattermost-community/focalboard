@@ -70,7 +70,7 @@ const CreateCategory = (props: Props): JSX.Element => {
                 name: categoryName,
                 userID: me.id,
                 teamID,
-                type: isPages ? 'pages-custom' : 'custom'
+                type: isPages ? 'pages-custom' : 'custom',
             } as Category
 
             await mutator.createCategory(category)

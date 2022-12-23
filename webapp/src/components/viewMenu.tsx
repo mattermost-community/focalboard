@@ -6,7 +6,7 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
-import {Page, createPage} from '../blocks/page'
+import {createPage} from '../blocks/page'
 import {Constants, Permission} from '../constants'
 import mutator from '../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
@@ -276,7 +276,7 @@ const ViewMenu = (props: Props) => {
         id: 'View.DeleteView',
         defaultMessage: 'Delete view',
     })
-    const addPageText= intl.formatMessage({
+    const addPageText = intl.formatMessage({
         id: 'View.AddPage',
         defaultMessage: 'Add subpage',
     })

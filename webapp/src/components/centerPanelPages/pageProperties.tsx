@@ -1,7 +1,10 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
 import React from 'react'
 
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Page} from '../../blocks/page'
+
 import PageProperty from './pageProperty'
 
 import './pageProperties.scss'
@@ -28,7 +31,7 @@ const PageProperties = (props: Props) => {
                     newTemplateId={props.newTemplateId}
                     page={props.page}
                     propertyTemplate={propertyTemplate}
-                />)
+                />),
             )}
         </div>
     )
