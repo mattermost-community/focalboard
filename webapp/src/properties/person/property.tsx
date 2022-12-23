@@ -13,4 +13,5 @@ export default class PersonProperty extends PropertyType {
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.Person', defaultMessage: 'Person'})
     canFilter = true
     filterValueType = 'person' as FilterValueType
+    canGroup = true
 }

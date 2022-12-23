@@ -22,12 +22,15 @@ import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
+import {getClientConfig} from '../store/clientConfig'
+
 import './centerPanel.scss'
 
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {
     getMe,
+    getBoardUsers,
     getOnboardingTourCategory,
     getOnboardingTourStarted,
     getOnboardingTourStep,
@@ -84,7 +87,10 @@ const CenterPanel = (props: Props) => {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const me = useAppSelector(getMe)
     const currentCard = useAppSelector(getCurrentCard)
+    const boardUsers = useAppSelector(getBoardUsers)
     const dispatch = useAppDispatch()
+
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
@@ -361,10 +367,28 @@ const CenterPanel = (props: Props) => {
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
 
     const {groupByProperty, activeView, board, views, cards} = props
-    const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(
-        () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
-        [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
-    )
+
+    const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {
+        const {visible: vg, hidden: hg} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
+        if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+            if (boardUsers) {
+                vg.forEach((value) => {
+                    const user = boardUsers[value.option.id]
+                    if (user) {
+                        value.option.value = Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
+                    }
+                })
+                hg.forEach((value) => {
+                    const user = boardUsers[value.option.id]
+                    if (user) {
+                        value.option.value = Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
+                    }
+                })
+            }
+        }
+        return {visible: vg, hidden: hg}
+    }, [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty, boardUsers])
+
     return (
         <div
             className='BoardComponent'

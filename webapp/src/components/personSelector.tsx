@@ -105,7 +105,7 @@ const PersonSelector = (props: Props): JSX.Element => {
     }
 
     let users: IUser[] = []
-    if (Array.isArray(userIDs) && userIDs.length > 0) {
+    if (Object.keys(boardUsersById).length > 0) {
         users = userIDs.map((id) => boardUsersById[id])
     }
 

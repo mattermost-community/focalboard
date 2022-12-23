@@ -14,4 +14,5 @@ export default class CreatedByProperty extends PropertyType {
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created by'})
     canFilter = true
     filterValueType = 'person' as FilterValueType
+    canGroup = true
 }

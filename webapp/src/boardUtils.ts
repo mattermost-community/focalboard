@@ -1,6 +1,5 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-
 import {Utils} from './utils'
 import {Card} from './blocks/card'
 import {IPropertyTemplate, IPropertyOption, BoardGroup} from './blocks/board'
@@ -36,7 +35,7 @@ export function groupCardsByOptions(cards: Card[], optionIds: string[], groupByP
     return groups
 }
 
-export function getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
+function getOptionGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
     let unassignedOptionIds: string[] = []
     if (groupByProperty) {
         unassignedOptionIds = groupByProperty.options.
@@ -53,4 +52,80 @@ export function getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: strin
     const visibleGroups = groupCardsByOptions(cards, allVisibleOptionIds, groupByProperty)
     const hiddenGroups = groupCardsByOptions(cards, hiddenOptionIds, groupByProperty)
     return {visible: visibleGroups, hidden: hiddenGroups}
+}
+export function getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: string[], hiddenOptionIds: string[], groupByProperty?: IPropertyTemplate): {visible: BoardGroup[], hidden: BoardGroup[]} {
+    if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+        return getPersonGroups(cards, groupByProperty, hiddenOptionIds)
+    }
+
+    return getOptionGroups(cards, visibleOptionIds, hiddenOptionIds, groupByProperty)
+}
+
+function getPersonGroups(cards: Card[], groupByProperty: IPropertyTemplate, hiddenOptionIds: string[]): {visible: BoardGroup[], hidden: BoardGroup[]} {
+    // return cards.reduce((unique: string[], item) => {
+    //     let key = item.fields.properties[groupByProperty.id] as string
+    //     if (groupByProperty?.type === 'createdBy') {
+    //         key = item.createdBy
+    //     } else if (groupByProperty?.type === 'updatedBy') {
+    //         key = item.modifiedBy
+    //     }
+
+    //     if (key && !unique.includes(key)) {
+    //         return [...unique, key]
+    //     }
+    //     return unique
+    // }, [])
+
+    const groups = cards.reduce((unique: {[key: string]: Card[]}, item: Card): {[key: string]: Card[]} => {
+        let key = item.fields.properties[groupByProperty.id] as string
+        if (groupByProperty?.type === 'createdBy') {
+            key = item.createdBy
+        } else if (groupByProperty?.type === 'updatedBy') {
+            key = item.modifiedBy
+        }
+
+        const curGroup = unique[key] ?? []
+        return {...unique, [key]: [...curGroup, item]}
+    }, {})
+
+    const hiddenGroups: BoardGroup[] = []
+    const visibleGroups: BoardGroup[] = []
+    Object.entries(groups).forEach(([key, value]) => {
+        let name = key
+        // const user = useAppSelector(getUser(key))
+        // if (user) {
+        //     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
+        //     name = Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
+        // }
+        const propertyOption = {id: key, value: name, color: ''} as IPropertyOption
+        if (hiddenOptionIds.find((e) => e === key)) {
+            hiddenGroups.push({option: propertyOption, cards: value})
+        } else {
+            visibleGroups.push({option: propertyOption, cards: value})
+        }
+    })
+
+    return {visible: visibleGroups, hidden: hiddenGroups}
+
+    // const groups = cards.reduce((unique: Record<string, Card[]>, item: Card) => {
+    //     let key = item.fields.properties[groupByProperty.id] as string
+    //     if (groupByProperty?.type === 'createdBy') {
+    //         key = item.createdBy
+    //     } else if (groupByProperty?.type === 'updatedBy') {
+    //         key = item.modifiedBy
+    //     }
+    //     unique[key].push(item)
+    //     return unique
+    // }, {})
+
+    // const groups = cards.reduce((unique: Map<string, Card[]>, item: Card) => {
+    //     // let key = item.fields.properties[groupByProperty.id] as string
+    //     // if (groupByProperty?.type === 'createdBy') {
+    //     //     key = item.createdBy
+    //     // } else if (groupByProperty?.type === 'updatedBy') {
+    //     //     key = item.modifiedBy
+    //     // }
+    //     // unique[key].push(item)
+    //     return unique
+    // }, {})
 }

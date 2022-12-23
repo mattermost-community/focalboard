@@ -14,4 +14,5 @@ export default class UpdatedByProperty extends PropertyType {
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.UpdatedBy', defaultMessage: 'Last updated by'})
     canFilter = true
     filterValueType = 'person' as FilterValueType
+    canGroup = true
 }
