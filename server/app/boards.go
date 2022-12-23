@@ -383,10 +383,14 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 
 		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		title := updatedBoard.Title
+		if title == "" {
+			title = "Untitled board" // todo: localize this when server has i18n
+		}
 		if *patch.ChannelID != "" {
-			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink), updatedBoard.ChannelID)
+			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, title, boardLink), updatedBoard.ChannelID)
 		} else if *patch.ChannelID == "" {
-			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink), oldChannelID)
+			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, title, boardLink), oldChannelID)
 		}
 	}
 
