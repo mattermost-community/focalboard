@@ -78,6 +78,8 @@ func TestPatchBlocks(t *testing.T) {
 	})
 
 	t.Run("cloud limit error scenario", func(t *testing.T) {
+		t.Skipf("The Cloud Limits feature has been disabled")
+
 		th.App.SetCardLimit(5)
 
 		fakeLicense := &mmModel.License{
@@ -185,6 +187,8 @@ func TestUndeleteBlock(t *testing.T) {
 }
 
 func TestIsWithinViewsLimit(t *testing.T) {
+	t.Skipf("The Cloud Limits feature has been disabled")
+
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
@@ -302,6 +306,8 @@ func TestInsertBlocks(t *testing.T) {
 	})
 
 	t.Run("create view within limits", func(t *testing.T) {
+		t.Skipf("The Cloud Limits feature has been disabled")
+
 		boardID := testBoardID
 		block := &model.Block{
 			Type:     model.TypeView,
@@ -334,6 +340,8 @@ func TestInsertBlocks(t *testing.T) {
 	})
 
 	t.Run("create view exceeding limits", func(t *testing.T) {
+		t.Skipf("The Cloud Limits feature has been disabled")
+
 		boardID := testBoardID
 		block := &model.Block{
 			Type:     model.TypeView,

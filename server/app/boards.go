@@ -189,9 +189,11 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
-	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
-			return nil, nil, categoryErr
+	if !asTemplate {
+		for _, board := range bab.Boards {
+			if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
+				return nil, nil, categoryErr
+			}
 		}
 	}
 
@@ -393,10 +395,14 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 
 		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		title := updatedBoard.Title
+		if title == "" {
+			title = "Untitled board" // todo: localize this when server has i18n
+		}
 		if *patch.ChannelID != "" {
-			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink), updatedBoard.ChannelID)
+			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, title, boardLink), updatedBoard.ChannelID)
 		} else if *patch.ChannelID == "" {
-			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink), oldChannelID)
+			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, title, boardLink), oldChannelID)
 		}
 	}
 
@@ -649,8 +655,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (a *App) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, searchField, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

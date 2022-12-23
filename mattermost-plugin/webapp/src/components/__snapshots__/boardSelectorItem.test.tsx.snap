@@ -8,25 +8,25 @@ exports[`components/boardSelectorItem renders board without title 1`] = `
     <div
       class="BoardSelectorItem-info"
     >
-      <span
-        class="icon"
-      >
-        <i
-          class="CompassIcon icon-product-boards"
-        />
-      </span>
       <div
-        class="resultLine"
+        class="d-flex"
       >
+        <span
+          class="icon"
+        >
+          <i
+            class="CompassIcon icon-product-boards"
+          />
+        </span>
         <div
           class="resultTitle"
         >
           Untitled board
         </div>
-        <div
-          class="resultDescription"
-        />
       </div>
+      <div
+        class="resultDescription"
+      />
     </div>
     <div
       class="linkUnlinkButton"
@@ -52,25 +52,25 @@ exports[`components/boardSelectorItem renders linked board 1`] = `
     <div
       class="BoardSelectorItem-info"
     >
-      <span
-        class="icon"
-      >
-        <i
-          class="CompassIcon icon-product-boards"
-        />
-      </span>
       <div
-        class="resultLine"
+        class="d-flex"
       >
+        <span
+          class="icon"
+        >
+          <i
+            class="CompassIcon icon-product-boards"
+          />
+        </span>
         <div
           class="resultTitle"
         >
           Test title
         </div>
-        <div
-          class="resultDescription"
-        />
       </div>
+      <div
+        class="resultDescription"
+      />
     </div>
     <div
       class="linkUnlinkButton"
@@ -96,25 +96,25 @@ exports[`components/boardSelectorItem renders not linked board 1`] = `
     <div
       class="BoardSelectorItem-info"
     >
-      <span
-        class="icon"
-      >
-        <i
-          class="CompassIcon icon-product-boards"
-        />
-      </span>
       <div
-        class="resultLine"
+        class="d-flex"
       >
+        <span
+          class="icon"
+        >
+          <i
+            class="CompassIcon icon-product-boards"
+          />
+        </span>
         <div
           class="resultTitle"
         >
           Test title
         </div>
-        <div
-          class="resultDescription"
-        />
       </div>
+      <div
+        class="resultDescription"
+      />
     </div>
     <div
       class="linkUnlinkButton"

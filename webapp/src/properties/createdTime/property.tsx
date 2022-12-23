@@ -23,4 +23,6 @@ export default class CreatedAtProperty extends PropertyType {
         Options.countValue, Options.countUniqueValue, Options.earliest,
         Options.latest, Options.dateRange]
     displayValue = (_1: string | string[] | undefined, card: Card, _2: IPropertyTemplate, intl: IntlShape) => Utils.displayDateTime(new Date(card.createAt), intl)
+    getDateFrom = (_: string | string[] | undefined, card: Card) => new Date(card.createAt || 0)
+    getDateTo = (_: string | string[] | undefined, card: Card) => new Date(card.createAt || 0)
 }

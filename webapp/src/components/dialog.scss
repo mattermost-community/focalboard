@@ -118,7 +118,7 @@
             height: 28px;
         }
 
-        > .content {
+        > .CardDetail {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -132,7 +132,7 @@
             }
         }
 
-        > .content.fullwidth {
+        > .CardDetail--fullwidth {
             padding-left: 78px;
         }
     }

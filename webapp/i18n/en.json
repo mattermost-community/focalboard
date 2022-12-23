@@ -284,6 +284,7 @@
   "TableHeaderMenu.insert-right": "Insert right",
   "TableHeaderMenu.sort-ascending": "Sort ascending",
   "TableHeaderMenu.sort-descending": "Sort descending",
+  "TableRow.MoreOption": "More actions",
   "TableRow.delete": "Delete",
   "TableRow.open": "Open",
   "TopBar.give-feedback": "Give feedback",
