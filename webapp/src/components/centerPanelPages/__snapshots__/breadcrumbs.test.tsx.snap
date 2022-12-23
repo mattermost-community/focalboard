@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/viewTitle should match snapshot 1`] = `
+exports[`components/breadcrumbs should match snapshot 1`] = `
 <div>
   <div
     class="Breadcrumbs"

@@ -111,6 +111,7 @@ describe('components/createCategory/CreateCategory', () => {
             name: 'category name',
             teamID: 'team-id',
             userID: 'user-id-1',
+            type: 'custom',
         })
     })
 

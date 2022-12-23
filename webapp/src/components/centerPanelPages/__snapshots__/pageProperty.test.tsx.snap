@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/viewTitle should match snapshot readonly with value 1`] = `
+exports[`components/pageProperty should match snapshot readonly with value 1`] = `
 <div>
   <div
     class="PageProperty octo-propertyrow"
@@ -19,7 +19,7 @@ exports[`components/viewTitle should match snapshot readonly with value 1`] = `
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot readonly without value 1`] = `
+exports[`components/pageProperty should match snapshot readonly without value 1`] = `
 <div>
   <div
     class="PageProperty octo-propertyrow"
@@ -36,7 +36,7 @@ exports[`components/viewTitle should match snapshot readonly without value 1`] =
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot with value 1`] = `
+exports[`components/pageProperty should match snapshot with value 1`] = `
 <div>
   <div
     class="PageProperty octo-propertyrow"
@@ -50,6 +50,7 @@ exports[`components/viewTitle should match snapshot with value 1`] = `
         class="octo-propertyname"
       >
         <button
+          class="Button"
           type="button"
         >
           <span>
@@ -70,7 +71,7 @@ exports[`components/viewTitle should match snapshot with value 1`] = `
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot without edit board permissions 1`] = `
+exports[`components/pageProperty should match snapshot without edit board permissions 1`] = `
 <div>
   <div
     class="PageProperty octo-propertyrow"
@@ -92,7 +93,7 @@ exports[`components/viewTitle should match snapshot without edit board permissio
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot without edit card permissions 1`] = `
+exports[`components/pageProperty should match snapshot without edit card permissions 1`] = `
 <div>
   <div
     class="PageProperty octo-propertyrow"
@@ -106,6 +107,7 @@ exports[`components/viewTitle should match snapshot without edit card permission
         class="octo-propertyname"
       >
         <button
+          class="Button"
           type="button"
         >
           <span>
@@ -123,7 +125,7 @@ exports[`components/viewTitle should match snapshot without edit card permission
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot without value 1`] = `
+exports[`components/pageProperty should match snapshot without value 1`] = `
 <div>
   <div
     class="PageProperty octo-propertyrow"
@@ -137,6 +139,7 @@ exports[`components/viewTitle should match snapshot without value 1`] = `
         class="octo-propertyname"
       >
         <button
+          class="Button"
           type="button"
         >
           <span>

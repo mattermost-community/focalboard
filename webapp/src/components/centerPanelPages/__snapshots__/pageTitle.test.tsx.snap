@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/viewTitle add random icon 1`] = `
+exports[`components/pageTitle add random icon 1`] = `
 <div>
   <div
     class="PageTitle"
@@ -34,7 +34,7 @@ exports[`components/viewTitle add random icon 1`] = `
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot 1`] = `
+exports[`components/pageTitle should match snapshot 1`] = `
 <div>
   <div
     class="PageTitle"
@@ -74,7 +74,7 @@ exports[`components/viewTitle should match snapshot 1`] = `
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot readonly 1`] = `
+exports[`components/pageTitle should match snapshot readonly 1`] = `
 <div>
   <div
     class="PageTitle"
@@ -109,7 +109,7 @@ exports[`components/viewTitle should match snapshot readonly 1`] = `
 </div>
 `;
 
-exports[`components/viewTitle should match snapshot readonly without icon 1`] = `
+exports[`components/pageTitle should match snapshot readonly without icon 1`] = `
 <div>
   <div
     class="PageTitle"

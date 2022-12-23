@@ -28,7 +28,7 @@ beforeAll(() => {
     mockDOM()
 })
 
-describe('components/viewTitle', () => {
+describe('components/pageTitle', () => {
     const board = TestBlockFactory.createBoard()
     const page = TestBlockFactory.createPage(board)
     board.id = 'test-id'
