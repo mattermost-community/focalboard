@@ -80,7 +80,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const myConfig = useAppSelector(getMyConfig)
     const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
     const category = useAppSelector(getCategoryOfBoard(activeBoardId))
-    const [previousBoardID, setPreviousBoardID] = useState<string>('')
+    const [previousBoardID, setPreviousBoardID] = useState<string>()
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -263,16 +263,11 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        // const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        // if (hiddenBoardIDs[match.params.boardId]) {
-        //     handleUnhideBoard(match.params.boardId)
-        // }
-
-        console.log('asdasd')
         if (hiddenBoardIDs.indexOf(match.params.boardId) >= 0) {
+            // setPreviousBoardID(match.params.boardId)
             handleUnhideBoard(match.params.boardId)
         }
-    }, [me?.id, teamId, match.params.boardId, hiddenBoardIDs])
+    }, [me?.id, teamId, match.params.boardId])
 
     if (props.readonly) {
         useEffect(() => {

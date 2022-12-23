@@ -1,3 +1,6 @@
+
+
+
 {{if .postgres}}
 -- dropping before adding constraint to make migration idempotent
 ALTER TABLE {{.prefix}}category_boards DROP CONSTRAINT IF EXISTS unique_user_category_board;
