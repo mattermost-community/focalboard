@@ -169,7 +169,17 @@ class CardFilter {
             return {id: filterClause.propertyId}
         }
 
+        if (template.type === 'createdBy' || template.type === 'updatedBy') {
+            return {id: filterClause.propertyId}
+        }
+
         switch (filterClause.condition) {
+        case 'is': {
+            if (filterClause.values.length < 1) {
+                return {id: filterClause.propertyId}
+            }
+            return {id: filterClause.propertyId, value: filterClause.values[0]}
+        }
         case 'includes': {
             if (filterClause.values.length < 1) {
                 return {id: filterClause.propertyId}
@@ -195,7 +205,7 @@ class CardFilter {
             return {id: filterClause.propertyId}
         }
         default: {
-            Utils.assertFailure(`Unexpected filter condition: ${filterClause.condition}`)
+            // Handle filter clause that cannot be set
             return {id: filterClause.propertyId}
         }
         }

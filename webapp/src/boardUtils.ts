@@ -4,7 +4,7 @@ import {Utils} from './utils'
 import {Card} from './blocks/card'
 import {IPropertyTemplate, IPropertyOption, BoardGroup} from './blocks/board'
 
-export function groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty?: IPropertyTemplate): BoardGroup[] {
+function groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty?: IPropertyTemplate): BoardGroup[] {
     const groups = []
     for (const optionId of optionIds) {
         if (optionId) {
@@ -62,20 +62,6 @@ export function getVisibleAndHiddenGroups(cards: Card[], visibleOptionIds: strin
 }
 
 function getPersonGroups(cards: Card[], groupByProperty: IPropertyTemplate, hiddenOptionIds: string[]): {visible: BoardGroup[], hidden: BoardGroup[]} {
-    // return cards.reduce((unique: string[], item) => {
-    //     let key = item.fields.properties[groupByProperty.id] as string
-    //     if (groupByProperty?.type === 'createdBy') {
-    //         key = item.createdBy
-    //     } else if (groupByProperty?.type === 'updatedBy') {
-    //         key = item.modifiedBy
-    //     }
-
-    //     if (key && !unique.includes(key)) {
-    //         return [...unique, key]
-    //     }
-    //     return unique
-    // }, [])
-
     const groups = cards.reduce((unique: {[key: string]: Card[]}, item: Card): {[key: string]: Card[]} => {
         let key = item.fields.properties[groupByProperty.id] as string
         if (groupByProperty?.type === 'createdBy') {
@@ -106,26 +92,4 @@ function getPersonGroups(cards: Card[], groupByProperty: IPropertyTemplate, hidd
     })
 
     return {visible: visibleGroups, hidden: hiddenGroups}
-
-    // const groups = cards.reduce((unique: Record<string, Card[]>, item: Card) => {
-    //     let key = item.fields.properties[groupByProperty.id] as string
-    //     if (groupByProperty?.type === 'createdBy') {
-    //         key = item.createdBy
-    //     } else if (groupByProperty?.type === 'updatedBy') {
-    //         key = item.modifiedBy
-    //     }
-    //     unique[key].push(item)
-    //     return unique
-    // }, {})
-
-    // const groups = cards.reduce((unique: Map<string, Card[]>, item: Card) => {
-    //     // let key = item.fields.properties[groupByProperty.id] as string
-    //     // if (groupByProperty?.type === 'createdBy') {
-    //     //     key = item.createdBy
-    //     // } else if (groupByProperty?.type === 'updatedBy') {
-    //     //     key = item.modifiedBy
-    //     // }
-    //     // unique[key].push(item)
-    //     return unique
-    // }, {})
 }
