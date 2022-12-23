@@ -10,6 +10,7 @@ import (
 
 	"text/template"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
 
@@ -56,14 +57,14 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 		}
 	}
 
-	db, err := sql.Open(s.dbType, connectionString)
-	if err != nil {
-		return nil, err
+	var settings mmModel.SqlSettings
+	settings.SetDefaults(false)
+	if s.configFn != nil {
+		settings = s.configFn().SqlSettings
 	}
+	*settings.DriverName = s.dbType
 
-	if err = db.Ping(); err != nil {
-		return nil, err
-	}
+	db := sqlstore.SetupConnection("master", connectionString, &settings)
 
 	return db, nil
 }

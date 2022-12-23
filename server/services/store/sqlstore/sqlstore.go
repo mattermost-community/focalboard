@@ -28,6 +28,8 @@ type SQLStore struct {
 	NewMutexFn       MutexFactory
 	servicesAPI      servicesAPI
 	isBinaryParam    bool
+	schemaName       string
+	configFn         func() *mmModel.Config
 }
 
 // MutexFactory is used by the store in plugin mode to generate
@@ -52,6 +54,7 @@ func New(params Params) (*SQLStore, error) {
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		servicesAPI:      params.ServicesAPI,
+		configFn:         params.ConfigFn,
 	}
 
 	var err error
