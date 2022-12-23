@@ -35,15 +35,19 @@ func (a *App) GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoar
 		return nil, err
 	}
 
-	resultCategories := append(categoryBoards, categoryPages...)
+	resultCategories := categoryBoards
+	resultCategories = append(resultCategories, categoryPages...)
 	resultCategories = append(resultCategories, createdCategoryBoards...)
 	return resultCategories, nil
 }
 
-func (a *App) createDefaultCategoriesIfRequired(existingCategoryBoards []model.CategoryBoards, existingCategoryPages []model.CategoryBoards, userID, teamID string) ([]model.CategoryBoards, error) {
+func (a *App) createDefaultCategoriesIfRequired(
+	existingCategoryBoards []model.CategoryBoards,
+	existingCategoryPages []model.CategoryBoards,
+	userID,
+	teamID string,
+) ([]model.CategoryBoards, error) {
 	createdCategories := []model.CategoryBoards{}
-	fmt.Println("BOARDS", existingCategoryBoards)
-	fmt.Println("PAGES", existingCategoryPages)
 
 	boardsCategoryExist := false
 	for _, categoryBoard := range existingCategoryBoards {

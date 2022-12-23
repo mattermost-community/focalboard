@@ -104,7 +104,13 @@ func (c *Category) IsValid() error {
 	}
 
 	if c.Type != CategoryTypeCustom && c.Type != CategoryTypeSystem && c.Type != CategoryTypePagesCustom && c.Type != CategoryTypePagesSystem {
-		return NewErrInvalidCategory(fmt.Sprintf("category type is invalid. Allowed types: %s, %s, %s and %s", CategoryTypeSystem, CategoryTypeCustom, CategoryTypePagesSystem, CategoryTypePagesCustom))
+		return NewErrInvalidCategory(fmt.Sprintf(
+			"category type is invalid. Allowed types: %s, %s, %s and %s",
+			CategoryTypeSystem,
+			CategoryTypeCustom,
+			CategoryTypePagesSystem,
+			CategoryTypePagesCustom,
+		))
 	}
 
 	return nil
