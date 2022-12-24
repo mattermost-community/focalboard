@@ -92,9 +92,6 @@ type Store interface {
 	// @withTransaction
 	PatchBoard(boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error)
 	GetBoard(id string) (*model.Board, error)
-	GetBoardsForTeam(teamID string, page, perPage int) ([]*model.Board, error)
-	GetBoardsHistory(modifiedSince int, includeDeleted bool, teamID string, page, perPage int) ([]*model.Board, error)
-	GetBlocksHistory(modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) ([]*model.Block, error)
 	GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error)
 	GetBoardsInTeamByIds(boardIDs []string, teamID string) ([]*model.Board, error)
 	// @withTransaction
@@ -174,6 +171,11 @@ type Store interface {
 	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+
+	// Compliance
+	GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions) ([]*model.Board, bool, error)
+	GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]model.BoardHistory, bool, error)
+	GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]model.BlockHistory, bool, error)
 
 	// For unit testing only
 	DeleteBoardRecord(boardID, modifiedBy string) error

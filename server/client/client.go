@@ -11,6 +11,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -987,7 +988,7 @@ func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
 	return stats, BuildResponse(r)
 }
 
-func (c *Client) GetAllBoards(teamID string, page, perPage int) (*model.ComplianceResponse, *Response) {
+func (c *Client) GetBoardsForCompliance(teamID string, page, perPage int) (*model.BoardsComplianceResponse, *Response) {
 	query := fmt.Sprintf("?team_id=%s&page=%d&per_page=%d", teamID, page, perPage)
 	r, err := c.DoAPIGet("/admin/boards"+query, "")
 	if err != nil {
@@ -995,7 +996,7 @@ func (c *Client) GetAllBoards(teamID string, page, perPage int) (*model.Complian
 	}
 	defer closeBody(r)
 
-	var res *model.ComplianceResponse
+	var res *model.BoardsComplianceResponse
 	err = json.NewDecoder(r.Body).Decode(&res)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -1004,15 +1005,17 @@ func (c *Client) GetAllBoards(teamID string, page, perPage int) (*model.Complian
 	return res, BuildResponse(r)
 }
 
-func (c *Client) GetBoardsHistory(modifiedSince int, includeDeleted bool, teamID string, page, perPage int) (*model.ComplianceResponse, *Response) {
-	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&page=%d&per_page=%d", modifiedSince, includeDeleted, teamID, page, perPage)
+func (c *Client) GetBoardsComplianceHistory(
+	modifiedSince int, includeDeleted bool, teamID string, page, perPage int) (*model.BoardsComplianceHistoryResponse, *Response) {
+	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&page=%d&per_page=%d",
+		modifiedSince, includeDeleted, teamID, page, perPage)
 	r, err := c.DoAPIGet("/admin/boards_history"+query, "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	var res *model.ComplianceResponse
+	var res *model.BoardsComplianceHistoryResponse
 	err = json.NewDecoder(r.Body).Decode(&res)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -1021,15 +1024,17 @@ func (c *Client) GetBoardsHistory(modifiedSince int, includeDeleted bool, teamID
 	return res, BuildResponse(r)
 }
 
-func (c *Client) GetBlocksHistory(modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) (*model.ComplianceResponse, *Response) {
-	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&board_id=%s&page=%d&per_page=%d", modifiedSince, includeDeleted, teamID, boardID, page, perPage)
+func (c *Client) GetBlocksComplianceHistory(
+	modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) (*model.BlocksComplianceHistoryResponse, *Response) {
+	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&board_id=%s&page=%d&per_page=%d",
+		modifiedSince, includeDeleted, teamID, boardID, page, perPage)
 	r, err := c.DoAPIGet("/admin/blocks_history"+query, "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	var res *model.ComplianceResponse
+	var res *model.BlocksComplianceHistoryResponse
 	err = json.NewDecoder(r.Body).Decode(&res)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)

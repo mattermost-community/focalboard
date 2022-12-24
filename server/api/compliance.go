@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
+
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -19,12 +20,12 @@ const (
 
 func (a *API) registerComplianceRoutes(r *mux.Router) {
 	// Compliance APIs
-	r.HandleFunc("/admin/boards", a.sessionRequired(a.handleGetAllBoards)).Methods("GET")
-	r.HandleFunc("/admin/boards_history", a.sessionRequired(a.handleGetBoardsHistory)).Methods("GET")
-	r.HandleFunc("/admin/blocks_history", a.sessionRequired(a.handleGetBlocksHistory)).Methods("GET")
+	r.HandleFunc("/admin/boards", a.sessionRequired(a.handleGetBoardsForCompliance)).Methods("GET")
+	r.HandleFunc("/admin/boards_history", a.sessionRequired(a.handleGetBoardsComplianceHistory)).Methods("GET")
+	r.HandleFunc("/admin/blocks_history", a.sessionRequired(a.handleGetBlocksComplianceHistory)).Methods("GET")
 }
 
-func (a *API) handleGetAllBoards(w http.ResponseWriter, r *http.Request) {
+func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Request) {
 	// TODO(@pinjasaur): swagger
 
 	query := r.URL.Query()
@@ -65,26 +66,26 @@ func (a *API) handleGetAllBoards(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	boards, err := a.app.GetBoardsForTeam(teamID, page, perPage)
+	opts := model.QueryBoardsForComplianceOptions{
+		TeamID:  teamID,
+		Page:    page,
+		PerPage: perPage,
+	}
+
+	boards, more, err := a.app.GetBoardsForCompliance(opts)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
 	}
 
-	// N+1; is there more?
-	// TODO: potentially fragile if len(boards) == 0 or perPage < 0
-	hasNext := len(boards) > perPage
-	if hasNext {
-		boards = boards[:len(boards)-1]
-	}
-
-	a.logger.Debug("GetAllBoards",
+	a.logger.Debug("GetBoardsForCompliance",
 		mlog.String("teamID", teamID),
 		mlog.Int("boardsCount", len(boards)),
+		mlog.Bool("hasNext", more),
 	)
 
-	response := model.ComplianceResponse{
-		HasNext: hasNext,
+	response := model.BoardsComplianceResponse{
+		HasNext: more,
 		Results: boards,
 	}
 	data, err := json.Marshal(response)
@@ -96,7 +97,7 @@ func (a *API) handleGetAllBoards(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 }
 
-func (a *API) handleGetBoardsHistory(w http.ResponseWriter, r *http.Request) {
+func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Request) {
 	// TODO(@pinjasaur): swagger
 
 	query := r.URL.Query()
@@ -143,33 +144,35 @@ func (a *API) handleGetBoardsHistory(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
-	modifiedSince, err := strconv.Atoi(strModifiedSince)
+	modifiedSince, err := strconv.ParseInt(strModifiedSince, 10, 64)
 	if err != nil {
 		message := fmt.Sprintf("invalid `modified_since` parameter: %s", err)
 		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
-	boards, err := a.app.GetBoardsHistory(modifiedSince, includeDeleted, teamID, page, perPage)
+	opts := model.QueryBoardsComplianceHistoryOptions{
+		ModifiedSince:  modifiedSince,
+		IncludeDeleted: includeDeleted,
+		TeamID:         teamID,
+		Page:           page,
+		PerPage:        perPage,
+	}
+
+	boards, more, err := a.app.GetBoardsComplianceHistory(opts)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
 	}
 
-	// N+1; is there more?
-	// TODO: potentially fragile if len(boards) == 0 or perPage < 0
-	hasNext := len(boards) > perPage
-	if hasNext {
-		boards = boards[:len(boards)-1]
-	}
-
-	a.logger.Debug("GetBoardsHistory",
+	a.logger.Debug("GetBoardsComplianceHistory",
 		mlog.String("teamID", teamID),
 		mlog.Int("boardsCount", len(boards)),
+		mlog.Bool("hasNext", more),
 	)
 
-	response := model.ComplianceResponse{
-		HasNext: hasNext,
+	response := model.BoardsComplianceHistoryResponse{
+		HasNext: more,
 		Results: boards,
 	}
 	data, err := json.Marshal(response)
@@ -181,7 +184,7 @@ func (a *API) handleGetBoardsHistory(w http.ResponseWriter, r *http.Request) {
 	jsonBytesResponse(w, http.StatusOK, data)
 }
 
-func (a *API) handleGetBlocksHistory(w http.ResponseWriter, r *http.Request) {
+func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Request) {
 	// TODO(@pinjasaur): swagger
 
 	query := r.URL.Query()
@@ -229,34 +232,37 @@ func (a *API) handleGetBlocksHistory(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
-	modifiedSince, err := strconv.Atoi(strModifiedSince)
+	modifiedSince, err := strconv.ParseInt(strModifiedSince, 10, 64)
 	if err != nil {
 		message := fmt.Sprintf("invalid `modified_since` parameter: %s", err)
 		a.errorResponse(w, r, model.NewErrBadRequest(message))
 		return
 	}
 
-	blocks, err := a.app.GetBlocksHistory(modifiedSince, includeDeleted, teamID, boardID, page, perPage)
+	opts := model.QueryBlocksComplianceHistoryOptions{
+		ModifiedSince:  modifiedSince,
+		IncludeDeleted: includeDeleted,
+		TeamID:         teamID,
+		BoardID:        boardID,
+		Page:           page,
+		PerPage:        perPage,
+	}
+
+	blocks, more, err := a.app.GetBlocksComplianceHistory(opts)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
 	}
 
-	// N+1; is there more?
-	// TODO: potentially fragile if len(blocks) == 0 or perPage < 0
-	hasNext := len(blocks) > perPage
-	if hasNext {
-		blocks = blocks[:len(blocks)-1]
-	}
-
-	a.logger.Debug("GetBlocksHistory",
+	a.logger.Debug("GetBlocksComplianceHistory",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", boardID),
 		mlog.Int("blocksCount", len(blocks)),
+		mlog.Bool("hasNext", more),
 	)
 
-	response := model.ComplianceResponse{
-		HasNext: hasNext,
+	response := model.BlocksComplianceHistoryResponse{
+		HasNext: more,
 		Results: blocks,
 	}
 	data, err := json.Marshal(response)
