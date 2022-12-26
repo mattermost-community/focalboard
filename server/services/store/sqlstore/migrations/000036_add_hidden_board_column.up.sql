@@ -1,1 +1,1 @@
-{{ genAddColumnIfNeeded "category_boards" "hidden" "boolean" "" }}
+{{ addColumnIfNeeded "category_boards" "hidden" "boolean" "" }}

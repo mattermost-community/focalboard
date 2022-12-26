@@ -302,7 +302,7 @@ func (s *SQLStore) GetTemplateHelperFuncs() template.FuncMap {
 		"renameColumnIfNeeded":  s.genRenameColumnIfNeeded,
 		"doesTableExist":        s.doesTableExist,
 		"doesColumnExist":       s.doesColumnExist,
-		"addConstraintIfNeeded": s.addConstraintIfNeeded,
+		"addConstraintIfNeeded": s.genAddConstraintIfNeeded,
 	}
 	return funcs
 }
@@ -608,7 +608,7 @@ func (s *SQLStore) doesColumnExist(tableName, columnName string) (bool, error) {
 	return exists, nil
 }
 
-func (s *SQLStore) addConstraintIfNeeded(tableName, constraintName, constraintType, constraintDefinition string) (string, error) {
+func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constraintType, constraintDefinition string) (string, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
 	normTableName := normalizeTablename(s.schemaName, tableName)
 
@@ -625,6 +625,7 @@ func (s *SQLStore) addConstraintIfNeeded(tableName, constraintName, constraintTy
 
 	switch s.dbType {
 	case model.SqliteDBType:
+		// TODO: what to do about SQLIte? Many of there generate scripts are incompatible with SQlite.
 		query = fmt.Sprintf("\n-- Sqlite3 cannot drop constraints; drop constraint '%s' in table '%s' skipped\n", constraintName, tableName)
 	case model.MysqlDBType:
 		query = replaceVars(`
