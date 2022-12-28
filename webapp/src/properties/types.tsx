@@ -15,7 +15,7 @@ function encodeText(text: string): string {
 
 export type PropertyTypeEnum = BoardPropertyTypeEnum
 
-export type FilterValueType = 'none'|'options'|'boolean'|'text'
+export type FilterValueType = 'none'|'options'|'boolean'|'text'|'date'
 
 export type FilterCondition = {
     id: string
@@ -72,6 +72,8 @@ export abstract class PropertyType {
 }
 
 export abstract class DatePropertyType extends PropertyType {
+    canFilter = true
+    filterValueType: FilterValueType = 'date'
     getDateFrom: (value: string | string[] | undefined, card: Card) => Date | undefined
     getDateTo: (value: string | string[] | undefined, card: Card) => Date | undefined
 
