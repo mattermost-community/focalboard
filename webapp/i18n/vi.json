@@ -15,9 +15,15 @@
   "BoardPage.newVersion": "Có một phiên bản mới của bảng, click vào đây để nạp lại.",
   "Calculations.Options.average.displayName": "Trung bình",
   "Calculations.Options.average.label": "Trung bình",
+  "TableComponent.add-icon": "Thêm icon",
+  "TableComponent.name": "Tên",
+  "TableComponent.plus-new": "+ Mới",
+  "TableHeaderMenu.delete": "Xóa",
   "share-board.publish": "Công khai",
   "share-board.share": "Chia sẻ",
   "shareBoard.channels-select-group": "Kênh",
   "shareBoard.members-select-group": "Thành viên",
-  "tutorial_tip.finish_tour": "Xong"
+  "tutorial_tip.finish_tour": "Xong",
+  "tutorial_tip.got_it": "Đã hiểu",
+  "tutorial_tip.ok": "Tiếp theo"
 }
