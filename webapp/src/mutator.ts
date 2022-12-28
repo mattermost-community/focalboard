@@ -1088,8 +1088,8 @@ class Mutator {
     async addEmptyBoard(
         teamId: string,
         intl: IntlShape,
-        afterRedo: (id: string) => Promise<void>,
-        beforeUndo: () => Promise<void>,
+        afterRedo?: (id: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
     ): Promise<BoardsAndBlocks> {
         const board = createBoard()
         board.teamId = teamId
@@ -1106,7 +1106,7 @@ class Mutator {
             async (bab: BoardsAndBlocks) => {
                 const newBoard = bab.boards[0]
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
-                await afterRedo(newBoard?.id || '')
+                afterRedo && await afterRedo(newBoard?.id || '')
             },
             beforeUndo,
         )

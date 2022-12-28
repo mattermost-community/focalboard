@@ -66,6 +66,7 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
+import CreateBoardFromTemplate, {createBoardFromTemplateAction} from './components/createBoardFromTemplate'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -334,6 +335,22 @@ export default class Plugin {
 
             if (this.registry.registerAppBarComponent) {
                 this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+            }
+
+            if (this.registry.registerActionAfterChannelCreation) {
+                this.registry.registerActionAfterChannelCreation((props: {
+                    setSelectedTemplate: (templateId: string) => void,
+                    toggleAddBoardCheck: (addBoard: boolean) => void,
+                    newBoardInfoIcon: React.ReactNode,
+                }) => (
+                    <ReduxProvider store={store}>
+                        <CreateBoardFromTemplate
+                            setSelectedTemplate={props.setSelectedTemplate}
+                            toggleAddBoardCheck={props.toggleAddBoardCheck}
+                            newBoardInfoIcon={props.newBoardInfoIcon}
+                        />
+                    </ReduxProvider>
+                ), createBoardFromTemplateAction)
             }
 
             this.registry.registerPostWillRenderEmbedComponent(

@@ -6,7 +6,8 @@ function blockList(line) {
         line.startsWith('.GlobalHeaderComponent') ||
         line.startsWith('.boards-rhs-icon') ||
         line.startsWith('.focalboard-plugin-root') ||
-        line.startsWith('.FocalboardUnfurl');
+        line.startsWith('.FocalboardUnfurl') ||
+        line.startsWith('.CreateBoardFromTemplate');
 }
 
 module.exports = function loader(source) {
