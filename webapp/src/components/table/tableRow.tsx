@@ -184,15 +184,15 @@ const TableRow = (props: Props) => {
                             />
                         </Tooltip>
                         <CardActionsMenu
-                            cardId={card!.id}
+                            cardId={card.id}
+                            boardId={card.boardId}
                             onClickDelete={handleDeleteButtonOnClick}
                             onClickDuplicate={() => {
-                                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
                                 mutator.duplicateCard(
                                     card.id,
                                     board.id,
                                     false,
-                                    'duplicate card',
+                                    intl.formatMessage({id: 'TableRow.DuplicateCard', defaultMessage: 'duplicate card'}),
                                     false,
                                     {},
                                     async (newCardId) => {
