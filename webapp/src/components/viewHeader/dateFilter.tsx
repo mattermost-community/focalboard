@@ -24,8 +24,6 @@ import './dateFilter.scss'
 import {FilterClause} from '../../blocks/filterClause'
 import {createFilterGroup} from '../../blocks/filterGroup'
 
-// import {PropertyProps} from '../../properties/types'
-
 export type DateProperty = {
     from?: number
     to?: number
@@ -59,8 +57,6 @@ function DateFilter(props: Props): JSX.Element {
             const adjustedValue = newValue ? new Date(newValue.getTime() - timeZoneOffset(newValue.getTime())) : undefined
             setValue(adjustedValue)
 
-            console.log(' onChange ' + newValue)
-            console.log(' adjusted ' + adjustedValue)
             const filterIndex = view.fields.filter.filters.indexOf(filter)
             Utils.assert(filterIndex >= 0, "Can't find filter")
 

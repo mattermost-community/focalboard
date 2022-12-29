@@ -177,6 +177,9 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'Filter.isafter', defaultMessage: 'is after'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
+                        </>}
+                    {propertyType.type === 'date' &&
+                        <>
                             <Menu.Text
                                 id='isSet'
                                 name={intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})}
