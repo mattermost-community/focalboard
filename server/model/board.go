@@ -105,6 +105,21 @@ type Board struct {
 	DeleteAt int64 `json:"deleteAt"`
 }
 
+// GetPropertyString returns the value of the specified property as a string,
+// or error if the property does not exist or is not of type string.
+func (b *Board) GetPropertyString(propName string) (string, error) {
+	val, ok := b.Properties[propName]
+	if !ok {
+		return "", NewErrNotFound(propName)
+	}
+
+	s, ok := val.(string)
+	if !ok {
+		return "", ErrInvalidPropertyValueType
+	}
+	return s, nil
+}
+
 // BoardPatch is a patch for modify boards
 // swagger:model
 type BoardPatch struct {
