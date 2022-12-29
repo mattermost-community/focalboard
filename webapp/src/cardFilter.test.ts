@@ -53,6 +53,147 @@ describe('src/cardFilter', () => {
             expect(result).toBeTruthy()
         })
     })
+
+    // describe('verify isClauseMet method - person property', () => {
+    //     const personCard = TestBlockFactory.createCard(board)
+    //     personCard.id = '1'
+    //     personCard.title = 'card1'
+    //     personCard.fields.properties.personPropertyID = 'personID1'
+
+    //     const template: IPropertyTemplate = {
+    //         id: 'personPropertyID',
+    //         name: 'myPerson',
+    //         type: 'person',
+    //         options: [],
+    //     }
+
+    //     test('should be true with isNotEmpty clause', () => {
+    //         const filterClauseIsNotEmpty = createFilterClause({propertyId: 'personPropertyID', condition: 'isNotEmpty', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseIsNotEmpty, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('should be false with isEmpty clause', () => {
+    //         const filterClauseIsEmpty = createFilterClause({propertyId: 'personPropertyID', condition: 'isEmpty', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseIsEmpty, [template], personCard)
+    //         expect(result).toBeFalsy()
+    //     })
+    //     test('verify empty contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID1']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause multiple valuse', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID2', 'personID1']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify not contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'notContains', values: ['personID2']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    // })
+
+    // describe('verify isClauseMet method - multi-person property', () => {
+    //     const personCard = TestBlockFactory.createCard(board)
+    //     personCard.id = '1'
+    //     personCard.title = 'card1'
+    //     personCard.fields.properties.personPropertyID = ['personID1', 'personID2']
+
+    //     const template: IPropertyTemplate = {
+    //         id: 'personPropertyID',
+    //         name: 'myPerson',
+    //         type: 'multiPerson',
+    //         options: [],
+    //     }
+
+    //     test('should be true with isNotEmpty clause', () => {
+    //         const filterClauseIsNotEmpty = createFilterClause({propertyId: 'personPropertyID', condition: 'isNotEmpty', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseIsNotEmpty, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('should be false with isEmpty clause', () => {
+    //         const filterClauseIsEmpty = createFilterClause({propertyId: 'personPropertyID', condition: 'isEmpty', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseIsEmpty, [template], personCard)
+    //         expect(result).toBeFalsy()
+    //     })
+    //     test('verify empty contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID1']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause 2', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID2']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause multiple values', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID3', 'personID1']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause multiple values 2', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID3', 'personID2']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify not contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'notContains', values: ['personID3']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify not contains clause, multiple values', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'notContains', values: ['personID3', 'personID4']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    // })
+
+    // describe('verify isClauseMet method - (createdBy) person property', () => {
+    //     const personCard = TestBlockFactory.createCard(board)
+    //     personCard.id = '1'
+    //     personCard.title = 'card1'
+    //     personCard.createdBy = 'personID1'
+
+    //     const template: IPropertyTemplate = {
+    //         id: 'personPropertyID',
+    //         name: 'myPerson',
+    //         type: 'createdBy',
+    //         options: [],
+    //     }
+
+    //     test('verify empty contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: []})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID1']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify contains clause multiple values', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'contains', values: ['personID3', 'personID1']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    //     test('verify not contains clause', () => {
+    //         const filterClauseContains = createFilterClause({propertyId: 'personPropertyID', condition: 'notContains', values: ['personID2']})
+    //         const result = CardFilter.isClauseMet(filterClauseContains, [template], personCard)
+    //         expect(result).toBeTruthy()
+    //     })
+    // })
+
     describe('verify isFilterGroupMet method', () => {
         test('should return true with no filter', () => {
             const filterGroup = createFilterGroup({

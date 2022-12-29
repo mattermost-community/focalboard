@@ -11,6 +11,7 @@ const Person = (props: PropertyProps): JSX.Element => {
     return (
         <ConfirmPerson
             {...props}
+            showEmptyPlaceholder={true}
         />
     )
 }

@@ -86,7 +86,7 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{OctoUtils.filterConditionDisplayString(filter.condition, intl, propertyType.filterValueType)}</Button>
                 <Menu>
-                    {(propertyType.filterValueType === 'options' || propertyType.filterValueType === 'person') &&
+                    {propertyType.filterValueType === 'options' &&
                         <>
                             <Menu.Text
                                 id='includes'
@@ -98,6 +98,32 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
+                            <Menu.Text
+                                id='isEmpty'
+                                name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isNotEmpty'
+                                name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.filterValueType === 'person' &&
+                        <>
+                            <Menu.Text
+                                id='includes'
+                                name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='notIncludes'
+                                name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.type === 'person' &&
+                        <>
                             <Menu.Text
                                 id='isEmpty'
                                 name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}

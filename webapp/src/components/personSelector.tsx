@@ -90,7 +90,7 @@ const PersonSelector = (props: Props): JSX.Element => {
         return (
             <div
                 key={user.id}
-                className='Person-item'
+                className={isMulti ? 'MultiPerson-item' : 'Person-item'}
             >
                 {profileImg && (
                     <img
@@ -130,6 +130,11 @@ const PersonSelector = (props: Props): JSX.Element => {
         ]
     }, [boardUsers, allowAddUsers, boardUsersById])
 
+    let primaryClass = 'Person'
+    if (isMulti) {
+        primaryClass = 'MultiPerson'
+    }
+    console.log(primaryClass)
     let secondaryClass = ''
     if (props.property) {
         secondaryClass = ` ${props.property.valueClassName(readOnly)}`
@@ -137,7 +142,7 @@ const PersonSelector = (props: Props): JSX.Element => {
 
     if (readOnly) {
         return (
-            <div className={`Person${secondaryClass}`}>
+            <div className={`${primaryClass}${secondaryClass}`}>
                 {users.map((user) => formatOptionLabel(user))}
             </div>
         )
@@ -155,7 +160,7 @@ const PersonSelector = (props: Props): JSX.Element => {
                 backspaceRemovesValue={true}
                 closeMenuOnSelect={closeMenuOnSelect}
                 // className={`MultiPerson ${props.property.valueClassName(props.readOnly)}`}
-                className={`Person${secondaryClass}`}
+                className={`${primaryClass}${secondaryClass}`}
                 classNamePrefix={'react-select'}
                 formatOptionLabel={formatOptionLabel}
                 styles={selectStyles}
