@@ -60,14 +60,14 @@ func testGetUserCategoryBoards(t *testing.T, store store.Store) {
 
 	// Adding Board 1 and Board 2 to Category 1
 	// The boards don't need to exists in DB for this test
-	err = store.AddUpdateCategoryBoard("user_id_1", map[string]string{"board_1": "category_id_1"})
+	err = store.AddUpdateCategoryBoard("user_id_1", "category_id_1", []string{"board_1"})
 	assert.NoError(t, err)
 
-	err = store.AddUpdateCategoryBoard("user_id_1", map[string]string{"board_2": "category_id_1"})
+	err = store.AddUpdateCategoryBoard("user_id_1", "category_id_1", []string{"board_2"})
 	assert.NoError(t, err)
 
 	// Adding Board 3 to Category 2
-	err = store.AddUpdateCategoryBoard("user_id_1", map[string]string{"board_3": "category_id_2"})
+	err = store.AddUpdateCategoryBoard("user_id_1", "category_id_2", []string{"board_3"})
 	assert.NoError(t, err)
 
 	// we'll leave category 3 empty
@@ -94,13 +94,13 @@ func testGetUserCategoryBoards(t *testing.T, store store.Store) {
 	}
 
 	assert.NotEmpty(t, category1BoardCategory)
-	assert.Equal(t, 2, len(category1BoardCategory.BoardIDs))
+	assert.Equal(t, 2, len(category1BoardCategory.BoardMetadata))
 
 	assert.NotEmpty(t, category1BoardCategory)
-	assert.Equal(t, 1, len(category2BoardCategory.BoardIDs))
+	assert.Equal(t, 1, len(category2BoardCategory.BoardMetadata))
 
 	assert.NotEmpty(t, category1BoardCategory)
-	assert.Equal(t, 0, len(category3BoardCategory.BoardIDs))
+	assert.Equal(t, 0, len(category3BoardCategory.BoardMetadata))
 
 	t.Run("get empty category boards", func(t *testing.T) {
 		userCategoryBoards, err := store.GetUserCategoryBoards("nonexistent-user-id", "nonexistent-team-id")

@@ -3,5 +3,5 @@
 {{end}}
 
 {{if .sqlite}}
-    CREATE UNIQUE INDEX IF NOT EXISTS unique_user_category_board ON category_boards(user_id, board_id);
+    CREATE UNIQUE INDEX IF NOT EXISTS unique_user_category_board ON {{.prefix}}category_boards(user_id, board_id);
 {{end}}

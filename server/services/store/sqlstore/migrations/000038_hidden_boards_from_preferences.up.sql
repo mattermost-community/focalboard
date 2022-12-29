@@ -8,10 +8,20 @@
         WHERE p.value LIKE concat('%', fcb.board_id, '%');
 {{end}}
 
-{{if or .postgres .sqlite}}
-    UPDATE focalboard_category_boards as fcb 
+{{if .postgres}}
+    UPDATE {{.prefix}}category_boards as fcb 
         SET hidden = true
         FROM preferences p
+        WHERE p.userid = fcb.user_id 
+        AND p.category = 'focalboard'
+        AND p.name = 'hiddenBoardIDs'
+        AND p.value like ('%' || fcb.board_id || '%');
+{{end}}
+
+{{if .sqlite}}
+    UPDATE {{.prefix}}category_boards as fcb 
+        SET hidden = true
+        FROM {{.prefix}}preferences as p
         WHERE p.userid = fcb.user_id 
         AND p.category = 'focalboard'
         AND p.name = 'hiddenBoardIDs'
