@@ -79,19 +79,6 @@ const filterValue = (props: Props): JSX.Element|null => {
                 view={view}
                 filter={filter}
             />
-            // <DayPickerInput
-            //     onDayChange={(day: Date) => {
-            //         const filterIndex = view.fields.filter.filters.indexOf(filter)
-            //         Utils.assert(filterIndex >= 0, "Can't find filter")
-
-            //         const filterGroup = createFilterGroup(view.fields.filter)
-            //         const newFilter = filterGroup.filters[filterIndex] as FilterClause
-            //         Utils.assert(newFilter, `No filter at index ${filterIndex}`)
-
-            //         newFilter.values = [day.getTime().toString()]
-            //         mutator.changeViewFilter(view.boardId, view.id, view.fields.filter, filterGroup)
-            //     }}
-            // />
         )
     }
 

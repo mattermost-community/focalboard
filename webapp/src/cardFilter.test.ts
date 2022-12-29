@@ -8,10 +8,14 @@ import {createFilterGroup} from './blocks/filterGroup'
 import {CardFilter} from './cardFilter'
 import {TestBlockFactory} from './test/testBlockFactory'
 import {Utils} from './utils'
+
 import {IPropertyTemplate} from './blocks/board'
 
 jest.mock('./utils')
 const mockedUtils = mocked(Utils, true)
+
+const dayMillis = 24 * 60 * 60 * 1000
+
 describe('src/cardFilter', () => {
     const board = TestBlockFactory.createBoard()
     board.id = '1'
@@ -21,6 +25,7 @@ describe('src/cardFilter', () => {
     card1.title = 'card1'
     card1.fields.properties.propertyId = 'Status'
     const filterClause = createFilterClause({propertyId: 'propertyId', condition: 'isNotEmpty', values: ['Status']})
+
     describe('verify isClauseMet method', () => {
         test('should be true with isNotEmpty clause', () => {
             const filterClauseIsNotEmpty = createFilterClause({propertyId: 'propertyId', condition: 'isNotEmpty', values: ['Status']})
@@ -53,6 +58,187 @@ describe('src/cardFilter', () => {
             expect(result).toBeTruthy()
         })
     })
+
+    describe('verify isClauseMet method - single date property', () => {
+        // Date Properties are stored as 12PM UTC.
+        const now = new Date(Date.now())
+        const propertyDate = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 12)
+
+        const dateCard = TestBlockFactory.createCard(board)
+        dateCard.id = '1'
+        dateCard.title = 'card1'
+        dateCard.fields.properties.datePropertyID = '{ "from": ' + propertyDate.toString() + ' }'
+
+        const checkDayBefore = propertyDate - dayMillis
+        const checkDayAfter = propertyDate + dayMillis
+
+        const template: IPropertyTemplate = {
+            id: 'datePropertyID',
+            name: 'myDate',
+            type: 'date',
+            options: [],
+        }
+
+        test('should be true with isSet clause', () => {
+            const filterClauseIsSet = createFilterClause({propertyId: 'datePropertyID', condition: 'isSet', values: []})
+            const result = CardFilter.isClauseMet(filterClauseIsSet, [template], dateCard)
+            expect(result).toBeTruthy()
+        })
+        test('should be false with notSet clause', () => {
+            const filterClauseIsNotSet = createFilterClause({propertyId: 'datePropertyID', condition: 'isNotSet', values: []})
+            const result = CardFilter.isClauseMet(filterClauseIsNotSet, [template], dateCard)
+            expect(result).toBeFalsy()
+        })
+        test('verify isBefore clause', () => {
+            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [checkDayAfter.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], dateCard)
+            expect(result).toBeTruthy()
+
+            const filterClauseIsNotBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [checkDayBefore.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsNotBefore, [template], dateCard)
+            expect(result2).toBeFalsy()
+        })
+        test('verify isAfter clauses', () => {
+            const filterClauseisAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [checkDayBefore.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseisAfter, [template], dateCard)
+            expect(result).toBeTruthy()
+
+            const filterClauseisNotAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [checkDayAfter.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseisNotAfter, [template], dateCard)
+            expect(result2).toBeFalsy()
+        })
+        test('verify is clause', () => {
+            const filterClauseIs = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [propertyDate.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIs, [template], dateCard)
+            expect(result).toBeTruthy()
+
+            const filterClauseIsNot = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDayBefore.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsNot, [template], dateCard)
+            expect(result2).toBeFalsy()
+        })
+    })
+
+    describe('verify isClauseMet method - date range property', () => {
+        // Date Properties are stored as 12PM UTC.
+        const now = new Date(Date.now())
+        const fromDate = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 12)
+        const toDate = fromDate + (2 * dayMillis)
+        const dateCard = TestBlockFactory.createCard(board)
+        dateCard.id = '1'
+        dateCard.title = 'card1'
+        dateCard.fields.properties.datePropertyID = '{ "from": ' + fromDate.toString() + ', "to": ' + toDate.toString() + ' }'
+
+        const beforeRange = fromDate - dayMillis
+        const afterRange = toDate + dayMillis
+        const inRange = fromDate + dayMillis
+
+        const template: IPropertyTemplate = {
+            id: 'datePropertyID',
+            name: 'myDate',
+            type: 'date',
+            options: [],
+        }
+
+        test('verify isBefore clause', () => {
+            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [beforeRange.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], dateCard)
+            expect(result).toBeFalsy()
+
+            const filterClauseIsInRange = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [inRange.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsInRange, [template], dateCard)
+            expect(result2).toBeTruthy()
+
+            const filterClauseIsAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [afterRange.toString()]})
+            const result3 = CardFilter.isClauseMet(filterClauseIsAfter, [template], dateCard)
+            expect(result3).toBeTruthy()
+        })
+
+        test('verify isAfter clauses', () => {
+            const filterClauseIsAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [afterRange.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIsAfter, [template], dateCard)
+            expect(result).toBeFalsy()
+
+            const filterClauseIsInRange = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [inRange.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsInRange, [template], dateCard)
+            expect(result2).toBeTruthy()
+
+            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [beforeRange.toString()]})
+            const result3 = CardFilter.isClauseMet(filterClauseIsBefore, [template], dateCard)
+            expect(result3).toBeTruthy()
+        })
+
+        test('verify is clause', () => {
+            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [beforeRange.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], dateCard)
+            expect(result).toBeFalsy()
+
+            const filterClauseIsInRange = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [inRange.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsInRange, [template], dateCard)
+            expect(result2).toBeTruthy()
+
+            const filterClauseIsAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [afterRange.toString()]})
+            const result3 = CardFilter.isClauseMet(filterClauseIsAfter, [template], dateCard)
+            expect(result3).toBeFalsy()
+        })
+    })
+
+    describe('verify isClauseMet method - (createdTime) date property', () => {
+        const createDate = new Date(card1.createAt)
+        const checkDate = Date.UTC(createDate.getFullYear(), createDate.getMonth(), createDate.getDate(), 12)
+        const checkDayBefore = checkDate - dayMillis
+        const checkDayAfter = checkDate + dayMillis
+
+        const template: IPropertyTemplate = {
+            id: 'datePropertyID',
+            name: 'myDate',
+            type: 'createdTime',
+            options: [],
+        }
+
+        test('should be true with isSet clause', () => {
+            const filterClauseIsSet = createFilterClause({propertyId: 'datePropertyID', condition: 'isSet', values: []})
+            const result = CardFilter.isClauseMet(filterClauseIsSet, [template], card1)
+            expect(result).toBeTruthy()
+        })
+        test('should be false with notSet clause', () => {
+            const filterClauseIsNotSet = createFilterClause({propertyId: 'datePropertyID', condition: 'isNotSet', values: []})
+            const result = CardFilter.isClauseMet(filterClauseIsNotSet, [template], card1)
+            expect(result).toBeFalsy()
+        })
+        test('verify isBefore clause', () => {
+            const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [checkDayAfter.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], card1)
+            expect(result).toBeTruthy()
+
+            const filterClauseIsNotBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [checkDate.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsNotBefore, [template], card1)
+            expect(result2).toBeFalsy()
+        })
+        test('verify isAfter clauses', () => {
+            const filterClauseisAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [checkDayBefore.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseisAfter, [template], card1)
+            expect(result).toBeTruthy()
+
+            const filterClauseisNotAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [checkDate.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseisNotAfter, [template], card1)
+            expect(result2).toBeFalsy()
+        })
+        test('verify is clause', () => {
+            // Is should find on that date regardless of time.
+            const filterClauseIs = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDate.toString()]})
+            const result = CardFilter.isClauseMet(filterClauseIs, [template], card1)
+            expect(result).toBeTruthy()
+
+            const filterClauseIsNot = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDayBefore.toString()]})
+            const result2 = CardFilter.isClauseMet(filterClauseIsNot, [template], card1)
+            expect(result2).toBeFalsy()
+
+            const filterClauseIsNot2 = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [checkDayAfter.toString()]})
+            const result3 = CardFilter.isClauseMet(filterClauseIsNot2, [template], card1)
+            expect(result3).toBeFalsy()
+        })
+    })
+
     describe('verify isFilterGroupMet method', () => {
         test('should return true with no filter', () => {
             const filterGroup = createFilterGroup({

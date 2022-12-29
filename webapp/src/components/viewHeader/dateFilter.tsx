@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo, useState, useCallback} from 'react'
+import React, {useState, useCallback} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -100,6 +100,12 @@ function DateFilter(props: Props): JSX.Element {
         loadedLocales[locale] = require(`moment/locale/${locale}`)
     }
 
+    // (new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12))
+    const handleTodayClick = (day: Date) => {
+        day.setHours(12)
+        saveValue(day)
+    }
+
     const handleDayClick = (day: Date) => {
         saveValue(day)
     }
@@ -109,7 +115,6 @@ function DateFilter(props: Props): JSX.Element {
     }
 
     const saveValue = (newValue: Date | undefined) => {
-        console.log(' SaveValue ' + newValue)
         onChange(newValue)
         setInput(newValue ? Utils.inputDate(newValue, intl) : '')
     }
@@ -178,10 +183,9 @@ function DateFilter(props: Props): JSX.Element {
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'DateRange.today', defaultMessage: 'Today'})}
-                                onTodayButtonClick={handleDayClick}
+                                onTodayButtonClick={handleTodayClick}
                                 month={offsetDate}
                                 selectedDays={offsetDate}
-                                // modifiers={dateTo ? {start: dateFrom, end: dateTo} : {start: dateFrom, end: dateFrom}}
                             />
                             <hr/>
                             <div
