@@ -17,3 +17,7 @@
     AND p.name = 'hiddenBoardIDs'
     AND p.value like concat('%', fcb.board_id, '%');
 {{end}}
+
+{{if .sqlite}}
+SELECT 1;
+{{end}}
