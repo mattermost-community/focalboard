@@ -75,5 +75,10 @@ func (bs *boardsServiceAPI) HasPermissionToBoard(userID, boardID string, permiss
 	return bs.app.HasPermissionToBoard(userID, boardID, permission)
 }
 
+func (bs *boardsServiceAPI) DuplicateBoard(boardID string, userID string,
+	toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
+	return bs.app.DuplicateBoard(boardID, userID, toTeam, asTemplate)
+}
+
 // Ensure boardsServiceAPI implements product.BoardsService interface.
 var _ product.BoardsService = (*boardsServiceAPI)(nil)
