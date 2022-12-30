@@ -54,20 +54,10 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 }
 
 func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID string, boardIDs []string) error {
-	// boardIDs := []string{}
-	// for boardID := range boardCategoryMapping {
-	// 	boardIDs = append(boardIDs, boardID)
-	// }
-
-	// if err := s.deleteUserCategoryBoards(db, userID, boardIDs); err != nil {
-	// 	return err
-	// }
-
-	// return s.addUserCategoryBoard(db, userID, boardCategoryMapping)
-
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"category_boards").
 		Columns(
+			"id",
 			"user_id",
 			"category_id",
 			"board_id",
@@ -80,6 +70,7 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 	now := utils.GetMillis()
 	for _, boardID := range boardIDs {
 		query = query.Values(
+			utils.NewID(utils.IDTypeNone),
 			userID,
 			categoryID,
 			boardID,
@@ -113,32 +104,6 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 
 	return nil
 }
-
-// func (s *SQLStore) deleteUserCategoryBoards(db sq.BaseRunner, userID string, boardIDs []string) error {
-// 	if len(boardIDs) == 0 {
-// 		return nil
-// 	}
-
-// 	_, err := s.getQueryBuilder(db).
-// 		Delete(s.tablePrefix + "category_boards").
-// 		Where(sq.Eq{
-// 			"user_id":   userID,
-// 			"board_id":  boardIDs,
-// 			"delete_at": 0,
-// 		}).Exec()
-
-// 	if err != nil {
-// 		s.logger.Error(
-// 			"deleteUserCategoryBoards delete error",
-// 			mlog.String("userID", userID),
-// 			mlog.Array("boardID", boardIDs),
-// 			mlog.Err(err),
-// 		)
-// 		return err
-// 	}
-
-// 	return nil
-// }
 
 func (s *SQLStore) categoryBoardsFromRows(rows *sql.Rows) ([]model.CategoryBoardMetadata, error) {
 	metadata := []model.CategoryBoardMetadata{}
