@@ -122,7 +122,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
                         </>}
-                    {propertyType.type === 'person' &&
+                    {(propertyType.type === 'person' || propertyType.type === 'multiPerson') &&
                         <>
                             <Menu.Text
                                 id='isEmpty'

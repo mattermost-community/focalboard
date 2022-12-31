@@ -134,7 +134,6 @@ const PersonSelector = (props: Props): JSX.Element => {
     if (isMulti) {
         primaryClass = 'MultiPerson'
     }
-    console.log(primaryClass)
     let secondaryClass = ''
     if (props.property) {
         secondaryClass = ` ${props.property.valueClassName(readOnly)}`
@@ -159,7 +158,6 @@ const PersonSelector = (props: Props): JSX.Element => {
                 isClearable={true}
                 backspaceRemovesValue={true}
                 closeMenuOnSelect={closeMenuOnSelect}
-                // className={`MultiPerson ${props.property.valueClassName(props.readOnly)}`}
                 className={`${primaryClass}${secondaryClass}`}
                 classNamePrefix={'react-select'}
                 formatOptionLabel={formatOptionLabel}

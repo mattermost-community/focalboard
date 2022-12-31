@@ -174,12 +174,6 @@ class CardFilter {
         }
 
         switch (filterClause.condition) {
-        case 'is': {
-            if (filterClause.values.length < 1) {
-                return {id: filterClause.propertyId}
-            }
-            return {id: filterClause.propertyId, value: filterClause.values[0]}
-        }
         case 'includes': {
             if (filterClause.values.length < 1) {
                 return {id: filterClause.propertyId}

@@ -29,7 +29,6 @@ const ConfirmPerson = (props: PropertyProps): JSX.Element => {
 
     const allowManageBoardRoles = useHasPermissions(board.teamId, board.id, [Permission.ManageBoardRoles])
     const allowAddUsers = !me?.is_guest && (allowManageBoardRoles || board.type === BoardTypeOpen)
-
     const changePropertyValue = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate.id])
     const emptyDisplayValue = props.showEmptyPlaceholder ? intl.formatMessage({id: 'ConfirmPerson.empty', defaultMessage: 'Empty'}) : ''
 
