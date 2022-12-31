@@ -15,6 +15,12 @@ const (
 	testAdmin = "test-admin"
 )
 
+var (
+	OneHour int64 = 360000
+	OneDay  int64 = OneHour * 24
+	OneYear int64 = OneDay * 365
+)
+
 func setupTestHelperForCompliance(t *testing.T, complianceLicense bool) (*TestHelper, Clients) {
 	os.Setenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE", strconv.FormatBool(complianceLicense))
 
@@ -47,10 +53,10 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
 		th.Logout(th.Client)
 
-		boards, resp := clients.Anon.GetBoardsForCompliance(testTeamID, 0, 0)
+		bcr, resp := clients.Anon.GetBoardsForCompliance(testTeamID, 0, 0)
 
 		th.CheckUnauthorized(resp)
-		require.Nil(t, boards)
+		require.Nil(t, bcr)
 	})
 
 	t.Run("a user without manage_system permission should be rejected", func(t *testing.T) {
@@ -72,7 +78,7 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		const count = 10
 		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
 
-		bcr, resp := clients.Admin.GetBoardsForCompliance(testTeamID, 0, 0) //  admin.GetBoardsForCompliance(testTeamID, 0, 0)
+		bcr, resp := clients.Admin.GetBoardsForCompliance(testTeamID, 0, 0)
 		th.CheckOK(resp)
 		require.False(t, bcr.HasNext)
 		require.Len(t, bcr.Results, count)
@@ -111,6 +117,94 @@ func TestGetBoardsForCompliance(t *testing.T) {
 
 		th.CheckBadRequest(resp)
 		require.Nil(t, bcr)
+	})
+
+}
+
+func TestGetBoardsComplianceHistory(t *testing.T) {
+	t.Run("missing Features.Compliance license should fail", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, false)
+		defer th.TearDown()
+
+		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
+
+		th.CheckNotImplemented(resp)
+		require.Nil(t, bchr)
+	})
+
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
+		th.Logout(th.Client)
+
+		bchr, resp := clients.Anon.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
+
+		th.CheckUnauthorized(resp)
+		require.Nil(t, bchr)
+	})
+
+	t.Run("a user without manage_system permission should be rejected", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
+
+		bcr, resp := clients.TeamMember.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
+
+		th.CheckUnauthorized(resp)
+		require.Nil(t, bcr)
+	})
+
+	t.Run("good call", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		const count = 10
+		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
+
+		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
+		th.CheckOK(resp)
+		require.False(t, bchr.HasNext)
+		require.Len(t, bchr.Results, count)
+	})
+
+	t.Run("pagination", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		const count = 20
+		const perPage = 3
+		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
+
+		boardHistory := make([]model.BoardHistory, 0, count)
+		page := 0
+		for {
+			bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, page, perPage)
+			page++
+			th.CheckOK(resp)
+			boardHistory = append(boardHistory, bchr.Results...)
+			if !bchr.HasNext {
+				break
+			}
+		}
+		require.Len(t, boardHistory, count)
+		require.Equal(t, int(math.Floor((count/perPage)+1)), page)
+	})
+
+	t.Run("invalid teamID", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, utils.NewID(utils.IDTypeTeam), 0, 0)
+
+		th.CheckBadRequest(resp)
+		require.Nil(t, bchr)
 	})
 
 }

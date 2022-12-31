@@ -133,6 +133,13 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	// check for valid team
+	_, err := a.app.GetTeam(teamID)
+	if err != nil {
+		a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
+		return
+	}
+
 	if strPage == "" {
 		strPage = complianceDefaultPage
 	}
@@ -218,6 +225,13 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 	license := a.app.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
 		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getBlocksHistory"))
+		return
+	}
+
+	// check for valid team
+	_, err := a.app.GetTeam(teamID)
+	if err != nil {
+		a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
 		return
 	}
 

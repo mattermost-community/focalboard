@@ -1006,7 +1006,7 @@ func (c *Client) GetBoardsForCompliance(teamID string, page, perPage int) (*mode
 }
 
 func (c *Client) GetBoardsComplianceHistory(
-	modifiedSince int, includeDeleted bool, teamID string, page, perPage int) (*model.BoardsComplianceHistoryResponse, *Response) {
+	modifiedSince int64, includeDeleted bool, teamID string, page, perPage int) (*model.BoardsComplianceHistoryResponse, *Response) {
 	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&page=%d&per_page=%d",
 		modifiedSince, includeDeleted, teamID, page, perPage)
 	r, err := c.DoAPIGet("/admin/boards_history"+query, "")
@@ -1025,7 +1025,7 @@ func (c *Client) GetBoardsComplianceHistory(
 }
 
 func (c *Client) GetBlocksComplianceHistory(
-	modifiedSince int, includeDeleted bool, teamID, boardID string, page, perPage int) (*model.BlocksComplianceHistoryResponse, *Response) {
+	modifiedSince int64, includeDeleted bool, teamID, boardID string, page, perPage int) (*model.BlocksComplianceHistoryResponse, *Response) {
 	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&board_id=%s&page=%d&per_page=%d",
 		modifiedSince, includeDeleted, teamID, boardID, page, perPage)
 	r, err := c.DoAPIGet("/admin/blocks_history"+query, "")
