@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 
-	mmModel "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -35,7 +35,7 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 
 	// Valid authorization (`manage_system`)?
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem) {
+	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getAllBoards"))
 		return
 	}
@@ -44,6 +44,13 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 	license := a.app.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
 		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getAllBoards"))
+		return
+	}
+
+	// check for valid team
+	_, err := a.app.GetTeam(teamID)
+	if err != nil {
+		a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
 		return
 	}
 
@@ -114,7 +121,7 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 
 	// Valid authorization (`manage_system`)?
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem) {
+	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBoardsHistory"))
 		return
 	}
@@ -202,7 +209,7 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 
 	// Valid authorization (`manage_system`)?
 	userID := getUserID(r)
-	if !a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem) {
+	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBlocksHistory"))
 		return
 	}

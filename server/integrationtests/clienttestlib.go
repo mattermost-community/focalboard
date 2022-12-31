@@ -457,6 +457,16 @@ func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *mod
 	return board
 }
 
+func (th *TestHelper) CreateBoards(teamID string, boardType model.BoardType, count int) []*model.Board {
+	boards := make([]*model.Board, 0, count)
+
+	for i := 0; i < count; i++ {
+		board := th.CreateBoard(teamID, boardType)
+		boards = append(boards, board)
+	}
+	return boards
+}
+
 func (th *TestHelper) CreateCategory(category model.Category) *model.Category {
 	cat, resp := th.Client.CreateCategory(category)
 	th.CheckOK(resp)

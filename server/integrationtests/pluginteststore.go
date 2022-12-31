@@ -2,6 +2,8 @@ package integrationtests
 
 import (
 	"errors"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -89,7 +91,7 @@ func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
 		return s.baseTeam, nil
 	case "other-team":
 		return s.otherTeam, nil
-	case "test-team":
+	case "test-team", "team-id":
 		return s.testTeam, nil
 	case "empty-team":
 		return s.emptyTeam, nil
@@ -292,4 +294,28 @@ func (s *PluginTestStore) SearchBoardsForUser(term string, field model.BoardSear
 		}
 	}
 	return resultBoards, nil
+}
+
+func (s *PluginTestStore) GetLicense() *mmModel.License {
+	license := s.Store.GetLicense()
+
+	if license == nil {
+		license = &mmModel.License{
+			Id:        mmModel.NewId(),
+			StartsAt:  mmModel.GetMillis() - 2629746000, // 1 month
+			ExpiresAt: mmModel.GetMillis() + 2629746000, //
+			IssuedAt:  mmModel.GetMillis() - 2629746000,
+			Features:  &mmModel.Features{},
+		}
+		license.Features.SetDefaults()
+	}
+
+	complianceLicense := os.Getenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE")
+	if complianceLicense != "" {
+		if val, err := strconv.ParseBool(complianceLicense); err == nil {
+			license.Features.Compliance = mmModel.NewBool(val)
+		}
+	}
+
+	return license
 }
