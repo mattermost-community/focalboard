@@ -153,23 +153,52 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 
 		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
 
-		bcr, resp := clients.TeamMember.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
+		bchr, resp := clients.TeamMember.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
 
 		th.CheckUnauthorized(resp)
-		require.Nil(t, bcr)
+		require.Nil(t, bchr)
 	})
 
-	t.Run("good call", func(t *testing.T) {
+	t.Run("good call, no deleted", func(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t, true)
 		defer th.TearDown()
 
 		const count = 10
-		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
+		boards := th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
+
+		deleted, resp := th.Client.DeleteBoard(boards[0].ID)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		deleted, resp = th.Client.DeleteBoard(boards[1].ID)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, false, testTeamID, 0, 0)
+		th.CheckOK(resp)
+		require.False(t, bchr.HasNext)
+		require.Len(t, bchr.Results, count) // both deleted boards have one non-deleted record each
+	})
+
+	t.Run("good call, include deleted", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		const count = 10
+		boards := th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
+
+		deleted, resp := th.Client.DeleteBoard(boards[0].ID)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		deleted, resp = th.Client.DeleteBoard(boards[1].ID)
+		th.CheckOK(resp)
+		require.True(t, deleted)
 
 		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, 0, 0)
 		th.CheckOK(resp)
 		require.False(t, bchr.HasNext)
-		require.Len(t, bchr.Results, count)
+		require.Len(t, bchr.Results, count+2) // both deleted boards have 2 history records each
 	})
 
 	t.Run("pagination", func(t *testing.T) {
@@ -202,6 +231,134 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, 2)
 
 		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, utils.NewID(utils.IDTypeTeam), 0, 0)
+
+		th.CheckBadRequest(resp)
+		require.Nil(t, bchr)
+	})
+
+}
+
+func TestGetBlocksComplianceHistory(t *testing.T) {
+	t.Run("missing Features.Compliance license should fail", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, false)
+		defer th.TearDown()
+
+		board, _ := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, board.ID, 0, 0)
+
+		th.CheckNotImplemented(resp)
+		require.Nil(t, bchr)
+	})
+
+	t.Run("a non authenticated user should be rejected", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		board, _ := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.Anon.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, board.ID, 0, 0)
+
+		th.CheckUnauthorized(resp)
+		require.Nil(t, bchr)
+	})
+
+	t.Run("a user without manage_system permission should be rejected", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		board, _ := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.TeamMember.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, board.ID, 0, 0)
+
+		th.CheckUnauthorized(resp)
+		require.Nil(t, bchr)
+	})
+
+	t.Run("good call, no deleted", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		const count = 10
+		board, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, count)
+
+		deleted, resp := th.Client.DeleteBlock(board.ID, cards[0].ID, true)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		deleted, resp = th.Client.DeleteBlock(board.ID, cards[1].ID, true)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, false, testTeamID, board.ID, 0, 0)
+		th.CheckOK(resp)
+		require.False(t, bchr.HasNext)
+		require.Len(t, bchr.Results, count) // both deleted cards have one non-deleted record each
+	})
+
+	t.Run("good call, include deleted", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		const count = 10
+		board, cards := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, count)
+
+		deleted, resp := th.Client.DeleteBlock(board.ID, cards[0].ID, true)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		deleted, resp = th.Client.DeleteBlock(board.ID, cards[1].ID, true)
+		th.CheckOK(resp)
+		require.True(t, deleted)
+
+		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, board.ID, 0, 0)
+		th.CheckOK(resp)
+		require.False(t, bchr.HasNext)
+		require.Len(t, bchr.Results, count+2) // both deleted boards have 2 history records each
+	})
+
+	t.Run("pagination", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		const count = 20
+		const perPage = 3
+		board, _ := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, count)
+
+		blockHistory := make([]model.BlockHistory, 0, count)
+		page := 0
+		for {
+			bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, board.ID, page, perPage)
+			page++
+			th.CheckOK(resp)
+			blockHistory = append(blockHistory, bchr.Results...)
+			if !bchr.HasNext {
+				break
+			}
+		}
+		require.Len(t, blockHistory, count)
+		require.Equal(t, int(math.Floor((count/perPage)+1)), page)
+	})
+
+	t.Run("invalid teamID", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		board, _ := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, utils.NewID(utils.IDTypeTeam), board.ID, 0, 0)
+
+		th.CheckBadRequest(resp)
+		require.Nil(t, bchr)
+	})
+
+	t.Run("invalid boardID", func(t *testing.T) {
+		th, clients := setupTestHelperForCompliance(t, true)
+		defer th.TearDown()
+
+		_, _ = th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, 2)
+
+		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, utils.NewID(utils.IDTypeBoard), 0, 0)
 
 		th.CheckBadRequest(resp)
 		require.Nil(t, bchr)

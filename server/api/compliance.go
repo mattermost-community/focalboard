@@ -235,6 +235,13 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	// check for valid team
+	_, err = a.app.GetBoard(boardID)
+	if err != nil {
+		a.errorResponse(w, r, model.NewErrBadRequest("invalid board id: "+boardID))
+		return
+	}
+
 	if strPage == "" {
 		strPage = complianceDefaultPage
 	}

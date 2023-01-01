@@ -135,7 +135,7 @@ func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.Query
 		From(s.tablePrefix+"blocks_history as bh").
 		Join(s.tablePrefix+"boards as brd on brd.id=bh.board_id").
 		Where(sq.Gt{"bh.update_at": opts.ModifiedSince}).
-		GroupBy("bh.id", "bh.team_id", "bh.board_id", "bh.type", "bh.delete_at", "bh.created_by", "bh.modified_by").
+		GroupBy("bh.id", "brd.team_id", "bh.board_id", "bh.type", "bh.delete_at", "bh.created_by", "bh.modified_by").
 		OrderBy("lastUpdateAt desc")
 
 	if !opts.IncludeDeleted {
@@ -143,7 +143,7 @@ func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.Query
 	}
 
 	if opts.TeamID != "" {
-		query = query.Where(sq.Eq{"bh.team_id": opts.TeamID})
+		query = query.Where(sq.Eq{"brd.team_id": opts.TeamID})
 	}
 
 	if opts.BoardID != "" {
