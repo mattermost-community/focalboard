@@ -51,7 +51,7 @@ func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.Query
 	queryDescendentLastUpdate := s.getQueryBuilder(db).
 		Select("MAX(blk1.update_at)").
 		From(s.tablePrefix + "blocks_history as blk1").
-		Where(sq.Eq{"blk1.board_id": "bh.id"})
+		Where("blk1.board_id=bh.id")
 
 	if !opts.IncludeDeleted {
 		queryDescendentLastUpdate.Where(sq.Eq{"blk1.delete_at": 0})
@@ -62,7 +62,7 @@ func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.Query
 	queryDescendentFirstUpdate := s.getQueryBuilder(db).
 		Select("MIN(blk2.update_at)").
 		From(s.tablePrefix + "blocks_history as blk2").
-		Where(sq.Eq{"blk2.board_id": "bh.id"})
+		Where("blk2.board_id=bh.id")
 
 	if !opts.IncludeDeleted {
 		queryDescendentFirstUpdate.Where(sq.Eq{"blk2.delete_at": 0})
