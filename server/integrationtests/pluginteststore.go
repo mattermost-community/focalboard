@@ -91,7 +91,7 @@ func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
 		return s.baseTeam, nil
 	case "other-team":
 		return s.otherTeam, nil
-	case "test-team", "team-id":
+	case "test-team", testTeamID:
 		return s.testTeam, nil
 	case "empty-team":
 		return s.emptyTeam, nil

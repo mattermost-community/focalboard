@@ -110,6 +110,9 @@ func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.Query
 	defer s.CloseRows(rows)
 
 	history, err := s.boardsHistoryFromRows(rows)
+	if err != nil {
+		return nil, false, err
+	}
 
 	var hasMore bool
 	if opts.PerPage > 0 && len(history) > opts.PerPage {
@@ -167,6 +170,9 @@ func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.Query
 	defer s.CloseRows(rows)
 
 	history, err := s.blocksHistoryFromRows(rows)
+	if err != nil {
+		return nil, false, err
+	}
 
 	var hasMore bool
 	if opts.PerPage > 0 && len(history) > opts.PerPage {

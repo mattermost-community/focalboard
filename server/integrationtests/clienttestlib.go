@@ -29,6 +29,7 @@ const (
 	user1Username = "user1"
 	user2Username = "user2"
 	password      = "Pa$$word"
+	testTeamID    = "team-id"
 )
 
 const (

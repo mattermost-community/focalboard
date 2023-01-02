@@ -11,10 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	testAdmin = "test-admin"
-)
-
 var (
 	OneHour int64 = 360000
 	OneDay  int64 = OneHour * 24
