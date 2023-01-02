@@ -114,7 +114,6 @@ func TestGetBoardsForCompliance(t *testing.T) {
 		th.CheckBadRequest(resp)
 		require.Nil(t, bcr)
 	})
-
 }
 
 func TestGetBoardsComplianceHistory(t *testing.T) {
@@ -231,7 +230,6 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		th.CheckBadRequest(resp)
 		require.Nil(t, bchr)
 	})
-
 }
 
 func TestGetBlocksComplianceHistory(t *testing.T) {
@@ -359,5 +357,4 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		th.CheckBadRequest(resp)
 		require.Nil(t, bchr)
 	})
-
 }
