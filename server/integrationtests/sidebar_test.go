@@ -18,8 +18,8 @@ func TestSidebar(t *testing.T) {
 	categoryBoards := th.GetUserCategoryBoards("team-id")
 	require.Equal(t, 1, len(categoryBoards))
 	require.Equal(t, "Boards", categoryBoards[0].Name)
-	require.Equal(t, 1, len(categoryBoards[0].BoardIDs))
-	require.Equal(t, board.ID, categoryBoards[0].BoardIDs[0])
+	require.Equal(t, 1, len(categoryBoards[0].BoardMetadata))
+	require.Equal(t, board.ID, categoryBoards[0].BoardMetadata[0].BoardID)
 
 	// create a new category, a new board
 	// and move that board into the new category
@@ -39,8 +39,8 @@ func TestSidebar(t *testing.T) {
 	// the newly created category should be the first one array
 	// as new categories end up on top in LHS
 	require.Equal(t, "Category 2", categoryBoards[0].Name)
-	require.Equal(t, 1, len(categoryBoards[0].BoardIDs))
-	require.Equal(t, board2.ID, categoryBoards[0].BoardIDs[0])
+	require.Equal(t, 1, len(categoryBoards[0].BoardMetadata))
+	require.Equal(t, board2.ID, categoryBoards[0].BoardMetadata[0].BoardID)
 
 	// now we'll delete the custom category we created, "Category 2"
 	// and all it's boards should get moved to the Boards category
@@ -48,7 +48,7 @@ func TestSidebar(t *testing.T) {
 	categoryBoards = th.GetUserCategoryBoards("team-id")
 	require.Equal(t, 1, len(categoryBoards))
 	require.Equal(t, "Boards", categoryBoards[0].Name)
-	require.Equal(t, 2, len(categoryBoards[0].BoardIDs))
-	require.Contains(t, categoryBoards[0].BoardIDs, board.ID)
-	require.Contains(t, categoryBoards[0].BoardIDs, board2.ID)
+	require.Equal(t, 2, len(categoryBoards[0].BoardMetadata))
+	require.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: board.ID, Hidden: false})
+	require.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: board2.ID, Hidden: false})
 }

@@ -49,7 +49,16 @@ func TestApp_ImportArchive(t *testing.T) {
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{boardMember}, nil)
 		th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
 		th.Store.EXPECT().GetMemberForBoard(board.ID, "user").Return(boardMember, nil)
-		th.Store.EXPECT().GetUserCategoryBoards("user", "test-team")
+		th.Store.EXPECT().GetUserCategoryBoards("user", "test-team").Return([]model.CategoryBoards{}, nil)
+		th.Store.EXPECT().GetUserCategoryBoards("user", "test-team").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					Type: "default",
+					Name: "Boards",
+					ID:   "boards_category_id",
+				},
+			},
+		}, nil)
 		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
 		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
 			ID:   "boards_category_id",
@@ -57,7 +66,7 @@ func TestApp_ImportArchive(t *testing.T) {
 		}, nil)
 		th.Store.EXPECT().GetBoardsForUserAndTeam("user", "test-team", false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().GetMembersForUser("user").Return([]*model.BoardMember{}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user", utils.Anything).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user", utils.Anything, utils.Anything).Return(nil)
 
 		err := th.App.ImportArchive(r, opts)
 		require.NoError(t, err, "import archive should not fail")

@@ -89,6 +89,8 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
 	}
 
+	boardIDsToAdd := []string{}
+
 	for _, board := range userTeamBoards {
 		boardMembership, ok := boardMemberByBoardID[board.ID]
 		if !ok {
@@ -122,10 +124,7 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		}
 
 		if !belongsToCategory {
-			if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, []string{board.ID}); err != nil {
-				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
-			}
-
+			boardIDsToAdd = append(boardIDsToAdd, board.ID)
 			newBoardMetadata := model.CategoryBoardMetadata{
 				BoardID: board.ID,
 				Hidden:  false,
@@ -134,10 +133,20 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		}
 	}
 
+	if len(boardIDsToAdd) > 0 {
+		if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, boardIDsToAdd); err != nil {
+			return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
+		}
+	}
+
 	return createdCategoryBoards, nil
 }
 
 func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID string, boardIDs []string) error {
+	if len(boardIDs) == 0 {
+		return nil
+	}
+
 	err := a.store.AddUpdateCategoryBoard(userID, categoryID, boardIDs)
 	if err != nil {
 		return err
