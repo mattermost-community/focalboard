@@ -2,6 +2,7 @@ package sqlstore
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -92,6 +93,11 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 			 DO UPDATE SET category_id = EXCLUDED.category_id, update_at = EXCLUDED.update_at`,
 		)
 	}
+
+	q, p, _ := query.ToSql()
+	s.logger.Error(fmt.Sprintf("%s %v", q, p))
+	j, _ := json.Marshal(boardIDs)
+	s.logger.Error(fmt.Sprintf("boardIDs: %s", string(j)))
 
 	// TODO write for SQLite
 
