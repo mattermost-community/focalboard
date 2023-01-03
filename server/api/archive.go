@@ -55,21 +55,16 @@ func (a *API) handleArchiveExportBoard(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	boardID := vars["boardID"]
 	userID := getUserID(r)
-	isSysAdmin := a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem)
 
-	// Don't need to check permission for a board if user has `manage_system` permissions
-	if !isSysAdmin {
-		if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+	// check user has permission to board
+	if !a.permissions.HasPermissionToBoard(userID, boardID, model.PermissionViewBoard) {
+		// if this user has `manage_system` permission and there is a license with the compliance
+		// feature enabled, then we will allow the export.
+		license := a.app.GetLicense()
+		if !a.permissions.HasPermissionTo(userID, mmModel.PermissionManageSystem) || license == nil || !(*license.Features.Compliance) {
 			a.errorResponse(w, r, model.NewErrPermission("access denied to board"))
 			return
 		}
-	}
-
-	// Check for valid license feature: compliance
-	license := a.app.GetLicense()
-	if license == nil || !(*license.Features.Compliance) {
-		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license"))
-		return
 	}
 
 	auditRec := a.makeAuditRecord(r, "archiveExportBoard", audit.Fail)
