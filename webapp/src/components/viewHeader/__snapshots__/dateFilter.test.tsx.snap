@@ -57,7 +57,7 @@ exports[`components/viewHeader/dateFilter handles calendar click event 1`] = `
     view={
       Object {
         "boardId": "testBoardID",
-        "createAt": 1672210800000,
+        "createAt": 1672228800000,
         "createdBy": "",
         "deleteAt": 0,
         "fields": Object {
@@ -110,7 +110,7 @@ exports[`components/viewHeader/dateFilter handles calendar click event 1`] = `
         "schema": 1,
         "title": "view title",
         "type": "view",
-        "updateAt": 1672210800000,
+        "updateAt": 1672228800000,
       }
     }
   />
