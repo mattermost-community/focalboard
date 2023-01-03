@@ -125,7 +125,6 @@ describe('properties/multiperson', () => {
     })
 
     test('readonly view', async () => {
-        console.log('readonly value')
         const store = mockStore(state)
         const component = wrapIntl(
             <ReduxProvider store={store}>
