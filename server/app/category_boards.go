@@ -264,7 +264,7 @@ func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID st
 
 func (a *App) SetBoardVisibility(teamID, userID, categoryID, boardID string, visible bool) error {
 	if err := a.store.SetBoardVisibility(userID, categoryID, boardID, visible); err != nil {
-		return fmt.Errorf("SetBoardVisibility: failed to update board visibility: %e", err)
+		return fmt.Errorf("SetBoardVisibility: failed to update board visibility: %w", err)
 	}
 
 	// go func() {

@@ -2,7 +2,6 @@ package sqlstore
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 
 	sq "github.com/Masterminds/squirrel"
@@ -94,16 +93,11 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 		)
 	}
 
-	q, p, _ := query.ToSql()
-	s.logger.Error(fmt.Sprintf("%s %v", q, p))
-	j, _ := json.Marshal(boardIDs)
-	s.logger.Error(fmt.Sprintf("boardIDs: %s", string(j)))
-
 	// TODO write for SQLite
 
 	if _, err := query.Exec(); err != nil {
 		return fmt.Errorf(
-			"store addUpdateCategoryBoard: failed to upsert user-board-category userID: %s, categoryID: %s, board_count: %d, error: %e",
+			"store addUpdateCategoryBoard: failed to upsert user-board-category userID: %s, categoryID: %s, board_count: %d, error: %w",
 			userID, categoryID, len(boardIDs), err,
 		)
 	}
@@ -169,11 +163,6 @@ func (s *SQLStore) setBoardVisibility(db sq.BaseRunner, userID, categoryID, boar
 			"category_id": categoryID,
 			"board_id":    boardID,
 		})
-
-	q, p, _ := query.ToSql()
-	fmt.Println(fmt.Sprintf("%s %v", q, p))
-
-	s.logger.Error(fmt.Sprintf("userID: %s boardID: %s visible: %t", userID, boardID, visible))
 
 	if _, err := query.Exec(); err != nil {
 		s.logger.Error(

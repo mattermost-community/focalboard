@@ -12,7 +12,7 @@ import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
 import {useWebsockets} from '../../hooks/websockets'
-import {IUser, UserConfigPatch} from '../../user'
+import {IUser} from '../../user'
 import {Block} from '../../blocks/block'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
@@ -40,7 +40,7 @@ import {
     fetchUserBlockSubscriptions,
     getMe,
     followBlock,
-    unfollowBlock, patchProps, getMyConfig,
+    unfollowBlock,
 } from '../../store/users'
 import {setGlobalError} from '../../store/globalError'
 import {UserSettings} from '../../userSettings'
@@ -52,6 +52,8 @@ import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../teleme
 
 import {Constants} from '../../constants'
 
+import {getCategoryOfBoard, getHiddenBoardIDs} from '../../store/sidebar'
+
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
 import UndoRedoHotKeys from './undoRedoHotKeys'
@@ -59,7 +61,6 @@ import BackwardCompatibilityQueryParamsRedirect from './backwardCompatibilityQue
 import WebsocketConnection from './websocketConnection'
 
 import './boardPage.scss'
-import {getCategoryOfBoard, getHiddenBoardIDs, updateBoardCategories} from '../../store/sidebar'
 
 type Props = {
     readonly?: boolean
@@ -72,15 +73,12 @@ const BoardPage = (props: Props): JSX.Element => {
     const activeViewId = useAppSelector(getCurrentViewId)
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
-    console.log(`match: ${match.url}`)
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
-    const myConfig = useAppSelector(getMyConfig)
     const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
     const category = useAppSelector(getCategoryOfBoard(activeBoardId))
-    const [previousBoardID, setPreviousBoardID] = useState<string>()
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -225,8 +223,6 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
-        console.log(`handleUnhideBoard: ${boardID}`)
-
         if (!me) {
             return
         }

@@ -23,7 +23,9 @@ import {Utils} from '../utils'
 import {IUser} from '../user'
 import propsRegistry from '../properties'
 
-import {getMe, getMyConfig} from '../store/users'
+import {getMe} from '../store/users'
+
+import {getHiddenBoardIDs} from '../store/sidebar'
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
@@ -32,7 +34,6 @@ import GuestNoBoards from './guestNoBoards'
 import Sidebar from './sidebar/sidebar'
 
 import './workspace.scss'
-import {getHiddenBoardIDs} from '../store/sidebar'
 
 type Props = {
     readonly: boolean
@@ -53,7 +54,6 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const myConfig = useAppSelector(getMyConfig)
     const me = useAppSelector<IUser|null>(getMe)
     const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
 

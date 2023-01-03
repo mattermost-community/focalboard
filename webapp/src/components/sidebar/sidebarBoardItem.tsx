@@ -35,10 +35,9 @@ import {Utils} from '../../utils'
 
 import AddIcon from '../../widgets/icons/add'
 import CloseIcon from '../../widgets/icons/close'
-import {UserConfigPatch} from '../../user'
-import {getMe, getMyConfig, patchProps} from '../../store/users'
+import {getMe} from '../../store/users'
 import octoClient from '../../octoClient'
-import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
+import {getCurrentBoardId} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
 
@@ -75,12 +74,10 @@ const SidebarBoardItem = (props: Props) => {
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
     const me = useAppSelector(getMe)
-    const myConfig = useAppSelector(getMyConfig)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
 
     const generateMoveToCategoryOptions = (boardID: string) => {
@@ -196,24 +193,6 @@ const SidebarBoardItem = (props: Props) => {
             // find the first visible board
 
             let visibleBoardID: string | null = null
-
-            // for (const iterBoard of myAllBoards) {
-            //     for (const category of props.allCategories) {
-            //         const categoryBoardMetadata = category.boardMetadata.find((m) => m.boardID === iterBoard.id)
-            //         if (categoryBoardMetadata) {
-            //             visibleBoardID = categoryBoardMetadata.boardID
-            //             break
-            //         }
-            //     }
-
-            //     // if a visible board was found,
-            //     // no need to continue searching furthur
-            //     if (visibleBoardID !== undefined) {
-            //         break
-            //     }
-            // }
-
-            console.log('askdjaskdh')
             for (const iterCategory of props.allCategories) {
                 const visibleBoardMetadata = iterCategory.boardMetadata.find((categoryBoardMetadata) => !categoryBoardMetadata.hidden && categoryBoardMetadata.boardID !== props.board.id)
                 if (visibleBoardMetadata) {

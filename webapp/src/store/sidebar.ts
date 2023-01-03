@@ -2,8 +2,6 @@
 // See LICENSE.txt for license information.
 
 import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@reduxjs/toolkit'
-import sidebar from 'components/sidebar/sidebar'
-import sidebarCategory from 'components/sidebar/sidebarCategory'
 
 import {default as client} from '../octoClient'
 
@@ -169,9 +167,6 @@ const sidebarSlice = createSlice({
             state.categoryAttributes = newOrderedCategories
         },
         updateCategoryBoardsOrder: (state, action: PayloadAction<CategoryBoardsReorderData>) => {
-            console.log('updateCategoryBoardsOrder')
-
-            // if (action.payload.boardIDs.length === 0) {
             if (action.payload.boardsMetadata.length === 0) {
                 return
             }

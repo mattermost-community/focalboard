@@ -1,7 +1,6 @@
 package integrationtests
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -49,7 +48,6 @@ func TestSidebar(t *testing.T) {
 	categoryBoards = th.GetUserCategoryBoards("team-id")
 	require.Equal(t, 1, len(categoryBoards))
 	require.Equal(t, "Boards", categoryBoards[0].Name)
-	fmt.Println(fmt.Sprintf("%v", categoryBoards[0].BoardMetadata))
 	require.Equal(t, 2, len(categoryBoards[0].BoardMetadata))
 	require.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: board.ID, Hidden: false})
 	require.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: board2.ID, Hidden: false})

@@ -59,8 +59,6 @@ func TestGetUserCategoryBoards(t *testing.T) {
 			},
 		}, nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_1", "board_id_2", "board_id_3"}).Return(nil)
-		//th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_2"}).Return(nil)
-		//th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_3"}).Return(nil)
 
 		categoryBoards, err := th.App.GetUserCategoryBoards("user_id", "team_id")
 		assert.NoError(t, err)
@@ -198,8 +196,6 @@ func TestCreateBoardsCategory(t *testing.T) {
 			},
 		}, nil)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_1", "board_id_2", "board_id_3"}).Return(nil)
-		//th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_2"}).Return(nil)
-		//th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_3"}).Return(nil)
 
 		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
 			{

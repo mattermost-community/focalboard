@@ -27,7 +27,6 @@ import CreateNewFolder from '../../widgets/icons/newFolder'
 import CreateCategory from '../createCategory/createCategory'
 import {useAppSelector} from '../../store/hooks'
 import {
-    getMyConfig,
     getOnboardingTourCategory,
     getOnboardingTourStep,
 } from '../../store/users'
