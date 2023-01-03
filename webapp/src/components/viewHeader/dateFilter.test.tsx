@@ -35,6 +35,9 @@ describe('components/viewHeader/dateFilter', () => {
 
     const activeView = TestBlockFactory.createBoardView(board)
     const dateFixed = Date.UTC(2022, 11, 28, 12) //Date.parse('28 Dec 2022')
+    console.log('datefix ' + dateFixed)
+    console.log('dateNohour ' + Date.UTC(2022, 11, 28, 12))
+    console.log('dateOrig ' + Date.parse('28 Dec 2022'))
     activeView.createAt = dateFixed
     activeView.updateAt = dateFixed
 
