@@ -26,21 +26,58 @@ func (a *API) registerComplianceRoutes(r *mux.Router) {
 }
 
 func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Request) {
-	// TODO(@pinjasaur): swagger
+	// swagger:operation GET /admin/boards getBoardsForCompliance
+	//
+	// Returns boards for a specific team, or all teams.
+	//
+	// Requires a license that includes Compliance feature. Caller must have `manage_system` permissions.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: team_id
+	//   in: query
+	//   description: Team ID. If empty then boards across all teams are included.
+	//   required: false
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: The page to select (default=0)
+	//   required: false
+	//   type: integer
+	// - name: per_page
+	//   in: query
+	//   description: Number of boards to return per page(default=60)
+	//   required: false
+	//   type: integer
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: object
+	//       items:
+	//         "$ref": "#/definitions/BoardsComplianceResponse"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	query := r.URL.Query()
 	teamID := query.Get("team_id")
 	strPage := query.Get("page")
 	strPerPage := query.Get("per_page")
 
-	// Valid authorization (`manage_system`)?
+	// check for permission `manage_system`
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getAllBoards"))
 		return
 	}
 
-	// Valid license feature (Compliance)?
+	// check for valid license feature: compliance
 	license := a.app.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
 		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getAllBoards"))
@@ -105,28 +142,75 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 }
 
 func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Request) {
-	// TODO(@pinjasaur): swagger
+	// swagger:operation GET /admin/boards_history getBoardsComplianceHistory
+	//
+	// Returns boards histories for a specific team, or all teams.
+	//
+	// Requires a license that includes Compliance feature. Caller must have `manage_system` permissions.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: modified_since
+	//   in: query
+	//   description: Filters for boards modified since timestamp; Unix time in milliseconds
+	//   required: true
+	//   type: integer
+	// - name: include_deleted
+	//   in: query
+	//   description: When true then deleted boards are included. Default=false
+	//   required: false
+	//   type: boolean
+	// - name: team_id
+	//   in: query
+	//   description: Team ID. If empty then board histories across all teams are included
+	//   required: false
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: The page to select (default=0)
+	//   required: false
+	//   type: integer
+	// - name: per_page
+	//   in: query
+	//   description: Number of board histories to return per page (default=60)
+	//   required: false
+	//   type: integer
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: object
+	//       items:
+	//         "$ref": "#/definitions/BoardsComplianceHistoryResponse"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	query := r.URL.Query()
 	strModifiedSince := query.Get("modified_since") // required, everything else optional
 	includeDeleted := query.Get("include_deleted") == "true"
-	teamID := query.Get("team_id")
 	strPage := query.Get("page")
 	strPerPage := query.Get("per_page")
+	teamID := query.Get("team_id")
 
 	if strModifiedSince == "" {
 		a.errorResponse(w, r, model.NewErrBadRequest("`modified_since` parameter required"))
 		return
 	}
 
-	// Valid authorization (`manage_system`)?
+	// check for permission `manage_system`
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBoardsHistory"))
 		return
 	}
 
-	// Valid license feature (Compliance)?
+	// check for valid license feature: compliance
 	license := a.app.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
 		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getBoardsHistory"))
@@ -199,29 +283,81 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 }
 
 func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Request) {
-	// TODO(@pinjasaur): swagger
+	// swagger:operation GET /admin/blocks_history getBlocksComplianceHistory
+	//
+	// Returns block histories for a specific team, specific board, or all teams and boards.
+	//
+	// Requires a license that includes Compliance feature. Caller must have `manage_system` permissions.
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: modified_since
+	//   in: query
+	//   description: Filters for boards modified since timestamp; Unix time in milliseconds
+	//   required: true
+	//   type: integer
+	// - name: include_deleted
+	//   in: query
+	//   description: When true then deleted boards are included. Default=false
+	//   required: false
+	//   type: boolean
+	// - name: team_id
+	//   in: query
+	//   description: Team ID. If empty then block histories across all teams are included
+	//   required: false
+	//   type: string
+	// - name: board_id
+	//   in: query
+	//   description: Board ID. If empty then block histories for all boards are included
+	//   required: false
+	//   type: string
+	// - name: page
+	//   in: query
+	//   description: The page to select (default=0)
+	//   required: false
+	//   type: integer
+	// - name: per_page
+	//   in: query
+	//   description: Number of block histories to return per page (default=60)
+	//   required: false
+	//   type: integer
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       type: object
+	//       items:
+	//         "$ref": "#/definitions/BlocksComplianceHistoryResponse"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
 
 	query := r.URL.Query()
 	strModifiedSince := query.Get("modified_since") // required, everything else optional
 	includeDeleted := query.Get("include_deleted") == "true"
-	teamID := query.Get("team_id")
-	boardID := query.Get("board_id")
 	strPage := query.Get("page")
 	strPerPage := query.Get("per_page")
+	teamID := query.Get("team_id")
+	boardID := query.Get("board_id")
 
 	if strModifiedSince == "" {
 		a.errorResponse(w, r, model.NewErrBadRequest("`modified_since` parameter required"))
 		return
 	}
 
-	// Valid authorization (`manage_system`)?
+	// check for permission `manage_system`
 	userID := getUserID(r)
 	if !a.permissions.HasPermissionTo(userID, mm_model.PermissionManageSystem) {
 		a.errorResponse(w, r, model.NewErrUnauthorized("access denied Compliance Export getBlocksHistory"))
 		return
 	}
 
-	// Valid license feature (Compliance)?
+	// check for valid license feature: compliance
 	license := a.app.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
 		a.errorResponse(w, r, model.NewErrNotImplemented("insufficient license Compliance Export getBlocksHistory"))
