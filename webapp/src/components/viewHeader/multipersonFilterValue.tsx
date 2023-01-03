@@ -37,7 +37,6 @@ const MultiPersonFilterValue = (props: Props): JSX.Element => {
             emptyDisplayValue={emptyDisplayValue}
             closeMenuOnSelect={false}
             onChange={(items: MultiValue<IUser>, action) => {
-                console.log(items)
                 const filterIndex = view.fields.filter.filters.indexOf(filter)
                 Utils.assert(filterIndex >= 0, "Can't find filter")
 

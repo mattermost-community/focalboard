@@ -77,13 +77,7 @@ function getPersonGroups(cards: Card[], groupByProperty: IPropertyTemplate, hidd
     const hiddenGroups: BoardGroup[] = []
     const visibleGroups: BoardGroup[] = []
     Object.entries(groups).forEach(([key, value]) => {
-        let name = key
-        // const user = useAppSelector(getUser(key))
-        // if (user) {
-        //     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
-        //     name = Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
-        // }
-        const propertyOption = {id: key, value: name, color: ''} as IPropertyOption
+        const propertyOption = {id: key, value: key, color: ''} as IPropertyOption
         if (hiddenOptionIds.find((e) => e === key)) {
             hiddenGroups.push({option: propertyOption, cards: value})
         } else {
