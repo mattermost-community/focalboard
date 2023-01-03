@@ -34,7 +34,7 @@ describe('components/viewHeader/dateFilter', () => {
     board.id = 'testBoardID'
 
     const activeView = TestBlockFactory.createBoardView(board)
-    const dateFixed = Date.parse('28 Dec 2022')
+    const dateFixed = Date.UTC(2022, 11, 28, 12) //Date.parse('28 Dec 2022')
     activeView.createAt = dateFixed
     activeView.updateAt = dateFixed
 
