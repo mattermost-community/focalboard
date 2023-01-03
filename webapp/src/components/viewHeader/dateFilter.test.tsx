@@ -78,8 +78,7 @@ describe('components/viewHeader/dateFilter', () => {
     })
 
     test('return dateFilter valid value', () => {
-        const today = new Date().getTime()
-
+        const june15 = June15.getTime().toString()
         const {container} = render(
             wrapIntl(
                 <DateFilter
@@ -87,7 +86,7 @@ describe('components/viewHeader/dateFilter', () => {
                     filter={{
                         propertyId: 'myPropertyId',
                         condition: 'is',
-                        values: [today.toString()],
+                        values: [june15.toString()],
                     }}
                 />,
             ),

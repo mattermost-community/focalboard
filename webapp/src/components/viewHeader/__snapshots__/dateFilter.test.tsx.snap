@@ -161,7 +161,7 @@ exports[`components/viewHeader/dateFilter return dateFilter valid value 1`] = `
       type="button"
     >
       <span>
-        December 29
+        June 15
       </span>
     </button>
   </div>
