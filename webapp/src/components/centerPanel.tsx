@@ -10,7 +10,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
-import {Board, IPropertyTemplate} from '../blocks/board'
+import {Board, IPropertyTemplate, BoardGroup} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
@@ -368,21 +368,28 @@ const CenterPanel = (props: Props) => {
 
     const {groupByProperty, activeView, board, views, cards} = props
 
+    const getUserDisplayName = (boardGroup: BoardGroup) => {
+        const user = boardUsers[boardGroup.option.id]
+        if (user) {
+            return Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
+        } else if (boardGroup.option.id === 'undefined') {
+            return intl.formatMessage({
+                id: 'centerPanel.undefined',
+                defaultMessage: 'No {propertyName}',
+            }, {propertyName: groupByProperty?.name})
+        }
+        return intl.formatMessage({id: 'centerPanel.unknown-user', defaultMessage: 'Unknown user'})
+    }
+
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {
         const {visible: vg, hidden: hg} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
         if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
             if (boardUsers) {
                 vg.forEach((value) => {
-                    const user = boardUsers[value.option.id]
-                    if (user) {
-                        value.option.value = Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
-                    }
+                    value.option.value = getUserDisplayName(value)
                 })
                 hg.forEach((value) => {
-                    const user = boardUsers[value.option.id]
-                    if (user) {
-                        value.option.value = Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
-                    }
+                    value.option.value = getUserDisplayName(value)
                 })
             }
         }
