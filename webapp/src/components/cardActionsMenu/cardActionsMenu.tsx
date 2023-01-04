@@ -15,9 +15,11 @@ import {sendFlashMessage} from '../flashMessages'
 import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 type Props = {
     cardId: string
+    boardId: string
     onClickDelete: () => void
     onClickDuplicate?: () => void
     children?: ReactNode
@@ -29,6 +31,18 @@ export const CardActionsMenu = (props: Props): JSX.Element => {
     const me = useAppSelector<IUser|null>(getMe)
     const intl = useIntl()
 
+    const handleDeleteCard = () => {
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DeleteCard, {board: props.boardId, card: props.cardId})
+        props.onClickDelete()
+    }
+
+    const handleDuplicateCard = () => {
+        if (props.onClickDuplicate) {
+            TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: props.boardId, card: props.cardId})
+            props.onClickDuplicate()
+        }
+    }
+
     return (
         <Menu position='left'>
             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
@@ -36,14 +50,14 @@ export const CardActionsMenu = (props: Props): JSX.Element => {
                     icon={<DeleteIcon/>}
                     id='delete'
                     name={intl.formatMessage({id: 'CardActionsMenu.delete', defaultMessage: 'Delete'})}
-                    onClick={props.onClickDelete}
+                    onClick={handleDeleteCard}
                 />
                 {props.onClickDuplicate &&
                 <Menu.Text
                     icon={<DuplicateIcon/>}
                     id='duplicate'
                     name={intl.formatMessage({id: 'CardActionsMenu.duplicate', defaultMessage: 'Duplicate'})}
-                    onClick={props.onClickDuplicate}
+                    onClick={handleDuplicateCard}
                 />}
             </BoardPermissionGate>
             {me?.id !== 'single-user' &&

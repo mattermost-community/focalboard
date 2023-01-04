@@ -105,6 +105,7 @@ const KanbanCard = (props: Props) => {
                     <CardActionsMenuIcon/>
                     <CardActionsMenu
                         cardId={card!.id}
+                        boardId={card!.boardId}
                         onClickDelete={handleDeleteButtonOnClick}
                         onClickDuplicate={() => {
                             TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
