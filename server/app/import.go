@@ -137,6 +137,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	}
 	now := utils.GetMillis()
 	var boardID string
+	var boardMembers []*model.BoardMember
 
 	lineNum := 1
 	firstLine := true
@@ -196,6 +197,13 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					block.UpdateAt = now
 					block.BoardID = boardID
 					boardsAndBlocks.Blocks = append(boardsAndBlocks.Blocks, block)
+				case "boardMember":
+					var boardMember *model.BoardMember
+					if err2 := json.Unmarshal(archiveLine.Data, &boardMember); err2 != nil {
+						return "", fmt.Errorf("invalid board Member in archive line %d: %w", lineNum, err2)
+					}
+
+					boardMembers = append(boardMembers, boardMember)
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
 				}
@@ -235,6 +243,27 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 			}
 			if _, err := a.AddMemberToBoard(boardMember); err != nil {
 				return "", fmt.Errorf("cannot add member to board: %w", err)
+			}
+		}
+	}
+
+	if len(boardMembers) > 0 {
+		for _, board := range boardsAndBlocks.Boards {
+			for _, boardMember := range boardMembers {
+				bm := &model.BoardMember{
+					BoardID:         board.ID,
+					UserID:          boardMember.UserID,
+					Roles:           boardMember.Roles,
+					MinimumRole:     boardMember.MinimumRole,
+					SchemeAdmin:     boardMember.SchemeAdmin,
+					SchemeEditor:    boardMember.SchemeEditor,
+					SchemeCommenter: boardMember.SchemeCommenter,
+					SchemeViewer:    boardMember.SchemeViewer,
+					Synthetic:       boardMember.Synthetic,
+				}
+				if _, err2 := a.AddMemberToBoard(bm); err2 != nil {
+					return "", fmt.Errorf("cannot add member to board: %w", err2)
+				}
 			}
 		}
 	}
