@@ -625,7 +625,7 @@ func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constrain
 
 	switch s.dbType {
 	case model.SqliteDBType:
-		// SQLiite doesn't have a generic way to add constraint. For example, you can only create indexes on existing tables.
+		// SQLite doesn't have a generic way to add constraint. For example, you can only create indexes on existing tables.
 		// For other constraints, you need to re-build the table. So skipping here.
 		// Include SQLite specific migration in original migration file.
 		query = fmt.Sprintf("\n-- Sqlite3 cannot drop constraints; drop constraint '%s' in table '%s' skipped\n", constraintName, tableName)

@@ -153,24 +153,6 @@ const SidebarBoardItem = (props: Props) => {
             return
         }
 
-        // // creating new array as myConfig.hiddenBoardIDs.value
-        // // belongs to Redux state and so is immutable.
-        // const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
-
-        // hiddenBoards[board.id] = true
-        // const hiddenBoardsArray = Object.keys(hiddenBoards)
-        // const patch: UserConfigPatch = {
-        //     updatedFields: {
-        //         hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
-        //     },
-        // }
-        // const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        // if (!patchedProps) {
-        //     return
-        // }
-
-        // await dispatch(patchProps(patchedProps))
-
         await octoClient.hideBoard(props.categoryBoards.id, board.id)
         dispatch(updateBoardCategories([
             {
@@ -188,10 +170,8 @@ const SidebarBoardItem = (props: Props) => {
 
             // Empty board ID navigates to template picker, which is
             // fine if there are no more visible boards to switch to.
-            // const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
 
             // find the first visible board
-
             let visibleBoardID: string | null = null
             for (const iterCategory of props.allCategories) {
                 const visibleBoardMetadata = iterCategory.boardMetadata.find((categoryBoardMetadata) => !categoryBoardMetadata.hidden && categoryBoardMetadata.boardID !== props.board.id)

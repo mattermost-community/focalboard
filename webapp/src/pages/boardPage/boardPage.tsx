@@ -223,35 +223,11 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
-        if (!me) {
-            return
-        }
-
-        // const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
-
-        // // const index = hiddenBoards.indexOf(boardID)
-        // // hiddenBoards.splice(index, 1)
-        // delete hiddenBoards[boardID]
-        // const hiddenBoardsArray = Object.keys(hiddenBoards)
-        // const patch: UserConfigPatch = {
-        //     updatedFields: {
-        //         hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
-        //     },
-        // }
-        // const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        // if (!patchedProps) {
-        //     return
-        // }
-
-        // await dispatch(patchProps(patchedProps))
-
-        if (!category) {
+        if (!me || !category) {
             return
         }
 
         await octoClient.unhideBoard(category.id, boardID)
-
-        // useAppDispatch(updateBoardCategories)
     }
 
     useEffect(() => {
@@ -260,7 +236,6 @@ const BoardPage = (props: Props): JSX.Element => {
         }
 
         if (hiddenBoardIDs.indexOf(match.params.boardId) >= 0) {
-            // setPreviousBoardID(match.params.boardId)
             handleUnhideBoard(match.params.boardId)
         }
     }, [me?.id, teamId, match.params.boardId])

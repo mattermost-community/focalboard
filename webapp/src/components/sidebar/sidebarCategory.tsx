@@ -76,8 +76,6 @@ const SidebarCategory = (props: Props) => {
     const [showCreateCategoryModal, setShowCreateCategoryModal] = useState(false)
     const [showUpdateCategoryModal, setShowUpdateCategoryModal] = useState(false)
 
-    // const myConfig = useAppSelector(getMyConfig)
-
     const onboardingTourCategory = useAppSelector(getOnboardingTourCategory)
     const onboardingTourStep = useAppSelector(getOnboardingTourStep)
     const currentCard = useAppSelector(getCurrentCard)
@@ -138,15 +136,10 @@ const SidebarCategory = (props: Props) => {
         }
 
         // hide if board was hidden by the user
-        // const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        // return !hiddenBoardIDs[boardID]
-
         return !categoryBoardMetadata.hidden
     }
 
     const sidebarBoardMetadata = props.categoryBoards.boardMetadata || []
-
-    // const visibleBlocks = props.categoryBoards.boardIDs.filter((boardID) => isBoardVisible(boardID))
     const visibleBlocks = props.categoryBoards.boardMetadata.filter((boardMetadata) => isBoardVisible(boardMetadata.boardID, boardMetadata))
 
     const handleCreateNewCategory = () => {

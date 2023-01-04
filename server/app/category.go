@@ -180,7 +180,6 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 
 	boardIDs := make([]string, len(sourceCategoryBoards.BoardMetadata))
 	for i := range sourceCategoryBoards.BoardMetadata {
-		// boardIDs = append(boardIDs, sourceCategoryBoards.BoardMetadata[i].BoardID)
 		boardIDs[i] = sourceCategoryBoards.BoardMetadata[i].BoardID
 	}
 

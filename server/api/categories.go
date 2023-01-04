@@ -9,7 +9,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/audit"
-	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
 func (a *API) registerCategoriesRoutes(r *mux.Router) {
@@ -26,7 +25,6 @@ func (a *API) registerCategoriesRoutes(r *mux.Router) {
 }
 
 func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleCreateCategory")
 	// swagger:operation POST /teams/{teamID}/categories createCategory
 	//
 	// Create a category for boards
@@ -111,7 +109,6 @@ func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleUpdateCategory")
 	// swagger:operation PUT /teams/{teamID}/categories/{categoryID} updateCategory
 	//
 	// Create a category for boards
@@ -204,7 +201,6 @@ func (a *API) handleUpdateCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleDeleteCategory")
 	// swagger:operation DELETE /teams/{teamID}/categories/{categoryID} deleteCategory
 	//
 	// Delete a category
@@ -261,7 +257,6 @@ func (a *API) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleGetUserCategoryBoards(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleGetUserCategoryBoards")
 	// swagger:operation GET /teams/{teamID}/categories getUserCategoryBoards
 	//
 	// Gets the user's board categories
@@ -316,8 +311,6 @@ func (a *API) handleGetUserCategoryBoards(w http.ResponseWriter, r *http.Request
 }
 
 func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("AAAAAAAAA")
-
 	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/{boardID} updateCategoryBoard
 	//
 	// Set the category of a board
@@ -375,7 +368,6 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 }
 
 func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleReorderCategories")
 	// swagger:operation PUT /teams/{teamID}/categories/reorder handleReorderCategories
 	//
 	// Updated sidebar category order
@@ -448,7 +440,6 @@ func (a *API) handleReorderCategories(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleReorderCategoryBoards")
 	// swagger:operation PUT /teams/{teamID}/categories/{categoryID}/boards/reorder handleReorderCategoryBoards
 	//
 	// Updates order of boards inside a sidebar category
@@ -534,7 +525,41 @@ func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request
 }
 
 func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleHideBoard")
+	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/{boardID}/hide hideBoard
+	//
+	// Hide the specified board for the user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: categoryID
+	//   in: path
+	//   description: Category ID to which the board to be hidden belongs to
+	//   required: true
+	//   type: string
+	// - name: boardID
+	//   in: path
+	//   description: ID of board to be hidden
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/Category"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	userID := getUserID(r)
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -558,12 +583,45 @@ func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonStringResponse(w, http.StatusOK, "{}")
-	a.logger.Debug("Hide Board", mlog.String("boardID", boardID))
 	auditRec.Success()
 }
 
 func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
-	a.logger.Error("handleUnhideBoard")
+	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/{boardID}/hide unhideBoard
+	//
+	// Unhides the specified board for the user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: categoryID
+	//   in: path
+	//   description: Category ID to which the board to be unhidden belongs to
+	//   required: true
+	//   type: string
+	// - name: boardID
+	//   in: path
+	//   description: ID of board to be unhidden
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/Category"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
 	userID := getUserID(r)
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]
@@ -585,6 +643,5 @@ func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	jsonStringResponse(w, http.StatusOK, "{}")
-	a.logger.Debug("Hide Board", mlog.String("boardID", boardID))
 	auditRec.Success()
 }

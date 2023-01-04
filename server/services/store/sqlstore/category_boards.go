@@ -93,8 +93,6 @@ func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID s
 		)
 	}
 
-	// TODO write for SQLite
-
 	if _, err := query.Exec(); err != nil {
 		return fmt.Errorf(
 			"store addUpdateCategoryBoard: failed to upsert user-board-category userID: %s, categoryID: %s, board_count: %d, error: %w",
