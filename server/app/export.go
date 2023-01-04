@@ -92,8 +92,8 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 			return err
 		}
 		if block.Type == model.TypeImage {
-			filename, err := extractImageFilename(block)
-			if err != nil {
+			filename, err2 := extractImageFilename(block)
+			if err2 != nil {
 				return err
 			}
 			files = append(files, filename)
@@ -120,7 +120,7 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 	return nil
 }
 
-// writeArchiveBoardMemberLine writes a single boardMember to the archive
+// writeArchiveBoardMemberLine writes a single boardMember to the archive.
 func (a *App) writeArchiveBoardMemberLine(w io.Writer, boardMember *model.BoardMember) error {
 	bm, err := json.Marshal(&boardMember)
 	if err != nil {
