@@ -54,6 +54,10 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 }
 
 func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID string, boardIDs []string) error {
+	if len(boardIDs) == 0 {
+		return nil
+	}
+
 	query := s.getQueryBuilder(db).
 		Insert(s.tablePrefix+"category_boards").
 		Columns(

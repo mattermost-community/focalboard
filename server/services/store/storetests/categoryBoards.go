@@ -15,6 +15,18 @@ func StoreTestCategoryBoardsStore(t *testing.T, setup func(t *testing.T) (store.
 		defer tearDown()
 		testGetUserCategoryBoards(t, store)
 	})
+
+	t.Run("AddUpdateCategoryBoard", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testAddUpdateCategoryBoard(t, store)
+	})
+
+	t.Run("SetBoardVisibility", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testSetBoardVisibility(t, store)
+	})
 }
 
 func testGetUserCategoryBoards(t *testing.T, store store.Store) {
@@ -107,4 +119,143 @@ func testGetUserCategoryBoards(t *testing.T, store store.Store) {
 		assert.NoError(t, err)
 		assert.Empty(t, userCategoryBoards)
 	})
+}
+
+func testAddUpdateCategoryBoard(t *testing.T, store store.Store) {
+	// creating few boards and categories to later associoate with the category
+	_, _, err := store.CreateBoardsAndBlocksWithAdmin(&model.BoardsAndBlocks{
+		Boards: []*model.Board{
+			{
+				ID:     "board_id_1",
+				TeamID: "team_id",
+			},
+			{
+				ID:     "board_id_2",
+				TeamID: "team_id",
+			},
+		},
+	}, "user_id")
+	assert.NoError(t, err)
+
+	err = store.CreateCategory(model.Category{
+		ID:     "category_id",
+		Name:   "Category",
+		UserID: "user_id",
+		TeamID: "team_id",
+	})
+	assert.NoError(t, err)
+
+	// adding a few boards to the category
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_1", "board_id_2"})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err := store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 2, len(categoryBoards[0].BoardMetadata))
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_1", Hidden: false})
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_2", Hidden: false})
+
+	// adding new boards to the same category
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_3"})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 3, len(categoryBoards[0].BoardMetadata))
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_3", Hidden: false})
+
+	// passing empty array
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 3, len(categoryBoards[0].BoardMetadata))
+
+	// passing duplicate data in input
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_4", "board_id_4"})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 4, len(categoryBoards[0].BoardMetadata))
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_4", Hidden: false})
+
+	// adding already added board
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_1", "board_id_2"})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 4, len(categoryBoards[0].BoardMetadata))
+
+	// passing already added board along with a new board
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_1", "board_id_5"})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 5, len(categoryBoards[0].BoardMetadata))
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_5", Hidden: false})
+}
+
+func testSetBoardVisibility(t *testing.T, store store.Store) {
+	_, _, err := store.CreateBoardsAndBlocksWithAdmin(&model.BoardsAndBlocks{
+		Boards: []*model.Board{
+			{
+				ID:     "board_id_1",
+				TeamID: "team_id",
+			},
+		},
+	}, "user_id")
+	assert.NoError(t, err)
+
+	err = store.CreateCategory(model.Category{
+		ID:     "category_id",
+		Name:   "Category",
+		UserID: "user_id",
+		TeamID: "team_id",
+	})
+	assert.NoError(t, err)
+
+	// adding a few boards to the category
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_1"})
+	assert.NoError(t, err)
+
+	err = store.SetBoardVisibility("user_id", "category_id", "board_id_1", true)
+	assert.NoError(t, err)
+
+	// verify set visibility
+	categoryBoards, err := store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 1, len(categoryBoards[0].BoardMetadata))
+	assert.False(t, categoryBoards[0].BoardMetadata[0].Hidden)
+
+	err = store.SetBoardVisibility("user_id", "category_id", "board_id_1", false)
+	assert.NoError(t, err)
+
+	// verify set visibility
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.True(t, categoryBoards[0].BoardMetadata[0].Hidden)
 }
