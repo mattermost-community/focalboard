@@ -53,7 +53,16 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 	return s.categoryBoardsFromRows(rows)
 }
 
-func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID string, boardIDs []string) error {
+func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID string, boardIDsParam []string) error {
+	// we need to de-duplicate this array as Postgres failes to
+	// handle upsert if there are multiple incoming rows
+	// that conflict the same existing row.
+	// For example, having the entry "1" in DB and trying to upsert "1" and "1" will fail
+	// as there are multiple duplicates of the same "1".
+	//
+	// Source: https://stackoverflow.com/questions/42994373/postgresql-on-conflict-cannot-affect-row-a-second-time
+	boardIDs := utils.DedupeStringArr(boardIDsParam)
+
 	if len(boardIDs) == 0 {
 		return nil
 	}

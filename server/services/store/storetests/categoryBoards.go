@@ -181,6 +181,18 @@ func testAddUpdateCategoryBoard(t *testing.T, store store.Store) {
 	assert.Equal(t, "category_id", categoryBoards[0].ID)
 	assert.Equal(t, 3, len(categoryBoards[0].BoardMetadata))
 
+	// passing duplicate data in input
+	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_4", "board_id_4"})
+	assert.NoError(t, err)
+
+	// verify inserted data
+	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
+	assert.NoError(t, err)
+	assert.Equal(t, 1, len(categoryBoards))
+	assert.Equal(t, "category_id", categoryBoards[0].ID)
+	assert.Equal(t, 4, len(categoryBoards[0].BoardMetadata))
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_4", Hidden: false})
+
 	// adding already added board
 	err = store.AddUpdateCategoryBoard("user_id", "category_id", []string{"board_id_1", "board_id_2"})
 	assert.NoError(t, err)
