@@ -4,10 +4,6 @@ import React, {useState} from 'react'
 
 import {useIntl} from 'react-intl'
 
-// import DateRange from '../../properties/date/date'
-// import DayPickerInput from 'react-day-picker/DayPickerInput'
-// import DayPicker from 'react-day-picker/DayPicker'
-
 import {PropertyType} from '../../properties/types'
 import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'

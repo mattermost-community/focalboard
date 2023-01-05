@@ -96,7 +96,6 @@ function DateFilter(props: Props): JSX.Element {
         loadedLocales[locale] = require(`moment/locale/${locale}`)
     }
 
-    // (new Date(date.getFullYear(), date.getMonth(), date.getDate(), 12))
     const handleTodayClick = (day: Date) => {
         day.setHours(12)
         saveValue(day)
@@ -129,9 +128,8 @@ function DateFilter(props: Props): JSX.Element {
         buttonText = intl.formatMessage({id: 'DateFilter.empty', defaultMessage: 'Empty'})
     }
 
-    const className = ''
     return (
-        <div className={`DateFilter ${displayValue ? '' : 'empty'} ` + className}>
+        <div className={`DateFilter ${displayValue ? '' : 'empty'} `}>
             <Button
                 onClick={() => setShowDialog(true)}
             >
