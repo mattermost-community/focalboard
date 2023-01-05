@@ -1,2 +1,2 @@
-ALTER TABLE {{.prefix}}blocks
-ADD COLUMN root_id VARCHAR(36);
+{{- /* addColumnIfNeeded tableName  columnName  datatype  constraint */ -}}
+{{ addColumnIfNeeded "blocks" "root_id" "varchar(36)" ""}}

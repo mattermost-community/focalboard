@@ -84,6 +84,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 			return cluster.NewMutex(&mutexAPIAdapter{api: api}, name)
 		},
 		ServicesAPI: api,
+		ConfigFn:    api.GetConfig,
 	}
 
 	var db store.Store
