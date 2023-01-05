@@ -796,25 +796,27 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 	userID := "user-id-1"
 
 	t.Run("should return empty if user is not a member of any board and there are no public boards on the team", func(t *testing.T) {
-		boards, err := store.SearchBoardsForUser("", userID, true)
+		boards, err := store.SearchBoardsForUser("", model.BoardSearchFieldTitle, userID, true)
 		require.NoError(t, err)
 		require.Empty(t, boards)
 	})
 
 	board1 := &model.Board{
-		ID:     "board-id-1",
-		TeamID: teamID1,
-		Type:   model.BoardTypeOpen,
-		Title:  "Public Board with admin",
+		ID:         "board-id-1",
+		TeamID:     teamID1,
+		Type:       model.BoardTypeOpen,
+		Title:      "Public Board with admin",
+		Properties: map[string]any{"foo": "bar1"},
 	}
 	_, _, err := store.InsertBoardWithAdmin(board1, userID)
 	require.NoError(t, err)
 
 	board2 := &model.Board{
-		ID:     "board-id-2",
-		TeamID: teamID1,
-		Type:   model.BoardTypeOpen,
-		Title:  "Public Board",
+		ID:         "board-id-2",
+		TeamID:     teamID1,
+		Type:       model.BoardTypeOpen,
+		Title:      "Public Board",
+		Properties: map[string]any{"foo": "bar2"},
 	}
 	_, err = store.InsertBoard(board2, userID)
 	require.NoError(t, err)
@@ -851,6 +853,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 		TeamID           string
 		UserID           string
 		Term             string
+		SearchField      model.BoardSearchField
 		IncludePublic    bool
 		ExpectedBoardIDs []string
 	}{
@@ -859,6 +862,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "",
+			SearchField:      model.BoardSearchFieldTitle,
 			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
 		},
@@ -867,6 +871,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "board",
+			SearchField:      model.BoardSearchFieldTitle,
 			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board1.ID, board2.ID, board3.ID, board5.ID},
 		},
@@ -875,6 +880,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "board",
+			SearchField:      model.BoardSearchFieldTitle,
 			IncludePublic:    false,
 			ExpectedBoardIDs: []string{board1.ID, board3.ID, board5.ID},
 		},
@@ -883,6 +889,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "public",
+			SearchField:      model.BoardSearchFieldTitle,
 			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board1.ID, board2.ID, board5.ID},
 		},
@@ -891,6 +898,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID1,
 			UserID:           userID,
 			Term:             "priv",
+			SearchField:      model.BoardSearchFieldTitle,
 			IncludePublic:    true,
 			ExpectedBoardIDs: []string{board3.ID},
 		},
@@ -899,6 +907,25 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 			TeamID:           teamID2,
 			UserID:           userID,
 			Term:             "non-matching-term",
+			SearchField:      model.BoardSearchFieldTitle,
+			IncludePublic:    true,
+			ExpectedBoardIDs: []string{},
+		},
+		{
+			Name:             "should find all boards with a named property",
+			TeamID:           teamID1,
+			UserID:           userID,
+			Term:             "foo",
+			SearchField:      model.BoardSearchFieldPropertyName,
+			IncludePublic:    true,
+			ExpectedBoardIDs: []string{board1.ID, board2.ID},
+		},
+		{
+			Name:             "should find no boards with a non-existing named property",
+			TeamID:           teamID1,
+			UserID:           userID,
+			Term:             "bogus",
+			SearchField:      model.BoardSearchFieldPropertyName,
 			IncludePublic:    true,
 			ExpectedBoardIDs: []string{},
 		},
@@ -906,7 +933,7 @@ func testSearchBoardsForUser(t *testing.T, store store.Store) {
 
 	for _, tc := range testCases {
 		t.Run(tc.Name, func(t *testing.T) {
-			boards, err := store.SearchBoardsForUser(tc.Term, tc.UserID, tc.IncludePublic)
+			boards, err := store.SearchBoardsForUser(tc.Term, tc.SearchField, tc.UserID, tc.IncludePublic)
 			require.NoError(t, err)
 
 			boardIDs := []string{}
