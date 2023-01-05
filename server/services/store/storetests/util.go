@@ -90,12 +90,12 @@ func createTestCards(t *testing.T, store store.Store, userID string, boardID str
 	return blocks
 }
 
-func createTestBoards(t *testing.T, store store.Store, userID string, num int) []*model.Board {
+func createTestBoards(t *testing.T, store store.Store, teamID string, userID string, num int) []*model.Board {
 	var boards []*model.Board
 	for i := 0; i < num; i++ {
 		board := &model.Board{
 			ID:        utils.NewID(utils.IDTypeBoard),
-			TeamID:    testTeamID,
+			TeamID:    teamID,
 			Type:      "O",
 			CreatedBy: userID,
 			Title:     fmt.Sprintf("board %d", i),
@@ -106,4 +106,24 @@ func createTestBoards(t *testing.T, store store.Store, userID string, num int) [
 		boards = append(boards, boardNew)
 	}
 	return boards
+}
+
+func deleteTestBoard(t *testing.T, store store.Store, boardID string, userID string) {
+	err := store.DeleteBoard(boardID, userID)
+	require.NoError(t, err)
+}
+
+func extractBoardIDs(boards1, boards2 []*model.Board) []string {
+	ids := make([]string, 0, len(boards1)+len(boards2))
+	for _, b := range boards1 {
+		if b != nil {
+			ids = append(ids, b.ID)
+		}
+	}
+	for _, b := range boards2 {
+		if b != nil {
+			ids = append(ids, b.ID)
+		}
+	}
+	return ids
 }
