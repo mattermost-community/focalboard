@@ -3,12 +3,12 @@
     align-items: center;
     overflow: hidden;
     flex-direction: row;
-    padding: 10px 0;
-    margin: 0 35px;
+    padding: 10px 35px 10px 0;
 
     .BoardSelectorItem-info {
         flex: 1;
         overflow: hidden;
+        padding-left: 35px;
     }
 
     .icon {
