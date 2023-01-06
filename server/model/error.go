@@ -24,8 +24,6 @@ var (
 	ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
 
 	ErrRequestEntityTooLarge = errors.New("request entity too large")
-
-	ErrInvalidBoardSearchField = errors.New("invalid board search field")
 )
 
 // ErrNotFound is an error type that can be returned by store APIs

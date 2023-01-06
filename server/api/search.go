@@ -114,11 +114,6 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	//   description: The search term. Must have at least one character
 	//   required: true
 	//   type: string
-	// - name: field
-	//   in: query
-	//   description: The field to search on for search term. Can be `title`, `property_name`. Defaults to `title`
-	//   required: false
-	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -133,18 +128,8 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
-	var err error
 	teamID := mux.Vars(r)["teamID"]
 	term := r.URL.Query().Get("q")
-	searchFieldText := r.URL.Query().Get("field")
-	searchField := model.BoardSearchFieldTitle
-	if searchFieldText != "" {
-		searchField, err = model.BoardSearchFieldFromString(searchFieldText)
-		if err != nil {
-			a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
-			return
-		}
-	}
 	userID := getUserID(r)
 
 	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
@@ -168,7 +153,7 @@ func (a *API) handleSearchBoards(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, searchField, userID, !isGuest)
+	boards, err := a.app.SearchBoardsForUser(term, userID, !isGuest)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
@@ -327,7 +312,7 @@ func (a *API) handleSearchAllBoards(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// retrieve boards list
-	boards, err := a.app.SearchBoardsForUser(term, model.BoardSearchFieldTitle, userID, !isGuest)
+	boards, err := a.app.SearchBoardsForUser(term, userID, !isGuest)
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
