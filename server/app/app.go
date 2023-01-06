@@ -64,7 +64,6 @@ type App struct {
 	metrics             *metrics.Metrics
 	notifications       *notify.Service
 	logger              mlog.LoggerIFace
-	permissions         permissions.PermissionsService
 	blockChangeNotifier *utils.CallbackQueue
 	servicesAPI         servicesAPI
 
@@ -91,7 +90,6 @@ func New(config *config.Configuration, wsAdapter ws.Adapter, services Services) 
 		metrics:             services.Metrics,
 		notifications:       services.Notifications,
 		logger:              services.Logger,
-		permissions:         services.Permissions,
 		blockChangeNotifier: utils.NewCallbackQueue("blockChangeNotifier", blockChangeNotifierQueueSize, blockChangeNotifierPoolSize, services.Logger),
 		servicesAPI:         services.ServicesAPI,
 	}
