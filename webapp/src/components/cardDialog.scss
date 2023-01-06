@@ -12,19 +12,7 @@
 .cardFollowBtn {
     display: inline-flex;
 
-    &.attach {
-        margin-right: 20px;
-        color: rgba(var(--center-channel-color-rgb), 0.64);
-        background-color: rgba(var(--center-channel-color-rgb), 0.08);
-    }
-
-    &.follow {
-        color: rgba(var(--center-channel-color-rgb), 0.64);
-        background-color: rgba(var(--center-channel-color-rgb), 0.08);
-    }
-
-    &.unfollow {
-        color: rgb(var(--button-bg-rgb));
-        background-color: rgba(var(--button-bg-rgb), 0.08);
+    &--attach {
+        margin-right: 8px;
     }
 }
