@@ -329,7 +329,7 @@ export default class Plugin {
             }
 
             if (registry.registerChannelIntroButtonAction) {
-                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, intl.formatMessage({id: 'ChannelIntro.CreateBoard', defaultMessage: 'Create a board'}))
             }
 
             if (this.registry.registerAppBarComponent) {
