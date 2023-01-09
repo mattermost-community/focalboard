@@ -18,7 +18,9 @@
         CONSTRAINT unique_user_category_board UNIQUE (user_id, board_id)
     );
 
-    INSERT INTO {{.prefix}}category_boards SELECT * FROM {{.prefix}}category_boards_old;
+    INSERT INTO {{.prefix}}category_boards
+        (id, user_id, category_id, board_id, create_at, update_at, sort_order, hidden)
+        SELECT id, user_id, category_id, board_id, create_at, update_at, sort_order, hidden FROM {{.prefix}}category_boards_old;
     DROP TABLE {{.prefix}}category_boards_old;
 
 {{end}}
