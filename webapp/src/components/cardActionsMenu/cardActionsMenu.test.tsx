@@ -48,6 +48,7 @@ describe('components/cardActionsMenu', () => {
                 <ReduxProvider store={store}>
                     <CardActionsMenu
                         cardId='123'
+                        boardId='345'
                         onClickDelete={jest.fn()}
                     />
                 </ReduxProvider>,
@@ -64,6 +65,7 @@ describe('components/cardActionsMenu', () => {
                 <ReduxProvider store={store}>
                     <CardActionsMenu
                         cardId='123'
+                        boardId='345'
                         onClickDelete={jest.fn()}
                         onClickDuplicate={jest.fn()}
                     />
@@ -81,6 +83,7 @@ describe('components/cardActionsMenu', () => {
                 <ReduxProvider store={store}>
                     <CardActionsMenu
                         cardId='123'
+                        boardId='345'
                         onClickDelete={jest.fn()}
                     >
                         <React.Fragment>

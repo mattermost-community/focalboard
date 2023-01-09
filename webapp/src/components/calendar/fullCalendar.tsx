@@ -167,6 +167,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                         <CardActionsMenuIcon/>
                         <CardActionsMenu
                             cardId={card.id}
+                            boardId={card.boardId}
                             onClickDelete={() => openConfirmationDialogBox(card)}
                             onClickDuplicate={() => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})
