@@ -28,6 +28,8 @@ type SQLStore struct {
 	NewMutexFn       MutexFactory
 	servicesAPI      servicesAPI
 	isBinaryParam    bool
+	schemaName       string
+	configFn         func() *mmModel.Config
 }
 
 // MutexFactory is used by the store in plugin mode to generate
@@ -52,12 +54,19 @@ func New(params Params) (*SQLStore, error) {
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		servicesAPI:      params.ServicesAPI,
+		configFn:         params.ConfigFn,
 	}
 
 	var err error
 	store.isBinaryParam, err = store.computeBinaryParam()
 	if err != nil {
 		params.Logger.Error(`Cannot compute binary parameter`, mlog.Err(err))
+		return nil, err
+	}
+
+	store.schemaName, err = store.GetSchemaName()
+	if err != nil {
+		params.Logger.Error(`Cannot get schema name`, mlog.Err(err))
 		return nil, err
 	}
 

@@ -146,7 +146,7 @@ server-test-mini-sqlite: setup-go-work ## Run server tests using sqlite
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql
-server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44445
+server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
 
 server-test-mysql: setup-go-work ## Run server tests using mysql
 	@echo Starting docker container for mysql
@@ -174,7 +174,7 @@ server-test-mariadb: templates-archive ## Run server tests using mysql
 
 server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
 server-test-postgres: export FOCALBOARD_STORE_TEST_DB_TYPE=postgres
-server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
+server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44447
 
 server-test-postgres: setup-go-work ## Run server tests using postgres
 	@echo Starting docker container for postgres

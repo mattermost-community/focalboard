@@ -175,7 +175,7 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 
 	// now that we have source board's category,
 	// we send destination board to the same category
-	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, destinationBoardID)
+	return a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{destinationBoardID: destinationCategoryID})
 }
 
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
@@ -189,9 +189,11 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
-	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
-			return nil, nil, categoryErr
+	if !asTemplate {
+		for _, board := range bab.Boards {
+			if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
+				return nil, nil, categoryErr
+			}
 		}
 	}
 
@@ -327,10 +329,13 @@ func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.
 		return fmt.Errorf("%w userID: %s", errNoDefaultCategoryFound, userID)
 	}
 
+	boardCategoryMapping := map[string]string{}
 	for _, board := range boards {
-		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, board.ID); err != nil {
-			return err
-		}
+		boardCategoryMapping[board.ID] = defaultCategoryID
+	}
+
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, boardCategoryMapping); err != nil {
+		return err
 	}
 
 	return nil
@@ -378,10 +383,14 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 
 		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		title := updatedBoard.Title
+		if title == "" {
+			title = "Untitled board" // todo: localize this when server has i18n
+		}
 		if *patch.ChannelID != "" {
-			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink), updatedBoard.ChannelID)
+			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, title, boardLink), updatedBoard.ChannelID)
 		} else if *patch.ChannelID == "" {
-			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink), oldChannelID)
+			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, title, boardLink), oldChannelID)
 		}
 	}
 
@@ -634,8 +643,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (a *App) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, searchField, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

@@ -45,16 +45,21 @@ exports[`components/table/TableRow should match snapshot 1`] = `
         class="MenuWrapper optionsMenu ml-2 mr-2"
         role="button"
       >
-        <button
-          aria-label="MenuBtn"
-          class="IconButton"
-          title="MenuBtn"
-          type="button"
+        <div
+          class="octo-tooltip tooltip-top"
+          data-tooltip="More actions"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            aria-label="MenuBtn"
+            class="IconButton"
+            title="MenuBtn"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="open-button"
@@ -118,16 +123,21 @@ exports[`components/table/TableRow should match snapshot, collapsed tree 1`] = `
         class="MenuWrapper optionsMenu ml-2 mr-2"
         role="button"
       >
-        <button
-          aria-label="MenuBtn"
-          class="IconButton"
-          title="MenuBtn"
-          type="button"
+        <div
+          class="octo-tooltip tooltip-top"
+          data-tooltip="More actions"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            aria-label="MenuBtn"
+            class="IconButton"
+            title="MenuBtn"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="open-button"
@@ -191,16 +201,21 @@ exports[`components/table/TableRow should match snapshot, display properties 1`]
         class="MenuWrapper optionsMenu ml-2 mr-2"
         role="button"
       >
-        <button
-          aria-label="MenuBtn"
-          class="IconButton"
-          title="MenuBtn"
-          type="button"
+        <div
+          class="octo-tooltip tooltip-top"
+          data-tooltip="More actions"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            aria-label="MenuBtn"
+            class="IconButton"
+            title="MenuBtn"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="open-button"
@@ -302,16 +317,21 @@ exports[`components/table/TableRow should match snapshot, isSelected 1`] = `
         class="MenuWrapper optionsMenu ml-2 mr-2"
         role="button"
       >
-        <button
-          aria-label="MenuBtn"
-          class="IconButton"
-          title="MenuBtn"
-          type="button"
+        <div
+          class="octo-tooltip tooltip-top"
+          data-tooltip="More actions"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            aria-label="MenuBtn"
+            class="IconButton"
+            title="MenuBtn"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="open-button"
@@ -337,6 +357,9 @@ exports[`components/table/TableRow should match snapshot, read-only 1`] = `
     draggable="true"
     style="opacity: 1;"
   >
+    <div
+      class="action-cell octo-table-cell-btn"
+    />
     <div
       class="octo-table-cell title-cell"
       id="mainBoardHeader"
@@ -421,16 +444,21 @@ exports[`components/table/TableRow should match snapshot, resizing column 1`] = 
         class="MenuWrapper optionsMenu ml-2 mr-2"
         role="button"
       >
-        <button
-          aria-label="MenuBtn"
-          class="IconButton"
-          title="MenuBtn"
-          type="button"
+        <div
+          class="octo-tooltip tooltip-top"
+          data-tooltip="More actions"
         >
-          <i
-            class="CompassIcon icon-dots-horizontal OptionsIcon"
-          />
-        </button>
+          <button
+            aria-label="MenuBtn"
+            class="IconButton"
+            title="MenuBtn"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
       </div>
       <div
         class="open-button"

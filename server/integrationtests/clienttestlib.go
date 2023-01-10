@@ -457,6 +457,17 @@ func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *mod
 	return board
 }
 
+func (th *TestHelper) CreateCategory(category model.Category) *model.Category {
+	cat, resp := th.Client.CreateCategory(category)
+	th.CheckOK(resp)
+	return cat
+}
+
+func (th *TestHelper) UpdateCategoryBoard(teamID, categoryID, boardID string) {
+	response := th.Client.UpdateCategoryBoard(teamID, categoryID, boardID)
+	th.CheckOK(response)
+}
+
 func (th *TestHelper) CreateBoardAndCards(teamdID string, boardType model.BoardType, numCards int) (*model.Board, []*model.Card) {
 	board := th.CreateBoard(teamdID, boardType)
 	cards := make([]*model.Card, 0, numCards)
@@ -480,6 +491,17 @@ func (th *TestHelper) MakeCardProps(count int) map[string]any {
 		props[utils.NewID(utils.IDTypeBlock)] = utils.NewID(utils.IDTypeBlock)
 	}
 	return props
+}
+
+func (th *TestHelper) GetUserCategoryBoards(teamID string) []model.CategoryBoards {
+	categoryBoards, response := th.Client.GetUserCategoryBoards(teamID)
+	th.CheckOK(response)
+	return categoryBoards
+}
+
+func (th *TestHelper) DeleteCategory(teamID, categoryID string) {
+	response := th.Client.DeleteCategory(teamID, categoryID)
+	th.CheckOK(response)
 }
 
 func (th *TestHelper) GetUser1() *model.User {

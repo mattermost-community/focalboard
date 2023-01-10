@@ -7,9 +7,13 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"strings"
 
 	"text/template"
 
+	sq "github.com/Masterminds/squirrel"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
 
@@ -25,7 +29,7 @@ import (
 	"github.com/mattermost/focalboard/server/model"
 )
 
-//go:embed migrations
+//go:embed migrations/*.sql
 var Assets embed.FS
 
 const (
@@ -56,14 +60,14 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 		}
 	}
 
-	db, err := sql.Open(s.dbType, connectionString)
-	if err != nil {
-		return nil, err
+	var settings mmModel.SqlSettings
+	settings.SetDefaults(false)
+	if s.configFn != nil {
+		settings = s.configFn().SqlSettings
 	}
+	*settings.DriverName = s.dbType
 
-	if err = db.Ping(); err != nil {
-		return nil, err
-	}
+	db := sqlstore.SetupConnection("master", connectionString, &settings)
 
 	return db, nil
 }
@@ -159,16 +163,22 @@ func (s *SQLStore) Migrate() error {
 				return nil, mErr
 			}
 
-			tmpl, pErr := template.New("sql").Parse(string(asset))
+			tmpl, pErr := template.New("sql").Funcs(s.GetTemplateHelperFuncs()).Parse(string(asset))
 			if pErr != nil {
 				return nil, pErr
 			}
+
 			buffer := bytes.NewBufferString("")
 
 			err = tmpl.Execute(buffer, params)
 			if err != nil {
 				return nil, err
 			}
+
+			s.logger.Trace("migration template",
+				mlog.String("name", name),
+				mlog.String("sql", buffer.String()),
+			)
 
 			return buffer.Bytes(), nil
 		},
@@ -281,4 +291,366 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 	}
 
 	return nil
+}
+
+func (s *SQLStore) GetTemplateHelperFuncs() template.FuncMap {
+	funcs := template.FuncMap{
+		"addColumnIfNeeded":    s.genAddColumnIfNeeded,
+		"dropColumnIfNeeded":   s.genDropColumnIfNeeded,
+		"createIndexIfNeeded":  s.genCreateIndexIfNeeded,
+		"renameTableIfNeeded":  s.genRenameTableIfNeeded,
+		"renameColumnIfNeeded": s.genRenameColumnIfNeeded,
+		"doesTableExist":       s.doesTableExist,
+		"doesColumnExist":      s.doesColumnExist,
+	}
+	return funcs
+}
+
+func (s *SQLStore) genAddColumnIfNeeded(tableName, columnName, datatype, constraint string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// Sqlite does not support any conditionals that can contain DDL commands. No idempotent migrations for Sqlite :-(
+		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          s.schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"column_name":     columnName,
+			"data_type":       datatype,
+			"constraint":      constraint,
+		}
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				  SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND column_name = '[[column_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] ADD COLUMN [[column_name]] [[data_type]] [[constraint]];'
+			));
+			PREPARE addColumnIfNeeded FROM @stmt;
+			EXECUTE addColumnIfNeeded;
+			DEALLOCATE PREPARE addColumnIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN IF NOT EXISTS %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genDropColumnIfNeeded(tableName, columnName string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		return fmt.Sprintf("\n-- Sqlite3 cannot drop columns for versions less than 3.35.0; drop column '%s' in table '%s' skipped\n", columnName, tableName), nil
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          s.schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"column_name":     columnName,
+		}
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				  SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND column_name = '[[column_name]]'
+				) > 0,
+				'ALTER TABLE [[norm_table_name]] DROP COLUMN [[column_name]];',
+				'SELECT 1;'
+			));
+			PREPARE dropColumnIfNeeded FROM @stmt;
+			EXECUTE dropColumnIfNeeded;
+			DEALLOCATE PREPARE dropColumnIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nALTER TABLE %s DROP COLUMN IF EXISTS %s;\n", normTableName, columnName), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genCreateIndexIfNeeded(tableName, columns string) (string, error) {
+	indexName := getIndexName(tableName, columns)
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// No support for idempotent index creation in Sqlite.
+		return fmt.Sprintf("\nCREATE INDEX %s ON %s (%s);\n", indexName, normTableName, columns), nil
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          s.schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"index_name":      indexName,
+			"columns":         columns,
+		}
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				  SELECT COUNT(index_name) FROM INFORMATION_SCHEMA.STATISTICS
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND index_name = '[[index_name]]'
+				) > 0,
+				'SELECT 1;',
+				'CREATE INDEX [[index_name]] ON [[norm_table_name]] ([[columns]]);'
+			));
+			PREPARE createIndexIfNeeded FROM @stmt;
+			EXECUTE createIndexIfNeeded;
+			DEALLOCATE PREPARE createIndexIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nCREATE INDEX IF NOT EXISTS %s ON %s (%s);\n", indexName, normTableName, columns), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genRenameTableIfNeeded(oldTableName, newTableName string) (string, error) {
+	oldTableName = addPrefixIfNeeded(oldTableName, s.tablePrefix)
+	newTableName = addPrefixIfNeeded(newTableName, s.tablePrefix)
+
+	normOldTableName := normalizeTablename(s.schemaName, oldTableName)
+
+	vars := map[string]string{
+		"schema":              s.schemaName,
+		"table_name":          newTableName,
+		"norm_old_table_name": normOldTableName,
+		"new_table_name":      newTableName,
+	}
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// No support for idempotent table renaming in Sqlite.
+		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", normOldTableName, newTableName), nil
+	case model.MysqlDBType:
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
+				WHERE table_name = '[[table_name]]'
+				AND table_schema = '[[schema]]'
+				) > 0,
+				'SELECT 1;',
+				'RENAME TABLE [[norm_old_table_name]] TO [[new_table_name]];'
+			));
+			PREPARE renameTableIfNeeded FROM @stmt;
+			EXECUTE renameTableIfNeeded;
+			DEALLOCATE PREPARE renameTableIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return replaceVars(`
+			do $$
+			begin 
+				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
+							WHERE table_name = '[[new_table_name]]'
+							AND table_schema = '[[schema]]'
+				) = 0 then 
+					ALTER TABLE [[norm_old_table_name]] RENAME TO [[new_table_name]];
+				end if;
+			end$$;		
+		`, vars), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genRenameColumnIfNeeded(tableName, oldColumnName, newColumnName, dataType string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	vars := map[string]string{
+		"schema":          s.schemaName,
+		"table_name":      tableName,
+		"norm_table_name": normTableName,
+		"old_column_name": oldColumnName,
+		"new_column_name": newColumnName,
+		"data_type":       dataType,
+	}
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// No support for idempotent column renaming in Sqlite.
+		return fmt.Sprintf("\nALTER TABLE %s RENAME COLUMN %s TO %s;\n", normTableName, oldColumnName, newColumnName), nil
+	case model.MysqlDBType:
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				WHERE table_name = '[[table_name]]'
+				AND table_schema = '[[schema]]'
+				AND column_name = '[[new_column_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] CHANGE [[old_column_name]] [[new_column_name]] [[data_type]];'
+			));
+			PREPARE renameColumnIfNeeded FROM @stmt;
+			EXECUTE renameColumnIfNeeded;
+			DEALLOCATE PREPARE renameColumnIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return replaceVars(`
+			do $$
+			begin 
+				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.COLUMNS
+							WHERE table_name = '[[table_name]]'
+							AND table_schema = '[[schema]]'
+							AND column_name = '[[new_column_name]]'
+				) = 0 then 
+					ALTER TABLE [[norm_table_name]] RENAME COLUMN [[old_column_name]] TO [[new_column_name]];
+				end if;
+			end$$;		
+		`, vars), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) doesTableExist(tableName string) (bool, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("table_name").
+			From("INFORMATION_SCHEMA.TABLES").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": s.schemaName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From("sqlite_master").
+			Where(sq.Eq{
+				"name": tableName,
+				"type": "table",
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesTableExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Trace("doesTableExist",
+		mlog.String("table", tableName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func (s *SQLStore) doesColumnExist(tableName, columnName string) (bool, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("table_name").
+			From("INFORMATION_SCHEMA.COLUMNS").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": s.schemaName,
+				"column_name":  columnName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From(fmt.Sprintf("pragma_table_info('%s')", tableName)).
+			Where(sq.Eq{
+				"name": columnName,
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesColumnExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Trace("doesColumnExist",
+		mlog.String("table", tableName),
+		mlog.String("column", columnName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func addPrefixIfNeeded(s, prefix string) string {
+	if !strings.HasPrefix(s, prefix) {
+		return prefix + s
+	}
+	return s
+}
+
+func normalizeTablename(schemaName, tableName string) string {
+	if schemaName != "" && !strings.HasPrefix(tableName, schemaName+".") {
+		tableName = schemaName + "." + tableName
+	}
+	return tableName
+}
+
+func getIndexName(tableName string, columns string) string {
+	var sb strings.Builder
+
+	_, _ = sb.WriteString("idx_")
+	_, _ = sb.WriteString(tableName)
+
+	// allow developers to separate column names with spaces and/or commas
+	columns = strings.ReplaceAll(columns, ",", " ")
+	cols := strings.Split(columns, " ")
+
+	for _, s := range cols {
+		sub := strings.TrimSpace(s)
+		if sub == "" {
+			continue
+		}
+
+		_, _ = sb.WriteString("_")
+		_, _ = sb.WriteString(s)
+	}
+	return sb.String()
+}
+
+// replaceVars replaces instances of variable placeholders with the
+// values provided via a map.  Variable placeholders are of the form
+// `[[var_name]]`.
+func replaceVars(s string, vars map[string]string) string {
+	for key, val := range vars {
+		placeholder := "[[" + key + "]]"
+		val = strings.ReplaceAll(val, "'", "\\'")
+		s = strings.ReplaceAll(s, placeholder, val)
+	}
+	return s
 }
