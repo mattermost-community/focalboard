@@ -53,10 +53,10 @@ const attachmentSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type === 'attachment') {
                     state.attachments[block.id] = block as AttachmentBlock
-                    if (!state.attachmentsByCard[block.parentId]) {
-                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
-                    } else {
+                    if (state.attachmentsByCard[block.parentId]) {
                         state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
+                    } else {
+                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
                     }
                 }
             }
@@ -68,10 +68,10 @@ const attachmentSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type === 'attachment') {
                     state.attachments[block.id] = block as AttachmentBlock
-                    if (!state.attachmentsByCard[block.parentId]) {
-                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
-                    } else {
+                    if (state.attachmentsByCard[block.parentId]) {
                         state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
+                    } else {
+                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
                     }
                 }
             }
