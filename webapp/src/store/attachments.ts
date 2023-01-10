@@ -53,8 +53,11 @@ const attachmentSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type === 'attachment') {
                     state.attachments[block.id] = block as AttachmentBlock
-                    state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
-                    state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
+                    if (!state.attachmentsByCard[block.parentId]) {
+                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
+                    } else {
+                        state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
+                    }
                 }
             }
             Object.values(state.attachmentsByCard).forEach((arr) => arr.sort((a, b) => a.createAt - b.createAt))
@@ -65,8 +68,11 @@ const attachmentSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type === 'attachment') {
                     state.attachments[block.id] = block as AttachmentBlock
-                    state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
-                    state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
+                    if (!state.attachmentsByCard[block.parentId]) {
+                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
+                    } else {
+                        state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
+                    }
                 }
             }
             Object.values(state.attachmentsByCard).forEach((arr) => arr.sort((a, b) => a.createAt - b.createAt))
