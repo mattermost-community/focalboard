@@ -27,7 +27,6 @@ func testGetBoardsForCompliance(t *testing.T, store store.Store) {
 
 	deleteTestBoard(t, store, boardsAdded1[0].ID, testUserID)
 	deleteTestBoard(t, store, boardsAdded1[1].ID, testUserID)
-	//boardsDeleted := boardsAdded1[0:2]
 	boardsAdded1 = boardsAdded1[2:]
 
 	t.Run("Invalid teamID", func(t *testing.T) {
