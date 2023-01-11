@@ -271,8 +271,8 @@ func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, 
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	boards, err := s.Store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (s *PluginTestStore) SearchBoardsForUser(term string, field model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	boards, err := s.Store.SearchBoardsForUser(term, field, userID, includePublicBoards)
 	if err != nil {
 		return nil, err
 	}

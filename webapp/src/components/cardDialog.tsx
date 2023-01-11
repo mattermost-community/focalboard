@@ -120,6 +120,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const menu = (
         <CardActionsMenu
             cardId={props.cardId}
+            boardId={board.id}
             onClickDelete={handleDeleteButtonOnClick}
         >
             {!isTemplate &&
@@ -223,7 +224,8 @@ const CardDialog = (props: Props): JSX.Element => {
             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
                 <Button
                     icon={<CompassIcon icon='paperclip'/>}
-                    className='cardFollowBtn attach'
+                    className='cardFollowBtn cardFollowBtn--attach'
+                    emphasis='gray'
                     size='medium'
                     onClick={addElement}
                 >
@@ -238,6 +240,7 @@ const CardDialog = (props: Props): JSX.Element => {
             <>
                 <Button
                     className='cardFollowBtn follow'
+                    emphasis='gray'
                     size='medium'
                     onClick={() => mutator.followBlock(props.cardId, 'card', me!.id)}
                 >
@@ -250,6 +253,7 @@ const CardDialog = (props: Props): JSX.Element => {
             <>
                 <Button
                     className='cardFollowBtn unfollow'
+                    emphasis='tertiary'
                     size='medium'
                     onClick={() => mutator.unfollowBlock(props.cardId, 'card', me!.id)}
                 >

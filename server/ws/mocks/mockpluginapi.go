@@ -261,6 +261,21 @@ func (mr *MockAPIMockRecorder) CreateTeamMembersGracefully(arg0, arg1, arg2 inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTeamMembersGracefully", reflect.TypeOf((*MockAPI)(nil).CreateTeamMembersGracefully), arg0, arg1, arg2)
 }
 
+// CreateUploadSession mocks base method.
+func (m *MockAPI) CreateUploadSession(arg0 *model.UploadSession) (*model.UploadSession, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUploadSession", arg0)
+	ret0, _ := ret[0].(*model.UploadSession)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUploadSession indicates an expected call of CreateUploadSession.
+func (mr *MockAPIMockRecorder) CreateUploadSession(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUploadSession", reflect.TypeOf((*MockAPI)(nil).CreateUploadSession), arg0)
+}
+
 // CreateUser mocks base method.
 func (m *MockAPI) CreateUser(arg0 *model.User) (*model.User, *model.AppError) {
 	m.ctrl.T.Helper()
@@ -1440,6 +1455,21 @@ func (mr *MockAPIMockRecorder) GetUnsanitizedConfig() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUnsanitizedConfig", reflect.TypeOf((*MockAPI)(nil).GetUnsanitizedConfig))
 }
 
+// GetUploadSession mocks base method.
+func (m *MockAPI) GetUploadSession(arg0 string) (*model.UploadSession, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUploadSession", arg0)
+	ret0, _ := ret[0].(*model.UploadSession)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUploadSession indicates an expected call of GetUploadSession.
+func (mr *MockAPIMockRecorder) GetUploadSession(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUploadSession", reflect.TypeOf((*MockAPI)(nil).GetUploadSession), arg0)
+}
+
 // GetUser mocks base method.
 func (m *MockAPI) GetUser(arg0 string) (*model.User, *model.AppError) {
 	m.ctrl.T.Helper()
@@ -2031,6 +2061,20 @@ func (mr *MockAPIMockRecorder) ReadFile(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFile", reflect.TypeOf((*MockAPI)(nil).ReadFile), arg0)
 }
 
+// RegisterCollectionAndTopic mocks base method.
+func (m *MockAPI) RegisterCollectionAndTopic(arg0, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RegisterCollectionAndTopic", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RegisterCollectionAndTopic indicates an expected call of RegisterCollectionAndTopic.
+func (mr *MockAPIMockRecorder) RegisterCollectionAndTopic(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterCollectionAndTopic", reflect.TypeOf((*MockAPI)(nil).RegisterCollectionAndTopic), arg0, arg1)
+}
+
 // RegisterCommand mocks base method.
 func (m *MockAPI) RegisterCommand(arg0 *model.Command) error {
 	m.ctrl.T.Helper()
@@ -2579,6 +2623,21 @@ func (m *MockAPI) UpdateUserStatus(arg0, arg1 string) (*model.Status, *model.App
 func (mr *MockAPIMockRecorder) UpdateUserStatus(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUserStatus", reflect.TypeOf((*MockAPI)(nil).UpdateUserStatus), arg0, arg1)
+}
+
+// UploadData mocks base method.
+func (m *MockAPI) UploadData(arg0 *model.UploadSession, arg1 io.Reader) (*model.FileInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UploadData", arg0, arg1)
+	ret0, _ := ret[0].(*model.FileInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UploadData indicates an expected call of UploadData.
+func (mr *MockAPIMockRecorder) UploadData(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadData", reflect.TypeOf((*MockAPI)(nil).UploadData), arg0, arg1)
 }
 
 // UploadFile mocks base method.

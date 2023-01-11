@@ -102,7 +102,7 @@ html {
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
-        overflow: auto;
+        overflow: hidden;
     }
 
     /* Main app */
@@ -236,5 +236,10 @@ html {
         @media not screen and (max-width: 975px) {
             width: 48px;
         }
+    }
+
+    .emoji-mart-category-list {
+        display: flex;
+        flex-wrap: wrap;
     }
 }

@@ -660,7 +660,7 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string, includePublicBoards bool) ([]*model.Board, error) {
+func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
@@ -680,19 +680,30 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string, in
 	}
 
 	if term != "" {
-		// break search query into space separated words
-		// and search for all words.
-		// This should later be upgraded to industrial-strength
-		// word tokenizer, that uses much more than space
-		// to break words.
-
-		conditions := sq.And{}
-
-		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		if searchField == model.BoardSearchFieldPropertyName {
+			switch s.dbType {
+			case model.PostgresDBType:
+				where := "b.properties->? is not null"
+				query = query.Where(where, term)
+			case model.MysqlDBType, model.SqliteDBType:
+				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
+				query = query.Where(where, "$."+term)
+			default:
+				where := "b.properties LIKE ?"
+				query = query.Where(where, "%\""+term+"\"%")
+			}
+		} else { // model.BoardSearchFieldTitle
+			// break search query into space separated words
+			// and search for all words.
+			// This should later be upgraded to industrial-strength
+			// word tokenizer, that uses much more than space
+			// to break words.
+			conditions := sq.And{}
+			for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+				conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+			}
+			query = query.Where(conditions)
 		}
-
-		query = query.Where(conditions)
 	}
 
 	rows, err := query.Query()
