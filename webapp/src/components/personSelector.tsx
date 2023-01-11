@@ -12,7 +12,7 @@ import {getSelectBaseStyle} from '../theme'
 import {IUser} from '../user'
 import {Utils} from '../utils'
 import {useAppSelector} from '../store/hooks'
-import {getBoardUsers, getBoardUsersList} from '../store/users'
+import {getBoardUsers, getBoardUsersList, getMe} from '../store/users'
 
 import {ClientConfig} from '../config/clientConfig'
 import {getClientConfig} from '../store/clientConfig'
@@ -33,6 +33,7 @@ type Props = {
     emptyDisplayValue: string
     isMulti: boolean
     closeMenuOnSelect?: boolean
+    showMe?: boolean
     onChange: (items: any, action: ActionMeta<IUser>) => void
 }
 
@@ -69,7 +70,7 @@ const selectStyles = {
 }
 
 const PersonSelector = (props: Props): JSX.Element => {
-    const {readOnly, userIDs, allowAddUsers, isMulti, closeMenuOnSelect = true, emptyDisplayValue, onChange} = props
+    const {readOnly, userIDs, allowAddUsers, isMulti, closeMenuOnSelect = true, emptyDisplayValue, showMe = false, onChange} = props
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
     const intl = useIntl()
@@ -77,6 +78,7 @@ const PersonSelector = (props: Props): JSX.Element => {
     const boardUsersById = useAppSelector<{[key: string]: IUser}>(getBoardUsers)
     const boardUsers = useAppSelector<IUser[]>(getBoardUsersList)
     const boardUsersKey = Object.keys(boardUsersById) ? Utils.hashCode(JSON.stringify(Object.keys(boardUsersById))) : 0
+    const me = useAppSelector<IUser|null>(getMe)
 
     const formatOptionLabel = (user: any): JSX.Element => {
         if (!user) {
@@ -111,7 +113,33 @@ const PersonSelector = (props: Props): JSX.Element => {
 
     const loadOptions = useCallback(async (value: string) => {
         if (!allowAddUsers) {
-            return boardUsers.filter((u) => u.username.toLowerCase().includes(value.toLowerCase()))
+            const returnUsers: IUser[] = []
+            if (showMe && me) {
+                returnUsers.push({
+                    id: me.id,
+                    username: intl.formatMessage({id: 'PersonProperty.me', defaultMessage: 'Me'}),
+                    email: '',
+                    nickname: '',
+                    firstname: '',
+                    lastname: '',
+                    props: {},
+                    create_at: me.create_at,
+                    update_at: me.update_at,
+                    is_bot: false,
+                    is_guest: me.is_guest,
+                    roles: me.roles,
+                })
+                returnUsers.push(...boardUsers.filter((u) => u.id !== me.id))
+            }
+            if (value) {
+                return returnUsers.filter((u) => {
+                    return u.username.toLowerCase().includes(value.toLowerCase()) ||
+                        u.lastname.toLowerCase().includes(value.toLowerCase()) ||
+                        u.firstname.toLowerCase().includes(value.toLowerCase()) ||
+                        u.nickname.toLowerCase().includes(value.toLowerCase())
+                })
+            }
+            return returnUsers
         }
         const excludeBots = true
         const allUsers = await client.searchTeamUsers(value, excludeBots)
@@ -128,7 +156,7 @@ const PersonSelector = (props: Props): JSX.Element => {
             {label: intl.formatMessage({id: 'PersonProperty.board-members', defaultMessage: 'Board members'}), options: usersInsideBoard},
             {label: intl.formatMessage({id: 'PersonProperty.non-board-members', defaultMessage: 'Not board members'}), options: usersOutsideBoard},
         ]
-    }, [boardUsers, allowAddUsers, boardUsersById])
+    }, [boardUsers, allowAddUsers, boardUsersById, me])
 
     let primaryClass = 'Person'
     if (isMulti) {

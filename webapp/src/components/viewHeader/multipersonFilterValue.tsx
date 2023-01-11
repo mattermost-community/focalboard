@@ -26,7 +26,7 @@ type Props = {
 const MultiPersonFilterValue = (props: Props): JSX.Element => {
     const {filter, view} = props
     const intl = useIntl()
-    const emptyDisplayValue = intl.formatMessage({id: 'ConfirmPerson.empty', defaultMessage: '(empty)'})
+    const emptyDisplayValue = intl.formatMessage({id: 'ConfirmPerson.search', defaultMessage: 'Search...'})
 
     return (
         <PersonSelector
@@ -35,6 +35,7 @@ const MultiPersonFilterValue = (props: Props): JSX.Element => {
             isMulti={true}
             readOnly={false}
             emptyDisplayValue={emptyDisplayValue}
+            showMe={true}
             closeMenuOnSelect={false}
             onChange={(items: MultiValue<IUser>, action) => {
                 const filterIndex = view.fields.filter.filters.indexOf(filter)
