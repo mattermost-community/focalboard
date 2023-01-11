@@ -3,8 +3,6 @@
 
 import {IntlShape} from 'react-intl'
 
-import {FilterValueType} from './properties/types'
-
 import {Block, createBlock} from './blocks/block'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
@@ -153,20 +151,6 @@ class OctoUtils {
             Utils.assertFailure()
             return '(unknown)'
         }
-    }
-
-    static filterConditionDefault(filterValueType: FilterValueType): FilterCondition {
-        if (filterValueType === 'options') {
-            return 'includes'
-        } else if (filterValueType === 'boolean') {
-            return 'isSet'
-        } else if (filterValueType === 'text') {
-            return 'is'
-        } else if (filterValueType === 'date') {
-            return 'is'
-        }
-        Utils.assertFailure()
-        return 'includes'
     }
 }
 
