@@ -160,6 +160,37 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
                         </>}
+                    {propertyType.filterValueType === 'date' &&
+                        <>
+                            <Menu.Text
+                                id='is'
+                                name={intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isBefore'
+                                name={intl.formatMessage({id: 'Filter.isbefore', defaultMessage: 'is before'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isAfter'
+                                name={intl.formatMessage({id: 'Filter.isafter', defaultMessage: 'is after'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.type === 'date' &&
+                        <>
+                            <Menu.Text
+                                id='isSet'
+                                name={intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isNotSet'
+                                name={intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
                 </Menu>
             </MenuWrapper>
             <FilterValue

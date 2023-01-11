@@ -386,6 +386,8 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on delet
             </div>
             <div />
             <div />
+            <div />
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -594,6 +596,8 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on doesn
                 />
               </div>
             </div>
+            <div />
+            <div />
             <div />
             <div />
           </div>
@@ -806,6 +810,8 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on inclu
             </div>
             <div />
             <div />
+            <div />
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -1016,6 +1022,8 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is em
             </div>
             <div />
             <div />
+            <div />
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -1224,6 +1232,8 @@ exports[`components/viewHeader/filterEntry return filterEntry and click on is no
                 />
               </div>
             </div>
+            <div />
+            <div />
             <div />
             <div />
           </div>
@@ -1661,6 +1671,8 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
               </div>
             </div>
             <div />
+            <div />
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"
@@ -1696,6 +1708,302 @@ exports[`components/viewHeader/filterEntry return filterEntry for boolean field 
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Delete
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/filterEntry return filterEntry for date field 1`] = `
+<div>
+  <div
+    class="FilterEntry"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Property 3
+        </span>
+      </button>
+    </div>
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          is
+        </span>
+      </button>
+    </div>
+    <div
+      class="DateFilter empty "
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Empty
+        </span>
+      </button>
+    </div>
+    <div
+      class="octo-spacer"
+    />
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Delete
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`components/viewHeader/filterEntry return filterEntry for date field 2`] = `
+<div>
+  <div
+    class="FilterEntry"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Property 3
+        </span>
+      </button>
+    </div>
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper override menuOpened"
+      role="button"
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          is
+        </span>
+      </button>
+      <div
+        class="Menu noselect bottom "
+      >
+        <div
+          class="menu-contents"
+        >
+          <div
+            class="menu-options"
+          >
+            <div />
+            <div />
+            <div />
+            <div>
+              <div
+                aria-label="is"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    is
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                aria-label="is before"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    is before
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                aria-label="is after"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    is after
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="is set"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    is set
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                aria-label="is not set"
+                class="MenuOption TextOption menu-option"
+                role="button"
+              >
+                <div
+                  class="d-flex"
+                >
+                  <div
+                    class="noicon"
+                  />
+                </div>
+                <div
+                  class="menu-option__content"
+                >
+                  <div
+                    class="menu-name"
+                  >
+                    is not set
+                  </div>
+                </div>
+                <div
+                  class="noicon"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="menu-spacer hideOnWidescreen"
+          />
+          <div
+            class="menu-options hideOnWidescreen"
+          >
+            <div
+              aria-label="Cancel"
+              class="MenuOption TextOption menu-option menu-cancel"
+              role="button"
+            >
+              <div
+                class="d-flex"
+              >
+                <div
+                  class="noicon"
+                />
+              </div>
+              <div
+                class="menu-option__content"
+              >
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
+              </div>
+              <div
+                class="noicon"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="DateFilter empty "
+    >
+      <button
+        class="Button"
+        type="button"
+      >
+        <span>
+          Empty
+        </span>
+      </button>
     </div>
     <div
       class="octo-spacer"
@@ -1986,6 +2294,8 @@ exports[`components/viewHeader/filterEntry return filterEntry for text field 2`]
                 />
               </div>
             </div>
+            <div />
+            <div />
           </div>
           <div
             class="menu-spacer hideOnWidescreen"

@@ -27,6 +27,7 @@ const board = TestBlockFactory.createBoard()
 const activeView = TestBlockFactory.createBoardView(board)
 board.cardProperties[1].type = 'checkbox'
 board.cardProperties[2].type = 'text'
+board.cardProperties[3].type = 'date'
 const statusFilter: FilterClause = {
     propertyId: board.cardProperties[0].id,
     condition: 'includes',
@@ -42,6 +43,12 @@ const textFilter: FilterClause = {
     condition: 'contains',
     values: [],
 }
+const dateFilter: FilterClause = {
+    propertyId: board.cardProperties[3].id,
+    condition: 'is',
+    values: [],
+}
+
 const unknownFilter: FilterClause = {
     propertyId: 'unknown',
     condition: 'includes',
@@ -112,6 +119,26 @@ describe('components/viewHeader/filterEntry', () => {
                         view={activeView}
                         conditionClicked={mockedConditionClicked}
                         filter={textFilter}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+        const buttonElement = screen.getAllByRole('button', {name: 'menuwrapper'})[1]
+        userEvent.click(buttonElement)
+        expect(container).toMatchSnapshot()
+    })
+
+    test('return filterEntry for date field', () => {
+        activeView.fields.filter.filters = [dateFilter]
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <FilterEntry
+                        board={board}
+                        view={activeView}
+                        conditionClicked={mockedConditionClicked}
+                        filter={dateFilter}
                     />
                 </ReduxProvider>,
             ),
