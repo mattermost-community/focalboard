@@ -1,8 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
+
 import {useIntl} from 'react-intl'
 
+import {PropertyType} from '../../properties/types'
 import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'
 import {createFilterGroup} from '../../blocks/filterGroup'
@@ -13,7 +15,8 @@ import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import Editable from '../../widgets/editable'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {PropertyType} from '../../properties/types'
+
+import DateFilter from './dateFilter'
 
 import './filterValue.scss'
 
@@ -58,6 +61,19 @@ const filterValue = (props: Props): JSX.Element|null => {
                     newFilter.values = [value]
                     mutator.changeViewFilter(view.boardId, view.id, view.fields.filter, filterGroup)
                 }}
+            />
+        )
+    }
+
+    if (propertyType.filterValueType === 'date') {
+        if (filter.condition === 'isSet' || filter.condition === 'isNotSet') {
+            return null
+        }
+
+        return (
+            <DateFilter
+                view={view}
+                filter={filter}
             />
         )
     }

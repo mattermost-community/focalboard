@@ -14,15 +14,14 @@ import {useSortable} from '../../hooks/sortable'
 import {Utils} from '../../utils'
 
 import PropertyValueElement from '../propertyValueElement'
-import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import IconButton from '../../widgets/buttons/iconButton'
 import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
-import DeleteIcon from '../../widgets/icons/delete'
 import Tooltip from '../../widgets/tooltip'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
 import {useColumnResize} from './tableColumnResizeContext'
 
@@ -39,7 +38,7 @@ type Props = {
     isSelected: boolean
     focusOnMount: boolean
     isLastCard: boolean
-    showCard: (cardId: string) => void
+    showCard: (cardId?: string) => void
     readonly: boolean
     addCard: (groupByOptionId?: string) => Promise<void>
     onClick?: (e: React.MouseEvent<HTMLDivElement>, card: Card) => void
@@ -184,14 +183,27 @@ const TableRow = (props: Props) => {
                                 icon={<OptionsIcon/>}
                             />
                         </Tooltip>
-                        <Menu>
-                            <Menu.Text
-                                icon={<DeleteIcon/>}
-                                id='delete'
-                                name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
-                                onClick={handleDeleteButtonOnClick}
-                            />
-                        </Menu>
+                        <CardActionsMenu
+                            cardId={card.id}
+                            boardId={card.boardId}
+                            onClickDelete={handleDeleteButtonOnClick}
+                            onClickDuplicate={() => {
+                                mutator.duplicateCard(
+                                    card.id,
+                                    board.id,
+                                    false,
+                                    intl.formatMessage({id: 'TableRow.DuplicateCard', defaultMessage: 'duplicate card'}),
+                                    false,
+                                    {},
+                                    async (newCardId) => {
+                                        props.showCard(newCardId)
+                                    },
+                                    async () => {
+                                        props.showCard(undefined)
+                                    },
+                                )
+                            }}
+                        />
                     </MenuWrapper>
                 )}
 
