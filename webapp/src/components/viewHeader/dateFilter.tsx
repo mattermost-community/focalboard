@@ -128,6 +128,7 @@ function DateFilter(props: Props): JSX.Element {
         buttonText = intl.formatMessage({id: 'DateFilter.empty', defaultMessage: 'Empty'})
     }
 
+    const className = 'DateFilter'
     return (
         <div className={`DateFilter ${displayValue ? '' : 'empty'} `}>
             <Button
