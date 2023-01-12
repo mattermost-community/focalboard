@@ -219,6 +219,13 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		lineNum++
 	}
 
+	// loop to remove the people how are not part of the team and system
+	for i := len(boardMembers) - 1; i >= 0; i-- {
+		if _, err := a.GetUser(boardMembers[i].UserID); err != nil {
+			boardMembers = append(boardMembers[:i], boardMembers[i+1:]...)
+		}
+	}
+
 	a.fixBoardsandBlocks(boardsAndBlocks, opt)
 
 	var err error
@@ -248,22 +255,19 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 
 	for _, board := range boardsAndBlocks.Boards {
 		for _, boardMember := range boardMembers {
-			_, err := a.GetUser(boardMember.UserID)
-			if err == nil {
-				bm := &model.BoardMember{
-					BoardID:         board.ID,
-					UserID:          boardMember.UserID,
-					Roles:           boardMember.Roles,
-					MinimumRole:     boardMember.MinimumRole,
-					SchemeAdmin:     boardMember.SchemeAdmin,
-					SchemeEditor:    boardMember.SchemeEditor,
-					SchemeCommenter: boardMember.SchemeCommenter,
-					SchemeViewer:    boardMember.SchemeViewer,
-					Synthetic:       boardMember.Synthetic,
-				}
-				if _, err2 := a.AddMemberToBoard(bm); err2 != nil {
-					return "", fmt.Errorf("cannot add member to board: %w", err2)
-				}
+			bm := &model.BoardMember{
+				BoardID:         board.ID,
+				UserID:          boardMember.UserID,
+				Roles:           boardMember.Roles,
+				MinimumRole:     boardMember.MinimumRole,
+				SchemeAdmin:     boardMember.SchemeAdmin,
+				SchemeEditor:    boardMember.SchemeEditor,
+				SchemeCommenter: boardMember.SchemeCommenter,
+				SchemeViewer:    boardMember.SchemeViewer,
+				Synthetic:       boardMember.Synthetic,
+			}
+			if _, err2 := a.AddMemberToBoard(bm); err2 != nil {
+				return "", fmt.Errorf("cannot add member to board: %w", err2)
 			}
 		}
 	}

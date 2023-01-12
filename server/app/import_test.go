@@ -84,6 +84,21 @@ func TestApp_ImportArchive(t *testing.T) {
 			BoardID: board.ID,
 			UserID:  "nto73edn5ir6ifimo5a53y1dwa",
 		}
+
+		user1 := &model.User{
+			ID: "f1tydgc697fcbp8ampr6881jea",
+		}
+
+		user2 := &model.User{
+			ID: "hxxzooc3ff8cubsgtcmpn8733e",
+		}
+
+		user3 := &model.User{
+			ID: "nto73edn5ir6ifimo5a53y1dwa",
+		}
+
+
+
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.AssignableToTypeOf(&model.BoardsAndBlocks{}), "f1tydgc697fcbp8ampr6881jea").Return(babs, nil)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{bm1, bm2, bm3}, nil)
 		th.Store.EXPECT().GetUserCategoryBoards("f1tydgc697fcbp8ampr6881jea", "test-team")
@@ -99,6 +114,9 @@ func TestApp_ImportArchive(t *testing.T) {
 		th.Store.EXPECT().GetMemberForBoard(board.ID, "f1tydgc697fcbp8ampr6881jea").AnyTimes().Return(bm1, nil)
 		th.Store.EXPECT().GetMemberForBoard(board.ID, "hxxzooc3ff8cubsgtcmpn8733e").AnyTimes().Return(bm2, nil)
 		th.Store.EXPECT().GetMemberForBoard(board.ID, "nto73edn5ir6ifimo5a53y1dwa").AnyTimes().Return(bm3, nil)
+		th.Store.EXPECT().GetUserByID("f1tydgc697fcbp8ampr6881jea").AnyTimes().Return(user1, nil)
+		th.Store.EXPECT().GetUserByID("hxxzooc3ff8cubsgtcmpn8733e").AnyTimes().Return(user2, nil)
+		th.Store.EXPECT().GetUserByID("nto73edn5ir6ifimo5a53y1dwa").AnyTimes().Return(user3, nil)
 
 		boardID, err := th.App.ImportBoardJSONL(r, opts)
 		require.Equal(t, board.ID, boardID, "Board ID should be same")
