@@ -97,8 +97,6 @@ func TestApp_ImportArchive(t *testing.T) {
 			ID: "nto73edn5ir6ifimo5a53y1dwa",
 		}
 
-
-
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.AssignableToTypeOf(&model.BoardsAndBlocks{}), "f1tydgc697fcbp8ampr6881jea").Return(babs, nil)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{bm1, bm2, bm3}, nil)
 		th.Store.EXPECT().GetUserCategoryBoards("f1tydgc697fcbp8ampr6881jea", "test-team")
