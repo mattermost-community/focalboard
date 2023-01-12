@@ -111,6 +111,10 @@
     .section-half--reverse .section-half__visual {
         margin: 0 120px 0 0;
     }
+
+    .homepage__intro {
+        height: 970px;
+    }
 }
 
 .section-half__container {
