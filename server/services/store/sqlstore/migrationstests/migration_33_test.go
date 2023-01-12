@@ -53,10 +53,11 @@ func Test33RemoveDeletedCategoryBoards(t *testing.T) {
 		th.f.MigrateToStep(33)
 
 		// and verify record count again.
-		// The soft deleted records should have been removed from the DB now
+		// Since there were no soft-deleted records, nothing should have been
+		// deleted from the database.
 		err = th.f.DB().Get(&count, "SELECT COUNT(*) FROM focalboard_category_boards")
 		require.NoError(t, err)
-		require.Equal(t, 2, count)
+		require.Equal(t, 5, count)
 
 	})
 }
