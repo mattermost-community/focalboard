@@ -22,6 +22,8 @@
     background-color: var(--denim05);
     color: white;
     padding: 160px 0 64px;
+    display: flex;
+    align-items: center;
 }
 
 .homepage__intro .container-fluid {
