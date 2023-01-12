@@ -640,7 +640,7 @@ func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constrain
 				AND table_name = '[[table_name]]'
 				) > 0,
 				'SELECT 1;',
-				'ALTER TABLE [[norm_table_name]] ADD CONSTRAINT [[constraint_definition]];'
+				'ALTER TABLE [[norm_table_name]] ADD CONSTRAINT [[constraint_name]] [[constraint_definition]];'
 			));
 			PREPARE addConstraintIfNeeded FROM @stmt;
 			EXECUTE addConstraintIfNeeded;
