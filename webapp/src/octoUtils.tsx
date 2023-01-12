@@ -136,6 +136,17 @@ class OctoUtils {
                 return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
             }
             }
+        } else if (filterValueType === 'date') {
+            switch (filterCondition) {
+            case 'is': return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
+            case 'isBefore': return intl.formatMessage({id: 'Filter.is-before', defaultMessage: 'is before'})
+            case 'isAfter': return intl.formatMessage({id: 'Filter.is-after', defaultMessage: 'is after'})
+            case 'isSet': return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
+            case 'isNotSet': return intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})
+            default: {
+                return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
+            }
+            }
         } else {
             Utils.assertFailure()
             return '(unknown)'
