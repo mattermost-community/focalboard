@@ -10,6 +10,14 @@
         bottom: 0;
     }
 
+    &.size--small {
+        .dialog {
+            max-width: 512px;
+            width: 100%;
+            height: max-content;
+        }
+    }
+
     .dialog-title {
         margin: 0;
         font-weight: 600;
@@ -20,10 +28,6 @@
     .dialog-subtitle {
         font-size: 12px;
         margin-top: 8px;
-    }
-
-    .dialog__close {
-        margin: 0 -14px 0 0;
     }
 
     .backdrop {
@@ -106,7 +110,7 @@
         .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px 32px;
+            padding: 24px 0;
             justify-content: space-between;
             align-items: flex-start;
         }
@@ -116,6 +120,7 @@
             gap: 8px;
             align-items: center;
             height: 28px;
+            margin-right: 16px;
         }
 
         > .CardDetail {

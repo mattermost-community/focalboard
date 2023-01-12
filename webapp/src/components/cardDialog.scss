@@ -1,14 +1,3 @@
-.Dialog {
-    &.cardDialog {
-        .dialog {
-            @media not screen and (max-width: 975px) {
-                width: 800px;
-                max-width: 100%;
-            }
-        }
-    }
-}
-
 .cardFollowBtn {
     display: inline-flex;
 

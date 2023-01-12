@@ -16,15 +16,24 @@
             .inputWrapper {
                 position: relative;
 
+                .inputWrapper__close-wrapper {
+                    position: absolute;
+                    height: 100%;
+                    top: 0;
+                    right: 0;
+                    display: flex;
+                    align-items: center;
+                    padding-right: 12px;
+                }
+
                 .CloseCircle {
                     cursor: pointer;
-                    position: absolute;
                     font-size: 18px;
-                    width: 16px;
-                    height: 16px;
-                    right: 16px;
-                    top: 6px;
                     color: rgba(var(--center-channel-color-rgb), 0.64);
+
+                    &:hover {
+                        color: rgba(var(--center-channel-color-rgb), 0.8);
+                    }
                 }
             }
 
