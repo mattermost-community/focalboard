@@ -130,6 +130,8 @@ const PersonSelector = (props: Props): JSX.Element => {
                     roles: me.roles,
                 })
                 returnUsers.push(...boardUsers.filter((u) => u.id !== me.id))
+            } else {
+                returnUsers.push(...boardUsers)
             }
             if (value) {
                 return returnUsers.filter((u) => {
