@@ -239,20 +239,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		return "", fmt.Errorf("error inserting archive blocks: %w", err)
 	}
 
-	// add user to all the new boards (if not the fake system user).
-	if opt.ModifiedBy != model.SystemUserID {
-		for _, board := range boardsAndBlocks.Boards {
-			boardMember := &model.BoardMember{
-				BoardID:     board.ID,
-				UserID:      opt.ModifiedBy,
-				SchemeAdmin: true,
-			}
-			if _, err := a.AddMemberToBoard(boardMember); err != nil {
-				return "", fmt.Errorf("cannot add member to board: %w", err)
-			}
-		}
-	}
-
+	// add users to all the new boards (if not the fake system user).
 	for _, board := range boardsAndBlocks.Boards {
 		for _, boardMember := range boardMembers {
 			bm := &model.BoardMember{
