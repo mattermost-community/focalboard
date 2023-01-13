@@ -113,16 +113,37 @@ func deleteTestBoard(t *testing.T, store store.Store, boardID string, userID str
 	require.NoError(t, err)
 }
 
-func extractBoardIDs(boards1, boards2 []*model.Board) []string {
-	ids := make([]string, 0, len(boards1)+len(boards2))
-	for _, b := range boards1 {
-		if b != nil {
-			ids = append(ids, b.ID)
+func extractIDs(t *testing.T, arr ...any) []string {
+	ids := make([]string, 0)
+
+	for _, item := range arr {
+		if item == nil {
+			continue
 		}
-	}
-	for _, b := range boards2 {
-		if b != nil {
-			ids = append(ids, b.ID)
+
+		switch tarr := item.(type) {
+		case []*model.Board:
+			for _, b := range tarr {
+				if b != nil {
+					ids = append(ids, b.ID)
+				}
+			}
+		case []model.BoardHistory:
+			for _, bh := range tarr {
+				ids = append(ids, bh.ID)
+			}
+		case []*model.Block:
+			for _, b := range tarr {
+				if b != nil {
+					ids = append(ids, b.ID)
+				}
+			}
+		case []model.BlockHistory:
+			for _, bh := range tarr {
+				ids = append(ids, bh.ID)
+			}
+		default:
+			t.Errorf("unsupported type %T extracting board ID", item)
 		}
 	}
 	return ids

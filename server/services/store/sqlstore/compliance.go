@@ -136,7 +136,7 @@ func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.Query
 			"bh.modified_by",
 		).
 		From(s.tablePrefix+"blocks_history as bh").
-		Join(s.tablePrefix+"boards as brd on brd.id=bh.board_id").
+		Join(s.tablePrefix+"boards_history as brd on brd.id=bh.board_id").
 		Where(sq.Gt{"bh.update_at": opts.ModifiedSince}).
 		GroupBy("bh.id", "brd.team_id", "bh.board_id", "bh.type", "bh.delete_at", "bh.created_by", "bh.modified_by").
 		OrderBy("lastUpdateAt desc")
