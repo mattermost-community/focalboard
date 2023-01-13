@@ -653,7 +653,7 @@ func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constrain
 		BEGIN
 		IF NOT EXISTS (
 			SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
-				WHERE constraint_catalog = '[[schena]]'
+				WHERE constraint_schema = '[[schema]]'
 				AND constraint_name = '[[constraint_name]]'
 				AND constraint_type = '[[constraint_type]]'
 				AND table_name = '[[table_name]]'

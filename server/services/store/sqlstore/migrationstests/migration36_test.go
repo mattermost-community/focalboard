@@ -27,6 +27,7 @@ func Test36AddUniqueConstraintToCategoryBoards(t *testing.T) {
 			"AND constraint_type = 'UNIQUE' " +
 			"AND table_name = 'focalboard_category_boards'"
 		th.f.DB().Get(&count, query)
+
 		require.Equal(t, 1, count)
 	})
 
@@ -47,15 +48,23 @@ func Test36AddUniqueConstraintToCategoryBoards(t *testing.T) {
 
 		if th.f.DB().DriverName() == "mysql" {
 			th.f.DB().Exec("alter table focalboard_category_boards add constraint unique_user_category_board UNIQUE(user_id, board_id);")
-			th.f.MigrateToStep(36)
 		} else if th.f.DB().DriverName() == "postgres" {
 			th.f.DB().Exec("ALTER TABLE focalboard_category_boards ADD CONSTRAINT unique_user_category_board UNIQUE(user_id, board_id);")
-			th.f.MigrateToStep(36)
+		}
+
+		th.f.MigrateToStep(36)
+
+		var schema string
+		if th.f.DB().DriverName() == "mysql" {
+			schema = "DATABASE()"
+		} else if th.f.DB().DriverName() == "postgres" {
+			schema = "'public'"
 		}
 
 		var count int
 		query := "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS " +
-			"WHERE constraint_name = 'unique_user_category_board' " +
+			"WHERE constraint_schema =  " + schema + " " +
+			"AND constraint_name = 'unique_user_category_board' " +
 			"AND constraint_type = 'UNIQUE' " +
 			"AND table_name = 'focalboard_category_boards'"
 		th.f.DB().Get(&count, query)
