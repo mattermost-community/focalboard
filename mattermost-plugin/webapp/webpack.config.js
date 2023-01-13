@@ -172,6 +172,7 @@ if (TARGET_IS_PRODUCT) {
 
     config.output = {
         path: path.join(__dirname, '/dist'),
+        chunkFilename: '[name].[contenthash].js',
     };
 } else {
     config.resolve.alias['react-intl'] = path.resolve(__dirname, '../../webapp/node_modules/react-intl/');
