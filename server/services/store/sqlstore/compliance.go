@@ -80,14 +80,17 @@ func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.Query
 			"bh.created_by",
 			"bh.modified_by",
 		).
-		From(s.tablePrefix+"boards_history as bh").
-		Where(sq.Gt{"bh.update_at": opts.ModifiedSince}).
-		GroupBy("bh.id", "bh.team_id", "bh.delete_at", "bh.created_by", "bh.modified_by").
-		OrderBy("decendentLastUpdateAt desc")
+		From(s.tablePrefix + "boards_history as bh")
 
 	if !opts.IncludeDeleted {
-		query = query.Where(sq.Eq{"bh.delete_at": 0})
+		// filtering out deleted boards; join with boards table to ensure no history
+		// for deleted boards are returned. Deleted boards won't exist in boards table.
+		query = query.Join(s.tablePrefix + "boards as b ON b.id=bh.id")
 	}
+
+	query = query.Where(sq.Gt{"bh.update_at": opts.ModifiedSince}).
+		GroupBy("bh.id", "bh.team_id", "bh.delete_at", "bh.created_by", "bh.modified_by").
+		OrderBy("decendentLastUpdateAt desc", "bh.id")
 
 	if opts.TeamID != "" {
 		query = query.Where(sq.Eq{"bh.team_id": opts.TeamID})
@@ -135,15 +138,18 @@ func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.Query
 			"bh.created_by",
 			"bh.modified_by",
 		).
-		From(s.tablePrefix+"blocks_history as bh").
-		Join(s.tablePrefix+"boards_history as brd on brd.id=bh.board_id").
-		Where(sq.Gt{"bh.update_at": opts.ModifiedSince}).
-		GroupBy("bh.id", "brd.team_id", "bh.board_id", "bh.type", "bh.delete_at", "bh.created_by", "bh.modified_by").
-		OrderBy("lastUpdateAt desc")
+		From(s.tablePrefix + "blocks_history as bh").
+		Join(s.tablePrefix + "boards_history as brd on brd.id=bh.board_id")
 
 	if !opts.IncludeDeleted {
-		query = query.Where(sq.Eq{"bh.delete_at": 0})
+		// filtering out deleted blocks; join with blocks table to ensure no history
+		// for deleted blocks are returned. Deleted blocks won't exist in blocks table.
+		query = query.Join(s.tablePrefix + "blocks as b ON b.id=bh.id")
 	}
+
+	query = query.Where(sq.Gt{"bh.update_at": opts.ModifiedSince}).
+		GroupBy("bh.id", "brd.team_id", "bh.board_id", "bh.type", "bh.delete_at", "bh.created_by", "bh.modified_by").
+		OrderBy("lastUpdateAt desc", "bh.id")
 
 	if opts.TeamID != "" {
 		query = query.Where(sq.Eq{"brd.team_id": opts.TeamID})

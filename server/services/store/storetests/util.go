@@ -5,6 +5,7 @@ package storetests
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -146,5 +147,8 @@ func extractIDs(t *testing.T, arr ...any) []string {
 			t.Errorf("unsupported type %T extracting board ID", item)
 		}
 	}
+
+	// sort the ids to make it easier to compare lists of ids visually.
+	sort.Strings(ids)
 	return ids
 }

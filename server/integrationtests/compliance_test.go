@@ -154,7 +154,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		require.Nil(t, bchr)
 	})
 
-	t.Run("good call, no deleted", func(t *testing.T) {
+	t.Run("good call, exclude deleted", func(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t, true)
 		defer th.TearDown()
 
@@ -172,7 +172,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, false, testTeamID, 0, 0)
 		th.CheckOK(resp)
 		require.False(t, bchr.HasNext)
-		require.Len(t, bchr.Results, count) // both deleted boards have one non-deleted record each
+		require.Len(t, bchr.Results, count-2) // two boards deleted
 	})
 
 	t.Run("good call, include deleted", func(t *testing.T) {
@@ -287,7 +287,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, false, testTeamID, board.ID, 0, 0)
 		th.CheckOK(resp)
 		require.False(t, bchr.HasNext)
-		require.Len(t, bchr.Results, count) // both deleted cards have one non-deleted record each
+		require.Len(t, bchr.Results, count-2) // 2 blocks deleted
 	})
 
 	t.Run("good call, include deleted", func(t *testing.T) {

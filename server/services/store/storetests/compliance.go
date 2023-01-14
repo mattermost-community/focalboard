@@ -104,12 +104,21 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 	team1 := testTeamID
 	team2 := utils.NewID(utils.IDTypeTeam)
 
-	boardsAdded1 := createTestBoards(t, store, team1, testUserID, 10)
-	boardsAdded2 := createTestBoards(t, store, team2, testUserID, 7)
+	boardsTeam1 := createTestBoards(t, store, team1, testUserID, 11)
+	boardsTeam2 := createTestBoards(t, store, team2, testUserID, 7)
+	boardsAdded := make([]*model.Board, 0)
+	boardsAdded = append(boardsAdded, boardsTeam1...)
+	boardsAdded = append(boardsAdded, boardsTeam2...)
 
-	deleteTestBoard(t, store, boardsAdded1[0].ID, testUserID)
-	deleteTestBoard(t, store, boardsAdded1[1].ID, testUserID)
-	boardsDeleted1 := boardsAdded1[0:2]
+	deleteTestBoard(t, store, boardsTeam1[0].ID, testUserID)
+	deleteTestBoard(t, store, boardsTeam1[1].ID, testUserID)
+	boardsDeleted := boardsTeam1[0:2]
+	boardsTeam1 = boardsTeam1[2:]
+
+	t.Log("boardsTeam1: ", extractIDs(t, boardsTeam1))
+	t.Log("boardsTeam2: ", extractIDs(t, boardsTeam2))
+	t.Log("boardsAdded: ", extractIDs(t, boardsAdded))
+	t.Log("boardsDeleted: ", extractIDs(t, boardsDeleted))
 
 	t.Run("Invalid teamID", func(t *testing.T) {
 		opts := model.QueryBoardsComplianceHistoryOptions{
@@ -131,7 +140,7 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 		boardHistories, hasMore, err := store.GetBoardsComplianceHistory(opts)
 
 		// boardHistories should contain a record for each board added, plus a record for the 2 deleted.
-		assert.ElementsMatch(t, extractIDs(t, boardHistories), extractIDs(t, boardsAdded1, boardsAdded2, boardsDeleted1))
+		assert.ElementsMatch(t, extractIDs(t, boardHistories), extractIDs(t, boardsAdded, boardsDeleted))
 		assert.False(t, hasMore)
 		assert.NoError(t, err)
 	})
@@ -143,8 +152,8 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 
 		boardHistories, hasMore, err := store.GetBoardsComplianceHistory(opts)
 
-		// boardHistories should contain a record for each board added.
-		assert.ElementsMatch(t, extractIDs(t, boardHistories), extractIDs(t, boardsAdded1, boardsAdded2))
+		// boardHistories should contain a record for each board added, minus the two deleted.
+		assert.ElementsMatch(t, extractIDs(t, boardHistories), extractIDs(t, boardsTeam1, boardsTeam2))
 		assert.False(t, hasMore)
 		assert.NoError(t, err)
 	})
@@ -156,7 +165,7 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 
 		boardHistories, hasMore, err := store.GetBoardsComplianceHistory(opts)
 
-		assert.ElementsMatch(t, extractIDs(t, boardHistories), extractIDs(t, boardsAdded1))
+		assert.ElementsMatch(t, extractIDs(t, boardHistories), extractIDs(t, boardsTeam1))
 		assert.False(t, hasMore)
 		assert.NoError(t, err)
 	})
@@ -168,7 +177,7 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 		}
 
 		reps := 0
-		allHistories := make([]model.BoardHistory, 0, 20)
+		allHistories := make([]model.BoardHistory, 0)
 
 		for {
 			reps++
@@ -183,10 +192,9 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 			opts.Page++
 		}
 
-		assert.ElementsMatch(t, extractIDs(t, allHistories), extractIDs(t, boardsAdded1, boardsAdded2))
-
-		// 17 boards were added. Fetching 3 per page means 6 reps
-		assert.Equal(t, math.Floor(17/3)+1, float64(reps))
+		assert.ElementsMatch(t, extractIDs(t, allHistories), extractIDs(t, boardsTeam1, boardsTeam2))
+		expectedCount := len(boardsTeam1) + len(boardsTeam2)
+		assert.Equal(t, math.Floor(float64(expectedCount/opts.PerPage)+1), float64(reps))
 	})
 }
 
@@ -194,17 +202,17 @@ func testGetBlocksComplianceHistory(t *testing.T, store store.Store) {
 	team1 := testTeamID
 	team2 := utils.NewID(utils.IDTypeTeam)
 
-	boardsAdded1 := createTestBoards(t, store, team1, testUserID, 3)
-	boardsAdded2 := createTestBoards(t, store, team2, testUserID, 1)
+	boardsTeam1 := createTestBoards(t, store, team1, testUserID, 3)
+	boardsTeam2 := createTestBoards(t, store, team2, testUserID, 1)
 
 	// add cards (13 in total)
-	cardsAdded1B1 := createTestCards(t, store, testUserID, boardsAdded1[0].ID, 3)
-	cardsAdded1B2 := createTestCards(t, store, testUserID, boardsAdded1[1].ID, 5)
-	cardsAdded1B3 := createTestCards(t, store, testUserID, boardsAdded1[2].ID, 2)
-	cardsAdded2B1 := createTestCards(t, store, testUserID, boardsAdded2[0].ID, 3)
+	cards1Team1 := createTestCards(t, store, testUserID, boardsTeam1[0].ID, 3)
+	cards2Team1 := createTestCards(t, store, testUserID, boardsTeam1[1].ID, 5)
+	cards3Team1 := createTestCards(t, store, testUserID, boardsTeam1[2].ID, 2)
+	cards1Team2 := createTestCards(t, store, testUserID, boardsTeam2[0].ID, 3)
 
-	deleteTestBoard(t, store, boardsAdded1[0].ID, testUserID)
-	cardsDeleted := cardsAdded1B1
+	deleteTestBoard(t, store, boardsTeam1[0].ID, testUserID)
+	cardsDeleted := cards1Team1
 
 	t.Run("Invalid teamID", func(t *testing.T) {
 		opts := model.QueryBlocksComplianceHistoryOptions{
@@ -227,7 +235,7 @@ func testGetBlocksComplianceHistory(t *testing.T, store store.Store) {
 
 		// blockHistories should have records for all cards added, plus all cards deleted
 		assert.ElementsMatch(t, extractIDs(t, blockHistories, nil),
-			extractIDs(t, cardsAdded1B1, cardsAdded1B2, cardsAdded1B3, cardsAdded2B1, cardsDeleted))
+			extractIDs(t, cards1Team1, cards2Team1, cards3Team1, cards1Team2, cardsDeleted))
 		assert.False(t, hasMore)
 		assert.NoError(t, err)
 	})
@@ -237,9 +245,9 @@ func testGetBlocksComplianceHistory(t *testing.T, store store.Store) {
 
 		blockHistories, hasMore, err := store.GetBlocksComplianceHistory(opts)
 
-		// blockHistories should have records for all cards added
+		// blockHistories should have records for all cards added that have not been deleted
 		assert.ElementsMatch(t, extractIDs(t, blockHistories, nil),
-			extractIDs(t, cardsAdded1B1, cardsAdded1B2, cardsAdded1B3, cardsAdded2B1))
+			extractIDs(t, cards2Team1, cards3Team1, cards1Team2))
 		assert.False(t, hasMore)
 		assert.NoError(t, err)
 	})
@@ -251,7 +259,7 @@ func testGetBlocksComplianceHistory(t *testing.T, store store.Store) {
 
 		blockHistories, hasMore, err := store.GetBlocksComplianceHistory(opts)
 
-		assert.ElementsMatch(t, extractIDs(t, blockHistories), extractIDs(t, cardsAdded1B1, cardsAdded1B2, cardsAdded1B3))
+		assert.ElementsMatch(t, extractIDs(t, blockHistories), extractIDs(t, cards2Team1, cards3Team1))
 		assert.False(t, hasMore)
 		assert.NoError(t, err)
 	})
@@ -278,9 +286,9 @@ func testGetBlocksComplianceHistory(t *testing.T, store store.Store) {
 			opts.Page++
 		}
 
-		assert.ElementsMatch(t, extractIDs(t, allHistories), extractIDs(t, cardsAdded1B1, cardsAdded1B2, cardsAdded1B3, cardsAdded2B1))
+		assert.ElementsMatch(t, extractIDs(t, allHistories), extractIDs(t, cards2Team1, cards3Team1, cards1Team2))
 
-		// 13 cards were added. Fetching 3 per page means 5 reps
-		assert.Equal(t, math.Floor(13/3)+1, float64(reps))
+		expectedCount := len(cards2Team1) + len(cards3Team1) + len(cards1Team2)
+		assert.Equal(t, math.Floor(float64(expectedCount/opts.PerPage)+1), float64(reps))
 	})
 }
