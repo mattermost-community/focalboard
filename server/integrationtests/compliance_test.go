@@ -269,7 +269,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		require.Nil(t, bchr)
 	})
 
-	t.Run("good call, no deleted", func(t *testing.T) {
+	t.Run("good call, exclude deleted", func(t *testing.T) {
 		th, clients := setupTestHelperForCompliance(t, true)
 		defer th.TearDown()
 

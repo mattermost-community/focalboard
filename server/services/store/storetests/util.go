@@ -114,6 +114,8 @@ func deleteTestBoard(t *testing.T, store store.Store, boardID string, userID str
 	require.NoError(t, err)
 }
 
+// extractIDs is a test helper that extracts a sorted slice of IDs from slices of various struct types.
+// Might have used generics here except that would require implementing a `GetID` method on each type.
 func extractIDs(t *testing.T, arr ...any) []string {
 	ids := make([]string, 0)
 
