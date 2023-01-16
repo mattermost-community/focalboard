@@ -70,14 +70,6 @@
             }
         }
 
-        @media screen and (max-width: 975px) {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
         > * {
             flex-shrink: 0;
         }
@@ -121,24 +113,6 @@
             align-items: center;
             height: 28px;
             margin-right: 16px;
-        }
-
-        > .CardDetail {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-
-            @media not screen and (max-width: 975px) {
-                padding: 10px 126px;
-            }
-
-            @media screen and (max-width: 975px) {
-                padding: 10px;
-            }
-        }
-
-        > .CardDetail--fullwidth {
-            padding-left: 78px;
         }
     }
 
