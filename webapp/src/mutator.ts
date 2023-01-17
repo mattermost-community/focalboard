@@ -665,19 +665,28 @@ class Mutator {
         const newBlockIDs: string[] = []
 
         if (propertyTemplate.type !== newType) {
-            if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') { // If the old type was either select or multiselect
+            if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect' ||
+                (propertyTemplate.type === 'person' || propertyTemplate.type === 'multiPerson')) { // If the old type was either select or multiselect
                 const isNewTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
+                const isNewTypePersonOrMulti = newType === 'person' || newType === 'multiPerson'
 
                 for (const card of cards) {
-                    const oldValue = Array.isArray(card.fields.properties[propertyTemplate.id]) ? (card.fields.properties[propertyTemplate.id].length > 0 && card.fields.properties[propertyTemplate.id][0]) : card.fields.properties[propertyTemplate.id]
+                    const oldValue = Array.isArray(card.fields.properties[propertyTemplate.id]) ? (card.fields.properties[propertyTemplate.id].length > 0 && card.fields.properties[propertyTemplate.id][0] as string) : card.fields.properties[propertyTemplate.id] as string
                     if (oldValue) {
-                        const newValue = isNewTypeSelectOrMulti ? propertyTemplate.options.find((o) => o.id === oldValue)?.id : propertyTemplate.options.find((o) => o.id === oldValue)?.value
-                        const newCard = createCard(card)
+                        let newValue: string | undefined
+                        if (isNewTypeSelectOrMulti) {
+                            newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.id
+                        } else if (isNewTypePersonOrMulti) {
+                            newValue = oldValue
+                        } else if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') {
+                            newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.value
+                        }
 
+                        const newCard = createCard(card)
                         if (newValue) {
                             newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [newValue] : newValue
                         } else {
-                            // This was an invalid select option, so delete it
+                            // This was an invalid select option or old person id, so delete it
                             delete newCard.fields.properties[propertyTemplate.id]
                         }
 
@@ -708,6 +717,18 @@ class Mutator {
                         const newCard = createCard(card)
                         newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [option.id] : option.id
 
+                        newBlocks.push(newCard)
+                        newBlockIDs.push(newCard.id)
+                        oldBlocks.push(card)
+                    }
+                }
+            } else if (newType === 'person' || newType === 'multiPerson') { // if the new type is either person or multiperson
+                // Clear old values
+                for (const card of cards) {
+                    const oldValue = card.fields.properties[propertyTemplate.id] as string
+                    if (oldValue) {
+                        const newCard = createCard(card)
+                        delete newCard.fields.properties[propertyTemplate.id]
                         newBlocks.push(newCard)
                         newBlockIDs.push(newCard.id)
                         oldBlocks.push(card)
