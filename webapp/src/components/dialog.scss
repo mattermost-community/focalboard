@@ -10,6 +10,14 @@
         bottom: 0;
     }
 
+    &.size--small {
+        .dialog {
+            max-width: 512px;
+            width: 100%;
+            height: max-content;
+        }
+    }
+
     .dialog-title {
         margin: 0;
         font-weight: 600;
@@ -20,10 +28,6 @@
     .dialog-subtitle {
         font-size: 12px;
         margin-top: 8px;
-    }
-
-    .dialog__close {
-        margin: 0 -14px 0 0;
     }
 
     .backdrop {
@@ -66,14 +70,6 @@
             }
         }
 
-        @media screen and (max-width: 975px) {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-
         > * {
             flex-shrink: 0;
         }
@@ -106,7 +102,7 @@
         .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px 32px;
+            padding: 24px 0;
             justify-content: space-between;
             align-items: flex-start;
         }
@@ -116,24 +112,7 @@
             gap: 8px;
             align-items: center;
             height: 28px;
-        }
-
-        > .CardDetail {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-
-            @media not screen and (max-width: 975px) {
-                padding: 10px 126px;
-            }
-
-            @media screen and (max-width: 975px) {
-                padding: 10px;
-            }
-        }
-
-        > .CardDetail--fullwidth {
-            padding-left: 78px;
+            margin-right: 16px;
         }
     }
 
