@@ -8,6 +8,8 @@ import {generatePath, match as routerMatch} from 'react-router-dom'
 
 import {History} from 'history'
 
+import {over} from 'lodash'
+
 import {IUser} from './user'
 
 import {Block} from './blocks/block'
@@ -582,13 +584,16 @@ class Utils {
         return frontendBaseURL
     }
 
-    static buildURL(path: string, absolute?: boolean): string {
+    static buildURL(path: string, absolute?: boolean, frontend?: boolean): string {
+        console.log(`!Utils.isFocalboardPlugin(): ${!Utils.isFocalboardPlugin()}`)
+        console.log(`process.env.TARGET_IS_PRODUCT: ${process.env.TARGET_IS_PRODUCT}`)
+
         /* eslint-disable no-process-env */
-        if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
+        if (!Utils.isFocalboardPlugin()) {
             return path
         }
 
-        const baseURL = Utils.getBaseURL()
+        const baseURL = frontend ? Utils.getFrontendBaseURL() : Utils.getBaseURL()
         let finalPath = baseURL + path
         if (path.indexOf('/') !== 0) {
             finalPath = baseURL + '/' + path
@@ -608,6 +613,10 @@ class Utils {
 
     static isFocalboardPlugin(): boolean {
         return Boolean(window.isFocalboardPlugin)
+    }
+
+    static isFocalboardProduct(): boolean {
+        return Boolean(process.env.TARGET_IS_PRODUCT)
     }
 
     // this is a temporary solution while we're using legacy routes
