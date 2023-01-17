@@ -1,10 +1,25 @@
-.Dialog {
-    &.cardDialog {
-        .dialog {
+.cardDialog {
+    .dialog {
+        width: 100%;
+        top: 0;
+        height: 100%;
+
+        >.CardDetail {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
             @media not screen and (max-width: 975px) {
-                width: 800px;
-                max-width: 100%;
+                padding: 10px 126px;
             }
+
+            @media screen and (max-width: 975px) {
+                padding: 16px 32px;
+            }
+        }
+
+        >.CardDetail--fullwidth {
+            padding-left: 78px;
         }
     }
 }
