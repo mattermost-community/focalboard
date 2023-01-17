@@ -6,7 +6,7 @@ exports[`components/boardSelector escape button should unmount the component 1`]
     class="focalboard-body"
   >
     <div
-      class="Dialog dialog-back BoardSelector"
+      class="Dialog dialog-back BoardSelector size--medium"
     >
       <div
         class="backdrop"
@@ -111,7 +111,7 @@ exports[`components/boardSelector renders with no results 1`] = `
     class="focalboard-body"
   >
     <div
-      class="Dialog dialog-back BoardSelector"
+      class="Dialog dialog-back BoardSelector size--medium"
     >
       <div
         class="backdrop"
@@ -217,7 +217,7 @@ exports[`components/boardSelector renders with some results 1`] = `
     class="focalboard-body"
   >
     <div
-      class="Dialog dialog-back BoardSelector"
+      class="Dialog dialog-back BoardSelector size--medium"
     >
       <div
         class="backdrop"
@@ -421,7 +421,7 @@ exports[`components/boardSelector renders without start searching 1`] = `
     class="focalboard-body"
   >
     <div
-      class="Dialog dialog-back BoardSelector"
+      class="Dialog dialog-back BoardSelector size--medium"
     >
       <div
         class="backdrop"
