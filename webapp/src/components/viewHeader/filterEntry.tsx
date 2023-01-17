@@ -76,6 +76,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                                 if (newFilter.propertyId !== optionId) {
                                     newFilter.propertyId = optionId
+                                    newFilter.condition = OctoUtils.filterConditionValidOrDefault(propsRegistry.get(o.type).filterValueType, newFilter.condition)
                                     newFilter.values = []
                                     mutator.changeViewFilter(props.board.id, view.id, view.fields.filter, filterGroup)
                                 }

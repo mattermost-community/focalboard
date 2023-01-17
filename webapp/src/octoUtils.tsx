@@ -3,6 +3,7 @@
 
 import {IntlShape} from 'react-intl'
 
+import {FilterValueType} from './properties/types'
 import {Block, createBlock} from './blocks/block'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
@@ -152,6 +153,57 @@ class OctoUtils {
             return '(unknown)'
         }
     }
-}
 
+    static filterConditionValidOrDefault(filterValueType: FilterValueType, currentFilterCondition: FilterCondition): FilterCondition {
+        if (filterValueType === 'options') {
+            switch (currentFilterCondition) {
+            case 'includes':
+            case 'notIncludes':
+            case 'isEmpty':
+            case 'isNotEmpty':
+                return currentFilterCondition
+            default: {
+                return 'includes'
+            }
+            }
+        } else if (filterValueType === 'boolean') {
+            switch (currentFilterCondition) {
+            case 'isSet':
+            case 'isNotSet':
+                return currentFilterCondition
+            default: {
+                return 'isSet'
+            }
+            }
+        } else if (filterValueType === 'text') {
+            switch (currentFilterCondition) {
+            case 'is':
+            case 'contains':
+            case 'notContains':
+            case 'startsWith':
+            case 'notStartsWith':
+            case 'endsWith':
+            case 'notEndsWith':
+                return currentFilterCondition
+            default: {
+                return 'is'
+            }
+            }
+        } else if (filterValueType === 'date') {
+            switch (currentFilterCondition) {
+            case 'is':
+            case 'isBefore':
+            case 'isAfter':
+            case 'isSet':
+            case 'isNotSet':
+                return currentFilterCondition
+            default: {
+                return 'is'
+            }
+            }
+        }
+        Utils.assertFailure()
+        return 'includes'
+    }
+}
 export {OctoUtils}
