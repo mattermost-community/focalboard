@@ -17,7 +17,7 @@ func Test37MigrateHiddenBoardIDTest(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		if th.f.DB().DriverName() != "sqlite3" {
+		if th.IsMySQL() || th.IsPostgres() {
 			return
 		}
 
@@ -48,7 +48,7 @@ func Test37MigrateHiddenBoardIDTest(t *testing.T) {
 		th, tearDown := SetupPluginTestHelper(t)
 		defer tearDown()
 
-		if th.f.DB().DriverName() == "sqlite3" {
+		if th.IsSQLite() {
 			return
 		}
 
@@ -95,7 +95,7 @@ func Test37MigrateHiddenBoardIDTest(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		if th.f.DB().DriverName() != "sqlite3" {
+		if th.IsMySQL() || th.IsPostgres() {
 			return
 		}
 
@@ -115,7 +115,7 @@ func Test37MigrateHiddenBoardIDTest(t *testing.T) {
 		th, tearDown := SetupPluginTestHelper(t)
 		defer tearDown()
 
-		if th.f.DB().DriverName() == "sqlite3" {
+		if th.IsSQLite() {
 			return
 		}
 

@@ -113,8 +113,6 @@ func execTemplate(w io.Writer, name string, opts DiffConvOpts, def string, data 
 
 // Diffs2SlackAttachments converts a slice of `Diff` to slack attachments to be used in a post.
 func Diffs2SlackAttachments(diffs []*Diff, opts DiffConvOpts) ([]*mm_model.SlackAttachment, error) {
-	fmt.Printf("Diffs2SlackAttachments called")
-
 	var attachments []*mm_model.SlackAttachment
 	merr := merror.New()
 

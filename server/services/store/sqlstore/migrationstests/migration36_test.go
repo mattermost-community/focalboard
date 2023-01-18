@@ -1,7 +1,6 @@
 package migrationstests
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -17,7 +16,7 @@ func Test36AddUniqueConstraintToCategoryBoards(t *testing.T) {
 		// verifying if constraint has been added
 
 		//can't verify in sqlite, so skipping it
-		if th.f.DB().DriverName() == "sqlite3" {
+		if th.IsSQLite() {
 			return
 		}
 
@@ -37,27 +36,24 @@ func Test36AddUniqueConstraintToCategoryBoards(t *testing.T) {
 
 		// SQLIte doesn't support adding constraint to existing table
 		// and neither do we, so skipping for sqlite
-
-		fmt.Println("Database drivername: " + th.f.DB().DriverName())
-
-		if th.f.DB().DriverName() == "sqlite3" {
+		if th.IsSQLite() {
 			return
 		}
 
 		th.f.MigrateToStep(35)
 
-		if th.f.DB().DriverName() == "mysql" {
+		if th.IsMySQL() {
 			th.f.DB().Exec("alter table focalboard_category_boards add constraint unique_user_category_board UNIQUE(user_id, board_id);")
-		} else if th.f.DB().DriverName() == "postgres" {
+		} else if th.IsPostgres() {
 			th.f.DB().Exec("ALTER TABLE focalboard_category_boards ADD CONSTRAINT unique_user_category_board UNIQUE(user_id, board_id);")
 		}
 
 		th.f.MigrateToStep(36)
 
 		var schema string
-		if th.f.DB().DriverName() == "mysql" {
+		if th.IsMySQL() {
 			schema = "DATABASE()"
-		} else if th.f.DB().DriverName() == "postgres" {
+		} else if th.IsPostgres() {
 			schema = "'public'"
 		}
 

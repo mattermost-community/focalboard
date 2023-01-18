@@ -15,7 +15,7 @@ func Test35AddHIddenColumnToCategoryBoards(t *testing.T) {
 
 		// We don't support adding column in idempotent manner
 		// for SQLite, so no need to check for it.
-		if th.f.DB().DriverName() == "sqlite3" {
+		if th.IsSQLite() {
 			return
 		}
 

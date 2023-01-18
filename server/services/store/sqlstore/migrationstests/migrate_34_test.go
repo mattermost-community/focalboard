@@ -33,7 +33,7 @@ func Test34DropDeleteAtColumnMySQLPostgres(t *testing.T) {
 
 		// For migration 34, we don't drop column
 		// on SQLite, so no need to test for it.
-		if th.f.DB().DriverName() == "sqlite3" {
+		if th.IsSQLite() {
 			return
 		}
 
@@ -42,12 +42,12 @@ func Test34DropDeleteAtColumnMySQLPostgres(t *testing.T) {
 
 		th.f.MigrateToStep(34)
 
-		if th.f.DB().DriverName() == "mysql" {
+		if th.IsMySQL() {
 			var count int
 			query := "SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = 'focalboard_category_boards' AND column_name = 'delete_at'"
 			th.f.DB().Get(&count, query)
 			require.Equal(t, 0, count)
-		} else if th.f.DB().DriverName() == "postgres" {
+		} else if th.IsPostgres() {
 			var count int
 			query := "select count(*) from information_schema.columns where table_name = 'focalboard_category_boards' and column_name = 'delete_at'"
 			th.f.DB().Get(&count, query)
