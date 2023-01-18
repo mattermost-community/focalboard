@@ -210,6 +210,14 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 				},
 			})
 		}
+		if attachmentID, ok := block.Fields["attachmentId"]; ok {
+			blockIDs = append(blockIDs, block.ID)
+			blockPatches = append(blockPatches, model.BlockPatch{
+				UpdatedFields: map[string]interface{}{
+					"attachmentId": attachmentID,
+				},
+			})
+		}
 	}
 	a.logger.Debug("Duplicate boards patching file IDs", mlog.Int("count", len(blockIDs)))
 

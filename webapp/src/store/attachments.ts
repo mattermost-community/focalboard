@@ -26,7 +26,9 @@ const attachmentSlice = createSlice({
                         state.attachmentsByCard[attachment.parentId] = [attachment]
                         return
                     }
-                    state.attachmentsByCard[attachment.parentId].push(attachment)
+                    if (state.attachmentsByCard[attachment.parentId].findIndex((a) => a.id === attachment.id) === -1) {
+                        state.attachmentsByCard[attachment.parentId].push(attachment)
+                    }
                 } else {
                     const parentId = state.attachments[attachment.id]?.parentId
                     if (!state.attachmentsByCard[parentId]) {
@@ -53,11 +55,8 @@ const attachmentSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type === 'attachment') {
                     state.attachments[block.id] = block as AttachmentBlock
-                    if (state.attachmentsByCard[block.parentId]) {
-                        state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
-                    } else {
-                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
-                    }
+                    state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
+                    state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
                 }
             }
             Object.values(state.attachmentsByCard).forEach((arr) => arr.sort((a, b) => a.createAt - b.createAt))
@@ -68,11 +67,8 @@ const attachmentSlice = createSlice({
             for (const block of action.payload.blocks) {
                 if (block.type === 'attachment') {
                     state.attachments[block.id] = block as AttachmentBlock
-                    if (state.attachmentsByCard[block.parentId]) {
-                        state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
-                    } else {
-                        state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
-                    }
+                    state.attachmentsByCard[block.parentId] = state.attachmentsByCard[block.parentId] || []
+                    state.attachmentsByCard[block.parentId].push(block as AttachmentBlock)
                 }
             }
             Object.values(state.attachmentsByCard).forEach((arr) => arr.sort((a, b) => a.createAt - b.createAt))

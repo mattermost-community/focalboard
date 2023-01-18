@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/services/notify"
@@ -309,10 +310,15 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 
 	for i := range copiedBlocks {
 		block := copiedBlocks[i]
-
+		attachmentPresent := false
 		fileName, ok := block.Fields["fileId"]
 		if !ok || fileName == "" {
-			continue // doesn't have a file attachment
+			fileName, ok = block.Fields["attachmentId"]
+			if !ok || fileName == "" {
+				continue // doesn't have a file attachment
+			} else {
+				attachmentPresent = true
+			}
 		}
 
 		// create unique filename in case we are copying cards within the same board.
@@ -345,7 +351,21 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 				mlog.Err(err),
 			)
 		}
-		block.Fields["fileId"] = destFilename
+		if attachmentPresent {
+			block.Fields["attachmentId"] = destFilename
+			parts := strings.Split(fileName.(string), ".")
+			fileInfoID := parts[0][1:]
+			fileInfo, _ := a.store.GetFileInfo(fileInfoID)
+			newParts := strings.Split(destFilename, ".")
+			newFileID := newParts[0][1:]
+			fileInfo.Id = newFileID
+			err := a.store.SaveFileInfo(fileInfo)
+			if err != nil {
+				return fmt.Errorf("cannot create file info for CopyCardFiles: %w", err)
+			}
+		} else {
+			block.Fields["fileId"] = destFilename
+		}
 	}
 
 	return nil

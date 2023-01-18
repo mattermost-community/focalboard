@@ -14,13 +14,14 @@ import (
 type BlockType string
 
 const (
-	TypeUnknown = "unknown"
-	TypeBoard   = "board"
-	TypeCard    = "card"
-	TypeView    = "view"
-	TypeText    = "text"
-	TypeComment = "comment"
-	TypeImage   = "image"
+	TypeUnknown    = "unknown"
+	TypeBoard      = "board"
+	TypeCard       = "card"
+	TypeView       = "view"
+	TypeText       = "text"
+	TypeComment    = "comment"
+	TypeImage      = "image"
+	TypeAttachment = "attachment"
 )
 
 func (bt BlockType) String() string {
@@ -42,6 +43,8 @@ func BlockTypeFromString(s string) (BlockType, error) {
 		return TypeComment, nil
 	case "image":
 		return TypeImage, nil
+	case "attachment":
+		return TypeAttachment, nil
 	}
 	return TypeUnknown, ErrInvalidBlockType{s}
 }
