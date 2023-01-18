@@ -3,7 +3,7 @@
 exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button for non sys admin user 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog"
+    class="Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"
@@ -85,7 +85,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
 exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys admin user 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog"
+    class="Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"

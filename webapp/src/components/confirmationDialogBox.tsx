@@ -28,6 +28,7 @@ export const ConfirmationDialogBox = (props: Props) => {
 
     return (
         <Dialog
+            size='small'
             className='confirmation-dialog-box'
             onClose={handleOnClose}
         >

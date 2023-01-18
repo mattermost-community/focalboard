@@ -80,8 +80,12 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 		showFullName = *mmconfig.PrivacySettings.ShowFullName
 	}
 
+	serverRoot := baseURL + "/plugins/focalboard"
+	if mmconfig.FeatureFlags.BoardsProduct {
+		serverRoot = baseURL + "/boards"
+	}
 	return &config.Configuration{
-		ServerRoot:               baseURL + "/plugins/focalboard",
+		ServerRoot:               serverRoot,
 		Port:                     -1,
 		DBType:                   *mmconfig.SqlSettings.DriverName,
 		DBConfigString:           *mmconfig.SqlSettings.DataSource,

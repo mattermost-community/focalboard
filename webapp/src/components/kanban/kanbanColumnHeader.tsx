@@ -49,6 +49,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
     const {board, activeView, intl, group, groupByProperty} = props
     const [groupTitle, setGroupTitle] = useState(group.option.value)
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const canEditOption = groupByProperty?.type !== 'person' && group.option.id
 
     const headerRef = useRef<HTMLDivElement>(null)
 
@@ -108,7 +109,11 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         }}
                     />
                 </Label>}
-            {group.option.id &&
+            {groupByProperty?.type === 'person' &&
+                <Label>
+                    {groupTitle}
+                </Label>}
+            {canEditOption &&
                 <Label color={group.option.color}>
                     <Editable
                         value={groupTitle}
@@ -165,7 +170,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                     name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                                     onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                                 />
-                                {group.option.id &&
+                                {canEditOption &&
                                     <>
                                         <Menu.Text
                                             id='delete'

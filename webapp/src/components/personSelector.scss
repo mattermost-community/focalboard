@@ -1,9 +1,8 @@
-.MultiPerson {
+.Person {
     display: flex;
     align-items: center;
     border-radius: 4px;
     flex-wrap: wrap;
-    padding: 8px 0 0;
     gap: 8px;
 
     &.readonly {
@@ -12,7 +11,7 @@
         min-width: unset;
     }
 
-    .MultiPerson-item {
+    .Person-item {
         display: flex;
         align-items: center;
 
@@ -98,7 +97,7 @@
             color: rgba(var(--center-channel-color-rgb), 1);
         }
 
-        .MultiPerson-item {
+        .Person-item {
             img {
                 margin-right: 12px;
             }

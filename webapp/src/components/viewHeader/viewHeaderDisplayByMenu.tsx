@@ -4,6 +4,8 @@
 import React from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
+import {DatePropertyType} from '../../properties/types'
+
 import {IPropertyTemplate} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 import mutator from '../../mutator'
@@ -27,7 +29,7 @@ const ViewHeaderDisplayByMenu = (props: Props) => {
     const createdDateName = propsRegistry.get('createdTime').displayName(intl)
 
     const getDateProperties = (): IPropertyTemplate[] => {
-        return properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).isDate)
+        return properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type) instanceof DatePropertyType)
     }
 
     return (

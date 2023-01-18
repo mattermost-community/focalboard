@@ -903,21 +903,6 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div>
-                <div
-                  aria-label="View menu"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-chevron-down DropdownIcon"
-                    />
-                  </button>
-                </div>
-              </div>
             </div>
             <div
               class="octo-spacer"
@@ -2029,21 +2014,6 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div>
-                <div
-                  aria-label="View menu"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-chevron-down DropdownIcon"
-                    />
-                  </button>
-                </div>
-              </div>
             </div>
             <div
               class="octo-spacer"
