@@ -665,26 +665,38 @@ class Mutator {
         const newBlockIDs: string[] = []
 
         if (propertyTemplate.type !== newType) {
+            // If the old type was either select/multiselect or person/multiperson
             if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect' ||
-                (propertyTemplate.type === 'person' || propertyTemplate.type === 'multiPerson')) { // If the old type was either select or multiselect
+                (propertyTemplate.type === 'person' || propertyTemplate.type === 'multiPerson')) {
+                // determine new type is either select/multiselect or person/multiperson
                 const isNewTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
                 const isNewTypePersonOrMulti = newType === 'person' || newType === 'multiPerson'
+                const isOldTypeSelectOrMulti = newType === 'select' || newType === 'multiSelect'
+                const isOldTypePersonOrMulti = newType === 'person' || newType === 'multiPerson'
 
                 for (const card of cards) {
+                    // if array get first value, if exists
                     const oldValue = Array.isArray(card.fields.properties[propertyTemplate.id]) ? (card.fields.properties[propertyTemplate.id].length > 0 && card.fields.properties[propertyTemplate.id][0] as string) : card.fields.properties[propertyTemplate.id] as string
                     if (oldValue) {
                         let newValue: string | undefined
-                        if (isNewTypeSelectOrMulti) {
-                            newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.id
-                        } else if (isNewTypePersonOrMulti) {
-                            newValue = oldValue
-                        } else if (propertyTemplate.type === 'select' || propertyTemplate.type === 'multiSelect') {
-                            newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.value
+                        if (isOldTypePersonOrMulti) {
+                            if (isNewTypePersonOrMulti) {
+                                newValue = oldValue
+                            }
+                        } else if (isNewTypeSelectOrMulti) {
+                            if (isOldTypeSelectOrMulti) {
+                                newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.id
+                            } else {
+                                newValue = propertyTemplate.options.find((o) => o.id === oldValue)?.value
+                            }
                         }
-
                         const newCard = createCard(card)
                         if (newValue) {
-                            newCard.fields.properties[propertyTemplate.id] = newType === 'multiSelect' ? [newValue] : newValue
+                            if (newType === 'multiSelect' || newType === 'multiPerson') {
+                                newCard.fields.properties[propertyTemplate.id] = [newValue]
+                            } else {
+                                newCard.fields.properties[propertyTemplate.id] = newValue
+                            }
                         } else {
                             // This was an invalid select option or old person id, so delete it
                             delete newCard.fields.properties[propertyTemplate.id]
