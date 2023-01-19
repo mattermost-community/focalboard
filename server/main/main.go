@@ -166,6 +166,7 @@ func main() {
 }
 
 // StartServer starts the server
+//
 //export StartServer
 func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString, configFilePath *C.char) {
 	startServer(
@@ -179,6 +180,7 @@ func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, 
 }
 
 // StopServer stops the server
+//
 //export StopServer
 func StopServer() {
 	stopServer()
