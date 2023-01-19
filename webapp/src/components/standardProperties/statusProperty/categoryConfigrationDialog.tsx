@@ -12,6 +12,7 @@ import InfoIcon from '../../../widgets/icons/info'
 import Dialog from '../../dialog'
 
 import './categoryConfigrationDialog.scss'
+import ActionDialog from '../../actionDialog/actionDialog'
 
 export type StatusCategory = {
     id: string
@@ -31,7 +32,7 @@ const StatusPropertyConfigrationDialog = (props: Props): JSX.Element => {
         />
     )
     return (
-        <Dialog
+        <ActionDialog
             onClose={props.onClose}
             title={title}
             className='StatusPropertyConfigrationDialog'
@@ -62,7 +63,7 @@ const StatusPropertyConfigrationDialog = (props: Props): JSX.Element => {
                     )
                 })}
             </div>
-        </Dialog>
+        </ActionDialog>
     )
 }
 

@@ -5,6 +5,9 @@ import React from 'react'
 import './button.scss'
 import {Utils} from '../../utils'
 
+export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large'
+export type Emphasis = 'primary' | 'secondary' | 'tertiary' | 'quaternary' | 'gray' | 'danger' | 'default' | 'link'
+
 type Props = {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
     onMouseOver?: (e: React.MouseEvent<HTMLButtonElement>) => void
@@ -16,8 +19,8 @@ type Props = {
     filled?: boolean
     active?: boolean
     submit?: boolean
-    emphasis?: string
-    size?: string
+    emphasis?: Emphasis
+    size?: ButtonSize
     danger?: boolean
     className?: string
     rightIcon?: boolean
