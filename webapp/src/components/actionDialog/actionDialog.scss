@@ -59,6 +59,10 @@
         overflow-x: hidden;
         overflow-y: auto;
 
+        &.footerHidden {
+            padding-bottom: 24px;
+        }
+
         @media not screen and (max-width: 975px) {
             margin: 72px auto;
             max-width: 975px;

@@ -11,6 +11,8 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './actionDialog.scss'
 import Button from '../../widgets/buttons/button'
 
+import {Utils} from '../../utils'
+
 type Props = {
     children: React.ReactNode
     size?: string
@@ -25,6 +27,7 @@ type Props = {
     onConfirm?: () => void
     cancelButtonText?: string
     onCancel?: () => void
+    hideFooter?: boolean
 }
 
 const ActionDialog = (props: Props) => {
@@ -61,7 +64,7 @@ const ActionDialog = (props: Props) => {
             >
                 <div
                     role='dialog'
-                    className='dialog'
+                    className={`dialog${props.hideFooter ? ' footerHidden' : ''}`}
                 >
                     <div className='toolbar'>
                         <div>
@@ -91,35 +94,38 @@ const ActionDialog = (props: Props) => {
                         </div>
                     </div>
                     {props.children}
-                    <div className='footer'>
-                        <Button
-                            onClick={props.onCancel}
-                            emphasis='tertiary'
-                            size='medium'
-                        >
-                            {
-                                props.cancelButtonText ||
-                                <FormattedMessage
-                                    id='generic.cancel'
-                                    defaultMessage='Cancel'
-                                />
-                            }
-                        </Button>
-                        <Button
-                            onClick={props.onConfirm}
-                            emphasis='primary'
-                            filled={true}
-                            size='medium'
-                        >
-                            {
-                                props.confirmButtonText ||
-                                <FormattedMessage
-                                    id='generic.save'
-                                    defaultMessage='Save'
-                                />
-                            }
-                        </Button>
-                    </div>
+                    {
+                        !props.hideFooter &&
+                        <div className='footer'>
+                            <Button
+                                onClick={props.onCancel}
+                                emphasis='tertiary'
+                                size='medium'
+                            >
+                                {
+                                    props.cancelButtonText ||
+                                    <FormattedMessage
+                                        id='generic.cancel'
+                                        defaultMessage='Cancel'
+                                    />
+                                }
+                            </Button>
+                            <Button
+                                onClick={props.onConfirm}
+                                emphasis='primary'
+                                filled={true}
+                                size='medium'
+                            >
+                                {
+                                    props.confirmButtonText ||
+                                    <FormattedMessage
+                                        id='generic.save'
+                                        defaultMessage='Save'
+                                    />
+                                }
+                            </Button>
+                        </div>
+                    }
                 </div>
             </div>
         </div>

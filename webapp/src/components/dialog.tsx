@@ -1,14 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useRef} from 'react'
-import {useIntl} from 'react-intl'
-import {useHotkeys} from 'react-hotkeys-hook'
+import React from 'react'
 
-import IconButton from '../widgets/buttons/iconButton'
-import CloseIcon from '../widgets/icons/close'
-import OptionsIcon from '../widgets/icons/options'
-import MenuWrapper from '../widgets/menuWrapper'
 import './dialog.scss'
+import ActionDialog from './actionDialog/actionDialog'
 
 type Props = {
     children: React.ReactNode
@@ -23,72 +18,12 @@ type Props = {
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu, toolbar, title, subtitle, size} = props
-    const intl = useIntl()
-
-    const closeDialogText = intl.formatMessage({
-        id: 'Dialog.closeDialog',
-        defaultMessage: 'Close dialog',
-    })
-
-    useHotkeys('esc', () => props.onClose())
-
-    const isBackdropClickedRef = useRef(false)
-
+    // A dialog is just a ActionDialog without any footer action buttons
     return (
-        <div className={`Dialog dialog-back ${props.className} size--${size || 'medium'}`}>
-            <div className='backdrop'/>
-            <div
-                className='wrapper'
-                onClick={(e) => {
-                    e.stopPropagation()
-                    if (!isBackdropClickedRef.current) {
-                        return
-                    }
-                    isBackdropClickedRef.current = false
-                    props.onClose()
-                }}
-                onMouseDown={(e) => {
-                    if (e.target === e.currentTarget) {
-                        isBackdropClickedRef.current = true
-                    }
-                }}
-            >
-                <div
-                    role='dialog'
-                    className='dialog'
-                >
-                    <div className='toolbar'>
-                        <div>
-                            {<h1 className='dialog-title'>{title || ''}</h1>}
-                            {subtitle && <h5 className='dialog-subtitle'>{subtitle}</h5>}
-                        </div>
-                        <div className='toolbar--right'>
-                            {toolbar && <div className='d-flex'>{toolbar}</div>}
-                            {toolsMenu && <MenuWrapper>
-                                <IconButton
-                                    size='medium'
-                                    icon={<OptionsIcon/>}
-                                />
-                                {toolsMenu}
-                            </MenuWrapper>
-                            }
-                            {
-                                !props.hideCloseButton &&
-                                <IconButton
-                                    className='dialog__close'
-                                    onClick={props.onClose}
-                                    icon={<CloseIcon/>}
-                                    title={closeDialogText}
-                                    size='medium'
-                                />
-                            }
-                        </div>
-                    </div>
-                    {props.children}
-                </div>
-            </div>
-        </div>
+        <ActionDialog
+            hideFooter={true}
+            {...props}
+        />
     )
 }
 

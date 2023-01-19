@@ -32,7 +32,7 @@ const StatusPropertyConfigrationDialog = (props: Props): JSX.Element => {
         />
     )
     return (
-        <ActionDialog
+        <Dialog
             onClose={props.onClose}
             title={title}
             className='StatusPropertyConfigrationDialog'
@@ -63,7 +63,7 @@ const StatusPropertyConfigrationDialog = (props: Props): JSX.Element => {
                     )
                 })}
             </div>
-        </ActionDialog>
+        </Dialog>
     )
 }
 
