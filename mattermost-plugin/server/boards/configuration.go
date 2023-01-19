@@ -80,6 +80,9 @@ func (b *BoardsApp) OnConfigurationChange() error {
 	if mmconfig.PluginSettings.Plugins[PluginName][SharedBoardsName] == true {
 		enableShareBoards = true
 	}
+	if mmconfig.ProductSettings.EnablePublicSharedBoards != nil {
+		enableShareBoards = *mmconfig.ProductSettings.EnablePublicSharedBoards
+	}
 	configuration := &configuration{
 		EnablePublicSharedBoards: enableShareBoards,
 	}

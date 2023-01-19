@@ -77,13 +77,21 @@ const Sidebar = (props: Props) => {
     const currentBoard = useAppSelector(getCurrentBoard)
 
     useEffect(() => {
-        wsClient.addOnChange((_: WSClient, categories: Category[]) => {
+        const categoryOnChangeHandler = (_: WSClient, categories: Category[]) => {
             dispatch(updateCategories(categories))
-        }, 'category')
+        }
 
-        wsClient.addOnChange((_: WSClient, blockCategories: BoardCategoryWebsocketData[]) => {
+        const blockCategoryOnChangeHandler = (_: WSClient, blockCategories: BoardCategoryWebsocketData[]) => {
             dispatch(updateBoardCategories(blockCategories))
-        }, 'blockCategories')
+        }
+
+        wsClient.addOnChange(categoryOnChangeHandler, 'category')
+        wsClient.addOnChange(blockCategoryOnChangeHandler, 'blockCategories')
+
+        return function cleanup() {
+            wsClient.removeOnChange(categoryOnChangeHandler, 'category')
+            wsClient.removeOnChange(blockCategoryOnChangeHandler, 'blockCategories')
+        }
     }, [])
 
     const teamId = useAppSelector(getCurrentTeamId)

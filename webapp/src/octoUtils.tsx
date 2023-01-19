@@ -3,6 +3,7 @@
 
 import {IntlShape} from 'react-intl'
 
+import {FilterValueType} from './properties/types'
 import {Block, createBlock} from './blocks/block'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
@@ -105,7 +106,7 @@ class OctoUtils {
     }
 
     static filterConditionDisplayString(filterCondition: FilterCondition, intl: IntlShape, filterValueType: string): string {
-        if (filterValueType === 'options') {
+        if (filterValueType === 'options' || filterValueType === 'person') {
             switch (filterCondition) {
             case 'includes': return intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})
             case 'notIncludes': return intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})
@@ -136,11 +137,73 @@ class OctoUtils {
                 return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
             }
             }
+        } else if (filterValueType === 'date') {
+            switch (filterCondition) {
+            case 'is': return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
+            case 'isBefore': return intl.formatMessage({id: 'Filter.is-before', defaultMessage: 'is before'})
+            case 'isAfter': return intl.formatMessage({id: 'Filter.is-after', defaultMessage: 'is after'})
+            case 'isSet': return intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})
+            case 'isNotSet': return intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})
+            default: {
+                return intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})
+            }
+            }
         } else {
             Utils.assertFailure()
             return '(unknown)'
         }
     }
-}
 
+    static filterConditionValidOrDefault(filterValueType: FilterValueType, currentFilterCondition: FilterCondition): FilterCondition {
+        if (filterValueType === 'options') {
+            switch (currentFilterCondition) {
+            case 'includes':
+            case 'notIncludes':
+            case 'isEmpty':
+            case 'isNotEmpty':
+                return currentFilterCondition
+            default: {
+                return 'includes'
+            }
+            }
+        } else if (filterValueType === 'boolean') {
+            switch (currentFilterCondition) {
+            case 'isSet':
+            case 'isNotSet':
+                return currentFilterCondition
+            default: {
+                return 'isSet'
+            }
+            }
+        } else if (filterValueType === 'text') {
+            switch (currentFilterCondition) {
+            case 'is':
+            case 'contains':
+            case 'notContains':
+            case 'startsWith':
+            case 'notStartsWith':
+            case 'endsWith':
+            case 'notEndsWith':
+                return currentFilterCondition
+            default: {
+                return 'is'
+            }
+            }
+        } else if (filterValueType === 'date') {
+            switch (currentFilterCondition) {
+            case 'is':
+            case 'isBefore':
+            case 'isAfter':
+            case 'isSet':
+            case 'isNotSet':
+                return currentFilterCondition
+            default: {
+                return 'is'
+            }
+            }
+        }
+        Utils.assertFailure()
+        return 'includes'
+    }
+}
 export {OctoUtils}

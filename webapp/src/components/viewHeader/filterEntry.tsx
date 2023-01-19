@@ -76,6 +76,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 Utils.assert(newFilter, `No filter at index ${filterIndex}`)
                                 if (newFilter.propertyId !== optionId) {
                                     newFilter.propertyId = optionId
+                                    newFilter.condition = OctoUtils.filterConditionValidOrDefault(propsRegistry.get(o.type).filterValueType, newFilter.condition)
                                     newFilter.values = []
                                     mutator.changeViewFilter(props.board.id, view.id, view.fields.filter, filterGroup)
                                 }
@@ -98,6 +99,32 @@ const FilterEntry = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
+                            <Menu.Text
+                                id='isEmpty'
+                                name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isNotEmpty'
+                                name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.filterValueType === 'person' &&
+                        <>
+                            <Menu.Text
+                                id='includes'
+                                name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='notIncludes'
+                                name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {(propertyType.type === 'person' || propertyType.type === 'multiPerson') &&
+                        <>
                             <Menu.Text
                                 id='isEmpty'
                                 name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
@@ -157,6 +184,37 @@ const FilterEntry = (props: Props): JSX.Element => {
                             <Menu.Text
                                 id='notEndsWith'
                                 name={intl.formatMessage({id: 'Filter.not-ends-with', defaultMessage: 'doesn\'t end with'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.filterValueType === 'date' &&
+                        <>
+                            <Menu.Text
+                                id='is'
+                                name={intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isBefore'
+                                name={intl.formatMessage({id: 'Filter.isbefore', defaultMessage: 'is before'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isAfter'
+                                name={intl.formatMessage({id: 'Filter.isafter', defaultMessage: 'is after'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                        </>}
+                    {propertyType.type === 'date' &&
+                        <>
+                            <Menu.Text
+                                id='isSet'
+                                name={intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})}
+                                onClick={(id) => props.conditionClicked(id, filter)}
+                            />
+                            <Menu.Text
+                                id='isNotSet'
+                                name={intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
                         </>}
