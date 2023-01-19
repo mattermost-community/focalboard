@@ -53,7 +53,7 @@ func (pd *PluginDelivery) getDirectChannelID(teamID string, subscriberID string,
 			return "", fmt.Errorf("cannot find user: %w", err)
 		}
 		channel, err := pd.getDirectChannel(teamID, user.Id, botID)
-		if err != nil {
+		if err != nil || channel == nil {
 			return "", fmt.Errorf("cannot get direct channel: %w", err)
 		}
 		return channel.Id, nil
