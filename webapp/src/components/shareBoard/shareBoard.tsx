@@ -254,19 +254,17 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const boardUrl = new URL(window.location.toString())
 
     if (match.params.teamId) {
-        const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId', {
+        let pathTemplate = '/team/:teamId/shared/:boardId/:viewId'
+        if (Utils.isFocalboardProduct()) {
+            pathTemplate = `/boards/public${pathTemplate}`
+        }
+
+        const newPath = generatePath(pathTemplate, {
             boardId: match.params.boardId,
             viewId: match.params.viewId,
             teamId: match.params.teamId,
         })
         shareUrl.pathname = Utils.buildURL(newPath)
-
-        const boardPath = generatePath('/team/:teamId/:boardId/:viewId', {
-            boardId: match.params.boardId,
-            viewId: match.params.viewId,
-            teamId: match.params.teamId,
-        })
-        boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
     } else {
         const newPath = generatePath('/shared/:boardId/:viewId', {
             boardId: match.params.boardId,
@@ -277,8 +275,8 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             generatePath(':boardId/:viewId', {
                 boardId: match.params.boardId,
                 viewId: match.params.viewId,
-            },
-            ))
+            }),
+        )
     }
 
     const shareBoardTitle = (

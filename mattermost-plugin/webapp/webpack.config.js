@@ -167,7 +167,8 @@ if (TARGET_IS_PRODUCT) {
     }));
 
     config.plugins.push(new webpack.DefinePlugin({
-        'process.env.TARGET_IS_PRODUCT': TARGET_IS_PRODUCT, // TODO We might want a better name for this
+        // This should be used through Utils.isFocalboardProduct()
+        'process.env.TARGET_IS_PRODUCT': TARGET_IS_PRODUCT,
     }));
 
     config.output = {

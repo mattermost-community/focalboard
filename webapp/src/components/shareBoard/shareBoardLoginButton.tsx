@@ -3,7 +3,7 @@
 
 import React, {useCallback} from 'react'
 import {FormattedMessage} from 'react-intl'
-import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
+import {generatePath, useRouteMatch} from 'react-router-dom'
 
 import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -12,22 +12,27 @@ import {Utils} from '../../utils'
 import './shareBoardLoginButton.scss'
 
 const ShareBoardLoginButton = () => {
-    const match = useRouteMatch<{teamId: string, boardId: string, viewId?: string, cardId?: string}>()
-    const history = useHistory()
+    const match = useRouteMatch<{ teamId: string, boardId: string, viewId?: string, cardId?: string }>()
 
-    let redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
+    let loginPath: string
     if (Utils.isFocalboardLegacy()) {
-        redirectQueryParam = 'redirect_to=' + encodeURIComponent(generatePath('/boards/team/:teamId/:boardId?/:viewId?/:cardId?', match.params))
+        const baseURL = window.location.href.split('/plugins/focalboard')[0]
+        loginPath = `${baseURL}/${generatePath('/boards/team/:teamId/:boardId?/:viewId?/:cardId?', match.params)}`
+    } else if (Utils.isFocalboardPlugin()) {
+        // Mattermost login doesn't respect the redirect query
+        // parameter if the user is already logged in, so we send the
+        // user to the board and if they are not logged in, the webapp
+        // will take care of the redirection
+        const baseURL = window.location.href.split('/boards/public')[0]
+        loginPath = `${baseURL}/${generatePath('/boards/team/:teamId/:boardId?/:viewId?/:cardId?', match.params)}`
+    } else {
+        const redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
+        loginPath = `/login?${redirectQueryParam}`
     }
-    const loginPath = '/login?' + redirectQueryParam
 
     const onLoginClick = useCallback(() => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardLogin)
-        if (Utils.isFocalboardLegacy()) {
-            location.assign(loginPath)
-        } else {
-            history.push(loginPath)
-        }
+        location.assign(loginPath)
     }, [])
 
     return (

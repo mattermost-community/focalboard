@@ -584,7 +584,7 @@ class Utils {
 
     static buildURL(path: string, absolute?: boolean): string {
         /* eslint-disable no-process-env */
-        if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
+        if (!Utils.isFocalboardPlugin() || Utils.isFocalboardProduct()) {
             return path
         }
 
@@ -608,6 +608,10 @@ class Utils {
 
     static isFocalboardPlugin(): boolean {
         return Boolean(window.isFocalboardPlugin)
+    }
+
+    static isFocalboardProduct(): boolean {
+        return Boolean(process.env.TARGET_IS_PRODUCT)
     }
 
     // this is a temporary solution while we're using legacy routes
