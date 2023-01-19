@@ -122,8 +122,18 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
         document.body.removeChild(anchor)
     }
 
+    const handleMouseLeave = () => {
+        const tempDiv = document.createElement('div')
+        document.body.appendChild(tempDiv)
+        tempDiv.click()
+        document.body.removeChild(tempDiv)
+    }
+
     return (
-        <div className='FileElement mr-4'>
+        <div
+            className='FileElement mr-4'
+            onMouseLeave={handleMouseLeave}
+        >
             {showConfirmationDialogBox && <ConfirmationDialogBox dialogBox={confirmDialogProps}/>}
             <div className='fileElement-icon-division'>
                 <CompassIcon
