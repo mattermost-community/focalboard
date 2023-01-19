@@ -122,7 +122,7 @@ func main() {
 	if pDBConfig != nil && len(*pDBConfig) > 0 {
 		config.DBConfigString = *pDBConfig
 		// Don't echo, as the confix string may contain passwords
-		logger.Info("DBConfigString overriden from commandline")
+		logger.Info("DBConfigString overridden from commandline")
 	}
 
 	if pPort != nil && *pPort > 0 && *pPort != config.Port {
