@@ -70,5 +70,5 @@ func (pd *PluginDelivery) getDirectChannel(teamID string, userID string, botID s
 	if err != nil {
 		return nil, fmt.Errorf("cannot add bot to team %s: %w", teamID, err)
 	}
-	return pd.api.GetDirectChannel(userID, botID)
+	return pd.api.GetDirectChannelOrCreate(userID, botID)
 }
