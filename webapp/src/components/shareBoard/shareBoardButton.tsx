@@ -4,7 +4,7 @@
 import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import StatusPropertyConfigrationDialog, {StatusCategory} from '../standardProperties/statusProperty/categoryConfigrationDialog'
+import EditStatusPropertyDialog, {StatusCategory} from '../standardProperties/statusProperty/editStatusDialog'
 
 import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
@@ -33,9 +33,34 @@ const ShareBoardButton = (props: Props) => {
     }
 
     const valueCategories: StatusCategory[] = [
-        {id: '1', title: 'Not Started'},
-        {id: '2', title: 'In progress'},
-        {id: '3', title: 'Completed'},
+        {
+            id: '1',
+            title: 'Not Started',
+            options: [
+                {id: '1', value: 'Pending Design', color: 'propColorPurple'},
+                {id: '1', value: 'TODO', color: 'propColorYellow'},
+                {id: '1', value: 'Pending Specs', color: 'propColorGray'},
+            ],
+        },
+        {
+            id: '2',
+            title: 'In progress',
+            options: [
+                {id: '1', value: 'In Progress', color: 'propColorBrown'},
+                {id: '1', value: 'In Review', color: 'propColorRed'},
+                {id: '1', value: 'In QA', color: 'propColorPink'},
+                {id: '1', value: 'Awaiting Cherrypick', color: 'propColorOrange'},
+            ],
+        },
+        {
+            id: '3',
+            title: 'Completed',
+            options: [
+                {id: '1', value: 'Done', color: 'propColorPink'},
+                {id: '1', value: 'Branch Cut', color: 'propColorGreen'},
+                {id: '1', value: 'Released', color: 'propColorDefault'},
+            ],
+        },
     ]
 
     return (
@@ -63,7 +88,7 @@ const ShareBoardButton = (props: Props) => {
 
             {
                 showShareDialog &&
-                    <StatusPropertyConfigrationDialog
+                    <EditStatusPropertyDialog
                         valueCategories={valueCategories}
                         onClose={() => setShowShareDialog(false)}
                     />
