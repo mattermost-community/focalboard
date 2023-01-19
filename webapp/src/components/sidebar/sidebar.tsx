@@ -321,6 +321,7 @@ const Sidebar = (props: Props) => {
         })
 
         const sortedBoards: Board[] = []
+        console.log(JSON.stringify(category))
         category.boardIDs.forEach((boardID) => {
             const b = categoryBoardsByID.get(boardID)
             if (b) {

@@ -4,6 +4,8 @@
 import React, {useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import StatusPropertyConfigrationDialog, {StatusCategory} from '../standardProperties/statusProperty/categoryConfigrationDialog'
+
 import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {useAppSelector} from '../../store/hooks'
@@ -30,6 +32,12 @@ const ShareBoardButton = (props: Props) => {
         return <LockOutline/>
     }
 
+    const valueCategories: StatusCategory[] = [
+        {id: '1', title: 'Not Started'},
+        {id: '2', title: 'In progress'},
+        {id: '3', title: 'Completed'},
+    ]
+
     return (
         <div className='ShareBoardButton'>
             <Button
@@ -47,11 +55,19 @@ const ShareBoardButton = (props: Props) => {
                     defaultMessage='Share'
                 />
             </Button>
-            {showShareDialog &&
+            {/* {showShareDialog &&
                 <ShareBoardDialog
                     onClose={() => setShowShareDialog(false)}
                     enableSharedBoards={props.enableSharedBoards}
-                />}
+                />} */}
+
+            {
+                showShareDialog &&
+                    <StatusPropertyConfigrationDialog
+                        valueCategories={valueCategories}
+                        onClose={() => setShowShareDialog(false)}
+                    />
+            }
         </div>
     )
 }
