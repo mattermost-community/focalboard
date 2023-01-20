@@ -16,6 +16,10 @@ import {BoardTypeOpen} from '../../blocks/board'
 
 import './shareBoardButton.scss'
 
+import ClockOutline from '../../widgets/icons/clockOutline'
+
+import CheckIcon from '../../widgets/icons/check'
+
 import ShareBoardDialog from './shareBoard'
 
 type Props = {
@@ -41,6 +45,11 @@ const ShareBoardButton = (props: Props) => {
                 {id: '1', value: 'TODO', color: 'propColorYellow'},
                 {id: '1', value: 'Pending Specs', color: 'propColorGray'},
             ],
+            emptyState: {
+                icon: (<div/>),
+                color: '#FF0000',
+                text: (<span>{'Hello world'}</span>),
+            },
         },
         {
             id: '2',
@@ -63,15 +72,36 @@ const ShareBoardButton = (props: Props) => {
                 {id: '1', value: 'Awaiting Cherrypick Awaiting Cherrypick Awaiting Cherrypick Awaiting Cherrypick Awaiting Cherrypick', color: 'propColorOrange'},
                 {id: '1', value: 'Awaiting Cherrypick Awaiting Cherrypick Awaiting Cherrypick Awaiting Cherrypick Awaiting Cherrypick', color: 'propColorOrange'},
             ],
+            emptyState: {
+                icon: (<ClockOutline/>),
+                color: '--away-indicator-rgb',
+                text: (
+                    <FormattedMessage
+                        id='statusProperty.configDialog.inProgress.emptyText'
+                        defaultMessage='Drag statuses here to consider tasks with these statuses “in progress”'
+                    />
+                ),
+            },
         },
         {
             id: '3',
             title: 'Completed',
             options: [
-                {id: '1', value: 'Done', color: 'propColorPink'},
-                {id: '1', value: 'Branch Cut', color: 'propColorGreen'},
-                {id: '1', value: 'Released', color: 'propColorDefault'},
+
+                // {id: '1', value: 'Done', color: 'propColorPink'},
+                // {id: '1', value: 'Branch Cut', color: 'propColorGreen'},
+                // {id: '1', value: 'Released', color: 'propColorDefault'},
             ],
+            emptyState: {
+                icon: (<CheckIcon/>),
+                color: '--online-indicator-rgb',
+                text: (
+                    <FormattedMessage
+                        id='statusProperty.configDialog.complete.emptyText'
+                        defaultMessage='Drag statuses here to consider tasks with these statuses ”Done”'
+                    />
+                ),
+            },
         },
     ]
 

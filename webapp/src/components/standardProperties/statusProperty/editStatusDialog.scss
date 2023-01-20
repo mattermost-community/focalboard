@@ -81,6 +81,33 @@
                     margin-top: 3px;
                 }
             }
+
+            .emptyColumnPlaceholder {
+                margin: 0 16px;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding: 6px 0;
+                
+                .icon-wrapper {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    margin: 0 auto;
+                    padding-top: 7px;
+
+                    .CompassIcon {
+                        font-size: 18px;
+                        opacity: 1;
+                        display: block;
+                        height: 18px;
+                    }
+                }
+            }
         }
     }
 }
+
+
+  
