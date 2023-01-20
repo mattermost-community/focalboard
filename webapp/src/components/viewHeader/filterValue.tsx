@@ -19,6 +19,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import DateFilter from './dateFilter'
 
 import './filterValue.scss'
+import MultiPersonFilterValue from './multipersonFilterValue'
 
 type Props = {
     view: BoardView
@@ -40,7 +41,7 @@ const filterValue = (props: Props): JSX.Element|null => {
         return null
     }
 
-    if (propertyType.filterValueType === 'options' && filter.condition !== 'includes' && filter.condition !== 'notIncludes') {
+    if ((propertyType.filterValueType === 'options' || propertyType.filterValueType === 'person') && filter.condition !== 'includes' && filter.condition !== 'notIncludes') {
         return null
     }
 
@@ -65,6 +66,14 @@ const filterValue = (props: Props): JSX.Element|null => {
         )
     }
 
+    if (propertyType.filterValueType === 'person') {
+        return (
+            <MultiPersonFilterValue
+                view={view}
+                filter={filter}
+            />
+        )
+    }
     if (propertyType.filterValueType === 'date') {
         if (filter.condition === 'isSet' || filter.condition === 'isNotSet') {
             return null
@@ -85,12 +94,13 @@ const filterValue = (props: Props): JSX.Element|null => {
             return option?.value || '(Unknown)'
         }).join(', ')
     } else {
-        displayValue = '(empty)'
+        displayValue = intl.formatMessage({id: 'FilterValue.empty', defaultMessage: '(empty)'})
     }
 
     return (
         <MenuWrapper className='filterValue'>
             <Button>{displayValue}</Button>
+
             <Menu>
                 {template?.options.map((o) => (
                     <Menu.Switch

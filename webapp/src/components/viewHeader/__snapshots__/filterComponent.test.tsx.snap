@@ -711,6 +711,8 @@ exports[`components/viewHeader/filterComponent return filterComponent and click 
                 <div />
                 <div />
                 <div />
+                <div />
+                <div />
               </div>
               <div
                 class="menu-spacer hideOnWidescreen"

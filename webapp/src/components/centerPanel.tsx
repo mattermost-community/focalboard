@@ -10,7 +10,7 @@ import {ClientConfig} from '../config/clientConfig'
 import {Block} from '../blocks/block'
 import {BlockIcons} from '../blockIcons'
 import {Card, createCard} from '../blocks/card'
-import {Board, IPropertyTemplate} from '../blocks/board'
+import {Board, IPropertyTemplate, BoardGroup} from '../blocks/board'
 import {BoardView} from '../blocks/boardView'
 import {CardFilter} from '../cardFilter'
 import mutator from '../mutator'
@@ -22,12 +22,15 @@ import {updateView} from '../store/views'
 import {getVisibleAndHiddenGroups} from '../boardUtils'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
+import {getClientConfig} from '../store/clientConfig'
+
 import './centerPanel.scss'
 
 import {useAppSelector, useAppDispatch} from '../store/hooks'
 
 import {
     getMe,
+    getBoardUsers,
     getOnboardingTourCategory,
     getOnboardingTourStarted,
     getOnboardingTourStep,
@@ -84,7 +87,10 @@ const CenterPanel = (props: Props) => {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const me = useAppSelector(getMe)
     const currentCard = useAppSelector(getCurrentCard)
+    const boardUsers = useAppSelector(getBoardUsers)
     const dispatch = useAppDispatch()
+
+    const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
     // empty dependency array yields behavior like `componentDidMount`, it only runs _once_
     // https://stackoverflow.com/a/58579462
@@ -361,10 +367,35 @@ const CenterPanel = (props: Props) => {
     const showShareLoginButton = props.readonly && me?.id !== 'single-user'
 
     const {groupByProperty, activeView, board, views, cards} = props
-    const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(
-        () => getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty),
-        [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty],
-    )
+
+    const getUserDisplayName = (boardGroup: BoardGroup) => {
+        const user = boardUsers[boardGroup.option.id]
+        if (user) {
+            return Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)
+        } else if (boardGroup.option.id === 'undefined') {
+            return intl.formatMessage({
+                id: 'centerPanel.undefined',
+                defaultMessage: 'No {propertyName}',
+            }, {propertyName: groupByProperty?.name})
+        }
+        return intl.formatMessage({id: 'centerPanel.unknown-user', defaultMessage: 'Unknown user'})
+    }
+
+    const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {
+        const {visible: vg, hidden: hg} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
+        if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
+            if (boardUsers) {
+                vg.forEach((value) => {
+                    value.option.value = getUserDisplayName(value)
+                })
+                hg.forEach((value) => {
+                    value.option.value = getUserDisplayName(value)
+                })
+            }
+        }
+        return {visible: vg, hidden: hg}
+    }, [cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty, boardUsers])
+
     return (
         <div
             className='BoardComponent'

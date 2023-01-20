@@ -76,9 +76,12 @@ class CardFilter {
         if (template?.type === 'date') {
             dateValue = this.createDatePropertyFromString(value as string)
         }
-        if (!value) {
-            // const template = templates.find((o) => o.id === filter.propertyId)
-            if (template && template.type === 'createdTime') {
+        if (!value && template) {
+            if (template.type === 'createdBy') {
+                value = card.createdBy
+            } else if (template.type === 'updatedBy') {
+                value = card.modifiedBy
+            } else if (template && template.type === 'createdTime') {
                 value = card.createAt.toString()
                 dateValue = this.createDatePropertyFromString(value as string)
             } else if (template && template.type === 'updatedTime') {
@@ -172,6 +175,9 @@ class CardFilter {
             return !(value as string || '').endsWith(filter.values[0]?.toLowerCase())
         }
         case 'isBefore': {
+            if (filter.values.length === 0) {
+                return true
+            }
             if (dateValue !== undefined) {
                 const numericFilter = parseInt(filter.values[0], 10)
                 if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
@@ -189,6 +195,9 @@ class CardFilter {
             return false
         }
         case 'isAfter': {
+            if (filter.values.length === 0) {
+                return true
+            }
             if (dateValue !== undefined) {
                 const numericFilter = parseInt(filter.values[0], 10)
                 if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
@@ -255,6 +264,10 @@ class CardFilter {
             return {id: filterClause.propertyId}
         }
 
+        if (template.type === 'createdBy' || template.type === 'updatedBy') {
+            return {id: filterClause.propertyId}
+        }
+
         switch (filterClause.condition) {
         case 'includes': {
             if (filterClause.values.length < 1) {
@@ -281,7 +294,7 @@ class CardFilter {
             return {id: filterClause.propertyId}
         }
         default: {
-            Utils.assertFailure(`Unexpected filter condition: ${filterClause.condition}`)
+            // Handle filter clause that cannot be set
             return {id: filterClause.propertyId}
         }
         }
