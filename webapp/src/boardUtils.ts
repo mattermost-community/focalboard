@@ -1,6 +1,5 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {Utils} from './utils'
 import {Card} from './blocks/card'
 import {IPropertyTemplate, IPropertyOption, BoardGroup} from './blocks/board'
 
@@ -17,7 +16,7 @@ function groupCardsByOptions(cards: Card[], optionIds: string[], groupByProperty
                 }
                 groups.push(group)
             } else {
-                Utils.logError(`groupCardsByOptions: Missing option with id: ${optionId}`)
+                // if optionId not found, its an old (deleted) option that can be ignored
             }
         } else {
             // Empty group
