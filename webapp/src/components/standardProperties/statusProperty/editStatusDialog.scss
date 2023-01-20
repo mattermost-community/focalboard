@@ -21,12 +21,14 @@
         flex-direction: row;
         margin-top: 36px;
         gap: 10px;
+        overflow: hidden;
 
         .categorySwimlane {
-            flex-grow: 1;
+            flex: 1 1 0;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            overflow: hidden;
         }
 
         .categorySwimlane_Header {
@@ -49,32 +51,32 @@
             flex: 1;
             border: 2px dashed rgba(63, 67, 80, 0.24);
             border-radius: 8px;
-            padding: 17px;
+            overflow: hidden;
+            padding: 14px 3px !important;
             display: flex;
             flex-direction: column;
             gap: 8px;
 
+            .overflowWrapper {
+                overflow-y: auto;
+            }
+
             .Label {
                 width: max-content;
+
+                span {
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
             }
 
             .categorySwimlane_Value {
                 display: flex;
-                padding-left: 20px;
                 cursor: pointer;
                 padding-top: 4px;
                 padding-bottom: 4px;
 
-                &:hover {
-                    padding-left: 0;
-
-                    .dragHandleWrapper {
-                        display: block;
-                    }
-                }
-
                 .dragHandleWrapper {
-                    display: none;
                     width: 20px;
                     margin-top: 3px;
                 }

@@ -81,7 +81,9 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                 <PlusIcon/>
                             </div>
                             <div className='categorySwimlane_ValueArea'>
-                                {valueCategory.options.map((option) => generateValueRow(option))}
+                                <div className='overflowWrapper'>
+                                    {valueCategory.options.map((option) => generateValueRow(option))}
+                                </div>
                             </div>
                         </div>
                     )
