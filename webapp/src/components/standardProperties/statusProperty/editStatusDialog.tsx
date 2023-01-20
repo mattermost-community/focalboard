@@ -17,6 +17,7 @@ import ActionDialog from '../../actionDialog/actionDialog'
 import Label from '../../../widgets/label'
 import {IPropertyOption} from '../../../blocks/board'
 import DragHandle from '../../../widgets/icons/dragHandle'
+import EditIcon from '../../../widgets/icons/edit'
 
 export type StatusCategoryEmptyState = {
     icon: JSX.Element
@@ -70,6 +71,8 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                         >
                             <span>{option.value}</span>
                         </Label>
+                        <div className={`colorEditor ${option.color} withBorder`}/>
+                        <EditIcon/>
                     </div>
                 )}
             </Draggable>

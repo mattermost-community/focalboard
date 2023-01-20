@@ -65,6 +65,8 @@
             .Label {
                 width: max-content;
                 margin-top: 0;
+                margin-right: auto;
+                max-width: 150px;
 
                 span {
                     overflow: hidden;
@@ -75,19 +77,50 @@
             .categorySwimlane_Value {
                 display: flex;
                 cursor: pointer;
-                padding-top: 4px;
-                padding-bottom: 4px;
+                padding: 4px;
+
+                .colorEditor, .EditIcon {
+                    display: none;
+                }
+
+                .colorEditor {
+                    margin-right: 4px;
+                    margin-left: 4px;
+                }
+
+                .EditIcon {
+                    width: 24px;
+                    height: 24px;
+                    text-align: center;
+                    border-radius: 4px;
+
+                    &:hover {
+                        background: rgba(var(--center-channel-color-rgb), 0.1);
+                    }
+                }
 
                 &:hover {
                     background: rgba(var(--center-channel-color-rgb), 0.1);
                     border-radius: 4px;
+
+                    .colorEditor, .EditIcon {
+                        display: block;
+                    }
                 }
 
                 .dragHandleWrapper {
                     width: 24px;
                     height: 24px;
-                    margin-top: 3px;
                     text-align: center;
+                }
+                
+                .colorEditor {
+                    width: 24px;
+                    min-width: 24px;
+                    max-width: 24px;
+                    height: 24px;
+                    border: 1px solid #80808052;
+                    border-radius: 4px;
                 }
             }
 
