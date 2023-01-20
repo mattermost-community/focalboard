@@ -17,7 +17,7 @@ type Service struct {
 // NewMetricsServer factory method to create a new prometheus server.
 func NewMetricsServer(address string, metricsService *Metrics, logger mlog.LoggerIFace) *Service {
 	return &Service{
-		&http.Server{ //nolint:gosec
+		&http.Server{
 			Addr: address,
 			Handler: promhttp.HandlerFor(metricsService.registry, promhttp.HandlerOpts{
 				ErrorLog: logger.StdLogger(mlog.LvlError),

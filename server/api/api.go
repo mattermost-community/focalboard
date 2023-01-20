@@ -220,7 +220,7 @@ func stringResponse(w http.ResponseWriter, message string) {
 	_, _ = fmt.Fprint(w, message)
 }
 
-func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam
+func jsonStringResponse(w http.ResponseWriter, code int, message string) {
 	setResponseHeader(w, "Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
@@ -232,7 +232,7 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	_, _ = w.Write(json)
 }
 
-func setResponseHeader(w http.ResponseWriter, key string, value string) { //nolint:unparam
+func setResponseHeader(w http.ResponseWriter, key string, value string) {
 	header := w.Header()
 	if header == nil {
 		return
