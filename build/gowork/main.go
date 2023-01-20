@@ -51,7 +51,7 @@ func makeGoWork(ci bool) string {
 
 	var b strings.Builder
 
-	b.WriteString("go 1.19\n\n")
+	b.WriteString("go 1.18\n\n")
 	b.WriteString("use ./server\n")
 
 	for repo, envVarName := range repos {

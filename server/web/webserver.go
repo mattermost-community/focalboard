@@ -59,8 +59,7 @@ func NewServer(rootPath string, serverRoot string, port int, ssl, localOnly bool
 	baseURL = url.Path
 
 	ws := &Server{
-		// (TODO: Add ReadHeaderTimeout)
-		Server: http.Server{ //nolint:gosec
+		Server: http.Server{
 			Addr:    addr,
 			Handler: r,
 		},

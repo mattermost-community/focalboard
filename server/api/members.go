@@ -146,7 +146,7 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if reqBoardMember.UserID == "" {
-		a.errorResponse(w, r, model.NewErrBadRequest("empty userID"))
+		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
 		return
 	}
 
