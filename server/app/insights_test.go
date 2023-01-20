@@ -51,7 +51,7 @@ func TestGetTeamAndUserBoardsInsights(t *testing.T) {
 		th.Store.EXPECT().GetUserByID("user-id").Return(fakeUser, nil).AnyTimes()
 		th.Store.EXPECT().GetBoardsForUserAndTeam("user-id", "team-id", true).Return(mockInsightsBoards, nil).AnyTimes()
 		th.Store.EXPECT().
-			GetTeamBoardsInsights("team-id", "user-id", int64(0), 0, 10, []string{"mock-user-workspace-id"}).
+			GetTeamBoardsInsights("team-id", int64(0), 0, 10, []string{"mock-user-workspace-id"}).
 			Return(mockTeamInsightsList, nil)
 		results, err := th.App.GetTeamBoardsInsights("user-id", "team-id", &mmModel.InsightsOpts{StartUnixMilli: 0, Page: 0, PerPage: 10})
 		require.NoError(t, err)
@@ -74,7 +74,7 @@ func TestGetTeamAndUserBoardsInsights(t *testing.T) {
 		th.Store.EXPECT().GetUserByID("user-id").Return(fakeUser, nil).AnyTimes()
 		th.Store.EXPECT().GetBoardsForUserAndTeam("user-id", "team-id", true).Return(mockInsightsBoards, nil).AnyTimes()
 		th.Store.EXPECT().
-			GetTeamBoardsInsights("team-id", "user-id", int64(0), 0, 10, []string{"mock-user-workspace-id"}).
+			GetTeamBoardsInsights("team-id", int64(0), 0, 10, []string{"mock-user-workspace-id"}).
 			Return(nil, insightError{"board-insight-error"})
 		_, err := th.App.GetTeamBoardsInsights("user-id", "team-id", &mmModel.InsightsOpts{StartUnixMilli: 0, Page: 0, PerPage: 10})
 		require.Error(t, err)
