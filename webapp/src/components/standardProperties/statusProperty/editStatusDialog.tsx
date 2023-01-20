@@ -4,6 +4,10 @@
 import React from 'react'
 import {FormattedMessage} from 'react-intl'
 
+import {useCallback} from 'preact/hooks'
+
+import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd'
+
 import PlusIcon from '../../../widgets/icons/plus'
 
 import InfoIcon from '../../../widgets/icons/info'
@@ -40,23 +44,35 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         />
     )
 
-    const generateValueRow = (option: IPropertyOption): JSX.Element => {
+    const generateValueRow = (option: IPropertyOption, index: number): JSX.Element => {
         return (
-            <div
-                key={option.id}
-                className='categorySwimlane_Value'
+            <Draggable
+                draggableId={option.id}
+                index={index}
             >
-                <div className='dragHandleWrapper'>
-                    <DragHandle/>
-                </div>
-                <Label
-                    key={option.id}
-                    color={option.color}
-                    title={option.value}
-                >
-                    <span>{option.value}</span>
-                </Label>
-            </div>
+                {(provided) => (
+                    <div
+                        {...provided.draggableProps}
+                        ref={provided.innerRef}
+                        key={option.id}
+                        className='categorySwimlane_Value'
+                    >
+                        <div
+                            {...provided.dragHandleProps}
+                            className='dragHandleWrapper'
+                        >
+                            <DragHandle/>
+                        </div>
+                        <Label
+                            key={option.id}
+                            color={option.color}
+                            title={option.value}
+                        >
+                            <span>{option.value}</span>
+                        </Label>
+                    </div>
+                )}
+            </Draggable>
         )
     }
 
@@ -79,6 +95,8 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         )
     }
 
+    const onDragEndHandler = () => {}
+
     return (
         <ActionDialog
             onClose={props.onClose}
@@ -93,34 +111,45 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                 />
             </div>
             <div className='categorySwimlanes'>
-                {props.valueCategories.map((valueCategory) => {
-                    return (
-                        <div
-                            key={valueCategory.id}
-                            className='categorySwimlane'
-                        >
-                            <div className='categorySwimlane_Header'>
-                                <div className='text-heading1'>
-                                    {valueCategory.title}
+                <DragDropContext onDragEnd={onDragEndHandler}>
+                    {props.valueCategories.map((valueCategory) => {
+                        return (
+                            <div
+                                key={valueCategory.id}
+                                className='categorySwimlane'
+                            >
+                                <div className='categorySwimlane_Header'>
+                                    <div className='text-heading1'>
+                                        {valueCategory.title}
+                                    </div>
+                                    <InfoIcon/>
+                                    <PlusIcon/>
                                 </div>
-                                <InfoIcon/>
-                                <PlusIcon/>
+                                <Droppable droppableId={`categorySwimlane_${valueCategory.id}`}>
+                                    {(provided) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            className='categorySwimlane_ValueArea'
+                                        >
+                                            <div className='overflowWrapper'>
+                                                {
+                                                    valueCategory.options.length === 0 &&
+                                         generateEmptyColumnPlaceholder(valueCategory.emptyState)
+                                                }
+                                                {
+                                                    valueCategory.options.length > 0 &&
+                                         valueCategory.options.map((option, index) => generateValueRow(option, index))
+                                                }
+                                            </div>
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
                             </div>
-                            <div className='categorySwimlane_ValueArea'>
-                                <div className='overflowWrapper'>
-                                    {
-                                        valueCategory.options.length === 0 &&
-                                        generateEmptyColumnPlaceholder(valueCategory.emptyState)
-                                    }
-                                    {
-                                        valueCategory.options.length > 0 &&
-                                        valueCategory.options.map((option) => generateValueRow(option))
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    )
-                })}
+                        )
+                    })}
+                </DragDropContext>
             </div>
         </ActionDialog>
     )

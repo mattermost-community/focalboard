@@ -49,7 +49,7 @@
 
         .categorySwimlane_ValueArea {
             flex: 1;
-            border: 2px dashed rgba(63, 67, 80, 0.24);
+            border: 2px dashed rgba(var(--center-channel-color-rgb), 0.25);
             border-radius: 8px;
             overflow: hidden;
             padding: 14px 3px !important;
@@ -59,10 +59,12 @@
 
             .overflowWrapper {
                 overflow-y: auto;
+                min-height: 100%;
             }
 
             .Label {
                 width: max-content;
+                margin-top: 0;
 
                 span {
                     overflow: hidden;
@@ -76,9 +78,16 @@
                 padding-top: 4px;
                 padding-bottom: 4px;
 
+                &:hover {
+                    background: rgba(var(--center-channel-color-rgb), 0.1);
+                    border-radius: 4px;
+                }
+
                 .dragHandleWrapper {
-                    width: 20px;
+                    width: 24px;
+                    height: 24px;
                     margin-top: 3px;
+                    text-align: center;
                 }
             }
 
@@ -108,6 +117,3 @@
         }
     }
 }
-
-
-  
