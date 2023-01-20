@@ -71,7 +71,12 @@ describe('properties/multiperson', () => {
                     propertyValue={['user-id-4']}
                     readOnly={false}
                     showEmptyPlaceholder={false}
-                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyTemplate={{
+                        id: 'personPropertyID',
+                        name: 'My Person Property',
+                        type: 'multiPerson',
+                        options: [],
+                    } as IPropertyTemplate}
                     board={{} as Board}
                     card={{} as Card}
                 />
@@ -97,7 +102,12 @@ describe('properties/multiperson', () => {
                     propertyValue={['user-id-1', 'user-id-2']}
                     readOnly={false}
                     showEmptyPlaceholder={false}
-                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyTemplate={{
+                        id: 'personPropertyID',
+                        name: 'My Person Property',
+                        type: 'multiPerson',
+                        options: [],
+                    } as IPropertyTemplate}
                     board={{} as Board}
                     card={{} as Card}
                 />
@@ -123,7 +133,12 @@ describe('properties/multiperson', () => {
                     propertyValue={['user-id-1', 'user-id-2']}
                     readOnly={true}
                     showEmptyPlaceholder={false}
-                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyTemplate={{
+                        id: 'personPropertyID',
+                        name: 'My Person Property',
+                        type: 'multiPerson',
+                        options: [],
+                    } as IPropertyTemplate}
                     board={{} as Board}
                     card={{} as Card}
                 />
@@ -149,7 +164,12 @@ describe('properties/multiperson', () => {
                     propertyValue={['user-id-1', 'user-id-2']}
                     readOnly={false}
                     showEmptyPlaceholder={false}
-                    propertyTemplate={{} as IPropertyTemplate}
+                    propertyTemplate={{
+                        id: 'personPropertyID',
+                        name: 'My Person Property',
+                        type: 'multiPerson',
+                        options: [],
+                    } as IPropertyTemplate}
                     board={{} as Board}
                     card={{} as Card}
                 />

@@ -54,6 +54,12 @@ func (a *pluginAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.
 	return channel, normalizeAppErr(appErr)
 }
 
+func (a *pluginAPIAdapter) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+	// plugin API's GetDirectChannel will create channel if it does not exist.
+	channel, appErr := a.api.GetDirectChannel(userID1, userID2)
+	return channel, normalizeAppErr(appErr)
+}
+
 func (a *pluginAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
 	channel, appErr := a.api.GetChannel(channelID)
 	return channel, normalizeAppErr(appErr)
