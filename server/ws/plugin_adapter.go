@@ -422,7 +422,7 @@ func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[strin
 			EnsureUsers: ensureUserIDs,
 		}
 
-		pa.sendMessageToCluster(clusterMessage)
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
 	pa.sendTeamMessageSkipCluster(event, teamID, payload)
@@ -447,7 +447,7 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 			EnsureUsers: ensureUserIDs,
 		}
 
-		pa.sendMessageToCluster(clusterMessage)
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
 	pa.sendBoardMessageSkipCluster(teamID, boardID, payload, ensureUserIDs...)
@@ -490,7 +490,7 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 			UserID:  category.UserID,
 		}
 
-		pa.sendMessageToCluster(clusterMessage)
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
@@ -514,7 +514,7 @@ func (pa *PluginAdapter) BroadcastCategoryReorder(teamID, userID string, categor
 			UserID:  userID,
 		}
 
-		pa.sendMessageToCluster(clusterMessage)
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
@@ -540,7 +540,7 @@ func (pa *PluginAdapter) BroadcastCategoryBoardsReorder(teamID, userID, category
 			UserID:  userID,
 		}
 
-		pa.sendMessageToCluster(clusterMessage)
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
@@ -568,7 +568,7 @@ func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boa
 			UserID:  userID,
 		}
 
-		pa.sendMessageToCluster(clusterMessage)
+		pa.sendMessageToCluster("websocket_message", clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategoryBoard, utils.StructToMap(message), userID)

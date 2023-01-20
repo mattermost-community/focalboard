@@ -15,8 +15,7 @@ type ClusterMessage struct {
 	EnsureUsers []string
 }
 
-func (pa *PluginAdapter) sendMessageToCluster(clusterMessage *ClusterMessage) {
-	const id = "websocket_message"
+func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *ClusterMessage) {
 	b, err := json.Marshal(clusterMessage)
 	if err != nil {
 		pa.logger.Error("couldn't get JSON bytes from cluster message",

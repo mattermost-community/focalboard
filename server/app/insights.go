@@ -19,7 +19,7 @@ func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.
 	if err != nil {
 		return nil, err
 	}
-	return a.store.GetTeamBoardsInsights(teamID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
+	return a.store.GetTeamBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
 }
 
 func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
