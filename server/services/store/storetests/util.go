@@ -5,6 +5,7 @@ package storetests
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -106,4 +107,37 @@ func createTestBoards(t *testing.T, store store.Store, userID string, num int) [
 		boards = append(boards, boardNew)
 	}
 	return boards
+}
+
+// extractIDs is a test helper that extracts a sorted slice of IDs from slices of various struct types.
+// Might have used generics here except that would require implementing a `GetID` method on each type.
+func extractIDs(t *testing.T, arr ...any) []string {
+	ids := make([]string, 0)
+
+	for _, item := range arr {
+		if item == nil {
+			continue
+		}
+
+		switch tarr := item.(type) {
+		case []*model.Board:
+			for _, b := range tarr {
+				if b != nil {
+					ids = append(ids, b.ID)
+				}
+			}
+		case []*model.Block:
+			for _, b := range tarr {
+				if b != nil {
+					ids = append(ids, b.ID)
+				}
+			}
+		default:
+			t.Errorf("unsupported type %T extracting board ID", item)
+		}
+	}
+
+	// sort the ids to make it easier to compare lists of ids visually.
+	sort.Strings(ids)
+	return ids
 }

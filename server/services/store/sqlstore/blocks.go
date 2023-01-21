@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -42,27 +43,31 @@ func (s *SQLStore) timestampToCharField(name string, as string) string {
 	}
 }
 
-func (s *SQLStore) blockFields() []string {
+func (s *SQLStore) blockFields(alias string) []string {
+	if alias != "" && !strings.HasSuffix(alias, ".") {
+		alias = alias + "."
+	}
+
 	return []string{
-		"id",
-		"parent_id",
-		"created_by",
-		"modified_by",
-		s.escapeField("schema"),
-		"type",
-		"title",
-		"COALESCE(fields, '{}')",
-		s.timestampToCharField("insert_at", "insertAt"),
-		"create_at",
-		"update_at",
-		"delete_at",
-		"COALESCE(board_id, '0')",
+		alias + "id",
+		alias + "parent_id",
+		alias + "created_by",
+		alias + "modified_by",
+		alias + s.escapeField("schema"),
+		alias + "type",
+		alias + "title",
+		"COALESCE(" + alias + "fields, '{}')",
+		s.timestampToCharField(alias+"insert_at", "insertAt"),
+		alias + "create_at",
+		alias + "update_at",
+		alias + "delete_at",
+		"COALESCE(" + alias + "board_id, '0')",
 	}
 }
 
 func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks")
 
 	if opts.BoardID != "" {
@@ -115,7 +120,7 @@ func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID strin
 
 func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": ids})
 
@@ -150,7 +155,7 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string
 // getSubTree2 returns blocks within 2 levels of the given blockID.
 func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"board_id": boardID}).
@@ -550,7 +555,7 @@ func (s *SQLStore) getBoardCount(db sq.BaseRunner) (int64, error) {
 
 func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": blockID})
 
@@ -580,7 +585,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
@@ -614,7 +619,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"board_id": boardID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
@@ -634,6 +639,58 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 	rows, err := query.Query()
 	if err != nil {
 		s.logger.Error(`GetBlockHistoryDescendants ERROR`, mlog.Err(err))
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	return s.blocksFromRows(rows)
+}
+
+// getBlockHistoryNewestChildren returns the newest (latest) version child blocks for the
+// specified parent from the blocks_history table. This includes any deleted children.
+func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID string) ([]*model.Block, error) {
+	// as we're joining 2 queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder(db).PlaceholderFormat(sq.Question)
+
+	sub := builder.
+		Select("bh2.id", "MAX(bh2.insert_at) AS max_insert_at").
+		From(s.tablePrefix + "blocks_history AS bh2").
+		Where(sq.Eq{"bh2.parent_id": parentID}).
+		GroupBy("bh2.id")
+
+	subQuery, subArgs, err := sub.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("getBlockHistoryNewestChildren unable to generate subquery: %w", err)
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields("bh")...).
+		From(s.tablePrefix+"blocks_history AS bh").
+		InnerJoin("("+subQuery+") AS sub ON bh.id=sub.id AND bh.insert_at=sub.max_insert_at", subArgs...)
+
+	sql, args, err := query.ToSql()
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		sql, rErr = sq.Dollar.ReplacePlaceholders(sql)
+		if rErr != nil {
+			return nil, fmt.Errorf("getBlockHistoryNewestChildren unable to replace sql placeholders: %w", rErr)
+		}
+	}
+
+	s.logger.Debug("getBlockHistoryNewestChildren",
+		mlog.String("sql", sql),
+		mlog.Array("args", args),
+	)
+
+	rows, err := db.Query(sql, args...)
+	if err != nil {
+		s.logger.Error(`getBlockHistoryNewestChildren ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)

@@ -1,6 +1,7 @@
 package storetests
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -78,6 +79,11 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testUndeleteBlockChildren(t, store)
+	})
+	t.Run("GetBlockHistoryNewestChildren", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlockHistoryNewestChildren(t, store)
 	})
 }
 
@@ -1151,5 +1157,63 @@ func testUndeleteBlockChildren(t *testing.T, store store.Store) {
 		blocks, err = store.GetBlocksForBoard(boardDelete.ID)
 		require.NoError(t, err)
 		assert.Len(t, blocks, len(blocksDelete)+len(cardsDelete))
+	})
+}
+
+func testGetBlockHistoryNewestChildren(t *testing.T, store store.Store) {
+	boards := createTestBoards(t, store, testUserID, 2)
+	board := boards[0]
+
+	const cardCount = 10
+
+	// create a card and some content blocks
+	cards := createTestCards(t, store, testUserID, board.ID, 1)
+	card := cards[0]
+	content := createTestBlocksForCard(t, store, card.ID, cardCount)
+
+	// patch the content blocks to create some history records
+	const patchCount = 5
+	for i := 1; i <= patchCount; i++ {
+		for _, block := range content {
+			title := strconv.FormatInt(int64(i), 10)
+			patch := &model.BlockPatch{
+				Title: &title,
+			}
+			err := store.PatchBlock(block.ID, patch, testUserID)
+			require.NoError(t, err, "error patching content blocks")
+		}
+	}
+
+	// delete some of the content blocks
+	err := store.DeleteBlock(content[0].ID, testUserID)
+	require.NoError(t, err, "error deleting content block")
+	err = store.DeleteBlock(content[3].ID, testUserID)
+	require.NoError(t, err, "error deleting content block")
+	err = store.DeleteBlock(content[7].ID, testUserID)
+	require.NoError(t, err, "error deleting content block")
+
+	t.Run("invalid card", func(t *testing.T) {
+		blocks, err := store.GetBlockHistoryNewestChildren(utils.NewID(utils.IDTypeCard))
+		require.NoError(t, err)
+		require.Empty(t, blocks)
+	})
+
+	t.Run("valid card with no children", func(t *testing.T) {
+		emptyCard := createTestCards(t, store, testUserID, board.ID, 1)[0]
+		blocks, err := store.GetBlockHistoryNewestChildren(emptyCard.ID)
+		require.NoError(t, err)
+		require.Empty(t, blocks)
+	})
+
+	t.Run("valid card with children", func(t *testing.T) {
+		blocks, err := store.GetBlockHistoryNewestChildren(card.ID)
+		require.NoError(t, err)
+		require.Len(t, blocks, cardCount)
+		require.ElementsMatch(t, extractIDs(t, blocks), extractIDs(t, content))
+
+		expected := strconv.FormatInt(patchCount, 10)
+		for _, b := range blocks {
+			require.Equal(t, expected, b.Title)
+		}
 	})
 }
