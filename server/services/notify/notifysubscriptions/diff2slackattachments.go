@@ -246,7 +246,7 @@ func appendCommentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Dif
 				msg = child.NewBlock.Title
 			}
 
-			if child.NewBlock == nil && child.OldBlock != nil {
+			if (child.NewBlock == nil || child.NewBlock.DeleteAt != 0) && child.OldBlock != nil {
 				// deleted comment
 				format = "~~`%s`~~"
 				msg = stripNewlines(child.OldBlock.Title)

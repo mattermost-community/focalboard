@@ -1,6 +1,7 @@
 package storetests
 
 import (
+	"math"
 	"strconv"
 	"testing"
 	"time"
@@ -1165,6 +1166,7 @@ func testGetBlockHistoryNewestChildren(t *testing.T, store store.Store) {
 	board := boards[0]
 
 	const cardCount = 10
+	const patchCount = 5
 
 	// create a card and some content blocks
 	cards := createTestCards(t, store, testUserID, board.ID, 1)
@@ -1172,7 +1174,6 @@ func testGetBlockHistoryNewestChildren(t *testing.T, store store.Store) {
 	content := createTestBlocksForCard(t, store, card.ID, cardCount)
 
 	// patch the content blocks to create some history records
-	const patchCount = 5
 	for i := 1; i <= patchCount; i++ {
 		for _, block := range content {
 			title := strconv.FormatInt(int64(i), 10)
@@ -1193,26 +1194,59 @@ func testGetBlockHistoryNewestChildren(t *testing.T, store store.Store) {
 	require.NoError(t, err, "error deleting content block")
 
 	t.Run("invalid card", func(t *testing.T) {
-		blocks, err := store.GetBlockHistoryNewestChildren(utils.NewID(utils.IDTypeCard))
+		opts := model.QueryBlockHistoryChildOptions{}
+		blocks, hasMore, err := store.GetBlockHistoryNewestChildren(utils.NewID(utils.IDTypeCard), opts)
 		require.NoError(t, err)
+		require.False(t, hasMore)
 		require.Empty(t, blocks)
 	})
 
 	t.Run("valid card with no children", func(t *testing.T) {
+		opts := model.QueryBlockHistoryChildOptions{}
 		emptyCard := createTestCards(t, store, testUserID, board.ID, 1)[0]
-		blocks, err := store.GetBlockHistoryNewestChildren(emptyCard.ID)
+		blocks, hasMore, err := store.GetBlockHistoryNewestChildren(emptyCard.ID, opts)
 		require.NoError(t, err)
+		require.False(t, hasMore)
 		require.Empty(t, blocks)
 	})
 
 	t.Run("valid card with children", func(t *testing.T) {
-		blocks, err := store.GetBlockHistoryNewestChildren(card.ID)
+		opts := model.QueryBlockHistoryChildOptions{}
+		blocks, hasMore, err := store.GetBlockHistoryNewestChildren(card.ID, opts)
 		require.NoError(t, err)
+		require.False(t, hasMore)
 		require.Len(t, blocks, cardCount)
 		require.ElementsMatch(t, extractIDs(t, blocks), extractIDs(t, content))
 
 		expected := strconv.FormatInt(patchCount, 10)
 		for _, b := range blocks {
+			require.Equal(t, expected, b.Title)
+		}
+	})
+
+	t.Run("pagination", func(t *testing.T) {
+		opts := model.QueryBlockHistoryChildOptions{
+			PerPage: 3,
+		}
+
+		collected := make([]*model.Block, 0)
+		reps := 0
+		for {
+			reps++
+			blocks, hasMore, err := store.GetBlockHistoryNewestChildren(card.ID, opts)
+			require.NoError(t, err)
+			collected = append(collected, blocks...)
+			if !hasMore {
+				break
+			}
+			opts.Page++
+		}
+
+		assert.Len(t, collected, cardCount)
+		assert.Equal(t, math.Floor(float64(cardCount/opts.PerPage)+1), float64(reps))
+
+		expected := strconv.FormatInt(patchCount, 10)
+		for _, b := range collected {
 			require.Equal(t, expected, b.Title)
 		}
 	})

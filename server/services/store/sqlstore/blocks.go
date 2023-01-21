@@ -648,7 +648,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 
 // getBlockHistoryNewestChildren returns the newest (latest) version child blocks for the
 // specified parent from the blocks_history table. This includes any deleted children.
-func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID string) ([]*model.Block, error) {
+func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error) {
 	// as we're joining 2 queries, we need to avoid numbered
 	// placeholders until the join is done, so we use the default
 	// question mark placeholder here
@@ -660,15 +660,32 @@ func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID stri
 		Where(sq.Eq{"bh2.parent_id": parentID}).
 		GroupBy("bh2.id")
 
+	if opts.AfterUpdateAt != 0 {
+		sub = sub.Where(sq.Gt{"bh2.update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.BeforeUpdateAt != 0 {
+		sub = sub.Where(sq.Lt{"bh2.update_at": opts.BeforeUpdateAt})
+	}
+
 	subQuery, subArgs, err := sub.ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("getBlockHistoryNewestChildren unable to generate subquery: %w", err)
+		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate subquery: %w", err)
 	}
 
 	query := s.getQueryBuilder(db).
 		Select(s.blockFields("bh")...).
 		From(s.tablePrefix+"blocks_history AS bh").
 		InnerJoin("("+subQuery+") AS sub ON bh.id=sub.id AND bh.insert_at=sub.max_insert_at", subArgs...)
+
+	if opts.Page != 0 {
+		query = query.Offset(uint64(opts.Page * opts.PerPage))
+	}
+
+	if opts.PerPage > 0 {
+		// limit+1 to detect if more records available
+		query = query.Limit(uint64(opts.PerPage + 1))
+	}
 
 	sql, args, err := query.ToSql()
 
@@ -679,23 +696,28 @@ func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID stri
 		var rErr error
 		sql, rErr = sq.Dollar.ReplacePlaceholders(sql)
 		if rErr != nil {
-			return nil, fmt.Errorf("getBlockHistoryNewestChildren unable to replace sql placeholders: %w", rErr)
+			return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to replace sql placeholders: %w", rErr)
 		}
 	}
-
-	s.logger.Debug("getBlockHistoryNewestChildren",
-		mlog.String("sql", sql),
-		mlog.Array("args", args),
-	)
 
 	rows, err := db.Query(sql, args...)
 	if err != nil {
 		s.logger.Error(`getBlockHistoryNewestChildren ERROR`, mlog.Err(err))
-		return nil, err
+		return nil, false, err
 	}
 	defer s.CloseRows(rows)
 
-	return s.blocksFromRows(rows)
+	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return nil, false, err
+	}
+
+	hasMore := false
+	if opts.PerPage > 0 && len(blocks) > opts.PerPage {
+		blocks = blocks[:opts.PerPage]
+		hasMore = true
+	}
+	return blocks, hasMore, nil
 }
 
 // getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.

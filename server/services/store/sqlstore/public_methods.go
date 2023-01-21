@@ -333,8 +333,8 @@ func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBl
 
 }
 
-func (s *SQLStore) GetBlockHistoryNewestChildren(parentID string) ([]*model.Block, error) {
-	return s.getBlockHistoryNewestChildren(s.db, parentID)
+func (s *SQLStore) GetBlockHistoryNewestChildren(parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error) {
+	return s.getBlockHistoryNewestChildren(s.db, parentID, opts)
 
 }
 
