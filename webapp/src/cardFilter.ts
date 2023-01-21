@@ -175,6 +175,9 @@ class CardFilter {
             return !(value as string || '').endsWith(filter.values[0]?.toLowerCase())
         }
         case 'isBefore': {
+            if (filter.values.length === 0) {
+                return true
+            }
             if (dateValue !== undefined) {
                 const numericFilter = parseInt(filter.values[0], 10)
                 if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
@@ -192,6 +195,9 @@ class CardFilter {
             return false
         }
         case 'isAfter': {
+            if (filter.values.length === 0) {
+                return true
+            }
             if (dateValue !== undefined) {
                 const numericFilter = parseInt(filter.values[0], 10)
                 if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
