@@ -4,6 +4,8 @@ import React, {useCallback, useEffect, useState, useContext} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {DatePropertyType} from '../properties/types'
+
 import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
 import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
@@ -145,7 +147,7 @@ function CenterContent(props: Props) {
 
         let displayProperty = dateDisplayProperty
         if (!displayProperty && activeView?.fields.viewType === 'calendar') {
-            displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
+            displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type) instanceof DatePropertyType)
         }
 
         if (isPages) {

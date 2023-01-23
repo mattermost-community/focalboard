@@ -95,7 +95,15 @@ const TableRow = (props: Props) => {
     }
     if (isGrouped) {
         const groupID = groupById || ''
-        const groupValue = card.fields.properties[groupID] as string || 'undefined'
+        let groupValue = card.fields.properties[groupID] as string || 'undefined'
+        if (groupValue === 'undefined') {
+            const template = board.cardProperties.find((p) => p.id === groupById) //templates.find((o) => o.id === groupById)
+            if (template && template.type === 'createdBy') {
+                groupValue = card.createdBy
+            } else if (template && template.type === 'updatedBy') {
+                groupValue = card.modifiedBy
+            }
+        }
         if (collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }

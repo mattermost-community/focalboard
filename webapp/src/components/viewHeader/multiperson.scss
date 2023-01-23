@@ -1,8 +1,9 @@
-.Person {
-    padding: 4px 8px;
+.MultiPerson {
     display: flex;
     align-items: center;
     border-radius: 4px;
+    flex-wrap: wrap;
+    gap: 8px;
 
     &.readonly {
         overflow: hidden;
@@ -10,10 +11,9 @@
         min-width: unset;
     }
 
-    .Person-item {
+    .MultiPerson-item {
         display: flex;
         align-items: center;
-        color: rgba(var(--center-channel-color-rgb), 1);
 
         img {
             border-radius: 50px;
@@ -21,10 +21,6 @@
             height: 24px;
             margin-right: 6px;
         }
-    }
-
-    .react-select__input {
-        margin-left: -5px !important;
     }
 
     .react-select__menu {
@@ -41,11 +37,52 @@
         max-width: 100%;
     }
 
+    .react-select__value-container--is-multi {
+        gap: 4px;
+        display: inline-flex;
+
+        .react-select__multi-value__label {
+            padding-left: 4px;
+        }
+
+        .react-select__multi-value {
+            background: rgba(var(--center-channel-color-rgb), 0.08);
+            border-radius: 24px;
+            display: inline-flex;
+            color: rgb(var(--center-channel-color-rgb));
+            margin: 0;
+            align-items: center;
+
+            .MultiPerson-item,
+            .react-select__multi-value__label {
+                color: inherit;
+            }
+        }
+    }
+
+    .react-select__multi-value__remove {
+        font-size: 18px;
+        color: rgba(var(--center-channel-color-rgb), 0.56);
+        margin: 6px;
+        border-radius: 100%;
+        margin-left: 0;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background: rgba(var(--center-channel-color-rgb), 0.26);
+        }
+    }
+
     .react-select__option {
         display: flex;
         align-items: center;
         height: 40px;
-        padding: 0 40px 0 10px;
+        padding: 0 40px 0 20px;
 
         &:hover {
             background: rgba(var(--center-channel-color-rgb), 0.08);
@@ -60,7 +97,7 @@
             color: rgba(var(--center-channel-color-rgb), 1);
         }
 
-        .Person-item {
+        .MultiPerson-item {
             img {
                 margin-right: 12px;
             }
@@ -71,5 +108,3 @@
         border: 0;
     }
 }
-
-

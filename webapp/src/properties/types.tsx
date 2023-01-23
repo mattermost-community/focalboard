@@ -16,7 +16,7 @@ function encodeText(text: string): string {
 
 export type PropertyTypeEnum = BoardPropertyTypeEnum
 
-export type FilterValueType = 'none'|'options'|'boolean'|'text'
+export type FilterValueType = 'none'|'options'|'boolean'|'text'|'date'|'person'
 
 export type FilterCondition = {
     id: string
@@ -34,7 +34,6 @@ export type PropertyProps = {
 }
 
 export abstract class PropertyType {
-    isDate = false
     canGroup = false
     canFilter = false
     filterValueType: FilterValueType = 'none'
@@ -43,14 +42,10 @@ export abstract class PropertyType {
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue]
     displayValue: (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined
-    getDateFrom: (value: string | string[] | undefined, item: Card|Page) => Date | undefined
-    getDateTo: (value: string | string[] | undefined, item: Card|Page) => Date | undefined
     valueLength: (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number) => number
 
     constructor() {
         this.displayValue = (value: string | string[] | undefined) => value
-        this.getDateFrom = () => undefined
-        this.getDateTo = () => undefined
         this.valueLength = (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
             const displayValue = this.displayValue(value, item, template, intl) || ''
             return Utils.getTextWidth(displayValue.toString(), fontDescriptor)
@@ -75,4 +70,17 @@ export abstract class PropertyType {
     abstract name: string
     abstract type: PropertyTypeEnum
     abstract displayName: (intl: IntlShape) => string
+}
+
+export abstract class DatePropertyType extends PropertyType {
+    canFilter = true
+    filterValueType: FilterValueType = 'date'
+    getDateFrom: (value: string | string[] | undefined, card: Card) => Date | undefined
+    getDateTo: (value: string | string[] | undefined, card: Card) => Date | undefined
+
+    constructor() {
+        super()
+        this.getDateFrom = () => undefined
+        this.getDateTo = () => undefined
+    }
 }

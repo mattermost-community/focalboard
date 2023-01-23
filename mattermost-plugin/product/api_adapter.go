@@ -49,6 +49,11 @@ func (a *serviceAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model
 	return channel, normalizeAppErr(appErr)
 }
 
+func (a *serviceAPIAdapter) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+	channel, appErr := a.api.channelService.GetDirectChannelOrCreate(userID1, userID2)
+	return channel, normalizeAppErr(appErr)
+}
+
 func (a *serviceAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
 	channel, appErr := a.api.channelService.GetChannelByID(channelID)
 	return channel, normalizeAppErr(appErr)

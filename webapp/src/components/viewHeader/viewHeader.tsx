@@ -149,20 +149,19 @@ const ViewHeader = (props: Props) => {
                     spellCheck={true}
                     autoExpand={false}
                 />
-                {activeView &&
-                    <div>
-                        <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
-                            <IconButton icon={<DropdownIcon/>}/>
-                            <ViewMenu
-                                board={board}
-                                activeView={activeView}
-                                views={views}
-                                readonly={props.readonly || !canEditBoardProperties}
-                                allowCreateView={allowCreateView}
-                            />
-                        </MenuWrapper>
-                        {showAddViewTourStep && <AddViewTourStep/>}
-                    </div>}
+                {activeView && !props.readonly && (<div>
+                    <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
+                        <IconButton icon={<DropdownIcon/>}/>
+                        <ViewMenu
+                            board={board}
+                            activeView={activeView}
+                            views={views}
+                            readonly={props.readonly || !canEditBoardProperties}
+                            allowCreateView={allowCreateView}
+                        />
+                    </MenuWrapper>
+                    {showAddViewTourStep && <AddViewTourStep/>}
+                </div>)}
             </div>
 
             {activeView &&

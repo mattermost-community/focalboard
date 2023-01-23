@@ -12,6 +12,24 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type MockResolver struct{}
+
+func (r MockResolver) GetUserByID(userID string) (*User, error) {
+	if userID == "user_id_1" {
+		return &User{
+			ID:       "user_id_1",
+			Username: "username_1",
+		}, nil
+	} else if userID == "user_id_2" {
+		return &User{
+			ID:       "user_id_2",
+			Username: "username_2",
+		}, nil
+	}
+
+	return nil, nil
+}
+
 func Test_parsePropertySchema(t *testing.T) {
 	board := &Board{
 		ID:     utils.NewID(utils.IDTypeBoard),
@@ -42,6 +60,33 @@ func Test_parsePropertySchema(t *testing.T) {
 		assert.Equal(t, "MyDate", prop.Name)
 		assert.Empty(t, prop.Options)
 	})
+}
+
+func Test_GetValue(t *testing.T) {
+	resolver := MockResolver{}
+
+	propDef := PropDef{
+		Type: "multiPerson",
+	}
+
+	value, err := propDef.GetValue([]interface{}{"user_id_1", "user_id_2"}, resolver)
+	require.NoError(t, err)
+	require.Equal(t, "username_1, username_2", value)
+
+	// trying with only user
+	value, err = propDef.GetValue([]interface{}{"user_id_1"}, resolver)
+	require.NoError(t, err)
+	require.Equal(t, "username_1", value)
+
+	// trying with unknown user
+	value, err = propDef.GetValue([]interface{}{"user_id_1", "user_id_unknown"}, resolver)
+	require.NoError(t, err)
+	require.Equal(t, "username_1, user_id_unknown", value)
+
+	// trying with multiple unknown users
+	value, err = propDef.GetValue([]interface{}{"michael_scott", "jim_halpert"}, resolver)
+	require.NoError(t, err)
+	require.Equal(t, "michael_scott, jim_halpert", value)
 }
 
 const (
