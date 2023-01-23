@@ -4,6 +4,10 @@
         top: 0;
         height: 100%;
 
+        @media (min-width: 975px) {
+            height: calc(100% - 144px);
+        }
+
         >.CardDetail {
             display: flex;
             flex-direction: column;
