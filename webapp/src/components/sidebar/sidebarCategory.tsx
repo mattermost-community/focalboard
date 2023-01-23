@@ -25,6 +25,7 @@ import ChevronDown from '../../widgets/icons/chevronDown'
 import ChevronRight from '../../widgets/icons/chevronRight'
 import CreateNewFolder from '../../widgets/icons/newFolder'
 import CreateCategory from '../createCategory/createCategory'
+import {UserSettings} from '../../userSettings'
 import {useAppSelector} from '../../store/hooks'
 import {
     getMyConfig,
@@ -58,6 +59,7 @@ type Props = {
     allCategories: CategoryBoards[]
     index: number
     onBoardTemplateSelectorClose?: () => void
+    isPages: boolean
     draggedItemID?: string
     forceCollapse?: boolean
 }
@@ -122,6 +124,18 @@ const SidebarCategory = (props: Props) => {
         // otherwise remove viewId and cardId, results in first view being selected
         const params = {...match.params, boardId: boardId || '', viewId: viewId || ''}
         if (boardId !== match.params.boardId && viewId !== match.params.viewId) {
+            params.cardId = undefined
+        }
+        const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
+        history.push(newPath)
+        props.hideSidebar()
+    }, [match, history])
+
+    const showPage = useCallback((pageId, boardId) => {
+        // if the same board, reuse the match params
+        // otherwise remove viewId and cardId, results in first view being selected
+        const params = {...match.params, boardId: boardId || '', viewId: pageId || ''}
+        if (boardId !== match.params.boardId && pageId !== match.params.viewId) {
             params.cardId = undefined
         }
         const newPath = generatePath(Utils.getBoardPagePath(match.path), params)
@@ -194,6 +208,13 @@ const SidebarCategory = (props: Props) => {
                     setTimeout(() => {
                         showBoard(props.boards[nextBoardId as number].id)
                     }, 120)
+                }
+                if (props.isPages) {
+                    UserSettings.setLastFolderID(deleteBoard.teamId, null)
+                    UserSettings.setLastPageId(deleteBoard.id, null)
+                } else {
+                    UserSettings.setLastBoardID(deleteBoard.teamId, null)
+                    UserSettings.setLastViewId(deleteBoard.id, null)
                 }
             },
             async () => {
@@ -317,7 +338,7 @@ const SidebarCategory = (props: Props) => {
                                                         parentRef={menuWrapperRef}
                                                     >
                                                         {
-                                                            props.categoryBoards.type === 'custom' &&
+                                                            (props.categoryBoards.type === 'custom' || props.categoryBoards.type === 'pages-custom') &&
                                                             <React.Fragment>
                                                                 <Menu.Text
                                                                     id='updateCategory'
@@ -376,6 +397,7 @@ const SidebarCategory = (props: Props) => {
                                                     showBoard={showBoard}
                                                     showView={showView}
                                                     onDeleteRequest={setDeleteBoard}
+                                                    showPage={showPage}
                                                 />
                                             )
                                         })}
@@ -391,6 +413,7 @@ const SidebarCategory = (props: Props) => {
                                                     showBoard={showBoard}
                                                     showView={showView}
                                                     onDeleteRequest={setDeleteBoard}
+                                                    showPage={showPage}
                                                     hideViews={props.draggedItemID === board.id || props.draggedItemID === props.categoryBoards.id}
                                                 />
                                             )

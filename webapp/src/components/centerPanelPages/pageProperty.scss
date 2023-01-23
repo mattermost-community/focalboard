@@ -1,0 +1,19 @@
+.PageProperty {
+    display: flex;
+    align-items: center;
+    border-left: 1px solid rgba(var(--center-channel-color-rgb), 0.16);
+    margin-right: 12px;
+    padding-left: 12px;
+    gap: 4px;
+    margin-bottom: 8px;
+
+    &:first-child {
+        margin-left: -10px;
+        padding-left: 0;
+        border: 0;
+    }
+
+    .Label {
+        margin: 0;
+    }
+}

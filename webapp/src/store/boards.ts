@@ -226,12 +226,26 @@ export const {reducer} = boardsSlice
 
 export const getBoards = (state: RootState): {[key: string]: Board} => state.boards?.boards || {}
 
-export const getMySortedBoards = createSelector(
+export const getAllMySortedBoards = createSelector(
     getBoards,
     (state: RootState): {[key: string]: BoardMember} => state.boards?.myBoardMemberships || {},
     (boards, myBoardMemberships: {[key: string]: BoardMember}) => {
         return Object.values(boards).filter((b) => myBoardMemberships[b.id]).
             sort((a, b) => a.title.localeCompare(b.title))
+    },
+)
+
+export const getMySortedBoards = createSelector(
+    getAllMySortedBoards,
+    (boards) => {
+        return boards.filter((b) => !b.isPagesFolder)
+    },
+)
+
+export const getMySortedPageFolders = createSelector(
+    getAllMySortedBoards,
+    (boards) => {
+        return boards.filter((b) => b.isPagesFolder)
     },
 )
 

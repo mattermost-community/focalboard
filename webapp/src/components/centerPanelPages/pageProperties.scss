@@ -1,0 +1,13 @@
+@import '../../styles/z-index';
+
+.PageProperties {
+    @include z-index(center-panel);
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+
+    &:empty {
+        display: none;
+    }
+
+}

@@ -4,6 +4,7 @@ import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
 import {BlockInputProps, ContentType} from '../types'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './h1.scss'
 
@@ -14,6 +15,7 @@ const H1: ContentType = {
     prefix: '# ',
     runSlashCommand: (): void => {},
     editable: true,
+    icon: <CompassIcon icon='format-header-1'/>,
     Display: (props: BlockInputProps) => {
         const renderer = new marked.Renderer()
         const html = marked('# ' + props.value, {renderer, breaks: true})

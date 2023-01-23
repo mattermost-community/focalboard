@@ -85,7 +85,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -127,7 +127,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 1`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -234,7 +234,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -276,7 +276,7 @@ exports[`components/sidebarCategory sidebar call hideSidebar 2`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -383,7 +383,7 @@ exports[`components/sidebarCategory sidebar collapsed with active board in it 1`
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -584,7 +584,7 @@ exports[`components/sidebarCategory sidebar template close other 1`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -626,7 +626,7 @@ exports[`components/sidebarCategory sidebar template close other 1`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -762,7 +762,7 @@ exports[`components/sidebarCategory sidebar template close self 1`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button
@@ -833,7 +833,7 @@ exports[`components/sidebarCategory sidebar template close self 1`] = `
               <div>
                 <div
                   aria-label="menuwrapper"
-                  class="MenuWrapper x"
+                  class="MenuWrapper SidebarBoardMenu x"
                   role="button"
                 >
                   <button

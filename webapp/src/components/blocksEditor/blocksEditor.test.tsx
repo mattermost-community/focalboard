@@ -56,6 +56,7 @@ describe('components/blocksEditor/blocksEditor', () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BlocksEditor
+                        readonly={false}
                         boardId='test-board'
                         onBlockCreated={jest.fn()}
                         onBlockModified={jest.fn()}
@@ -75,6 +76,7 @@ describe('components/blocksEditor/blocksEditor', () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BlocksEditor
+                        readonly={false}
                         boardId='test-board'
                         onBlockCreated={jest.fn()}
                         onBlockModified={jest.fn()}
@@ -94,6 +96,7 @@ describe('components/blocksEditor/blocksEditor', () => {
             render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BlocksEditor
+                        readonly={false}
                         boardId='test-board'
                         onBlockCreated={onBlockCreated}
                         onBlockModified={jest.fn()}
@@ -122,6 +125,7 @@ describe('components/blocksEditor/blocksEditor', () => {
             render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BlocksEditor
+                        readonly={false}
                         boardId='test-board'
                         onBlockCreated={jest.fn()}
                         onBlockModified={onBlockModified}

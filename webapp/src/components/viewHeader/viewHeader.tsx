@@ -51,7 +51,7 @@ import './viewHeader.scss'
 
 type Props = {
     board: Board
-    activeView: BoardView
+    activeView?: BoardView
     views: BoardView[]
     cards: Card[]
     groupByProperty?: IPropertyTemplate
@@ -71,17 +71,17 @@ const ViewHeader = (props: Props) => {
 
     const {board, activeView, views, groupByProperty, cards, dateDisplayProperty} = props
 
-    const withGroupBy = activeView.fields.viewType === 'board' || activeView.fields.viewType === 'table'
-    const withDisplayBy = activeView.fields.viewType === 'calendar'
-    const withSortBy = activeView.fields.viewType !== 'calendar'
+    const withGroupBy = activeView?.fields.viewType === 'board' || activeView?.fields.viewType === 'table'
+    const withDisplayBy = activeView?.fields.viewType === 'calendar'
+    const withSortBy = activeView?.fields.viewType !== 'calendar'
 
-    const [viewTitle, setViewTitle] = useState(activeView.title)
+    const [viewTitle, setViewTitle] = useState(activeView?.title || '')
 
     useEffect(() => {
-        setViewTitle(activeView.title)
-    }, [activeView.title])
+        setViewTitle(activeView?.title || '')
+    }, [activeView?.title])
 
-    const hasFilter = activeView.fields.filter && activeView.fields.filter.filters?.length > 0
+    const hasFilter = activeView?.fields.filter && activeView?.fields.filter.filters?.length > 0
 
     const isOnboardingBoard = props.board.title === OnboardingBoardTitle
     const onboardingTourStarted = useAppSelector(getOnboardingTourStarted)
@@ -132,16 +132,16 @@ const ViewHeader = (props: Props) => {
     }
 
     return (
-        <div className='ViewHeader'>
+        <div className='ViewHeader viewHeaderView'>
             <div className='viewSelector'>
                 <Editable
                     value={viewTitle}
                     placeholderText='Untitled View'
                     onSave={(): void => {
-                        mutator.changeBlockTitle(activeView.boardId, activeView.id, activeView.title, viewTitle)
+                        mutator.changeBlockTitle(activeView?.boardId || '', activeView?.id || '', activeView?.title || '', viewTitle)
                     }}
                     onCancel={(): void => {
-                        setViewTitle(activeView.title)
+                        setViewTitle(activeView?.title || '')
                     }}
                     onChange={setViewTitle}
                     saveOnEsc={true}
@@ -149,7 +149,7 @@ const ViewHeader = (props: Props) => {
                     spellCheck={true}
                     autoExpand={false}
                 />
-                {!props.readonly && (<div>
+                {activeView && !props.readonly && (<div>
                     <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                         <IconButton icon={<DropdownIcon/>}/>
                         <ViewMenu
@@ -162,12 +162,12 @@ const ViewHeader = (props: Props) => {
                     </MenuWrapper>
                     {showAddViewTourStep && <AddViewTourStep/>}
                 </div>)}
-
             </div>
 
-            <div className='octo-spacer'/>
+            {activeView &&
+                <div className='octo-spacer'/>}
 
-            {!props.readonly && canEditBoardProperties &&
+            {!props.readonly && activeView && canEditBoardProperties &&
             <>
                 {/* Card properties */}
 
@@ -234,11 +234,12 @@ const ViewHeader = (props: Props) => {
 
             {/* Search */}
 
-            <ViewHeaderSearch/>
+            {activeView &&
+                <ViewHeaderSearch/>}
 
             {/* Options menu */}
 
-            {!props.readonly &&
+            {!props.readonly && activeView &&
             <>
                 <ViewHeaderActionsMenu
                     board={board}

@@ -144,6 +144,7 @@ html {
         max-width: 100%;
         font-size: 12px;
         color: rgb(var(--center-channel-color-rgb));
+        padding: 0;
 
         &.empty {
             color: rgba(var(--center-channel-color-rgb), 0.4);

@@ -56,6 +56,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -78,6 +79,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -100,6 +102,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
@@ -124,11 +127,12 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={setAfterBlock}
                         onSave={jest.fn()}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))
         })
-        const item = screen.getByTestId('add-action')
+        const item = screen.getByTestId('block-actions').children[0]
         expect(setAfterBlock).not.toBeCalled()
         fireEvent.click(item)
         expect(setAfterBlock).toBeCalledWith(block)
@@ -148,6 +152,7 @@ describe('components/blocksEditor/blockContent', () => {
                         setAfterBlock={jest.fn()}
                         onSave={onSave}
                         onMove={jest.fn()}
+                        readonly={false}
                     />
                 </ReduxProvider>,
             ))

@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/pkg/errors"
@@ -12,16 +13,27 @@ func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where 
 		message := fmt.Sprintf("not matching parent %s and %s", block.ParentID, dstBlock.ParentID)
 		return model.NewErrBadRequest(message)
 	}
-
-	card, err := a.GetBlockByID(block.ParentID)
-	if err != nil {
-		return err
-	}
-
-	contentOrderData, ok := card.Fields["contentOrder"]
 	var contentOrder []interface{}
-	if ok {
-		contentOrder = contentOrderData.([]interface{})
+	if strings.HasPrefix(block.ParentID, "b") {
+		board, err := a.GetBoard(block.ParentID)
+		if err != nil {
+			return err
+		}
+
+		contentOrderData, ok := board.Properties["contentOrder"]
+		if ok {
+			contentOrder = contentOrderData.([]interface{})
+		}
+	} else {
+		card, err := a.GetBlockByID(block.ParentID)
+		if err != nil {
+			return err
+		}
+
+		contentOrderData, ok := card.Fields["contentOrder"]
+		if ok {
+			contentOrder = contentOrderData.([]interface{})
+		}
 	}
 
 	newContentOrder := []interface{}{}
@@ -64,13 +76,26 @@ func (a *App) MoveContentBlock(block *model.Block, dstBlock *model.Block, where 
 		return model.NewErrBadRequest(message)
 	}
 
+	if strings.HasPrefix(block.ParentID, "b") {
+		patch := &model.BoardPatch{
+			UpdatedProperties: map[string]interface{}{
+				"contentOrder": newContentOrder,
+			},
+		}
+		_, err := a.PatchBoard(patch, block.ParentID, userID)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
 	patch := &model.BlockPatch{
 		UpdatedFields: map[string]interface{}{
 			"contentOrder": newContentOrder,
 		},
 	}
 
-	_, err = a.PatchBlock(block.ParentID, patch, userID)
+	_, err := a.PatchBlock(block.ParentID, patch, userID)
 	if errors.Is(err, model.ErrPatchUpdatesLimitedCards) {
 		return err
 	}

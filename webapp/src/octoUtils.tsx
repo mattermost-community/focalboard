@@ -7,6 +7,7 @@ import {FilterValueType} from './properties/types'
 import {Block, createBlock} from './blocks/block'
 import {BoardView, createBoardView} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
+import {createPage} from './blocks/page'
 import {createCommentBlock} from './blocks/commentBlock'
 import {createCheckboxBlock} from './blocks/checkboxBlock'
 import {createDividerBlock} from './blocks/dividerBlock'
@@ -23,6 +24,7 @@ class OctoUtils {
     static hydrateBlock(block: Block): Block {
         switch (block.type) {
         case 'view': { return createBoardView(block) }
+        case 'page': { return createPage(block) }
         case 'card': { return createCard(block) }
         case 'text': { return createTextBlock(block) }
         case 'h1': { return createH1Block(block) }

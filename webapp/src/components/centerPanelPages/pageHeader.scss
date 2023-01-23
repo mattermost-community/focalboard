@@ -1,0 +1,37 @@
+@import '../../styles/z-index';
+
+.PageHeader {
+    @include z-index(modal-permissions-label);
+    width: 100%;
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: rgb(var(--center-channel-bg-rgb));
+    padding: 0;
+
+    >.mid-head {
+        margin-top: 0;
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+        align-items: center;
+        border-bottom: 1px solid rgba(var(--center-channel-color-rgb), 0.1);
+
+        >div {
+            margin: 10px;
+        }
+
+        .Button {
+            .CompassIcon: {
+                color: rgba(var(--center-channel-color-rgb), 0.5);
+                font-size: 18px;
+            }
+        }
+    }
+
+    .shareButtonWrapper {
+        position: relative;
+        flex: 0 0 auto;
+    }
+}

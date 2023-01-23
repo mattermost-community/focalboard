@@ -4,6 +4,7 @@ import React from 'react'
 import {IntlShape} from 'react-intl'
 
 import {Card} from '../blocks/card'
+import {Page} from '../blocks/page'
 import {Board, IPropertyTemplate, PropertyTypeEnum as BoardPropertyTypeEnum} from '../blocks/board'
 import {Options} from '../components/calculations/options'
 import {Utils} from '../utils'
@@ -24,7 +25,7 @@ export type FilterCondition = {
 
 export type PropertyProps = {
     property: PropertyType
-    card: Card
+    item: Card|Page
     board: Board
     readOnly: boolean
     propertyValue: string | string[]
@@ -40,19 +41,19 @@ export abstract class PropertyType {
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
         Options.countValue, Options.countUniqueValue]
-    displayValue: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined
-    valueLength: (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number) => number
+    displayValue: (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape) => string | string[] | undefined
+    valueLength: (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string, perItemPadding?: number) => number
 
     constructor() {
         this.displayValue = (value: string | string[] | undefined) => value
-        this.valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
-            const displayValue = this.displayValue(value, card, template, intl) || ''
+        this.valueLength = (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape, fontDescriptor: string): number => {
+            const displayValue = this.displayValue(value, item, template, intl) || ''
             return Utils.getTextWidth(displayValue.toString(), fontDescriptor)
         }
     }
 
-    exportValue = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, intl: IntlShape): string => {
-        const displayValue = this.displayValue(value, card, template, intl)
+    exportValue = (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, intl: IntlShape): string => {
+        const displayValue = this.displayValue(value, item, template, intl)
         if (typeof displayValue === 'string') {
             return `"${encodeText(displayValue)}"`
         } else if (Array.isArray(displayValue)) {

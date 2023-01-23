@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: row;
 
-    border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
     margin: 16px 0 0;
     padding: 8px 0;
     color: rgba(var(--center-channel-color-rgb), 0.64);
@@ -12,6 +11,14 @@
     @media (max-width: 768px) {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
+    }
+
+    &.viewHeaderView {
+        border-bottom: solid 1px rgba(var(--center-channel-color-rgb), 0.16);
+    }
+
+    &.viewHeaderPage {
+        margin-left: 28px;
     }
 
     > div {
@@ -46,6 +53,19 @@
         display: flex;
         flex-direction: row;
         position: relative;
+
+        .MenuWrapper {
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .pageSelector {
+        display: flex;
+        flex-direction: row;
+        position: relative;
+        font-size: 36px;
+        margin-left: 44px;
 
         .MenuWrapper {
             display: flex;

@@ -192,7 +192,7 @@ const CalendarFullView = (props: Props): JSX.Element|null => {
                             <PropertyValueElement
                                 board={board}
                                 readOnly={true}
-                                card={card}
+                                item={card}
                                 propertyTemplate={template}
                                 showEmptyPlaceholder={false}
                             />

@@ -4,6 +4,7 @@ import React, {useRef, useEffect} from 'react'
 import {marked} from 'marked'
 
 import {BlockInputProps, ContentType} from '../types'
+import CompassIcon from '../../../../widgets/icons/compassIcon'
 
 import './checkbox.scss'
 
@@ -20,6 +21,7 @@ const Checkbox: ContentType<ValueType> = {
     nextType: 'checkbox',
     runSlashCommand: (): void => {},
     editable: true,
+    icon: <CompassIcon icon='checkbox-marked'/>,
     Display: (props: BlockInputProps<ValueType>) => {
         const renderer = new marked.Renderer()
         const html = marked(props.value.value || '', {renderer, breaks: true})

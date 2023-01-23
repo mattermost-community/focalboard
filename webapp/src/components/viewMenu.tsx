@@ -6,6 +6,7 @@ import {generatePath, useHistory, useRouteMatch} from 'react-router-dom'
 
 import {Board, IPropertyTemplate} from '../blocks/board'
 import {BoardView, createBoardView, IViewType} from '../blocks/boardView'
+import {createPage} from '../blocks/page'
 import {Constants, Permission} from '../constants'
 import mutator from '../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
@@ -18,6 +19,7 @@ import DeleteIcon from '../widgets/icons/delete'
 import DuplicateIcon from '../widgets/icons/duplicate'
 import GalleryIcon from '../widgets/icons/gallery'
 import TableIcon from '../widgets/icons/table'
+import TextIcon from '../widgets/icons/text'
 import Menu from '../widgets/menu'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
@@ -231,6 +233,39 @@ const ViewMenu = (props: Props) => {
             })
     }, [props.board, props.activeView, props.intl, showView])
 
+    const handleAddPage = useCallback(() => {
+        const {board, activeView, intl} = props
+
+        Utils.log('addpage')
+
+        if (!props.allowCreateView()) {
+            return
+        }
+
+        const page = createPage()
+        page.title = intl.formatMessage({id: 'View.NewPageTitle', defaultMessage: 'New Page'})
+        page.parentId = board.id
+        page.boardId = board.id
+        page.fields = {contentOrder: [], properties: {}, icon: ''}
+
+        const oldViewId = activeView.id
+
+        mutator.insertBlock(
+            page.boardId,
+            page,
+            'add page',
+            async (block: Block) => {
+                // This delay is needed because WSClient has a default 100 ms notification delay before updates
+                setTimeout(() => {
+                    Utils.log(`showView: ${block.id}`)
+                    showView(block.id)
+                }, 120)
+            },
+            async () => {
+                showView(oldViewId)
+            })
+    }, [props.board, props.activeView, props.intl, showView])
+
     const {views, intl} = props
 
     const duplicateViewText = intl.formatMessage({
@@ -240,6 +275,10 @@ const ViewMenu = (props: Props) => {
     const deleteViewText = intl.formatMessage({
         id: 'View.DeleteView',
         defaultMessage: 'Delete view',
+    })
+    const addPageText = intl.formatMessage({
+        id: 'View.AddPage',
+        defaultMessage: 'Add subpage',
     })
     const addViewText = intl.formatMessage({
         id: 'View.AddView',
@@ -338,6 +377,16 @@ const ViewMenu = (props: Props) => {
                             />
                         </div>
                     </Menu.SubMenu>
+                </BoardPermissionGate>
+                }
+                {!props.readonly && views.length > 1 &&
+                <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
+                    <Menu.Text
+                        id='__addPage'
+                        name={addPageText}
+                        icon={<TextIcon/>}
+                        onClick={handleAddPage}
+                    />
                 </BoardPermissionGate>
                 }
             </Menu>

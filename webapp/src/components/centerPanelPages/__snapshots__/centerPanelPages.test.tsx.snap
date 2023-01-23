@@ -1,0 +1,1144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/centerPanelPages should match snapshot 1`] = `
+<div>
+  <div
+    class="CenterPanelPages"
+  >
+    <div
+      class="PageHeader"
+    >
+      <div
+        class="mid-head"
+      >
+        <div
+          class="FormattingMenu"
+        >
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-1"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-2"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-3"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-4"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-5"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-6"
+            />
+          </button>
+          <span
+            class="divider"
+          />
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-bold"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-italic"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-strikethrough-variant"
+            />
+          </button>
+          <span
+            class="divider"
+          />
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-link-variant"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-code-tags"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-code-block"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-quote-open"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-list-bulleted"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-list-numbered"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-table-plus"
+            />
+          </button>
+          <span
+            class="divider"
+          />
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-plus"
+            />
+          </button>
+        </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardButton"
+          >
+            <button
+              class="Button emphasis--primary size--medium"
+              title="Share board"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-lock-outline LockOutlineIcon"
+              />
+              <span>
+                Share
+              </span>
+            </button>
+          </div>
+        </div>
+        <button
+          class="Button size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-message-text-outline"
+          />
+          <span>
+            8
+          </span>
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-star-outline"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-information-outline"
+          />
+        </button>
+        <div
+          class="PageMenu"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="IconButton size--medium"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="content"
+    >
+      <div
+        class="doc-header"
+      >
+        <div
+          class="Breadcrumbs"
+        >
+          <span
+            class="page-breadcrumb"
+          >
+            board title
+          </span>
+        </div>
+        <div
+          class="expand-collapsed-button"
+        >
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-arrow-expand"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="PageTitle"
+      >
+        <div
+          class="add-buttons add-visible"
+        />
+        <div
+          class="title"
+        >
+          <div
+            class="IconSelector"
+          >
+            <div
+              aria-label="menuwrapper"
+              class="MenuWrapper"
+              role="button"
+            >
+              <div
+                class="octo-icon size-m"
+              >
+                <span>
+                  i
+                </span>
+              </div>
+            </div>
+          </div>
+          <input
+            class="Editable title"
+            placeholder="Untitled board"
+            spellcheck="true"
+            title="title"
+            value="title"
+          />
+        </div>
+      </div>
+      <div
+        class="page-author"
+      >
+        <div
+          class="person"
+        >
+          Created by 
+          <b />
+           
+           - 
+          Last updated: a few seconds ago
+        </div>
+        <div
+          class="add-property"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="Button emphasis--quaternary size--medium"
+              type="button"
+            >
+              <span>
+                + Add a property
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+        class="PageProperties"
+      >
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="octo-propertyname"
+            >
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  Status
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-propertyvalue"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            >
+              <span
+                class="Label-text"
+              >
+                Empty
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="octo-propertyname"
+            >
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  Property 1
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-propertyvalue"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="octo-propertyname"
+            >
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  Property 2
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-propertyvalue"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            >
+              <span
+                class="Label-text"
+              >
+                Empty
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <div
+              class="octo-propertyname"
+            >
+              <button
+                class="Button"
+                type="button"
+              >
+                <span>
+                  Property 3
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="octo-propertyvalue"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            >
+              <span
+                class="Label-text"
+              >
+                Empty
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="PageBlocks"
+      >
+        <div
+          class="BlocksEditor"
+        >
+          <div>
+            <div
+              class="BlockContent   "
+              data-testid="block-content"
+              style="opacity: 1;"
+            >
+              <div
+                class="block-actions"
+                data-testid="block-actions"
+              >
+                <button
+                  class="IconButton size--small"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-plus"
+                  />
+                </button>
+                <div
+                  draggable="true"
+                >
+                  <button
+                    class="IconButton size--small"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div
+                class="content"
+              >
+                <div
+                  class="octo-editor-preview"
+                >
+                  <p>
+                    text content 1
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="BlockContent   "
+              data-testid="block-content"
+              style="opacity: 1;"
+            >
+              <div
+                class="block-actions"
+                data-testid="block-actions"
+              >
+                <button
+                  class="IconButton size--small"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-plus"
+                  />
+                </button>
+                <div
+                  draggable="true"
+                >
+                  <button
+                    class="IconButton size--small"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div
+                class="content"
+              >
+                <div
+                  class="octo-editor-preview"
+                >
+                  <p>
+                    text content 2
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="BlockContent   "
+              data-testid="block-content"
+              style="opacity: 1;"
+            >
+              <div
+                class="block-actions"
+                data-testid="block-actions"
+              >
+                <button
+                  class="IconButton size--small"
+                  type="button"
+                >
+                  <i
+                    class="CompassIcon icon-plus"
+                  />
+                </button>
+                <div
+                  draggable="true"
+                >
+                  <button
+                    class="IconButton size--small"
+                    type="button"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical"
+                    />
+                  </button>
+                </div>
+              </div>
+              <div
+                class="content"
+              >
+                <div
+                  class="octo-editor-preview"
+                >
+                  <p>
+                    text content 3
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Editor"
+          >
+            <div
+              class="RootInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-2-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class="RootInput__control css-9fsvdt-control"
+              >
+                <div
+                  class="RootInput__value-container css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class="RootInput__placeholder css-vinljo-placeholder"
+                    id="react-select-2-placeholder"
+                  >
+                    Add text or type "/" for commands
+                  </div>
+                  <div
+                    class="RootInput__input-container css-g5309v-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-2-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class="RootInput__input"
+                      id="react-select-2-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/centerPanelPages should match snapshot when readonly 1`] = `
+<div>
+  <div
+    class="CenterPanelPages"
+  >
+    <div
+      class="PageHeader"
+    >
+      <div
+        class="mid-head"
+      >
+        <div
+          class="FormattingMenu"
+        >
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-1"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-2"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-3"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-4"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-5"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-header-6"
+            />
+          </button>
+          <span
+            class="divider"
+          />
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-bold"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-italic"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-strikethrough-variant"
+            />
+          </button>
+          <span
+            class="divider"
+          />
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-link-variant"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-code-tags"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-code-block"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-quote-open"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-list-bulleted"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-format-list-numbered"
+            />
+          </button>
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-table-plus"
+            />
+          </button>
+          <span
+            class="divider"
+          />
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-plus"
+            />
+          </button>
+        </div>
+        <div
+          class="shareButtonWrapper"
+        >
+          <div
+            class="ShareBoardLoginButton"
+          >
+            <button
+              class="Button emphasis--primary size--medium"
+              title="Login"
+              type="button"
+            >
+              <span>
+                Login
+              </span>
+            </button>
+          </div>
+        </div>
+        <button
+          class="Button size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-message-text-outline"
+          />
+          <span>
+            8
+          </span>
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-star-outline"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-information-outline"
+          />
+        </button>
+        <div
+          class="PageMenu"
+        >
+          <div
+            aria-label="menuwrapper"
+            class="MenuWrapper"
+            role="button"
+          >
+            <button
+              class="IconButton size--medium"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-dots-horizontal OptionsIcon"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="content"
+    >
+      <div
+        class="doc-header"
+      >
+        <div
+          class="Breadcrumbs"
+        >
+          <span
+            class="page-breadcrumb"
+          >
+            board title
+          </span>
+        </div>
+        <div
+          class="expand-collapsed-button"
+        >
+          <button
+            class="IconButton size--small"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-arrow-expand"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="PageTitle"
+      >
+        <div
+          class="add-buttons add-visible"
+        />
+        <div
+          class="title"
+        >
+          <div
+            class="IconSelector"
+          >
+            <div
+              class="octo-icon size-m readonly"
+            >
+              <span>
+                i
+              </span>
+            </div>
+          </div>
+          <input
+            class="Editable readonly title"
+            placeholder="Untitled board"
+            readonly=""
+            spellcheck="true"
+            title="title"
+            value="title"
+          />
+        </div>
+      </div>
+      <div
+        class="page-author"
+      >
+        <div
+          class="person"
+        >
+          Created by 
+          <b />
+           
+           - 
+          Last updated: a few seconds ago
+        </div>
+        <div
+          class="add-property"
+        />
+      </div>
+      <div
+        class="PageProperties"
+      >
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            class="octo-propertyname octo-propertyname--readonly"
+          >
+            Status
+          </div>
+          <div
+            class="octo-propertyvalue octo-propertyvalue--readonly"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            >
+              <span
+                class="Label-text"
+              >
+                Empty
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            class="octo-propertyname octo-propertyname--readonly"
+          >
+            Property 1
+          </div>
+          <div
+            class="octo-propertyvalue octo-propertyvalue--readonly"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label propColorBrown "
+            >
+              <span
+                class="Label-text"
+              >
+                value 1
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            class="octo-propertyname octo-propertyname--readonly"
+          >
+            Property 2
+          </div>
+          <div
+            class="octo-propertyvalue octo-propertyvalue--readonly"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            >
+              <span
+                class="Label-text"
+              >
+                Empty
+              </span>
+            </span>
+          </div>
+        </div>
+        <div
+          class="PageProperty octo-propertyrow"
+        >
+          <div
+            class="octo-propertyname octo-propertyname--readonly"
+          >
+            Property 3
+          </div>
+          <div
+            class="octo-propertyvalue octo-propertyvalue--readonly"
+            data-testid="select-non-editable"
+            tabindex="0"
+          >
+            <span
+              class="Label empty "
+            >
+              <span
+                class="Label-text"
+              >
+                Empty
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="PageBlocks"
+      >
+        <div
+          class="BlocksEditor"
+        >
+          <div>
+            <div
+              class="BlockContent   "
+              data-testid="block-content"
+              style="opacity: 1;"
+            >
+              <div
+                class="content"
+              >
+                <div
+                  class="octo-editor-preview"
+                >
+                  <p>
+                    text content 1
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="BlockContent   "
+              data-testid="block-content"
+              style="opacity: 1;"
+            >
+              <div
+                class="content"
+              >
+                <div
+                  class="octo-editor-preview"
+                >
+                  <p>
+                    text content 2
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="BlockContent   "
+              data-testid="block-content"
+              style="opacity: 1;"
+            >
+              <div
+                class="content"
+              >
+                <div
+                  class="octo-editor-preview"
+                >
+                  <p>
+                    text content 3
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

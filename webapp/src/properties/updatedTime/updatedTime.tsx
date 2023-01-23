@@ -16,12 +16,12 @@ import {PropertyProps} from '../types'
 
 const UpdatedTime = (props: PropertyProps): JSX.Element => {
     const intl = useIntl()
-    const lastContent = useAppSelector(getLastCardContent(props.card.id || '')) as Block
-    const lastComment = useAppSelector(getLastCardComment(props.card.id)) as Block
+    const lastContent = useAppSelector(getLastCardContent(props.item.id || '')) as Block
+    const lastComment = useAppSelector(getLastCardComment(props.item.id)) as Block
 
-    let latestBlock: Block = props.card
-    if (props.card) {
-        const allBlocks = [props.card, lastContent, lastComment]
+    let latestBlock: Block = props.item
+    if (props.item) {
+        const allBlocks = [props.item, lastContent, lastComment]
         const sortedBlocks = allBlocks.sort((a, b) => b.updateAt - a.updateAt)
 
         latestBlock = sortedBlocks.length > 0 ? sortedBlocks[0] : latestBlock

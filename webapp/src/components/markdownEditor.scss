@@ -2,6 +2,8 @@
 
 .product-wrapper {
     .octo-editor-preview {
+        word-break: break-word;
+
         a {
             color: rgba(var(--link-color-rgb), 1);
         }

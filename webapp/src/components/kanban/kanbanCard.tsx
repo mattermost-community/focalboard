@@ -145,7 +145,7 @@ const KanbanCard = (props: Props) => {
                         <PropertyValueElement
                             board={board}
                             readOnly={true}
-                            card={card}
+                            item={card}
                             propertyTemplate={template}
                             showEmptyPlaceholder={false}
                         />

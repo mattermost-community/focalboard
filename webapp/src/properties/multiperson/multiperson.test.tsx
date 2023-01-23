@@ -78,7 +78,7 @@ describe('properties/multiperson', () => {
                         options: [],
                     } as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -109,7 +109,7 @@ describe('properties/multiperson', () => {
                         options: [],
                     } as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -140,7 +140,7 @@ describe('properties/multiperson', () => {
                         options: [],
                     } as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )
@@ -171,7 +171,7 @@ describe('properties/multiperson', () => {
                         options: [],
                     } as IPropertyTemplate}
                     board={{} as Board}
-                    card={{} as Card}
+                    item={{} as Card}
                 />
             </ReduxProvider>,
         )

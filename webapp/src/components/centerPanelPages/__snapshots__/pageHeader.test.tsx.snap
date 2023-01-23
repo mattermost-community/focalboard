@@ -1,0 +1,679 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/pageHeader should match snapshot 1`] = `
+<div>
+  <div
+    class="PageHeader"
+  >
+    <div
+      class="mid-head"
+    >
+      <div
+        class="FormattingMenu"
+      >
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-1"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-2"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-3"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-4"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-5"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-6"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-bold"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-italic"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-strikethrough-variant"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-link-variant"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-code-tags"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-code-block"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-quote-open"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-list-bulleted"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-list-numbered"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-table-plus"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus"
+          />
+        </button>
+      </div>
+      <div
+        class="shareButtonWrapper"
+      >
+        <div
+          class="ShareBoardButton"
+        >
+          <button
+            class="Button emphasis--primary size--medium"
+            title="Share board"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-lock-outline LockOutlineIcon"
+            />
+            <span>
+              Share
+            </span>
+          </button>
+        </div>
+      </div>
+      <button
+        class="Button size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-message-text-outline"
+        />
+        <span>
+          8
+        </span>
+      </button>
+      <button
+        class="IconButton size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-star-outline"
+        />
+      </button>
+      <button
+        class="IconButton size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-information-outline"
+        />
+      </button>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageHeader should match snapshot public share boards 1`] = `
+<div>
+  <div
+    class="PageHeader"
+  >
+    <div
+      class="mid-head"
+    >
+      <div
+        class="FormattingMenu"
+      >
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-1"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-2"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-3"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-4"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-5"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-6"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-bold"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-italic"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-strikethrough-variant"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-link-variant"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-code-tags"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-code-block"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-quote-open"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-list-bulleted"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-list-numbered"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-table-plus"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus"
+          />
+        </button>
+      </div>
+      <div
+        class="shareButtonWrapper"
+      >
+        <div
+          class="ShareBoardButton"
+        >
+          <button
+            class="Button emphasis--primary size--medium"
+            title="Share board"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-lock-outline LockOutlineIcon"
+            />
+            <span>
+              Share
+            </span>
+          </button>
+        </div>
+      </div>
+      <button
+        class="Button size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-message-text-outline"
+        />
+        <span>
+          8
+        </span>
+      </button>
+      <button
+        class="IconButton size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-star-outline"
+        />
+      </button>
+      <button
+        class="IconButton size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-information-outline"
+        />
+      </button>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageHeader should match snapshot when readonly 1`] = `
+<div>
+  <div
+    class="PageHeader"
+  >
+    <div
+      class="mid-head"
+    >
+      <div
+        class="FormattingMenu"
+      >
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-1"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-2"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-3"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-4"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-5"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-header-6"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-bold"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-italic"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-strikethrough-variant"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-link-variant"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-code-tags"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-code-block"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-quote-open"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-list-bulleted"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-format-list-numbered"
+          />
+        </button>
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-table-plus"
+          />
+        </button>
+        <span
+          class="divider"
+        />
+        <button
+          class="IconButton size--small"
+          type="button"
+        >
+          <i
+            class="CompassIcon icon-plus"
+          />
+        </button>
+      </div>
+      <div
+        class="shareButtonWrapper"
+      >
+        <div
+          class="ShareBoardLoginButton"
+        >
+          <button
+            class="Button emphasis--primary size--medium"
+            title="Login"
+            type="button"
+          >
+            <span>
+              Login
+            </span>
+          </button>
+        </div>
+      </div>
+      <button
+        class="Button size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-message-text-outline"
+        />
+        <span>
+          8
+        </span>
+      </button>
+      <button
+        class="IconButton size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-star-outline"
+        />
+      </button>
+      <button
+        class="IconButton size--small"
+        type="button"
+      >
+        <i
+          class="CompassIcon icon-information-outline"
+        />
+      </button>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

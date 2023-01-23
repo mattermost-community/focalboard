@@ -50,7 +50,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={false}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )
@@ -68,7 +68,7 @@ describe('properties/dateRange', () => {
                     showEmptyPlaceholder={false}
                     readOnly={false}
                     board={{...board}}
-                    card={{...card}}
+                    item={{...card}}
                     propertyTemplate={propertyTemplate}
                 />
             </IntlProvider>
@@ -88,7 +88,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={true}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )
@@ -116,7 +116,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={true}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )
@@ -154,7 +154,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={false}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )
@@ -182,7 +182,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={false}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )
@@ -221,7 +221,7 @@ describe('properties/dateRange', () => {
                     showEmptyPlaceholder={false}
                     readOnly={false}
                     board={{...board}}
-                    card={{...card}}
+                    item={{...card}}
                     propertyTemplate={propertyTemplate}
                 />
             </IntlProvider>
@@ -259,7 +259,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={false}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )
@@ -292,7 +292,7 @@ describe('properties/dateRange', () => {
                 showEmptyPlaceholder={true}
                 readOnly={false}
                 board={{...board}}
-                card={{...card}}
+                item={{...card}}
                 propertyTemplate={propertyTemplate}
             />,
         )

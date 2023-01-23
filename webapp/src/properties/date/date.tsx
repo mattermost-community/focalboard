@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useMemo, useState, useCallback} from 'react'
+import React, {useMemo, useState, useCallback, useEffect} from 'react'
 import {useIntl} from 'react-intl'
 import {DateUtils} from 'react-day-picker'
 import MomentLocaleUtils from 'react-day-picker/moment'
@@ -54,16 +54,20 @@ function datePropertyToString(dateProperty: DateProperty): string {
 const loadedLocales: Record<string, moment.Locale> = {}
 
 function DateRange(props: PropertyProps): JSX.Element {
-    const {propertyValue, propertyTemplate, showEmptyPlaceholder, readOnly, board, card} = props
+    const {propertyValue, propertyTemplate, showEmptyPlaceholder, readOnly, board, item} = props
     const [value, setValue] = useState(propertyValue)
     const intl = useIntl()
+
+    useEffect(() => {
+        setValue(propertyValue)
+    }, [props.item.id])
 
     const onChange = useCallback((newValue) => {
         if (value !== newValue) {
             setValue(newValue)
-            mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue)
+            mutator.changePropertyValue(board.id, item, propertyTemplate.id, newValue)
         }
-    }, [value, board.id, card, propertyTemplate.id])
+    }, [value, board.id, item, propertyTemplate.id])
 
     const getDisplayDate = (date: Date | null | undefined) => {
         let displayDate = ''

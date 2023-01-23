@@ -23,7 +23,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate || board.cardProperties[0]}
                 showEmptyPlaceholder={true}
             />,
@@ -39,7 +39,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={true}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate || board.cardProperties[0]}
                 showEmptyPlaceholder={true}
             />,
@@ -71,7 +71,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -94,7 +94,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -117,7 +117,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -140,7 +140,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -161,7 +161,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,
@@ -187,7 +187,7 @@ describe('components/propertyValueElement', () => {
             <PropertyValueElement
                 board={board}
                 readOnly={false}
-                card={card}
+                item={card}
                 propertyTemplate={propertyTemplate}
                 showEmptyPlaceholder={true}
             />,

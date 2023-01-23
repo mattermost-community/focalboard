@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useMemo, useCallback} from 'react'
+import React, {useEffect, useState, useMemo, useCallback, useContext} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
 import {useRouteMatch} from 'react-router-dom'
@@ -11,6 +11,7 @@ import VersionMessage from '../../components/messages/versionMessage'
 import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
+import isPagesContext from '../../isPages'
 import {useWebsockets} from '../../hooks/websockets'
 import {IUser, UserConfigPatch} from '../../user'
 import {Block} from '../../blocks/block'
@@ -19,6 +20,7 @@ import {CommentBlock} from '../../blocks/commentBlock'
 import {AttachmentBlock} from '../../blocks/attachmentBlock'
 import {Board, BoardMember} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
+import {Page} from '../../blocks/page'
 import {Card} from '../../blocks/card'
 import {
     updateBoards,
@@ -29,6 +31,7 @@ import {
     addMyBoardMemberships,
 } from '../../store/boards'
 import {getCurrentViewId, setCurrent as setCurrentView, updateViews} from '../../store/views'
+import {getCurrentPageId, setCurrent as setCurrentPage, updatePages} from '../../store/pages'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {setTeam} from '../../store/teams'
@@ -69,11 +72,13 @@ const BoardPage = (props: Props): JSX.Element => {
     const intl = useIntl()
     const activeBoardId = useAppSelector(getCurrentBoardId)
     const activeViewId = useAppSelector(getCurrentViewId)
+    const activePageId = useAppSelector(getCurrentPageId)
     const dispatch = useAppDispatch()
     const match = useRouteMatch<{boardId: string, viewId: string, cardId?: string, teamId?: string}>()
     const [mobileWarningClosed, setMobileWarningClosed] = useState(UserSettings.mobileWarningClosed)
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
+    const isPages = useContext(isPagesContext)
     const me = useAppSelector<IUser|null>(getMe)
     const myConfig = useAppSelector(getMyConfig)
 
@@ -114,10 +119,11 @@ const BoardPage = (props: Props): JSX.Element => {
 
             batch(() => {
                 dispatch(updateViews(teamBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updatePages(teamBlocks.filter((b: Block) => b.type === 'page' || b.deleteAt !== 0) as Page[]))
                 dispatch(updateCards(teamBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
                 dispatch(updateComments(teamBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
                 dispatch(updateAttachments(teamBlocks.filter((b: Block) => b.type === 'attachment' || b.deleteAt !== 0) as AttachmentBlock[]))
-                dispatch(updateContents(teamBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment' && b.type !== 'attachment') as ContentBlock[]))
+                dispatch(updateContents(teamBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'page' && b.type !== 'board' && b.type !== 'comment' && b.type !== 'attachment') as ContentBlock[]))
             })
         }
 
@@ -180,8 +186,13 @@ const BoardPage = (props: Props): JSX.Element => {
         if (result.payload.blocks.length === 0 && userId) {
             const member = await octoClient.joinBoard(boardId)
             if (!member) {
-                UserSettings.setLastBoardID(boardTeamId, null)
-                UserSettings.setLastViewId(boardId, null)
+                if (isPages) {
+                    UserSettings.setLastFolderID(boardTeamId, null)
+                    UserSettings.setLastPageId(boardId, null)
+                } else {
+                    UserSettings.setLastBoardID(boardTeamId, null)
+                    UserSettings.setLastViewId(boardId, null)
+                }
                 dispatch(setGlobalError('board-not-found'))
                 return
             }
@@ -201,15 +212,30 @@ const BoardPage = (props: Props): JSX.Element => {
             // set the active board
             dispatch(setCurrentBoard(match.params.boardId))
 
-            // and set it as most recently viewed board
-            UserSettings.setLastBoardID(teamId, match.params.boardId)
+            // and set it as most recently viewed board/folder
+            if (isPages) {
+                UserSettings.setLastFolderID(teamId, match.params.boardId)
+            } else {
+                UserSettings.setLastBoardID(teamId, match.params.boardId)
+            }
 
             if (viewId !== Constants.globalTeamId) {
-                // reset current, even if empty string
-                dispatch(setCurrentView(viewId))
+                if (viewId && viewId.startsWith('p')) {
+                    // reset current, even if empty string
+                    dispatch(setCurrentPage(viewId))
+                    dispatch(setCurrentView(''))
+                } else {
+                    // reset current, even if empty string
+                    dispatch(setCurrentView(viewId))
+                    dispatch(setCurrentPage(''))
+                }
                 if (viewId) {
                     // don't reset per board if empty string
-                    UserSettings.setLastViewId(match.params.boardId, viewId)
+                    if (isPages) {
+                        UserSettings.setLastPageId(match.params.boardId, viewId)
+                    } else {
+                        UserSettings.setLastViewId(match.params.boardId, viewId)
+                    }
                 }
             }
 
@@ -241,7 +267,7 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        await dispatch(patchProps(patchedProps))
+        dispatch(patchProps(patchedProps))
     }
 
     useEffect(() => {
@@ -257,10 +283,10 @@ const BoardPage = (props: Props): JSX.Element => {
 
     if (props.readonly) {
         useEffect(() => {
-            if (activeBoardId && activeViewId) {
-                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: activeBoardId, view: activeViewId})
+            if (activeBoardId && (activeViewId || activePageId)) {
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ViewSharedBoard, {board: activeBoardId, view: activeViewId, page: activePageId})
             }
-        }, [activeBoardId, activeViewId])
+        }, [activeBoardId, activeViewId, activePageId])
     }
 
     return (

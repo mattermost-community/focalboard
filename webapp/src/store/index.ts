@@ -10,6 +10,7 @@ import {reducer as languageReducer} from './language'
 import {reducer as globalTemplatesReducer} from './globalTemplates'
 import {reducer as boardsReducer} from './boards'
 import {reducer as viewsReducer} from './views'
+import {reducer as pagesReducer} from './pages'
 import {reducer as cardsReducer} from './cards'
 import {reducer as contentsReducer} from './contents'
 import {reducer as commentsReducer} from './comments'
@@ -29,6 +30,7 @@ const store = configureStore({
         globalTemplates: globalTemplatesReducer,
         boards: boardsReducer,
         views: viewsReducer,
+        pages: pagesReducer,
         cards: cardsReducer,
         contents: contentsReducer,
         comments: commentsReducer,

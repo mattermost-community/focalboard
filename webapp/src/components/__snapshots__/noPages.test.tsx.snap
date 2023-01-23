@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/noPages should match snapshot 1`] = `
+<div>
+  <div
+    class="NoPages"
+  >
+    <div
+      class="header"
+    >
+      <img
+        alt="No Pages Image"
+        class="noPagesImage"
+        src="test-file-stub"
+      />
+      <h1
+        class="title text-heading6"
+      >
+        No pages yet
+      </h1>
+      <p
+        class="description text-base"
+      >
+        You are not member of any pages yet, you can start creating your own page, or ask somebody to add you to an existing one.
+      </p>
+    </div>
+    <div
+      class="buttons"
+    >
+      <button
+        class="Button filled size--large"
+        type="button"
+      >
+        <span>
+          Create new page
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/noPages should match snapshot as guest 1`] = `
+<div>
+  <div
+    class="NoPages"
+  >
+    <div
+      class="header"
+    >
+      <img
+        alt="No Pages Image"
+        class="noPagesImage"
+        src="test-file-stub"
+      />
+      <h1
+        class="title text-heading6"
+      >
+        No pages yet
+      </h1>
+      <p
+        class="description text-base"
+      >
+        You are not member of any pages yet, please ask somebody to add you to an existing one.
+      </p>
+    </div>
+  </div>
+</div>
+`;

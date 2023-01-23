@@ -14,7 +14,7 @@ import ValueSelector from '../../widgets/valueSelector'
 import {PropertyProps} from '../types'
 
 const SelectProperty = (props: PropertyProps) => {
-    const {propertyValue, propertyTemplate, board, card} = props
+    const {propertyValue, propertyTemplate, board, item} = props
     const intl = useIntl()
 
     const [open, setOpen] = useState(false)
@@ -27,16 +27,16 @@ const SelectProperty = (props: PropertyProps) => {
             color: 'propColorDefault',
         }
         mutator.insertPropertyOption(board.id, board.cardProperties, propertyTemplate, option, 'add property option').then(() => {
-            mutator.changePropertyValue(board.id, card, propertyTemplate.id, option.id)
+            mutator.changePropertyValue(board.id, item, propertyTemplate.id, option.id)
         })
-    }, [board, board.id, props.card, propertyTemplate.id])
+    }, [board, board.id, props.item, propertyTemplate.id])
 
     const emptyDisplayValue = props.showEmptyPlaceholder ? intl.formatMessage({id: 'PropertyValueElement.empty', defaultMessage: 'Empty'}) : ''
 
-    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue), [board.id, card, propertyTemplate])
+    const onChange = useCallback((newValue) => mutator.changePropertyValue(board.id, item, propertyTemplate.id, newValue), [board.id, item, propertyTemplate])
     const onChangeColor = useCallback((option: IPropertyOption, colorId: string) => mutator.changePropertyOptionColor(board.id, board.cardProperties, propertyTemplate, option, colorId), [board, propertyTemplate])
     const onDeleteOption = useCallback((option: IPropertyOption) => mutator.deletePropertyOption(board.id, board.cardProperties, propertyTemplate, option), [board, propertyTemplate])
-    const onDeleteValue = useCallback(() => mutator.changePropertyValue(board.id, card, propertyTemplate.id, ''), [card, propertyTemplate.id])
+    const onDeleteValue = useCallback(() => mutator.changePropertyValue(board.id, item, propertyTemplate.id, ''), [item, propertyTemplate.id])
 
     const option = propertyTemplate.options.find((o: IPropertyOption) => o.id === propertyValue)
     const propertyColorCssClassName = option?.color || ''

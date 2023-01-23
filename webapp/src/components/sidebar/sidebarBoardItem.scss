@@ -25,6 +25,7 @@
     &.sidebar-view-item {
         padding-left: 42px;
         color: rgba(var(--sidebar-text-rgb), 0.64);
+        fill: rgba(var(--sidebar-text-rgb), 0.64);
         font-weight: 400;
     }
 
@@ -83,10 +84,6 @@
         }
     }
 
-    .Menu.left {
-        right: -11px;
-    }
-
     &.expanded {
         .DisclosureTriangleIcon {
             transform: rotate(90deg);
@@ -96,46 +93,6 @@
     .DisclosureTriangleIcon {
         transition: 200ms ease-in-out;
         transform: rotate(0deg);
-    }
-
-    &.category {
-        .MenuWrapper {
-            display: none;
-
-            &.menuOpen {
-                display: block;
-            }
-        }
-
-        &:hover {
-            .MenuWrapper {
-                display: block;
-            }
-        }
-    }
-
-    &.subitem {
-        .MenuWrapper {
-            display: none;
-
-            &.menuOpen {
-                display: block;
-            }
-        }
-
-        &:hover {
-            .MenuWrapper {
-                display: block;
-            }
-        }
-    }
-
-    .MenuWrapper {
-        border-radius: 4px;
-
-        &:hover {
-            background: rgba(var(--sidebar-text-rgb), 0.08);
-        }
     }
 
     .octo-sidebar-icon {
@@ -152,34 +109,6 @@
             width: 16px;
             vertical-align: top;
             margin-left: -2px;
-        }
-    }
-
-    .Menu.noselect.left {
-        position: fixed;
-        right: auto;
-        left: auto;
-    }
-
-    .boardMoveToCategorySubmenu {
-        .menu-options {
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        @media only screen and (max-height: 768px) {
-            .menu-options {
-                max-height: min(350px, 50vh);
-            }
-        }
-    }
-}
-
-.team-sidebar + .product-wrapper {
-    .SidebarBoardItem {
-        .Menu.noselect.left {
-            right: calc(100% - 480px - 64px + 50px);
-            left: calc(64px + 240px - 50px);
         }
     }
 }

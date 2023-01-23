@@ -84,6 +84,10 @@ type Board struct {
 	// required: false
 	TemplateVersion int `json:"templateVersion"`
 
+	// Mark the board as a pages folder
+	// required: false
+	IsPagesFolder bool `json:"isPagesFolder"`
+
 	// The properties of the board
 	// required: false
 	Properties map[string]interface{} `json:"properties"`

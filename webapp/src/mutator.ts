@@ -9,6 +9,7 @@ import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
 import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
+import {Page, createPage} from './blocks/page'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
 import {CommentBlock} from './blocks/commentBlock'
@@ -25,6 +26,7 @@ import {UserConfigPatch, UserPreference} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
+import {updatePages} from './store/pages'
 import {updateCards} from './store/cards'
 import {updateComments} from './store/comments'
 import {updateContents} from './store/contents'
@@ -34,9 +36,10 @@ function updateAllBoardsAndBlocks(boards: Board[], blocks: Block[]) {
     return batch(() => {
         store.dispatch(updateBoards(boards.filter((b: Board) => b.deleteAt !== 0) as Board[]))
         store.dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+        store.dispatch(updatePages(blocks.filter((b: Block) => b.type === 'page' || b.deleteAt !== 0) as Page[]))
         store.dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
         store.dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-        store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+        store.dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'page' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
     })
 }
 
@@ -539,10 +542,13 @@ class Mutator {
             }
         })
         cards.forEach((card) => {
-            if (card.fields.properties[propertyId]) {
+            if (card.fields?.properties[propertyId]) {
                 oldBlocks.push(card)
 
-                const newCard = createCard(card)
+                let newCard: any = createCard(card)
+                if (card.type === 'page') {
+                    newCard = createPage(card as any)
+                }
                 delete newCard.fields.properties[propertyId]
                 changedBlocks.push(newCard)
                 changedBlockIDs.push(newCard.id)
@@ -634,7 +640,21 @@ class Mutator {
             return
         }
 
-        const newCard = createCard(card)
+        // TODO: This is now using any to fake the page is a valid card (fix all the anys added in this POC)
+        let newCard: any = createCard(card)
+        if (card.type === 'page') {
+            newCard = createPage(card as any)
+        }
+        if (card.id.startsWith('b')) {
+            if (value) {
+                newCard = createBoard({...card, properties: {...card.fields, properties: {...card.fields.properties, [propertyId]: value}}} as any)
+            } else {
+                newCard = createBoard({...card, properties: {...card.fields, properties: {...card.fields.properties, [propertyId]: undefined}}} as any)
+            }
+            await this.updateBoard(newCard, card as any, description)
+            return
+        }
+
         if (value) {
             newCard.fields.properties[propertyId] = value
         } else {
@@ -1014,9 +1034,50 @@ class Mutator {
                 }
                 return [blocks, newRootBlock.id]
             },
-            async (newBlocks: Block[]) => {
+            async (newBlocks: [Block[], string]) => {
                 await beforeUndo?.()
-                const newRootBlock = newBlocks && newBlocks[0]
+                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id === newBlocks[1])
+                if (newRootBlock) {
+                    await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
+                }
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
+    async duplicatePage(
+        pageId: string,
+        boardId: string,
+        description = 'duplicate page',
+        afterRedo?: (newCardId: string) => Promise<void>,
+        beforeUndo?: () => Promise<void>,
+    ): Promise<[Block[], string]> {
+        return undoManager.perform(
+            async () => {
+                const blocks = await octoClient.duplicateBlock(boardId, pageId, false)
+                const newRootBlock = blocks && blocks[0]
+                if (!newRootBlock) {
+                    Utils.log('Unable to duplicate card')
+                    return [[], '']
+                }
+                newRootBlock.title = `${newRootBlock.title} copy`
+                const patch = {
+                    updatedFields: {
+                        icon: newRootBlock.fields.icon,
+                    },
+                    title: newRootBlock.title,
+                }
+                await octoClient.patchBlock(newRootBlock.boardId, newRootBlock.id, patch)
+                if (blocks) {
+                    updateAllBoardsAndBlocks([], blocks)
+                    await afterRedo?.(newRootBlock.id)
+                }
+                return [blocks, newRootBlock.id]
+            },
+            async (newBlocks: [Block[], string]) => {
+                await beforeUndo?.()
+                const newRootBlock = newBlocks && newBlocks[0].find((b) => b.id === newBlocks[1])
                 if (newRootBlock) {
                     await octoClient.deleteBlock(newRootBlock.boardId, newRootBlock.id)
                 }
@@ -1107,6 +1168,39 @@ class Mutator {
                 const newBoard = bab.boards[0]
                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateBoard, {board: newBoard?.id})
                 await afterRedo(newBoard?.id || '')
+            },
+            beforeUndo,
+        )
+    }
+
+    async addEmptyFolder(
+        teamId: string,
+        intl: IntlShape,
+        afterRedo: (id: string) => Promise<void>,
+        beforeUndo: () => Promise<void>,
+    ): Promise<BoardsAndBlocks> {
+        const board = createBoard()
+        board.teamId = teamId
+        board.isPagesFolder = true
+        board.cardProperties = []
+
+        const folderPage: any = createPage()
+        folderPage.parentId = ''
+        folderPage.boardId = board.id
+        folderPage.title = ''
+
+        // TODO: We need at least a block here, I'm adding an empty block. This
+        // is a hack so we should removed this before merge in main and find
+        // the right solution (maybe accepting no-blocks if the created board
+        // is a page board)
+
+        return mutator.createBoardsAndBlocks(
+            {boards: [board], blocks: [folderPage]},
+            'add page',
+            async (bab: BoardsAndBlocks) => {
+                const newFolder = bab.boards[0]
+                TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.CreateFolder, {folder: newFolder?.id})
+                await afterRedo(newFolder?.id || '')
             },
             beforeUndo,
         )

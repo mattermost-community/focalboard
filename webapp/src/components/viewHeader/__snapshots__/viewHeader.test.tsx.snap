@@ -3,7 +3,7 @@
 exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
 <div>
   <div
-    class="ViewHeader"
+    class="ViewHeader viewHeaderView"
   >
     <div
       class="viewSelector"
@@ -153,7 +153,7 @@ exports[`components/viewHeader/viewHeader return viewHeader 1`] = `
 exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
 <div>
   <div
-    class="ViewHeader"
+    class="ViewHeader viewHeaderView"
   >
     <div
       class="viewSelector"
@@ -189,7 +189,7 @@ exports[`components/viewHeader/viewHeader return viewHeader readonly 1`] = `
 exports[`components/viewHeader/viewHeader return viewHeader without permissions 1`] = `
 <div>
   <div
-    class="ViewHeader"
+    class="ViewHeader viewHeaderView"
   >
     <div
       class="viewSelector"

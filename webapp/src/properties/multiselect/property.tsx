@@ -4,6 +4,7 @@ import {IntlShape} from 'react-intl'
 
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
+import {Page} from '../../blocks/page'
 import {Utils} from '../../utils'
 
 import {PropertyType, PropertyTypeEnum, FilterValueType} from '../types'
@@ -17,24 +18,24 @@ export default class MultiSelectProperty extends PropertyType {
     canFilter = true
     filterValueType = 'options' as FilterValueType
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.MultiSelect', defaultMessage: 'Multi select'})
-    displayValue = (propertyValue: string | string[] | undefined, card: Card, propertyTemplate: IPropertyTemplate) => {
+    displayValue = (propertyValue: string | string[] | undefined, item: Card|Page, propertyTemplate: IPropertyTemplate) => {
         if (propertyValue?.length) {
             const options = propertyTemplate.options.filter((o) => propertyValue.includes(o.id))
             if (!options.length) {
-                Utils.assertFailure(`Invalid multiSelect option IDs ${propertyValue}, block.title: ${card.title}`)
+                Utils.assertFailure(`Invalid multiSelect option IDs ${propertyValue}, block.title: ${item.title}`)
             }
             return options.map((o) => o.value)
         }
         return ''
     }
 
-    exportValue = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate): string => {
-        const displayValue = this.displayValue(value, card, template)
+    exportValue = (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate): string => {
+        const displayValue = this.displayValue(value, item, template)
         return ((displayValue as unknown || []) as string[]).join('|')
     }
 
-    valueLength = (value: string | string[] | undefined, card: Card, template: IPropertyTemplate, _: IntlShape, fontDescriptor: string, perItemPadding?: number): number => {
-        const displayValue = this.displayValue(value, card, template)
+    valueLength = (value: string | string[] | undefined, item: Card|Page, template: IPropertyTemplate, _: IntlShape, fontDescriptor: string, perItemPadding?: number): number => {
+        const displayValue = this.displayValue(value, item, template)
         if (!displayValue) {
             return 0
         }

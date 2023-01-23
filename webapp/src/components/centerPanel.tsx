@@ -242,7 +242,7 @@ const CenterPanel = (props: Props) => {
 
         const patchedProps = await octoClient.patchUserConfig(me.id, patch)
         if (patchedProps) {
-            await dispatch(patchProps(patchedProps))
+            dispatch(patchProps(patchedProps))
         }
     }, [me?.id])
 
@@ -382,7 +382,7 @@ const CenterPanel = (props: Props) => {
     }
 
     const {visible: visibleGroups, hidden: hiddenGroups} = useMemo(() => {
-        const {visible: vg, hidden: hg} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds, activeView.fields.hiddenOptionIds, groupByProperty)
+        const {visible: vg, hidden: hg} = getVisibleAndHiddenGroups(cards, activeView.fields.visibleOptionIds || [], activeView.fields.hiddenOptionIds || [], groupByProperty)
         if (groupByProperty?.type === 'createdBy' || groupByProperty?.type === 'updatedBy' || groupByProperty?.type === 'person') {
             if (boardUsers) {
                 vg.forEach((value) => {

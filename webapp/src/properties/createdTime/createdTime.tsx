@@ -13,7 +13,7 @@ const CreatedTime = (props: PropertyProps): JSX.Element => {
     const intl = useIntl()
     return (
         <div className={`CreatedTime ${props.property.valueClassName(true)}`}>
-            {Utils.displayDateTime(new Date(props.card.createAt), intl)}
+            {Utils.displayDateTime(new Date(props.item.createAt), intl)}
         </div>
     )
 }

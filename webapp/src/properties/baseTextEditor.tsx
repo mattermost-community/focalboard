@@ -11,14 +11,14 @@ import Editable from '../widgets/editable'
 import {PropertyProps} from './types'
 
 const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellCheck?: boolean}): JSX.Element => {
-    const [value, setValue] = useState(props.card.fields.properties[props.propertyTemplate.id || ''] || '')
+    const [value, setValue] = useState(props.item.fields.properties[props.propertyTemplate.id || ''] || '')
     const onCancel = useCallback(() => setValue(props.propertyValue || ''), [props.propertyValue])
 
     const saveTextProperty = useCallback(() => {
-        if (value !== (props.card.fields.properties[props.propertyTemplate?.id || ''] || '')) {
-            mutator.changePropertyValue(props.board.id, props.card, props.propertyTemplate?.id || '', value)
+        if (value !== (props.item.fields.properties[props.propertyTemplate?.id || ''] || '')) {
+            mutator.changePropertyValue(props.board.id, props.item, props.propertyTemplate?.id || '', value)
         }
-    }, [props.board.id, props.card, props.propertyTemplate?.id, value])
+    }, [props.board.id, props.item, props.propertyTemplate?.id, value])
 
     const saveTextPropertyRef = useRef<() => void>(saveTextProperty)
     if (props.readOnly) {
@@ -35,6 +35,10 @@ const BaseTextEditor = (props: PropertyProps & {validator: () => boolean, spellC
             saveTextPropertyRef.current && saveTextPropertyRef.current()
         }
     }, [])
+
+    useEffect(() => {
+        setValue(props.item.fields.properties[props.propertyTemplate.id || ''] || '')
+    }, [props.item.id])
 
     if (!props.readOnly) {
         return (

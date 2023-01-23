@@ -1,0 +1,102 @@
+@import '../../styles/z-index';
+
+.CenterPanelPages {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+
+    >* {
+        padding: 0 32px;
+
+        @media screen and (max-width: 768px) {
+            padding: 0 40px;
+        }
+
+        &:first-child {
+            padding-top: 8px;
+
+            @media screen and (max-width: 768px) {
+                padding: 0 8px;
+            }
+        }
+
+        &:last-child {
+            padding-bottom: 8px;
+        }
+    }
+
+    >.content {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-width: 768px;
+        justify-content: center;
+
+        >.doc-header {
+            display: flex;
+            align-items: center;
+            margin-top: 32px;
+
+        }
+
+
+        >.PageTitle {
+            .Editable {
+                font-size: 36px;
+            }
+
+            >div {
+                align-items: center;
+            }
+        }
+
+        >.page-author {
+            margin-top: 16px;
+            margin-bottom: 24px;
+            display: flex;
+
+            >.person {
+                display: flex;
+                flex-grow: 1;
+                align-items: center;
+                color: rgba(var(--center-channel-color-rgb), 0.5);
+
+                img {
+                    border-radius: 50px;
+                    width: 24px;
+                    height: 24px;
+                    margin-right: 6px;
+                }
+
+                b {
+                    color: rgba(var(--center-channel-color-rgb), 1);
+                    margin: 0 3px;
+                }
+            }
+        }
+
+        &.expanded {
+            max-width: 100%;
+        }
+    }
+
+
+    >div:nth-child(2) {
+        padding: 0 32px 48px;
+
+        @media (max-width: 768px) {
+            margin-left: 0;
+            padding-left: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+    .NotificationBox {
+        .AlertIcon {
+            color: #ffbc1f;
+            font-size: 24px;
+        }
+    }
+}

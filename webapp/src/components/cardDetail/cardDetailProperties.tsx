@@ -151,7 +151,7 @@ const CardDetailProperties = (props: Props) => {
                         }
                         <PropertyValueElement
                             readOnly={props.readonly || !canEditBoardCards}
-                            card={card}
+                            item={card}
                             board={board}
                             propertyTemplate={propertyTemplate}
                             showEmptyPlaceholder={true}

@@ -1,11 +1,12 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useContext} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
 import {BlockIcons} from '../blockIcons'
 import {Board} from '../blocks/board'
 import mutator from '../mutator'
+import isPagesContext from '../isPages'
 import Button from '../widgets/buttons/button'
 import Editable from '../widgets/editable'
 import CompassIcon from '../widgets/icons/compassIcon'
@@ -35,6 +36,7 @@ const ViewTitle = (props: Props) => {
     const onShowDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), true), [board.id, board.showDescription])
     const onHideDescription = useCallback(() => mutator.showBoardDescription(board.id, Boolean(board.showDescription), false), [board.id, board.showDescription])
     const canEditBoardProperties = useHasCurrentBoardPermissions([Permission.ManageBoardProperties])
+    const isPages = useContext(isPagesContext)
 
     const readonly = props.readonly || !canEditBoardProperties
 
@@ -101,7 +103,7 @@ const ViewTitle = (props: Props) => {
                 <Editable
                     className='title'
                     value={title}
-                    placeholderText={intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
+                    placeholderText={isPages ? intl.formatMessage({id: 'ViewTitle.untitled-page', defaultMessage: 'Untitled page'}) : intl.formatMessage({id: 'ViewTitle.untitled-board', defaultMessage: 'Untitled board'})}
                     onChange={(newTitle) => setTitle(newTitle)}
                     saveOnEsc={true}
                     onSave={onEditTitleSave}

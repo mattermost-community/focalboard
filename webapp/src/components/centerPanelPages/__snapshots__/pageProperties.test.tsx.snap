@@ -1,0 +1,630 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/pageProperties should match snapshot readonly with value 1`] = `
+<div>
+  <div
+    class="PageProperties"
+  >
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Status
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorBrown "
+        >
+          <span
+            class="Label-text"
+          >
+            test
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 1
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        Test value 1
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 2
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        Test value 2
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 3
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        Test value 3
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperties should match snapshot readonly without value 1`] = `
+<div>
+  <div
+    class="PageProperties"
+  >
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Status
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label empty "
+        >
+          <span
+            class="Label-text"
+          >
+            Empty
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 1
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        value1
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 2
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 3
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperties should match snapshot with value 1`] = `
+<div>
+  <div
+    class="PageProperties"
+  >
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Status
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorBrown "
+        >
+          <span
+            class="Label-text"
+          >
+            test
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 1
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="Test value 1"
+        value="Test value 1"
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 2
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="Test value 2"
+        value="Test value 2"
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 3
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="Test value 3"
+        value="Test value 3"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperties should match snapshot without edit board permissions 1`] = `
+<div>
+  <div
+    class="PageProperties"
+  >
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Status
+      </div>
+      <div
+        class="octo-propertyvalue"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorBrown "
+        >
+          <span
+            class="Label-text"
+          >
+            test
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 1
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="Test value 1"
+        value="Test value 1"
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 2
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="Test value 2"
+        value="Test value 2"
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        class="octo-propertyname octo-propertyname--readonly"
+      >
+        Property 3
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="Test value 3"
+        value="Test value 3"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperties should match snapshot without edit card permissions 1`] = `
+<div>
+  <div
+    class="PageProperties"
+  >
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Status
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label propColorBrown "
+        >
+          <span
+            class="Label-text"
+          >
+            test
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 1
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        Test value 1
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 2
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        Test value 2
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 3
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue octo-propertyvalue--readonly"
+      >
+        Test value 3
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperties should match snapshot without value 1`] = `
+<div>
+  <div
+    class="PageProperties"
+  >
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Status
+            </span>
+          </button>
+        </div>
+      </div>
+      <div
+        class="octo-propertyvalue"
+        data-testid="select-non-editable"
+        tabindex="0"
+      >
+        <span
+          class="Label empty "
+        >
+          <span
+            class="Label-text"
+          >
+            Empty
+          </span>
+        </span>
+      </div>
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 1
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title="value1"
+        value="value1"
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 2
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title=""
+        value=""
+      />
+    </div>
+    <div
+      class="PageProperty octo-propertyrow"
+    >
+      <div
+        aria-label="menuwrapper"
+        class="MenuWrapper"
+        role="button"
+      >
+        <div
+          class="octo-propertyname"
+        >
+          <button
+            class="Button"
+            type="button"
+          >
+            <span>
+              Property 3
+            </span>
+          </button>
+        </div>
+      </div>
+      <input
+        class="Editable octo-propertyvalue"
+        placeholder="Empty"
+        spellcheck="true"
+        style="width: 100%;"
+        title=""
+        value=""
+      />
+    </div>
+  </div>
+</div>
+`;

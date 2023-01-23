@@ -63,6 +63,9 @@ describe('components/sidebarBoardItem', () => {
                 [view.id]: view,
             },
         },
+        pages: {
+            pages: {},
+        },
         teams: {
             current: {
                 id: 'team-id',
@@ -85,6 +88,7 @@ describe('components/sidebarBoardItem', () => {
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}
+                        showPage={jest.fn()}
                         onDeleteRequest={jest.fn()}
                     />
                 </Router>
@@ -113,6 +117,7 @@ describe('components/sidebarBoardItem', () => {
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}
+                        showPage={jest.fn()}
                         onDeleteRequest={jest.fn()}
                     />
                 </Router>
@@ -137,6 +142,7 @@ describe('components/sidebarBoardItem', () => {
                         isActive={true}
                         showBoard={jest.fn()}
                         showView={jest.fn()}
+                        showPage={jest.fn()}
                         onDeleteRequest={jest.fn()}
                     />
                 </Router>

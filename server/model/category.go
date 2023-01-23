@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	CategoryTypeSystem = "system"
-	CategoryTypeCustom = "custom"
+	CategoryTypeSystem      = "system"
+	CategoryTypeCustom      = "custom"
+	CategoryTypePagesSystem = "pages-system"
+	CategoryTypePagesCustom = "pages-custom"
 )
 
 // Category is a board category
@@ -101,8 +103,14 @@ func (c *Category) IsValid() error {
 		return NewErrInvalidCategory("category team id ID cannot be empty")
 	}
 
-	if c.Type != CategoryTypeCustom && c.Type != CategoryTypeSystem {
-		return NewErrInvalidCategory(fmt.Sprintf("category type is invalid. Allowed types: %s and %s", CategoryTypeSystem, CategoryTypeCustom))
+	if c.Type != CategoryTypeCustom && c.Type != CategoryTypeSystem && c.Type != CategoryTypePagesCustom && c.Type != CategoryTypePagesSystem {
+		return NewErrInvalidCategory(fmt.Sprintf(
+			"category type is invalid. Allowed types: %s, %s, %s and %s",
+			CategoryTypeSystem,
+			CategoryTypeCustom,
+			CategoryTypePagesSystem,
+			CategoryTypePagesCustom,
+		))
 	}
 
 	return nil

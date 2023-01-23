@@ -1,15 +1,18 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useCallback, useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import React, {useCallback, useEffect, useState, useContext, useMemo} from 'react'
+import {FormattedMessage, useIntl} from 'react-intl'
+import {useHistory, useRouteMatch} from 'react-router-dom'
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
 import {getActiveThemeName, loadTheme} from '../../theme'
+import mutator from '../../mutator'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
 import ShowSidebarIcon from '../../widgets/icons/showSidebar'
-import {getCurrentBoard, getMySortedBoards} from '../../store/boards'
+import isPagesContext from '../../isPages'
+import {getCurrentBoardId, getCurrentBoard, getMySortedBoards, getMySortedPageFolders} from '../../store/boards'
 import {useAppDispatch, useAppSelector} from '../../store/hooks'
 import {Utils} from '../../utils'
 import {IUser} from '../../user'
@@ -32,7 +35,7 @@ import BoardsSwitcher from '../boardsSwitcher/boardsSwitcher'
 
 import wsClient, {WSClient} from '../../wsclient'
 
-import {getCurrentTeam, getCurrentTeamId} from '../../store/teams'
+import {getCurrentTeam, getCurrentTeamId, Team} from '../../store/teams'
 
 import {Constants} from '../../constants'
 
@@ -42,8 +45,6 @@ import {getCurrentViewId} from '../../store/views'
 import octoClient from '../../octoClient'
 
 import {useWebsockets} from '../../hooks/websockets'
-
-import mutator from '../../mutator'
 
 import {Board} from '../../blocks/board'
 
@@ -69,12 +70,32 @@ const Sidebar = (props: Props) => {
     const [isHidden, setHidden] = useState(false)
     const [userHidden, setUserHidden] = useState(false)
     const [windowDimensions, setWindowDimensions] = useState(getWindowDimensions())
+    const currentBoardId = useAppSelector<string>(getCurrentBoardId) || null
+    const currentTeam = useAppSelector<Team|null>(getCurrentTeam)
     const boards = useAppSelector(getMySortedBoards)
+    const pages = useAppSelector(getMySortedPageFolders)
+    const isPages = useContext(isPagesContext)
     const dispatch = useAppDispatch()
-    const sidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
+    const allSidebarCategories = useAppSelector<CategoryBoards[]>(getSidebarCategories)
     const me = useAppSelector<IUser|null>(getMe)
     const activeViewID = useAppSelector(getCurrentViewId)
+    const history = useHistory()
+    const match = useRouteMatch<{boardId: string, viewId?: string}>()
+    const intl = useIntl()
     const currentBoard = useAppSelector(getCurrentBoard)
+
+    const pagesSidebarCategories = useMemo(() => {
+        return allSidebarCategories.filter((c) => c.type === 'pages-system' || c.type === 'pages-custom')
+    }, [allSidebarCategories])
+
+    const boardsSidebarCategories = useMemo(() => {
+        return allSidebarCategories.filter((c) => c.type === 'system' || c.type === 'custom')
+    }, [allSidebarCategories])
+
+    let sidebarCategories = boardsSidebarCategories
+    if (isPages) {
+        sidebarCategories = pagesSidebarCategories
+    }
 
     useEffect(() => {
         const categoryOnChangeHandler = (_: WSClient, categories: Category[]) => {
@@ -175,6 +196,9 @@ const Sidebar = (props: Props) => {
             }
         }
     }
+    const showFolder = useCallback(async (boardId) => {
+        Utils.showBoard(boardId, match, history)
+    }, [match, history])
 
     const handleCategoryDND = useCallback(async (result: DropResult) => {
         const {destination, source} = result
@@ -250,13 +274,11 @@ const Sidebar = (props: Props) => {
 
         if (!team || !destination) {
             setDraggedItemID('')
-            setIsCategoryBeingDragged(false)
             return
         }
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
             setDraggedItemID('')
-            setIsCategoryBeingDragged(false)
             return
         }
 
@@ -269,11 +291,9 @@ const Sidebar = (props: Props) => {
         }
 
         setDraggedItemID('')
-        setIsCategoryBeingDragged(false)
     }, [team, sidebarCategories])
 
     const [draggedItemID, setDraggedItemID] = useState<string>('')
-    const [isCategoryBeingDragged, setIsCategoryBeingDragged] = useState<boolean>(false)
 
     if (!boards) {
         return <div/>
@@ -371,7 +391,11 @@ const Sidebar = (props: Props) => {
 
             <BoardsSwitcher
                 onBoardTemplateSelectorOpen={props.onBoardTemplateSelectorOpen}
+                onFolderCreate={() => {
+                    mutator.addEmptyFolder(currentTeam?.id || '', intl, showFolder, () => showFolder(currentBoardId))
+                }}
                 userIsGuest={me?.is_guest}
+                isPages={isPages}
             />
 
             <DragDropContext
@@ -396,12 +420,12 @@ const Sidebar = (props: Props) => {
                                         activeBoardID={props.activeBoardId}
                                         activeViewID={activeViewID}
                                         categoryBoards={category}
-                                        boards={getSortedCategoryBoards(category)}
+                                        boards={isPages ? pages : getSortedCategoryBoards(category)}
+                                        isPages={isPages}
                                         allCategories={sidebarCategories}
                                         index={index}
                                         onBoardTemplateSelectorClose={props.onBoardTemplateSelectorClose}
                                         draggedItemID={draggedItemID}
-                                        forceCollapse={isCategoryBeingDragged}
                                     />
                                 ))
                             }
@@ -414,7 +438,7 @@ const Sidebar = (props: Props) => {
             <div className='octo-spacer'/>
 
             {
-                (!Utils.isFocalboardPlugin()) &&
+                (!Utils.isFocalboardPlugin() && !isPages) &&
                 <div
                     className='add-board'
                     onClick={props.onBoardTemplateSelectorOpen}
@@ -422,6 +446,20 @@ const Sidebar = (props: Props) => {
                     <FormattedMessage
                         id='Sidebar.add-board'
                         defaultMessage='+ Add board'
+                    />
+                </div>
+            }
+            {
+                (!Utils.isFocalboardPlugin() && isPages) &&
+                <div
+                    className='add-page'
+                    onClick={() => {
+                        mutator.addEmptyFolder(currentTeam?.id || '', intl, showFolder, () => showFolder(currentBoardId))
+                    }}
+                >
+                    <FormattedMessage
+                        id='Sidebar.add-page'
+                        defaultMessage='+ Add page'
                     />
                 </div>
             }

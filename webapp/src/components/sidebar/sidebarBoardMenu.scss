@@ -1,0 +1,71 @@
+.SidebarBoardMenu {
+    border-radius: 4px;
+
+    &:hover {
+        background: rgba(var(--sidebar-text-rgb), 0.08);
+    }
+
+    .Menu.noselect.left {
+        position: fixed;
+        right: auto;
+        left: auto;
+    }
+
+    .Menu.left {
+        right: -11px;
+    }
+
+    .boardMoveToCategorySubmenu {
+        .menu-options {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        @media only screen and (max-height: 768px) {
+            .menu-options {
+                max-height: min(350px, 50vh);
+            }
+        }
+    }
+}
+
+.SidebarBoardItem.category {
+    .SidebarBoardMenu {
+        display: none;
+
+        &.menuOpen {
+            display: block;
+        }
+    }
+
+    &:hover {
+        .MenuWrapper {
+            display: block;
+        }
+    }
+}
+
+.SidebarBoardItem.subitem {
+    .SidebarBoardMenu {
+        display: none;
+
+        &.menuOpen {
+            display: block;
+        }
+    }
+
+    &:hover {
+        .MenuWrapper {
+            display: block;
+        }
+    }
+}
+
+.team-sidebar + .product-wrapper {
+    .SidebarBoardMenu {
+        .Menu.noselect.left {
+            right: calc(100% - 480px - 64px + 50px);
+            left: calc(64px + 240px - 50px);
+        }
+    }
+}

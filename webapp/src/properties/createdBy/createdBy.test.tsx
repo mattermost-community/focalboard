@@ -40,7 +40,7 @@ describe('properties/createdBy', () => {
                 <CreatedBy
                     property={new CreatedByProperty()}
                     board={{} as Board}
-                    card={card}
+                    item={card}
                     readOnly={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     propertyValue={''}
@@ -76,7 +76,7 @@ describe('properties/createdBy', () => {
                 <CreatedBy
                     property={new CreatedByProperty()}
                     board={{} as Board}
-                    card={card}
+                    item={card}
                     readOnly={false}
                     propertyTemplate={{} as IPropertyTemplate}
                     propertyValue={''}

@@ -77,6 +77,9 @@ describe('components/sidebarCategory', () => {
                 [view.id]: view,
             },
         },
+        pages: {
+            pages: {},
+        },
         teams: {
             current: {
                 id: 'team-id',
@@ -97,6 +100,7 @@ describe('components/sidebarCategory', () => {
                         boards={boards}
                         allCategories={allCategoryBoards}
                         index={0}
+                        isPages={false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -124,6 +128,7 @@ describe('components/sidebarCategory', () => {
                         boards={boards}
                         allCategories={allCategoryBoards}
                         index={0}
+                        isPages={false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -150,6 +155,7 @@ describe('components/sidebarCategory', () => {
                         boards={boards}
                         allCategories={allCategoryBoards}
                         index={0}
+                        isPages={false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -179,6 +185,7 @@ describe('components/sidebarCategory', () => {
                         allCategories={allCategoryBoards}
                         index={0}
                         onBoardTemplateSelectorClose={mockTemplateClose}
+                        isPages={false}
                     />
                 </Router>
             </ReduxProvider>,
@@ -210,6 +217,7 @@ describe('components/sidebarCategory', () => {
                         allCategories={allCategoryBoards}
                         index={0}
                         onBoardTemplateSelectorClose={mockTemplateClose}
+                        isPages={false}
                     />
                 </Router>
             </ReduxProvider>,

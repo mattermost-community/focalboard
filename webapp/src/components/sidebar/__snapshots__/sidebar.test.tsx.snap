@@ -702,7 +702,7 @@ exports[`components/sidebarSidebar shouldnt do any category assignment is board 
                 <div>
                   <div
                     aria-label="menuwrapper"
-                    class="MenuWrapper x"
+                    class="MenuWrapper SidebarBoardMenu x"
                     role="button"
                   >
                     <button
@@ -1058,7 +1058,7 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
                 <div>
                   <div
                     aria-label="menuwrapper"
-                    class="MenuWrapper x"
+                    class="MenuWrapper SidebarBoardMenu x"
                     role="button"
                   >
                     <button
@@ -1352,7 +1352,7 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
                 <div>
                   <div
                     aria-label="menuwrapper"
-                    class="MenuWrapper x"
+                    class="MenuWrapper SidebarBoardMenu x"
                     role="button"
                   >
                     <button

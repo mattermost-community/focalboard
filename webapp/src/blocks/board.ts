@@ -35,6 +35,7 @@ type Board = {
     icon?: string
     showDescription: boolean
     isTemplate: boolean
+    isPagesFolder: boolean
     templateVersion: number
     properties: Record<string, string | string[]>
     cardProperties: IPropertyTemplate[]
@@ -103,7 +104,7 @@ function createBoard(board?: Board): Board {
     const now = Date.now()
     let cardProperties: IPropertyTemplate[] = []
     const selectProperties = cardProperties.find((o) => o.type === 'select')
-    if (!selectProperties) {
+    if (!selectProperties && board?.isPagesFolder !== true) {
         const property: IPropertyTemplate = {
             id: Utils.createGuid(IDType.BlockID),
             name: 'Status',
@@ -138,8 +139,9 @@ function createBoard(board?: Board): Board {
         icon: board?.icon || '',
         showDescription: board?.showDescription || false,
         isTemplate: board?.isTemplate || false,
+        isPagesFolder: board?.isPagesFolder || false,
         templateVersion: board?.templateVersion || 0,
-        properties: board?.properties || {},
+        properties: {...board?.properties} || {},
         cardProperties,
         createAt: board?.createAt || now,
         updateAt: board?.updateAt || now,

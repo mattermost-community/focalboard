@@ -32,6 +32,7 @@ func boardFields(prefix string) []string {
 		"show_description",
 		"is_template",
 		"template_version",
+		"is_pages_folder",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '[]')",
 		"create_at",
@@ -69,6 +70,7 @@ func boardHistoryFields() []string {
 		"COALESCE(show_description, false)",
 		"COALESCE(is_template, false)",
 		"template_version",
+		"is_pages_folder",
 		"COALESCE(properties, '{}')",
 		"COALESCE(card_properties, '[]')",
 		"COALESCE(create_at, 0)",
@@ -112,12 +114,14 @@ func (s *SQLStore) boardsFromRows(rows *sql.Rows) ([]*model.Board, error) {
 			&board.ShowDescription,
 			&board.IsTemplate,
 			&board.TemplateVersion,
+			&board.IsPagesFolder,
 			&propertiesBytes,
 			&cardPropertiesBytes,
 			&board.CreateAt,
 			&board.UpdateAt,
 			&board.DeleteAt,
 		)
+
 		if err != nil {
 			s.logger.Error("boardsFromRows scan error", mlog.Err(err))
 			return nil, err
@@ -359,6 +363,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"icon":             board.Icon,
 		"show_description": board.ShowDescription,
 		"is_template":      board.IsTemplate,
+		"is_pages_folder":  board.IsPagesFolder,
 		"template_version": board.TemplateVersion,
 		"properties":       propertiesBytes,
 		"card_properties":  cardPropertiesBytes,
@@ -379,6 +384,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("icon", board.Icon).
 			Set("show_description", board.ShowDescription).
 			Set("is_template", board.IsTemplate).
+			Set("is_pages_folder", board.IsPagesFolder).
 			Set("template_version", board.TemplateVersion).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
@@ -455,6 +461,7 @@ func (s *SQLStore) deleteBoardAndChildren(db sq.BaseRunner, boardID, userID stri
 		"icon":             board.Icon,
 		"show_description": board.ShowDescription,
 		"is_template":      board.IsTemplate,
+		"is_pages_folder":  board.IsPagesFolder,
 		"template_version": board.TemplateVersion,
 		"properties":       propertiesBytes,
 		"card_properties":  cardPropertiesBytes,
@@ -838,6 +845,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"show_description",
 		"is_template",
 		"template_version",
+		"is_pages_folder",
 		"properties",
 		"card_properties",
 		"create_at",
@@ -859,6 +867,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		board.ShowDescription,
 		board.IsTemplate,
 		board.TemplateVersion,
+		board.IsPagesFolder,
 		propertiesJSON,
 		cardPropertiesJSON,
 		board.CreateAt,

@@ -1,0 +1,564 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/sidebarPageItem renders default icon if no custom icon set 1`] = `
+<div>
+  <div
+    data-rbd-droppable-context-id="2"
+    data-rbd-droppable-id="droppable_id"
+  >
+    <div
+      class="SidebarPageItem active depth-0"
+    >
+      <i
+        class="CompassIcon icon-file-text-outline"
+      />
+      <div
+        class="octo-sidebar-title"
+        title="title"
+      >
+        title
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/sidebarPageItem sidebar page item with other item active 1`] = `
+<div>
+  <div
+    data-rbd-droppable-context-id="1"
+    data-rbd-droppable-id="droppable_id"
+  >
+    <div
+      class="SidebarPageItem  depth-0"
+    >
+      i
+      <div
+        class="octo-sidebar-title"
+        title="Main Page"
+      >
+        Main Page
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper override menuOpened"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+          <div
+            class="Menu noselect left "
+          >
+            <div
+              class="menu-contents"
+            >
+              <div
+                class="menu-options"
+              >
+                <div>
+                  <div
+                    aria-label="Add subpage"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-plus AddIcon"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Add subpage
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Delete"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Delete
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Duplicate"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-content-copy content-copy"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Duplicate
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div
+                    aria-label="Copy link"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-link-variant LinkIcon"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Copy link
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="menu-spacer hideOnWidescreen"
+              />
+              <div
+                class="menu-options hideOnWidescreen"
+              >
+                <div
+                  aria-label="Cancel"
+                  class="MenuOption TextOption menu-option menu-cancel"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Cancel
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="SidebarPageItem  depth-1"
+    >
+      i
+      <div
+        class="octo-sidebar-title"
+        title="Sub Page"
+      >
+        Sub Page
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="SidebarPageItem active depth-2"
+    >
+      i
+      <div
+        class="octo-sidebar-title"
+        title="Sub Sub Page"
+      >
+        Sub Sub Page
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/sidebarPageItem sidebar page item with root active 1`] = `
+<div>
+  <div
+    data-rbd-droppable-context-id="0"
+    data-rbd-droppable-id="droppable_id"
+  >
+    <div
+      class="SidebarPageItem active depth-0"
+    >
+      i
+      <div
+        class="octo-sidebar-title"
+        title="Main Page"
+      >
+        Main Page
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper override menuOpened"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+          <div
+            class="Menu noselect left "
+          >
+            <div
+              class="menu-contents"
+            >
+              <div
+                class="menu-options"
+              >
+                <div>
+                  <div
+                    aria-label="Add subpage"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-plus AddIcon"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Add subpage
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Delete"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Delete
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    aria-label="Duplicate"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-content-copy content-copy"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Duplicate
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div
+                    aria-label="Copy link"
+                    class="MenuOption TextOption menu-option"
+                    role="button"
+                  >
+                    <div
+                      class="d-flex"
+                    >
+                      <div
+                        class="menu-option__icon"
+                      >
+                        <i
+                          class="CompassIcon icon-link-variant LinkIcon"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="menu-option__content"
+                    >
+                      <div
+                        class="menu-name"
+                      >
+                        Copy link
+                      </div>
+                    </div>
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="menu-spacer hideOnWidescreen"
+              />
+              <div
+                class="menu-options hideOnWidescreen"
+              >
+                <div
+                  aria-label="Cancel"
+                  class="MenuOption TextOption menu-option menu-cancel"
+                  role="button"
+                >
+                  <div
+                    class="d-flex"
+                  >
+                    <div
+                      class="noicon"
+                    />
+                  </div>
+                  <div
+                    class="menu-option__content"
+                  >
+                    <div
+                      class="menu-name"
+                    >
+                      Cancel
+                    </div>
+                  </div>
+                  <div
+                    class="noicon"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="SidebarPageItem  depth-1"
+    >
+      i
+      <div
+        class="octo-sidebar-title"
+        title="Sub Page"
+      >
+        Sub Page
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="SidebarPageItem  depth-2"
+    >
+      i
+      <div
+        class="octo-sidebar-title"
+        title="Sub Sub Page"
+      >
+        Sub Sub Page
+      </div>
+      <div
+        class="PageMenu"
+      >
+        <div
+          aria-label="menuwrapper"
+          class="MenuWrapper"
+          role="button"
+        >
+          <button
+            class="IconButton size--medium"
+            type="button"
+          >
+            <i
+              class="CompassIcon icon-dots-horizontal OptionsIcon"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

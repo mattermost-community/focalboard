@@ -11,14 +11,18 @@ export const TelemetryActions = {
     ClickChannelIntro: 'channelIntro_boardLink',
     ViewBoard: 'viewBoard',
     CreateBoard: 'createBoard',
+    CreateFolder: 'createFolder',
+    CreateSubpage: 'createSubpage',
     DuplicateBoard: 'duplicateBoard',
     DeleteBoard: 'deleteBoard',
     DeleteBoardTemplate: 'deleteBoardTemplate',
+    DeletePage: 'deletePage',
     ShareBoard: 'shareBoard',
     CreateBoardTemplate: 'createBoardTemplate',
     CreateBoardViaTemplate: 'createBoardViaTemplate',
     AddTemplateFromBoard: 'AddTemplateFromBoard',
     CreateBoardView: 'createBoardView',
+    DuplicatePage: 'duplicatePage',
     DuplicateBoardView: 'duplicagteBoardView',
     DeleteBoardView: 'deleteBoardView',
     EditCardProperty: 'editCardProperty',
@@ -56,7 +60,9 @@ interface IEventProps {
     channelID?: string
     teamID?: string
     board?: string
+    folder?: string
     view?: string
+    page?: string
     viewType?: string
     card?: string
     cardTemplateId?: string

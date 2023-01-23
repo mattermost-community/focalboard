@@ -1,0 +1,36 @@
+@import '../styles/z-index';
+
+.NoPages {
+    @include z-index(board-template-selector);
+    position: absolute;
+    background-color: rgb(var(--center-channel-bg-rgb));
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .noPagesImage {
+        max-width: 320px;
+        margin: 0 -100px -56px 0;
+    }
+
+    .header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        .description {
+            max-width: 640px;
+            text-align: center;
+            margin: 0 0 32px;
+        }
+    }
+}
+

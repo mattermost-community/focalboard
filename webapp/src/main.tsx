@@ -29,12 +29,14 @@ importNativeAppSettings()
 
 initThemes()
 
+const isPages = localStorage.getItem('isPagesE2ETests')
+
 const MainApp = () => {
     const me = useAppSelector<IUser|null>(getMe)
 
     return (
         <WithWebSockets userId={me?.id}>
-            <App/>
+            <App pages={Boolean(isPages)}/>
         </WithWebSockets>
     )
 }

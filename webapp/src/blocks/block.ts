@@ -8,7 +8,7 @@ import {Utils} from '../utils'
 const contentBlockTypes = ['text', 'image', 'divider', 'checkbox', 'h1', 'h2', 'h3', 'list-item', 'attachment', 'quote', 'video'] as const
 
 // ToDo: remove type board
-const blockTypes = [...contentBlockTypes, 'board', 'view', 'card', 'comment', 'attachment', 'unknown'] as const
+const blockTypes = [...contentBlockTypes, 'board', 'view', 'page', 'card', 'comment', 'attachment', 'unknown'] as const
 type ContentBlockTypes = typeof contentBlockTypes[number]
 type BlockTypes = typeof blockTypes[number]
 

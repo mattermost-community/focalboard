@@ -70,6 +70,9 @@ describe('components/sidebarSidebar', () => {
             views: {
                 views: [],
             },
+            pages: {
+                pages: [],
+            },
             users: {
                 me: {
                     id: 'user_id_1',
@@ -133,6 +136,9 @@ describe('components/sidebarSidebar', () => {
             views: {
                 views: [],
             },
+            pages: {
+                pages: [],
+            },
             users: {
                 me: {
                     id: 'user_id_1',
@@ -190,6 +196,9 @@ describe('components/sidebarSidebar', () => {
             },
             views: {
                 views: [],
+            },
+            pages: {
+                pages: [],
             },
             users: {
                 me: {
@@ -259,6 +268,9 @@ describe('components/sidebarSidebar', () => {
             views: {
                 views: [],
             },
+            pages: {
+                pages: [],
+            },
             users: {
                 me: {
                     id: 'user_id_1',
@@ -315,6 +327,9 @@ describe('components/sidebarSidebar', () => {
             },
             views: {
                 views: [],
+            },
+            pages: {
+                pages: [],
             },
             users: {
                 me: {
@@ -379,6 +394,9 @@ describe('components/sidebarSidebar', () => {
             views: {
                 views: [],
             },
+            pages: {
+                pages: [],
+            },
             users: {
                 me: {
                     id: 'user_id_1',
@@ -427,6 +445,9 @@ describe('components/sidebarSidebar', () => {
     //         },
     //         views: {
     //             views: [],
+    //         },
+    //         pages: {
+    //             pages: [],
     //         },
     //         users: {
     //             me: {},

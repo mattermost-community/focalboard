@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useState, KeyboardEvent} from 'react'
+import React, {useContext, useState, KeyboardEvent} from 'react'
 
 import {useIntl} from 'react-intl'
 
@@ -10,6 +10,7 @@ import {Category} from '../../store/sidebar'
 import {getCurrentTeam} from '../../store/teams'
 import mutator from '../../mutator'
 import {useAppSelector} from '../../store/hooks'
+import isPagesContext from '../../isPages'
 import {
     getMe,
 } from '../../store/users'
@@ -34,6 +35,7 @@ const CreateCategory = (props: Props): JSX.Element => {
     const intl = useIntl()
     const me = useAppSelector<IUser|null>(getMe)
     const team = useAppSelector(getCurrentTeam)
+    const isPages = useContext(isPagesContext)
     const teamID = team?.id || ''
     const placeholder = intl.formatMessage({id: 'Categories.CreateCategoryDialog.Placeholder', defaultMessage: 'Name your category'})
     const cancelText = intl.formatMessage({id: 'Categories.CreateCategoryDialog.CancelText', defaultMessage: 'Cancel'})
@@ -68,6 +70,7 @@ const CreateCategory = (props: Props): JSX.Element => {
                 name: categoryName,
                 userID: me.id,
                 teamID,
+                type: isPages ? 'pages-custom' : 'custom',
             } as Category
 
             await mutator.createCategory(category)

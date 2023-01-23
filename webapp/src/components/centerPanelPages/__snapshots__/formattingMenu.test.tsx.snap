@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/formattingMenu should match snapshot 1`] = `
+<div>
+  <div
+    class="FormattingMenu"
+  >
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-header-1"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-header-2"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-header-3"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-header-4"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-header-5"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-header-6"
+      />
+    </button>
+    <span
+      class="divider"
+    />
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-bold"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-italic"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-strikethrough-variant"
+      />
+    </button>
+    <span
+      class="divider"
+    />
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-link-variant"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-code-tags"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-code-block"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-quote-open"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-list-bulleted"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-format-list-numbered"
+      />
+    </button>
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-table-plus"
+      />
+    </button>
+    <span
+      class="divider"
+    />
+    <button
+      class="IconButton size--small"
+      type="button"
+    >
+      <i
+        class="CompassIcon icon-plus"
+      />
+    </button>
+  </div>
+</div>
+`;

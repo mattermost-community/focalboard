@@ -22,19 +22,19 @@ exports[`components/blocksEditor/blocksEditor should match snapshot on empty 1`]
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class=" css-4bb158-control"
+          class="RootInput__control css-9fsvdt-control"
         >
           <div
-            class=" css-30zlo3-ValueContainer"
+            class="RootInput__value-container css-30zlo3-ValueContainer"
           >
             <div
-              class=" css-14el2xx-placeholder"
+              class="RootInput__placeholder css-vinljo-placeholder"
               id="react-select-2-placeholder"
             >
-              Introduce your text or your slash command
+              Add text or type "/" for commands
             </div>
             <div
-              class=" css-g5309v-Input"
+              class="RootInput__input-container css-g5309v-Input"
               data-value=""
             >
               <input
@@ -45,7 +45,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot on empty 1`]
                 autocapitalize="none"
                 autocomplete="off"
                 autocorrect="off"
-                class=""
+                class="RootInput__input"
                 id="react-select-2-input"
                 role="combobox"
                 spellcheck="false"
@@ -57,7 +57,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot on empty 1`]
             </div>
           </div>
           <div
-            class=" css-1hb7zxy-IndicatorsContainer"
+            class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
           />
         </div>
       </div>
@@ -77,32 +77,31 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
         data-testid="block-content"
         style="opacity: 1;"
       >
-        <span
-          class="action"
-          data-testid="add-action"
+        <div
+          class="block-actions"
+          data-testid="block-actions"
         >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </span>
-        <span
-          class="action"
-          draggable="true"
-        >
-          <svg
-            class="GripIcon Icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            class="IconButton size--small"
+            type="button"
           >
-            <path
-              d="M0 0h24v24H0V0z"
-              fill="none"
+            <i
+              class="CompassIcon icon-plus"
             />
-            <path
-              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-        </span>
+          </button>
+          <div
+            draggable="true"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-drag-vertical"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="content"
         >
@@ -122,32 +121,31 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
         data-testid="block-content"
         style="opacity: 1;"
       >
-        <span
-          class="action"
-          data-testid="add-action"
+        <div
+          class="block-actions"
+          data-testid="block-actions"
         >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </span>
-        <span
-          class="action"
-          draggable="true"
-        >
-          <svg
-            class="GripIcon Icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            class="IconButton size--small"
+            type="button"
           >
-            <path
-              d="M0 0h24v24H0V0z"
-              fill="none"
+            <i
+              class="CompassIcon icon-plus"
             />
-            <path
-              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-        </span>
+          </button>
+          <div
+            draggable="true"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-drag-vertical"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="content"
         >
@@ -167,32 +165,31 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
         data-testid="block-content"
         style="opacity: 1;"
       >
-        <span
-          class="action"
-          data-testid="add-action"
+        <div
+          class="block-actions"
+          data-testid="block-actions"
         >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </span>
-        <span
-          class="action"
-          draggable="true"
-        >
-          <svg
-            class="GripIcon Icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            class="IconButton size--small"
+            type="button"
           >
-            <path
-              d="M0 0h24v24H0V0z"
-              fill="none"
+            <i
+              class="CompassIcon icon-plus"
             />
-            <path
-              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-        </span>
+          </button>
+          <div
+            draggable="true"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-drag-vertical"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="content"
         >
@@ -212,32 +209,31 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
         data-testid="block-content"
         style="opacity: 1;"
       >
-        <span
-          class="action"
-          data-testid="add-action"
+        <div
+          class="block-actions"
+          data-testid="block-actions"
         >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </span>
-        <span
-          class="action"
-          draggable="true"
-        >
-          <svg
-            class="GripIcon Icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            class="IconButton size--small"
+            type="button"
           >
-            <path
-              d="M0 0h24v24H0V0z"
-              fill="none"
+            <i
+              class="CompassIcon icon-plus"
             />
-            <path
-              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-        </span>
+          </button>
+          <div
+            draggable="true"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-drag-vertical"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="content"
         >
@@ -261,32 +257,31 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
         data-testid="block-content"
         style="opacity: 1;"
       >
-        <span
-          class="action"
-          data-testid="add-action"
+        <div
+          class="block-actions"
+          data-testid="block-actions"
         >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </span>
-        <span
-          class="action"
-          draggable="true"
-        >
-          <svg
-            class="GripIcon Icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            class="IconButton size--small"
+            type="button"
           >
-            <path
-              d="M0 0h24v24H0V0z"
-              fill="none"
+            <i
+              class="CompassIcon icon-plus"
             />
-            <path
-              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-        </span>
+          </button>
+          <div
+            draggable="true"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-drag-vertical"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="content"
         >
@@ -339,32 +334,31 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
         data-testid="block-content"
         style="opacity: 1;"
       >
-        <span
-          class="action"
-          data-testid="add-action"
+        <div
+          class="block-actions"
+          data-testid="block-actions"
         >
-          <i
-            class="CompassIcon icon-plus AddIcon"
-          />
-        </span>
-        <span
-          class="action"
-          draggable="true"
-        >
-          <svg
-            class="GripIcon Icon"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
+          <button
+            class="IconButton size--small"
+            type="button"
           >
-            <path
-              d="M0 0h24v24H0V0z"
-              fill="none"
+            <i
+              class="CompassIcon icon-plus"
             />
-            <path
-              d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-            />
-          </svg>
-        </span>
+          </button>
+          <div
+            draggable="true"
+          >
+            <button
+              class="IconButton size--small"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-drag-vertical"
+              />
+            </button>
+          </div>
+        </div>
         <div
           class="content"
         >
@@ -402,19 +396,19 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
           class="css-1f43avz-a11yText-A11yText"
         />
         <div
-          class=" css-4bb158-control"
+          class="RootInput__control css-9fsvdt-control"
         >
           <div
-            class=" css-30zlo3-ValueContainer"
+            class="RootInput__value-container css-30zlo3-ValueContainer"
           >
             <div
-              class=" css-14el2xx-placeholder"
+              class="RootInput__placeholder css-vinljo-placeholder"
               id="react-select-3-placeholder"
             >
-              Introduce your text or your slash command
+              Add text or type "/" for commands
             </div>
             <div
-              class=" css-g5309v-Input"
+              class="RootInput__input-container css-g5309v-Input"
               data-value=""
             >
               <input
@@ -425,7 +419,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
                 autocapitalize="none"
                 autocomplete="off"
                 autocorrect="off"
-                class=""
+                class="RootInput__input"
                 id="react-select-3-input"
                 role="combobox"
                 spellcheck="false"
@@ -437,7 +431,7 @@ exports[`components/blocksEditor/blocksEditor should match snapshot with blocks 
             </div>
           </div>
           <div
-            class=" css-1hb7zxy-IndicatorsContainer"
+            class="RootInput__indicators css-1hb7zxy-IndicatorsContainer"
           />
         </div>
       </div>

@@ -1,0 +1,161 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/pageProperty should match snapshot readonly with value 1`] = `
+<div>
+  <div
+    class="PageProperty octo-propertyrow"
+  >
+    <div
+      class="octo-propertyname octo-propertyname--readonly"
+    >
+      Test prop
+    </div>
+    <div
+      class="octo-propertyvalue octo-propertyvalue--readonly"
+    >
+      Test value
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperty should match snapshot readonly without value 1`] = `
+<div>
+  <div
+    class="PageProperty octo-propertyrow"
+  >
+    <div
+      class="octo-propertyname octo-propertyname--readonly"
+    >
+      Test prop
+    </div>
+    <div
+      class="octo-propertyvalue octo-propertyvalue--readonly"
+    />
+  </div>
+</div>
+`;
+
+exports[`components/pageProperty should match snapshot with value 1`] = `
+<div>
+  <div
+    class="PageProperty octo-propertyrow"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <div
+        class="octo-propertyname"
+      >
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            Test prop
+          </span>
+        </button>
+      </div>
+    </div>
+    <input
+      class="Editable octo-propertyvalue"
+      placeholder="Empty"
+      spellcheck="true"
+      style="width: 100%;"
+      title="Test value"
+      value="Test value"
+    />
+  </div>
+</div>
+`;
+
+exports[`components/pageProperty should match snapshot without edit board permissions 1`] = `
+<div>
+  <div
+    class="PageProperty octo-propertyrow"
+  >
+    <div
+      class="octo-propertyname octo-propertyname--readonly"
+    >
+      Test prop
+    </div>
+    <input
+      class="Editable octo-propertyvalue"
+      placeholder="Empty"
+      spellcheck="true"
+      style="width: 100%;"
+      title="Test value"
+      value="Test value"
+    />
+  </div>
+</div>
+`;
+
+exports[`components/pageProperty should match snapshot without edit card permissions 1`] = `
+<div>
+  <div
+    class="PageProperty octo-propertyrow"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <div
+        class="octo-propertyname"
+      >
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            Test prop
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="octo-propertyvalue octo-propertyvalue--readonly"
+    >
+      Test value
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/pageProperty should match snapshot without value 1`] = `
+<div>
+  <div
+    class="PageProperty octo-propertyrow"
+  >
+    <div
+      aria-label="menuwrapper"
+      class="MenuWrapper"
+      role="button"
+    >
+      <div
+        class="octo-propertyname"
+      >
+        <button
+          class="Button"
+          type="button"
+        >
+          <span>
+            Test prop
+          </span>
+        </button>
+      </div>
+    </div>
+    <input
+      class="Editable octo-propertyvalue"
+      placeholder="Empty"
+      spellcheck="true"
+      style="width: 100%;"
+      title=""
+      value=""
+    />
+  </div>
+</div>
+`;

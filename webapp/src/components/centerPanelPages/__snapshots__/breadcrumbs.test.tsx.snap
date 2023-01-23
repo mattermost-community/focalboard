@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/breadcrumbs should match snapshot 1`] = `
+<div>
+  <div
+    class="Breadcrumbs"
+  >
+    <span
+      class="page-breadcrumb"
+    >
+      BoardTitle
+    </span>
+    <span>
+       / 
+    </span>
+    <span
+      class="page-breadcrumb"
+    >
+      Page2Title
+    </span>
+    <span>
+       / 
+    </span>
+    <span
+      class="page-breadcrumb"
+    >
+      Page3Title
+    </span>
+  </div>
+</div>
+`;

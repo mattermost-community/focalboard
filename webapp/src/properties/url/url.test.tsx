@@ -33,7 +33,7 @@ describe('properties/link', () => {
     const propertyTemplate = board.cardProperties[0]
     const baseData = {
         property: new UrlProperty(),
-        card,
+        item: card,
         board,
         propertyTemplate,
         readOnly: false,
