@@ -11,6 +11,7 @@ type Props = {
     title?: string
     children: React.ReactNode
     className?: string
+    editing?: boolean
 }
 
 function Label(props: Props): JSX.Element {
@@ -18,6 +19,7 @@ function Label(props: Props): JSX.Element {
     if (props.color && props.color in Constants.menuColors) {
         color = props.color
     }
+
     return (
         <span
             className={`Label ${color} ${props.className ? props.className : ''}`}

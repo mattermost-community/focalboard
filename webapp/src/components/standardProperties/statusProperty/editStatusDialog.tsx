@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {useCallback} from 'preact/hooks'
@@ -19,25 +19,39 @@ import {IPropertyOption} from '../../../blocks/board'
 import DragHandle from '../../../widgets/icons/dragHandle'
 import EditIcon from '../../../widgets/icons/edit'
 
+import EditableLabel from './editableLabel/editableLabel'
+
 export type StatusCategoryEmptyState = {
     icon: JSX.Element
     color: string
     text: JSX.Element
 }
 
+export type EditablePropertyOption = IPropertyOption & {
+    editing?: boolean
+}
+
 export type StatusCategory = {
     id: string
     title: string
-    options: IPropertyOption[]
+    options: EditablePropertyOption[]
     emptyState: StatusCategoryEmptyState
 }
 
 type Props = {
     valueCategories: StatusCategory[]
     onClose: () => void
+    onUpdate: (updatedValueCategories: StatusCategory[]) => void
 }
 
 const EditStatusPropertyDialog = (props: Props): JSX.Element => {
+    const [valueCategories, setValueCategories] = useState<StatusCategory[]>([])
+
+    useEffect(() => {
+        console.log('setting: ' + props.valueCategories.length)
+        setValueCategories(props.valueCategories)
+    }, [props.valueCategories])
+
     const title = (
         <FormattedMessage
             id='statusProperty.configDialog.title'
@@ -45,7 +59,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         />
     )
 
-    const generateValueRow = (option: IPropertyOption, index: number): JSX.Element => {
+    const generateValueRow = (option: EditablePropertyOption, index: number): JSX.Element => {
         return (
             <Draggable
                 draggableId={option.id}
@@ -64,13 +78,10 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                         >
                             <DragHandle/>
                         </div>
-                        <Label
-                            key={option.id}
-                            color={option.color}
-                            title={option.value}
-                        >
-                            <span>{option.value}</span>
-                        </Label>
+                        <EditableLabel
+                            option={option}
+                            editing={option.editing}
+                        />
                         <div className={`colorEditor ${option.color} withBorder`}/>
                         <EditIcon/>
                     </div>
@@ -98,7 +109,28 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         )
     }
 
+    const handleAddCategoryValue = (categoryID: string) => {
+        console.log('asdasd')
+        const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === categoryID)
+        if (categoryIndex < 0) {
+            return
+        }
+
+        const newOption: EditablePropertyOption = {
+            id: '',
+            value: '',
+            color: 'propColorOrange',
+            editing: true,
+        }
+
+        const updatedValueCategories = [...valueCategories]
+        updatedValueCategories[categoryIndex].options.unshift(newOption)
+        setValueCategories(updatedValueCategories)
+    }
+
     const onDragEndHandler = () => {}
+
+    console.log(valueCategories)
 
     return (
         <ActionDialog
@@ -115,7 +147,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
             </div>
             <div className='categorySwimlanes'>
                 <DragDropContext onDragEnd={onDragEndHandler}>
-                    {props.valueCategories.map((valueCategory) => {
+                    {valueCategories.map((valueCategory) => {
                         return (
                             <div
                                 key={valueCategory.id}
@@ -126,7 +158,12 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                         {valueCategory.title}
                                     </div>
                                     <InfoIcon/>
-                                    <PlusIcon/>
+                                    <div
+                                        className='addBtnWrapper'
+                                        onClick={() => handleAddCategoryValue(valueCategory.id)}
+                                    >
+                                        <PlusIcon/>
+                                    </div>
                                 </div>
                                 <Droppable droppableId={`categorySwimlane_${valueCategory.id}`}>
                                     {(provided) => (

@@ -127,6 +127,7 @@ const ShareBoardButton = (props: Props) => {
                     <EditStatusPropertyDialog
                         valueCategories={valueCategories}
                         onClose={() => setShowShareDialog(false)}
+                        onUpdate={(updatedValue) => console.log(updatedValue)}
                     />
             }
         </div>

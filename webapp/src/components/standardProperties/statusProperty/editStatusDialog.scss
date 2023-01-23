@@ -41,9 +41,17 @@
                 text-transform: uppercase;
             }
 
-            .PlusIcon {
+            .addBtnWrapper {
                 margin-left: auto;
                 cursor: pointer;
+                border-radius: 4px;
+                width: 24px;
+                height: 24px;
+                text-align: center;
+                
+                &:hover {
+                    background: rgba(var(--center-channel-color-rgb), 0.1);
+                }
             }
         }
 
@@ -65,8 +73,8 @@
             .Label {
                 width: max-content;
                 margin-top: 0;
-                margin-right: auto;
                 max-width: 150px;
+                margin-right: auto;
 
                 span {
                     overflow: hidden;
