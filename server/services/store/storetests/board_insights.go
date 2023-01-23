@@ -72,7 +72,7 @@ func getBoardsInsightsTest(t *testing.T, store store.Store) {
 	boardsUser2, _ := store.GetBoardsForUserAndTeam(testInsightsUserID1, testTeamID, true)
 	t.Run("team insights", func(t *testing.T) {
 		boardIDs := []string{boardsUser1[0].ID, boardsUser1[1].ID, boardsUser1[2].ID}
-		topTeamBoards, err := store.GetTeamBoardsInsights(testTeamID, testUserID,
+		topTeamBoards, err := store.GetTeamBoardsInsights(testTeamID,
 			0, 0, 10, boardIDs)
 		require.NoError(t, err)
 		require.Len(t, topTeamBoards.Items, 3)
