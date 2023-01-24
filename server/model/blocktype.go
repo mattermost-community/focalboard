@@ -14,13 +14,16 @@ import (
 type BlockType string
 
 const (
-	TypeUnknown = "unknown"
-	TypeBoard   = "board"
-	TypeCard    = "card"
-	TypeView    = "view"
-	TypeText    = "text"
-	TypeComment = "comment"
-	TypeImage   = "image"
+	TypeUnknown    = "unknown"
+	TypeBoard      = "board"
+	TypeCard       = "card"
+	TypeView       = "view"
+	TypeText       = "text"
+	TypeCheckbox   = "checkbox"
+	TypeComment    = "comment"
+	TypeImage      = "image"
+	TypeAttachment = "attachment"
+	TypeDivider    = "divider"
 )
 
 func (bt BlockType) String() string {
@@ -42,6 +45,10 @@ func BlockTypeFromString(s string) (BlockType, error) {
 		return TypeComment, nil
 	case "image":
 		return TypeImage, nil
+	case "attachment":
+		return TypeAttachment, nil
+	case "divider":
+		return TypeDivider, nil
 	}
 	return TypeUnknown, ErrInvalidBlockType{s}
 }
@@ -57,6 +64,8 @@ func BlockType2IDType(blockType BlockType) utils.IDType {
 		return utils.IDTypeView
 	case TypeText, TypeComment:
 		return utils.IDTypeBlock
+	case TypeImage, TypeAttachment:
+		return utils.IDTypeAttachment
 	}
 	return utils.IDTypeNone
 }
