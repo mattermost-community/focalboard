@@ -999,18 +999,18 @@ func (mr *MockStoreMockRecorder) GetTeam(arg0 interface{}) *gomock.Call {
 }
 
 // GetTeamBoardsInsights mocks base method.
-func (m *MockStore) GetTeamBoardsInsights(arg0, arg1 string, arg2 int64, arg3, arg4 int, arg5 []string) (*model.BoardInsightsList, error) {
+func (m *MockStore) GetTeamBoardsInsights(arg0 string, arg1 int64, arg2, arg3 int, arg4 []string) (*model.BoardInsightsList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1, arg2, arg3, arg4, arg5)
+	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].(*model.BoardInsightsList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTeamBoardsInsights indicates an expected call of GetTeamBoardsInsights.
-func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1, arg2, arg3, arg4, arg5)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1, arg2, arg3, arg4)
 }
 
 // GetTeamCount mocks base method.
