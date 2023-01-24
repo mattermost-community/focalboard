@@ -131,8 +131,9 @@ type Store interface {
 	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
-	AddUpdateCategoryBoard(userID string, boardCategoryMapping map[string]string) error
+	AddUpdateCategoryBoard(userID, categoryID string, boardIDs []string) error
 	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
+	SetBoardVisibility(userID, categoryID, boardID string, visible bool) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error
@@ -168,7 +169,7 @@ type Store interface {
 	SendMessage(message, postType string, receipts []string) error
 
 	// Insights
-	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetTeamBoardsInsights(teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
 

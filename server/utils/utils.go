@@ -102,3 +102,20 @@ func IsCloudLicense(license *mmModel.License) bool {
 		license.Features.Cloud != nil &&
 		*license.Features.Cloud
 }
+
+func DedupeStringArr(arr []string) []string {
+	hashMap := map[string]bool{}
+
+	for _, item := range arr {
+		hashMap[item] = true
+	}
+
+	dedupedArr := make([]string, len(hashMap))
+	i := 0
+	for key := range hashMap {
+		dedupedArr[i] = key
+		i++
+	}
+
+	return dedupedArr
+}

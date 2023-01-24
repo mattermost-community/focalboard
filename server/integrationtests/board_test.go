@@ -2078,8 +2078,8 @@ func TestDuplicateBoard(t *testing.T) {
 
 		var duplicateBoardCategoryID string
 		for _, categoryBoard := range userCategoryBoards {
-			for _, boardID := range categoryBoard.BoardIDs {
-				if boardID == duplicateBoard.ID {
+			for _, boardMetadata := range categoryBoard.BoardMetadata {
+				if boardMetadata.BoardID == duplicateBoard.ID {
 					duplicateBoardCategoryID = categoryBoard.Category.ID
 				}
 			}

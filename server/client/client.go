@@ -1042,3 +1042,21 @@ func (c *Client) GetBlocksComplianceHistory(
 
 	return res, BuildResponse(r)
 }
+
+func (c *Client) HideBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/boards/"+boardID+"/hide", "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
+func (c *Client) UnhideBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/boards/"+boardID+"/unhide", "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}

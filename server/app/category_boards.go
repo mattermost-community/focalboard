@@ -79,8 +79,8 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	}
 
 	createdCategoryBoards := &model.CategoryBoards{
-		Category: *createdCategory,
-		BoardIDs: []string{},
+		Category:      *createdCategory,
+		BoardMetadata: []model.CategoryBoardMetadata{},
 	}
 
 	// get user's current team's baords
@@ -88,6 +88,8 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 	if err != nil {
 		return nil, fmt.Errorf("createBoardsCategory error fetching user's team's boards: %w", err)
 	}
+
+	boardIDsToAdd := []string{}
 
 	for _, board := range userTeamBoards {
 		boardMembership, ok := boardMemberByBoardID[board.ID]
@@ -107,8 +109,8 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		belongsToCategory := false
 
 		for _, categoryBoard := range existingCategoryBoards {
-			for _, boardID := range categoryBoard.BoardIDs {
-				if boardID == board.ID {
+			for _, metadata := range categoryBoard.BoardMetadata {
+				if metadata.BoardID == board.ID {
 					belongsToCategory = true
 					break
 				}
@@ -122,29 +124,58 @@ func (a *App) createBoardsCategory(userID, teamID string, existingCategoryBoards
 		}
 
 		if !belongsToCategory {
-			if err := a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{board.ID: createdCategory.ID}); err != nil {
-				return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
+			boardIDsToAdd = append(boardIDsToAdd, board.ID)
+			newBoardMetadata := model.CategoryBoardMetadata{
+				BoardID: board.ID,
+				Hidden:  false,
 			}
+			createdCategoryBoards.BoardMetadata = append(createdCategoryBoards.BoardMetadata, newBoardMetadata)
+		}
+	}
 
-			createdCategoryBoards.BoardIDs = append(createdCategoryBoards.BoardIDs, board.ID)
+	if len(boardIDsToAdd) > 0 {
+		if err := a.AddUpdateUserCategoryBoard(teamID, userID, createdCategory.ID, boardIDsToAdd); err != nil {
+			return nil, fmt.Errorf("createBoardsCategory failed to add category-less board to the default category, defaultCategoryID: %s, error: %w", createdCategory.ID, err)
 		}
 	}
 
 	return createdCategoryBoards, nil
 }
 
-func (a *App) AddUpdateUserCategoryBoard(teamID, userID string, boardCategoryMapping map[string]string) error {
-	err := a.store.AddUpdateCategoryBoard(userID, boardCategoryMapping)
+func (a *App) AddUpdateUserCategoryBoard(teamID, userID, categoryID string, boardIDs []string) error {
+	if len(boardIDs) == 0 {
+		return nil
+	}
+
+	err := a.store.AddUpdateCategoryBoard(userID, categoryID, boardIDs)
 	if err != nil {
 		return err
 	}
 
-	wsPayload := make([]*model.BoardCategoryWebsocketData, len(boardCategoryMapping))
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	var updatedCategory *model.CategoryBoards
+	for i := range userCategoryBoards {
+		if userCategoryBoards[i].ID == categoryID {
+			updatedCategory = &userCategoryBoards[i]
+			break
+		}
+	}
+
+	if updatedCategory == nil {
+		return errCategoryNotFound
+	}
+
+	wsPayload := make([]*model.BoardCategoryWebsocketData, len(updatedCategory.BoardMetadata))
 	i := 0
-	for boardID, categoryID := range boardCategoryMapping {
+	for _, categoryBoardMetadata := range updatedCategory.BoardMetadata {
 		wsPayload[i] = &model.BoardCategoryWebsocketData{
-			BoardID:    boardID,
+			BoardID:    categoryBoardMetadata.BoardID,
 			CategoryID: categoryID,
+			Hidden:     categoryBoardMetadata.Hidden,
 		}
 		i++
 	}
@@ -198,12 +229,12 @@ func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID st
 		return fmt.Errorf("%w categoryID: %s", errCategoryNotFound, categoryID)
 	}
 
-	if len(targetCategoryBoards.BoardIDs) != len(newBoardsOrder) {
+	if len(targetCategoryBoards.BoardMetadata) != len(newBoardsOrder) {
 		return fmt.Errorf(
 			"%w length new category boards: %d, length existing category boards: %d, userID: %s, teamID: %s, categoryID: %s",
 			errCategoryBoardsLengthMismatch,
 			len(newBoardsOrder),
-			len(targetCategoryBoards.BoardIDs),
+			len(targetCategoryBoards.BoardMetadata),
 			userID,
 			teamID,
 			categoryID,
@@ -211,8 +242,8 @@ func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID st
 	}
 
 	existingBoardMap := map[string]bool{}
-	for _, boardID := range targetCategoryBoards.BoardIDs {
-		existingBoardMap[boardID] = true
+	for _, metadata := range targetCategoryBoards.BoardMetadata {
+		existingBoardMap[metadata.BoardID] = true
 	}
 
 	for _, boardID := range newBoardsOrder {
@@ -227,6 +258,22 @@ func (a *App) verifyNewCategoryBoardsMatchExisting(userID, teamID, categoryID st
 			)
 		}
 	}
+
+	return nil
+}
+
+func (a *App) SetBoardVisibility(teamID, userID, categoryID, boardID string, visible bool) error {
+	if err := a.store.SetBoardVisibility(userID, categoryID, boardID, visible); err != nil {
+		return fmt.Errorf("SetBoardVisibility: failed to update board visibility: %w", err)
+	}
+
+	a.wsAdapter.BroadcastCategoryBoardChange(teamID, userID, []*model.BoardCategoryWebsocketData{
+		{
+			BoardID:    boardID,
+			CategoryID: categoryID,
+			Hidden:     !visible,
+		},
+	})
 
 	return nil
 }
