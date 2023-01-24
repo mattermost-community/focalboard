@@ -144,7 +144,7 @@ func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 }
 
 func (s *SQLStore) DBVersion() string {
-	return s.dBVersion(s.db)
+	return s.dBVersion()
 
 }
 
@@ -513,8 +513,8 @@ func (s *SQLStore) GetTeam(ID string) (*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
-	return s.getTeamBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
+func (s *SQLStore) GetTeamBoardsInsights(teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+	return s.getTeamBoardsInsights(s.db, teamID, since, offset, limit, boardIDs)
 
 }
 
