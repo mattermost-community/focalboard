@@ -278,7 +278,7 @@ func TestDeleteCategory(t *testing.T) {
 					Type:     "default",
 					Name:     "Boards",
 				},
-				BoardIDs: []string{},
+				BoardMetadata: []model.CategoryBoardMetadata{},
 			},
 			{
 				Category: model.Category{
@@ -289,11 +289,9 @@ func TestDeleteCategory(t *testing.T) {
 					Type:     "custom",
 					Name:     "Category 1",
 				},
-				BoardIDs: []string{},
+				BoardMetadata: []model.CategoryBoardMetadata{},
 			},
 		}, nil)
-
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", utils.Anything).Return(nil)
 
 		deletedCategory, err := th.App.DeleteCategory("category_id_1", "user_id_1", "team_id_1")
 		assert.NotNil(t, deletedCategory)
@@ -351,8 +349,6 @@ func TestMoveBoardsToDefaultCategory(t *testing.T) {
 			},
 		}, nil)
 
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", utils.Anything).Return(nil)
-
 		err := th.App.moveBoardsToDefaultCategory("user_id", "team_id", "category_id_2")
 		assert.NoError(t, err)
 	})
@@ -376,7 +372,6 @@ func TestMoveBoardsToDefaultCategory(t *testing.T) {
 		}, nil)
 		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
 		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", utils.Anything).Return(nil)
 
 		err := th.App.moveBoardsToDefaultCategory("user_id", "team_id", "category_id_2")
 		assert.NoError(t, err)

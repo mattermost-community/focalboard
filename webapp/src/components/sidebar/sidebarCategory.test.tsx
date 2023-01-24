@@ -36,7 +36,7 @@ describe('components/sidebarCategory', () => {
     const categoryBoards1 = TestBlockFactory.createCategoryBoards()
     categoryBoards1.id = 'category_1_id'
     categoryBoards1.name = 'Category 1'
-    categoryBoards1.boardIDs = [board1.id, board2.id]
+    categoryBoards1.boardMetadata = [{boardID: board1.id, hidden: false}, {boardID: board2.id, hidden: false}]
 
     const categoryBoards2 = TestBlockFactory.createCategoryBoards()
     categoryBoards2.id = 'category_2_id'

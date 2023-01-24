@@ -12,7 +12,7 @@ import octoClient from '../../octoClient'
 import {Subscription, WSClient} from '../../wsclient'
 import {Utils} from '../../utils'
 import {useWebsockets} from '../../hooks/websockets'
-import {IUser, UserConfigPatch} from '../../user'
+import {IUser} from '../../user'
 import {Block} from '../../blocks/block'
 import {ContentBlock} from '../../blocks/contentBlock'
 import {CommentBlock} from '../../blocks/commentBlock'
@@ -40,7 +40,7 @@ import {
     fetchUserBlockSubscriptions,
     getMe,
     followBlock,
-    unfollowBlock, patchProps, getMyConfig,
+    unfollowBlock,
 } from '../../store/users'
 import {setGlobalError} from '../../store/globalError'
 import {UserSettings} from '../../userSettings'
@@ -51,6 +51,8 @@ import CloseIcon from '../../widgets/icons/close'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
 import {Constants} from '../../constants'
+
+import {getCategoryOfBoard, getHiddenBoardIDs} from '../../store/sidebar'
 
 import SetWindowTitleAndIcon from './setWindowTitleAndIcon'
 import TeamToBoardAndViewRedirect from './teamToBoardAndViewRedirect'
@@ -75,7 +77,8 @@ const BoardPage = (props: Props): JSX.Element => {
     const teamId = match.params.teamId || UserSettings.lastTeamId || Constants.globalTeamId
     const viewId = match.params.viewId
     const me = useAppSelector<IUser|null>(getMe)
-    const myConfig = useAppSelector(getMyConfig)
+    const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
+    const category = useAppSelector(getCategoryOfBoard(activeBoardId))
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -220,28 +223,11 @@ const BoardPage = (props: Props): JSX.Element => {
     }, [teamId, match.params.boardId, viewId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
-        Utils.log('handleUnhideBoard called')
-        if (!me) {
+        if (!me || !category) {
             return
         }
 
-        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
-
-        // const index = hiddenBoards.indexOf(boardID)
-        // hiddenBoards.splice(index, 1)
-        delete hiddenBoards[boardID]
-        const hiddenBoardsArray = Object.keys(hiddenBoards)
-        const patch: UserConfigPatch = {
-            updatedFields: {
-                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
-            },
-        }
-        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        if (!patchedProps) {
-            return
-        }
-
-        await dispatch(patchProps(patchedProps))
+        await octoClient.unhideBoard(category.id, boardID)
     }
 
     useEffect(() => {
@@ -249,8 +235,7 @@ const BoardPage = (props: Props): JSX.Element => {
             return
         }
 
-        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        if (hiddenBoardIDs[match.params.boardId]) {
+        if (hiddenBoardIDs.indexOf(match.params.boardId) >= 0) {
             handleUnhideBoard(match.params.boardId)
         }
     }, [me?.id, teamId, match.params.boardId])

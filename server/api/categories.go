@@ -20,6 +20,8 @@ func (a *API) registerCategoriesRoutes(r *mux.Router) {
 	r.HandleFunc("/teams/{teamID}/categories", a.sessionRequired(a.handleGetUserCategoryBoards)).Methods(http.MethodGet)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/reorder", a.sessionRequired(a.handleReorderCategoryBoards)).Methods(http.MethodPut)
 	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}", a.sessionRequired(a.handleUpdateCategoryBoard)).Methods(http.MethodPost)
+	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}/hide", a.sessionRequired(a.handleHideBoard)).Methods(http.MethodPut)
+	r.HandleFunc("/teams/{teamID}/categories/{categoryID}/boards/{boardID}/unhide", a.sessionRequired(a.handleUnhideBoard)).Methods(http.MethodPut)
 }
 
 func (a *API) handleCreateCategory(w http.ResponseWriter, r *http.Request) {
@@ -355,7 +357,7 @@ func (a *API) handleUpdateCategoryBoard(w http.ResponseWriter, r *http.Request) 
 	userID := session.UserID
 
 	// TODO: Check the category and the team matches
-	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{boardID: categoryID})
+	err := a.app.AddUpdateUserCategoryBoard(teamID, userID, categoryID, []string{boardID})
 	if err != nil {
 		a.errorResponse(w, r, err)
 		return
@@ -519,5 +521,127 @@ func (a *API) handleReorderCategoryBoards(w http.ResponseWriter, r *http.Request
 	}
 
 	jsonBytesResponse(w, http.StatusOK, data)
+	auditRec.Success()
+}
+
+func (a *API) handleHideBoard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/{boardID}/hide hideBoard
+	//
+	// Hide the specified board for the user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: categoryID
+	//   in: path
+	//   description: Category ID to which the board to be hidden belongs to
+	//   required: true
+	//   type: string
+	// - name: boardID
+	//   in: path
+	//   description: ID of board to be hidden
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/Category"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	boardID := vars["boardID"]
+	categoryID := vars["categoryID"]
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "hideBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("board_id", boardID)
+	auditRec.AddMeta("team_id", teamID)
+	auditRec.AddMeta("category_id", categoryID)
+
+	if err := a.app.SetBoardVisibility(teamID, userID, categoryID, boardID, false); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
+	auditRec.Success()
+}
+
+func (a *API) handleUnhideBoard(w http.ResponseWriter, r *http.Request) {
+	// swagger:operation POST /teams/{teamID}/categories/{categoryID}/boards/{boardID}/hide unhideBoard
+	//
+	// Unhides the specified board for the user
+	//
+	// ---
+	// produces:
+	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: true
+	//   type: string
+	// - name: categoryID
+	//   in: path
+	//   description: Category ID to which the board to be unhidden belongs to
+	//   required: true
+	//   type: string
+	// - name: boardID
+	//   in: path
+	//   description: ID of board to be unhidden
+	//   required: true
+	//   type: string
+	// security:
+	// - BearerAuth: []
+	// responses:
+	//   '200':
+	//     description: success
+	//     schema:
+	//       "$ref": "#/definitions/Category"
+	//   default:
+	//     description: internal error
+	//     schema:
+	//       "$ref": "#/definitions/ErrorResponse"
+
+	userID := getUserID(r)
+	vars := mux.Vars(r)
+	teamID := vars["teamID"]
+	boardID := vars["boardID"]
+	categoryID := vars["categoryID"]
+
+	if !a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to category"))
+		return
+	}
+
+	auditRec := a.makeAuditRecord(r, "unhideBoard", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelModify, auditRec)
+	auditRec.AddMeta("boardID", boardID)
+
+	if err := a.app.SetBoardVisibility(teamID, userID, categoryID, boardID, true); err != nil {
+		a.errorResponse(w, r, err)
+		return
+	}
+
+	jsonStringResponse(w, http.StatusOK, "{}")
 	auditRec.Success()
 }
