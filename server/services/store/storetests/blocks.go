@@ -1076,14 +1076,15 @@ func testUndeleteBlockChildren(t *testing.T, store store.Store) {
 	boards := createTestBoards(t, store, testUserID, 2)
 	boardDelete := boards[0]
 	boardKeep := boards[1]
+	userID := testUserID
 
 	// create some blocks to be deleted
-	cardsDelete := createTestCards(t, store, testUserID, boardDelete.ID, 3)
+	cardsDelete := createTestCards(t, store, userID, boardDelete.ID, 3)
 	blocksDelete := createTestBlocksForCard(t, store, cardsDelete[0].ID, 5)
 	require.Len(t, blocksDelete, 5)
 
 	// create some blocks to keep
-	cardsKeep := createTestCards(t, store, testUserID, boardKeep.ID, 3)
+	cardsKeep := createTestCards(t, store, userID, boardKeep.ID, 3)
 	blocksKeep := createTestBlocksForCard(t, store, cardsKeep[0].ID, 4)
 	require.Len(t, blocksKeep, 4)
 

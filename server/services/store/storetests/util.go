@@ -72,6 +72,7 @@ func createTestBlocksForCard(t *testing.T, store store.Store, cardID string, num
 	return blocks
 }
 
+//nolint:unparam
 func createTestCards(t *testing.T, store store.Store, userID string, boardID string, num int) []*model.Block {
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {

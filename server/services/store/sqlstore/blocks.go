@@ -45,7 +45,7 @@ func (s *SQLStore) timestampToCharField(name string, as string) string {
 
 func (s *SQLStore) blockFields(alias string) []string {
 	if alias != "" && !strings.HasSuffix(alias, ".") {
-		alias = alias + "."
+		alias += "."
 	}
 
 	return []string{
@@ -688,6 +688,9 @@ func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID stri
 	}
 
 	sql, args, err := query.ToSql()
+	if err != nil {
+		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate sql: %w", err)
+	}
 
 	// if we're using postgres or sqlite, we need to replace the
 	// question mark placeholder with the numbered dollar one, now

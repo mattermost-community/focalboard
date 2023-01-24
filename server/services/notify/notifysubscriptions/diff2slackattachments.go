@@ -268,13 +268,15 @@ func appendContentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Dif
 	for _, child := range cardDiff.Diffs {
 		var opAdd, opDelete bool
 		var opString string
-		if child.OldBlock == nil && child.NewBlock != nil {
+
+		switch {
+		case child.OldBlock == nil && child.NewBlock != nil:
 			opAdd = true
 			opString = "added" // TODO: localize when i18n added to server
-		} else if child.NewBlock == nil || child.NewBlock.DeleteAt != 0 {
+		case child.NewBlock == nil || child.NewBlock.DeleteAt != 0:
 			opDelete = true
 			opString = "deleted"
-		} else {
+		default:
 			opString = "modified"
 		}
 
