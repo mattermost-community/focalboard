@@ -280,6 +280,10 @@ describe('src/cardFilter', () => {
         }
 
         test('verify isBefore clause', () => {
+            const filterClauseIsBeforeEmpty = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: []})
+            const resulta = CardFilter.isClauseMet(filterClauseIsBeforeEmpty, [template], dateCard)
+            expect(resulta).toBeTruthy()
+
             const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: [beforeRange.toString()]})
             const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], dateCard)
             expect(result).toBeFalsy()
@@ -294,6 +298,10 @@ describe('src/cardFilter', () => {
         })
 
         test('verify isAfter clauses', () => {
+            const filterClauseIsAfterEmpty = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: []})
+            const resulta = CardFilter.isClauseMet(filterClauseIsAfterEmpty, [template], dateCard)
+            expect(resulta).toBeTruthy()
+
             const filterClauseIsAfter = createFilterClause({propertyId: 'datePropertyID', condition: 'isAfter', values: [afterRange.toString()]})
             const result = CardFilter.isClauseMet(filterClauseIsAfter, [template], dateCard)
             expect(result).toBeFalsy()
@@ -308,6 +316,10 @@ describe('src/cardFilter', () => {
         })
 
         test('verify is clause', () => {
+            const filterClauseIsEmpty = createFilterClause({propertyId: 'datePropertyID', condition: 'isBefore', values: []})
+            const resulta = CardFilter.isClauseMet(filterClauseIsEmpty, [template], dateCard)
+            expect(resulta).toBeTruthy()
+
             const filterClauseIsBefore = createFilterClause({propertyId: 'datePropertyID', condition: 'is', values: [beforeRange.toString()]})
             const result = CardFilter.isClauseMet(filterClauseIsBefore, [template], dateCard)
             expect(result).toBeFalsy()

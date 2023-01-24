@@ -15,6 +15,18 @@ type TestHelper struct {
 	isPlugin bool
 }
 
+func (th *TestHelper) IsPostgres() bool {
+	return th.f.DB().DriverName() == "postgres"
+}
+
+func (th *TestHelper) IsMySQL() bool {
+	return th.f.DB().DriverName() == "mysql"
+}
+
+func (th *TestHelper) IsSQLite() bool {
+	return th.f.DB().DriverName() == "sqlite3"
+}
+
 func SetupPluginTestHelper(t *testing.T) (*TestHelper, func()) {
 	dbType := strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DB_TYPE"))
 	if dbType == "" || dbType == model.SqliteDBType {
