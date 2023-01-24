@@ -1,87 +1,89 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import {useEffect, useState} from 'react'
+import {useMemo} from 'react'
 import {batch} from 'react-redux'
 
 import {Block} from '../blocks/block'
 import {ContentBlock} from '../blocks/contentBlock'
+import {AttachmentBlock} from '../blocks/attachmentBlock'
+import {Utils} from '../utils'
 import {CommentBlock} from '../blocks/commentBlock'
-import {Board} from '../blocks/board'
+import {Board, BoardMember} from '../blocks/board'
 import {Card} from '../blocks/card'
 import {BoardView} from '../blocks/boardView'
 
-import wsClient, {Subscription, WSClient} from '../wsclient'
-import {updateBoards} from '../store/boards'
+import {Subscription, WSClient} from '../wsclient'
+import {
+    updateBoards,
+    updateMembersEnsuringBoardsAndUsers,
+    fetchBoardMembers,
+    addMyBoardMemberships,
+} from '../store/boards'
 import {updateViews} from '../store/views'
 import {updateCards} from '../store/cards'
 import {updateContents} from '../store/contents'
 import {updateComments} from '../store/comments'
+import {updateAttachments} from '../store/attachments'
 import {followBlock, unfollowBlock} from '../store/users'
 import {initialLoad, initialReadOnlyLoad} from '../store/initialLoad'
+import {Constants} from '../constants'
 
-const websocketTimeoutForBanner = 5000
+import {useWebsockets} from './websockets'
 
-export default function useConnectToBoard(dispatch: any, readToken: string, myID: string, teamId: string|undefined, readonly: boolean, boardId: string): void {
-    const [websocketClosed, setWebsocketClosed] = useState(false)
-    useEffect(() => {
-        let loadAction: any = initialLoad /* eslint-disable-line @typescript-eslint/no-explicit-any */
-        let token = localStorage.getItem('focalboardSessionId') || ''
+export default function useConnectToBoard(dispatch: any, myID: string, teamId: string, readonly: boolean, boardId: string): void {
+    const loadAction: (boardId: string) => any = useMemo(() => {
         if (readonly) {
-            loadAction = initialReadOnlyLoad
-            token = token || readToken || ''
+            return initialReadOnlyLoad
         }
+        return initialLoad
+    }, [readonly])
 
-        dispatch(loadAction(boardId))
+    useWebsockets(teamId, (wsClient: WSClient) =>{
+        const incrementalBlockUpdate = (_: WSClient, blocks: Block[]) => {
+            const teamBlocks = blocks
 
-        let subscribedToTeam = false
-        if (wsClient.state === 'open') {
-            wsClient.authenticate(token)
-            wsClient.subscribeToTeam(teamId || '0')
-            subscribedToTeam = true
-        }
-
-        const incrementalUpdateBoard = (_: WSClient, boards: Board[]) => {
-            // only takes into account the boards that belong to the team
-            const teamBoards = boards.filter((b: Board) => b.teamId === '0' || b.teamId === teamId)
-            dispatch(updateBoards(teamBoards.filter((b: Board) => b.deleteAt !== 0)))
-        }
-
-        const incrementalUpdateBlock = (_: WSClient, blocks: Block[]) => {
             batch(() => {
-                dispatch(updateViews(blocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
-                dispatch(updateCards(blocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
-                dispatch(updateComments(blocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
-                dispatch(updateContents(blocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment') as ContentBlock[]))
+                dispatch(updateViews(teamBlocks.filter((b: Block) => b.type === 'view' || b.deleteAt !== 0) as BoardView[]))
+                dispatch(updateCards(teamBlocks.filter((b: Block) => b.type === 'card' || b.deleteAt !== 0) as Card[]))
+                dispatch(updateComments(teamBlocks.filter((b: Block) => b.type === 'comment' || b.deleteAt !== 0) as CommentBlock[]))
+                dispatch(updateAttachments(teamBlocks.filter((b: Block) => b.type === 'attachment' || b.deleteAt !== 0) as AttachmentBlock[]))
+                dispatch(updateContents(teamBlocks.filter((b: Block) => b.type !== 'card' && b.type !== 'view' && b.type !== 'board' && b.type !== 'comment' && b.type !== 'attachment') as ContentBlock[]))
             })
         }
 
-        let timeout: ReturnType<typeof setTimeout>
-        const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
-            if (newState === 'open') {
-                const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(newToken)
-                wsClient.subscribeToTeam(teamId || '0')
-                subscribedToTeam = true
-            }
+        const incrementalBoardUpdate = (_: WSClient, boards: Board[]) => {
+            // only takes into account the entities that belong to the team or the user boards
+            const teamBoards = boards.filter((b: Board) => b.teamId === Constants.globalTeamId || b.teamId === teamId)
+            const activeBoard = teamBoards.find((b: Board) => b.id === boardId)
+            dispatch(updateBoards(teamBoards))
 
-            if (timeout) {
-                clearTimeout(timeout)
-            }
-
-            if (newState === 'close') {
-                timeout = setTimeout(() => {
-                    setWebsocketClosed(true)
-                    subscribedToTeam = false
-                }, websocketTimeoutForBanner)
-            } else {
-                setWebsocketClosed(false)
+            if (activeBoard) {
+                dispatch(fetchBoardMembers({
+                    teamId,
+                    boardId: boardId,
+                }))
             }
         }
 
-        wsClient.addOnChange(incrementalUpdateBoard, 'board')
-        wsClient.addOnChange(incrementalUpdateBlock, 'block')
-        wsClient.addOnReconnect(() => dispatch(loadAction(boardId)))
-        wsClient.addOnStateChange(updateWebsocketState)
+        const incrementalBoardMemberUpdate = (_: WSClient, members: BoardMember[]) => {
+            dispatch(updateMembersEnsuringBoardsAndUsers(members))
+
+            if (myID) {
+                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === myID)
+                dispatch(addMyBoardMemberships(myBoardMemberships))
+            }
+        }
+
+        const dispatchLoadAction = () => {
+            dispatch(loadAction(boardId))
+        }
+
+        Utils.log('useWEbsocket adding onChange handler')
+        wsClient.addOnChange(incrementalBlockUpdate, 'block')
+        wsClient.addOnChange(incrementalBoardUpdate, 'board')
+        wsClient.addOnChange(incrementalBoardMemberUpdate, 'boardMembers')
+        wsClient.addOnReconnect(dispatchLoadAction)
+
         wsClient.setOnFollowBlock((_: WSClient, subscription: Subscription): void => {
             if (subscription.subscriberId === myID) {
                 dispatch(followBlock(subscription))
@@ -92,17 +94,13 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
                 dispatch(unfollowBlock(subscription))
             }
         })
+
         return () => {
-            if (timeout) {
-                clearTimeout(timeout)
-            }
-            if (subscribedToTeam) {
-                wsClient.unsubscribeToTeam(teamId || '0')
-            }
-            wsClient.removeOnChange(incrementalUpdateBlock, 'block')
-            wsClient.removeOnChange(incrementalUpdateBoard, 'board')
-            wsClient.removeOnReconnect(() => dispatch(loadAction(boardId)))
-            wsClient.removeOnStateChange(updateWebsocketState)
+            Utils.log('useWebsocket cleanup')
+            wsClient.removeOnChange(incrementalBlockUpdate, 'block')
+            wsClient.removeOnChange(incrementalBoardUpdate, 'board')
+            wsClient.removeOnChange(incrementalBoardMemberUpdate, 'boardMembers')
+            wsClient.removeOnReconnect(dispatchLoadAction)
         }
     }, [teamId, readonly, boardId, myID])
 }
