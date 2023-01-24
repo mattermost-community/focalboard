@@ -3,9 +3,11 @@ package sqlstore
 import (
 	"context"
 	"fmt"
+	"os"
 	"strconv"
 
 	sq "github.com/Masterminds/squirrel"
+	"github.com/wiggin77/merror"
 
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
@@ -19,13 +21,14 @@ const (
 	// query, so we want to stay safely below.
 	CategoryInsertBatch = 1000
 
-	TemplatesToTeamsMigrationKey = "TemplatesToTeamsMigrationComplete"
-	UniqueIDsMigrationKey        = "UniqueIDsMigrationComplete"
-	CategoryUUIDIDMigrationKey   = "CategoryUuidIdMigrationComplete"
-	TeamLessBoardsMigrationKey   = "TeamLessBoardsMigrationComplete"
+	TemplatesToTeamsMigrationKey        = "TemplatesToTeamsMigrationComplete"
+	UniqueIDsMigrationKey               = "UniqueIDsMigrationComplete"
+	CategoryUUIDIDMigrationKey          = "CategoryUuidIdMigrationComplete"
+	TeamLessBoardsMigrationKey          = "TeamLessBoardsMigrationComplete"
+	DeletedMembershipBoardsMigrationKey = "DeletedMembershipBoardsMigrationComplete"
 )
 
-func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) {
+func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]*model.Block, error) {
 	subquery, _, _ := s.getQueryBuilder(db).
 		Select("id").
 		From(s.tablePrefix + "blocks").
@@ -64,7 +67,7 @@ func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]model.Block, error) 
 	return s.blocksFromRows(rows)
 }
 
-func (s *SQLStore) runUniqueIDsMigration() error {
+func (s *SQLStore) RunUniqueIDsMigration() error {
 	setting, err := s.GetSystemSetting(UniqueIDsMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -90,7 +93,7 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 		return fmt.Errorf("cannot get blocks with same ID: %w", err)
 	}
 
-	blocksByID := map[string][]model.Block{}
+	blocksByID := map[string][]*model.Block{}
 	for _, block := range blocks {
 		blocksByID[block.ID] = append(blocksByID[block.ID], block)
 	}
@@ -127,11 +130,11 @@ func (s *SQLStore) runUniqueIDsMigration() error {
 	return nil
 }
 
-// runCategoryUUIDIDMigration takes care of deriving the categories
+// RunCategoryUUIDIDMigration takes care of deriving the categories
 // from the boards and its memberships. The name references UUID
 // because of the preexisting purpose of this migration, and has been
 // preserved for compatibility with already migrated instances.
-func (s *SQLStore) runCategoryUUIDIDMigration() error {
+func (s *SQLStore) RunCategoryUUIDIDMigration() error {
 	setting, err := s.GetSystemSetting(CategoryUUIDIDMigrationKey)
 	if err != nil {
 		return fmt.Errorf("cannot get migration state: %w", err)
@@ -347,7 +350,7 @@ func (s *SQLStore) createCategoryBoards(db sq.BaseRunner) error {
 // We no longer support boards existing in DMs and private
 // group messages. This function migrates all boards
 // belonging to a DM to the best possible team.
-func (s *SQLStore) migrateTeamLessBoards() error {
+func (s *SQLStore) RunTeamLessBoardsMigration() error {
 	if !s.isPlugin {
 		return nil
 	}
@@ -376,7 +379,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 
 	tx, err := s.db.BeginTx(context.Background(), nil)
 	if err != nil {
-		s.logger.Error("error starting transaction in migrateTeamLessBoards", mlog.Err(err))
+		s.logger.Error("error starting transaction in runTeamLessBoardsMigration", mlog.Err(err))
 		return err
 	}
 
@@ -390,6 +393,7 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 			if err != nil {
 				// don't let one board's error spoil
 				// the mood for others
+				s.logger.Error("could not find the best team for board during team less boards migration. Continuing", mlog.String("boardID", boards[i].ID))
 				continue
 			}
 		}
@@ -411,13 +415,13 @@ func (s *SQLStore) migrateTeamLessBoards() error {
 
 	if err := s.setSystemSetting(tx, TeamLessBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
-			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "migrateTeamLessBoards"))
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "runTeamLessBoardsMigration"))
 		}
 		return fmt.Errorf("cannot mark migration as completed: %w", err)
 	}
 
 	if err := tx.Commit(); err != nil {
-		s.logger.Error("failed to commit migrateTeamLessBoards transaction", mlog.Err(err))
+		s.logger.Error("failed to commit runTeamLessBoardsMigration transaction", mlog.Err(err))
 		return err
 	}
 
@@ -514,10 +518,15 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 
 func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[string][]string, error) {
 	query := s.getQueryBuilder(tx).
-		Select("TeamMembers.UserId", "TeamMembers.TeamId").
-		From("ChannelMembers").
-		Join("TeamMembers ON ChannelMembers.UserId = TeamMembers.UserId").
-		Where(sq.Eq{"ChannelId": board.ChannelID})
+		Select("tm.UserId", "tm.TeamId").
+		From("ChannelMembers cm").
+		Join("TeamMembers tm ON cm.UserId = tm.UserId").
+		Join("Teams t ON tm.TeamId = t.Id").
+		Where(sq.Eq{
+			"cm.ChannelId": board.ChannelID,
+			"t.DeleteAt":   0,
+			"tm.DeleteAt":  0,
+		})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -541,4 +550,243 @@ func (s *SQLStore) getBoardUserTeams(tx sq.BaseRunner, board *model.Board) (map[
 	}
 
 	return userTeams, nil
+}
+
+func (s *SQLStore) RunDeletedMembershipBoardsMigration() error {
+	if !s.isPlugin {
+		return nil
+	}
+
+	setting, err := s.GetSystemSetting(DeletedMembershipBoardsMigrationKey)
+	if err != nil {
+		return fmt.Errorf("cannot get deleted membership boards migration state: %w", err)
+	}
+
+	// If the migration is already completed, do not run it again.
+	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
+		return nil
+	}
+
+	boards, err := s.getDeletedMembershipBoards(s.db)
+	if err != nil {
+		return err
+	}
+
+	if len(boards) == 0 {
+		s.logger.Debug("No boards with owner not anymore on their team found, marking runDeletedMembershipBoardsMigration as done")
+		if sErr := s.SetSystemSetting(DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); sErr != nil {
+			return fmt.Errorf("cannot mark migration as completed: %w", sErr)
+		}
+		return nil
+	}
+
+	s.logger.Debug("Migrating boards with owner not anymore on their team", mlog.Int("count", len(boards)))
+
+	tx, err := s.db.BeginTx(context.Background(), nil)
+	if err != nil {
+		s.logger.Error("error starting transaction in runDeletedMembershipBoardsMigration", mlog.Err(err))
+		return err
+	}
+
+	for i := range boards {
+		teamID, err := s.getBestTeamForBoard(s.db, boards[i])
+		if err != nil {
+			// don't let one board's error spoil
+			// the mood for others
+			s.logger.Error("could not find the best team for board during deleted membership boards migration. Continuing", mlog.String("boardID", boards[i].ID))
+			continue
+		}
+
+		boards[i].TeamID = teamID
+
+		query := s.getQueryBuilder(tx).
+			Update(s.tablePrefix+"boards").
+			Set("team_id", teamID).
+			Where(sq.Eq{"id": boards[i].ID})
+
+		if _, err := query.Exec(); err != nil {
+			s.logger.Error("failed to set team id for board", mlog.String("board_id", boards[i].ID), mlog.String("team_id", teamID), mlog.Err(err))
+			return err
+		}
+	}
+
+	if err := s.setSystemSetting(tx, DeletedMembershipBoardsMigrationKey, strconv.FormatBool(true)); err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "runDeletedMembershipBoardsMigration"))
+		}
+		return fmt.Errorf("cannot mark migration as completed: %w", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		s.logger.Error("failed to commit runDeletedMembershipBoardsMigration transaction", mlog.Err(err))
+		return err
+	}
+
+	return nil
+}
+
+// getDeletedMembershipBoards retrieves those boards whose creator is
+// associated to the board's team with a deleted team membership.
+func (s *SQLStore) getDeletedMembershipBoards(tx sq.BaseRunner) ([]*model.Board, error) {
+	rows, err := s.getQueryBuilder(tx).
+		Select(legacyBoardFields("b.")...).
+		From(s.tablePrefix + "boards b").
+		Join("TeamMembers tm ON b.created_by = tm.UserId").
+		Where("b.team_id = tm.TeamId").
+		Where(sq.NotEq{"tm.DeleteAt": 0}).
+		Query()
+	if err != nil {
+		return nil, err
+	}
+	defer s.CloseRows(rows)
+
+	boards, err := s.boardsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	return boards, err
+}
+
+func (s *SQLStore) RunFixCollationsAndCharsetsMigration() error {
+	// This is for MySQL only
+	if s.dbType != model.MysqlDBType {
+		return nil
+	}
+
+	// get collation and charSet setting that Channels is using.
+	// when personal server or unit testing, no channels tables exist so just set to a default.
+	var collation string
+	var charSet string
+	var err error
+	if !s.isPlugin || os.Getenv("FOCALBOARD_UNIT_TESTING") == "1" {
+		collation = "utf8mb4_general_ci"
+		charSet = "utf8mb4"
+	} else {
+		collation, charSet, err = s.getCollationAndCharset("Channels")
+		if err != nil {
+			return err
+		}
+	}
+
+	// get all FocalBoard tables
+	tableNames, err := s.getFocalBoardTableNames()
+	if err != nil {
+		return err
+	}
+
+	merr := merror.New()
+
+	// alter each table if there is a collation or charset mismatch
+	for _, name := range tableNames {
+		tableCollation, tableCharSet, err := s.getCollationAndCharset(name)
+		if err != nil {
+			return err
+		}
+
+		if collation == tableCollation && charSet == tableCharSet {
+			// nothing to do
+			continue
+		}
+
+		s.logger.Warn(
+			"found collation/charset mismatch, fixing table",
+			mlog.String("tableName", name),
+			mlog.String("tableCollation", tableCollation),
+			mlog.String("tableCharSet", tableCharSet),
+			mlog.String("collation", collation),
+			mlog.String("charSet", charSet),
+		)
+
+		sql := fmt.Sprintf("ALTER TABLE %s CONVERT TO CHARACTER SET '%s' COLLATE '%s'", name, charSet, collation)
+		result, err := s.db.Exec(sql)
+		if err != nil {
+			merr.Append(err)
+			continue
+		}
+		num, err := result.RowsAffected()
+		if err != nil {
+			merr.Append(err)
+		}
+		if num > 0 {
+			s.logger.Debug("table collation and/or charSet fixed",
+				mlog.String("table_name", name),
+			)
+		}
+	}
+	return merr.ErrorOrNil()
+}
+
+func (s *SQLStore) getFocalBoardTableNames() ([]string, error) {
+	if s.dbType != model.MysqlDBType {
+		return nil, newErrInvalidDBType("getFocalBoardTableNames requires MySQL")
+	}
+
+	query := s.getQueryBuilder(s.db).
+		Select("table_name").
+		From("information_schema.tables").
+		Where(sq.Like{"table_name": s.tablePrefix + "%"}).
+		Where("table_schema=(SELECT DATABASE())")
+
+	rows, err := query.Query()
+	if err != nil {
+		return nil, fmt.Errorf("error fetching FocalBoard table names: %w", err)
+	}
+	defer rows.Close()
+
+	names := make([]string, 0)
+
+	for rows.Next() {
+		var tableName string
+
+		err := rows.Scan(&tableName)
+		if err != nil {
+			return nil, fmt.Errorf("cannot scan result while fetching table names: %w", err)
+		}
+
+		names = append(names, tableName)
+	}
+
+	return names, nil
+}
+
+func (s *SQLStore) getCollationAndCharset(tableName string) (string, string, error) {
+	if s.dbType != model.MysqlDBType {
+		return "", "", newErrInvalidDBType("getCollationAndCharset requires MySQL")
+	}
+
+	query := s.getQueryBuilder(s.db).
+		Select("table_collation").
+		From("information_schema.tables").
+		Where(sq.Eq{"table_name": tableName}).
+		Where("table_schema=(SELECT DATABASE())")
+
+	row := query.QueryRow()
+
+	var collation string
+	err := row.Scan(&collation)
+	if err != nil {
+		return "", "", fmt.Errorf("error fetching collation for table %s: %w", tableName, err)
+	}
+
+	// obtains the charset from the first column that has it set
+	query = s.getQueryBuilder(s.db).
+		Select("CHARACTER_SET_NAME").
+		From("information_schema.columns").
+		Where(sq.Eq{
+			"table_name": tableName,
+		}).
+		Where("table_schema=(SELECT DATABASE())").
+		Where(sq.NotEq{"CHARACTER_SET_NAME": "NULL"}).
+		Limit(1)
+
+	row = query.QueryRow()
+
+	var charSet string
+	err = row.Scan(&charSet)
+	if err != nil {
+		return "", "", fmt.Errorf("error fetching charSet: %w", err)
+	}
+
+	return collation, charSet, nil
 }

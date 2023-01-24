@@ -1,12 +1,16 @@
 .MenuWrapper {
     position: relative;
-    
+    cursor: default;
+
     &.disabled {
         cursor: default;
     }
 
-    
-    *:first-child { 
+    &.override.menuOpened {
+        display: block;
+    }
+
+    *:first-child {
         /* stylelint-disable property-no-vendor-prefix*/
         -webkit-user-select: text; /* Chrome all / Safari all */
         -moz-user-select: text; /* Firefox all */

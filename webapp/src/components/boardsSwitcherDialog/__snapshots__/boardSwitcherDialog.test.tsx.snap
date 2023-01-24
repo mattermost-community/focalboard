@@ -3,7 +3,7 @@
 exports[`component/BoardSwitcherDialog base case 1`] = `
 <div>
   <div
-    class="Dialog dialog-back BoardSwitcherDialog"
+    class="Dialog dialog-back BoardSwitcherDialog size--medium"
   >
     <div
       class="backdrop"
@@ -18,19 +18,48 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <div>
+                Find Boards
+              </div>
+            </h1>
+            <h5
+              class="dialog-subtitle"
+            >
+              <div>
+                Type to find a board. Use 
+                <b>
+                  UP/DOWN
+                </b>
+                 to browse. 
+                <b>
+                  ENTER
+                </b>
+                 to select, 
+                <b>
+                  ESC
+                </b>
+                 to dismiss
+              </div>
+            </h5>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="BoardSwitcherDialogBody"
@@ -38,26 +67,6 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
           <div
             class="head"
           >
-            <h3
-              class="text-heading4"
-            >
-              Find Boards
-            </h3>
-            <h5>
-              Type to find a board. Use 
-              <b>
-                UP/DOWN
-              </b>
-               to browse. 
-              <b>
-                ENTER
-              </b>
-               to select, 
-              <b>
-                ESC
-              </b>
-               to dismiss
-            </h5>
             <div
               class="queryWrapper"
             >

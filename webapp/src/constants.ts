@@ -10,7 +10,9 @@ enum Permission {
     ManageBoardRoles = 'manage_board_roles',
     ManageBoardCards = 'manage_board_cards',
     ManageBoardProperties = 'manage_board_properties',
+    CommentBoardCards = 'comment_board_cards',
     ViewBoard = 'view_board',
+    DeleteOthersComments = 'delete_others_comments'
 }
 
 class Constants {
@@ -34,10 +36,10 @@ class Constants {
     static readonly titleColumnId = '__title'
     static readonly badgesColumnId = '__badges'
 
-    static readonly versionString = '7.3.0'
-    static readonly versionDisplayString = 'Sep 2022'
+    static readonly versionString = '7.8.0'
+    static readonly versionDisplayString = 'Feb 2023'
 
-    static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/data-and-archives.html'
+    static readonly archiveHelpPage = 'https://docs.mattermost.com/boards/migrate-to-boards.html'
     static readonly imports = [
         {
             id: 'trello',
@@ -128,7 +130,7 @@ class Constants {
             displayName: 'Occitan',
         },
         {
-            code: 'pt_BR',
+            code: 'pt-br',
             name: 'portuguese',
             displayName: 'Português (Brasil)',
         },
@@ -194,6 +196,10 @@ class Constants {
     }
 
     static readonly globalTeamId = '0'
+
+    static readonly myInsights = 'MY'
+
+    static readonly SystemUserID = 'system'
 }
 
 export {Constants, Permission}

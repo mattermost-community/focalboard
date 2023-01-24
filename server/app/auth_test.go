@@ -108,8 +108,8 @@ func TestRegisterUser(t *testing.T) {
 	th.Store.EXPECT().GetUserByUsername("existingUsername").Return(mockUser, nil)
 	th.Store.EXPECT().GetUserByUsername("newUsername").Return(mockUser, errors.New("user not found"))
 	th.Store.EXPECT().GetUserByEmail("existingEmail").Return(mockUser, nil)
-	th.Store.EXPECT().GetUserByEmail("newEmail").Return(nil, errors.New("email not found"))
-	th.Store.EXPECT().CreateUser(gomock.Any()).Return(nil)
+	th.Store.EXPECT().GetUserByEmail("newEmail").Return(nil, model.NewErrNotFound("user"))
+	th.Store.EXPECT().CreateUser(gomock.Any()).Return(nil, nil)
 
 	for _, test := range testcases {
 		t.Run(test.title, func(t *testing.T) {

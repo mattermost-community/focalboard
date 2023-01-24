@@ -9,7 +9,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu "
       role="button"
     >
       <button
@@ -37,14 +37,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -58,14 +66,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -81,14 +97,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -116,9 +140,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on copy li
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -163,7 +191,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu "
       role="button"
     >
       <button
@@ -191,14 +219,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -212,14 +248,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -235,14 +279,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -270,9 +322,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on delete 
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -317,7 +373,7 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
   >
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper optionsMenu "
+      class="MenuWrapper override menuOpened optionsMenu "
       role="button"
     >
       <button
@@ -345,14 +401,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-trash-can-outline DeleteIcon trash-can-outline"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Delete
+                  <div
+                    class="menu-name"
+                  >
+                    Delete
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -366,14 +430,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-content-copy content-copy"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-content-copy content-copy"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Duplicate
+                  <div
+                    class="menu-name"
+                  >
+                    Duplicate
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -389,14 +461,22 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-link-variant LinkIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-link-variant LinkIcon"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Copy link
+                  <div
+                    class="menu-name"
+                  >
+                    Copy link
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -424,9 +504,13 @@ exports[`src/components/kanban/kanbanCard return kanbanCard and click on duplica
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"

@@ -74,6 +74,10 @@ const RHSCardContent = () => {
                 comments={comments}
                 contents={contents}
                 readonly={readonly}
+                attachments={[]}
+                onDelete={() => {}}
+                onClose={() => {}}
+                addAttachment={() => {}}
             />
         </IntlProvider>
     )

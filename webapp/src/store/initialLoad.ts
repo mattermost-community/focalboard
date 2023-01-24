@@ -12,8 +12,9 @@ import {RootState} from './index'
 export const initialLoad = createAsyncThunk(
     'initialLoad',
     async () => {
-        const [me, team, teams, boards, boardsMemberships, boardTemplates, limits] = await Promise.all([
+        const [me, myConfig, team, teams, boards, boardsMemberships, boardTemplates, limits] = await Promise.all([
             client.getMe(),
+            client.getMyConfig(),
             client.getTeam(),
             client.getTeams(),
             client.getBoards(),
@@ -38,6 +39,7 @@ export const initialLoad = createAsyncThunk(
             boardsMemberships,
             boardTemplates,
             limits,
+            myConfig,
         }
     },
 )
@@ -79,7 +81,17 @@ export const loadBoards = createAsyncThunk(
     },
 )
 
-export const getUserBlockSubscriptions = (state: RootState): Array<Subscription> => state.users.blockSubscriptions
+export const loadMyBoardsMemberships = createAsyncThunk(
+    'loadMyBoardsMemberships',
+    async () => {
+        const boardsMemberships = await client.getMyBoardMemberships()
+        return {
+            boardsMemberships,
+        }
+    },
+)
+
+export const getUserBlockSubscriptions = (state: RootState): Subscription[] => state.users.blockSubscriptions
 
 export const getUserBlockSubscriptionList = createSelector(
     getUserBlockSubscriptions,

@@ -28,7 +28,7 @@ describe('Create and delete board / card', () => {
         cy.contains('Project Tasks').should('exist')
 
         // Create empty board
-        cy.contains('Create empty board').should('exist').click({force: true})
+        cy.contains('Create an empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
         cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
 
@@ -133,6 +133,9 @@ describe('Create and delete board / card', () => {
 
         // Delete board
         cy.log('**Delete board**')
+        cy.get('.Sidebar .octo-sidebar-list').then((el) => {
+            cy.log(el.text())
+        })
         cy.get('.Sidebar .octo-sidebar-list').
             contains(boardTitle).
             parent().
@@ -182,5 +185,44 @@ describe('Create and delete board / card', () => {
             trigger('dragend')
 
         cy.get('.Kanban').invoke('scrollLeft').should('equal', 0)
+    })
+
+    it('GH-2520 make cut/undo/redo work in comments', () => {
+        const isMAC = navigator.userAgent.indexOf('Mac') !== -1
+        const ctrlKey = isMAC ? 'meta' : 'ctrl'
+
+        // Visit a page and create new empty board
+        cy.visit('/')
+        cy.uiCreateEmptyBoard()
+
+        // Create card
+        cy.log('**Create card**')
+        cy.get('.ViewHeader').contains('New').click()
+        cy.get('.CardDetail').should('exist')
+
+        cy.wait(1000)
+
+        cy.log('**Add comment**')
+        cy.get('.CommentsList').
+            findAllByTestId('preview-element').
+            click().
+            get('.CommentsList .MarkdownEditorInput').
+            type('Test Text')
+
+        cy.log('**Cut comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type('{selectAll}').
+            trigger('cut').
+            should('have.text', '')
+
+        cy.log('**Undo comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type(`{${ctrlKey}+z}`).
+            should('have.text', 'Test Text')
+
+        cy.log('**Redo comment**')
+        cy.get('.CommentsList .MarkdownEditorInput').
+            type(`{shift+${ctrlKey}+z}`).
+            should('have.text', '')
     })
 })

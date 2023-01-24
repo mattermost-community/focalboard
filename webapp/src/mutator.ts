@@ -7,7 +7,7 @@ import cloneDeep from 'lodash/cloneDeep'
 
 import {BlockIcons} from './blockIcons'
 import {Block, BlockPatch, createPatchesFromBlocks} from './blocks/block'
-import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyType, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
+import {Board, BoardMember, BoardsAndBlocks, IPropertyOption, IPropertyTemplate, PropertyTypeEnum, createBoard, createPatchesFromBoards, createPatchesFromBoardsAndBlocks, createCardPropertiesPatches} from './blocks/board'
 import {BoardView, ISortOption, createBoardView, KanbanCalculationFields} from './blocks/boardView'
 import {Card, createCard} from './blocks/card'
 import {ContentBlock} from './blocks/contentBlock'
@@ -21,14 +21,14 @@ import TelemetryClient, {TelemetryCategory, TelemetryActions} from './telemetry/
 import {Category} from './store/sidebar'
 
 /* eslint-disable max-lines */
-import {UserConfigPatch} from './user'
+import {UserConfigPatch, UserPreference} from './user'
 import store from './store'
 import {updateBoards} from './store/boards'
 import {updateViews} from './store/views'
 import {updateCards} from './store/cards'
 import {updateComments} from './store/comments'
 import {updateContents} from './store/contents'
-import {addBoardUsers, removeBoardUsersById} from "./store/users"
+import {addBoardUsers, removeBoardUsersById} from './store/users'
 
 function updateAllBoardsAndBlocks(boards: Board[], blocks: Block[]) {
     return batch(() => {
@@ -353,9 +353,7 @@ class Mutator {
 
     // Board Members
 
-    async createBoardMember(boardId: string, userId: string, description = 'create board member'): Promise<void> {
-        const member = {boardId, userId, schemeEditor: true} as BoardMember
-
+    async createBoardMember(member: BoardMember, description = 'create board member'): Promise<void> {
         await undoManager.perform(
             async () => {
                 await octoClient.createBoardMember(member)
@@ -646,7 +644,7 @@ class Mutator {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.EditCardProperty, {board: card.boardId, card: card.id})
     }
 
-    async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyType, newName: string) {
+    async changePropertyTypeAndName(board: Board, cards: Card[], propertyTemplate: IPropertyTemplate, newType: PropertyTypeEnum, newName: string) {
         if (propertyTemplate.type === newType && propertyTemplate.name === newName) {
             return
         }
@@ -963,7 +961,7 @@ class Mutator {
         )
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<UserPreference[] | undefined> {
         return octoClient.patchUserConfig(userID, patch)
     }
 
@@ -1005,7 +1003,7 @@ class Mutator {
                 const patch = {
                     updatedFields: {
                         icon: newRootBlock.fields.icon,
-                        properties: {...newRootBlock.fields.properties, ...propertyOverrides}
+                        properties: {...newRootBlock.fields.properties, ...propertyOverrides},
                     },
                     title: newRootBlock.title,
                 }
@@ -1061,6 +1059,19 @@ class Mutator {
         )
     }
 
+    async moveContentBlock(blockId: string, dstBlockId: string, where: 'after'|'before', srcBlockId: string, srcWhere: 'after'|'before', description: string): Promise<void> {
+        return undoManager.perform(
+            async () => {
+                await octoClient.moveBlockTo(blockId, where, dstBlockId)
+            },
+            async () => {
+                await octoClient.moveBlockTo(blockId, srcWhere, srcBlockId)
+            },
+            description,
+            this.undoGroupId,
+        )
+    }
+
     async addBoardFromTemplate(
         teamId: string,
         intl: IntlShape,
@@ -1110,7 +1121,7 @@ class Mutator {
         const boardTemplate = createBoard()
         boardTemplate.isTemplate = true
         boardTemplate.teamId = teamId
-        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateTitle', defaultMessage: 'Untitled Template'})
+        boardTemplate.title = intl.formatMessage({id: 'View.NewTemplateDefaultTitle', defaultMessage: 'Untitled Template'})
 
         const view = createBoardView()
         view.fields.viewType = 'board'

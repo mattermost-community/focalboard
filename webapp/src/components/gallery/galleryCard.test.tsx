@@ -50,7 +50,7 @@ describe('src/components/gallery/GalleryCard', () => {
     const contentComment = TestBlockFactory.createComment(card)
     contentComment.id = 'contentId-Comment'
 
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
 
     beforeEach(() => {
         jest.clearAllMocks()
@@ -159,8 +159,6 @@ describe('src/components/gallery/GalleryCard', () => {
             const buttonDelete = screen.getByRole('button', {name: 'Delete'})
             userEvent.click(buttonDelete)
             expect(container).toMatchSnapshot()
-            expect(mockedMutator.deleteBlock).toBeCalledTimes(1)
-            expect(mockedMutator.deleteBlock).toBeCalledWith(card, 'delete card')
         })
 
         test('return GalleryCard and duplicate card', () => {

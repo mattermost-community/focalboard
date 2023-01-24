@@ -6,7 +6,7 @@ import {act, render} from '@testing-library/react'
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import { TestBlockFactory } from '../../test/testBlockFactory'
+import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockDOM, mockStateStore, wrapIntl} from '../../testUtils'
 
 import CardActionsMenu from './cardActionsMenu'
@@ -48,6 +48,7 @@ describe('components/cardActionsMenu', () => {
                 <ReduxProvider store={store}>
                     <CardActionsMenu
                         cardId='123'
+                        boardId='345'
                         onClickDelete={jest.fn()}
                     />
                 </ReduxProvider>,
@@ -64,6 +65,7 @@ describe('components/cardActionsMenu', () => {
                 <ReduxProvider store={store}>
                     <CardActionsMenu
                         cardId='123'
+                        boardId='345'
                         onClickDelete={jest.fn()}
                         onClickDuplicate={jest.fn()}
                     />
@@ -81,10 +83,11 @@ describe('components/cardActionsMenu', () => {
                 <ReduxProvider store={store}>
                     <CardActionsMenu
                         cardId='123'
+                        boardId='345'
                         onClickDelete={jest.fn()}
                     >
                         <React.Fragment>
-                            Test.
+                            {'Test.'}
                         </React.Fragment>
                     </CardActionsMenu>
                 </ReduxProvider>,

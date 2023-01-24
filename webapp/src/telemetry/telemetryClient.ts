@@ -49,18 +49,19 @@ export const TelemetryActions = {
     LimitCardCTAPerformed: 'limit_CardLimitCTAPerformed',
     LimitCardLimitReached: 'limit_cardLimitReached',
     LimitCardLimitLinkOpen: 'limit_cardLimitLinkOpen',
+    VersionMoreInfo: 'version_more_info',
 }
 
 interface IEventProps {
-    channelID?: string,
-    teamID?: string,
-    board?: string,
-    view?: string,
-    viewType?: string,
-    card?: string,
-    cardTemplateId?: string,
-    boardTemplateId?: string,
-    shareBoardEnabled?: boolean,
+    channelID?: string
+    teamID?: string
+    board?: string
+    view?: string
+    viewType?: string
+    card?: string
+    cardTemplateId?: string
+    boardTemplateId?: string
+    shareBoardEnabled?: boolean
 }
 
 class TelemetryClient {

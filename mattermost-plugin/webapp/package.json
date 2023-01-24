@@ -11,7 +11,9 @@
     "test": "jest --forceExit --detectOpenHandles --verbose",
     "test:watch": "jest --watch",
     "test-ci": "jest --forceExit --detectOpenHandles --maxWorkers=2",
-    "check-types": "tsc"
+    "check-types": "tsc",
+    "build:product": "webpack --mode=production",
+    "start:product": "webpack serve --mode=development"
   },
   "devDependencies": {
     "@babel/cli": "7.17.6",
@@ -78,21 +80,19 @@
     "ts-loader": "9.2.8",
     "typescript": "4.6.2",
     "webpack": "5.70.0",
-    "webpack-cli": "4.9.2"
+    "webpack-cli": "4.10.0",
+    "webpack-dev-server": "4.10.0"
   },
   "dependencies": {
     "core-js": "3.21.1",
     "glob-parent": "6.0.2",
     "marked": ">=4.0.12",
     "mattermost-redux": "5.33.1",
-    "react": "^17.0.2",
-    "react-dnd": "^14.0.2",
-    "react-dnd-html5-backend": "^14.0.0",
-    "react-dnd-touch-backend": "^14.0.0",
-    "react-dom": "17.0.2",
-    "react-intl": "^5.24.7",
-    "react-redux": "^7.2.8",
-    "react-router-dom": "5.2.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-intl": "^5.20.0",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
     "trim-newlines": "4.0.2"
   },
   "jest": {
@@ -110,7 +110,7 @@
       "text-summary"
     ],
     "moduleNameMapper": {
-      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "identity-obj-proxy",
+      "^.+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../../webapp/__mocks__/fileMock.js",
       "^.+\\.(scss|css)$": "<rootDir>/tests/style_mock.json",
       "^.*i18n.*\\.(json)$": "<rootDir>/tests/i18n_mock.json",
       "^bundle-loader\\?lazy\\!(.*)$": "$1",

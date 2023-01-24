@@ -43,17 +43,17 @@ describe('src/component/kanban/kanban', () => {
 
         },
     }
-    const optionQ1:IPropertyOption = {
+    const optionQ1: IPropertyOption = {
         color: 'propColorOrange',
         id: 'property_value_id_1',
         value: 'Q1',
     }
-    const optionQ2:IPropertyOption = {
+    const optionQ2: IPropertyOption = {
         color: 'propColorBlue',
         id: 'property_value_id_2',
         value: 'Q2',
     }
-    const optionQ3:IPropertyOption = {
+    const optionQ3: IPropertyOption = {
         color: 'propColorDefault',
         id: 'property_value_id_3',
         value: 'Q3',
@@ -75,6 +75,7 @@ describe('src/component/kanban/kanban', () => {
         },
         cards: {
             cards: [card1, card2, card3],
+            templates: [],
         },
         teams: {
             current: {id: 'team-id'},
@@ -542,6 +543,7 @@ describe('src/component/kanban/kanban', () => {
     card2.fields.properties = {id: 'property_value_id_1'}
     const card3 = TestBlockFactory.createCard(board)
     card3.id = 'id3'
+    card3.boardId = 'board_id_1'
     card3.fields.properties = {id: 'property_value_id_2'}
     activeView.fields.kanbanCalculations = {
         id1: {
@@ -550,18 +552,18 @@ describe('src/component/kanban/kanban', () => {
 
         },
     }
-    activeView.fields.defaultTemplateId = "defaultTemplateId"
-    const optionQ1:IPropertyOption = {
+    activeView.fields.defaultTemplateId = card3.id
+    const optionQ1: IPropertyOption = {
         color: 'propColorOrange',
         id: 'property_value_id_1',
         value: 'Q1',
     }
-    const optionQ2:IPropertyOption = {
+    const optionQ2: IPropertyOption = {
         color: 'propColorBlue',
         id: 'property_value_id_2',
         value: 'Q2',
     }
-    const optionQ3:IPropertyOption = {
+    const optionQ3: IPropertyOption = {
         color: 'propColorDefault',
         id: 'property_value_id_3',
         value: 'Q3',
@@ -582,7 +584,8 @@ describe('src/component/kanban/kanban', () => {
             },
         },
         cards: {
-            cards: [card1, card2, card3],
+            cards: [card1, card2],
+            templates: [card3],
         },
         teams: {
             current: {id: 'team-id'},
@@ -653,5 +656,4 @@ describe('src/component/kanban/kanban', () => {
         userEvent.click(allButtonsNew[0])
         expect(mockedAddCard).toBeCalledTimes(1)
     })
-
 })

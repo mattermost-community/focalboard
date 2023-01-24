@@ -12,7 +12,7 @@ exports[`components/viewTitle add random icon 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-emoticon-outline undefined"
+          class="CompassIcon icon-emoticon-outline"
         />
         <span>
           Add icon
@@ -22,7 +22,7 @@ exports[`components/viewTitle add random icon 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-outline undefined"
+          class="CompassIcon icon-eye-outline"
         />
         <span>
           show description
@@ -56,7 +56,7 @@ exports[`components/viewTitle hide description 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-outline undefined"
+          class="CompassIcon icon-eye-outline"
         />
         <span>
           show description
@@ -107,7 +107,7 @@ exports[`components/viewTitle should match snapshot 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-off-outline undefined"
+          class="CompassIcon icon-eye-off-outline"
         />
         <span>
           hide description
@@ -152,53 +152,6 @@ exports[`components/viewTitle should match snapshot 1`] = `
           class="octo-editor-preview"
           data-testid="preview-element"
         />
-        <div
-          class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-        >
-          <div
-            class="DraftEditor-root"
-          >
-            <div
-              class="DraftEditor-editorContainer"
-            >
-              <div
-                aria-autocomplete="list"
-                aria-expanded="false"
-                class="notranslate public-DraftEditor-content"
-                contenteditable="true"
-                role="combobox"
-                spellcheck="false"
-                style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-              >
-                <div
-                  data-contents="true"
-                >
-                  <div
-                    class=""
-                    data-block="true"
-                    data-editor="123"
-                    data-offset-key="123-0-0"
-                  >
-                    <div
-                      class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="123-0-0"
-                    >
-                      <span
-                        data-offset-key="123-0-0"
-                      >
-                        <span
-                          data-text="true"
-                        >
-                          description
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -246,53 +199,6 @@ exports[`components/viewTitle should match snapshot readonly 1`] = `
           class="octo-editor-preview"
           data-testid="preview-element"
         />
-        <div
-          class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-        >
-          <div
-            class="DraftEditor-root"
-          >
-            <div
-              class="DraftEditor-editorContainer"
-            >
-              <div
-                aria-autocomplete="list"
-                aria-expanded="false"
-                class="notranslate public-DraftEditor-content"
-                contenteditable="true"
-                role="combobox"
-                spellcheck="false"
-                style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-              >
-                <div
-                  data-contents="true"
-                >
-                  <div
-                    class=""
-                    data-block="true"
-                    data-editor="123"
-                    data-offset-key="123-0-0"
-                  >
-                    <div
-                      class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="123-0-0"
-                    >
-                      <span
-                        data-offset-key="123-0-0"
-                      >
-                        <span
-                          data-text="true"
-                        >
-                          description
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -311,7 +217,7 @@ exports[`components/viewTitle show description 1`] = `
         type="button"
       >
         <i
-          class="CompassIcon icon-eye-off-outline undefined"
+          class="CompassIcon icon-eye-off-outline"
         />
         <span>
           hide description
@@ -356,53 +262,6 @@ exports[`components/viewTitle show description 1`] = `
           class="octo-editor-preview"
           data-testid="preview-element"
         />
-        <div
-          class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-        >
-          <div
-            class="DraftEditor-root"
-          >
-            <div
-              class="DraftEditor-editorContainer"
-            >
-              <div
-                aria-autocomplete="list"
-                aria-expanded="false"
-                class="notranslate public-DraftEditor-content"
-                contenteditable="true"
-                role="combobox"
-                spellcheck="false"
-                style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-              >
-                <div
-                  data-contents="true"
-                >
-                  <div
-                    class=""
-                    data-block="true"
-                    data-editor="123"
-                    data-offset-key="123-0-0"
-                  >
-                    <div
-                      class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                      data-offset-key="123-0-0"
-                    >
-                      <span
-                        data-offset-key="123-0-0"
-                      >
-                        <span
-                          data-text="true"
-                        >
-                          description
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

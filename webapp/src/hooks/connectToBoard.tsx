@@ -35,7 +35,7 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
 
         let subscribedToTeam = false
         if (wsClient.state === 'open') {
-            wsClient.authenticate(teamId || '0', token)
+            wsClient.authenticate(token)
             wsClient.subscribeToTeam(teamId || '0')
             subscribedToTeam = true
         }
@@ -59,7 +59,7 @@ export default function useConnectToBoard(dispatch: any, readToken: string, myID
         const updateWebsocketState = (_: WSClient, newState: 'init'|'open'|'close'): void => {
             if (newState === 'open') {
                 const newToken = localStorage.getItem('focalboardSessionId') || ''
-                wsClient.authenticate(teamId || '0', newToken)
+                wsClient.authenticate(newToken)
                 wsClient.subscribeToTeam(teamId || '0')
                 subscribedToTeam = true
             }

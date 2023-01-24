@@ -11,12 +11,14 @@ import userEvent from '@testing-library/user-event'
 import {mocked} from 'jest-mock'
 
 import {FilterClause} from '../../blocks/filterClause'
+import {IPropertyTemplate} from '../../blocks/board'
 
 import {TestBlockFactory} from '../../test/testBlockFactory'
 
 import {wrapIntl, mockStateStore} from '../../testUtils'
 
 import mutator from '../../mutator'
+import propsRegistry from '../../properties'
 
 import FilterValue from './filterValue'
 
@@ -54,6 +56,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
@@ -70,6 +73,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
@@ -91,6 +95,7 @@ describe('components/viewHeader/filterValue', () => {
                         view={activeView}
                         filter={filter}
                         template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
                     />
                 </ReduxProvider>,
             ),
@@ -101,5 +106,66 @@ describe('components/viewHeader/filterValue', () => {
         userEvent.click(switchStatus)
         expect(mockedMutator.changeViewFilter).toBeCalledTimes(1)
         expect(container).toMatchSnapshot()
+    })
+    test('return filterValue and verify that menu is not closed after clicking on the item', () => {
+        filter.values = []
+        activeView.fields.filter.filters = [filter]
+        render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <FilterValue
+                        view={activeView}
+                        filter={filter}
+                        template={board.cardProperties[0]}
+                        propertyType={propsRegistry.get(board.cardProperties[0].type)}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        const buttonElement = screen.getByRole('button', {name: '(empty)'})
+        userEvent.click(buttonElement)
+
+        const switchStatus = screen.getByRole('button', {name: 'Status'})
+        userEvent.click(switchStatus)
+        expect(switchStatus).toBeInTheDocument()
+    })
+
+    test('return date filter value', () => {
+        const propertyTemplate: IPropertyTemplate = {
+            id: 'datePropertyID',
+            name: 'My Date Property',
+            type: 'date',
+            options: [],
+        }
+        board.cardProperties.push(propertyTemplate)
+
+        const dateFilter: FilterClause = {
+            propertyId: 'datePropertyID',
+            condition: 'is',
+            values: [],
+        }
+
+        // filter.values = []
+        activeView.fields.filter.filters = [dateFilter]
+        const {container} = render(
+            wrapIntl(
+                <ReduxProvider store={store}>
+                    <FilterValue
+                        view={activeView}
+                        filter={filter}
+                        template={propertyTemplate}
+                        propertyType={propsRegistry.get(propertyTemplate.type)}
+                    />
+                </ReduxProvider>,
+            ),
+        )
+        expect(container).toMatchSnapshot()
+
+        const buttonElement = screen.getByRole('button', {name: 'Empty'})
+        userEvent.click(buttonElement)
+
+        // make sure modal is displayed
+        const clearButton = screen.getByRole('button', {name: 'Clear'})
+        expect(clearButton).toBeInTheDocument()
     })
 })

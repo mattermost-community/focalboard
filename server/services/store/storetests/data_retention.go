@@ -3,7 +3,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"testing"
 	"time"
 
@@ -49,30 +48,30 @@ func LoadData(t *testing.T, store store.Store) {
 	board, err := store.InsertBoard(&validBoard, testUserID)
 	require.NoError(t, err)
 
-	validBlock := model.Block{
+	validBlock := &model.Block{
 		ID:         "id-test",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
 
-	validBlock2 := model.Block{
+	validBlock2 := &model.Block{
 		ID:         "id-test2",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
-	validBlock3 := model.Block{
+	validBlock3 := &model.Block{
 		ID:         "id-test3",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
 
-	validBlock4 := model.Block{
+	validBlock4 := &model.Block{
 		ID:         "id-test4",
 		BoardID:    board.ID,
 		ModifiedBy: testUserID,
 	}
 
-	newBlocks := []model.Block{validBlock, validBlock2, validBlock3, validBlock4}
+	newBlocks := []*model.Block{validBlock, validBlock2, validBlock3, validBlock4}
 
 	err = store.InsertBlocks(newBlocks, testUserID)
 	require.NoError(t, err)
@@ -93,14 +92,14 @@ func LoadData(t *testing.T, store store.Store) {
 	err = store.UpsertSharing(sharing)
 	require.NoError(t, err)
 
-	err = store.AddUpdateCategoryBoard(testUserID, categoryID, boardID)
+	err = store.AddUpdateCategoryBoard(testUserID, categoryID, []string{boardID})
 	require.NoError(t, err)
 }
 
 func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 	LoadData(t, store)
 
-	blocks, err := store.GetBlocksWithBoardID(boardID)
+	blocks, err := store.GetBlocksForBoard(boardID)
 	require.NoError(t, err)
 	require.Len(t, blocks, 4)
 	initialCount := len(blocks)
@@ -117,20 +116,20 @@ func testRunDataRetention(t *testing.T, store store.Store, batchSize int) {
 		require.True(t, deletions > int64(initialCount))
 
 		// expect all blocks to be deleted.
-		blocks, errBlocks := store.GetBlocksWithBoardID(boardID)
+		blocks, errBlocks := store.GetBlocksForBoard(boardID)
 		require.NoError(t, errBlocks)
 		require.Equal(t, 0, len(blocks))
 
 		// GetMemberForBoard throws error on now rows found
 		member, err := store.GetMemberForBoard(boardID, testUserID)
 		require.Error(t, err)
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), err)
 		require.Nil(t, member)
 
 		// GetSharing throws error on now rows found
 		sharing, err := store.GetSharing(boardID)
 		require.Error(t, err)
-		require.Equal(t, sql.ErrNoRows, err)
+		require.True(t, model.IsErrNotFound(err), err)
 		require.Nil(t, sharing)
 
 		category, err := store.GetUserCategoryBoards(boardID, testTeamID)

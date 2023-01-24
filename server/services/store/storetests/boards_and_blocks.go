@@ -1,7 +1,6 @@
 package storetests
 
 import (
-	"database/sql"
 	"fmt"
 	"testing"
 	"time"
@@ -41,7 +40,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 	teamID := testTeamID
 	userID := testUserID
 
-	boards, err := store.GetBoardsForUserAndTeam(userID, teamID)
+	boards, err := store.GetBoardsForUserAndTeam(userID, teamID, true)
 	require.Nil(t, err)
 	require.Empty(t, boards)
 
@@ -52,7 +51,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
 				{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
 			},
@@ -85,7 +84,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-5", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-6", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-3", BoardID: "board-id-4", Type: model.TypeCard},
 				{ID: "block-id-4", BoardID: "board-id-5", Type: model.TypeCard},
 			},
@@ -127,7 +126,7 @@ func testCreateBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-8", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-9", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-5", BoardID: "board-id-7", Type: model.TypeCard},
 				{ID: "block-id-6", BoardID: "", Type: model.TypeCard},
 			},
@@ -165,12 +164,12 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 		_, err := store.InsertBoard(board, userID)
 		require.NoError(t, err)
 
-		block := model.Block{
+		block := &model.Block{
 			ID:      "block-id-1",
 			BoardID: "board-id-1",
 			Title:   initialTitle,
 		}
-		require.NoError(t, store.InsertBlock(&block, userID))
+		require.NoError(t, store.InsertBlock(block, userID))
 
 		// apply the patches
 		pbab := &model.PatchBoardsAndBlocks{
@@ -208,7 +207,7 @@ func testPatchBoardsAndBlocks(t *testing.T, store store.Store) {
 				{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 				{ID: "board-id-3", Title: "initial title", TeamID: teamID, Type: model.BoardTypeOpen},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-1", Title: "initial title", BoardID: "board-id-1", Type: model.TypeCard},
 				{ID: "block-id-2", Schema: 1, BoardID: "board-id-2", Type: model.TypeCard},
 			},
@@ -399,7 +398,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		time.Sleep(10 * time.Millisecond)
 
-		require.ErrorIs(t, store.DeleteBoardsAndBlocks(dbab, userID), sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(store.DeleteBoardsAndBlocks(dbab, userID)))
 
 		// all the entities should still exist
 		rBoard1, err := store.GetBoard(board1.ID)
@@ -475,7 +474,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		time.Sleep(10 * time.Millisecond)
 
-		require.ErrorIs(t, store.DeleteBoardsAndBlocks(dbab, userID), sql.ErrNoRows)
+		require.True(t, model.IsErrNotFound(store.DeleteBoardsAndBlocks(dbab, userID)))
 
 		// all the entities should still exist
 		rBoard1, err := store.GetBoard(board1.ID)
@@ -499,7 +498,7 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 		require.NotNil(t, rBlock4)
 	})
 
-	t.Run("should not work properly if all the entities are related", func(t *testing.T) {
+	t.Run("should work properly if all the entities are related", func(t *testing.T) {
 		newBoard1 := &model.Board{
 			ID:     utils.NewID(utils.IDTypeBoard),
 			TeamID: teamID,
@@ -551,22 +550,28 @@ func testDeleteBoardsAndBlocks(t *testing.T, store store.Store) {
 
 		rBoard1, err := store.GetBoard(board1.ID)
 		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBoard1)
 		rBlock1, err := store.GetBlock(block1.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock1)
 		rBlock2, err := store.GetBlock(block2.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock2)
 
 		rBoard2, err := store.GetBoard(board2.ID)
 		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBoard2)
 		rBlock3, err := store.GetBlock(block3.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock3)
 		rBlock4, err := store.GetBlock(block4.ID)
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, rBlock4)
 	})
 }
@@ -577,11 +582,11 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 
 	newBab := &model.BoardsAndBlocks{
 		Boards: []*model.Board{
-			{ID: "board-id-1", TeamID: teamID, Type: model.BoardTypeOpen},
+			{ID: "board-id-1", TeamID: teamID, Type: model.BoardTypeOpen, ChannelID: "test-channel"},
 			{ID: "board-id-2", TeamID: teamID, Type: model.BoardTypePrivate},
 			{ID: "board-id-3", TeamID: teamID, Type: model.BoardTypeOpen},
 		},
-		Blocks: []model.Block{
+		Blocks: []*model.Block{
 			{ID: "block-id-1", BoardID: "board-id-1", Type: model.TypeCard},
 			{ID: "block-id-1a", BoardID: "board-id-1", Type: model.TypeComment},
 			{ID: "block-id-2", BoardID: "board-id-2", Type: model.TypeCard},
@@ -601,6 +606,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 		require.Len(t, bab.Boards, 1)
 		require.Len(t, bab.Blocks, 1)
 		require.Equal(t, bab.Boards[0].IsTemplate, false)
+		require.Equal(t, "", bab.Boards[0].ChannelID)
 	})
 
 	t.Run("duplicate existing board as template", func(t *testing.T) {
@@ -610,6 +616,7 @@ func testDuplicateBoard(t *testing.T, store store.Store) {
 		require.Len(t, bab.Boards, 1)
 		require.Len(t, bab.Blocks, 1)
 		require.Equal(t, bab.Boards[0].IsTemplate, true)
+		require.Equal(t, "", bab.Boards[0].ChannelID)
 	})
 
 	t.Run("duplicate not existing board", func(t *testing.T) {

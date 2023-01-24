@@ -9,7 +9,7 @@ import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {UserSettings} from '../../userSettings'
 import {Utils} from '../../utils'
 import {getSidebarCategories} from '../../store/sidebar'
-import {Constants} from "../../constants"
+import {Constants} from '../../constants'
 
 const TeamToBoardAndViewRedirect = (): null => {
     const boardId = useAppSelector(getCurrentBoardId)
@@ -25,19 +25,17 @@ const TeamToBoardAndViewRedirect = (): null => {
         let boardID = match.params.boardId
         if (!match.params.boardId) {
             // first preference is for last visited board
-            if (boards[UserSettings.lastBoardId[teamId]]) {
-                boardID = UserSettings.lastBoardId[teamId]
-            }
+            boardID = UserSettings.lastBoardId[teamId]
 
             // if last visited board is unavailable, use the first board in categories list
             if (!boardID && categories.length > 0) {
                 let goToBoardID: string | null = null
 
                 for (const category of categories) {
-                    for (const categoryBoardID of category.boardIDs) {
-                        if (boards[categoryBoardID]) {
-                            // pick the first category board that exists
-                            goToBoardID = categoryBoardID
+                    for (const boardMetadata of category.boardMetadata) {
+                        // pick the first category board that exists and is not hidden
+                        if (!boardMetadata.hidden && boards[boardMetadata.boardID]) {
+                            goToBoardID = boardMetadata.boardID
                             break
                         }
                     }

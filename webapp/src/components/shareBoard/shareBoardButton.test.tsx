@@ -18,7 +18,6 @@ const boardId = '1'
 const board = TestBlockFactory.createBoard()
 board.id = boardId
 
-
 describe('src/components/shareBoard/shareBoard', () => {
     const state = {
         boards: {
@@ -28,11 +27,10 @@ describe('src/components/shareBoard/shareBoard', () => {
             current: board.id,
         },
     }
-    
+
     const store = mockStateStore([], state)
 
     test('should match snapshot, Private Board', async () => {
-
         const result = render(
             wrapDNDIntl(
                 <ReduxProvider store={store}>
@@ -40,7 +38,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         enableSharedBoards={true}
                     />
                 </ReduxProvider>))
-                
+
         const renderer = result.container
 
         expect(renderer).toMatchSnapshot()
@@ -55,7 +53,7 @@ describe('src/components/shareBoard/shareBoard', () => {
                         enableSharedBoards={true}
                     />
                 </ReduxProvider>))
-                
+
         const renderer = result.container
 
         expect(renderer).toMatchSnapshot()

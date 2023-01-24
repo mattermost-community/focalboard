@@ -15,43 +15,42 @@ import (
 )
 
 var (
-	ErrBoardMemberIsLastAdmin = errors.New("cannot leave a board with no admins")
-	ErrNewBoardCannotHaveID   = errors.New("new board cannot have an ID")
-	ErrInsufficientLicense    = errors.New("appropriate license required")
+	ErrNewBoardCannotHaveID = errors.New("new board cannot have an ID")
 )
+
+const linkBoardMessage = "@%s linked the board [%s](%s) with this channel"
+const unlinkBoardMessage = "@%s unlinked the board [%s](%s) with this channel"
+
+var errNoDefaultCategoryFound = errors.New("no default category found for user")
 
 func (a *App) GetBoard(boardID string) (*model.Board, error) {
 	board, err := a.store.GetBoard(boardID)
-	if model.IsErrNotFound(err) {
-		return nil, nil
-	}
 	if err != nil {
 		return nil, err
 	}
 	return board, nil
 }
 
+func (a *App) GetBoardCount() (int64, error) {
+	return a.store.GetBoardCount()
+}
+
 func (a *App) GetBoardMetadata(boardID string) (*model.Board, *model.BoardMetadata, error) {
 	license := a.store.GetLicense()
 	if license == nil || !(*license.Features.Compliance) {
-		return nil, nil, ErrInsufficientLicense
+		return nil, nil, model.ErrInsufficientLicense
 	}
 
 	board, err := a.GetBoard(boardID)
-	if err != nil {
-		return nil, nil, err
-	}
-	if board == nil {
+	if model.IsErrNotFound(err) {
 		// Board may have been deleted, retrieve most recent history instead
 		board, err = a.getBoardHistory(boardID, true)
 		if err != nil {
 			return nil, nil, err
 		}
 	}
-
-	if board == nil {
-		// Board not found
-		return nil, nil, nil
+	if err != nil {
+		return nil, nil, err
 	}
 
 	earliestTime, _, err := a.getBoardDescendantModifiedInfo(boardID, false)
@@ -133,7 +132,7 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	}
 	if len(blocks) > 0 {
 		// Compare the board history info with the descendant block info, if it exists
-		block := &blocks[0]
+		block := blocks[0]
 		if latest && block.UpdateAt > timestamp {
 			timestamp = block.UpdateAt
 			modifiedBy = block.ModifiedBy
@@ -145,6 +144,40 @@ func (a *App) getBoardDescendantModifiedInfo(boardID string, latest bool) (int64
 	return timestamp, modifiedBy, nil
 }
 
+func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, userID, teamID string, asTemplate bool) error {
+	// find source board's category ID for the user
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	var destinationCategoryID string
+
+	for _, categoryBoard := range userCategoryBoards {
+		for _, metadata := range categoryBoard.BoardMetadata {
+			if metadata.BoardID == sourceBoardID {
+				// category found!
+				destinationCategoryID = categoryBoard.ID
+				break
+			}
+		}
+	}
+
+	if destinationCategoryID == "" {
+		// if source board is not mapped to a category for this user,
+		// then move new board to default category
+		if !asTemplate {
+			return a.addBoardsToDefaultCategory(userID, teamID, []*model.Board{{ID: destinationBoardID}})
+		} else {
+			return nil
+		}
+	}
+
+	// now that we have source board's category,
+	// we send destination board to the same category
+	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, []string{destinationBoardID})
+}
+
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
 	bab, members, err := a.store.DuplicateBoard(boardID, userID, toTeam, asTemplate)
 	if err != nil {
@@ -154,6 +187,14 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	// copy any file attachments from the duplicated blocks.
 	if err = a.CopyCardFiles(boardID, bab.Blocks); err != nil {
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
+	}
+
+	if !asTemplate {
+		for _, board := range bab.Boards {
+			if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
+				return nil, nil, categoryErr
+			}
+		}
 	}
 
 	// bab.Blocks now has updated file ids for any blocks containing files.  We need to store them.
@@ -195,7 +236,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		for _, block := range bab.Blocks {
 			blk := block
 			a.wsAdapter.BroadcastBlockChange(teamID, blk)
-			a.notifyBlockChanged(notify.Add, &blk, nil, userID)
+			a.notifyBlockChanged(notify.Add, blk, nil, userID)
 		}
 		for _, member := range members {
 			a.wsAdapter.BroadcastMemberChange(teamID, member.BoardID, member)
@@ -217,8 +258,8 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	return bab, members, err
 }
 
-func (a *App) GetBoardsForUserAndTeam(userID, teamID string) ([]*model.Board, error) {
-	return a.store.GetBoardsForUserAndTeam(userID, teamID)
+func (a *App) GetBoardsForUserAndTeam(userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.GetBoardsForUserAndTeam(userID, teamID, includePublicBoards)
 }
 
 func (a *App) GetTemplateBoards(teamID, userID string) ([]*model.Board, error) {
@@ -247,27 +288,179 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(newBoard.TeamID, newBoard)
 
-		if addMember {
+		if newBoard.ChannelID != "" {
+			members, err := a.GetMembersForBoard(board.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			for _, member := range members {
+				a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, member.BoardID, member)
+			}
+		} else if addMember {
 			a.wsAdapter.BroadcastMemberChange(newBoard.TeamID, newBoard.ID, member)
 		}
 		return nil
 	})
 
+	if !board.IsTemplate {
+		if err := a.addBoardsToDefaultCategory(userID, newBoard.TeamID, []*model.Board{newBoard}); err != nil {
+			return nil, err
+		}
+	}
+
 	return newBoard, nil
 }
 
+func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.Board) error {
+	userCategoryBoards, err := a.GetUserCategoryBoards(userID, teamID)
+	if err != nil {
+		return err
+	}
+
+	defaultCategoryID := ""
+	for _, categoryBoard := range userCategoryBoards {
+		if categoryBoard.Name == defaultCategoryBoards {
+			defaultCategoryID = categoryBoard.ID
+			break
+		}
+	}
+
+	if defaultCategoryID == "" {
+		return fmt.Errorf("%w userID: %s", errNoDefaultCategoryFound, userID)
+	}
+
+	boardIDs := make([]string, len(boards))
+	for i := range boards {
+		boardIDs[i] = boards[i].ID
+	}
+
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, boardIDs); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*model.Board, error) {
+	var oldChannelID string
+	var isTemplate bool
+	var oldMembers []*model.BoardMember
+
+	if patch.Type != nil || patch.ChannelID != nil {
+		if patch.ChannelID != nil && *patch.ChannelID == "" {
+			var err error
+			oldMembers, err = a.GetMembersForBoard(boardID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+		}
+
+		board, err := a.store.GetBoard(boardID)
+		if model.IsErrNotFound(err) {
+			return nil, model.NewErrNotFound("board ID=" + boardID)
+		}
+		if err != nil {
+			return nil, err
+		}
+		oldChannelID = board.ChannelID
+		isTemplate = board.IsTemplate
+	}
 	updatedBoard, err := a.store.PatchBoard(boardID, patch, userID)
 	if err != nil {
 		return nil, err
 	}
 
+	// Post message to channel if linked/unlinked
+	if patch.ChannelID != nil {
+		var username string
+
+		user, err := a.store.GetUserByID(userID)
+		if err != nil {
+			a.logger.Error("Unable to get the board updater", mlog.Err(err))
+			username = "unknown"
+		} else {
+			username = user.Username
+		}
+
+		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		title := updatedBoard.Title
+		if title == "" {
+			title = "Untitled board" // todo: localize this when server has i18n
+		}
+		if *patch.ChannelID != "" {
+			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, title, boardLink), updatedBoard.ChannelID)
+		} else if *patch.ChannelID == "" {
+			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, title, boardLink), oldChannelID)
+		}
+	}
+
+	// Broadcast Messages to affected users
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBoardChange(updatedBoard.TeamID, updatedBoard)
+
+		if patch.ChannelID != nil {
+			if *patch.ChannelID != "" {
+				members, err := a.GetMembersForBoard(updatedBoard.ID)
+				if err != nil {
+					a.logger.Error("Unable to get the board members", mlog.Err(err))
+				}
+				for _, member := range members {
+					if member.Synthetic {
+						a.wsAdapter.BroadcastMemberChange(updatedBoard.TeamID, member.BoardID, member)
+					}
+				}
+			} else {
+				for _, oldMember := range oldMembers {
+					if oldMember.Synthetic {
+						a.wsAdapter.BroadcastMemberDelete(updatedBoard.TeamID, boardID, oldMember.UserID)
+					}
+				}
+			}
+		}
+
+		if patch.Type != nil && isTemplate {
+			members, err := a.GetMembersForBoard(updatedBoard.ID)
+			if err != nil {
+				a.logger.Error("Unable to get the board members", mlog.Err(err))
+			}
+			a.broadcastTeamUsers(updatedBoard.TeamID, updatedBoard.ID, *patch.Type, members)
+		}
 		return nil
 	})
 
 	return updatedBoard, nil
+}
+
+func (a *App) postChannelMessage(message, channelID string) {
+	err := a.store.PostMessage(message, "", channelID)
+	if err != nil {
+		a.logger.Error("Unable to post the link message to channel", mlog.Err(err))
+	}
+}
+
+// broadcastTeamUsers notifies the members of a team when a template changes its type
+// from public to private or viceversa.
+func (a *App) broadcastTeamUsers(teamID, boardID string, boardType model.BoardType, members []*model.BoardMember) {
+	users, err := a.GetTeamUsers(teamID, "")
+	if err != nil {
+		a.logger.Error("Unable to get the team users", mlog.Err(err))
+	}
+	for _, user := range users {
+		isMember := false
+		for _, member := range members {
+			if member.UserID == user.ID {
+				isMember = true
+				break
+			}
+		}
+		if !isMember {
+			if boardType == model.BoardTypePrivate {
+				a.wsAdapter.BroadcastMemberDelete(teamID, boardID, user.ID)
+			} else if boardType == model.BoardTypeOpen {
+				a.wsAdapter.BroadcastMemberChange(teamID, boardID, &model.BoardMember{UserID: user.ID, BoardID: boardID, SchemeViewer: true, Synthetic: true})
+			}
+		}
+	}
 }
 
 func (a *App) DeleteBoard(boardID, userID string) error {
@@ -335,6 +528,12 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
+	if !board.IsTemplate {
+		if err = a.addBoardsToDefaultCategory(member.UserID, board.TeamID, []*model.Board{board}); err != nil {
+			return nil, err
+		}
+	}
+
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
 		return nil
@@ -368,7 +567,7 @@ func (a *App) UpdateBoardMember(member *model.BoardMember) (*model.BoardMember, 
 			return nil, err2
 		}
 		if isLastAdmin {
-			return nil, ErrBoardMemberIsLastAdmin
+			return nil, model.ErrBoardMemberIsLastAdmin
 		}
 	}
 
@@ -424,7 +623,7 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 			return err
 		}
 		if isLastAdmin {
-			return ErrBoardMemberIsLastAdmin
+			return model.ErrBoardMemberIsLastAdmin
 		}
 	}
 
@@ -433,15 +632,19 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
+		if syntheticMember, _ := a.GetMemberForBoard(boardID, userID); syntheticMember != nil {
+			a.wsAdapter.BroadcastMemberChange(board.TeamID, boardID, syntheticMember)
+		} else {
+			a.wsAdapter.BroadcastMemberDelete(board.TeamID, boardID, userID)
+		}
 		return nil
 	})
 
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID)
+func (a *App) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, searchField, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

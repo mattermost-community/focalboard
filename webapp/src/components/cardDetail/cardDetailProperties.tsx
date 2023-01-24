@@ -3,14 +3,14 @@
 import React, {useEffect, useState} from 'react'
 import {FormattedMessage, useIntl} from 'react-intl'
 
-import {Board, IPropertyTemplate, PropertyType} from '../../blocks/board'
+import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {BoardView} from '../../blocks/boardView'
 
 import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import MenuWrapper from '../../widgets/menuWrapper'
-import PropertyMenu, {PropertyTypes, typeDisplayName} from '../../widgets/propertyMenu'
+import PropertyMenu, {PropertyTypes} from '../../widgets/propertyMenu'
 
 import Calculations from '../calculations/calculations'
 import PropertyValueElement from '../propertyValueElement'
@@ -21,6 +21,8 @@ import {IDType, Utils} from '../../utils'
 import AddPropertiesTourStep from '../onboardingTour/addProperties/add_properties'
 import {Permission} from '../../constants'
 import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
+import propRegistry from '../../properties'
+import {PropertyType} from '../../properties/types'
 
 type Props = {
     board: Board
@@ -48,26 +50,26 @@ const CardDetailProperties = (props: Props) => {
     const [confirmationDialogBox, setConfirmationDialogBox] = useState<ConfirmationDialogBoxProps>({heading: '', onConfirm: () => {}, onClose: () => {}})
     const [showConfirmationDialog, setShowConfirmationDialog] = useState<boolean>(false)
 
-    function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate:IPropertyTemplate) {
-        const oldType = propertyTemplate.type
+    function onPropertyChangeSetAndOpenConfirmationDialog(newType: PropertyType, newName: string, propertyTemplate: IPropertyTemplate) {
+        const oldType = propRegistry.get(propertyTemplate.type)
 
         // do nothing if no change
         if (oldType === newType && propertyTemplate.name === newName) {
             return
         }
 
-        const affectsNumOfCards:string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
+        const affectsNumOfCards: string = Calculations.countNotEmpty(cards, propertyTemplate, intl)
 
         // if only the name has changed, set the property without warning
         if (affectsNumOfCards === '0' || oldType === newType) {
-            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
+            mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
             return
         }
 
         const subTextString = intl.formatMessage({
             id: 'CardDetailProperty.property-name-change-subtext',
             defaultMessage: 'type from "{oldPropType}" to "{newPropType}"',
-        }, {oldPropType: oldType, newPropType: newType})
+        }, {oldPropType: oldType.displayName(intl), newPropType: newType.displayName(intl)})
 
         setConfirmationDialogBox({
             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-property-type-change', defaultMessage: 'Confirm property type change'}),
@@ -85,8 +87,8 @@ const CardDetailProperties = (props: Props) => {
             onConfirm: async () => {
                 setShowConfirmationDialog(false)
                 try {
-                    await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType, newName)
-                } catch (err:any) {
+                    await mutator.changePropertyTypeAndName(board, cards, propertyTemplate, newType.type, newName)
+                } catch (err: any) {
                     Utils.logError(`Error Changing Property And Name:${propertyTemplate.name}: ${err?.toString()}`)
                 }
                 sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-changed', defaultMessage: 'Changed property successfully!'}), severity: 'high'})
@@ -98,7 +100,7 @@ const CardDetailProperties = (props: Props) => {
         setShowConfirmationDialog(true)
     }
 
-    function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate:IPropertyTemplate) {
+    function onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate: IPropertyTemplate) {
         // set ConfirmationDialogBox Props
         setConfirmationDialogBox({
             heading: intl.formatMessage({id: 'CardDetailProperty.confirm-delete-heading', defaultMessage: 'Confirm delete property'}),
@@ -114,7 +116,7 @@ const CardDetailProperties = (props: Props) => {
                 try {
                     await mutator.deleteProperty(board, views, cards, propertyTemplate.id)
                     sendFlashMessage({content: intl.formatMessage({id: 'CardDetailProperty.property-deleted', defaultMessage: 'Deleted {propertyName} successfully!'}, {propertyName: deletingPropName}), severity: 'high'})
-                } catch (err:any) {
+                } catch (err: any) {
                     Utils.logError(`Error Deleting Property!: Could Not delete Property -" + ${deletingPropName} ${err?.toString()}`)
                 }
             },
@@ -141,7 +143,7 @@ const CardDetailProperties = (props: Props) => {
                                 <PropertyMenu
                                     propertyId={propertyTemplate.id}
                                     propertyName={propertyTemplate.name}
-                                    propertyType={propertyTemplate.type}
+                                    propertyType={propRegistry.get(propertyTemplate.type)}
                                     onTypeAndNameChanged={(newType: PropertyType, newName: string) => onPropertyChangeSetAndOpenConfirmationDialog(newType, newName, propertyTemplate)}
                                     onDelete={() => onPropertyDeleteSetAndOpenConfirmationDialog(propertyTemplate)}
                                 />
@@ -179,8 +181,8 @@ const CardDetailProperties = (props: Props) => {
                                 onTypeSelected={async (type) => {
                                     const template: IPropertyTemplate = {
                                         id: Utils.createGuid(IDType.BlockID),
-                                        name: typeDisplayName(intl, type),
-                                        type,
+                                        name: type.displayName(intl),
+                                        type: type.type,
                                         options: [],
                                     }
                                     const templateId = await mutator.insertPropertyTemplate(board, activeView, -1, template)

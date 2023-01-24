@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 const (
@@ -56,7 +56,7 @@ func BuildErrorResponse(r *http.Response, err error) *Response {
 
 func closeBody(r *http.Response) {
 	if r.Body != nil {
-		_, _ = io.Copy(ioutil.Discard, r.Body)
+		_, _ = io.Copy(io.Discard, r.Body)
 		_ = r.Body.Close()
 	}
 }
@@ -142,7 +142,7 @@ func (c *Client) doAPIRequestReader(method, url string, data io.Reader, _ /* eta
 
 	if rp.StatusCode >= http.StatusMultipleChoices {
 		defer closeBody(rp)
-		b, err := ioutil.ReadAll(rp.Body)
+		b, err := io.ReadAll(rp.Body)
 		if err != nil {
 			return rp, fmt.Errorf("error when parsing response with code %d: %w", rp.StatusCode, err)
 		}
@@ -196,6 +196,14 @@ func (c *Client) GetBoardsAndBlocksRoute() string {
 	return "/boards-and-blocks"
 }
 
+func (c *Client) GetCardsRoute() string {
+	return "/cards"
+}
+
+func (c *Client) GetCardRoute(cardID string) string {
+	return fmt.Sprintf("%s/%s", c.GetCardsRoute(), cardID)
+}
+
 func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID), "")
 	if err != nil {
@@ -206,7 +214,37 @@ func (c *Client) GetTeam(teamID string) (*model.Team, *Response) {
 	return model.TeamFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
+func (c *Client) GetTeamBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
+	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v", timeRange, page, perPage)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/insights"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var boardInsightsList *model.BoardInsightsList
+	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
+		return nil, BuildErrorResponse(r, jsonErr)
+	}
+	return boardInsightsList, BuildResponse(r)
+}
+
+func (c *Client) GetUserBoardsInsights(teamID string, userID string, timeRange string, page int, perPage int) (*model.BoardInsightsList, *Response) {
+	query := fmt.Sprintf("?time_range=%v&page=%v&per_page=%v&team_id=%v", timeRange, page, perPage, teamID)
+	r, err := c.DoAPIGet(c.GetMeRoute()+"/boards/insights"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var boardInsightsList *model.BoardInsightsList
+	if jsonErr := json.NewDecoder(r.Body).Decode(&boardInsightsList); jsonErr != nil {
+		return nil, BuildErrorResponse(r, jsonErr)
+	}
+	return boardInsightsList, BuildResponse(r)
+}
+
+func (c *Client) GetBlocksForBoard(boardID string) ([]*model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -216,7 +254,7 @@ func (c *Client) GetBlocksForBoard(boardID string) ([]model.Block, *Response) {
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response) {
+func (c *Client) GetAllBlocksForBoard(boardID string) ([]*model.Block, *Response) {
 	r, err := c.DoAPIGet(c.GetAllBlocksRoute(boardID), "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
@@ -226,8 +264,14 @@ func (c *Client) GetAllBlocksForBoard(boardID string) ([]model.Block, *Response)
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch) (bool, *Response) {
-	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID), toJSON(blockPatch))
+const disableNotifyQueryParam = "disable_notify=true"
+
+func (c *Client) PatchBlock(boardID, blockID string, blockPatch *model.BlockPatch, disableNotify bool) (bool, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPatch(c.GetBlockRoute(boardID, blockID)+queryParams, toJSON(blockPatch))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -277,8 +321,12 @@ func (c *Client) UndeleteBlock(boardID, blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
-func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Block, *Response) {
-	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID), toJSON(blocks))
+func (c *Client) InsertBlocks(boardID string, blocks []*model.Block, disableNotify bool) ([]*model.Block, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+queryParams, toJSON(blocks))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -287,18 +335,12 @@ func (c *Client) InsertBlocks(boardID string, blocks []model.Block) ([]model.Blo
 	return model.BlocksFromJSON(r.Body), BuildResponse(r)
 }
 
-func (c *Client) InsertBlocksDisableNotify(boardID string, blocks []model.Block) ([]model.Block, *Response) {
-	r, err := c.DoAPIPost(c.GetBlocksRoute(boardID)+"?disable_notify=true", toJSON(blocks))
-	if err != nil {
-		return nil, BuildErrorResponse(r, err)
+func (c *Client) DeleteBlock(boardID, blockID string, disableNotify bool) (bool, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
 	}
-	defer closeBody(r)
-
-	return model.BlocksFromJSON(r.Body), BuildResponse(r)
-}
-
-func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
-	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID), "")
+	r, err := c.DoAPIDelete(c.GetBlockRoute(boardID, blockID)+queryParams, "")
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
 	}
@@ -307,7 +349,80 @@ func (c *Client) DeleteBlock(boardID, blockID string) (bool, *Response) {
 	return true, BuildResponse(r)
 }
 
+//
+// Cards
+//
+
+func (c *Client) CreateCard(boardID string, card *model.Card, disableNotify bool) (*model.Card, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPost(c.GetBoardRoute(boardID)+"/cards"+queryParams, toJSON(card))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var cardNew *model.Card
+	if err := json.NewDecoder(r.Body).Decode(&cardNew); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return cardNew, BuildResponse(r)
+}
+
+func (c *Client) GetCards(boardID string, page int, perPage int) ([]*model.Card, *Response) {
+	url := fmt.Sprintf("%s/cards?page=%d&per_page=%d", c.GetBoardRoute(boardID), page, perPage)
+	r, err := c.DoAPIGet(url, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var cards []*model.Card
+	if err := json.NewDecoder(r.Body).Decode(&cards); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return cards, BuildResponse(r)
+}
+
+func (c *Client) PatchCard(cardID string, cardPatch *model.CardPatch, disableNotify bool) (*model.Card, *Response) {
+	var queryParams string
+	if disableNotify {
+		queryParams = "?" + disableNotifyQueryParam
+	}
+	r, err := c.DoAPIPatch(c.GetCardRoute(cardID)+queryParams, toJSON(cardPatch))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var cardNew *model.Card
+	if err := json.NewDecoder(r.Body).Decode(&cardNew); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return cardNew, BuildResponse(r)
+}
+
+func (c *Client) GetCard(cardID string) (*model.Card, *Response) {
+	r, err := c.DoAPIGet(c.GetCardRoute(cardID), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	var card *model.Card
+	if err := json.NewDecoder(r.Body).Decode(&card); err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return card, BuildResponse(r)
+}
+
+//
 // Boards and blocks.
+//
+
 func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
 	r, err := c.DoAPIPost(c.GetBoardsAndBlocksRoute(), toJSON(bab))
 	if err != nil {
@@ -316,6 +431,71 @@ func (c *Client) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks) (*model.Board
 	defer closeBody(r)
 
 	return model.BoardsAndBlocksFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) CreateCategory(category model.Category) (*model.Category, *Response) {
+	r, err := c.DoAPIPost(c.GetTeamRoute(category.TeamID)+"/categories", toJSON(category))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.CategoryFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) DeleteCategory(teamID, categoryID string) *Response {
+	r, err := c.DoAPIDelete(c.GetTeamRoute(teamID)+"/categories/"+categoryID, "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
+func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return BuildResponse(r)
+}
+
+func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *Response) {
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/categories", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var categoryBoards []model.CategoryBoards
+	_ = json.NewDecoder(r.Body).Decode(&categoryBoards)
+	return categoryBoards, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategories(teamID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedCategoryOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedCategoryOrder)
+	return updatedCategoryOrder, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategoryBoards(teamID, categoryID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedBoardsOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedBoardsOrder)
+	return updatedBoardsOrder, BuildResponse(r)
 }
 
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
@@ -369,7 +549,7 @@ func (c *Client) GetRegisterRoute() string {
 	return "/register"
 }
 
-func (c *Client) Register(request *api.RegisterRequest) (bool, *Response) {
+func (c *Client) Register(request *model.RegisterRequest) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetRegisterRoute(), toJSON(&request))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
@@ -383,14 +563,14 @@ func (c *Client) GetLoginRoute() string {
 	return "/login"
 }
 
-func (c *Client) Login(request *api.LoginRequest) (*api.LoginResponse, *Response) {
+func (c *Client) Login(request *model.LoginRequest) (*model.LoginResponse, *Response) {
 	r, err := c.DoAPIPost(c.GetLoginRoute(), toJSON(&request))
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
 	defer closeBody(r)
 
-	data, err := api.LoginResponseFromJSON(r.Body)
+	data, err := model.LoginResponseFromJSON(r.Body)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -450,7 +630,7 @@ func (c *Client) GetUserChangePasswordRoute(id string) string {
 	return fmt.Sprintf("/users/%s/changepassword", id)
 }
 
-func (c *Client) UserChangePassword(id string, data *api.ChangePasswordRequest) (bool, *Response) {
+func (c *Client) UserChangePassword(id string, data *model.ChangePasswordRequest) (bool, *Response) {
 	r, err := c.DoAPIPost(c.GetUserChangePasswordRoute(id), toJSON(&data))
 	if err != nil {
 		return false, BuildErrorResponse(r, err)
@@ -532,6 +712,17 @@ func (c *Client) GetBoardMetadata(boardID, readToken string) (*model.BoardMetada
 
 func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
+func (c *Client) SearchBoardsForUser(teamID, term string, field model.BoardSearchField) ([]*model.Board, *Response) {
+	query := fmt.Sprintf("q=%s&field=%s", term, field)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?"+query, "")
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -644,6 +835,19 @@ func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.Fi
 	return fileUploadResponse, BuildResponse(r)
 }
 
+func (c *Client) TeamUploadFileInfo(teamID, boardID string, fileName string) (*mmModel.FileInfo, *Response) {
+	r, err := c.DoAPIGet(fmt.Sprintf("/files/teams/%s/%s/%s/info", teamID, boardID, fileName), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+	fileInfoResponse, error := api.FileInfoResponseFromJSON(r.Body)
+	if error != nil {
+		return nil, BuildErrorResponse(r, error)
+	}
+	return fileInfoResponse, BuildResponse(r)
+}
+
 func (c *Client) GetSubscriptionsRoute() string {
 	return "/subscriptions"
 }
@@ -709,7 +913,7 @@ func (c *Client) ExportBoardArchive(boardID string) ([]byte, *Response) {
 	}
 	defer closeBody(r)
 
-	buf, err := ioutil.ReadAll(r.Body)
+	buf, err := io.ReadAll(r.Body)
 	if err != nil {
 		return nil, BuildErrorResponse(r, err)
 	}
@@ -755,4 +959,48 @@ func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
 	}
 
 	return limits, BuildResponse(r)
+}
+
+func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where string, userID string) (bool, *Response) {
+	r, err := c.DoAPIPost("/content-blocks/"+srcBlockID+"/moveto/"+where+"/"+dstBlockID, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
+func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
+	r, err := c.DoAPIGet("/statistics", "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var stats *model.BoardsStatistics
+	err = json.NewDecoder(r.Body).Decode(&stats)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return stats, BuildResponse(r)
+}
+
+func (c *Client) HideBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/boards/"+boardID+"/hide", "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
+func (c *Client) UnhideBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/boards/"+boardID+"/unhide", "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
 }

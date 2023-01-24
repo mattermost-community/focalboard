@@ -4,7 +4,7 @@
 package boards
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -46,6 +46,12 @@ func TestSetConfiguration(t *testing.T) {
 		TeammateNameDisplay: &usernameRef,
 	}
 
+	falseRef := false
+	basePrivacySettings := &model.PrivacySettings{
+		ShowEmailAddress: &falseRef,
+		ShowFullName:     &falseRef,
+	}
+
 	baseConfig := &model.Config{
 		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
@@ -53,6 +59,7 @@ func TestSetConfiguration(t *testing.T) {
 		FileSettings:          *baseFileSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
 		TeamSettings:          *baseTeamSettings,
+		PrivacySettings:       *basePrivacySettings,
 	}
 
 	t.Run("test enable telemetry", func(t *testing.T) {
@@ -113,7 +120,7 @@ func TestServeHTTP(t *testing.T) {
 	result := w.Result()
 	assert.NotNil(result)
 	defer result.Body.Close()
-	bodyBytes, err := ioutil.ReadAll(result.Body)
+	bodyBytes, err := io.ReadAll(result.Body)
 	assert.Nil(err)
 	bodyString := string(bodyBytes)
 

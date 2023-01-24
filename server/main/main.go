@@ -53,16 +53,6 @@ func monitorPid(pid int, logger *mlog.Logger) {
 	}()
 }
 
-func logInfo(logger *mlog.Logger) {
-	logger.Info("FocalBoard Server",
-		mlog.String("version", model.CurrentVersion),
-		mlog.String("edition", model.Edition),
-		mlog.String("build_number", model.BuildNumber),
-		mlog.String("build_date", model.BuildDate),
-		mlog.String("build_hash", model.BuildHash),
-	)
-}
-
 func main() {
 	// Command line args
 	pMonitorPid := flag.Int("monitorpid", -1, "a process ID")
@@ -101,7 +91,7 @@ func main() {
 		defer restore()
 	}
 
-	logInfo(logger)
+	model.LogServerInfo(logger)
 
 	singleUser := false
 	if pSingleUser != nil {
@@ -132,7 +122,7 @@ func main() {
 	if pDBConfig != nil && len(*pDBConfig) > 0 {
 		config.DBConfigString = *pDBConfig
 		// Don't echo, as the confix string may contain passwords
-		logger.Info("DBConfigString overriden from commandline")
+		logger.Info("DBConfigString overridden from commandline")
 	}
 
 	if pPort != nil && *pPort > 0 && *pPort != config.Port {
@@ -176,6 +166,7 @@ func main() {
 }
 
 // StartServer starts the server
+//
 //export StartServer
 func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, dbConfigString, configFilePath *C.char) {
 	startServer(
@@ -189,6 +180,7 @@ func StartServer(webPath *C.char, filesPath *C.char, port int, singleUserToken, 
 }
 
 // StopServer stops the server
+//
 //export StopServer
 func StopServer() {
 	stopServer()
@@ -214,7 +206,7 @@ func startServer(webPath string, filesPath string, port int, singleUserToken, db
 		return
 	}
 
-	logInfo(logger)
+	model.LogServerInfo(logger)
 
 	if len(filesPath) > 0 {
 		config.FilesPath = filesPath

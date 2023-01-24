@@ -13,7 +13,7 @@ import Button from '../../widgets/buttons/button'
 import IconButton from '../../widgets/buttons/iconButton'
 import AddIcon from '../../widgets/icons/add'
 import DeleteIcon from '../../widgets/icons/delete'
-import DisclosureTriangle from '../../widgets/icons/disclosureTriangle'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import HideIcon from '../../widgets/icons/hide'
 import OptionsIcon from '../../widgets/icons/options'
 import Menu from '../../widgets/menu'
@@ -21,7 +21,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
-import {useColumnResize} from "./tableColumnResizeContext"
+import {useColumnResize} from './tableColumnResizeContext'
 
 type Props = {
     board: Board
@@ -54,6 +54,8 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
         className += ' expanded'
     }
 
+    const canEditOption = groupByProperty?.type !== 'person' && group.option.id
+
     return (
         <div
             key={group.option.id + 'header'}
@@ -67,9 +69,12 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                 ref={(ref) => columnResize.updateRef(group.option.id, Constants.titleColumnId, ref)}
             >
                 <IconButton
-                    icon={<DisclosureTriangle/>}
+                    icon={
+                        <CompassIcon
+                            icon='menu-right'
+                        />}
                     onClick={() => (props.readonly ? {} : props.hideGroup(group.option.id || 'undefined'))}
-                    className={props.readonly ? 'readonly' : ''}
+                    className={`octo-table-cell__expand ${props.readonly ? 'readonly' : ''}`}
                 />
 
                 {!group.option.id &&
@@ -87,7 +92,11 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                             }}
                         />
                     </Label>}
-                {group.option.id &&
+                {groupByProperty?.type === 'person' &&
+                    <Label>
+                        {groupTitle}
+                    </Label>}
+                {canEditOption &&
                     <Label color={group.option.color}>
                         <Editable
                             value={groupTitle}
@@ -119,7 +128,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                                 onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
-                            {group.option.id &&
+                            {canEditOption &&
                                 <>
                                     <Menu.Text
                                         id='delete'

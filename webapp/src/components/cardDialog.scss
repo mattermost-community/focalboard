@@ -1,25 +1,33 @@
-.Dialog {
-    &.cardDialog {
-        .dialog {
+.cardDialog {
+    .dialog {
+        width: 100%;
+        top: 0;
+        height: 100%;
+
+        >.CardDetail {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
             @media not screen and (max-width: 975px) {
-                width: 800px;
-                max-width: 100%;
+                padding: 10px 126px;
             }
+
+            @media screen and (max-width: 975px) {
+                padding: 16px 32px;
+            }
+        }
+
+        >.CardDetail--fullwidth {
+            padding-left: 78px;
         }
     }
 }
 
 .cardFollowBtn {
-    float: right;
-    height: 100%;
+    display: inline-flex;
 
-    &.follow {
-        color: rgba(var(--center-channel-color-rgb), 0.64);
-        background-color: rgba(var(--center-channel-color-rgb), 0.08);
-    }
-
-    &.unfollow {
-        color: rgb(var(--button-bg-rgb));
-        background-color: rgba(var(--button-bg-rgb), 0.08);
+    &--attach {
+        margin-right: 8px;
     }
 }

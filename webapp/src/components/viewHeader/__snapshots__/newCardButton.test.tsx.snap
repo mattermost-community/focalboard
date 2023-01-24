@@ -12,7 +12,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -41,25 +41,33 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CardIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <rect
-                      height="40"
-                      rx="3"
-                      ry="3"
-                      width="60"
-                      x="20"
-                      y="30"
-                    />
-                  </svg>
+                    <svg
+                      class="CardIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        height="40"
+                        rx="3"
+                        ry="3"
+                        width="60"
+                        x="20"
+                        y="30"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Empty card
+                  <div
+                    class="menu-name"
+                  >
+                    Empty card
+                  </div>
                 </div>
                 <div
                   aria-label="menuwrapper"
@@ -86,14 +94,22 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-plus AddIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-plus AddIcon"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  New template
+                  <div
+                    class="menu-name"
+                  >
+                    New template
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -120,9 +136,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton 1`] = `
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -148,7 +168,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -177,25 +197,33 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CardIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <rect
-                      height="40"
-                      rx="3"
-                      ry="3"
-                      width="60"
-                      x="20"
-                      y="30"
-                    />
-                  </svg>
+                    <svg
+                      class="CardIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        height="40"
+                        rx="3"
+                        ry="3"
+                        width="60"
+                        x="20"
+                        y="30"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Empty card
+                  <div
+                    class="menu-name"
+                  >
+                    Empty card
+                  </div>
                 </div>
                 <div
                   aria-label="menuwrapper"
@@ -222,14 +250,22 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-plus AddIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-plus AddIcon"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  New template
+                  <div
+                    class="menu-name"
+                  >
+                    New template
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -256,9 +292,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCard 1`
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"
@@ -284,7 +324,7 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
     </div>
     <div
       aria-label="menuwrapper"
-      class="MenuWrapper"
+      class="MenuWrapper override menuOpened"
       role="button"
     >
       <div
@@ -313,25 +353,33 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 <div
                   class="d-flex"
                 >
-                  <svg
-                    class="CardIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <div
+                    class="menu-option__icon"
                   >
-                    <rect
-                      height="40"
-                      rx="3"
-                      ry="3"
-                      width="60"
-                      x="20"
-                      y="30"
-                    />
-                  </svg>
+                    <svg
+                      class="CardIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        height="40"
+                        rx="3"
+                        ry="3"
+                        width="60"
+                        x="20"
+                        y="30"
+                      />
+                    </svg>
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  Empty card
+                  <div
+                    class="menu-name"
+                  >
+                    Empty card
+                  </div>
                 </div>
                 <div
                   aria-label="menuwrapper"
@@ -358,14 +406,22 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 <div
                   class="d-flex"
                 >
-                  <i
-                    class="CompassIcon icon-plus AddIcon"
-                  />
+                  <div
+                    class="menu-option__icon"
+                  >
+                    <i
+                      class="CompassIcon icon-plus AddIcon"
+                    />
+                  </div>
                 </div>
                 <div
-                  class="menu-name"
+                  class="menu-option__content"
                 >
-                  New template
+                  <div
+                    class="menu-name"
+                  >
+                    New template
+                  </div>
                 </div>
                 <div
                   class="noicon"
@@ -392,9 +448,13 @@ exports[`components/viewHeader/newCardButton return NewCardButton and addCardTem
                 />
               </div>
               <div
-                class="menu-name"
+                class="menu-option__content"
               >
-                Cancel
+                <div
+                  class="menu-name"
+                >
+                  Cancel
+                </div>
               </div>
               <div
                 class="noicon"

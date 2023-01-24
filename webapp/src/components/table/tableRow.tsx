@@ -14,14 +14,14 @@ import {useSortable} from '../../hooks/sortable'
 import {Utils} from '../../utils'
 
 import PropertyValueElement from '../propertyValueElement'
-import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import IconButton from '../../widgets/buttons/iconButton'
-import GripIcon from '../../widgets/icons/grip'
+import CompassIcon from '../../widgets/icons/compassIcon'
 import OptionsIcon from '../../widgets/icons/options'
-import DeleteIcon from '../../widgets/icons/delete'
+import Tooltip from '../../widgets/tooltip'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 
 import {useColumnResize} from './tableColumnResizeContext'
 
@@ -38,7 +38,7 @@ type Props = {
     isSelected: boolean
     focusOnMount: boolean
     isLastCard: boolean
-    showCard: (cardId: string) => void
+    showCard: (cardId?: string) => void
     readonly: boolean
     addCard: (groupByOptionId?: string) => Promise<void>
     onClick?: (e: React.MouseEvent<HTMLDivElement>, card: Card) => void
@@ -95,10 +95,21 @@ const TableRow = (props: Props) => {
     }
     if (isGrouped) {
         const groupID = groupById || ''
-        const groupValue = card.fields.properties[groupID] as string || 'undefined'
+        let groupValue = card.fields.properties[groupID] as string || 'undefined'
+        if (groupValue === 'undefined') {
+            const template = board.cardProperties.find((p) => p.id === groupById) //templates.find((o) => o.id === groupById)
+            if (template && template.type === 'createdBy') {
+                groupValue = card.createdBy
+            } else if (template && template.type === 'updatedBy') {
+                groupValue = card.modifiedBy
+            }
+        }
         if (collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
         }
+    }
+    if (props.readonly) {
+        className += ' readonly'
     }
 
     const handleDeleteCard = useCallback(async () => {
@@ -141,24 +152,9 @@ const TableRow = (props: Props) => {
         >
 
             <div className='action-cell octo-table-cell-btn'>
-                <MenuWrapper
-                    className='optionsMenu'
-                    stopPropagationOnToggle={true}
-                >
-                    <IconButton
-                        title='MenuBtn'
-                        icon={<OptionsIcon/>}
-                    />
-                    <Menu>
-                        <Menu.Text
-                            icon={<DeleteIcon/>}
-                            id='delete'
-                            name={intl.formatMessage({id: 'TableRow.delete', defaultMessage: 'Delete'})}
-                            onClick={handleDeleteButtonOnClick}
-                        />
-                    </Menu>
-                </MenuWrapper>
-                <IconButton icon={<GripIcon/>}/>
+                {!props.readonly && (
+                    <IconButton icon={<CompassIcon icon='drag-vertical'/>}/>
+                )}
             </div>
 
             {/* Name / title */}
@@ -181,6 +177,43 @@ const TableRow = (props: Props) => {
                         spellCheck={true}
                     />
                 </div>
+
+                {!props.readonly && (
+                    <MenuWrapper
+                        className='optionsMenu ml-2 mr-2'
+                        stopPropagationOnToggle={true}
+                    >
+                        <Tooltip
+                            title={intl.formatMessage({id: 'TableRow.MoreOption', defaultMessage: 'More actions'})}
+                        >
+                            <IconButton
+                                title='MenuBtn'
+                                icon={<OptionsIcon/>}
+                            />
+                        </Tooltip>
+                        <CardActionsMenu
+                            cardId={card.id}
+                            boardId={card.boardId}
+                            onClickDelete={handleDeleteButtonOnClick}
+                            onClickDuplicate={() => {
+                                mutator.duplicateCard(
+                                    card.id,
+                                    board.id,
+                                    false,
+                                    intl.formatMessage({id: 'TableRow.DuplicateCard', defaultMessage: 'duplicate card'}),
+                                    false,
+                                    {},
+                                    async (newCardId) => {
+                                        props.showCard(newCardId)
+                                    },
+                                    async () => {
+                                        props.showCard(undefined)
+                                    },
+                                )
+                            }}
+                        />
+                    </MenuWrapper>
+                )}
 
                 <div className='open-button'>
                     <Button onClick={() => props.showCard(props.card.id || '')}>

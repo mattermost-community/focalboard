@@ -10,6 +10,26 @@
         bottom: 0;
     }
 
+    &.size--small {
+        .dialog {
+            max-width: 512px;
+            width: 100%;
+            height: max-content;
+        }
+    }
+
+    .dialog-title {
+        margin: 0;
+        font-weight: 600;
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    .dialog-subtitle {
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
     .backdrop {
         @include z-index(dialog-backdrop);
         position: fixed;
@@ -26,14 +46,8 @@
         justify-content: center;
     }
 
-    .toolbar {
-        display: flex;
-        flex-direction: row;
-        padding: 16px;
-        justify-content: space-between;
-    }
-
     .dialog {
+        position: relative;
         display: flex;
         flex-direction: column;
         background-color: rgb(var(--center-channel-bg-rgb));
@@ -55,13 +69,6 @@
                 display: none !important;
             }
         }
-        @media screen and (max-width: 975px) {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
 
         > * {
             flex-shrink: 0;
@@ -78,33 +85,34 @@
             background-color: rgba(230, 192, 192, 0.9);
         }
 
-        > .toolbar {
+        .IconButton {
+            color: rgba(var(--center-channel-color-rgb), 0.56);
+
+            &:hover {
+                color: rgba(var(--center-channel-color-rgb), 0.72);
+                background-color: rgba(var(--center-channel-color-rgb), 0.08);
+            }
+
+            &:active {
+                background-color: rgba(var(--button-bg-rgb), 0.08);
+                color: rgba(var(--button-bg-rgb), 1);
+            }
+        }
+
+        .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px;
+            padding: 24px 0;
             justify-content: space-between;
+            align-items: flex-start;
         }
 
         .toolbar--right {
             display: flex;
             gap: 8px;
-        }
-
-        > .content {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-
-            @media not screen and (max-width: 975px) {
-                padding: 10px 126px;
-            }
-            @media screen and (max-width: 975px) {
-                padding: 10px;
-            }
-        }
-
-        > .content.fullwidth {
-            padding-left: 78px;
+            align-items: center;
+            height: 28px;
+            margin-right: 16px;
         }
     }
 

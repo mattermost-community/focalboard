@@ -3,7 +3,7 @@
 exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back confirmation-dialog-box"
+    class="Dialog dialog-back confirmation-dialog-box size--small"
   >
     <div
       class="backdrop"
@@ -18,19 +18,25 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
+          <div>
+            <h1
+              class="dialog-title"
             />
-          </button>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="box-area"
@@ -59,7 +65,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
               </span>
             </button>
             <button
-              class="Button filled danger size--medium"
+              class="Button filled size--medium"
               title="test-btn-text"
               type="submit"
             >
@@ -78,7 +84,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
 exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Text should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back confirmation-dialog-box"
+    class="Dialog dialog-back confirmation-dialog-box size--small"
   >
     <div
       class="backdrop"
@@ -93,19 +99,25 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
+          <div>
+            <h1
+              class="dialog-title"
             />
-          </button>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="box-area"
@@ -134,7 +146,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
               </span>
             </button>
             <button
-              class="Button filled danger size--medium"
+              class="Button filled size--medium"
               title="test-btn-text"
               type="submit"
             >

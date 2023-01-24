@@ -43,7 +43,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -88,53 +88,6 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -354,18 +307,12 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -420,18 +367,12 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -484,39 +425,13 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -541,6 +456,27 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -562,39 +498,13 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -617,6 +527,27 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -646,18 +577,12 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -826,7 +751,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -871,53 +796,6 @@ exports[`components/centerPanel return centerPanel and click on card to show car
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1299,7 +1177,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -1333,7 +1211,7 @@ exports[`components/centerPanel return centerPanel and click on card to show car
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -1426,7 +1304,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -1471,53 +1349,6 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -1737,18 +1568,12 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -1803,18 +1628,12 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -1867,39 +1686,13 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -1924,6 +1717,27 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -1945,39 +1759,13 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -2000,6 +1788,27 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -2029,18 +1838,12 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -2187,53 +1990,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -2269,22 +2025,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             title="view title"
             value="view title"
           />
-          <div>
-            <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                class="IconButton"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
-            </div>
-          </div>
         </div>
         <div
           class="octo-spacer"
@@ -2349,18 +2089,12 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton readonly"
+                  class="IconButton octo-table-cell__expand readonly"
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -2393,18 +2127,12 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton readonly"
+                  class="IconButton octo-table-cell__expand readonly"
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -2429,48 +2157,13 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </button>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
               <div
                 class="action-cell octo-table-cell-btn"
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
-                </button>
-              </div>
+              />
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2508,48 +2201,13 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </div>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
               <div
                 class="action-cell octo-table-cell-btn"
-              >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
-                <button
-                  class="IconButton"
-                  type="button"
-                >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
-                </button>
-              </div>
+              />
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2600,18 +2258,12 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton readonly"
+                  class="IconButton octo-table-cell__expand readonly"
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -2709,7 +2361,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -2754,53 +2406,6 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -3020,18 +2625,12 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -3086,18 +2685,12 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -3150,39 +2743,13 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -3207,6 +2774,27 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -3228,39 +2816,13 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -3283,6 +2845,27 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -3312,18 +2895,12 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -3442,7 +3019,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -3487,53 +3064,6 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -3753,18 +3283,12 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -3819,18 +3343,12 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -3883,39 +3401,13 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -3940,6 +3432,27 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -3961,39 +3474,13 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -4016,6 +3503,27 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -4045,18 +3553,12 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -4175,7 +3677,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -4220,53 +3722,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -4486,18 +3941,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -4552,18 +4001,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -4616,39 +4059,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -4673,6 +4090,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -4694,39 +4132,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -4749,6 +4161,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -4778,18 +4211,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -4908,7 +4335,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -4953,53 +4380,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -5219,18 +4599,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -5285,18 +4659,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -5349,39 +4717,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -5406,6 +4748,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -5427,39 +4790,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -5482,6 +4819,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -5511,18 +4869,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -5641,7 +4993,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -5686,53 +5038,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -5952,18 +5257,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -6018,18 +5317,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -6082,39 +5375,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -6139,6 +5406,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -6160,39 +5448,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -6215,6 +5477,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -6244,18 +5527,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -6374,7 +5651,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -6419,53 +5696,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -6685,18 +5915,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -6751,18 +5975,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -6815,39 +6033,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -6872,6 +6064,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -6893,39 +6106,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -6948,6 +6135,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -6977,18 +6185,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -7107,7 +6309,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -7152,53 +6354,6 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -7418,18 +6573,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -7484,18 +6633,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -7548,39 +6691,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -7605,6 +6722,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -7626,39 +6764,13 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -7681,6 +6793,27 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -7710,18 +6843,12 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -7840,7 +6967,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -7885,53 +7012,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -8151,18 +7231,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -8217,18 +7291,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -8281,39 +7349,13 @@ exports[`components/centerPanel return centerPanel and select one card and click
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -8338,6 +7380,27 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -8359,39 +7422,13 @@ exports[`components/centerPanel return centerPanel and select one card and click
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -8414,6 +7451,27 @@ exports[`components/centerPanel return centerPanel and select one card and click
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -8443,18 +7501,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -8573,7 +7625,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -8618,53 +7670,6 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -8884,18 +7889,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -8950,18 +7949,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -9014,39 +8007,13 @@ exports[`components/centerPanel return centerPanel and select one card and click
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -9071,6 +8038,27 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   />
                 </div>
                 <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
                   class="open-button"
                 >
                   <button
@@ -9092,39 +8080,13 @@ exports[`components/centerPanel return centerPanel and select one card and click
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -9147,6 +8109,27 @@ exports[`components/centerPanel return centerPanel and select one card and click
                     title="card2"
                     value="card2"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -9176,18 +8159,12 @@ exports[`components/centerPanel return centerPanel and select one card and click
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "
@@ -9306,7 +8283,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -9351,53 +8328,6 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -9563,7 +8493,7 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
           role="button"
         >
           <button
-            class="IconButton"
+            class="IconButton CardActionsMenuIcon"
             type="button"
           >
             <i
@@ -9628,7 +8558,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -9673,53 +8603,6 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -10101,7 +8984,7 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -10194,7 +9077,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -10620,7 +9503,7 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
               role="button"
             >
               <button
-                class="IconButton"
+                class="IconButton CardActionsMenuIcon"
                 type="button"
               >
                 <i
@@ -10713,7 +9596,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               type="button"
             >
               <i
-                class="CompassIcon icon-eye-off-outline undefined"
+                class="CompassIcon icon-eye-off-outline"
               />
               <span>
                 hide description
@@ -10758,53 +9641,6 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 class="octo-editor-preview"
                 data-testid="preview-element"
               />
-              <div
-                class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-              >
-                <div
-                  class="DraftEditor-root"
-                >
-                  <div
-                    class="DraftEditor-editorContainer"
-                  >
-                    <div
-                      aria-autocomplete="list"
-                      aria-expanded="false"
-                      class="notranslate public-DraftEditor-content"
-                      contenteditable="true"
-                      role="combobox"
-                      spellcheck="false"
-                      style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                    >
-                      <div
-                        data-contents="true"
-                      >
-                        <div
-                          class=""
-                          data-block="true"
-                          data-editor="123"
-                          data-offset-key="123-0-0"
-                        >
-                          <div
-                            class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                            data-offset-key="123-0-0"
-                          >
-                            <span
-                              data-offset-key="123-0-0"
-                            >
-                              <span
-                                data-text="true"
-                              >
-                                description
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -11024,18 +9860,12 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label empty "
@@ -11090,18 +9920,12 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorOrange "
@@ -11154,39 +9978,13 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
               <div
                 class="action-cell octo-table-cell-btn"
               >
-                <div
-                  aria-label="menuwrapper"
-                  class="MenuWrapper optionsMenu"
-                  role="button"
-                >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
-                </div>
                 <button
                   class="IconButton"
                   type="button"
                 >
-                  <svg
-                    class="GripIcon Icon"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0V0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-drag-vertical"
+                  />
                 </button>
               </div>
               <div
@@ -11209,6 +10007,27 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                     title="card1"
                     value="card1"
                   />
+                </div>
+                <div
+                  aria-label="menuwrapper"
+                  class="MenuWrapper optionsMenu ml-2 mr-2"
+                  role="button"
+                >
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
+                  >
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -11238,18 +10057,12 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                 style="width: 100px;"
               >
                 <button
-                  class="IconButton"
+                  class="IconButton octo-table-cell__expand "
                   type="button"
                 >
-                  <svg
-                    class="DisclosureTriangleIcon Icon"
-                    viewBox="0 0 100 100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <polygon
-                      points="37,35 37,65 63,50"
-                    />
-                  </svg>
+                  <i
+                    class="CompassIcon icon-menu-right"
+                  />
                 </button>
                 <span
                   class="Label propColorBlue "

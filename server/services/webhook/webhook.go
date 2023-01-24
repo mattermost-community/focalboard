@@ -3,7 +3,7 @@ package webhook
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -13,7 +13,7 @@ import (
 )
 
 // NotifyUpdate calls webhooks.
-func (wh *Client) NotifyUpdate(block model.Block) {
+func (wh *Client) NotifyUpdate(block *model.Block) {
 	if len(wh.config.WebhookUpdate) < 1 {
 		return
 	}
@@ -24,7 +24,7 @@ func (wh *Client) NotifyUpdate(block model.Block) {
 	}
 	for _, url := range wh.config.WebhookUpdate {
 		resp, _ := http.Post(url, "application/json", bytes.NewBuffer(json)) //nolint:gosec
-		_, _ = ioutil.ReadAll(resp.Body)
+		_, _ = io.ReadAll(resp.Body)
 		resp.Body.Close()
 
 		wh.logger.Debug("webhook.NotifyUpdate", mlog.String("url", url))

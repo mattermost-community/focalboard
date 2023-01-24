@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
  EXCLUDE_ENTERPRISE: true
 
 jobs:
@@ -22,6 +22,7 @@ jobs:
         db:
           - sqlite
           - mysql
+          - mariadb
           - postgres
 
     steps:
@@ -34,20 +35,20 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: "Test server: ${{matrix['db']}}"
       run: cd focalboard; make server-test-${{matrix['db']}}
@@ -64,14 +65,14 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
     - name: npm ci
@@ -82,7 +83,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: Setup Node
       uses: actions/setup-node@v3
@@ -122,21 +123,21 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
 
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: cd focalboard; make server-test-mini-${{matrix['db']}}
@@ -159,21 +160,21 @@ jobs:
       continue-on-error: true
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref: ${{ env.BRANCH_NAME }}
     - uses: actions/checkout@v3
       if: steps.mattermostServer.outcome == 'failure'
       with:
         repository: "mattermost/mattermost-server"
-        fetch-depth: "20" 
+        fetch-depth: "20"
         path: "mattermost-server"
         ref : "master"
 
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: "Test server (minimum): ${{matrix['db']}}"
       run: cd focalboard; make server-test-mini-${{matrix['db']}}

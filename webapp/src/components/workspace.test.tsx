@@ -11,6 +11,7 @@ import userEvent from '@testing-library/user-event'
 import thunk from 'redux-thunk'
 
 import {IUser} from '../user'
+import octoClient from '../octoClient'
 import {TestBlockFactory} from '../test/testBlockFactory'
 import {mockDOM, mockMatchMedia, mockStateStore, wrapDNDIntl} from '../testUtils'
 import {Constants} from '../constants'
@@ -21,8 +22,10 @@ import Workspace from './workspace'
 Object.defineProperty(Constants, 'versionString', {value: '1.0.0'})
 jest.useFakeTimers()
 jest.mock('../utils')
+jest.mock('../octoClient')
 jest.mock('draft-js/lib/generateRandomKey', () => () => '123')
 const mockedUtils = mocked(Utils, true)
+const mockedOctoClient = mocked(octoClient, true)
 const board = TestBlockFactory.createBoard()
 board.id = 'board1'
 board.teamId = 'team-id'
@@ -83,12 +86,13 @@ const me: IUser = {
     create_at: 0,
     update_at: 0,
     is_bot: false,
+    is_guest: false,
     roles: 'system_user',
 }
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
-categoryAttribute1.boardIDs = [board.id]
+categoryAttribute1.boardMetadata = [{boardID: board.id, hidden: false}]
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -113,7 +117,7 @@ describe('src/components/workspace', () => {
         },
         users: {
             me,
-            boardUsers: [me],
+            boardUsers: {[me.id]: me},
             blockSubscriptions: [],
         },
         boards: {
@@ -167,8 +171,10 @@ describe('src/components/workspace', () => {
             categoryAttributes: [
                 categoryAttribute1,
             ],
+            hiddenBoardIDs: [],
         },
     }
+    mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers))
     const store = mockStateStore([thunk], state)
     beforeAll(() => {
         mockDOM()
@@ -206,7 +212,7 @@ describe('src/components/workspace', () => {
     })
 
     test('return workspace and showcard', async () => {
-        let container:Element | undefined
+        let container: Element | undefined
         await act(async () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
@@ -224,7 +230,7 @@ describe('src/components/workspace', () => {
     })
 
     test('return workspace readonly and showcard', async () => {
-        let container:Element | undefined
+        let container: Element | undefined
         await act(async () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={store}>
@@ -246,7 +252,7 @@ describe('src/components/workspace', () => {
         const emptyStore = mockStateStore([], {
             users: {
                 me,
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
             },
             teams: {
                 current: {id: 'team-id', title: 'Test Team'},
@@ -280,8 +286,14 @@ describe('src/components/workspace', () => {
                     featureFlags: {},
                 },
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+                hiddenBoardIDs: [],
+            },
         })
-        let container:Element | undefined
+        let container: Element | undefined
         await act(async () => {
             const result = render(wrapDNDIntl(
                 <ReduxProvider store={emptyStore}>
@@ -316,21 +328,21 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     nickname: '',
-                    firstname: '', 
+                    firstname: '',
                     lastname: '',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'onboarding',
-                        focalboard_onboardingTourStep: '0',
-                    },
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
                     roles: 'system_user',
                 },
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'onboarding'},
+                    onboardingTourStep: {value: '0'},
+                },
             },
             boards: {
                 current: welcomeBoard.id,
@@ -383,6 +395,7 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         }
         const localStore = mockStateStore([thunk], localState)
@@ -420,20 +433,20 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     nickname: '',
-                    firstname: '', 
+                    firstname: '',
                     lastname: '',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'board',
-                        focalboard_onboardingTourStep: '0',
-                    },
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
                     roles: 'system_user',
                 },
-                boardUsers: [me],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'board'},
+                    onboardingTourStep: {value: '0'},
+                },
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {
@@ -487,6 +500,7 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         }
         const localStore = mockStateStore([thunk], localState)
@@ -529,20 +543,20 @@ describe('src/components/workspace', () => {
                     username: 'username_1',
                     email: '',
                     nickname: '',
-                    firstname: '', 
+                    firstname: '',
                     lastname: '',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'board',
-                        focalboard_onboardingTourStep: '1',
-                    },
                     create_at: 0,
                     update_at: 0,
                     is_bot: false,
                     roles: 'system_user',
                 },
-                boardUsers: [me],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'board'},
+                    onboardingTourStep: {value: '1'},
+                },
+                boardUsers: {[me.id]: me},
                 blockSubscriptions: [],
             },
             boards: {
@@ -596,6 +610,7 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         }
         const localStore = mockStateStore([thunk], localState)

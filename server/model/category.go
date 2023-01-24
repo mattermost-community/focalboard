@@ -1,9 +1,17 @@
 package model
 
 import (
+	"encoding/json"
+	"fmt"
+	"io"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
+)
+
+const (
+	CategoryTypeSystem = "system"
+	CategoryTypeCustom = "custom"
 )
 
 // Category is a board category
@@ -36,44 +44,72 @@ type Category struct {
 	// The deleted time in miliseconds since the current epoch. Set to indicate this category is deleted
 	// required: false
 	DeleteAt int64 `json:"deleteAt"`
+
+	// Category's state in client side
+	// required: true
+	Collapsed bool `json:"collapsed"`
+
+	// Inter-category sort order per user
+	// required: true
+	SortOrder int `json:"sortOrder"`
+
+	// The sorting method applied on this category
+	// required: true
+	Sorting string `json:"sorting"`
+
+	// Category's type
+	// required: true
+	Type string `json:"type"`
 }
 
 func (c *Category) Hydrate() {
-	c.ID = utils.NewID(utils.IDTypeNone)
-	c.CreateAt = utils.GetMillis()
-	c.UpdateAt = c.CreateAt
+	if c.ID == "" {
+		c.ID = utils.NewID(utils.IDTypeNone)
+	}
+
+	if c.CreateAt == 0 {
+		c.CreateAt = utils.GetMillis()
+	}
+
+	if c.UpdateAt == 0 {
+		c.UpdateAt = c.CreateAt
+	}
+
+	if c.SortOrder < 0 {
+		c.SortOrder = 0
+	}
+
+	if strings.TrimSpace(c.Type) == "" {
+		c.Type = CategoryTypeCustom
+	}
 }
 
 func (c *Category) IsValid() error {
 	if strings.TrimSpace(c.ID) == "" {
-		return newErrInvalidCategory("category ID cannot be empty")
+		return NewErrInvalidCategory("category ID cannot be empty")
 	}
 
 	if strings.TrimSpace(c.Name) == "" {
-		return newErrInvalidCategory("category name cannot be empty")
+		return NewErrInvalidCategory("category name cannot be empty")
 	}
 
 	if strings.TrimSpace(c.UserID) == "" {
-		return newErrInvalidCategory("category user ID cannot be empty")
+		return NewErrInvalidCategory("category user ID cannot be empty")
 	}
 
 	if strings.TrimSpace(c.TeamID) == "" {
-		return newErrInvalidCategory("category team id ID cannot be empty")
+		return NewErrInvalidCategory("category team id ID cannot be empty")
+	}
+
+	if c.Type != CategoryTypeCustom && c.Type != CategoryTypeSystem {
+		return NewErrInvalidCategory(fmt.Sprintf("category type is invalid. Allowed types: %s and %s", CategoryTypeSystem, CategoryTypeCustom))
 	}
 
 	return nil
 }
 
-type ErrInvalidCategory struct {
-	msg string
-}
-
-func newErrInvalidCategory(msg string) *ErrInvalidCategory {
-	return &ErrInvalidCategory{
-		msg: msg,
-	}
-}
-
-func (e *ErrInvalidCategory) Error() string {
-	return e.msg
+func CategoryFromJSON(data io.Reader) *Category {
+	var category *Category
+	_ = json.NewDecoder(data).Decode(&category)
+	return category
 }

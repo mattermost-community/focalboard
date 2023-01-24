@@ -13,12 +13,10 @@ import (
 )
 
 var ErrBlocksFromMultipleBoards = errors.New("the block set contain blocks from multiple boards")
-var ErrViewsLimitReached = errors.New("views limit reached for board")
-var ErrPatchUpdatesLimitedCards = errors.New("patch updates cards that are limited")
 
-func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Block, error) {
+func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]*model.Block, error) {
 	if boardID == "" {
-		return []model.Block{}, nil
+		return []*model.Block{}, nil
 	}
 
 	if blockType != "" && parentID != "" {
@@ -32,7 +30,7 @@ func (a *App) GetBlocks(boardID, parentID string, blockType string) ([]model.Blo
 	return a.store.GetBlocksWithParent(boardID, parentID)
 }
 
-func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]model.Block, error) {
+func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTemplate bool) ([]*model.Block, error) {
 	board, err := a.GetBoard(boardID)
 	if err != nil {
 		return nil, err
@@ -65,56 +63,62 @@ func (a *App) DuplicateBlock(boardID string, blockID string, userID string, asTe
 	return blocks, err
 }
 
-func (a *App) GetBlocksWithBoardID(boardID string) ([]model.Block, error) {
-	return a.store.GetBlocksWithBoardID(boardID)
+func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) (*model.Block, error) {
+	return a.PatchBlockAndNotify(blockID, blockPatch, modifiedByID, false)
 }
 
-func (a *App) PatchBlock(blockID string, blockPatch *model.BlockPatch, modifiedByID string) error {
+func (a *App) PatchBlockAndNotify(blockID string, blockPatch *model.BlockPatch, modifiedByID string, disableNotify bool) (*model.Block, error) {
 	oldBlock, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if a.IsCloudLimited() {
-		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]model.Block{*oldBlock})
+		containsLimitedBlocks, lErr := a.ContainsLimitedBlocks([]*model.Block{oldBlock})
 		if lErr != nil {
-			return lErr
+			return nil, lErr
 		}
 		if containsLimitedBlocks {
-			return ErrPatchUpdatesLimitedCards
+			return nil, model.ErrPatchUpdatesLimitedCards
 		}
 	}
 
 	board, err := a.store.GetBoard(oldBlock.BoardID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = a.store.PatchBlock(blockID, blockPatch, modifiedByID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	a.metrics.IncrementBlocksPatched(1)
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	a.blockChangeNotifier.Enqueue(func() error {
 		// broadcast on websocket
-		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 
 		// broadcast on webhooks
-		a.webhook.NotifyUpdate(*block)
+		a.webhook.NotifyUpdate(block)
 
 		// send notifications
-		a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
+		if !disableNotify {
+			a.notifyBlockChanged(notify.Update, block, oldBlock, modifiedByID)
+		}
 		return nil
 	})
-	return nil
+	return block, nil
 }
 
 func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, modifiedByID string) error {
+	return a.PatchBlocksAndNotify(teamID, blockPatches, modifiedByID, false)
+}
+
+func (a *App) PatchBlocksAndNotify(teamID string, blockPatches *model.BlockPatchBatch, modifiedByID string, disableNotify bool) error {
 	oldBlocks, err := a.store.GetBlocksByIDs(blockPatches.BlockIDs)
 	if err != nil {
 		return err
@@ -126,7 +130,7 @@ func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, mo
 			return err
 		}
 		if containsLimitedBlocks {
-			return ErrPatchUpdatesLimitedCards
+			return model.ErrPatchUpdatesLimitedCards
 		}
 	}
 
@@ -141,29 +145,36 @@ func (a *App) PatchBlocks(teamID string, blockPatches *model.BlockPatchBatch, mo
 			if err != nil {
 				return err
 			}
-			a.wsAdapter.BroadcastBlockChange(teamID, *newBlock)
-			a.webhook.NotifyUpdate(*newBlock)
-			a.notifyBlockChanged(notify.Update, newBlock, &oldBlocks[i], modifiedByID)
+			a.wsAdapter.BroadcastBlockChange(teamID, newBlock)
+			a.webhook.NotifyUpdate(newBlock)
+			if !disableNotify {
+				a.notifyBlockChanged(notify.Update, newBlock, oldBlocks[i], modifiedByID)
+			}
 		}
 		return nil
 	})
 	return nil
 }
 
-func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
+func (a *App) InsertBlock(block *model.Block, modifiedByID string) error {
+	return a.InsertBlockAndNotify(block, modifiedByID, false)
+}
+
+func (a *App) InsertBlockAndNotify(block *model.Block, modifiedByID string, disableNotify bool) error {
 	board, bErr := a.store.GetBoard(block.BoardID)
 	if bErr != nil {
 		return bErr
 	}
 
-	err := a.store.InsertBlock(&block, modifiedByID)
+	err := a.store.InsertBlock(block, modifiedByID)
 	if err == nil {
 		a.blockChangeNotifier.Enqueue(func() error {
 			a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 			a.metrics.IncrementBlocksInserted(1)
 			a.webhook.NotifyUpdate(block)
-			a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
-
+			if !disableNotify {
+				a.notifyBlockChanged(notify.Add, block, nil, modifiedByID)
+			}
 			return nil
 		})
 	}
@@ -180,31 +191,42 @@ func (a *App) InsertBlock(block model.Block, modifiedByID string) error {
 	return err
 }
 
-func (a *App) isWithinViewsLimit(boardID string, block model.Block) (bool, error) {
-	limits, err := a.GetBoardsCloudLimits()
-	if err != nil {
-		return false, err
-	}
+func (a *App) isWithinViewsLimit(boardID string, block *model.Block) (bool, error) {
+	// ToDo: Cloud Limits have been disabled by design. We should
+	// revisit the decision and update the related code accordingly
 
-	if limits.Views == model.LimitUnlimited {
-		return true, nil
-	}
+	/*
+		limits, err := a.GetBoardsCloudLimits()
+		if err != nil {
+			return false, err
+		}
 
-	views, err := a.store.GetBlocksWithParentAndType(boardID, block.ParentID, model.TypeView)
-	if err != nil {
-		return false, err
-	}
+		if limits.Views == model.LimitUnlimited {
+			return true, nil
+		}
 
-	// < rather than <= because we'll be creating new view if this
-	// check passes. When that view is created, the limit will be reached.
-	// That's why we need to check for if existing + the being-created
-	// view doesn't exceed the limit.
-	return len(views) < limits.Views, nil
+		views, err := a.store.GetBlocksWithParentAndType(boardID, block.ParentID, model.TypeView)
+		if err != nil {
+			return false, err
+		}
+
+		// < rather than <= because we'll be creating new view if this
+		// check passes. When that view is created, the limit will be reached.
+		// That's why we need to check for if existing + the being-created
+		// view doesn't exceed the limit.
+		return len(views) < limits.Views, nil
+	*/
+
+	return true, nil
 }
 
-func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotifications bool) ([]model.Block, error) {
+func (a *App) InsertBlocks(blocks []*model.Block, modifiedByID string) ([]*model.Block, error) {
+	return a.InsertBlocksAndNotify(blocks, modifiedByID, false)
+}
+
+func (a *App) InsertBlocksAndNotify(blocks []*model.Block, modifiedByID string, disableNotify bool) ([]*model.Block, error) {
 	if len(blocks) == 0 {
-		return []model.Block{}, nil
+		return []*model.Block{}, nil
 	}
 
 	// all blocks must belong to the same board
@@ -220,7 +242,7 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 		return nil, err
 	}
 
-	needsNotify := make([]model.Block, 0, len(blocks))
+	needsNotify := make([]*model.Block, 0, len(blocks))
 	for i := range blocks {
 		// this check is needed to whitelist inbuilt template
 		// initialization. They do contain more than 5 views per board.
@@ -232,11 +254,11 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 
 			if !withinLimit {
 				a.logger.Info("views limit reached on board", mlog.String("board_id", blocks[i].ParentID), mlog.String("team_id", board.TeamID))
-				return nil, ErrViewsLimitReached
+				return nil, model.ErrViewsLimitReached
 			}
 		}
 
-		err := a.store.InsertBlock(&blocks[i], modifiedByID)
+		err := a.store.InsertBlock(blocks[i], modifiedByID)
 		if err != nil {
 			return nil, err
 		}
@@ -250,11 +272,10 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 		for _, b := range needsNotify {
 			block := b
 			a.webhook.NotifyUpdate(block)
-			if allowNotifications {
-				a.notifyBlockChanged(notify.Add, &block, nil, modifiedByID)
+			if !disableNotify {
+				a.notifyBlockChanged(notify.Add, block, nil, modifiedByID)
 			}
 		}
-
 		return nil
 	})
 
@@ -270,7 +291,7 @@ func (a *App) InsertBlocks(blocks []model.Block, modifiedByID string, allowNotif
 	return blocks, nil
 }
 
-func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []model.Block) error {
+func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) error {
 	// Images attached in cards have a path comprising the card's board ID.
 	// When we create a template from this board, we need to copy the files
 	// with the new board ID in path.
@@ -335,6 +356,10 @@ func (a *App) GetBlockByID(blockID string) (*model.Block, error) {
 }
 
 func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
+	return a.DeleteBlockAndNotify(blockID, modifiedBy, false)
+}
+
+func (a *App) DeleteBlockAndNotify(blockID string, modifiedBy string, disableNotify bool) error {
 	block, err := a.store.GetBlock(blockID)
 	if err != nil {
 		return err
@@ -372,8 +397,9 @@ func (a *App) DeleteBlock(blockID string, modifiedBy string) error {
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastBlockDelete(board.TeamID, blockID, block.BoardID)
 		a.metrics.IncrementBlocksDeleted(1)
-		a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
-
+		if !disableNotify {
+			a.notifyBlockChanged(notify.Delete, block, block, modifiedBy)
+		}
 		return nil
 	})
 
@@ -397,7 +423,7 @@ func (a *App) GetLastBlockHistoryEntry(blockID string) (*model.Block, error) {
 	if len(blocks) == 0 {
 		return nil, nil
 	}
-	return &blocks[0], nil
+	return blocks[0], nil
 }
 
 func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, error) {
@@ -417,13 +443,12 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 	}
 
 	block, err := a.store.GetBlock(blockID)
-	if err != nil {
+	if model.IsErrNotFound(err) {
+		a.logger.Error("Error loading the block after a successful undelete, not propagating through websockets or notifications", mlog.String("blockID", blockID))
 		return nil, err
 	}
-
-	if block == nil {
-		a.logger.Error("Error loading the block after undelete, not propagating through websockets or notifications")
-		return nil, nil
+	if err != nil {
+		return nil, err
 	}
 
 	board, err := a.store.GetBoard(block.BoardID)
@@ -432,9 +457,9 @@ func (a *App) UndeleteBlock(blockID string, modifiedBy string) (*model.Block, er
 	}
 
 	a.blockChangeNotifier.Enqueue(func() error {
-		a.wsAdapter.BroadcastBlockChange(board.TeamID, *block)
+		a.wsAdapter.BroadcastBlockChange(board.TeamID, block)
 		a.metrics.IncrementBlocksInserted(1)
-		a.webhook.NotifyUpdate(*block)
+		a.webhook.NotifyUpdate(block)
 		a.notifyBlockChanged(notify.Add, block, nil, modifiedBy)
 
 		return nil
@@ -456,7 +481,7 @@ func (a *App) GetBlockCountsByType() (map[string]int64, error) {
 	return a.store.GetBlockCountsByType()
 }
 
-func (a *App) GetBlocksForBoard(boardID string) ([]model.Block, error) {
+func (a *App) GetBlocksForBoard(boardID string) ([]*model.Block, error) {
 	return a.store.GetBlocksForBoard(boardID)
 }
 
@@ -519,7 +544,10 @@ func (a *App) getBoardAndCard(block *model.Block) (board *model.Board, card *mod
 		}
 
 		iter, err = a.store.GetBlock(iter.ParentID)
-		if err != nil || iter == nil {
+		if model.IsErrNotFound(err) {
+			return board, card, nil
+		}
+		if err != nil {
 			return board, card, err
 		}
 	}

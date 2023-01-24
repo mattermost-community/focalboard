@@ -10,30 +10,45 @@ import {useWebsockets} from '../../../../webapp/src/hooks/websockets'
 
 import {Board, BoardMember} from '../../../../webapp/src/blocks/board'
 import {getCurrentTeamId} from '../../../../webapp/src/store/teams'
-import {loadBoards} from '../../../../webapp/src/store/initialLoad'
+import {IUser} from '../../../../webapp/src/user'
+import {getMe, fetchMe} from '../../../../webapp/src/store/users'
+import {loadBoards, loadMyBoardsMemberships} from '../../../../webapp/src/store/initialLoad'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
-import {getMySortedBoards, setLinkToChannel, updateBoards, updateMembers} from '../../../../webapp/src/store/boards'
+import {
+    getMySortedBoards,
+    setLinkToChannel,
+    updateBoards,
+    updateMembersEnsuringBoardsAndUsers,
+    addMyBoardMemberships,
+} from '../../../../webapp/src/store/boards'
 import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks'
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 
+import {Utils} from '../../../../webapp/src/utils'
 import {WSClient} from '../../../../webapp/src/wsclient'
+
+import boardsScreenshots from '../../../../webapp/static/boards-screenshots.png'
 
 import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 import './rhsChannelBoards.scss'
 
-const boardsScreenshots = (window as any).baseURL + '/public/boards-screenshots.png'
-
 const RHSChannelBoards = () => {
     const boards = useAppSelector(getMySortedBoards)
     const teamId = useAppSelector(getCurrentTeamId)
     const currentChannel = useAppSelector(getCurrentChannel)
+    const me = useAppSelector<IUser|null>(getMe)
     const dispatch = useAppDispatch()
     const intl = useIntl()
+    const [dataLoaded, setDataLoaded] = React.useState(false)
 
     useEffect(() => {
-        dispatch(loadBoards())
+        Promise.all([
+            dispatch(loadBoards()),
+            dispatch(loadMyBoardsMemberships()),
+            dispatch(fetchMe()),
+        ]).then(() => setDataLoaded(true))
     }, [])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
@@ -41,7 +56,12 @@ const RHSChannelBoards = () => {
             dispatch(updateBoards(boards))
         }
         const onChangeMemberHandler = (_: WSClient, members: BoardMember[]): void => {
-            dispatch(updateMembers(members))
+            dispatch(updateMembersEnsuringBoardsAndUsers(members))
+
+            if (me) {
+                const myBoardMemberships = members.filter((boardMember) => boardMember.userId === me.id)
+                dispatch(addMyBoardMemberships(myBoardMemberships))
+            }
         }
 
         wsClient.addOnChange(onChangeBoardHandler, 'board')
@@ -51,7 +71,7 @@ const RHSChannelBoards = () => {
             wsClient.removeOnChange(onChangeBoardHandler, 'board')
             wsClient.removeOnChange(onChangeMemberHandler, 'boardMembers')
         }
-    }, [])
+    }, [me])
 
     if (!boards) {
         return null
@@ -62,6 +82,10 @@ const RHSChannelBoards = () => {
     if (!currentChannel) {
         return null
     }
+    if (!dataLoaded) {
+        return null
+    }
+
     const channelBoards = boards.filter((b) => b.channelId === currentChannel.id)
 
     let channelName = currentChannel.display_name
@@ -92,7 +116,7 @@ const RHSChannelBoards = () => {
                             defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
                         />
                     </div>
-                    <div className='boards-screenshots'><img src={boardsScreenshots}/></div>
+                    <div className='boards-screenshots'><img src={Utils.buildURL(boardsScreenshots, true)}/></div>
                     <Button
                         onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
                         emphasis='primary'

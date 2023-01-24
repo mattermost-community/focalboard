@@ -8,17 +8,29 @@ on:
   workflow_dispatch:
 
 env:
- BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+ BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
  EXCLUDE_ENTERPRISE: true
- 
+
 jobs:
+  down-migrations:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: "focalboard"
+      - name: assert that down migrations are SELECT 1 scripts
+        run: |
+          cd focalboard
+          echo 'SELECT 1;' > downmigration
+          for file in server/services/store/sqlstore/migrations/*.down.sql; do diff -Bw downmigration $file; done
+
   golangci:
     name: plugin
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18.1
+          go-version: 1.19.5
       - uses: actions/checkout@v3
         with:
           path: "focalboard"
@@ -27,18 +39,18 @@ jobs:
         continue-on-error: true
         with:
           repository: "mattermost/mattermost-server"
-          fetch-depth: "20" 
+          fetch-depth: "20"
           path: "mattermost-server"
           ref: ${{ env.BRANCH_NAME }}
       - uses: actions/checkout@v3
         if: steps.mattermostServer.outcome == 'failure'
         with:
           repository: "mattermost/mattermost-server"
-          fetch-depth: "20" 
+          fetch-depth: "20"
           path: "mattermost-server"
           ref : "master"
       - name: set up golangci-lint
-        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.50.1
       - name: lint
         run: |
           cd focalboard

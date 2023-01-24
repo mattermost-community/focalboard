@@ -237,7 +237,7 @@ function optionForPropertyValue(cardProperty: IPropertyTemplate, propertyValue: 
 }
 
 function showHelp() {
-    console.log('import -i <input.xml> -o [output.focalboard]')
+    console.log('import -i <input.xml> -o [output.boardarchive]')
     exit(1)
 }
 

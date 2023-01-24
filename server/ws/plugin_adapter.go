@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockpluginapi.go -package mocks github.com/mattermost/mattermost-server/v6/plugin API
+//go:generate mockgen -destination=mocks/mockpluginapi.go -package mocks github.com/mattermost/mattermost-server/v6/plugin API
 package ws
 
 import (
@@ -26,7 +26,7 @@ type PluginAdapterInterface interface {
 	OnWebSocketDisconnect(webConnID, userID string)
 	WebSocketMessageHasBeenPosted(webConnID, userID string, req *mmModel.WebSocketRequest)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
-	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockChange(teamID string, block *model.Block)
 	BroadcastBlockDelete(teamID, blockID, parentID string)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
 	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
@@ -422,7 +422,7 @@ func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[strin
 			EnsureUsers: ensureUserIDs,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendTeamMessageSkipCluster(event, teamID, payload)
@@ -447,13 +447,13 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 			EnsureUsers: ensureUserIDs,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendBoardMessageSkipCluster(teamID, boardID, payload, ensureUserIDs...)
 }
 
-func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block model.Block) {
+func (pa *PluginAdapter) BroadcastBlockChange(teamID string, block *model.Block) {
 	pa.logger.Debug("BroadcastingBlockChange",
 		mlog.String("teamID", teamID),
 		mlog.String("boardID", block.BoardID),
@@ -486,37 +486,97 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 
 	go func() {
 		clusterMessage := &ClusterMessage{
-			Payload:     payload,
-			EnsureUsers: []string{category.UserID},
+			Payload: payload,
+			UserID:  category.UserID,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
 }
 
-func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryReorder(teamID, userID string, categoryOrder []string) {
+	pa.logger.Debug("BroadcastCategoryReorder",
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+	)
+
+	message := CategoryReorderMessage{
+		Action:        websocketActionReorderCategories,
+		CategoryOrder: categoryOrder,
+		TeamID:        teamID,
+	}
+	payload := utils.StructToMap(message)
+	go func() {
+		clusterMessage := &ClusterMessage{
+			Payload: payload,
+			UserID:  userID,
+		}
+
+		pa.sendMessageToCluster(clusterMessage)
+	}()
+
+	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBoardsReorder(teamID, userID, categoryID string, boardsOrder []string) {
+	pa.logger.Debug("BroadcastCategoryBoardsReorder",
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", categoryID),
+	)
+
+	message := CategoryBoardReorderMessage{
+		Action:     websocketActionReorderCategoryBoards,
+		CategoryID: categoryID,
+		BoardOrder: boardsOrder,
+		TeamID:     teamID,
+	}
+	payload := utils.StructToMap(message)
+	go func() {
+		clusterMessage := &ClusterMessage{
+			Payload: payload,
+			UserID:  userID,
+		}
+
+		pa.sendMessageToCluster(clusterMessage)
+	}()
+
+	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategories []*model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
 		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
-		mlog.String("categoryID", boardCategory.CategoryID),
-		mlog.String("blockID", boardCategory.BoardID),
+		mlog.Int("numEntries", len(boardCategories)),
 	)
 
 	message := UpdateCategoryMessage{
 		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
-		BoardCategories: &boardCategory,
+		BoardCategories: boardCategories,
 	}
 
-	pa.sendTeamMessage(websocketActionUpdateCategoryBoard, teamID, utils.StructToMap(message))
+	payload := utils.StructToMap(message)
+
+	go func() {
+		clusterMessage := &ClusterMessage{
+			Payload: payload,
+			UserID:  userID,
+		}
+
+		pa.sendMessageToCluster(clusterMessage)
+	}()
+
+	pa.sendUserMessageSkipCluster(websocketActionUpdateCategoryBoard, utils.StructToMap(message), userID)
 }
 
 func (pa *PluginAdapter) BroadcastBlockDelete(teamID, blockID, boardID string) {
 	now := utils.GetMillis()
-	block := model.Block{}
+	block := &model.Block{}
 	block.ID = blockID
 	block.BoardID = boardID
 	block.UpdateAt = now
@@ -564,7 +624,7 @@ func (pa *PluginAdapter) BroadcastMemberChange(teamID, boardID string, member *m
 		Member: member,
 	}
 
-	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message))
+	pa.sendBoardMessage(teamID, boardID, utils.StructToMap(message), member.UserID)
 }
 
 func (pa *PluginAdapter) BroadcastMemberDelete(teamID, boardID, userID string) {

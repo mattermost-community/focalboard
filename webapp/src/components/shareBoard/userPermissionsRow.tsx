@@ -1,8 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React from 'react'
-import {useIntl, FormattedMessage} from 'react-intl'
+import React, {useRef} from 'react'
+import {useIntl} from 'react-intl'
 
 import MenuWrapper from '../../widgets/menuWrapper'
 import Menu from '../../widgets/menu'
@@ -10,10 +10,13 @@ import Menu from '../../widgets/menu'
 import CheckIcon from '../../widgets/icons/check'
 import CompassIcon from '../../widgets/icons/compassIcon'
 
-import {BoardMember} from '../../blocks/board'
+import {BoardMember, MemberRole} from '../../blocks/board'
 import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import {Permission} from '../../constants'
+import GuestBadge from '../../widgets/guestBadge'
+import {useAppSelector} from '../../store/hooks'
+import {getCurrentBoard} from '../../store/boards'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
@@ -21,25 +24,35 @@ type Props = {
     user: IUser
     member: BoardMember
     isMe: boolean
-    teammateNameDisplay: string,
+    teammateNameDisplay: string
     onDeleteBoardMember: (member: BoardMember) => void
     onUpdateBoardMember: (member: BoardMember, permission: string) => void
 }
 
 const UserPermissionsRow = (props: Props): JSX.Element => {
     const intl = useIntl()
+    const board = useAppSelector(getCurrentBoard)
     const {user, member, isMe, teammateNameDisplay} = props
-    let currentRole = 'Viewer'
+    let currentRole = MemberRole.Viewer
+    let displayRole = intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})
     if (member.schemeAdmin) {
-        currentRole = 'Admin'
-    } else if (member.schemeEditor) {
-        currentRole = 'Editor'
-    } else if (member.schemeCommenter) {
-        currentRole = 'Commenter'
+        currentRole = MemberRole.Admin
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})
+    } else if (member.schemeEditor || member.minimumRole === MemberRole.Editor) {
+        currentRole = MemberRole.Editor
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})
+    } else if (member.schemeCommenter || member.minimumRole === MemberRole.Commenter) {
+        currentRole = MemberRole.Commenter
+        displayRole = intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})
     }
 
+    const menuWrapperRef = useRef<HTMLDivElement>(null)
+
     return (
-        <div className='user-item'>
+        <div
+            className='user-item'
+            ref={menuWrapperRef}
+        >
             <div className='user-item__content'>
                 {Utils.isFocalboardPlugin() &&
                     <img
@@ -51,40 +64,54 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     <strong>{Utils.getUserDisplayName(user, teammateNameDisplay)}</strong>
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     {isMe && <strong className='ml-2 text-light'>{intl.formatMessage({id: 'ShareBoard.userPermissionsYouText', defaultMessage: '(You)'})}</strong>}
+                    <GuestBadge show={user.is_guest}/>
                 </div>
             </div>
             <div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardRoles]}>
                     <MenuWrapper>
                         <button className='user-item__button'>
-                            {intl.formatMessage({id: `BoardMember.scheme${currentRole}`, defaultMessage: currentRole})}
+                            {displayRole}
                             <CompassIcon
                                 icon='chevron-down'
                                 className='CompassIcon'
                             />
                         </button>
-                        <Menu position='left'>
+                        <Menu
+                            position='left'
+                            parentRef={menuWrapperRef}
+                        >
+                            {(board.minimumRole === MemberRole.Viewer || board.minimumRole === MemberRole.None) &&
+                                <Menu.Text
+                                    id={MemberRole.Viewer}
+                                    check={true}
+                                    icon={currentRole === MemberRole.Viewer ? <CheckIcon/> : <div className='empty-icon'/>}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
+                                    onClick={() => props.onUpdateBoardMember(member, MemberRole.Viewer)}
+                                />}
+                            {!board.isTemplate && (board.minimumRole === MemberRole.None || board.minimumRole === MemberRole.Commenter || board.minimumRole === MemberRole.Viewer) &&
+                                <Menu.Text
+                                    id={MemberRole.Commenter}
+                                    check={true}
+                                    icon={currentRole === MemberRole.Commenter ? <CheckIcon/> : <div className='empty-icon'/>}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
+                                    onClick={() => props.onUpdateBoardMember(member, MemberRole.Commenter)}
+                                />}
                             <Menu.Text
-                                id='Viewer'
+                                id={MemberRole.Editor}
                                 check={true}
-                                icon={currentRole === 'Viewer' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Viewer')}
-                            />
-                            <Menu.Text
-                                id='Editor'
-                                check={true}
-                                icon={currentRole === 'Editor' ? <CheckIcon/> : null}
+                                icon={currentRole === MemberRole.Editor ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeEditor', defaultMessage: 'Editor'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Editor')}
+                                onClick={() => props.onUpdateBoardMember(member, MemberRole.Editor)}
                             />
-                            <Menu.Text
-                                id='Admin'
-                                check={true}
-                                icon={currentRole === 'Admin' ? <CheckIcon/> : null}
-                                name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
-                                onClick={() => props.onUpdateBoardMember(member, 'Admin')}
-                            />
+                            {user.is_guest !== true &&
+                                <Menu.Text
+                                    id={MemberRole.Admin}
+                                    check={true}
+                                    icon={currentRole === MemberRole.Admin ? <CheckIcon/> : <div className='empty-icon'/>}
+                                    name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
+                                    onClick={() => props.onUpdateBoardMember(member, MemberRole.Admin)}
+                                />}
                             <Menu.Separator/>
                             <Menu.Text
                                 id='Remove'
@@ -98,10 +125,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     permissions={[Permission.ManageBoardRoles]}
                     invert={true}
                 >
-                    <FormattedMessage
-                        id={`BoardMember.scheme${currentRole}`}
-                        defaultMessage={currentRole}
-                    />
+                    {displayRole}
                 </BoardPermissionGate>
             </div>
         </div>

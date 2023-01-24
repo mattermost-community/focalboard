@@ -13,6 +13,14 @@ const BoardTypePrivate = 'P'
 const boardTypes = [BoardTypeOpen, BoardTypePrivate]
 type BoardTypes = typeof boardTypes[number]
 
+enum MemberRole {
+    Viewer = 'viewer',
+    Commenter = 'commenter',
+    Editor = 'editor',
+    Admin = 'admin',
+    None = '',
+}
+
 type Board = {
     id: string
     teamId: string
@@ -20,7 +28,7 @@ type Board = {
     createdBy: string
     modifiedBy: string
     type: BoardTypes
-    minimumRole: string
+    minimumRole: MemberRole
 
     title: string
     description: string
@@ -38,7 +46,7 @@ type Board = {
 
 type BoardPatch = {
     type?: BoardTypes
-    minimumRole?: string
+    minimumRole?: MemberRole
     title?: string
     description?: string
     icon?: string
@@ -55,6 +63,7 @@ type BoardMember = {
     boardId: string
     userId: string
     roles?: string
+    minimumRole: MemberRole
     schemeAdmin: boolean
     schemeEditor: boolean
     schemeCommenter: boolean
@@ -63,18 +72,18 @@ type BoardMember = {
 }
 
 type BoardsAndBlocks = {
-    boards: Board[],
-    blocks: Block[],
+    boards: Board[]
+    blocks: Block[]
 }
 
 type BoardsAndBlocksPatch = {
-    boardIDs: string[],
-    boardPatches: BoardPatch[],
-    blockIDs: string[],
-    blockPatches: BlockPatch[],
+    boardIDs: string[]
+    boardPatches: BoardPatch[]
+    blockIDs: string[]
+    blockPatches: BlockPatch[]
 }
 
-type PropertyType = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy'
+type PropertyTypeEnum = 'text' | 'number' | 'select' | 'multiSelect' | 'date' | 'person' | 'multiPerson' | 'file' | 'checkbox' | 'url' | 'email' | 'phone' | 'createdTime' | 'createdBy' | 'updatedTime' | 'updatedBy' | 'unknown'
 
 interface IPropertyOption {
     id: string
@@ -86,7 +95,7 @@ interface IPropertyOption {
 interface IPropertyTemplate {
     id: string
     name: string
-    type: PropertyType
+    type: PropertyTypeEnum
     options: IPropertyOption[]
 }
 
@@ -123,7 +132,7 @@ function createBoard(board?: Board): Board {
         createdBy: board?.createdBy || '',
         modifiedBy: board?.modifiedBy || '',
         type: board?.type || BoardTypePrivate,
-        minimumRole: board?.minimumRole || '',
+        minimumRole: board?.minimumRole || MemberRole.None,
         title: board?.title || '',
         description: board?.description || '',
         icon: board?.icon || '',
@@ -310,7 +319,7 @@ export {
     BoardMember,
     BoardsAndBlocks,
     BoardsAndBlocksPatch,
-    PropertyType,
+    PropertyTypeEnum,
     IPropertyOption,
     IPropertyTemplate,
     BoardGroup,
@@ -318,6 +327,7 @@ export {
     BoardTypes,
     BoardTypeOpen,
     BoardTypePrivate,
+    MemberRole,
     createPatchesFromBoards,
     createPatchesFromBoardsAndBlocks,
     createCardPropertiesPatches,

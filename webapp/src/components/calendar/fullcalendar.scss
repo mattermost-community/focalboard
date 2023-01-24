@@ -6,6 +6,11 @@
     overflow: auto;
 
     .fc-daygrid-event,
+    .fc-event-main {
+        @include z-index(unset);
+    }
+
+    .fc-daygrid-event,
     .fc-daygrid-day-number {
         text-decoration: none;
         color: var(--link-color-rgb);
@@ -33,10 +38,6 @@
         position: absolute;
         right: 0;
         top: 0;
-
-        .IconButton {
-            background-color: rgba(var(--center-channel-color-rgb), 0.13);
-        }
     }
 
     .octo-tooltip {
@@ -234,7 +235,9 @@
 
     .fc-day-sat,
     .fc-day-sun {
-        background-color: rgba(var(--center-channel-color-rgb), 0.04);
+        &:not(.fc-popover) {
+            background-color: rgba(var(--center-channel-color-rgb), 0.04);
+        }
     }
 
     .dateDisplay {

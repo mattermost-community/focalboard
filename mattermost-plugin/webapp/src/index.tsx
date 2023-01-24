@@ -1,6 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useEffect, useState, useRef} from 'react'
+import React, {useEffect} from 'react'
+import {createIntl, createIntlCache} from 'react-intl'
 import {Store, Action} from 'redux'
 import {Provider as ReduxProvider} from 'react-redux'
 import {createBrowserHistory, History} from 'history'
@@ -13,10 +14,10 @@ import {selectTeam} from 'mattermost-redux/actions/teams'
 
 import {SuiteWindow} from '../../../webapp/src/types/index'
 import {UserSettings} from '../../../webapp/src/userSettings'
-
+import {getMessages, getCurrentLanguage} from '../../../webapp/src/i18n'
 
 const windowAny = (window as SuiteWindow)
-windowAny.baseURL = '/plugins/focalboard'
+windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
 windowAny.isFocalboardPlugin = true
 
@@ -38,6 +39,9 @@ import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
+import {Constants} from '../../../webapp/src/constants'
+
+import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
 import BoardsUnfurl from './components/boardsUnfurl/boardsUnfurl'
 import RHSCard from './rhsCard'
@@ -53,6 +57,7 @@ import wsClient, {
     ACTION_UPDATE_CATEGORY,
     ACTION_UPDATE_BOARD_CATEGORY,
     ACTION_UPDATE_BOARD,
+    ACTION_REORDER_CATEGORIES,
 } from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -186,6 +191,13 @@ export default class Plugin {
         windowAny.frontendBaseURL = subpath + windowAny.frontendBaseURL
         windowAny.baseURL = subpath + windowAny.baseURL
         browserHistory = customHistory()
+        const cache = createIntlCache()
+        const intl = createIntl({
+            // modeled after <IntlProvider> in webapp/src/app.tsx
+            locale: getCurrentLanguage(),
+            messages: getMessages(getCurrentLanguage())
+        }, cache)
+
 
         const registerResult = registry.registerRightHandSidebarComponent(RHSCard, 'Card')
         console.log(registerResult)
@@ -205,13 +217,17 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
 
+        const productID = process.env.TARGET_IS_PRODUCT ? 'boards' : manifest.id
+
         // register websocket handlers
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
-        this.registry?.registerWebSocketEventHandler(`custom_${manifest.id}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD_CATEGORY}`, (e: any) => wsClient.updateHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_REORDER_CATEGORIES}`, (e) => wsClient.updateHandler(e.data))
+
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
         this.registry?.registerPostTypeComponent('custom_cloud_upgrade_nudge', CloudUpgradeNudge)
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
@@ -256,12 +272,35 @@ export default class Plugin {
             const currentTeamID = mmStore.getState().entities.teams.currentTeamId
             if (currentTeamID && currentTeamID !== prevTeamID) {
                 if (prevTeamID && window.location.pathname.startsWith(windowAny.frontendBaseURL || '')) {
-                    browserHistory.push(`/team/${currentTeamID}`)
+                    // Don't re-push the URL if we're already on a URL for the current team
+                    if (!window.location.pathname.startsWith(`${(windowAny.frontendBaseURL || '')}/team/${currentTeamID}`))
+                        browserHistory.push(`/team/${currentTeamID}`)
                 }
                 prevTeamID = currentTeamID
                 store.dispatch(setTeam(currentTeamID))
                 octoClient.teamId = currentTeamID
                 store.dispatch(initialLoad())
+            }
+
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                let theme = mmStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
+                if (!theme) {
+                    theme = mmStore.getState().entities.preferences.myPreferences['theme--'] || mmStore.getState().entities.preferences.myPreferences.theme
+                }
+                setMattermostTheme(theme)
+            }
+        })
+
+        let fbPrevTeamID = store.getState().teams.currentId
+        store.subscribe(() => {
+            const currentTeamID: string = store.getState().teams.currentId
+            const currentUserId = mmStore.getState().entities.users.currentUserId
+            if (currentTeamID !== fbPrevTeamID) {
+                fbPrevTeamID = currentTeamID
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                mmStore.dispatch(selectTeam(currentTeamID))
+                localStorage.setItem(`user_prev_team:${currentUserId}`, currentTeamID)
             }
         })
 
@@ -306,12 +345,11 @@ export default class Plugin {
             }
 
             if (registry.registerChannelIntroButtonAction) {
-                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, intl.formatMessage({id: 'ChannelIntro.CreateBoard', defaultMessage: 'Create a board'}))
             }
 
             if (this.registry.registerAppBarComponent) {
-                const appBarIconURL = windowAny.baseURL + '/public/app-bar-icon.png'
-                this.registry.registerAppBarComponent(appBarIconURL, () => mmStore.dispatch(toggleRHSPlugin), 'Boards')
+                this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(
@@ -326,6 +364,45 @@ export default class Plugin {
                 ),
                 false
             )
+
+            // Insights handler
+            if (this.registry?.registerInsightsHandler) {
+                this.registry?.registerInsightsHandler(async (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => {
+                    if (insightType === Constants.myInsights) {
+                        const data = await octoClient.getMyTopBoards(timeRange, page, perPage, teamId)
+
+                        return data
+                    }
+
+                    const data = await octoClient.getTeamTopBoards(timeRange, page, perPage, teamId)
+
+                    return data
+                })
+            }
+
+            // Site statistics handler
+            if (registry.registerSiteStatisticsHandler) {
+                registry.registerSiteStatisticsHandler(async () => {
+                    const siteStats = await octoClient.getSiteStatistics()
+                    if(siteStats){
+                        return {
+                            boards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_boards', defaultMessage: 'Total Boards'}),
+                                id: 'total_boards',
+                                icon: 'icon-product-boards',
+                                value: siteStats.board_count,
+                            },
+                            cards_count: {
+                                name: intl.formatMessage({id: 'SiteStats.total_cards', defaultMessage: 'Total Cards'}),
+                                id: 'total_cards',
+                                icon: 'icon-products',
+                                value: siteStats.card_count,
+                            },
+                        }
+                    }
+                    return {}
+                })
+            }
         }
 
         this.boardSelectorId = this.registry.registerRootComponent((props: {webSocketClient: MMWebSocketClient}) => (
@@ -371,11 +448,6 @@ export default class Plugin {
             }
         }
 
-        windowAny.setTeamInSidebar = (teamID: string) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            mmStore.dispatch(selectTeam(teamID))
-        }
         windowAny.getCurrentTeamId = (): string => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -399,11 +471,3 @@ export default class Plugin {
         this.registry?.unregisterWebSocketEventHandler(wsClient.clientPrefix + ACTION_UPDATE_BLOCK)
     }
 }
-
-declare global {
-    interface Window {
-        registerPlugin(id: string, plugin: Plugin): void
-    }
-}
-
-window.registerPlugin(manifest.id, new Plugin())

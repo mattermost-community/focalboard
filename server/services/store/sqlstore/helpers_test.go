@@ -12,6 +12,9 @@ import (
 )
 
 func SetupTests(t *testing.T) (store.Store, func()) {
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
 	dbType, connectionString, err := PrepareNewTestDatabase()
 	require.NoError(t, err)
 
@@ -31,7 +34,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		IsPlugin:         false,
 	}
 	store, err := New(storeParams)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	tearDown := func() {
 		defer func() { _ = logger.Shutdown() }()
@@ -40,6 +43,7 @@ func SetupTests(t *testing.T) (store.Store, func()) {
 		if err = os.Remove(connectionString); err == nil {
 			logger.Debug("Removed test database", mlog.String("file", connectionString))
 		}
+		os.Setenv("FOCALBOARD_UNIT_TESTING", origUnitTesting)
 	}
 
 	return store, tearDown

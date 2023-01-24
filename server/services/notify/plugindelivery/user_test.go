@@ -101,6 +101,10 @@ func (m servicesAPIMock) GetDirectChannel(userID1, userID2 string) (*mm_model.Ch
 	return nil, nil
 }
 
+func (m servicesAPIMock) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+	return nil, nil
+}
+
 func (m servicesAPIMock) CreatePost(post *mm_model.Post) (*mm_model.Post, error) {
 	return post, nil
 }

@@ -35,7 +35,7 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 		a.wsAdapter.BroadcastBlockChange(teamID, b)
 		a.metrics.IncrementBlocksInserted(1)
 		a.webhook.NotifyUpdate(b)
-		a.notifyBlockChanged(notify.Add, &b, nil, userID)
+		a.notifyBlockChanged(notify.Add, b, nil, userID)
 	}
 
 	if addMember {
@@ -55,6 +55,14 @@ func (a *App) CreateBoardsAndBlocks(bab *model.BoardsAndBlocks, userID string, a
 		}()
 	}
 
+	for _, board := range newBab.Boards {
+		if !board.IsTemplate {
+			if err := a.addBoardsToDefaultCategory(userID, board.TeamID, []*model.Board{board}); err != nil {
+				return nil, err
+			}
+		}
+	}
+
 	return newBab, nil
 }
 
@@ -70,11 +78,11 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 			return nil, cErr
 		}
 		if containsLimitedBlocks {
-			return nil, ErrPatchUpdatesLimitedCards
+			return nil, model.ErrPatchUpdatesLimitedCards
 		}
 	}
 
-	oldBlocksMap := map[string]model.Block{}
+	oldBlocksMap := map[string]*model.Block{}
 	for _, block := range oldBlocks {
 		oldBlocksMap[block.ID] = block
 	}
@@ -98,7 +106,7 @@ func (a *App) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks, userID stri
 			a.metrics.IncrementBlocksPatched(1)
 			a.wsAdapter.BroadcastBlockChange(teamID, b)
 			a.webhook.NotifyUpdate(b)
-			a.notifyBlockChanged(notify.Update, &b, &oldBlock, userID)
+			a.notifyBlockChanged(notify.Update, b, oldBlock, userID)
 		}
 
 		for _, board := range bab.Boards {

@@ -12,7 +12,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
-	_ "github.com/mattn/go-sqlite3" // sqlite driver
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -127,8 +126,8 @@ func idsFromRows(rows *sql.Rows) ([]string, error) {
 	return deleteIds, nil
 }
 
-// genericRetentionPoliciesDeletion actually executes the DELETE query using a sq.SelectBuilder
-// which selects the rows to delete.
+// genericRetentionPoliciesDeletion actually executes the DELETE query
+// using a sq.SelectBuilder which selects the rows to delete.
 func (s *SQLStore) genericRetentionPoliciesDeletion(
 	db sq.BaseRunner,
 	info RetentionTableDeletionInfo,

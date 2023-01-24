@@ -46,6 +46,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
                         id={Constants.titleColumnId}
                         name={intl.formatMessage({id: 'default-properties.title', defaultMessage: 'Title'})}
                         isOn={visiblePropertyIds.includes(Constants.titleColumnId)}
+                        suppressItemClicked={true}
                         onClick={toggleVisibility}
                     />}
                 {properties?.map((option: IPropertyTemplate) => (
@@ -54,6 +55,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
                         id={option.id}
                         name={option.name}
                         isOn={visiblePropertyIds.includes(option.id)}
+                        suppressItemClicked={true}
                         onClick={toggleVisibility}
                     />
                 ))}
@@ -63,6 +65,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
                         id={Constants.badgesColumnId}
                         name={intl.formatMessage({id: 'default-properties.badges', defaultMessage: 'Comments and description'})}
                         isOn={visiblePropertyIds.includes(Constants.badgesColumnId)}
+                        suppressItemClicked={true}
                         onClick={toggleVisibility}
                     />}
             </Menu>

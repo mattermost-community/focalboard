@@ -6,7 +6,7 @@ import React from 'react'
 import {MockStoreEnhanced} from 'redux-mock-store'
 import {Provider as ReduxProvider} from 'react-redux'
 
-import {Board, IPropertyTemplate} from '../../blocks/board'
+import {Board, MemberRole, IPropertyTemplate} from '../../blocks/board'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 
 import {IUser} from '../../user'
@@ -67,7 +67,7 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         description: 'test',
         showDescription: false,
         type: 'board',
-        minimumRole: 'editor',
+        minimumRole: MemberRole.Editor,
         isTemplate: true,
         templateVersion: 0,
         icon: '🚴🏻‍♂️',
@@ -79,13 +79,13 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
         id: 'global-1',
         title: 'Template global',
         teamId: '0',
-        createdBy: 'user-1',
-        modifiedBy: 'user-1',
+        createdBy: 'system',
+        modifiedBy: 'system',
         createAt: 10,
         updateAt: 20,
         deleteAt: 0,
         type: 'board',
-        minimumRole: 'editor',
+        minimumRole: MemberRole.Editor,
         icon: '🚴🏻‍♂️',
         description: 'test',
         showDescription: false,
@@ -96,20 +96,21 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
     }
 
     const me: IUser = {
-        id: 'user-id-1', 
-        username: 'username_1', 
+        id: 'user-id-1',
+        username: 'username_1',
         nickname: '',
-        firstname: '', 
+        firstname: '',
         lastname: '',
-        email: '', 
-        props: {}, 
-        create_at: 0, 
-        update_at: 0, 
+        email: '',
+        props: {},
+        create_at: 0,
+        update_at: 0,
         is_bot: false,
+        is_guest: false,
         roles: 'system_user',
     }
 
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     beforeEach(() => {
         jest.clearAllMocks()
         const state = {
@@ -119,9 +120,12 @@ describe('components/boardTemplateSelector/boardTemplateSelectorItem', () => {
             boards: {
                 current: '1',
                 myBoardMemberships: {
-                    ['1']: {userId: me.id, schemeAdmin: true},
+                    1: {userId: me.id, schemeAdmin: true},
                 },
-            }
+                templates: {
+                    [template.id]: template,
+                },
+            },
         }
         store = mockStateStore([], state)
     })

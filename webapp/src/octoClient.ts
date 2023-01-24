@@ -4,7 +4,7 @@ import {Block, BlockPatch, FileInfo} from './blocks/block'
 import {Board, BoardsAndBlocks, BoardsAndBlocksPatch, BoardPatch, BoardMember} from './blocks/board'
 import {ISharing} from './blocks/sharing'
 import {OctoUtils} from './octoUtils'
-import {IUser, UserConfigPatch} from './user'
+import {IUser, UserConfigPatch, UserPreference} from './user'
 import {Utils} from './utils'
 import {ClientConfig} from './config/clientConfig'
 import {UserSettings} from './userSettings'
@@ -13,9 +13,11 @@ import {Channel} from './store/channels'
 import {Team} from './store/teams'
 import {Subscription} from './wsclient'
 import {PrepareOnboardingResponse} from './onboardingTour'
-import {Constants} from "./constants"
+import {Constants} from './constants'
 
 import {BoardsCloudLimits} from './boardsCloudLimits'
+import {TopBoardResponse} from './insights'
+import {BoardSiteStatistics} from './statistics'
 
 //
 // OctoClient is the client interface to the server APIs
@@ -188,7 +190,7 @@ class OctoClient {
     }
 
     async getUsersList(userIds: string[]): Promise<IUser[] | []> {
-        const path = `/api/v2/users`
+        const path = '/api/v2/users'
         const body = JSON.stringify(userIds)
         const response = await fetch(this.getBaseURL() + path, {
             headers: this.headers(),
@@ -196,15 +198,28 @@ class OctoClient {
             body,
         })
 
-        if(response.status !== 200) {
+        if (response.status !== 200) {
             return []
         }
 
         return (await this.getJson(response, [])) as IUser[]
-
     }
 
-    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<Record<string, string> | undefined> {
+    async getMyConfig(): Promise<UserPreference[] | undefined> {
+        const path = '/api/v2/users/me/config'
+        const response = await fetch(this.getBaseURL() + path, {
+            headers: this.headers(),
+            method: 'GET',
+        })
+
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, [])) as UserPreference[]
+    }
+
+    async patchUserConfig(userID: string, patch: UserConfigPatch): Promise<UserPreference[] | undefined> {
         const path = `/api/v2/users/${encodeURIComponent(userID)}/config`
         const body = JSON.stringify(patch)
         const response = await fetch(this.getBaseURL() + path, {
@@ -217,7 +232,7 @@ class OctoClient {
             return undefined
         }
 
-        return (await this.getJson(response, {})) as Record<string, string>
+        return (await this.getJson(response, {})) as UserPreference[]
     }
 
     async exportBoardArchive(boardID: string): Promise<Response> {
@@ -457,7 +472,7 @@ class OctoClient {
 
         const response = await fetch(this.getBaseURL() + `/api/v2/boards/${boardId}/join`, {
             method: 'POST',
-            headers: this.headers()
+            headers: this.headers(),
         })
 
         if (response.status !== 200) {
@@ -575,6 +590,45 @@ class OctoClient {
         return undefined
     }
 
+    async uploadAttachment(rootID: string, file: File): Promise<XMLHttpRequest | undefined> {
+        const formData = new FormData()
+        formData.append('file', file)
+
+        const xhr = new XMLHttpRequest()
+
+        xhr.open('POST', this.getBaseURL() + this.teamPath() + '/' + rootID + '/files', true)
+        const headers = this.headers() as Record<string, string>
+        delete headers['Content-Type']
+
+        xhr.setRequestHeader('Accept', 'application/json')
+        xhr.setRequestHeader('Authorization', this.token ? 'Bearer ' + this.token : '')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+
+        if (xhr.upload) {
+            xhr.upload.onprogress = () => {}
+        }
+        xhr.send(formData)
+        return xhr
+    }
+
+    async getFileInfo(boardId: string, fileId: string): Promise<FileInfo> {
+        let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId + '/info'
+        const readToken = Utils.getReadToken()
+        if (readToken) {
+            path += `?read_token=${readToken}`
+        }
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        let fileInfo: FileInfo = {}
+
+        if (response.status === 200) {
+            fileInfo = this.getJson(response, {}) as FileInfo
+        } else if (response.status === 400) {
+            fileInfo = await this.getJson(response, {}) as FileInfo
+        }
+
+        return fileInfo
+    }
+
     async getFileAsDataUrl(boardId: string, fileId: string): Promise<FileInfo> {
         let path = '/api/v2/files/teams/' + this.teamId + '/' + boardId + '/' + fileId
         const readToken = Utils.getReadToken()
@@ -604,18 +658,21 @@ class OctoClient {
         return this.getJson(response, null)
     }
 
-    async getTeams(): Promise<Array<Team>> {
+    async getTeams(): Promise<Team[]> {
         const path = this.teamsPath()
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
 
-        return this.getJson<Array<Team>>(response, [])
+        return this.getJson<Team[]>(response, [])
     }
 
-    async getTeamUsers(): Promise<IUser[]> {
-        const path = this.teamPath() + '/users'
+    async getTeamUsers(excludeBots?: boolean): Promise<IUser[]> {
+        let path = this.teamPath() + '/users'
+        if (excludeBots) {
+            path += '?exclude_bots=true'
+        }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
@@ -623,8 +680,11 @@ class OctoClient {
         return (await this.getJson(response, [])) as IUser[]
     }
 
-    async searchTeamUsers(searchQuery: string): Promise<IUser[]> {
-        const path = this.teamPath() + `/users?search=${searchQuery}`
+    async searchTeamUsers(searchQuery: string, excludeBots?: boolean): Promise<IUser[]> {
+        let path = this.teamPath() + `/users?search=${searchQuery}`
+        if (excludeBots) {
+            path += '&exclude_bots=true'
+        }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
@@ -737,14 +797,14 @@ class OctoClient {
         })
     }
 
-    async getSidebarCategories(teamID: string): Promise<Array<CategoryBoards>> {
+    async getSidebarCategories(teamID: string): Promise<CategoryBoards[]> {
         const path = `/api/v2/teams/${teamID}/categories`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<CategoryBoards>
+        return (await this.getJson(response, [])) as CategoryBoards[]
     }
 
     async createSidebarCategory(category: Category): Promise<Response> {
@@ -775,6 +835,38 @@ class OctoClient {
         })
     }
 
+    async reorderSidebarCategories(teamID: string, newCategoryOrder: string[]): Promise<string[]> {
+        const path = `/api/v2/teams/${teamID}/categories/reorder`
+        const body = JSON.stringify(newCategoryOrder)
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+            body,
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as string[]
+    }
+
+    async reorderSidebarCategoryBoards(teamID: string, categoryID: string, newBoardsOrder: string[]): Promise<string[]> {
+        const path = `/api/v2/teams/${teamID}/categories/${categoryID}/boards/reorder`
+        const body = JSON.stringify(newBoardsOrder)
+        const response = await fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+            body,
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as string[]
+    }
+
     async moveBoardToCategory(teamID: string, boardID: string, toCategoryID: string, fromCategoryID: string): Promise<Response> {
         const url = `/api/v2/teams/${teamID}/categories/${toCategoryID || '0'}/boards/${boardID}`
         const payload = {
@@ -789,7 +881,7 @@ class OctoClient {
         })
     }
 
-    async search(teamID: string, query: string): Promise<Array<Board>> {
+    async search(teamID: string, query: string): Promise<Board[]> {
         const url = `${this.teamPath(teamID)}/boards/search?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
@@ -800,10 +892,24 @@ class OctoClient {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<Board>
+        return (await this.getJson(response, [])) as Board[]
     }
 
-    async searchAll(query: string): Promise<Array<Board>> {
+    async searchLinkableBoards(teamID: string, query: string): Promise<Board[]> {
+        const url = `${this.teamPath(teamID)}/boards/search/linkable?q=${encodeURIComponent(query)}`
+        const response = await fetch(this.getBaseURL() + url, {
+            method: 'GET',
+            headers: this.headers(),
+        })
+
+        if (response.status !== 200) {
+            return []
+        }
+
+        return (await this.getJson(response, [])) as Board[]
+    }
+
+    async searchAll(query: string): Promise<Board[]> {
         const url = `/api/v2/boards/search?q=${encodeURIComponent(query)}`
         const response = await fetch(this.getBaseURL() + url, {
             method: 'GET',
@@ -814,10 +920,10 @@ class OctoClient {
             return []
         }
 
-        return (await this.getJson(response, [])) as Array<Board>
+        return (await this.getJson(response, [])) as Board[]
     }
 
-    async getUserBlockSubscriptions(userId: string): Promise<Array<Subscription>> {
+    async getUserBlockSubscriptions(userId: string): Promise<Subscription[]> {
         const path = `/api/v2/subscriptions/${userId}`
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
@@ -885,6 +991,63 @@ class OctoClient {
         const limits = (await this.getJson(response, {})) as BoardsCloudLimits
         Utils.log(`Cloud limits: cards=${limits.cards}   views=${limits.views}`)
         return limits
+    }
+
+    async getSiteStatistics(): Promise<BoardSiteStatistics | undefined> {
+        const path = '/api/v2/statistics'
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        const stats = (await this.getJson(response, {})) as BoardSiteStatistics
+        Utils.log(`Site Statistics: cards=${stats.card_count}   boards=${stats.board_count}`)
+        return stats
+    }
+
+    // insights
+    async getMyTopBoards(timeRange: string, page: number, perPage: number, teamId: string): Promise<TopBoardResponse | undefined> {
+        const path = `/api/v2/users/me/boards/insights?time_range=${timeRange}&page=${page}&per_page=${perPage}&team_id=${teamId}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as TopBoardResponse
+    }
+
+    async getTeamTopBoards(timeRange: string, page: number, perPage: number, teamId: string): Promise<TopBoardResponse | undefined> {
+        const path = `/api/v2/teams/${teamId}/boards/insights?time_range=${timeRange}&page=${page}&per_page=${perPage}`
+        const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
+        if (response.status !== 200) {
+            return undefined
+        }
+
+        return (await this.getJson(response, {})) as TopBoardResponse
+    }
+
+    async moveBlockTo(blockId: string, where: 'before'|'after', dstBlockId: string): Promise<Response> {
+        return fetch(`${this.getBaseURL()}/api/v2/content-blocks/${blockId}/moveto/${where}/${dstBlockId}`, {
+            method: 'POST',
+            headers: this.headers(),
+            body: '{}',
+        })
+    }
+
+    async hideBoard(categoryID: string, boardID: string): Promise<Response> {
+        const path = `${this.teamPath()}/categories/${categoryID}/boards/${boardID}/hide`
+        return fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+        })
+    }
+
+    async unhideBoard(categoryID: string, boardID: string): Promise<Response> {
+        const path = `${this.teamPath()}/categories/${categoryID}/boards/${boardID}/unhide`
+        return fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+        })
     }
 }
 

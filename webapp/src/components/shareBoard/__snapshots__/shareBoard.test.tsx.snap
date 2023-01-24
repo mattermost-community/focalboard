@@ -3,7 +3,7 @@
 exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -18,25 +18,25 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -71,7 +71,7 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
                     class=" css-14el2xx-placeholder"
                     id="react-select-12-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -232,7 +232,7 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -253,7 +253,7 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -268,25 +268,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -321,7 +321,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                     class=" css-14el2xx-placeholder"
                     id="react-select-4-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -441,7 +441,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -462,7 +462,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -477,25 +477,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -530,7 +530,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
                     class=" css-14el2xx-placeholder"
                     id="react-select-4-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -650,7 +650,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -671,7 +671,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Regenerate token 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -686,25 +686,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -739,7 +739,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                     class=" css-14el2xx-placeholder"
                     id="react-select-5-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -876,7 +876,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh undefined"
+                    class="CompassIcon icon-refresh"
                   />
                 </button>
               </div>
@@ -903,7 +903,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -918,25 +918,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -971,7 +971,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-10-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -1118,7 +1118,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -1139,7 +1139,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -1154,25 +1154,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1216,7 +1216,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-10-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -1586,7 +1586,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -1607,7 +1607,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select, non-plugin mode 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -1622,25 +1622,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1675,7 +1675,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-11-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -1822,7 +1822,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -1843,7 +1843,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select, non-plugin mode 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -1858,25 +1858,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -1920,7 +1920,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                     class=" css-14el2xx-placeholder"
                     id="react-select-11-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2290,7 +2290,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -2308,10 +2308,10 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 </div>
 `;
 
-exports[`src/components/shareBoard/shareBoard return shareBoard, and click switch 1`] = `
+exports[`src/components/shareBoard/shareBoard return shareBoard template and click Select 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2326,25 +2326,531 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Template
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
               <span
-                class="text-heading5"
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-14-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
               >
-                Share Board
-              </span>
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-14-placeholder"
+                  >
+                    Search for people
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-14-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-14-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                />
+              </div>
             </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard return shareBoard template and click Select 2`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Template
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-14-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              >
+                <span
+                  id="aria-selection"
+                />
+                <span
+                  id="aria-context"
+                >
+                  option username_1 focused, 0 of 1. 4 results available. Use Up and Down to choose options, press Enter to select the currently focused option, press Escape to exit the menu, press Tab to select the option and exit the menu.
+                </span>
+              </span>
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-14-placeholder"
+                  >
+                    Search for people
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-controls="react-select-14-listbox"
+                      aria-describedby="react-select-14-placeholder"
+                      aria-expanded="true"
+                      aria-haspopup="true"
+                      aria-owns="react-select-14-listbox"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-14-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                />
+              </div>
+              <div
+                class=" css-1rsmi4x-menu"
+                id="react-select-14-listbox"
+              >
+                <div
+                  class=" css-g29tl0-MenuList"
+                >
+                  <div
+                    class=" css-syji7d-Group"
+                  >
+                    <div
+                      class=" css-18ng2q5-group"
+                      id="react-select-14-group-0-heading"
+                    >
+                      Members
+                    </div>
+                    <div>
+                      <div
+                        aria-disabled="false"
+                        class=" css-erqggd-option"
+                        id="react-select-14-option-0-0"
+                        tabindex="-1"
+                      >
+                        <div
+                          class="user-item"
+                        >
+                          <img
+                            class="user-item__img"
+                          />
+                          <div
+                            class="ml-3"
+                          >
+                            <strong>
+                              username_1
+                            </strong>
+                            <strong
+                              class="ml-2 text-light"
+                            >
+                              @username_1
+                            </strong>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        aria-disabled="false"
+                        class=" css-14xsrqy-option"
+                        id="react-select-14-option-0-1"
+                        tabindex="-1"
+                      >
+                        <div
+                          class="user-item"
+                        >
+                          <img
+                            class="user-item__img"
+                          />
+                          <div
+                            class="ml-3"
+                          >
+                            <strong>
+                              username_2
+                            </strong>
+                            <strong
+                              class="ml-2 text-light"
+                            >
+                              @username_2
+                            </strong>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        aria-disabled="false"
+                        class=" css-14xsrqy-option"
+                        id="react-select-14-option-0-2"
+                        tabindex="-1"
+                      >
+                        <div
+                          class="user-item"
+                        >
+                          <img
+                            class="user-item__img"
+                          />
+                          <div
+                            class="ml-3"
+                          >
+                            <strong>
+                              username_3
+                            </strong>
+                            <strong
+                              class="ml-2 text-light"
+                            >
+                              @username_3
+                            </strong>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        aria-disabled="false"
+                        class=" css-14xsrqy-option"
+                        id="react-select-14-option-0-3"
+                        tabindex="-1"
+                      >
+                        <div
+                          class="user-item"
+                        >
+                          <img
+                            class="user-item__img"
+                          />
+                          <div
+                            class="ml-3"
+                          >
+                            <strong>
+                              username_4
+                            </strong>
+                            <strong
+                              class="ml-2 text-light"
+                            >
+                              @username_4
+                            </strong>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard return shareBoard, and click switch 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -2379,7 +2885,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                     class=" css-14el2xx-placeholder"
                     id="react-select-6-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2516,7 +3022,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh undefined"
+                    class="CompassIcon icon-refresh"
                   />
                 </button>
               </div>
@@ -2543,7 +3049,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
 exports[`src/components/shareBoard/shareBoard return shareBoardComponent and click Switch without sharing 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2558,25 +3064,25 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -2611,7 +3117,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                     class=" css-14el2xx-placeholder"
                     id="react-select-7-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2748,7 +3254,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-refresh undefined"
+                    class="CompassIcon icon-refresh"
                   />
                 </button>
               </div>
@@ -2775,7 +3281,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
 exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2790,25 +3296,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -2843,7 +3349,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
                     class=" css-14el2xx-placeholder"
                     id="react-select-2-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -2963,7 +3469,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -2984,7 +3490,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
 exports[`src/components/shareBoard/shareBoard should match snapshot with sharing 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2999,25 +3505,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3052,7 +3558,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                     class=" css-14el2xx-placeholder"
                     id="react-select-3-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -3172,7 +3678,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -3193,7 +3699,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
 exports[`src/components/shareBoard/shareBoard should match snapshot with sharing and subpath 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3208,25 +3714,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3261,7 +3767,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                     class=" css-14el2xx-placeholder"
                     id="react-select-9-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -3381,7 +3887,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -3402,7 +3908,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
 exports[`src/components/shareBoard/shareBoard should match snapshot with sharing and without workspaceId and subpath 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog"
+    class="Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3417,25 +3923,25 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Board
+            </h1>
+          </div>
           <div
             class="toolbar--right"
           >
-            <div>
-              <span
-                class="text-heading5"
-              >
-                Share Board
-              </span>
-            </div>
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
           </div>
         </div>
         <div
@@ -3470,7 +3976,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                     class=" css-14el2xx-placeholder"
                     id="react-select-8-placeholder"
                   >
-                    Search for people
+                    Search for people and channels
                   </div>
                   <div
                     class=" css-ox1y69-Input"
@@ -3590,7 +4096,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
               </a>
             </div>
             <button
-              title="Copy internal link"
+              title="Copy link"
               type="button"
             >
               <i
@@ -3600,6 +4106,191 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
                 Copy link
               </span>
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`src/components/shareBoard/shareBoard should match snapshot, with template 1`] = `
+<div>
+  <div
+    class="Dialog dialog-back ShareBoardDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Share Template
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="share-input__container"
+        >
+          <div
+            class="share-input"
+          >
+            <i
+              class="CompassIcon icon-magnify MagnifyIcon"
+            />
+            <div
+              class="userSearchInput css-b62m3t-container"
+            >
+              <span
+                class="css-1f43avz-a11yText-A11yText"
+                id="react-select-13-live-region"
+              />
+              <span
+                aria-atomic="false"
+                aria-live="polite"
+                aria-relevant="additions text"
+                class="css-1f43avz-a11yText-A11yText"
+              />
+              <div
+                class=" css-1wmrr75-Control"
+              >
+                <div
+                  class=" css-30zlo3-ValueContainer"
+                >
+                  <div
+                    class=" css-14el2xx-placeholder"
+                    id="react-select-13-placeholder"
+                  >
+                    Search for people
+                  </div>
+                  <div
+                    class=" css-ox1y69-Input"
+                    data-value=""
+                  >
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="react-select-13-placeholder"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                      autocapitalize="none"
+                      autocomplete="off"
+                      autocorrect="off"
+                      class=""
+                      id="react-select-13-input"
+                      role="combobox"
+                      spellcheck="false"
+                      style="opacity: 1; width: 100%; grid-area: 1 / 2; min-width: 2px; border: 0px; margin: 0px; outline: 0; padding: 0px;"
+                      tabindex="0"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <div
+                  class=" css-1hb7zxy-IndicatorsContainer"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="user-items"
+        >
+          <div
+            class="user-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <i
+                class="CompassIcon icon-mattermost user-item__img"
+              />
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Everyone at Test Team Team
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  None
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="user-item channel-item"
+          >
+            <div
+              class="user-item__content"
+            >
+              <span
+                class="user-item__img"
+              >
+                <i
+                  class="CompassIcon icon-lock-outline LockOutlineIcon"
+                />
+              </span>
+              <div
+                class="ml-3"
+              >
+                <strong>
+                  Dunder Mifflin Party Planing Committee
+                </strong>
+              </div>
+            </div>
+            <div>
+              <div
+                aria-label="menuwrapper"
+                class="MenuWrapper"
+                role="button"
+              >
+                <button
+                  class="user-item__button"
+                >
+                  Editor
+                  <i
+                    class="CompassIcon icon-chevron-down CompassIcon"
+                  />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

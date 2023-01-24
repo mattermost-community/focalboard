@@ -2,12 +2,12 @@ package integrationtests
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"testing"
 	"time"
 
-	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/client"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/server"
@@ -17,6 +17,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
 	"github.com/mattermost/focalboard/server/services/store/sqlstore"
+	"github.com/mattermost/focalboard/server/utils"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -38,6 +39,7 @@ const (
 	userCommenter    string = "commenter"
 	userEditor       string = "editor"
 	userAdmin        string = "admin"
+	userGuest        string = "guest"
 )
 
 var (
@@ -48,6 +50,7 @@ var (
 	userCommenterID    = userCommenter
 	userEditorID       = userEditor
 	userAdminID        = userAdmin
+	userGuestID        = userGuest
 )
 
 type LicenseType int
@@ -63,9 +66,15 @@ type TestHelper struct {
 	Server  *server.Server
 	Client  *client.Client
 	Client2 *client.Client
+
+	origEnvUnitTesting string
 }
 
 type FakePermissionPluginAPI struct{}
+
+func (*FakePermissionPluginAPI) HasPermissionTo(userID string, permission *mmModel.Permission) bool {
+	return userID == userAdmin
+}
 
 func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
 	if userID == userNoTeamMember {
@@ -249,8 +258,16 @@ func newTestServerLocalMode() *server.Server {
 }
 
 func SetupTestHelperWithToken(t *testing.T) *TestHelper {
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
 	sessionToken := "TESTTOKEN"
-	th := &TestHelper{T: t}
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = newTestServer(sessionToken)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, sessionToken)
@@ -262,21 +279,42 @@ func SetupTestHelper(t *testing.T) *TestHelper {
 }
 
 func SetupTestHelperPluginMode(t *testing.T) *TestHelper {
-	th := &TestHelper{T: t}
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = NewTestServerPluginMode()
 	th.Start()
 	return th
 }
 
 func SetupTestHelperLocalMode(t *testing.T) *TestHelper {
-	th := &TestHelper{T: t}
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = newTestServerLocalMode()
 	th.Start()
 	return th
 }
 
 func SetupTestHelperWithLicense(t *testing.T, licenseType LicenseType) *TestHelper {
-	th := &TestHelper{T: t}
+	origUnitTesting := os.Getenv("FOCALBOARD_UNIT_TESTING")
+	os.Setenv("FOCALBOARD_UNIT_TESTING", "1")
+
+	th := &TestHelper{
+		T:                  t,
+		origEnvUnitTesting: origUnitTesting,
+	}
+
 	th.Server = newTestServerWithLicense("", licenseType)
 	th.Client = client.NewClient(th.Server.Config().ServerRoot, "")
 	th.Client2 = client.NewClient(th.Server.Config().ServerRoot, "")
@@ -344,6 +382,8 @@ func (th *TestHelper) InitBasic() *TestHelper {
 var ErrRegisterFail = errors.New("register failed")
 
 func (th *TestHelper) TearDown() {
+	os.Setenv("FOCALBOARD_UNIT_TESTING", th.origEnvUnitTesting)
+
 	logger := th.Server.Logger()
 
 	if l, ok := logger.(*mlog.Logger); ok {
@@ -363,7 +403,7 @@ func (th *TestHelper) TearDown() {
 }
 
 func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, password, token string) {
-	req := &api.RegisterRequest{
+	req := &model.RegisterRequest{
 		Username: username,
 		Email:    email,
 		Password: password,
@@ -378,7 +418,7 @@ func (th *TestHelper) RegisterAndLogin(client *client.Client, username, email, p
 }
 
 func (th *TestHelper) Login(client *client.Client, username, password string) {
-	req := &api.LoginRequest{
+	req := &model.LoginRequest{
 		Type:     "normal",
 		Username: username,
 		Password: password,
@@ -415,6 +455,53 @@ func (th *TestHelper) CreateBoard(teamID string, boardType model.BoardType) *mod
 	board, resp := th.Client.CreateBoard(newBoard)
 	th.CheckOK(resp)
 	return board
+}
+
+func (th *TestHelper) CreateCategory(category model.Category) *model.Category {
+	cat, resp := th.Client.CreateCategory(category)
+	th.CheckOK(resp)
+	return cat
+}
+
+func (th *TestHelper) UpdateCategoryBoard(teamID, categoryID, boardID string) {
+	response := th.Client.UpdateCategoryBoard(teamID, categoryID, boardID)
+	th.CheckOK(response)
+}
+
+func (th *TestHelper) CreateBoardAndCards(teamdID string, boardType model.BoardType, numCards int) (*model.Board, []*model.Card) {
+	board := th.CreateBoard(teamdID, boardType)
+	cards := make([]*model.Card, 0, numCards)
+	for i := 0; i < numCards; i++ {
+		card := &model.Card{
+			Title:        fmt.Sprintf("test card %d", i+1),
+			ContentOrder: []string{utils.NewID(utils.IDTypeBlock), utils.NewID(utils.IDTypeBlock), utils.NewID(utils.IDTypeBlock)},
+			Icon:         "😱",
+			Properties:   th.MakeCardProps(5),
+		}
+		newCard, resp := th.Client.CreateCard(board.ID, card, true)
+		th.CheckOK(resp)
+		cards = append(cards, newCard)
+	}
+	return board, cards
+}
+
+func (th *TestHelper) MakeCardProps(count int) map[string]any {
+	props := make(map[string]any)
+	for i := 0; i < count; i++ {
+		props[utils.NewID(utils.IDTypeBlock)] = utils.NewID(utils.IDTypeBlock)
+	}
+	return props
+}
+
+func (th *TestHelper) GetUserCategoryBoards(teamID string) []model.CategoryBoards {
+	categoryBoards, response := th.Client.GetUserCategoryBoards(teamID)
+	th.CheckOK(response)
+	return categoryBoards
+}
+
+func (th *TestHelper) DeleteCategory(teamID, categoryID string) {
+	response := th.Client.DeleteCategory(teamID, categoryID)
+	th.CheckOK(response)
 }
 
 func (th *TestHelper) GetUser1() *model.User {

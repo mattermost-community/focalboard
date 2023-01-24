@@ -50,7 +50,7 @@ const BoardSelector = () => {
         if (query.trim().length === 0 || !teamId) {
             return
         }
-        const items = await octoClient.search(teamId, query)
+        const items = await octoClient.searchLinkableBoards(teamId, query)
 
         setResults(items)
         setIsSearching(false)
@@ -100,6 +100,10 @@ const BoardSelector = () => {
         const newBoard = createBoard({...board, channelId: currentChannel})
         await mutator.updateBoard(newBoard, board, 'linked channel')
         setShowLinkBoardConfirmation(null)
+        dispatch(setLinkToChannel(''))
+        setResults([])
+        setIsSearching(false)
+        setSearchQuery('')
     }
 
     const unlinkBoard = async (board: Board): Promise<void> => {
@@ -116,26 +120,55 @@ const BoardSelector = () => {
     if (showLinkBoardConfirmation?.channelId !== '') {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext-with-other-channel',
-            defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board.\n\nAdditionally, this board is linked to another channel, and will be unlinked from the other channel when you link it here.\n\nAre you sure you want to link it?'
-        }, {boardName: showLinkBoardConfirmation?.title})
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests.{lineBreak} This board is currently linked to another channel. It will be unlinked if you choose to link it here.'
+        }, {boardName: showLinkBoardConfirmation?.title, lineBreak: <p/>})
     } else {
         confirmationSubText = intl.formatMessage({
             id: 'boardSelector.confirm-link-board-subtext',
-            defaultMessage: 'Linking the "{boardName}" board to this channel would give all members of this channel "Editor" access to the board.\n\nAre you sure you want to link it?'
+            defaultMessage: 'When you link "{boardName}" to the channel, all members of the channel (existing and new) will be able to edit it. This excludes members who are guests. You can unlink a board from a channel at any time.'
         }, {boardName: showLinkBoardConfirmation?.title})
     }
 
+    const closeDialog = () => {
+        dispatch(setLinkToChannel(''))
+        setResults([])
+        setIsSearching(false)
+        setSearchQuery('')
+        setShowLinkBoardConfirmation(null)
+    }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if(event.key == 'Escape') {
+            closeDialog()
+        }
+    }
+
+
     return (
-        <div className='focalboard-body'>
+        <div
+            className='focalboard-body'
+            onKeyDown={handleKeyDown}
+        >
             <Dialog
                 className='BoardSelector'
-                onClose={() => {
-                    dispatch(setLinkToChannel(''))
-                    setResults([])
-                    setIsSearching(false)
-                    setSearchQuery('')
-                    setShowLinkBoardConfirmation(null)
-                }}
+                onClose={closeDialog}
+                title={
+                    <FormattedMessage
+                        id='boardSelector.title'
+                        defaultMessage='Link boards'
+                    />
+                }
+                toolbar={
+                    <Button
+                        onClick={() => newLinkedBoard()}
+                        emphasis='secondary'
+                    >
+                        <FormattedMessage
+                            id='boardSelector.create-a-board'
+                            defaultMessage='Create a board'
+                        />
+                    </Button>
+                }
             >
                 {showLinkBoardConfirmation &&
                     <ConfirmationDialog
@@ -143,29 +176,13 @@ const BoardSelector = () => {
                             heading: intl.formatMessage({id: 'boardSelector.confirm-link-board', defaultMessage: 'Link board to channel'}),
                             subText: confirmationSubText,
                             confirmButtonText: intl.formatMessage({id: 'boardSelector.confirm-link-board-button', defaultMessage: 'Yes, link board'}),
+                            destructive: showLinkBoardConfirmation?.channelId !== '',
                             onConfirm: () => linkBoard(showLinkBoardConfirmation, true),
                             onClose: () => setShowLinkBoardConfirmation(null),
                         }}
                     />}
                 <div className='BoardSelectorBody'>
                     <div className='head'>
-                        <div className='heading'>
-                            <h3 className='text-heading4'>
-                                <FormattedMessage
-                                    id='boardSelector.title'
-                                    defaultMessage='Link boards'
-                                />
-                            </h3>
-                            <Button
-                                onClick={() => newLinkedBoard()}
-                                emphasis='secondary'
-                            >
-                                <FormattedMessage 
-                                    id='boardSelector.create-a-board'
-                                    defaultMessage='Create a board'
-                                />
-                            </Button>
-                        </div>
                         <div className='queryWrapper'>
                             <SearchIcon/>
                             <input

@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	mux "github.com/gorilla/mux"
 	model "github.com/mattermost/mattermost-server/v6/model"
 	mlog "github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -64,6 +65,20 @@ func (m *MockServicesAPI) CreatePost(arg0 *model.Post) (*model.Post, error) {
 func (mr *MockServicesAPIMockRecorder) CreatePost(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePost", reflect.TypeOf((*MockServicesAPI)(nil).CreatePost), arg0)
+}
+
+// DeletePreferencesForUser mocks base method.
+func (m *MockServicesAPI) DeletePreferencesForUser(arg0 string, arg1 model.Preferences) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeletePreferencesForUser", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeletePreferencesForUser indicates an expected call of DeletePreferencesForUser.
+func (mr *MockServicesAPIMockRecorder) DeletePreferencesForUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePreferencesForUser", reflect.TypeOf((*MockServicesAPI)(nil).DeletePreferencesForUser), arg0, arg1)
 }
 
 // EnsureBot mocks base method.
@@ -184,6 +199,21 @@ func (mr *MockServicesAPIMockRecorder) GetDirectChannel(arg0, arg1 interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDirectChannel", reflect.TypeOf((*MockServicesAPI)(nil).GetDirectChannel), arg0, arg1)
 }
 
+// GetDirectChannelOrCreate mocks base method.
+func (m *MockServicesAPI) GetDirectChannelOrCreate(arg0, arg1 string) (*model.Channel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDirectChannelOrCreate", arg0, arg1)
+	ret0, _ := ret[0].(*model.Channel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDirectChannelOrCreate indicates an expected call of GetDirectChannelOrCreate.
+func (mr *MockServicesAPIMockRecorder) GetDirectChannelOrCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDirectChannelOrCreate", reflect.TypeOf((*MockServicesAPI)(nil).GetDirectChannelOrCreate), arg0, arg1)
+}
+
 // GetFileInfo mocks base method.
 func (m *MockServicesAPI) GetFileInfo(arg0 string) (*model.FileInfo, error) {
 	m.ctrl.T.Helper()
@@ -240,6 +270,21 @@ func (m *MockServicesAPI) GetMasterDB() (*sql.DB, error) {
 func (mr *MockServicesAPIMockRecorder) GetMasterDB() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMasterDB", reflect.TypeOf((*MockServicesAPI)(nil).GetMasterDB))
+}
+
+// GetPreferencesForUser mocks base method.
+func (m *MockServicesAPI) GetPreferencesForUser(arg0 string) (model.Preferences, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPreferencesForUser", arg0)
+	ret0, _ := ret[0].(model.Preferences)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPreferencesForUser indicates an expected call of GetPreferencesForUser.
+func (mr *MockServicesAPIMockRecorder) GetPreferencesForUser(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreferencesForUser", reflect.TypeOf((*MockServicesAPI)(nil).GetPreferencesForUser), arg0)
 }
 
 // GetTeamMember mocks base method.
@@ -317,6 +362,20 @@ func (mr *MockServicesAPIMockRecorder) GetUsersFromProfiles(arg0 interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersFromProfiles", reflect.TypeOf((*MockServicesAPI)(nil).GetUsersFromProfiles), arg0)
 }
 
+// HasPermissionTo mocks base method.
+func (m *MockServicesAPI) HasPermissionTo(arg0 string, arg1 *model.Permission) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "HasPermissionTo", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// HasPermissionTo indicates an expected call of HasPermissionTo.
+func (mr *MockServicesAPIMockRecorder) HasPermissionTo(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPermissionTo", reflect.TypeOf((*MockServicesAPI)(nil).HasPermissionTo), arg0, arg1)
+}
+
 // HasPermissionToChannel mocks base method.
 func (m *MockServicesAPI) HasPermissionToChannel(arg0, arg1 string, arg2 *model.Permission) bool {
 	m.ctrl.T.Helper()
@@ -384,6 +443,32 @@ func (m *MockServicesAPI) PublishWebSocketEvent(arg0 string, arg1 map[string]int
 func (mr *MockServicesAPIMockRecorder) PublishWebSocketEvent(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PublishWebSocketEvent", reflect.TypeOf((*MockServicesAPI)(nil).PublishWebSocketEvent), arg0, arg1, arg2)
+}
+
+// RegisterRouter mocks base method.
+func (m *MockServicesAPI) RegisterRouter(arg0 *mux.Router) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "RegisterRouter", arg0)
+}
+
+// RegisterRouter indicates an expected call of RegisterRouter.
+func (mr *MockServicesAPIMockRecorder) RegisterRouter(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterRouter", reflect.TypeOf((*MockServicesAPI)(nil).RegisterRouter), arg0)
+}
+
+// UpdatePreferencesForUser mocks base method.
+func (m *MockServicesAPI) UpdatePreferencesForUser(arg0 string, arg1 model.Preferences) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdatePreferencesForUser", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdatePreferencesForUser indicates an expected call of UpdatePreferencesForUser.
+func (mr *MockServicesAPIMockRecorder) UpdatePreferencesForUser(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePreferencesForUser", reflect.TypeOf((*MockServicesAPI)(nil).UpdatePreferencesForUser), arg0, arg1)
 }
 
 // UpdateUser mocks base method.

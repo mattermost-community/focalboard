@@ -5,16 +5,24 @@ exports[`components/boardSelectorItem renders board without title 1`] = `
   <div
     class="BoardSelectorItem"
   >
-    <span
-      class="icon"
-    />
     <div
-      class="resultLine"
+      class="BoardSelectorItem-info"
     >
       <div
-        class="resultTitle"
+        class="d-flex"
       >
-        Untitled board
+        <span
+          class="icon"
+        >
+          <i
+            class="CompassIcon icon-product-boards"
+          />
+        </span>
+        <div
+          class="resultTitle"
+        >
+          Untitled board
+        </div>
       </div>
       <div
         class="resultDescription"
@@ -41,16 +49,24 @@ exports[`components/boardSelectorItem renders linked board 1`] = `
   <div
     class="BoardSelectorItem"
   >
-    <span
-      class="icon"
-    />
     <div
-      class="resultLine"
+      class="BoardSelectorItem-info"
     >
       <div
-        class="resultTitle"
+        class="d-flex"
       >
-        Test title
+        <span
+          class="icon"
+        >
+          <i
+            class="CompassIcon icon-product-boards"
+          />
+        </span>
+        <div
+          class="resultTitle"
+        >
+          Test title
+        </div>
       </div>
       <div
         class="resultDescription"
@@ -77,16 +93,24 @@ exports[`components/boardSelectorItem renders not linked board 1`] = `
   <div
     class="BoardSelectorItem"
   >
-    <span
-      class="icon"
-    />
     <div
-      class="resultLine"
+      class="BoardSelectorItem-info"
     >
       <div
-        class="resultTitle"
+        class="d-flex"
       >
-        Test title
+        <span
+          class="icon"
+        >
+          <i
+            class="CompassIcon icon-product-boards"
+          />
+        </span>
+        <div
+          class="resultTitle"
+        >
+          Test title
+        </div>
       </div>
       <div
         class="resultDescription"

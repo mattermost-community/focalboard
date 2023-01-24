@@ -68,9 +68,9 @@ describe('components/cardDetail/CardDetail', () => {
         const mockStore = configureStore([])
         const store = mockStore({
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -108,8 +108,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={card}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -149,9 +152,14 @@ describe('components/cardDetail/CardDetail', () => {
                 },
             },
             users: {
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
+            },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
             },
         })
 
@@ -166,8 +174,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={card}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={true}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -204,16 +215,16 @@ describe('components/cardDetail/CardDetail', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'card',
-                        focalboard_onboardingTourStep: '0',
-                    },
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '0'},
+                },
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -257,8 +268,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -279,7 +293,7 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip[1]).toMatchSnapshot()
 
         // moving to next step
-        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
         const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
@@ -291,7 +305,7 @@ describe('components/cardDetail/CardDetail', () => {
             'user_id_1',
             {
                 updatedFields: {
-                    focalboard_onboardingTourStep: '1',
+                    onboardingTourStep: '1',
                 },
             },
         )
@@ -310,16 +324,16 @@ describe('components/cardDetail/CardDetail', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'card',
-                        focalboard_onboardingTourStep: '1',
-                    },
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '1'},
+                },
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -363,8 +377,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -385,7 +402,7 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip[1]).toMatchSnapshot()
 
         // moving to next step
-        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
         const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
@@ -397,7 +414,7 @@ describe('components/cardDetail/CardDetail', () => {
             'user_id_1',
             {
                 updatedFields: {
-                    focalboard_onboardingTourStep: '2',
+                    onboardingTourStep: '2',
                 },
             },
         )
@@ -414,16 +431,16 @@ describe('components/cardDetail/CardDetail', () => {
             users: {
                 me: {
                     id: 'user_id_1',
-                    props: {
-                        focalboard_welcomePageViewed: '1',
-                        focalboard_onboardingTourStarted: true,
-                        focalboard_tourCategory: 'card',
-                        focalboard_onboardingTourStep: '2',
-                    },
                 },
-                boardUsers: [
-                    {username: 'username_1'},
-                ],
+                myConfig: {
+                    welcomePageViewed: {value: '1'},
+                    onboardingTourStarted: {value: true},
+                    tourCategory: {value: 'card'},
+                    onboardingTourStep: {value: '2'},
+                },
+                boardUsers: {
+                    'user-id-1': {username: 'username_1'},
+                },
             },
             teams: {
                 current: {id: 'team-id'},
@@ -473,8 +490,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={onboardingCard}
                         comments={[comment1, comment2]}
                         contents={[text]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>
@@ -495,7 +515,7 @@ describe('components/cardDetail/CardDetail', () => {
         expect(tourTip[1]).toMatchSnapshot()
 
         // moving to next step
-        mockedOctoClient.patchUserConfig.mockResolvedValueOnce({})
+        mockedOctoClient.patchUserConfig.mockResolvedValueOnce([])
 
         const nextBtn = document!.querySelector('.tipNextButton')
         expect(nextBtn).toBeDefined()
@@ -507,7 +527,7 @@ describe('components/cardDetail/CardDetail', () => {
             'user_id_1',
             {
                 updatedFields: {
-                    focalboard_onboardingTourStep: '999',
+                    onboardingTourStep: '999',
                 },
             },
         )
@@ -540,6 +560,11 @@ describe('components/cardDetail/CardDetail', () => {
                 },
                 current: limitedCard.id,
             },
+            clientConfig: {
+                value: {
+                    featureFlags: {},
+                },
+            },
         })
 
         const component = (
@@ -553,8 +578,11 @@ describe('components/cardDetail/CardDetail', () => {
                         card={limitedCard}
                         comments={[comment1, comment2]}
                         contents={[]}
+                        attachments={[]}
                         readonly={false}
                         onClose={jest.fn()}
+                        onDelete={jest.fn()}
+                        addAttachment={jest.fn()}
                     />,
                 )}
             </ReduxProvider>

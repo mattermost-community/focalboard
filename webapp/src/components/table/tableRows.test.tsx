@@ -59,7 +59,10 @@ describe('components/table/TableRows', () => {
         const store = mockStore(state)
         const component = wrapDNDIntl(
             <ReduxProvider store={store}>
-                <ColumnResizeProvider columnWidths={{}} onResizeColumn={() => {}}>
+                <ColumnResizeProvider
+                    columnWidths={{}}
+                    onResizeColumn={() => {}}
+                >
                     <TableRows
                         board={board}
                         activeView={view}

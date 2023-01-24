@@ -10,7 +10,7 @@ import (
 	"go/format"
 	"go/parser"
 	"go/token"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"path"
@@ -60,7 +60,7 @@ func buildTransactionalStore() error {
 		return err
 	}
 
-	return ioutil.WriteFile(path.Join("sqlstore/public_methods.go"), formatedCode, 0644) //nolint:gosec
+	return os.WriteFile(path.Join("sqlstore/public_methods.go"), formatedCode, 0644) //nolint:gosec
 }
 
 type methodParam struct {
@@ -126,7 +126,7 @@ func extractStoreMetadata() (*storeMetadata, error) {
 	if err != nil {
 		return nil, fmt.Errorf("unable to open store/store.go file: %w", err)
 	}
-	src, err := ioutil.ReadAll(file)
+	src, err := io.ReadAll(file)
 	if err != nil {
 		return nil, err
 	}

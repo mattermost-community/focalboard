@@ -3,7 +3,7 @@
 exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button for non sys admin user 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog"
+    class="Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"
@@ -18,19 +18,25 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
+          <div>
+            <h1
+              class="dialog-title"
             />
-          </button>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="ViewLimitDialog_body"
@@ -79,7 +85,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
 exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys admin user 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog"
+    class="Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"
@@ -94,19 +100,25 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
+          <div>
+            <h1
+              class="dialog-title"
             />
-          </button>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="ViewLimitDialog_body"

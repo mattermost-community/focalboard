@@ -6,6 +6,8 @@ package product
 import (
 	"database/sql"
 
+	"github.com/gorilla/mux"
+
 	"github.com/mattermost/mattermost-server/v6/app/request"
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -25,7 +27,7 @@ func normalizeAppErr(appErr *mm_model.AppError) error {
 // serviceAPIAdapter is an adapter that flattens the APIs provided by suite services so they can
 // be used as per the Plugin API.
 // Note: when supporting a plugin build is no longer needed this adapter may be removed as the Boards app
-//       can be modified to use the services in modular fashion.
+// can be modified to use the services in modular fashion.
 type serviceAPIAdapter struct {
 	api *boardsProduct
 	ctx *request.Context
@@ -44,6 +46,11 @@ func newServiceAPIAdapter(api *boardsProduct) *serviceAPIAdapter {
 
 func (a *serviceAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error) {
 	channel, appErr := a.api.channelService.GetDirectChannel(userID1, userID2)
+	return channel, normalizeAppErr(appErr)
+}
+
+func (a *serviceAPIAdapter) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+	channel, appErr := a.api.channelService.GetDirectChannelOrCreate(userID1, userID2)
 	return channel, normalizeAppErr(appErr)
 }
 
@@ -121,6 +128,10 @@ func (a *serviceAPIAdapter) CreateMember(teamID string, userID string) (*mm_mode
 // Permissions service.
 //
 
+func (a *serviceAPIAdapter) HasPermissionTo(userID string, permission *mm_model.Permission) bool {
+	return a.api.permissionsService.HasPermissionTo(userID, permission)
+}
+
 func (a *serviceAPIAdapter) HasPermissionToTeam(userID, teamID string, permission *mm_model.Permission) bool {
 	return a.api.permissionsService.HasPermissionToTeam(userID, teamID, permission)
 }
@@ -132,6 +143,7 @@ func (a *serviceAPIAdapter) HasPermissionToChannel(askingUserID string, channelI
 //
 // Bot service.
 //
+
 func (a *serviceAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 	return a.api.botService.EnsureBot(a.ctx, boardsProductID, bot)
 }
@@ -139,6 +151,7 @@ func (a *serviceAPIAdapter) EnsureBot(bot *mm_model.Bot) (string, error) {
 //
 // License service.
 //
+
 func (a *serviceAPIAdapter) GetLicense() *mm_model.License {
 	return a.api.licenseService.GetLicense()
 }
@@ -146,6 +159,7 @@ func (a *serviceAPIAdapter) GetLicense() *mm_model.License {
 //
 // FileInfoStore service.
 //
+
 func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, error) {
 	fi, appErr := a.api.fileInfoStoreService.GetFileInfo(fileID)
 	return fi, normalizeAppErr(appErr)
@@ -154,17 +168,19 @@ func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, erro
 //
 // Cluster store.
 //
+
 func (a *serviceAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
-	a.api.clusterService.PublishWebSocketEvent(boardsProductID, event, payload, broadcast)
+	a.api.clusterService.PublishWebSocketEvent(boardsProductName, event, payload, broadcast)
 }
 
 func (a *serviceAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error {
-	return a.api.clusterService.PublishPluginClusterEvent(boardsProductID, ev, opts)
+	return a.api.clusterService.PublishPluginClusterEvent(boardsProductName, ev, opts)
 }
 
 //
 // Cloud service.
 //
+
 func (a *serviceAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 	return a.api.cloudService.GetCloudLimits()
 }
@@ -172,6 +188,7 @@ func (a *serviceAPIAdapter) GetCloudLimits() (*mm_model.ProductLimits, error) {
 //
 // Config service.
 //
+
 func (a *serviceAPIAdapter) GetConfig() *mm_model.Config {
 	return a.api.configService.Config()
 }
@@ -179,6 +196,7 @@ func (a *serviceAPIAdapter) GetConfig() *mm_model.Config {
 //
 // Logger service.
 //
+
 func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 	return a.api.logger
 }
@@ -186,14 +204,16 @@ func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 //
 // KVStore service.
 //
+
 func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
-	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
+	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductName, key, value, options)
 	return b, normalizeAppErr(appErr)
 }
 
 //
 // Store service.
 //
+
 func (a *serviceAPIAdapter) GetMasterDB() (*sql.DB, error) {
 	return a.api.storeService.GetMasterDB(), nil
 }
@@ -201,8 +221,36 @@ func (a *serviceAPIAdapter) GetMasterDB() (*sql.DB, error) {
 //
 // System service.
 //
+
 func (a *serviceAPIAdapter) GetDiagnosticID() string {
 	return a.api.systemService.GetDiagnosticId()
+}
+
+//
+// Router service.
+//
+
+func (a *serviceAPIAdapter) RegisterRouter(sub *mux.Router) {
+	a.api.routerService.RegisterRouter(boardsProductName, sub)
+}
+
+//
+// Preferences service.
+//
+
+func (a *serviceAPIAdapter) GetPreferencesForUser(userID string) (mm_model.Preferences, error) {
+	p, appErr := a.api.preferencesService.GetPreferencesForUser(userID)
+	return p, normalizeAppErr(appErr)
+}
+
+func (a *serviceAPIAdapter) UpdatePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.preferencesService.UpdatePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
+}
+
+func (a *serviceAPIAdapter) DeletePreferencesForUser(userID string, preferences mm_model.Preferences) error {
+	appErr := a.api.preferencesService.DeletePreferencesForUser(userID, preferences)
+	return normalizeAppErr(appErr)
 }
 
 // Ensure the adapter implements ServicesAPI.

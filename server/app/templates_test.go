@@ -21,7 +21,7 @@ func TestApp_initializeTemplates(t *testing.T) {
 		TemplateVersion: defaultTemplateVersion,
 	}
 
-	block := model.Block{
+	block := &model.Block{
 		ID:       utils.NewID(utils.IDTypeBlock),
 		ParentID: board.ID,
 		BoardID:  board.ID,
@@ -31,7 +31,7 @@ func TestApp_initializeTemplates(t *testing.T) {
 
 	boardsAndBlocks := &model.BoardsAndBlocks{
 		Boards: []*model.Board{board},
-		Blocks: []model.Block{block},
+		Blocks: []*model.Block{block},
 	}
 
 	boardMember := &model.BoardMember{

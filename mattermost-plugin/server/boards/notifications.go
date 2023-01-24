@@ -12,15 +12,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/permissions"
 	"github.com/mattermost/focalboard/server/services/store"
 
-	mm_model "github.com/mattermost/mattermost-server/v6/model"
-
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
-)
-
-const (
-	botUsername    = "boards"
-	botDisplayname = "Boards"
-	botDescription = "Created by Boards plugin."
 )
 
 type notifyBackendParams struct {
@@ -71,15 +63,11 @@ func createSubscriptionsNotifyBackend(params notifyBackendParams) (*notifysubscr
 }
 
 func createDelivery(servicesAPI model.ServicesAPI, serverRoot string) (*plugindelivery.PluginDelivery, error) {
-	bot := &mm_model.Bot{
-		Username:    botUsername,
-		DisplayName: botDisplayname,
-		Description: botDescription,
-		OwnerId:     model.SystemUserID,
-	}
+	bot := model.FocalboardBot
+
 	botID, err := servicesAPI.EnsureBot(bot)
 	if err != nil {
-		return nil, fmt.Errorf("failed to ensure %s bot: %w", botDisplayname, err)
+		return nil, fmt.Errorf("failed to ensure %s bot: %w", bot.DisplayName, err)
 	}
 
 	return plugindelivery.New(botID, serverRoot, servicesAPI), nil
@@ -103,11 +91,11 @@ func (a *appAPI) init(store store.Store, app appIface) {
 	a.app = app
 }
 
-func (a *appAPI) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]model.Block, error) {
+func (a *appAPI) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error) {
 	return a.store.GetBlockHistory(blockID, opts)
 }
 
-func (a *appAPI) GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]model.Block, error) {
+func (a *appAPI) GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	return a.store.GetSubTree2(boardID, blockID, opts)
 }
 

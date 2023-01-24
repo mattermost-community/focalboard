@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockstore.go -package mocks . Store
+//go:generate mockgen -destination=mocks/mockstore.go -package mocks . Store
 package ws
 
 import (
@@ -20,6 +20,8 @@ const (
 	websocketActionUpdateCategoryBoard      = "UPDATE_BOARD_CATEGORY"
 	websocketActionUpdateSubscription       = "UPDATE_SUBSCRIPTION"
 	websocketActionUpdateCardLimitTimestamp = "UPDATE_CARD_LIMIT_TIMESTAMP"
+	websocketActionReorderCategories        = "REORDER_CATEGORIES"
+	websocketActionReorderCategoryBoards    = "REORDER_CATEGORY_BOARDS"
 )
 
 type Store interface {
@@ -28,7 +30,7 @@ type Store interface {
 }
 
 type Adapter interface {
-	BroadcastBlockChange(teamID string, block model.Block)
+	BroadcastBlockChange(teamID string, block *model.Block)
 	BroadcastBlockDelete(teamID, blockID, boardID string)
 	BroadcastBoardChange(teamID string, board *model.Board)
 	BroadcastBoardDelete(teamID, boardID string)
@@ -36,7 +38,9 @@ type Adapter interface {
 	BroadcastMemberDelete(teamID, boardID, userID string)
 	BroadcastConfigChange(clientConfig model.ClientConfig)
 	BroadcastCategoryChange(category model.Category)
-	BroadcastCategoryBoardChange(teamID, userID string, blockCategory model.BoardCategoryWebsocketData)
+	BroadcastCategoryBoardChange(teamID, userID string, blockCategory []*model.BoardCategoryWebsocketData)
 	BroadcastCardLimitTimestampChange(cardLimitTimestamp int64)
 	BroadcastSubscriptionChange(teamID string, subscription *model.Subscription)
+	BroadcastCategoryReorder(teamID, userID string, categoryOrder []string)
+	BroadcastCategoryBoardsReorder(teamID, userID, categoryID string, boardsOrder []string)
 }

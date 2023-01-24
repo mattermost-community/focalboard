@@ -10,10 +10,13 @@ import userEvent from '@testing-library/user-event'
 import {createBoard} from '../../../../webapp/src/blocks/board'
 import {mockStateStore, wrapIntl} from '../../../../webapp/src/testUtils'
 
+import {TestBlockFactory} from '../../../../webapp/src/test/testBlockFactory'
+
 import RHSChannelBoardItem from './rhsChannelBoardItem'
 
 describe('components/rhsChannelBoardItem', () => {
     it('render board', async () => {
+        const board = createBoard()
         const state = {
             teams: {
                 current: {
@@ -22,8 +25,12 @@ describe('components/rhsChannelBoardItem', () => {
                     display_name: 'Team name',
                 },
             },
+            boards: {
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            }
         }
-        const board = createBoard()
         board.updateAt = 1657311058157
         board.title = 'Test board'
 
@@ -37,6 +44,7 @@ describe('components/rhsChannelBoardItem', () => {
     })
 
     it('render board with menu open', async () => {
+        const board = TestBlockFactory.createBoard()
         const state = {
             teams: {
                 current: {
@@ -45,11 +53,16 @@ describe('components/rhsChannelBoardItem', () => {
                     display_name: 'Team name',
                 },
             },
+            boards: {
+                myBoardMemberships: {
+                    [board.id]: {userId: 'user_id_1', schemeAdmin: true},
+                },
+            }
         }
-        const board = createBoard()
+        board.id = 'test_id'
+        board.title = 'New board'
+        board.description = '**Board** with description'
         board.updateAt = 1657311058157
-        board.title = 'Test board'
-
         const store = mockStateStore([], state)
         const {container} = render(wrapIntl(
             <ReduxProvider store={store}>
@@ -59,7 +72,6 @@ describe('components/rhsChannelBoardItem', () => {
 
         const buttonElement = screen.getByRole('button', {name: 'menuwrapper'})
         await userEvent.click(buttonElement)
-
         expect(container).toMatchSnapshot()
     })
 })

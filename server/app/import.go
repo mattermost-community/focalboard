@@ -126,7 +126,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	// TODO: Stream this once `model.GenerateBlockIDs` can take a stream of blocks.
 	//       We don't want to load the whole file in memory, even though it's a single board.
 	boardsAndBlocks := &model.BoardsAndBlocks{
-		Blocks: make([]model.Block, 0, 10),
+		Blocks: make([]*model.Block, 0, 10),
 		Boards: make([]*model.Board, 0, 10),
 	}
 	lineReader := bufio.NewReader(r)
@@ -137,6 +137,7 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 	}
 	now := utils.GetMillis()
 	var boardID string
+	var boardMembers []*model.BoardMember
 
 	lineNum := 1
 	firstLine := true
@@ -175,20 +176,20 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					boardID = board.ID
 				case "board_block":
 					// legacy archives encoded boards as blocks; we need to convert them to real boards.
-					var block model.Block
+					var block *model.Block
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return "", fmt.Errorf("invalid board block in archive line %d: %w", lineNum, err2)
 					}
 					block.ModifiedBy = userID
 					block.UpdateAt = now
-					board, err := a.blockToBoard(&block, opt)
+					board, err := a.blockToBoard(block, opt)
 					if err != nil {
 						return "", fmt.Errorf("cannot convert archive line %d to block: %w", lineNum, err)
 					}
 					boardsAndBlocks.Boards = append(boardsAndBlocks.Boards, board)
 					boardID = board.ID
 				case "block":
-					var block model.Block
+					var block *model.Block
 					if err2 := json.Unmarshal(archiveLine.Data, &block); err2 != nil {
 						return "", fmt.Errorf("invalid block in archive line %d: %w", lineNum, err2)
 					}
@@ -196,6 +197,12 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 					block.UpdateAt = now
 					block.BoardID = boardID
 					boardsAndBlocks.Blocks = append(boardsAndBlocks.Blocks, block)
+				case "boardMember":
+					var boardMember *model.BoardMember
+					if err2 := json.Unmarshal(archiveLine.Data, &boardMember); err2 != nil {
+						return "", fmt.Errorf("invalid board Member in archive line %d: %w", lineNum, err2)
+					}
+					boardMembers = append(boardMembers, boardMember)
 				default:
 					return "", model.NewErrUnsupportedArchiveLineType(lineNum, archiveLine.Type)
 				}
@@ -212,6 +219,13 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		lineNum++
 	}
 
+	// loop to remove the people how are not part of the team and system
+	for i := len(boardMembers) - 1; i >= 0; i-- {
+		if _, err := a.GetUser(boardMembers[i].UserID); err != nil {
+			boardMembers = append(boardMembers[:i], boardMembers[i+1:]...)
+		}
+	}
+
 	a.fixBoardsandBlocks(boardsAndBlocks, opt)
 
 	var err error
@@ -225,15 +239,23 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 		return "", fmt.Errorf("error inserting archive blocks: %w", err)
 	}
 
-	// add user to all the new boards.
+	// add users to all the new boards (if not the fake system user).
 	for _, board := range boardsAndBlocks.Boards {
-		boardMember := &model.BoardMember{
-			BoardID:     board.ID,
-			UserID:      opt.ModifiedBy,
-			SchemeAdmin: true,
-		}
-		if _, err := a.AddMemberToBoard(boardMember); err != nil {
-			return "", fmt.Errorf("cannot add member to board: %w", err)
+		for _, boardMember := range boardMembers {
+			bm := &model.BoardMember{
+				BoardID:         board.ID,
+				UserID:          boardMember.UserID,
+				Roles:           boardMember.Roles,
+				MinimumRole:     boardMember.MinimumRole,
+				SchemeAdmin:     boardMember.SchemeAdmin,
+				SchemeEditor:    boardMember.SchemeEditor,
+				SchemeCommenter: boardMember.SchemeCommenter,
+				SchemeViewer:    boardMember.SchemeViewer,
+				Synthetic:       boardMember.Synthetic,
+			}
+			if _, err2 := a.AddMemberToBoard(bm); err2 != nil {
+				return "", fmt.Errorf("cannot add member to board: %w", err2)
+			}
 		}
 	}
 
@@ -253,7 +275,7 @@ func (a *App) fixBoardsandBlocks(boardsAndBlocks *model.BoardsAndBlocks, opt mod
 
 	modInfoCache := make(map[string]interface{})
 	modBoards := make([]*model.Board, 0, len(boardsAndBlocks.Boards))
-	modBlocks := make([]model.Block, 0, len(boardsAndBlocks.Blocks))
+	modBlocks := make([]*model.Block, 0, len(boardsAndBlocks.Blocks))
 
 	for _, board := range boardsAndBlocks.Boards {
 		b := *board
@@ -268,7 +290,7 @@ func (a *App) fixBoardsandBlocks(boardsAndBlocks *model.BoardsAndBlocks, opt mod
 
 	for _, block := range boardsAndBlocks.Blocks {
 		b := block
-		if opt.BlockModifier != nil && !opt.BlockModifier(&b, modInfoCache) {
+		if opt.BlockModifier != nil && !opt.BlockModifier(b, modInfoCache) {
 			a.logger.Debug("skipping insert block per block modifier",
 				mlog.String("blockID", block.ID),
 			)

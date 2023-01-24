@@ -2,7 +2,15 @@
 // See LICENSE.txt for license information.
 import {Utils} from '../utils'
 
-type FilterCondition = 'includes' | 'notIncludes' | 'isEmpty' | 'isNotEmpty'
+type FilterCondition =
+    'includes' | 'notIncludes' |
+    'isEmpty' | 'isNotEmpty' |
+    'isSet' | 'isNotSet' |
+    'is' |
+    'contains' | 'notContains' |
+    'startsWith' | 'notStartsWith' |
+    'endsWith' | 'notEndsWith' |
+    'isBefore' | 'isAfter'
 
 type FilterClause = {
     propertyId: string

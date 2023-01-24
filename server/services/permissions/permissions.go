@@ -1,4 +1,4 @@
-//go:generate mockgen --build_flags=--mod=mod -destination=mocks/mockstore.go -package mocks . Store
+//go:generate mockgen -destination=mocks/mockstore.go -package mocks . Store
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
@@ -11,6 +11,7 @@ import (
 )
 
 type PermissionsService interface {
+	HasPermissionTo(userID string, permission *mmModel.Permission) bool
 	HasPermissionToTeam(userID, teamID string, permission *mmModel.Permission) bool
 	HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool
 	HasPermissionToBoard(userID, boardID string, permission *mmModel.Permission) bool

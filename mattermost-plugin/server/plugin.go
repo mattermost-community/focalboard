@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
+	"github.com/mattermost/focalboard/server/model"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
@@ -51,6 +52,8 @@ func (p *Plugin) OnActivate() error {
 	if err != nil {
 		return fmt.Errorf("cannot activate plugin: %w", err)
 	}
+
+	model.LogServerInfo(logger)
 
 	p.boardsApp = boardsApp
 	return p.boardsApp.Start()

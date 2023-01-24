@@ -50,7 +50,7 @@ export const refreshCards = createAsyncThunk<Block[], number, {state: RootState}
     },
 )
 
-const limitCard = (isBoardTemplate: boolean, limitTimestamp:number, card: Card): Card => {
+const limitCard = (isBoardTemplate: boolean, limitTimestamp: number, card: Card): Card => {
     if (isBoardTemplate) {
         return card
     }
@@ -308,6 +308,22 @@ function sortCards(cards: Card[], lastCommentByCard: {[key: string]: CommentBloc
                         bValue = template.options.find((o) => o.id === (Array.isArray(bValue) ? bValue[0] : bValue))?.value || ''
                     }
 
+                    if (template.type === 'multiPerson') {
+                        aValue = Array.isArray(aValue) && aValue.length !== 0 && Object.keys(usersById).length > 0 ? aValue.map((id) => {
+                            if (usersById[id] !== undefined) {
+                                return usersById[id].username
+                            }
+                            return ''
+                        }).toString() : aValue
+
+                        bValue = Array.isArray(bValue) && bValue.length !== 0 && Object.keys(usersById).length > 0 ? bValue.map((id) => {
+                            if (usersById[id] !== undefined) {
+                                return usersById[id].username
+                            }
+                            return ''
+                        }).toString() : bValue
+                    }
+
                     result = (aValue as string).localeCompare(bValue as string)
                 }
 
@@ -348,11 +364,11 @@ function searchFilterCards(cards: Card[], board: Board, searchTextRaw: string): 
                     }
                 } else if (propertyTemplate.type === 'multiSelect') {
                     // Look up the value of the select option
-                    const options = (propertyValue as string[]).map((value) => propertyTemplate.options.find((o) => o.id === value)?.value.toLowerCase())
+                    const options = (Array.isArray(propertyValue) ? propertyValue : [propertyValue]).map((value) => propertyTemplate.options.find((o) => o.id === value)?.value.toLowerCase())
                     if (options?.includes(searchText)) {
                         return true
                     }
-                } else if ((propertyValue as string).toLowerCase().includes(searchText)) {
+                } else if (propertyTemplate.type !== 'date' && (propertyValue.toString()).toLowerCase().includes(searchText)) {
                     return true
                 }
             }

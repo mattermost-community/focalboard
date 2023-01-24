@@ -12,13 +12,13 @@ import {getSelectBaseStyle} from '../../theme'
 import ChevronUp from '../../widgets/icons/chevronUp'
 import {IPropertyTemplate} from '../../blocks/board'
 
-type Option = {
+export type Option = {
     label: string
     value: string
     displayName: string
 }
 
-export const Options:Record<string, Option> = {
+export const Options: Record<string, Option> = {
     none: {value: 'none', label: 'None', displayName: 'Calculate'},
     count: {value: 'count', label: 'Count', displayName: 'Count'},
     countEmpty: {value: 'countEmpty', label: 'Count Empty', displayName: 'Empty'},
@@ -160,11 +160,11 @@ const DropdownIndicator = (props: DropdownIndicatorProps<Option, false>) => {
 }
 
 // Calculation option props shared by all implementations of calculation options
-type CommonCalculationOptionProps = {
-    value: string,
+export type CommonCalculationOptionProps = {
+    value: string
     menuOpen: boolean
     onClose?: () => void
-    components?: {[key:string]: (props: any) => JSX.Element}
+    components?: {[key: string]: (props: any) => JSX.Element}
     onChange: (data: any) => void
     property?: IPropertyTemplate
 }
@@ -174,7 +174,7 @@ type BaseCalculationOptionProps = CommonCalculationOptionProps & {
     options: Option[]
 }
 
-const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
+export const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
     const intl = useIntl()
 
     return (
@@ -207,10 +207,4 @@ const CalculationOptions = (props: BaseCalculationOptionProps): JSX.Element => {
             }}
         />
     )
-}
-
-export {
-    CalculationOptions,
-    Option,
-    CommonCalculationOptionProps,
 }

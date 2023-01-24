@@ -13,6 +13,8 @@ import (
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 )
 
+const defaultS3Timeout = 60 * 1000 // 60 seconds
+
 func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
@@ -45,6 +47,11 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 	if mmconfig.FileSettings.AmazonS3Trace != nil {
 		filesS3Config.Trace = *mmconfig.FileSettings.AmazonS3Trace
 	}
+	if mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds != nil && *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds > 0 {
+		filesS3Config.Timeout = *mmconfig.FileSettings.AmazonS3RequestTimeoutMilliseconds
+	} else {
+		filesS3Config.Timeout = defaultS3Timeout
+	}
 
 	enableTelemetry := false
 	if mmconfig.LogSettings.EnableDiagnostics != nil {
@@ -63,8 +70,22 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 
 	featureFlags := parseFeatureFlags(mmconfig.FeatureFlags.ToMap())
 
+	showEmailAddress := false
+	if mmconfig.PrivacySettings.ShowEmailAddress != nil {
+		showEmailAddress = *mmconfig.PrivacySettings.ShowEmailAddress
+	}
+
+	showFullName := false
+	if mmconfig.PrivacySettings.ShowFullName != nil {
+		showFullName = *mmconfig.PrivacySettings.ShowFullName
+	}
+
+	serverRoot := baseURL + "/plugins/focalboard"
+	if mmconfig.FeatureFlags.BoardsProduct {
+		serverRoot = baseURL + "/boards"
+	}
 	return &config.Configuration{
-		ServerRoot:               baseURL + "/plugins/focalboard",
+		ServerRoot:               serverRoot,
 		Port:                     -1,
 		DBType:                   *mmconfig.SqlSettings.DriverName,
 		DBConfigString:           *mmconfig.SqlSettings.DataSource,
@@ -92,6 +113,8 @@ func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID strin
 		EnableDataRetention:      enableBoardsDeletion,
 		DataRetentionDays:        *mmconfig.DataRetentionSettings.BoardsRetentionDays,
 		TeammateNameDisplay:      *mmconfig.TeamSettings.TeammateNameDisplay,
+		ShowEmailAddress:         showEmailAddress,
+		ShowFullName:             showFullName,
 	}
 }
 

@@ -1,12 +1,35 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+import {DateUtils} from 'react-day-picker'
+
+import {DateProperty} from './properties/date/date'
+
 import {IPropertyTemplate} from './blocks/board'
 import {Card} from './blocks/card'
 import {FilterClause} from './blocks/filterClause'
 import {FilterGroup, isAFilterGroupInstance} from './blocks/filterGroup'
 import {Utils} from './utils'
 
+const halfDay = 12 * 60 * 60 * 1000
+
 class CardFilter {
+    static createDatePropertyFromString(initialValue: string): DateProperty {
+        let dateProperty: DateProperty = {}
+        if (initialValue) {
+            const singleDate = new Date(Number(initialValue))
+            if (singleDate && DateUtils.isDate(singleDate)) {
+                dateProperty.from = singleDate.getTime()
+            } else {
+                try {
+                    dateProperty = JSON.parse(initialValue)
+                } catch {
+                    //Don't do anything, return empty dateProperty
+                }
+            }
+        }
+        return dateProperty
+    }
+
     static applyFilterGroup(filterGroup: FilterGroup, templates: readonly IPropertyTemplate[], cards: Card[]): Card[] {
         return cards.filter((card) => this.isFilterGroupMet(filterGroup, templates, card))
     }
@@ -44,7 +67,29 @@ class CardFilter {
     }
 
     static isClauseMet(filter: FilterClause, templates: readonly IPropertyTemplate[], card: Card): boolean {
-        const value = card.fields.properties[filter.propertyId]
+        let value = card.fields.properties[filter.propertyId]
+        if (filter.propertyId === 'title') {
+            value = card.title.toLowerCase()
+        }
+        const template = templates.find((o) => o.id === filter.propertyId)
+        let dateValue: DateProperty | undefined
+        if (template?.type === 'date') {
+            dateValue = this.createDatePropertyFromString(value as string)
+        }
+        if (!value && template) {
+            if (template.type === 'createdBy') {
+                value = card.createdBy
+            } else if (template.type === 'updatedBy') {
+                value = card.modifiedBy
+            } else if (template && template.type === 'createdTime') {
+                value = card.createAt.toString()
+                dateValue = this.createDatePropertyFromString(value as string)
+            } else if (template && template.type === 'updatedTime') {
+                value = card.updateAt.toString()
+                dateValue = this.createDatePropertyFromString(value as string)
+            }
+        }
+
         switch (filter.condition) {
         case 'includes': {
             if (filter.values?.length < 1) {
@@ -64,6 +109,115 @@ class CardFilter {
         case 'isNotEmpty': {
             return (value || '').length > 0
         }
+        case 'isSet': {
+            return Boolean(value)
+        }
+        case 'isNotSet': {
+            return !value
+        }
+        case 'is': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            if (dateValue !== undefined) {
+                const numericFilter = parseInt(filter.values[0], 10)
+                if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
+                    // createdTime and updatedTime include the time
+                    // So to check if create and/or updated "is" date.
+                    // Need to add and subtract 12 hours and check range
+                    if (dateValue.from) {
+                        return dateValue.from > (numericFilter - halfDay) && dateValue.from < (numericFilter + halfDay)
+                    }
+                    return false
+                }
+
+                if (dateValue.from && dateValue.to) {
+                    return dateValue.from <= numericFilter && dateValue.to >= numericFilter
+                }
+                return dateValue.from === numericFilter
+            }
+            return filter.values[0]?.toLowerCase() === value
+        }
+        case 'contains': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').includes(filter.values[0]?.toLowerCase())
+        }
+        case 'notContains': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return !(value as string || '').includes(filter.values[0]?.toLowerCase())
+        }
+        case 'startsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').startsWith(filter.values[0]?.toLowerCase())
+        }
+        case 'notStartsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return !(value as string || '').startsWith(filter.values[0]?.toLowerCase())
+        }
+        case 'endsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return (value as string || '').endsWith(filter.values[0]?.toLowerCase())
+        }
+        case 'notEndsWith': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            return !(value as string || '').endsWith(filter.values[0]?.toLowerCase())
+        }
+        case 'isBefore': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            if (dateValue !== undefined) {
+                const numericFilter = parseInt(filter.values[0], 10)
+                if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
+                    // createdTime and updatedTime include the time
+                    // So to check if create and/or updated "isBefore" date.
+                    // Need to subtract 12 hours to filter
+                    if (dateValue.from) {
+                        return dateValue.from < (numericFilter - halfDay)
+                    }
+                    return false
+                }
+
+                return dateValue.from ? dateValue.from < numericFilter : false
+            }
+            return false
+        }
+        case 'isAfter': {
+            if (filter.values.length === 0) {
+                return true
+            }
+            if (dateValue !== undefined) {
+                const numericFilter = parseInt(filter.values[0], 10)
+                if (template && (template.type === 'createdTime' || template.type === 'updatedTime')) {
+                    // createdTime and updatedTime include the time
+                    // So to check if create and/or updated "isAfter" date.
+                    // Need to add 12 hours to filter
+                    if (dateValue.from) {
+                        return dateValue.from > (numericFilter + halfDay)
+                    }
+                    return false
+                }
+
+                if (dateValue.to) {
+                    return dateValue.to > numericFilter
+                }
+                return dateValue.from ? dateValue.from > numericFilter : false
+            }
+            return false
+        }
+
         default: {
             Utils.assertFailure(`Invalid filter condition ${filter.condition}`)
         }
@@ -110,6 +264,10 @@ class CardFilter {
             return {id: filterClause.propertyId}
         }
 
+        if (template.type === 'createdBy' || template.type === 'updatedBy') {
+            return {id: filterClause.propertyId}
+        }
+
         switch (filterClause.condition) {
         case 'includes': {
             if (filterClause.values.length < 1) {
@@ -136,7 +294,7 @@ class CardFilter {
             return {id: filterClause.propertyId}
         }
         default: {
-            Utils.assertFailure(`Unexpected filter condition: ${filterClause.condition}`)
+            // Handle filter clause that cannot be set
             return {id: filterClause.propertyId}
         }
         }

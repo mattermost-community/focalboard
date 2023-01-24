@@ -79,3 +79,22 @@ function createBlocks(): Block[] {
 
     return blocks
 }
+
+test('OctoClient: GetFileInfo', async () => {
+    FetchMock.fn.mockReturnValueOnce(FetchMock.jsonResponse(JSON.stringify({
+        name: 'test.txt',
+        size: 2300,
+        extension: '.txt',
+    })))
+    await octoClient.getFileInfo('board-id', 'file-id')
+    expect(FetchMock.fn).toBeCalledTimes(1)
+    expect(FetchMock.fn).toHaveBeenCalledWith(
+        'http://localhost/api/v2/files/teams/0/board-id/file-id/info',
+        expect.objectContaining({
+            headers: {
+                Accept: 'application/json',
+                Authorization: '',
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            }}))
+})

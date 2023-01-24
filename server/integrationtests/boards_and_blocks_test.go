@@ -17,7 +17,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 
 		newBab := &model.BoardsAndBlocks{
 			Boards: []*model.Board{},
-			Blocks: []model.Block{},
+			Blocks: []*model.Block{},
 		}
 
 		bab, resp := th.Client.CreateBoardsAndBlocks(newBab)
@@ -32,7 +32,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 		t.Run("no boards", func(t *testing.T) {
 			newBab := &model.BoardsAndBlocks{
 				Boards: []*model.Board{},
-				Blocks: []model.Block{
+				Blocks: []*model.Block{
 					{ID: "block-id", BoardID: "board-id", Type: model.TypeCard},
 				},
 			}
@@ -47,7 +47,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 				Boards: []*model.Board{
 					{ID: "board-id", TeamID: teamID, Type: model.BoardTypePrivate},
 				},
-				Blocks: []model.Block{},
+				Blocks: []*model.Block{},
 			}
 
 			bab, resp := th.Client.CreateBoardsAndBlocks(newBab)
@@ -60,7 +60,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 				Boards: []*model.Board{
 					{ID: "board-id", TeamID: teamID, Type: model.BoardTypePrivate},
 				},
-				Blocks: []model.Block{
+				Blocks: []*model.Block{
 					{ID: "block-id", BoardID: "nonexistent-board-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
@@ -76,7 +76,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{ID: "board-id", TeamID: teamID, Type: model.BoardTypePrivate},
 					{TeamID: teamID, Type: model.BoardTypePrivate},
 				},
-				Blocks: []model.Block{
+				Blocks: []*model.Block{
 					{ID: "block-id", BoardID: "board-id", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
@@ -92,7 +92,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{ID: "board-id-1", TeamID: "team-id-1", Type: model.BoardTypePrivate},
 					{ID: "board-id-2", TeamID: "team-id-2", Type: model.BoardTypePrivate},
 				},
-				Blocks: []model.Block{
+				Blocks: []*model.Block{
 					{ID: "block-id", BoardID: "board-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
 			}
@@ -108,7 +108,7 @@ func TestCreateBoardsAndBlocks(t *testing.T) {
 					{ID: "board-id-1", Title: "public board", TeamID: teamID, Type: model.BoardTypeOpen},
 					{ID: "board-id-2", Title: "private board", TeamID: teamID, Type: model.BoardTypePrivate},
 				},
-				Blocks: []model.Block{
+				Blocks: []*model.Block{
 					{ID: "block-id-1", Title: "block 1", BoardID: "board-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 					{ID: "block-id-2", Title: "block 2", BoardID: "board-id-2", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				},
@@ -203,7 +203,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board2)
 
-		newBlock1 := model.Block{
+		newBlock1 := &model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
 			Title:   initialTitle,
@@ -213,7 +213,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
-		newBlock2 := model.Block{
+		newBlock2 := &model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
 			Title:   initialTitle,
@@ -303,7 +303,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 				BoardPatches: []*model.BoardPatch{
 					{Title: &newTitle},
 				},
-				BlockIDs: []string{block1.ID, "board-id-2"},
+				BlockIDs: []string{block1.ID, block2.ID},
 				BlockPatches: []*model.BlockPatch{
 					{Title: &newTitle},
 					{Title: &newTitle},
@@ -342,7 +342,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board2)
 
-		newBlock1 := model.Block{
+		newBlock1 := &model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
 			Title:   initialTitle,
@@ -352,7 +352,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
-		newBlock2 := model.Block{
+		newBlock2 := &model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
 			Title:   initialTitle,
@@ -406,7 +406,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board2)
 
-		newBlock1 := model.Block{
+		newBlock1 := &model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
 			Title:   initialTitle,
@@ -416,7 +416,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
-		newBlock2 := model.Block{
+		newBlock2 := &model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
 			Title:   initialTitle,
@@ -470,7 +470,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board2)
 
-		newBlock1 := model.Block{
+		newBlock1 := &model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
 			Title:   initialTitle,
@@ -480,7 +480,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
-		newBlock2 := model.Block{
+		newBlock2 := &model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
 			Title:   initialTitle,
@@ -537,7 +537,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board2)
 
-		newBlock1 := model.Block{
+		newBlock1 := &model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
 			Title:   initialTitle,
@@ -547,7 +547,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
-		newBlock2 := model.Block{
+		newBlock2 := &model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
 			Title:   initialTitle,
@@ -600,7 +600,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board2)
 
-		newBlock1 := model.Block{
+		newBlock1 := &model.Block{
 			ID:      "block-id-1",
 			BoardID: board1.ID,
 			Title:   initialTitle,
@@ -610,7 +610,7 @@ func TestPatchBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, block1)
 
-		newBlock2 := model.Block{
+		newBlock2 := &model.Block{
 			ID:      "block-id-2",
 			BoardID: board2.ID,
 			Title:   initialTitle,
@@ -674,7 +674,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
 		defer th.TearDown()
 
-		// a board is required for the permission checks
+		// a board and a block are required for the permission checks
 		newBoard := &model.Board{
 			TeamID: teamID,
 			Type:   model.BoardTypeOpen,
@@ -683,9 +683,19 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, board)
 
+		newBlock := &model.Block{
+			ID:      "block-id-1",
+			BoardID: board.ID,
+			Title:   "title",
+		}
+		require.NoError(t, th.Server.App().InsertBlock(newBlock, th.GetUser1().ID))
+		block, err := th.Server.App().GetBlockByID(newBlock.ID)
+		require.NoError(t, err)
+		require.NotNil(t, block)
+
 		t.Run("no boards", func(t *testing.T) {
 			dbab := &model.DeleteBoardsAndBlocks{
-				Blocks: []string{"block-id-1"},
+				Blocks: []string{block.ID},
 			}
 
 			success, resp := th.Client.DeleteBoardsAndBlocks(dbab)
@@ -719,7 +729,8 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		// the user is an admin of the first board
 		newBoard1 := &model.Board{
-			Type: model.BoardTypeOpen,
+			Type:   model.BoardTypeOpen,
+			TeamID: "team_id_1",
 		}
 		board1, err := th.Server.App().CreateBoard(newBoard1, th.GetUser1().ID, true)
 		require.NoError(t, err)
@@ -727,7 +738,8 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		// but not of the second
 		newBoard2 := &model.Board{
-			Type: model.BoardTypeOpen,
+			Type:   model.BoardTypeOpen,
+			TeamID: "team_id_1",
 		}
 		board2, err := th.Server.App().CreateBoard(newBoard2, th.GetUser1().ID, false)
 		require.NoError(t, err)
@@ -752,7 +764,7 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 				{ID: "board-id-1", Title: "public board", TeamID: teamID, Type: model.BoardTypeOpen},
 				{ID: "board-id-2", Title: "private board", TeamID: teamID, Type: model.BoardTypePrivate},
 			},
-			Blocks: []model.Block{
+			Blocks: []*model.Block{
 				{ID: "block-id-1", Title: "block 1", BoardID: "board-id-1", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 				{ID: "block-id-2", Title: "block 2", BoardID: "board-id-2", Type: model.TypeCard, CreateAt: 1, UpdateAt: 1},
 			},
@@ -790,17 +802,21 @@ func TestDeleteBoardsAndBlocks(t *testing.T) {
 
 		// ensure that the entities have been successfully deleted
 		board1, err = th.Server.App().GetBoard("board-id-1")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, board1)
 		block1, err = th.Server.App().GetBlockByID("block-id-1")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, block1)
 
 		board2, err = th.Server.App().GetBoard("board-id-2")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, board2)
 		block2, err = th.Server.App().GetBlockByID("block-id-2")
-		require.NoError(t, err)
+		require.Error(t, err)
+		require.True(t, model.IsErrNotFound(err))
 		require.Nil(t, block2)
 	})
 }

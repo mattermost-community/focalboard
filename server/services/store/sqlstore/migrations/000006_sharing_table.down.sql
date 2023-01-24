@@ -1,1 +1,1 @@
-DROP TABLE {{.prefix}}sharing;
+SELECT 1;

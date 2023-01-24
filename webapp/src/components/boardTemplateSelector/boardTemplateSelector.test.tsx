@@ -21,7 +21,7 @@ import {mockDOM, mockStateStore, wrapDNDIntl} from '../../testUtils'
 
 import client from '../../octoClient'
 
-import TelemetryClient from "../../telemetry/telemetryClient"
+import TelemetryClient from '../../telemetry/telemetryClient'
 
 import BoardTemplateSelector from './boardTemplateSelector'
 
@@ -63,18 +63,19 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         username: 'username_1',
         email: '',
         nickname: '',
-        firstname: '', 
+        firstname: '',
         lastname: '',
         props: {},
         create_at: 0,
         update_at: 0,
         is_bot: false,
+        is_guest: false,
         roles: 'system_user',
     }
     const template1Title = 'Template 1'
     const globalTemplateTitle = 'Template Global'
     const boardTitle = 'Board 1'
-    let store:MockStoreEnhanced<unknown, unknown>
+    let store: MockStoreEnhanced<unknown, unknown>
     beforeAll(mockDOM)
     beforeEach(() => {
         jest.clearAllMocks()
@@ -84,7 +85,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             },
             users: {
                 me,
-                boardUsers: [me],
+                boardUsers: {[me.id]: me},
             },
             boards: {
                 boards: [
@@ -122,15 +123,16 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                         properties: {
                             trackingTemplateId: 'template_id_2',
                         },
+                        createdBy: 'system',
                     },
                 ],
                 membersInBoards: {
-                    ['1']: {userId: me.id, schemeAdmin: true},
-                    ['2']: {userId: me.id, schemeAdmin: true},
+                    1: {userId: me.id, schemeAdmin: true},
+                    2: {userId: me.id, schemeAdmin: true},
                 },
                 myBoardMemberships: {
-                    ['1']: {userId: me.id, schemeAdmin: true},
-                    ['2']: {userId: me.id, schemeAdmin: true},
+                    1: {userId: me.id, schemeAdmin: true},
+                    2: {userId: me.id, schemeAdmin: true},
                 },
                 cards: [],
                 views: [],
@@ -150,10 +152,12 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
                     properties: {
                         trackingTemplateId: 'template_id_global',
                     },
+                    createdBy: 'system',
                 }],
             },
         }
         store = mockStateStore([], state)
+        jest.useRealTimers()
     })
     describe('not a focalboard Plugin', () => {
         beforeAll(() => {
@@ -217,13 +221,13 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             expect(onClose).toBeCalledTimes(1)
         })
         test('return BoardTemplateSelector and click new template', () => {
-            const {container} = render(wrapDNDIntl(
+            render(wrapDNDIntl(
                 <ReduxProvider store={store}>
                     <BoardTemplateSelector onClose={jest.fn()}/>
                 </ReduxProvider>
                 ,
             ), {wrapper: MemoryRouter})
-            const divNewTemplate = container.querySelector('div.new-template')
+            const divNewTemplate = screen.getByText('Create new template').parentElement
             expect(divNewTemplate).not.toBeNull()
             userEvent.click(divNewTemplate!)
             expect(mockedMutator.addEmptyBoardTemplate).toBeCalledTimes(1)
@@ -399,9 +403,9 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
             await waitFor(() => expect(mockedMutator.updateBoard).toBeCalledWith(newBoard, newBoard, 'linked channel'))
             expect(mockedOctoClient.patchUserConfig).toBeCalledWith('user-id-1', {
                 updatedFields: {
-                    'focalboard_onboardingTourStarted': '1',
-                    'focalboard_onboardingTourStep': '0',
-                    'focalboard_tourCategory': 'onboarding',
+                    onboardingTourStarted: '1',
+                    onboardingTourStep: '0',
+                    tourCategory: 'onboarding',
                 },
             })
         })

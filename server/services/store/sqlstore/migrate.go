@@ -7,12 +7,15 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"strings"
 
 	"text/template"
 
-	"github.com/mattermost/morph/models"
+	sq "github.com/Masterminds/squirrel"
 
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/store/sqlstore"
 
 	"github.com/mattermost/morph"
 	drivers "github.com/mattermost/morph/drivers"
@@ -21,17 +24,13 @@ import (
 	sqlite "github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
 
-	mysqldriver "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq" // postgres driver
 
-	sq "github.com/Masterminds/squirrel"
-
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/mattermost-plugin-api/cluster"
 )
 
-//go:embed migrations
-var assets embed.FS
+//go:embed migrations/*.sql
+var Assets embed.FS
 
 const (
 	uniqueIDsMigrationRequiredVersion        = 14
@@ -43,30 +42,6 @@ const (
 
 var errChannelCreatorNotInTeam = errors.New("channel creator not found in user teams")
 
-func appendMultipleStatementsFlag(connectionString string) (string, error) {
-	config, err := mysqldriver.ParseDSN(connectionString)
-	if err != nil {
-		return "", err
-	}
-
-	if config.Params == nil {
-		config.Params = map[string]string{}
-	}
-
-	config.Params["multiStatements"] = "true"
-	return config.FormatDSN(), nil
-}
-
-// resetReadTimeout removes the timeout contraint from the MySQL dsn.
-func resetReadTimeout(dataSource string) (string, error) {
-	config, err := mysqldriver.ParseDSN(dataSource)
-	if err != nil {
-		return "", err
-	}
-	config.ReadTimeout = 0
-	return config.FormatDSN(), nil
-}
-
 // migrations in MySQL need to run with the multiStatements flag
 // enabled, so this method creates a new connection ensuring that it's
 // enabled.
@@ -74,40 +49,61 @@ func (s *SQLStore) getMigrationConnection() (*sql.DB, error) {
 	connectionString := s.connectionString
 	if s.dbType == model.MysqlDBType {
 		var err error
-		connectionString, err = resetReadTimeout(connectionString)
+		connectionString, err = sqlstore.ResetReadTimeout(connectionString)
 		if err != nil {
 			return nil, err
 		}
 
-		connectionString, err = appendMultipleStatementsFlag(connectionString)
+		connectionString, err = sqlstore.AppendMultipleStatementsFlag(connectionString)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	db, err := sql.Open(s.dbType, connectionString)
-	if err != nil {
-		return nil, err
+	var settings mmModel.SqlSettings
+	settings.SetDefaults(false)
+	if s.configFn != nil {
+		settings = s.configFn().SqlSettings
 	}
+	*settings.DriverName = s.dbType
 
-	if err = db.Ping(); err != nil {
-		return nil, err
-	}
+	db := sqlstore.SetupConnection("master", connectionString, &settings)
 
 	return db, nil
 }
 
 func (s *SQLStore) Migrate() error {
+	if s.isPlugin {
+		mutex, mutexErr := s.NewMutexFn("Boards_dbMutex")
+		if mutexErr != nil {
+			return fmt.Errorf("error creating database mutex: %w", mutexErr)
+		}
+
+		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
+		mutex.Lock()
+		defer func() {
+			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
+			mutex.Unlock()
+		}()
+	}
+
+	if err := s.EnsureSchemaMigrationFormat(); err != nil {
+		return err
+	}
+	defer func() {
+		// the old schema migration table deletion happens after the
+		// migrations have run, to be able to recover its information
+		// in case there would be errors during the process.
+		if err := s.deleteOldSchemaMigrationTable(); err != nil {
+			s.logger.Error("cannot delete the old schema migration table", mlog.Err(err))
+		}
+	}()
+
 	var driver drivers.Driver
 	var err error
 
-	migrationConfig := drivers.Config{
-		StatementTimeoutInSecs: 1000000,
-		MigrationsTable:        fmt.Sprintf("%sschema_migrations", s.tablePrefix),
-	}
-
 	if s.dbType == model.SqliteDBType {
-		driver, err = sqlite.WithInstance(s.db, &sqlite.Config{Config: migrationConfig})
+		driver, err = sqlite.WithInstance(s.db)
 		if err != nil {
 			return err
 		}
@@ -128,20 +124,20 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	if s.dbType == model.PostgresDBType {
-		driver, err = postgres.WithInstance(db, &postgres.Config{Config: migrationConfig})
+		driver, err = postgres.WithInstance(db)
 		if err != nil {
 			return err
 		}
 	}
 
 	if s.dbType == model.MysqlDBType {
-		driver, err = mysql.WithInstance(db, &mysql.Config{Config: migrationConfig})
+		driver, err = mysql.WithInstance(db)
 		if err != nil {
 			return err
 		}
 	}
 
-	assetsList, err := assets.ReadDir("migrations")
+	assetsList, err := Assets.ReadDir("migrations")
 	if err != nil {
 		return err
 	}
@@ -162,21 +158,27 @@ func (s *SQLStore) Migrate() error {
 	migrationAssets := &embedded.AssetSource{
 		Names: assetNamesForDriver,
 		AssetFunc: func(name string) ([]byte, error) {
-			asset, mErr := assets.ReadFile("migrations/" + name)
+			asset, mErr := Assets.ReadFile("migrations/" + name)
 			if mErr != nil {
 				return nil, mErr
 			}
 
-			tmpl, pErr := template.New("sql").Parse(string(asset))
+			tmpl, pErr := template.New("sql").Funcs(s.GetTemplateHelperFuncs()).Parse(string(asset))
 			if pErr != nil {
 				return nil, pErr
 			}
+
 			buffer := bytes.NewBufferString("")
 
 			err = tmpl.Execute(buffer, params)
 			if err != nil {
 				return nil, err
 			}
+
+			s.logger.Trace("migration template",
+				mlog.String("name", name),
+				mlog.String("sql", buffer.String()),
+			)
 
 			return buffer.Bytes(), nil
 		},
@@ -189,6 +191,8 @@ func (s *SQLStore) Migrate() error {
 
 	opts := []morph.EngineOption{
 		morph.WithLock("boards-lock-key"),
+		morph.SetMigrationTableName(fmt.Sprintf("%sschema_migrations", s.tablePrefix)),
+		morph.SetStatementTimeoutInSeconds(1000000),
 	}
 
 	if s.dbType == model.SqliteDBType {
@@ -205,31 +209,17 @@ func (s *SQLStore) Migrate() error {
 		engine.Close()
 	}()
 
-	var mutex *cluster.Mutex
-	if s.isPlugin {
-		var mutexErr error
-		mutex, mutexErr = s.NewMutexFn("Boards_dbMutex")
-		if mutexErr != nil {
-			return fmt.Errorf("error creating database mutex: %w", mutexErr)
-		}
+	return s.runMigrationSequence(engine, driver)
+}
 
-		s.logger.Debug("Acquiring cluster lock for Focalboard migrations")
-		mutex.Lock()
-		defer func() {
-			s.logger.Debug("Releasing cluster lock for Focalboard migrations")
-			mutex.Unlock()
-		}()
-	}
-
-	if mErr := s.migrateSchemaVersionTable(src.Migrations()); mErr != nil {
-		return mErr
-	}
-
+// runMigrationSequence executes all the migrations in order, both
+// plain SQL and data migrations.
+func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driver) error {
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, uniqueIDsMigrationRequiredVersion); mErr != nil {
 		return mErr
 	}
 
-	if mErr := s.runUniqueIDsMigration(); mErr != nil {
+	if mErr := s.RunUniqueIDsMigration(); mErr != nil {
 		return fmt.Errorf("error running unique IDs migration: %w", mErr)
 	}
 
@@ -237,20 +227,20 @@ func (s *SQLStore) Migrate() error {
 		return mErr
 	}
 
-	if mErr := s.migrateTeamLessBoards(); mErr != nil {
-		return mErr
+	if mErr := s.RunTeamLessBoardsMigration(); mErr != nil {
+		return fmt.Errorf("error running teamless boards migration: %w", mErr)
+	}
+
+	if mErr := s.RunDeletedMembershipBoardsMigration(); mErr != nil {
+		return fmt.Errorf("error running deleted membership boards migration: %w", mErr)
 	}
 
 	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, categoriesUUIDIDMigrationRequiredVersion); mErr != nil {
 		return mErr
 	}
 
-	if mErr := s.runCategoryUUIDIDMigration(); mErr != nil {
+	if mErr := s.RunCategoryUUIDIDMigration(); mErr != nil {
 		return fmt.Errorf("error running categoryID migration: %w", mErr)
-	}
-
-	if mErr := s.deleteOldSchemaMigrationTable(); mErr != nil {
-		return mErr
 	}
 
 	appliedMigrations, err := driver.AppliedMigrations()
@@ -259,220 +249,17 @@ func (s *SQLStore) Migrate() error {
 	}
 
 	s.logger.Debug("== Applying all remaining migrations ====================",
-		mlog.Int("current_version", len(appliedMigrations)))
+		mlog.Int("current_version", len(appliedMigrations)),
+	)
 
-	return engine.ApplyAll()
-}
-
-// migrateSchemaVersionTable converts the schema version table from
-// the old format used by go-migrate to the new format used by
-// gomorph.
-// When running the Focalboard with go-migrate's schema version table
-// existing in the database, gomorph is unable to make sense of it as it's
-// not in the format required by gomorph.
-func (s *SQLStore) migrateSchemaVersionTable(migrations []*models.Migration) error {
-	migrationNeeded, err := s.isSchemaMigrationNeeded()
-	if err != nil {
+	if err := engine.ApplyAll(); err != nil {
 		return err
 	}
 
-	if !migrationNeeded {
-		return nil
+	// always run the collations & charset fix-ups
+	if mErr := s.RunFixCollationsAndCharsetsMigration(); mErr != nil {
+		return fmt.Errorf("error running fix collations and charsets migration: %w", mErr)
 	}
-
-	s.logger.Info("Migrating schema migration to new format")
-
-	legacySchemaVersion, err := s.getLegacySchemaVersion()
-	if err != nil {
-		return err
-	}
-
-	if err := s.createTempSchemaTable(); err != nil {
-		return err
-	}
-
-	if err := s.populateTempSchemaTable(migrations, legacySchemaVersion); err != nil {
-		return err
-	}
-
-	if err := s.useNewSchemaTable(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
-	// Check if `dirty` column exists on schema version table.
-	// This column exists only for the old schema version table.
-
-	// SQLite needs a bit of a special handling
-	if s.dbType == model.SqliteDBType {
-		return s.isSchemaMigrationNeededSQLite()
-	}
-
-	query := s.getQueryBuilder(s.db).
-		Select("count(*)").
-		From("information_schema.COLUMNS").
-		Where(sq.Eq{
-			"TABLE_NAME":  s.tablePrefix + "schema_migrations",
-			"COLUMN_NAME": "dirty",
-		})
-
-	row := query.QueryRow()
-
-	var count int
-	if err := row.Scan(&count); err != nil {
-		s.logger.Error("failed to check for columns of schema_migrations table", mlog.Err(err))
-		return false, err
-	}
-
-	return count == 1, nil
-}
-
-func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
-	// the way to check presence of a column is different
-	// for SQLite. Hence, the separate function
-
-	query := fmt.Sprintf("PRAGMA table_info(\"%sschema_migrations\");", s.tablePrefix)
-	rows, err := s.db.Query(query)
-	if err != nil {
-		s.logger.Error("SQLite - failed to check for columns in schema_migrations table", mlog.Err(err))
-		return false, err
-	}
-
-	defer s.CloseRows(rows)
-
-	data := [][]*string{}
-	for rows.Next() {
-		// PRAGMA returns 6 columns
-		row := make([]*string, 6)
-
-		err := rows.Scan(
-			&row[0],
-			&row[1],
-			&row[2],
-			&row[3],
-			&row[4],
-			&row[5],
-		)
-		if err != nil {
-			s.logger.Error("error scanning rows from SQLite schema_migrations table definition", mlog.Err(err))
-			return false, err
-		}
-
-		data = append(data, row)
-	}
-
-	nameColumnFound := false
-	for _, row := range data {
-		if len(row) >= 2 && *row[1] == "dirty" {
-			nameColumnFound = true
-			break
-		}
-	}
-
-	return nameColumnFound, nil
-}
-
-func (s *SQLStore) getLegacySchemaVersion() (uint32, error) {
-	query := s.getQueryBuilder(s.db).
-		Select("version").
-		From(s.tablePrefix + "schema_migrations")
-
-	row := query.QueryRow()
-
-	var version uint32
-	if err := row.Scan(&version); err != nil {
-		s.logger.Error("error fetching legacy schema version", mlog.Err(err))
-		s.logger.Error("getLegacySchemaVersion err " + err.Error())
-		return version, err
-	}
-
-	return version, nil
-}
-
-func (s *SQLStore) createTempSchemaTable() error {
-	// squirrel doesn't support DDL query in query builder
-	// so, we need to use a plain old string
-	query := fmt.Sprintf("CREATE TABLE IF NOT EXISTS %s (Version bigint NOT NULL, Name varchar(64) NOT NULL, PRIMARY KEY (Version))", s.tablePrefix+tempSchemaMigrationTableName)
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to create temporary schema migration table", mlog.Err(err))
-		s.logger.Error("createTempSchemaTable error  " + err.Error())
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) populateTempSchemaTable(migrations []*models.Migration, legacySchemaVersion uint32) error {
-	query := s.getQueryBuilder(s.db).
-		Insert(s.tablePrefix+tempSchemaMigrationTableName).
-		Columns("Version", "Name")
-
-	for _, migration := range migrations {
-		// migrations param contains both up and down variant for
-		// each migration. Skipping for either one (down in this case)
-		// to process a migration only a single time.
-		if migration.Direction == models.Down {
-			continue
-		}
-
-		if migration.Version > legacySchemaVersion {
-			break
-		}
-
-		query = query.Values(migration.Version, migration.Name)
-	}
-
-	if _, err := query.Exec(); err != nil {
-		s.logger.Error("failed to insert migration records into temporary schema table", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) useNewSchemaTable() error {
-	// first delete the old table, then
-	// rename the new table to old table's name
-
-	// renaming old schema migration table. Will delete later once the migration is
-	// complete, just in case.
-	var query string
-	if s.dbType == model.MysqlDBType {
-		query = fmt.Sprintf("RENAME TABLE `%sschema_migrations` TO `%sschema_migrations_old_temp`", s.tablePrefix, s.tablePrefix)
-	} else {
-		query = fmt.Sprintf("ALTER TABLE %sschema_migrations RENAME TO %sschema_migrations_old_temp", s.tablePrefix, s.tablePrefix)
-	}
-
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to rename old schema migration table", mlog.Err(err))
-		return err
-	}
-
-	// renaming new temp table to old table's name
-	if s.dbType == model.MysqlDBType {
-		query = fmt.Sprintf("RENAME TABLE `%s%s` TO `%sschema_migrations`", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
-	} else {
-		query = fmt.Sprintf("ALTER TABLE %s%s RENAME TO %sschema_migrations", s.tablePrefix, tempSchemaMigrationTableName, s.tablePrefix)
-	}
-
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to rename temp schema table", mlog.Err(err))
-		return err
-	}
-
-	return nil
-}
-
-func (s *SQLStore) deleteOldSchemaMigrationTable() error {
-	query := "DROP TABLE IF EXISTS " + s.tablePrefix + "schema_migrations_old_temp"
-	if _, err := s.db.Exec(query); err != nil {
-		s.logger.Error("failed to delete old temp schema migrations table", mlog.Err(err))
-		return err
-	}
-
 	return nil
 }
 
@@ -504,4 +291,428 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 	}
 
 	return nil
+}
+
+func (s *SQLStore) GetTemplateHelperFuncs() template.FuncMap {
+	funcs := template.FuncMap{
+		"addColumnIfNeeded":     s.genAddColumnIfNeeded,
+		"dropColumnIfNeeded":    s.genDropColumnIfNeeded,
+		"createIndexIfNeeded":   s.genCreateIndexIfNeeded,
+		"renameTableIfNeeded":   s.genRenameTableIfNeeded,
+		"renameColumnIfNeeded":  s.genRenameColumnIfNeeded,
+		"doesTableExist":        s.doesTableExist,
+		"doesColumnExist":       s.doesColumnExist,
+		"addConstraintIfNeeded": s.genAddConstraintIfNeeded,
+	}
+	return funcs
+}
+
+func (s *SQLStore) genAddColumnIfNeeded(tableName, columnName, datatype, constraint string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// Sqlite does not support any conditionals that can contain DDL commands. No idempotent migrations for Sqlite :-(
+		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          s.schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"column_name":     columnName,
+			"data_type":       datatype,
+			"constraint":      constraint,
+		}
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				  SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND column_name = '[[column_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] ADD COLUMN [[column_name]] [[data_type]] [[constraint]];'
+			));
+			PREPARE addColumnIfNeeded FROM @stmt;
+			EXECUTE addColumnIfNeeded;
+			DEALLOCATE PREPARE addColumnIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN IF NOT EXISTS %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genDropColumnIfNeeded(tableName, columnName string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		return fmt.Sprintf("\n-- Sqlite3 cannot drop columns for versions less than 3.35.0; drop column '%s' in table '%s' skipped\n", columnName, tableName), nil
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          s.schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"column_name":     columnName,
+		}
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				  SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND column_name = '[[column_name]]'
+				) > 0,
+				'ALTER TABLE [[norm_table_name]] DROP COLUMN [[column_name]];',
+				'SELECT 1;'
+			));
+			PREPARE dropColumnIfNeeded FROM @stmt;
+			EXECUTE dropColumnIfNeeded;
+			DEALLOCATE PREPARE dropColumnIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nALTER TABLE %s DROP COLUMN IF EXISTS %s;\n", normTableName, columnName), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genCreateIndexIfNeeded(tableName, columns string) (string, error) {
+	indexName := getIndexName(tableName, columns)
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// No support for idempotent index creation in Sqlite.
+		return fmt.Sprintf("\nCREATE INDEX %s ON %s (%s);\n", indexName, normTableName, columns), nil
+	case model.MysqlDBType:
+		vars := map[string]string{
+			"schema":          s.schemaName,
+			"table_name":      tableName,
+			"norm_table_name": normTableName,
+			"index_name":      indexName,
+			"columns":         columns,
+		}
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				  SELECT COUNT(index_name) FROM INFORMATION_SCHEMA.STATISTICS
+				  WHERE table_name = '[[table_name]]'
+				  AND table_schema = '[[schema]]'
+				  AND index_name = '[[index_name]]'
+				) > 0,
+				'SELECT 1;',
+				'CREATE INDEX [[index_name]] ON [[norm_table_name]] ([[columns]]);'
+			));
+			PREPARE createIndexIfNeeded FROM @stmt;
+			EXECUTE createIndexIfNeeded;
+			DEALLOCATE PREPARE createIndexIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return fmt.Sprintf("\nCREATE INDEX IF NOT EXISTS %s ON %s (%s);\n", indexName, normTableName, columns), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genRenameTableIfNeeded(oldTableName, newTableName string) (string, error) {
+	oldTableName = addPrefixIfNeeded(oldTableName, s.tablePrefix)
+	newTableName = addPrefixIfNeeded(newTableName, s.tablePrefix)
+
+	normOldTableName := normalizeTablename(s.schemaName, oldTableName)
+
+	vars := map[string]string{
+		"schema":              s.schemaName,
+		"table_name":          newTableName,
+		"norm_old_table_name": normOldTableName,
+		"new_table_name":      newTableName,
+	}
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// No support for idempotent table renaming in Sqlite.
+		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", normOldTableName, newTableName), nil
+	case model.MysqlDBType:
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
+				WHERE table_name = '[[table_name]]'
+				AND table_schema = '[[schema]]'
+				) > 0,
+				'SELECT 1;',
+				'RENAME TABLE [[norm_old_table_name]] TO [[new_table_name]];'
+			));
+			PREPARE renameTableIfNeeded FROM @stmt;
+			EXECUTE renameTableIfNeeded;
+			DEALLOCATE PREPARE renameTableIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return replaceVars(`
+			do $$
+			begin 
+				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
+							WHERE table_name = '[[new_table_name]]'
+							AND table_schema = '[[schema]]'
+				) = 0 then 
+					ALTER TABLE [[norm_old_table_name]] RENAME TO [[new_table_name]];
+				end if;
+			end$$;		
+		`, vars), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) genRenameColumnIfNeeded(tableName, oldColumnName, newColumnName, dataType string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	vars := map[string]string{
+		"schema":          s.schemaName,
+		"table_name":      tableName,
+		"norm_table_name": normTableName,
+		"old_column_name": oldColumnName,
+		"new_column_name": newColumnName,
+		"data_type":       dataType,
+	}
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// No support for idempotent column renaming in Sqlite.
+		return fmt.Sprintf("\nALTER TABLE %s RENAME COLUMN %s TO %s;\n", normTableName, oldColumnName, newColumnName), nil
+	case model.MysqlDBType:
+		return replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(column_name) FROM INFORMATION_SCHEMA.COLUMNS
+				WHERE table_name = '[[table_name]]'
+				AND table_schema = '[[schema]]'
+				AND column_name = '[[new_column_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] CHANGE [[old_column_name]] [[new_column_name]] [[data_type]];'
+			));
+			PREPARE renameColumnIfNeeded FROM @stmt;
+			EXECUTE renameColumnIfNeeded;
+			DEALLOCATE PREPARE renameColumnIfNeeded;
+		`, vars), nil
+	case model.PostgresDBType:
+		return replaceVars(`
+			do $$
+			begin 
+				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.COLUMNS
+							WHERE table_name = '[[table_name]]'
+							AND table_schema = '[[schema]]'
+							AND column_name = '[[new_column_name]]'
+				) = 0 then 
+					ALTER TABLE [[norm_table_name]] RENAME COLUMN [[old_column_name]] TO [[new_column_name]];
+				end if;
+			end$$;		
+		`, vars), nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+}
+
+func (s *SQLStore) doesTableExist(tableName string) (bool, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("table_name").
+			From("INFORMATION_SCHEMA.TABLES").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": s.schemaName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From("sqlite_master").
+			Where(sq.Eq{
+				"name": tableName,
+				"type": "table",
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesTableExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Trace("doesTableExist",
+		mlog.String("table", tableName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func (s *SQLStore) doesColumnExist(tableName, columnName string) (bool, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType, model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("table_name").
+			From("INFORMATION_SCHEMA.COLUMNS").
+			Where(sq.Eq{
+				"table_name":   tableName,
+				"table_schema": s.schemaName,
+				"column_name":  columnName,
+			})
+	case model.SqliteDBType:
+		query = s.getQueryBuilder(s.db).
+			Select("name").
+			From(fmt.Sprintf("pragma_table_info('%s')", tableName)).
+			Where(sq.Eq{
+				"name": columnName,
+			})
+	default:
+		return false, ErrUnsupportedDatabaseType
+	}
+
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error(`doesColumnExist ERROR`, mlog.Err(err))
+		return false, err
+	}
+	defer s.CloseRows(rows)
+
+	exists := rows.Next()
+	sql, _, _ := query.ToSql()
+
+	s.logger.Trace("doesColumnExist",
+		mlog.String("table", tableName),
+		mlog.String("column", columnName),
+		mlog.Bool("exists", exists),
+		mlog.String("sql", sql),
+	)
+	return exists, nil
+}
+
+func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constraintType, constraintDefinition string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	var query string
+
+	vars := map[string]string{
+		"schema":                s.schemaName,
+		"constraint_name":       constraintName,
+		"constraint_type":       constraintType,
+		"table_name":            tableName,
+		"constraint_definition": constraintDefinition,
+		"norm_table_name":       normTableName,
+	}
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// SQLite doesn't have a generic way to add constraint. For example, you can only create indexes on existing tables.
+		// For other constraints, you need to re-build the table. So skipping here.
+		// Include SQLite specific migration in original migration file.
+		query = fmt.Sprintf("\n-- Sqlite3 cannot drop constraints; drop constraint '%s' in table '%s' skipped\n", constraintName, tableName)
+	case model.MysqlDBType:
+		query = replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+				WHERE constraint_schema = '[[schema]]'
+				AND constraint_name = '[[constraint_name]]'
+				AND constraint_type = '[[constraint_type]]'
+				AND table_name = '[[table_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] ADD CONSTRAINT [[constraint_name]] [[constraint_definition]];'
+			));
+			PREPARE addConstraintIfNeeded FROM @stmt;
+			EXECUTE addConstraintIfNeeded;
+			DEALLOCATE PREPARE addConstraintIfNeeded;
+		`, vars)
+	case model.PostgresDBType:
+		query = replaceVars(`
+		DO
+		$$
+		BEGIN
+		IF NOT EXISTS (
+			SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+				WHERE constraint_schema = '[[schema]]'
+				AND constraint_name = '[[constraint_name]]'
+				AND constraint_type = '[[constraint_type]]'
+				AND table_name = '[[table_name]]'
+		) THEN
+			ALTER TABLE [[norm_table_name]] ADD CONSTRAINT [[constraint_name]] [[constraint_definition]];
+		END IF;
+		END;
+		$$
+		LANGUAGE plpgsql;
+		`, vars)
+	}
+
+	return query, nil
+}
+
+func addPrefixIfNeeded(s, prefix string) string {
+	if !strings.HasPrefix(s, prefix) {
+		return prefix + s
+	}
+	return s
+}
+
+func normalizeTablename(schemaName, tableName string) string {
+	if schemaName != "" && !strings.HasPrefix(tableName, schemaName+".") {
+		tableName = schemaName + "." + tableName
+	}
+	return tableName
+}
+
+func getIndexName(tableName string, columns string) string {
+	var sb strings.Builder
+
+	_, _ = sb.WriteString("idx_")
+	_, _ = sb.WriteString(tableName)
+
+	// allow developers to separate column names with spaces and/or commas
+	columns = strings.ReplaceAll(columns, ",", " ")
+	cols := strings.Split(columns, " ")
+
+	for _, s := range cols {
+		sub := strings.TrimSpace(s)
+		if sub == "" {
+			continue
+		}
+
+		_, _ = sb.WriteString("_")
+		_, _ = sb.WriteString(s)
+	}
+	return sb.String()
+}
+
+// replaceVars replaces instances of variable placeholders with the
+// values provided via a map.  Variable placeholders are of the form
+// `[[var_name]]`.
+func replaceVars(s string, vars map[string]string) string {
+	for key, val := range vars {
+		placeholder := "[[" + key + "]]"
+		val = strings.ReplaceAll(val, "'", "\\'")
+		s = strings.ReplaceAll(s, placeholder, val)
+	}
+	return s
 }

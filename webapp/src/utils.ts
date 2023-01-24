@@ -4,9 +4,9 @@ import {marked} from 'marked'
 import {IntlShape} from 'react-intl'
 import moment from 'moment'
 
-import {generatePath, match as routerMatch} from "react-router-dom"
+import {generatePath, match as routerMatch} from 'react-router-dom'
 
-import {History} from "history"
+import {History} from 'history'
 
 import {IUser} from './user'
 
@@ -31,8 +31,9 @@ const base32Alphabet = 'ybndrfg8ejkmcpqxot1uwisza345h769'
 
 export const SYSTEM_ADMIN_ROLE = 'system_admin'
 export const TEAM_ADMIN_ROLE = 'team_admin'
+export type CategoryOrder = string[]
 
-export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData | BoardType | BoardMember | null
+export type WSMessagePayloads = Block | Category | BoardCategoryWebsocketData[] | BoardType | BoardMember | null | CategoryOrder
 
 // eslint-disable-next-line no-shadow
 enum IDType {
@@ -54,7 +55,7 @@ export const KeyCodes: Record<string, [string, number]> = {
 
 export const ShowUsername = 'username'
 export const ShowNicknameFullName = 'nickname_full_name'
-export const ShowFullName         = 'full_name'
+export const ShowFullName = 'full_name'
 
 class Utils {
     static createGuid(idType: IDType): string {
@@ -88,26 +89,26 @@ class Utils {
     }
 
     static getUserDisplayName(user: IUser, configNameFormat: string): string {
-        let nameFormat = configNameFormat    
-        if(UserSettings.nameFormat){
-            nameFormat=UserSettings.nameFormat
+        let nameFormat = configNameFormat
+        if (UserSettings.nameFormat) {
+            nameFormat = UserSettings.nameFormat
         }
-    
+
         // default nameFormat = 'username'
         let displayName = user.username
-    
+
         if (nameFormat === ShowNicknameFullName) {
-            if( user.nickname != '') {
-                displayName = user.nickname
-            } else {
+            if (user.nickname === '') {
                 const fullName = Utils.getFullName(user)
-                if(fullName != ''){
+                if (fullName !== '') {
                     displayName = fullName
                 }
+            } else {
+                displayName = user.nickname
             }
-        } else if (nameFormat == ShowFullName) {
+        } else if (nameFormat === ShowFullName) {
             const fullName = Utils.getFullName(user)
-            if(fullName != ''){
+            if (fullName !== '') {
                 displayName = fullName
             }
         }
@@ -115,15 +116,14 @@ class Utils {
     }
 
     static getFullName(user: IUser): string {
-        if (user.firstname != '' && user.lastname != '') {
+        if (user.firstname !== '' && user.lastname !== '') {
             return user.firstname + ' ' + user.lastname
-        } else if (user.firstname != '') {
+        } else if (user.firstname !== '') {
             return user.firstname
-        } else if (user.lastname != '') {
+        } else if (user.lastname !== '') {
             return user.lastname
-        } else {
-            return ''
         }
+        return ''
     }
 
     static randomArray(size: number): Uint8Array {
@@ -166,6 +166,15 @@ class Utils {
         return output
     }
 
+    // general purpose (non-secure) hash
+    static hashCode(s: string) {
+        let h = 0
+        for (let i = 0; i < s.length; i++) {
+            h = Math.imul(31, h) + s.charCodeAt(i) | 0
+        }
+        return h
+    }
+
     static htmlToElement(html: string): HTMLElement {
         const template = document.createElement('template')
         template.innerHTML = html.trim()
@@ -187,7 +196,7 @@ class Utils {
     }
 
     // re-use canvas object for better performance
-    static canvas : HTMLCanvasElement | undefined
+    static canvas: HTMLCanvasElement | undefined
     static getTextWidth(displayText: string, fontDescriptor: string): number {
         if (displayText !== '') {
             if (!Utils.canvas) {
@@ -203,7 +212,7 @@ class Utils {
         return 0
     }
 
-    static getFontAndPaddingFromCell = (cell: Element) : {fontDescriptor: string, padding: number} => {
+    static getFontAndPaddingFromCell = (cell: Element): {fontDescriptor: string, padding: number} => {
         const style = getComputedStyle(cell)
         const padding = Utils.getTotalHorizontalPadding(style)
         return Utils.getFontAndPaddingFromChildren(cell.children, padding)
@@ -211,7 +220,7 @@ class Utils {
 
     // recursive routine to determine the padding and font from its children
     // specifically for the table view
-    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number) : {fontDescriptor: string, padding: number} => {
+    static getFontAndPaddingFromChildren = (children: HTMLCollection, pad: number): {fontDescriptor: string, padding: number} => {
         const myResults = {
             fontDescriptor: '',
             padding: pad,
@@ -286,8 +295,8 @@ class Utils {
             return '<a ' +
                 'target="_blank" ' +
                 'rel="noreferrer" ' +
-                `href="${encodeURI(href || '')}" ` +
-                `title="${title ? encodeURI(title) : ''}" ` +
+                `href="${encodeURI(decodeURI(href || ''))}" ` +
+                `title="${title || ''}" ` +
                 `onclick="${(window.openInNewBrowser ? ' openInNewBrowser && openInNewBrowser(event.target.href);' : '')}"` +
             '>' + contents + '</a>'
         }
@@ -574,7 +583,8 @@ class Utils {
     }
 
     static buildURL(path: string, absolute?: boolean): string {
-        if (!Utils.isFocalboardPlugin()) {
+        /* eslint-disable no-process-env */
+        if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
             return path
         }
 
@@ -618,6 +628,8 @@ class Utils {
             return [message.blockCategories, 'blockCategories']
         } else if (message.member) {
             return [message.member, 'boardMembers']
+        } else if (message.categoryOrder) {
+            return [message.categoryOrder, 'categoryOrder']
         }
         return [null, 'block']
     }
@@ -758,8 +770,8 @@ class Utils {
     }
 
     static getBoardPagePath(currentPath: string) {
-        if (currentPath == "/team/:teamId/new/:channelId") {
-            return "/team/:teamId/:boardId?/:viewId?/:cardId?"
+        if (currentPath === '/team/:teamId/new/:channelId') {
+            return '/team/:teamId/:boardId?/:viewId?/:cardId?'
         }
         return currentPath
     }

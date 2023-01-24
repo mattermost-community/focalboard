@@ -17,14 +17,6 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-type BoardNotFoundErr struct {
-	boardID string
-}
-
-func (be BoardNotFoundErr) Error() string {
-	return fmt.Sprintf("board not found (board id: %s", be.boardID)
-}
-
 func boardFields(prefix string) []string {
 	fields := []string{
 		"id",
@@ -231,7 +223,7 @@ func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string,
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`getBoardsByCondition ERROR`, mlog.Err(err))
+		s.logger.Error(`getBoardsFieldsByCondition ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
@@ -242,7 +234,7 @@ func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string,
 	}
 
 	if len(boards) == 0 {
-		return nil, sql.ErrNoRows
+		return nil, model.NewErrNotFound("boards")
 	}
 
 	return boards, nil
@@ -252,21 +244,25 @@ func (s *SQLStore) getBoard(db sq.BaseRunner, boardID string) (*model.Board, err
 	return s.getBoardByCondition(db, sq.Eq{"id": boardID})
 }
 
-func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string) ([]*model.Board, error) {
+func (s *SQLStore) getBoardsForUserAndTeam(db sq.BaseRunner, userID, teamID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
 		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Or{
+		Where(sq.Eq{"b.is_template": false})
+
+	if includePublicBoards {
+		query = query.Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.And{
-				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
-			},
+			sq.Eq{"bm.user_id": userID},
 		})
+	} else {
+		query = query.Where(sq.Or{
+			sq.Eq{"bm.user_id": userID},
+		})
+	}
 
 	rows, err := query.Query()
 	if err != nil {
@@ -283,7 +279,6 @@ func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, tea
 		Select(boardFields("b.")...).
 		From(s.tablePrefix + "boards as b").
 		Where(sq.Eq{"b.team_id": teamID}).
-		Where(sq.Eq{"b.is_template": false}).
 		Where(sq.Eq{"b.id": boardIDs})
 
 	rows, err := query.Query()
@@ -293,7 +288,20 @@ func (s *SQLStore) getBoardsInTeamByIds(db sq.BaseRunner, boardIDs []string, tea
 	}
 	defer s.CloseRows(rows)
 
-	return s.boardsFromRows(rows)
+	boards, err := s.boardsFromRows(rows)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(boards) != len(boardIDs) {
+		s.logger.Warn("getBoardsInTeamByIds mismatched number of boards found",
+			mlog.Int("len(boards)", len(boards)),
+			mlog.Int("len(boardIDs)", len(boardIDs)),
+		)
+		return boards, model.NewErrNotAllFound("board", boardIDs)
+	}
+
+	return boards, nil
 }
 
 func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, error) {
@@ -335,13 +343,15 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		Columns(boardFields("")...)
 
 	now := utils.GetMillis()
+	board.ModifiedBy = userID
+	board.UpdateAt = now
 
 	insertQueryValues := map[string]interface{}{
 		"id":               board.ID,
 		"team_id":          board.TeamID,
 		"channel_id":       board.ChannelID,
 		"created_by":       board.CreatedBy,
-		"modified_by":      userID,
+		"modified_by":      board.ModifiedBy,
 		"type":             board.Type,
 		"title":            board.Title,
 		"minimum_role":     board.MinimumRole,
@@ -353,14 +363,14 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		"properties":       propertiesBytes,
 		"card_properties":  cardPropertiesBytes,
 		"create_at":        board.CreateAt,
-		"update_at":        now,
+		"update_at":        board.UpdateAt,
 		"delete_at":        board.DeleteAt,
 	}
 
 	if existingBoard != nil {
 		query := s.getQueryBuilder(db).Update(s.tablePrefix+"boards").
 			Where(sq.Eq{"id": board.ID}).
-			Set("modified_by", userID).
+			Set("modified_by", board.ModifiedBy).
 			Set("type", board.Type).
 			Set("channel_id", board.ChannelID).
 			Set("minimum_role", board.MinimumRole).
@@ -372,7 +382,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			Set("template_version", board.TemplateVersion).
 			Set("properties", propertiesBytes).
 			Set("card_properties", cardPropertiesBytes).
-			Set("update_at", now).
+			Set("update_at", board.UpdateAt).
 			Set("delete_at", board.DeleteAt)
 
 		if _, err := query.Exec(); err != nil {
@@ -380,9 +390,10 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 			return nil, fmt.Errorf("insertBoard error occurred while updating existing board %s: %w", board.ID, err)
 		}
 	} else {
-		insertQueryValues["created_by"] = userID
-		insertQueryValues["create_at"] = now
-		insertQueryValues["update_at"] = now
+		board.CreatedBy = userID
+		board.CreateAt = now
+		insertQueryValues["created_by"] = board.CreatedBy
+		insertQueryValues["create_at"] = board.CreateAt
 
 		query := insertQuery.SetMap(insertQueryValues).Into(s.tablePrefix + "boards")
 		if _, err := query.Exec(); err != nil {
@@ -397,7 +408,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 		return nil, fmt.Errorf("failed to insert board %s history: %w", board.ID, err)
 	}
 
-	return s.getBoard(db, board.ID)
+	return board, nil
 }
 
 func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *model.BoardPatch, userID string) (*model.Board, error) {
@@ -405,15 +416,16 @@ func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *mode
 	if err != nil {
 		return nil, err
 	}
-	if existingBoard == nil {
-		return nil, BoardNotFoundErr{boardID}
-	}
 
 	board := boardPatch.Patch(existingBoard)
 	return s.insertBoard(db, board, userID)
 }
 
 func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
+	return s.deleteBoardAndChildren(db, boardID, userID, false)
+}
+
+func (s *SQLStore) deleteBoardAndChildren(db sq.BaseRunner, boardID, userID string, keepChildren bool) error {
 	now := utils.GetMillis()
 
 	board, err := s.getBoard(db, boardID)
@@ -469,7 +481,11 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	return nil
+	if keepChildren {
+		return nil
+	}
+
+	return s.deleteBlockChildren(db, boardID, "", userID)
 }
 
 func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, *model.BoardMember, error) {
@@ -594,7 +610,8 @@ func (s *SQLStore) getMemberForBoard(db sq.BaseRunner, boardID, userID string) (
 	}
 
 	if len(members) == 0 {
-		return nil, sql.ErrNoRows
+		message := fmt.Sprintf("board member BoardID=%s UserID=%s", boardID, userID)
+		return nil, model.NewErrNotFound(message)
 	}
 
 	return members[0], nil
@@ -643,35 +660,50 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string) ([]*model.Board, error) {
+func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
 		From(s.tablePrefix + "boards as b").
 		LeftJoin(s.tablePrefix + "board_members as bm on b.id=bm.board_id").
-		Where(sq.Eq{"b.is_template": false}).
-		Where(sq.Or{
+		Where(sq.Eq{"b.is_template": false})
+
+	if includePublicBoards {
+		query = query.Where(sq.Or{
 			sq.Eq{"b.type": model.BoardTypeOpen},
-			sq.And{
-				sq.Eq{"b.type": model.BoardTypePrivate},
-				sq.Eq{"bm.user_id": userID},
-			},
+			sq.Eq{"bm.user_id": userID},
 		})
+	} else {
+		query = query.Where(sq.Or{
+			sq.Eq{"bm.user_id": userID},
+		})
+	}
 
 	if term != "" {
-		// break search query into space separated words
-		// and search for each word.
-		// This should later be upgraded to industrial-strength
-		// word tokenizer, that uses much more than space
-		// to break words.
-
-		conditions := sq.Or{}
-
-		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		if searchField == model.BoardSearchFieldPropertyName {
+			switch s.dbType {
+			case model.PostgresDBType:
+				where := "b.properties->? is not null"
+				query = query.Where(where, term)
+			case model.MysqlDBType, model.SqliteDBType:
+				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
+				query = query.Where(where, "$."+term)
+			default:
+				where := "b.properties LIKE ?"
+				query = query.Where(where, "%\""+term+"\"%")
+			}
+		} else { // model.BoardSearchFieldTitle
+			// break search query into space separated words
+			// and search for all words.
+			// This should later be upgraded to industrial-strength
+			// word tokenizer, that uses much more than space
+			// to break words.
+			conditions := sq.And{}
+			for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+				conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+			}
+			query = query.Where(conditions)
 		}
-
-		query = query.Where(conditions)
 	}
 
 	rows, err := query.Query()
@@ -706,12 +738,12 @@ func (s *SQLStore) searchBoardsForUserInTeam(db sq.BaseRunner, teamID, term, use
 
 	if term != "" {
 		// break search query into space separated words
-		// and search for each word.
+		// and search for all words.
 		// This should later be upgraded to industrial-strength
 		// word tokenizer, that uses much more than space
 		// to break words.
 
-		conditions := sq.Or{}
+		conditions := sq.And{}
 
 		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
 			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
@@ -848,7 +880,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return err
 	}
 
-	return nil
+	return s.undeleteBlockChildren(db, board.ID, "", modifiedBy)
 }
 
 func (s *SQLStore) getBoardMemberHistory(db sq.BaseRunner, boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {

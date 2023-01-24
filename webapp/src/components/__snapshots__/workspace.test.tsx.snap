@@ -110,127 +110,128 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
       </div>
       <div
         class="octo-sidebar-list"
+        data-rbd-droppable-context-id="1"
+        data-rbd-droppable-id="lhs-categories"
       >
         <div
-          class="SidebarCategory"
+          data-rbd-draggable-context-id="1"
         >
           <div
-            class="octo-sidebar-item category ' expanded active"
+            class="SidebarCategory"
           >
             <div
-              class="octo-sidebar-title category-title"
-              title="Category 1"
+              class="categoryBoardsDroppableArea"
+              data-rbd-droppable-context-id="1"
             >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-              Category 1
-            </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                type="button"
+              <div
+                class="octo-sidebar-item category expanded active"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            class="SidebarBoardItem subitem active"
-          >
-            <div
-              class="octo-sidebar-icon"
-            >
-              i
-            </div>
-            <div
-              class="octo-sidebar-title"
-              title="board title"
-            >
-              board title
-            </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper x"
-              role="button"
-            >
-              <button
-                type="button"
+                <div
+                  aria-describedby="rbd-hidden-text-1-hidden-text-5"
+                  class="octo-sidebar-title category-title"
+                  data-rbd-drag-handle-context-id="1"
+                  draggable="false"
+                  role="button"
+                  tabindex="0"
+                  title="Category 1"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  />
+                  Category 1
+                  <div
+                    class="sidebarCategoriesTour"
+                  />
+                </div>
+                <div
+                  class=""
+                >
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <button
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                data-rbd-draggable-context-id="1"
+                data-rbd-draggable-id="board1"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <div
+                  aria-describedby="rbd-hidden-text-1-hidden-text-5"
+                  class="SidebarBoardItem subitem active"
+                  data-rbd-drag-handle-context-id="1"
+                  data-rbd-drag-handle-draggable-id="board1"
+                  draggable="false"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="octo-sidebar-icon"
+                  >
+                    i
+                  </div>
+                  <div
+                    class="octo-sidebar-title"
+                    title="board title"
+                  >
+                    board title
+                  </div>
+                  <div>
+                    <div
+                      aria-label="menuwrapper"
+                      class="MenuWrapper x"
+                      role="button"
+                    >
+                      <button
+                        type="button"
+                      >
+                        <i
+                          class="CompassIcon icon-dots-horizontal OptionsIcon"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="SidebarBoardItem sidebar-view-item active"
+                >
+                  <svg
+                    class="BoardIcon Icon"
+                    fill="currentColor"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      opacity="0.8"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                    </g>
+                  </svg>
+                  <div
+                    class="octo-sidebar-title"
+                    title="view title"
+                  >
+                    view title
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div
-            class="SidebarBoardItem sidebar-view-item active"
-          >
-            <svg
-              class="BoardIcon Icon"
-              fill="currentColor"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                opacity="0.8"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </g>
-            </svg>
-            <div
-              class="octo-sidebar-title"
-              title="view title"
-            >
-              view title
-            </div>
-          </div>
-        </div>
-        <div
-          class="SidebarCategory"
-        >
-          <div
-            class="octo-sidebar-item category ' expanded "
-          >
-            <div
-              class="octo-sidebar-title category-title"
-              title="Boards"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-              Boards
-            </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            class="octo-sidebar-item subitem no-views"
-          >
-            No boards inside
           </div>
         </div>
       </div>
@@ -301,7 +302,7 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-eye-off-outline undefined"
+                    class="CompassIcon icon-eye-off-outline"
                   />
                   <span>
                     hide description
@@ -346,53 +347,6 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -915,53 +869,6 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -996,21 +903,6 @@ exports[`src/components/workspace return workspace readonly and showcard 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div>
-                <div
-                  aria-label="View menu"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-chevron-down DropdownIcon"
-                    />
-                  </button>
-                </div>
-              </div>
             </div>
             <div
               class="octo-spacer"
@@ -1329,127 +1221,128 @@ exports[`src/components/workspace should match snapshot 1`] = `
       </div>
       <div
         class="octo-sidebar-list"
+        data-rbd-droppable-context-id="0"
+        data-rbd-droppable-id="lhs-categories"
       >
         <div
-          class="SidebarCategory"
+          data-rbd-draggable-context-id="0"
         >
           <div
-            class="octo-sidebar-item category ' expanded active"
+            class="SidebarCategory"
           >
             <div
-              class="octo-sidebar-title category-title"
-              title="Category 1"
+              class="categoryBoardsDroppableArea"
+              data-rbd-droppable-context-id="0"
             >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-              Category 1
-            </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                type="button"
+              <div
+                class="octo-sidebar-item category expanded active"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            class="SidebarBoardItem subitem active"
-          >
-            <div
-              class="octo-sidebar-icon"
-            >
-              i
-            </div>
-            <div
-              class="octo-sidebar-title"
-              title="board title"
-            >
-              board title
-            </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper x"
-              role="button"
-            >
-              <button
-                type="button"
+                <div
+                  aria-describedby="rbd-hidden-text-0-hidden-text-0"
+                  class="octo-sidebar-title category-title"
+                  data-rbd-drag-handle-context-id="0"
+                  draggable="false"
+                  role="button"
+                  tabindex="0"
+                  title="Category 1"
+                >
+                  <i
+                    class="CompassIcon icon-chevron-down ChevronDownIcon"
+                  />
+                  Category 1
+                  <div
+                    class="sidebarCategoriesTour"
+                  />
+                </div>
+                <div
+                  class=""
+                >
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <button
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                data-rbd-draggable-context-id="0"
+                data-rbd-draggable-id="board1"
               >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
+                <div
+                  aria-describedby="rbd-hidden-text-0-hidden-text-0"
+                  class="SidebarBoardItem subitem active"
+                  data-rbd-drag-handle-context-id="0"
+                  data-rbd-drag-handle-draggable-id="board1"
+                  draggable="false"
+                  role="button"
+                  tabindex="0"
+                >
+                  <div
+                    class="octo-sidebar-icon"
+                  >
+                    i
+                  </div>
+                  <div
+                    class="octo-sidebar-title"
+                    title="board title"
+                  >
+                    board title
+                  </div>
+                  <div>
+                    <div
+                      aria-label="menuwrapper"
+                      class="MenuWrapper x"
+                      role="button"
+                    >
+                      <button
+                        type="button"
+                      >
+                        <i
+                          class="CompassIcon icon-dots-horizontal OptionsIcon"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="SidebarBoardItem sidebar-view-item active"
+                >
+                  <svg
+                    class="BoardIcon Icon"
+                    fill="currentColor"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      opacity="0.8"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                      />
+                    </g>
+                  </svg>
+                  <div
+                    class="octo-sidebar-title"
+                    title="view title"
+                  >
+                    view title
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div
-            class="SidebarBoardItem sidebar-view-item active"
-          >
-            <svg
-              class="BoardIcon Icon"
-              fill="currentColor"
-              height="24"
-              viewBox="0 0 24 24"
-              width="24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                opacity="0.8"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M4 4H20V20H4V4ZM2 4C2 2.89543 2.89543 2 4 2H20C21.1046 2 22 2.89543 22 4V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V4ZM8 6H6V12H8V6ZM11 6H13V16H11V6ZM18 6H16V9H18V6Z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </g>
-            </svg>
-            <div
-              class="octo-sidebar-title"
-              title="view title"
-            >
-              view title
-            </div>
-          </div>
-        </div>
-        <div
-          class="SidebarCategory"
-        >
-          <div
-            class="octo-sidebar-item category ' expanded "
-          >
-            <div
-              class="octo-sidebar-title category-title"
-              title="Boards"
-            >
-              <i
-                class="CompassIcon icon-chevron-down ChevronDownIcon"
-              />
-              Boards
-            </div>
-            <div
-              aria-label="menuwrapper"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-dots-horizontal OptionsIcon"
-                />
-              </button>
-            </div>
-          </div>
-          <div
-            class="octo-sidebar-item subitem no-views"
-          >
-            No boards inside
           </div>
         </div>
       </div>
@@ -1520,7 +1413,7 @@ exports[`src/components/workspace should match snapshot 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-eye-off-outline undefined"
+                    class="CompassIcon icon-eye-off-outline"
                   />
                   <span>
                     hide description
@@ -1565,53 +1458,6 @@ exports[`src/components/workspace should match snapshot 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -2134,53 +1980,6 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                     class="octo-editor-preview"
                     data-testid="preview-element"
                   />
-                  <div
-                    class="MarkdownEditorInput MarkdownEditorInput--IsNotEditing"
-                  >
-                    <div
-                      class="DraftEditor-root"
-                    >
-                      <div
-                        class="DraftEditor-editorContainer"
-                      >
-                        <div
-                          aria-autocomplete="list"
-                          aria-expanded="false"
-                          class="notranslate public-DraftEditor-content"
-                          contenteditable="true"
-                          role="combobox"
-                          spellcheck="false"
-                          style="outline: none; user-select: text; white-space: pre-wrap; word-wrap: break-word;"
-                        >
-                          <div
-                            data-contents="true"
-                          >
-                            <div
-                              class=""
-                              data-block="true"
-                              data-editor="123"
-                              data-offset-key="123-0-0"
-                            >
-                              <div
-                                class="public-DraftStyleDefault-block public-DraftStyleDefault-ltr"
-                                data-offset-key="123-0-0"
-                              >
-                                <span
-                                  data-offset-key="123-0-0"
-                                >
-                                  <span
-                                    data-text="true"
-                                  >
-                                    description
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -2215,21 +2014,6 @@ exports[`src/components/workspace should match snapshot with readonly 1`] = `
                 title="view title"
                 value="view title"
               />
-              <div>
-                <div
-                  aria-label="View menu"
-                  class="MenuWrapper"
-                  role="button"
-                >
-                  <button
-                    type="button"
-                  >
-                    <i
-                      class="CompassIcon icon-chevron-down DropdownIcon"
-                    />
-                  </button>
-                </div>
-              </div>
             </div>
             <div
               class="octo-spacer"

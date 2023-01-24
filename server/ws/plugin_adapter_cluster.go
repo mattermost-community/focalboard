@@ -10,11 +10,13 @@ import (
 type ClusterMessage struct {
 	TeamID      string
 	BoardID     string
+	UserID      string
 	Payload     map[string]interface{}
 	EnsureUsers []string
 }
 
-func (pa *PluginAdapter) sendMessageToCluster(id string, clusterMessage *ClusterMessage) {
+func (pa *PluginAdapter) sendMessageToCluster(clusterMessage *ClusterMessage) {
+	const id = "websocket_message"
 	b, err := json.Marshal(clusterMessage)
 	if err != nil {
 		pa.logger.Error("couldn't get JSON bytes from cluster message",
@@ -66,6 +68,11 @@ func (pa *PluginAdapter) HandleClusterEvent(ev mmModel.PluginClusterEvent) {
 			mlog.String("id", ev.Id),
 			mlog.Map("payload", clusterMessage.Payload),
 		)
+		return
+	}
+
+	if clusterMessage.UserID != "" {
+		pa.sendUserMessageSkipCluster(action, clusterMessage.Payload, clusterMessage.UserID)
 		return
 	}
 

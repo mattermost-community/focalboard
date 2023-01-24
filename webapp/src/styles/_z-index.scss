@@ -9,6 +9,7 @@
 
 $z-index: (
     // key: value
+    modal-permissions-label: 1000,
     board-template-selector: 1000,
     notification-box:        1000,
     calculation-dropdown:     999,
@@ -36,6 +37,7 @@ $z-index: (
     table-header:               1,
     value-selector-delete:      1,
     dialog-backdrop:           -1,
+    unset:                   unset
 );
 
 @function z-index($key) {

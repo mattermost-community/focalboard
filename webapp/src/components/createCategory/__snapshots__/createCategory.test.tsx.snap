@@ -3,7 +3,7 @@
 exports[`components/createCategory/CreateCategory base case should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back CreateCategoryModal"
+    class="Dialog dialog-back CreateCategoryModal size--medium"
   >
     <div
       class="backdrop"
@@ -18,28 +18,33 @@ exports[`components/createCategory/CreateCategory base case should match snapsho
         <div
           class="toolbar"
         >
-          <button
-            aria-label="Close dialog"
-            class="IconButton size--medium"
-            title="Close dialog"
-            type="button"
-          >
-            <i
-              class="CompassIcon icon-close CloseIcon"
-            />
-          </button>
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              <span>
+                title
+              </span>
+            </h1>
+          </div>
           <div
             class="toolbar--right"
-          />
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
         </div>
         <div
           class="CreateCategory"
         >
-          <h3>
-            <span>
-              title
-            </span>
-          </h3>
           <div
             class="inputWrapper"
           >

@@ -23,7 +23,7 @@ describe('src/components/kanban/kanbanHiddenColumnItem', () => {
     const activeView = TestBlockFactory.createBoardView(board)
     const card = TestBlockFactory.createCard(board)
     const card2 = TestBlockFactory.createCard(board)
-    const option:IPropertyOption = {
+    const option: IPropertyOption = {
         id: 'id1',
         value: 'propOption',
         color: 'propColorDefault',

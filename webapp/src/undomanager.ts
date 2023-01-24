@@ -75,7 +75,7 @@ class UndoManager {
 
     registerUndo(
         command: {
-            undo: (value?: any) => Promise<void>,
+            undo: (value?: any) => Promise<void>
             redo: () => Promise<void>
         },
         description?: string,
