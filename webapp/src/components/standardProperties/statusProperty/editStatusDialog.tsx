@@ -80,59 +80,6 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         props.onUpdate(updatedValueCategories)
     }
 
-    const generateValueRow = (categoryID: string, option: EditablePropertyOption, index: number): JSX.Element => {
-        return (
-            <Draggable
-                draggableId={option.id}
-                index={index}
-                key={index}
-            >
-                {(provided) => (
-                    <div
-                        {...provided.draggableProps}
-                        ref={provided.innerRef}
-                        key={option.id}
-                        className='categorySwimlane_Value'
-                    >
-                        <div
-                            {...provided.dragHandleProps}
-                            className='dragHandleWrapper'
-                        >
-                            <DragHandle/>
-                        </div>
-                        <EditableLabel
-                            option={option}
-                            editing={option.id === focusedValueID}
-                            focus={option.id === focusedValueID}
-                            onBlur={(newOptionValue: IPropertyOption) => handleAddNewValue(categoryID, newOptionValue)}
-                        />
-                        <div className={`colorEditor ${option.color} withBorder`}/>
-                        <EditIcon/>
-                    </div>
-                )}
-            </Draggable>
-        )
-    }
-
-    const generateEmptyColumnPlaceholder = (categoryEmptyState: StatusCategoryEmptyState): JSX.Element => {
-        return (
-            <div className='emptyColumnPlaceholder'>
-                <div
-                    className='icon-wrapper'
-                    style={{
-                        backgroundColor: `rgba(var(${categoryEmptyState.color}), 0.2)`,
-                        color: `rgba(var(${categoryEmptyState.color}), 1)`,
-                    }}
-                >
-                    {categoryEmptyState.icon}
-                </div>
-                <div className='placeholderText text-75'>
-                    {categoryEmptyState.text}
-                </div>
-            </div>
-        )
-    }
-
     const handleAddCategoryValue = (categoryID: string) => {
         const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === categoryID)
         if (categoryIndex < 0) {
@@ -152,7 +99,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         setValueCategories(updatedValueCategories)
     }
 
-    const onDragEndHandler = useCallback(async (result: DropResult) => {
+    const onDragEndHandler = (result: DropResult) => {
         const {destination, source, type} = result
 
         if (type !== 'statusCategory' || !destination) {
@@ -172,7 +119,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         updatedValues[destinationCategoryIndex].options.splice(destination.index, 0, draggedObject)
 
         setValueCategories(updatedValues)
-    }, [valueCategories])
+    }
 
     return (
         <ActionDialog
@@ -220,11 +167,54 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                             <div className='overflowWrapper'>
                                                 {
                                                     valueCategory.options.length === 0 &&
-                                         generateEmptyColumnPlaceholder(valueCategory.emptyState)
+                                                    <div className='emptyColumnPlaceholder'>
+                                                        <div
+                                                            className='icon-wrapper'
+                                                            style={{
+                                                                backgroundColor: `rgba(var(${valueCategory.emptyState.color}), 0.2)`,
+                                                                color: `rgba(var(${valueCategory.emptyState.color}), 1)`,
+                                                            }}
+                                                        >
+                                                            {valueCategory.emptyState.icon}
+                                                        </div>
+                                                        <div className='placeholderText text-75'>
+                                                            {valueCategory.emptyState.text}
+                                                        </div>
+                                                    </div>
                                                 }
                                                 {
                                                     valueCategory.options.length > 0 &&
-                                         valueCategory.options.map((option, index) => generateValueRow(valueCategory.id, option, index))
+                                                    valueCategory.options.map((option: EditablePropertyOption, index) => (
+                                                        <Draggable
+                                                            draggableId={option.id}
+                                                            index={index}
+                                                            key={option.id}
+                                                        >
+                                                            {(draggableProvided) => (
+                                                                <div
+                                                                    {...draggableProvided.draggableProps}
+                                                                    ref={draggableProvided.innerRef}
+                                                                    key={option.id}
+                                                                    className='categorySwimlane_Value'
+                                                                >
+                                                                    <div
+                                                                        {...draggableProvided.dragHandleProps}
+                                                                        className='dragHandleWrapper'
+                                                                    >
+                                                                        <DragHandle/>
+                                                                    </div>
+                                                                    <EditableLabel
+                                                                        option={option}
+                                                                        editing={option.id === focusedValueID}
+                                                                        focus={option.id === focusedValueID}
+                                                                        onBlur={(newOptionValue: IPropertyOption) => handleAddNewValue(valueCategory.id, newOptionValue)}
+                                                                    />
+                                                                    <div className={`colorEditor ${option.color} withBorder`}/>
+                                                                    <EditIcon/>
+                                                                </div>
+                                                            )}
+                                                        </Draggable>
+                                                    ))
                                                 }
                                             </div>
                                             {provided.placeholder}
