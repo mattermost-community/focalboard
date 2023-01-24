@@ -1,12 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {useCallback} from 'preact/hooks'
-
-import {DragDropContext, Droppable, Draggable} from 'react-beautiful-dnd'
+import {DragDropContext, Droppable, Draggable, DropReason, DropResult} from 'react-beautiful-dnd'
 
 import PlusIcon from '../../../widgets/icons/plus'
 
@@ -14,10 +12,11 @@ import InfoIcon from '../../../widgets/icons/info'
 
 import './editStatusDialog.scss'
 import ActionDialog from '../../actionDialog/actionDialog'
-import Label from '../../../widgets/label'
 import {IPropertyOption} from '../../../blocks/board'
 import DragHandle from '../../../widgets/icons/dragHandle'
 import EditIcon from '../../../widgets/icons/edit'
+
+import {IDType, Utils} from '../../../utils'
 
 import EditableLabel from './editableLabel/editableLabel'
 
@@ -29,6 +28,7 @@ export type StatusCategoryEmptyState = {
 
 export type EditablePropertyOption = IPropertyOption & {
     editing?: boolean
+    focused?: boolean
 }
 
 export type StatusCategory = {
@@ -46,9 +46,9 @@ type Props = {
 
 const EditStatusPropertyDialog = (props: Props): JSX.Element => {
     const [valueCategories, setValueCategories] = useState<StatusCategory[]>([])
+    const [focusedValueID, setFocusedValueID] = useState<string>()
 
     useEffect(() => {
-        console.log('setting: ' + props.valueCategories.length)
         setValueCategories(props.valueCategories)
     }, [props.valueCategories])
 
@@ -59,11 +59,33 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         />
     )
 
-    const generateValueRow = (option: EditablePropertyOption, index: number): JSX.Element => {
+    const handleAddNewValue = (statusCategoryID: string, newOptionValue: IPropertyOption): void => {
+        const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === statusCategoryID)
+        if (categoryIndex < 0) {
+            Utils.logError(`category with ID: ${statusCategoryID} not found`)
+            return
+        }
+
+        const valueIndex = valueCategories[categoryIndex].options.findIndex((option) => option.id === newOptionValue.id)
+        if (valueIndex < 0) {
+            Utils.logError(`Value with ID ${newOptionValue.id} not found`)
+            return
+        }
+
+        const updatedValueCategories = [...valueCategories]
+        updatedValueCategories[categoryIndex].options[valueIndex] = newOptionValue
+
+        setFocusedValueID('')
+        setValueCategories(updatedValueCategories)
+        props.onUpdate(updatedValueCategories)
+    }
+
+    const generateValueRow = (categoryID: string, option: EditablePropertyOption, index: number): JSX.Element => {
         return (
             <Draggable
                 draggableId={option.id}
                 index={index}
+                key={index}
             >
                 {(provided) => (
                     <div
@@ -80,7 +102,9 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                         </div>
                         <EditableLabel
                             option={option}
-                            editing={option.editing}
+                            editing={option.id === focusedValueID}
+                            focus={option.id === focusedValueID}
+                            onBlur={(newOptionValue: IPropertyOption) => handleAddNewValue(categoryID, newOptionValue)}
                         />
                         <div className={`colorEditor ${option.color} withBorder`}/>
                         <EditIcon/>
@@ -110,27 +134,45 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
     }
 
     const handleAddCategoryValue = (categoryID: string) => {
-        console.log('asdasd')
         const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === categoryID)
         if (categoryIndex < 0) {
             return
         }
 
         const newOption: EditablePropertyOption = {
-            id: '',
+            id: Utils.createGuid(IDType.None),
             value: '',
             color: 'propColorOrange',
-            editing: true,
         }
 
         const updatedValueCategories = [...valueCategories]
         updatedValueCategories[categoryIndex].options.unshift(newOption)
+
+        setFocusedValueID(newOption.id)
         setValueCategories(updatedValueCategories)
     }
 
-    const onDragEndHandler = () => {}
+    const onDragEndHandler = useCallback(async (result: DropResult) => {
+        const {destination, source, type} = result
 
-    console.log(valueCategories)
+        if (type !== 'statusCategory' || !destination) {
+            return
+        }
+
+        console.log(`destination: ${destination} source: ${source} type: ${type}`)
+
+        const updatedValues = Array.from(valueCategories)
+
+        const sourceCategoryIndex = updatedValues.findIndex((valueCategory) => valueCategory.id === source.droppableId)
+        const destinationCategoryIndex = updatedValues.findIndex((valueCategory) => valueCategory.id === destination.droppableId)
+
+        const draggedObject = valueCategories[sourceCategoryIndex].options[source.index]
+
+        updatedValues[sourceCategoryIndex].options.splice(source.index, 1)
+        updatedValues[destinationCategoryIndex].options.splice(destination.index, 0, draggedObject)
+
+        setValueCategories(updatedValues)
+    }, [valueCategories])
 
     return (
         <ActionDialog
@@ -165,7 +207,10 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                         <PlusIcon/>
                                     </div>
                                 </div>
-                                <Droppable droppableId={`categorySwimlane_${valueCategory.id}`}>
+                                <Droppable
+                                    type='statusCategory'
+                                    droppableId={valueCategory.id}
+                                >
                                     {(provided) => (
                                         <div
                                             ref={provided.innerRef}
@@ -179,7 +224,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                                 }
                                                 {
                                                     valueCategory.options.length > 0 &&
-                                         valueCategory.options.map((option, index) => generateValueRow(option, index))
+                                         valueCategory.options.map((option, index) => generateValueRow(valueCategory.id, option, index))
                                                 }
                                             </div>
                                             {provided.placeholder}
