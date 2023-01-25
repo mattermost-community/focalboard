@@ -1,0 +1,129 @@
+header {
+    background: #FAFAFA;
+    font-weight: 300;
+    font-size: 15px;
+    height: 100px;
+    line-height: 100px;
+    width: 100%;
+    position: relative;
+    z-index: 5;
+}
+
+header .container {
+    display: flex;
+    position: relative;
+}
+
+header.with-notification-bar {
+    margin-top: 64px;
+}
+
+.header__logo {
+    margin-top: -8px;
+}
+
+.header__feedback {
+    position: absolute;
+    right: 32px;
+    top: 0;
+}
+
+.header__links--right {
+    list-style: none;
+    padding: 0;
+    z-index: 5;
+    color: var(--black04);
+    font-weight: 600;
+    margin: 0;
+    margin-left: 24px;
+}
+
+.header__links--right li {
+    display: inline-block;
+}
+
+.header__links--right li.active a {
+    color: #186CDA;
+}
+
+.header__links--right a {
+    font-family: var(--tradeGothic);
+    color: inherit;
+    padding: 0 16px;
+}
+
+.homepage .header__links--right a:hover {
+    color: var(--marigold03) !important;
+}
+
+.header__links--right a:hover,
+.header__links--right a:focus {
+    color: #186CDA;
+}
+
+.header__menu-toggle {
+    cursor: pointer;
+    display: none;
+    position: relative;
+    top: 4rem;
+    position: absolute;
+    right: 16px;
+    top: 32px;
+    height: 48px;
+    width: 48px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.header__menu-toggle .menu-bar {
+    height: 3px;
+    background-color: var(--denim02);
+    width: 28px;
+    margin-bottom: 6px;
+}
+
+.logo__white {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .header__links--right {
+        margin-left: 0;
+        background: #fff;
+        border-bottom: 1px solid #ddd;
+        display: none;
+        float: none;
+        line-height: 50px;
+        position: fixed;
+        top: 100px;
+        width: 100%;
+        left: 0;
+        padding-bottom: 12px;
+    }
+
+    .header__links--right li {
+        display: block;
+    }
+
+    .header__links--right li.active {
+        background: #f5f5f5;
+    }
+
+    .header__links--right li.active a {
+        color: #000 !important;
+    }
+
+    .header__links--right a {
+        display: block;
+    }
+
+    .header__menu-toggle {
+        display: flex;
+    }
+
+    .header__feedback {
+        position: relative;
+        left: 16px;
+    }
+}

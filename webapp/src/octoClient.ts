@@ -1033,6 +1033,22 @@ class OctoClient {
             body: '{}',
         })
     }
+
+    async hideBoard(categoryID: string, boardID: string): Promise<Response> {
+        const path = `${this.teamPath()}/categories/${categoryID}/boards/${boardID}/hide`
+        return fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+        })
+    }
+
+    async unhideBoard(categoryID: string, boardID: string): Promise<Response> {
+        const path = `${this.teamPath()}/categories/${categoryID}/boards/${boardID}/unhide`
+        return fetch(this.getBaseURL() + path, {
+            method: 'PUT',
+            headers: this.headers(),
+        })
+    }
 }
 
 const octoClient = new OctoClient()

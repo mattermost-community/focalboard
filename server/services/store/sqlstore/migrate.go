@@ -295,13 +295,14 @@ func (s *SQLStore) ensureMigrationsAppliedUpToVersion(engine *morph.Morph, drive
 
 func (s *SQLStore) GetTemplateHelperFuncs() template.FuncMap {
 	funcs := template.FuncMap{
-		"addColumnIfNeeded":    s.genAddColumnIfNeeded,
-		"dropColumnIfNeeded":   s.genDropColumnIfNeeded,
-		"createIndexIfNeeded":  s.genCreateIndexIfNeeded,
-		"renameTableIfNeeded":  s.genRenameTableIfNeeded,
-		"renameColumnIfNeeded": s.genRenameColumnIfNeeded,
-		"doesTableExist":       s.doesTableExist,
-		"doesColumnExist":      s.doesColumnExist,
+		"addColumnIfNeeded":     s.genAddColumnIfNeeded,
+		"dropColumnIfNeeded":    s.genDropColumnIfNeeded,
+		"createIndexIfNeeded":   s.genCreateIndexIfNeeded,
+		"renameTableIfNeeded":   s.genRenameTableIfNeeded,
+		"renameColumnIfNeeded":  s.genRenameColumnIfNeeded,
+		"doesTableExist":        s.doesTableExist,
+		"doesColumnExist":       s.doesColumnExist,
+		"addConstraintIfNeeded": s.genAddConstraintIfNeeded,
 	}
 	return funcs
 }
@@ -605,6 +606,67 @@ func (s *SQLStore) doesColumnExist(tableName, columnName string) (bool, error) {
 		mlog.String("sql", sql),
 	)
 	return exists, nil
+}
+
+func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constraintType, constraintDefinition string) (string, error) {
+	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
+	normTableName := normalizeTablename(s.schemaName, tableName)
+
+	var query string
+
+	vars := map[string]string{
+		"schema":                s.schemaName,
+		"constraint_name":       constraintName,
+		"constraint_type":       constraintType,
+		"table_name":            tableName,
+		"constraint_definition": constraintDefinition,
+		"norm_table_name":       normTableName,
+	}
+
+	switch s.dbType {
+	case model.SqliteDBType:
+		// SQLite doesn't have a generic way to add constraint. For example, you can only create indexes on existing tables.
+		// For other constraints, you need to re-build the table. So skipping here.
+		// Include SQLite specific migration in original migration file.
+		query = fmt.Sprintf("\n-- Sqlite3 cannot drop constraints; drop constraint '%s' in table '%s' skipped\n", constraintName, tableName)
+	case model.MysqlDBType:
+		query = replaceVars(`
+			SET @stmt = (SELECT IF(
+				(
+				SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+				WHERE constraint_schema = '[[schema]]'
+				AND constraint_name = '[[constraint_name]]'
+				AND constraint_type = '[[constraint_type]]'
+				AND table_name = '[[table_name]]'
+				) > 0,
+				'SELECT 1;',
+				'ALTER TABLE [[norm_table_name]] ADD CONSTRAINT [[constraint_name]] [[constraint_definition]];'
+			));
+			PREPARE addConstraintIfNeeded FROM @stmt;
+			EXECUTE addConstraintIfNeeded;
+			DEALLOCATE PREPARE addConstraintIfNeeded;
+		`, vars)
+	case model.PostgresDBType:
+		query = replaceVars(`
+		DO
+		$$
+		BEGIN
+		IF NOT EXISTS (
+			SELECT * FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+				WHERE constraint_schema = '[[schema]]'
+				AND constraint_name = '[[constraint_name]]'
+				AND constraint_type = '[[constraint_type]]'
+				AND table_name = '[[table_name]]'
+		) THEN
+			ALTER TABLE [[norm_table_name]] ADD CONSTRAINT [[constraint_name]] [[constraint_definition]];
+		END IF;
+		END;
+		$$
+		LANGUAGE plpgsql;
+		`, vars)
+	}
+
+	return query, nil
 }
 
 func addPrefixIfNeeded(s, prefix string) string {

@@ -19,14 +19,14 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 
 	userCategoryBoards := []model.CategoryBoards{}
 	for _, category := range categories {
-		boardIDs, err := s.getCategoryBoardAttributes(db, category.ID)
+		boardMetadata, err := s.getCategoryBoardAttributes(db, category.ID)
 		if err != nil {
 			return nil, err
 		}
 
 		userCategoryBoard := model.CategoryBoards{
-			Category: category,
-			BoardIDs: boardIDs,
+			Category:      category,
+			BoardMetadata: boardMetadata,
 		}
 
 		userCategoryBoards = append(userCategoryBoards, userCategoryBoard)
@@ -35,13 +35,12 @@ func (s *SQLStore) getUserCategoryBoards(db sq.BaseRunner, userID, teamID string
 	return userCategoryBoards, nil
 }
 
-func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID string) ([]string, error) {
+func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID string) ([]model.CategoryBoardMetadata, error) {
 	query := s.getQueryBuilder(db).
-		Select("board_id").
+		Select("board_id, COALESCE(hidden, false)").
 		From(s.tablePrefix + "category_boards").
 		Where(sq.Eq{
 			"category_id": categoryID,
-			"delete_at":   0,
 		}).
 		OrderBy("sort_order")
 
@@ -54,21 +53,17 @@ func (s *SQLStore) getCategoryBoardAttributes(db sq.BaseRunner, categoryID strin
 	return s.categoryBoardsFromRows(rows)
 }
 
-func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
-	boardIDs := []string{}
-	for boardID := range boardCategoryMapping {
-		boardIDs = append(boardIDs, boardID)
-	}
+func (s *SQLStore) addUpdateCategoryBoard(db sq.BaseRunner, userID, categoryID string, boardIDsParam []string) error {
+	// we need to de-duplicate this array as Postgres failes to
+	// handle upsert if there are multiple incoming rows
+	// that conflict the same existing row.
+	// For example, having the entry "1" in DB and trying to upsert "1" and "1" will fail
+	// as there are multiple duplicates of the same "1".
+	//
+	// Source: https://stackoverflow.com/questions/42994373/postgresql-on-conflict-cannot-affect-row-a-second-time
+	boardIDs := utils.DedupeStringArr(boardIDsParam)
 
-	if err := s.deleteUserCategoryBoards(db, userID, boardIDs); err != nil {
-		return err
-	}
-
-	return s.addUserCategoryBoard(db, userID, boardCategoryMapping)
-}
-
-func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCategoryMapping map[string]string) error {
-	if len(boardCategoryMapping) == 0 {
+	if len(boardIDs) == 0 {
 		return nil
 	}
 
@@ -81,73 +76,62 @@ func (s *SQLStore) addUserCategoryBoard(db sq.BaseRunner, userID string, boardCa
 			"board_id",
 			"create_at",
 			"update_at",
-			"delete_at",
 			"sort_order",
+			"hidden",
 		)
 
 	now := utils.GetMillis()
-	for boardID, categoryID := range boardCategoryMapping {
-		query = query.
-			Values(
-				utils.NewID(utils.IDTypeNone),
-				userID,
-				categoryID,
-				boardID,
-				now,
-				now,
-				0,
-				0,
-			)
+	for _, boardID := range boardIDs {
+		query = query.Values(
+			utils.NewID(utils.IDTypeNone),
+			userID,
+			categoryID,
+			boardID,
+			now,
+			now,
+			0,
+			false,
+		)
+	}
+
+	if s.dbType == model.MysqlDBType {
+		query = query.Suffix(
+			"ON DUPLICATE KEY UPDATE category_id = ?",
+			categoryID,
+		)
+	} else {
+		query = query.Suffix(
+			`ON CONFLICT (user_id, board_id)
+			 DO UPDATE SET category_id = EXCLUDED.category_id, update_at = EXCLUDED.update_at`,
+		)
 	}
 
 	if _, err := query.Exec(); err != nil {
-		s.logger.Error("addUserCategoryBoard error", mlog.Err(err))
-		return err
-	}
-	return nil
-}
-
-func (s *SQLStore) deleteUserCategoryBoards(db sq.BaseRunner, userID string, boardIDs []string) error {
-	if len(boardIDs) == 0 {
-		return nil
-	}
-
-	_, err := s.getQueryBuilder(db).
-		Update(s.tablePrefix+"category_boards").
-		Set("delete_at", utils.GetMillis()).
-		Where(sq.Eq{
-			"user_id":   userID,
-			"board_id":  boardIDs,
-			"delete_at": 0,
-		}).Exec()
-
-	if err != nil {
-		s.logger.Error(
-			"deleteUserCategoryBoards delete error",
-			mlog.String("userID", userID),
-			mlog.Array("boardID", boardIDs),
-			mlog.Err(err),
+		return fmt.Errorf(
+			"store addUpdateCategoryBoard: failed to upsert user-board-category userID: %s, categoryID: %s, board_count: %d, error: %w",
+			userID, categoryID, len(boardIDs), err,
 		)
-		return err
 	}
 
 	return nil
 }
 
-func (s *SQLStore) categoryBoardsFromRows(rows *sql.Rows) ([]string, error) {
-	blocks := []string{}
+func (s *SQLStore) categoryBoardsFromRows(rows *sql.Rows) ([]model.CategoryBoardMetadata, error) {
+	metadata := []model.CategoryBoardMetadata{}
 
 	for rows.Next() {
-		boardID := ""
-		if err := rows.Scan(&boardID); err != nil {
+		datum := model.CategoryBoardMetadata{}
+		err := rows.Scan(&datum.BoardID, &datum.Hidden)
+
+		if err != nil {
 			s.logger.Error("categoryBoardsFromRows row scan error", mlog.Err(err))
 			return nil, err
 		}
 
-		blocks = append(blocks, boardID)
+		metadata = append(metadata, datum)
 	}
 
-	return blocks, nil
+	return metadata, nil
 }
 
 func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, newBoardsOrder []string) ([]string, error) {
@@ -166,7 +150,6 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 		Set("sort_order", updateCase).
 		Where(sq.Eq{
 			"category_id": categoryID,
-			"delete_at":   0,
 		})
 
 	if _, err := query.Exec(); err != nil {
@@ -180,4 +163,29 @@ func (s *SQLStore) reorderCategoryBoards(db sq.BaseRunner, categoryID string, ne
 	}
 
 	return newBoardsOrder, nil
+}
+
+func (s *SQLStore) setBoardVisibility(db sq.BaseRunner, userID, categoryID, boardID string, visible bool) error {
+	query := s.getQueryBuilder(db).
+		Update(s.tablePrefix+"category_boards").
+		Set("hidden", !visible).
+		Where(sq.Eq{
+			"user_id":     userID,
+			"category_id": categoryID,
+			"board_id":    boardID,
+		})
+
+	if _, err := query.Exec(); err != nil {
+		s.logger.Error(
+			"SQLStore setBoardVisibility: failed to update board visibility",
+			mlog.String("user_id", userID),
+			mlog.String("board_id", boardID),
+			mlog.Bool("visible", visible),
+			mlog.Err(err),
+		)
+
+		return err
+	}
+
+	return nil
 }
