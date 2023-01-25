@@ -139,7 +139,7 @@ const RHSChannelBoards = () => {
                 <div className='rhs-boards-header'>
                     <span className='linked-boards'>
                         <FormattedMessage
-                            id='rhs-boards.linked-boards2'
+                            id='rhs-boards.linked-boards'
                             defaultMessage='Linked boards'
                         />
                     </span>
