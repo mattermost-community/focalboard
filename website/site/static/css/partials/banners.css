@@ -1,0 +1,56 @@
+.mmtrust-banner {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.mmtrust-banner .title {
+    font-size: 14px;
+    font-weight: bold;
+    opacity: .6;
+}
+
+.mmtrust_banner__logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 120px;
+}
+
+.mmtrust-banner.mentioned-in {
+    margin-top: 140px;
+}
+
+.mmtrust-banner.mentioned-in img {
+    opacity: 1;
+    filter: none;
+    -webkit-filter: grayscale(0%);
+    -moz-filter:    grayscale(0%);
+    -ms-filter:     grayscale(0%);
+    -o-filter:      grayscale(0%);;
+}
+
+.mmtrust_banner__logos img {
+    transition: all ease 0.25s;
+    opacity: 0.4;
+    filter: none;
+    -webkit-filter: grayscale(100%);
+    -moz-filter:    grayscale(100%);
+    -ms-filter:     grayscale(100%);
+    -o-filter:      grayscale(100%);;
+}
+
+.mmtrust_banner__logos img:hover {
+    opacity: 1;
+    filter: none;
+    -webkit-filter: grayscale(0%);
+    -moz-filter:    grayscale(0%);
+    -ms-filter:     grayscale(0%);
+    -o-filter:      grayscale(0%);
+}
+
+@media (max-width: 992px) {
+    .mmtrust_banner__logos {
+        gap: 40px;
+    }
+}

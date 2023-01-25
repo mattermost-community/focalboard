@@ -599,7 +599,7 @@ func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.servicesAPI.GetLicense()
 }
 
-func boardFields(prefix string) []string {
+func boardFields(prefix string) []string { //nolint:unparam
 	fields := []string{
 		"id",
 		"team_id",
@@ -1114,10 +1114,12 @@ func (s *MattermostAuthLayer) GetMembersForBoard(boardID string) ([]*model.Board
 		From(s.tablePrefix + "boards AS B").
 		Join("ChannelMembers AS CM ON B.channel_id=CM.channelId").
 		Join("Users as U on CM.userID = U.id").
+		LeftJoin("Bots as bo on U.id = bo.UserID").
 		Where(sq.Eq{"B.id": boardID}).
 		Where(sq.NotEq{"B.channel_id": ""}).
 		// Filter out guests as they don't have synthetic membership
-		Where(sq.NotEq{"U.roles": "system_guest"})
+		Where(sq.NotEq{"U.roles": "system_guest"}).
+		Where(sq.Eq{"bo.UserId IS NOT NULL": false})
 
 	rows, err := query.Query()
 	if err != nil {

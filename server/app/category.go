@@ -178,13 +178,12 @@ func (a *App) moveBoardsToDefaultCategory(userID, teamID, sourceCategoryID strin
 		return fmt.Errorf("moveBoardsToDefaultCategory: %w", errNoDefaultCategoryFound)
 	}
 
-	boardCategoryMapping := map[string]string{}
-
-	for _, boardID := range sourceCategoryBoards.BoardIDs {
-		boardCategoryMapping[boardID] = defaultCategoryID
+	boardIDs := make([]string, len(sourceCategoryBoards.BoardMetadata))
+	for i := range sourceCategoryBoards.BoardMetadata {
+		boardIDs[i] = sourceCategoryBoards.BoardMetadata[i].BoardID
 	}
 
-	if err := a.AddUpdateUserCategoryBoard(teamID, userID, boardCategoryMapping); err != nil {
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, boardIDs); err != nil {
 		return fmt.Errorf("moveBoardsToDefaultCategory: %w", err)
 	}
 

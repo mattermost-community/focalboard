@@ -3,7 +3,7 @@
 exports[`/components/confirmAddUserForNotifications should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back confirmation-dialog-box"
+    class="Dialog dialog-back confirmation-dialog-box size--small"
   >
     <div
       class="backdrop"
