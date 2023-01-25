@@ -371,7 +371,7 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// check for valid team
+	// check for valid board
 	_, err = a.app.GetBoard(boardID)
 	if err != nil {
 		a.errorResponse(w, r, model.NewErrBadRequest("invalid board id: "+boardID))
