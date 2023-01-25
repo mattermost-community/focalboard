@@ -2,9 +2,11 @@
 // See LICENSE.txt for license information.
 
 import React, {useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, useIntl} from 'react-intl'
 
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
+
+import Tooltip from '../../../widgets/tooltip'
 
 import PlusIcon from '../../../widgets/icons/plus'
 
@@ -21,7 +23,10 @@ import ValueRow from './valueRow'
 export type StatusCategoryEmptyState = {
     icon: JSX.Element
     color: string
-    text: JSX.Element
+    text: {
+        id: string
+        defaultMessage: string
+    }
 }
 
 export type EditablePropertyOption = IPropertyOption & {
@@ -47,8 +52,10 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
     const [focusedValueID, setFocusedValueID] = useState<string>()
 
     useEffect(() => {
-        setValueCategories(props.valueCategories)
+        setValueCategories(JSON.parse(JSON.stringify(props.valueCategories)))
     }, [props.valueCategories])
+
+    const intl = useIntl()
 
     const title = (
         <FormattedMessage
@@ -58,6 +65,8 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
     )
 
     const handleUpdateValue = (statusCategoryID: string, newOptionValue: IPropertyOption): void => {
+        newOptionValue.value = newOptionValue.value.trim()
+
         const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === statusCategoryID)
         if (categoryIndex < 0) {
             Utils.logError(`category with ID: ${statusCategoryID} not found`)
@@ -71,11 +80,34 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         }
 
         const updatedValueCategories = [...valueCategories]
-        updatedValueCategories[categoryIndex].options[valueIndex] = newOptionValue
+        const oldOptionvalue = updatedValueCategories[categoryIndex].options[valueIndex]
+
+        if (oldOptionvalue.value === newOptionValue.value && newOptionValue.value === '') {
+            updatedValueCategories[categoryIndex].options.splice(valueIndex, 1)
+        } else {
+            updatedValueCategories[categoryIndex].options[valueIndex] = newOptionValue
+        }
 
         setFocusedValueID('')
         setValueCategories(updatedValueCategories)
-        props.onUpdate(updatedValueCategories)
+    }
+
+    const handleDeleteValue = (statusCategoryID: string, optionID: string) => {
+        const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === statusCategoryID)
+        if (categoryIndex < 0) {
+            Utils.logError(`category with ID: ${statusCategoryID} not found`)
+            return
+        }
+
+        const valueIndex = valueCategories[categoryIndex].options.findIndex((option) => option.id === optionID)
+        if (valueIndex < 0) {
+            Utils.logError(`Value with ID ${optionID} not found`)
+            return
+        }
+
+        const updatedValueCategories = Array.from(valueCategories)
+        updatedValueCategories[categoryIndex].options.splice(valueIndex, 1)
+        setValueCategories(updatedValueCategories)
     }
 
     const handleAddCategoryValue = (categoryID: string) => {
@@ -115,7 +147,6 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         updatedValues[destinationCategoryIndex].options.splice(destination.index, 0, draggedObject)
 
         setValueCategories(updatedValues)
-        props.onUpdate(updatedValues)
     }
 
     return (
@@ -123,6 +154,11 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
             onClose={props.onClose}
             title={title}
             className='StatusPropertyConfigrationDialog'
+            onConfirm={() => {
+                props.onUpdate(valueCategories)
+                props.onClose()
+            }}
+            onCancel={props.onClose}
         >
             <div className='text-heading5'/>
             <div className='text-75'>
@@ -143,7 +179,15 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                     <div className='text-heading1'>
                                         {valueCategory.title}
                                     </div>
-                                    <InfoIcon/>
+                                    <Tooltip
+                                        title={intl.formatMessage({
+                                            id: valueCategory.emptyState.text.id,
+                                            defaultMessage: valueCategory.emptyState.text.defaultMessage,
+                                        })}
+                                        placement='top'
+                                    >
+                                        <InfoIcon/>
+                                    </Tooltip>
                                     <div
                                         className='addBtnWrapper'
                                         onClick={() => handleAddCategoryValue(valueCategory.id)}
@@ -175,7 +219,12 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                                             {valueCategory.emptyState.icon}
                                                         </div>
                                                         <div className='placeholderText text-75'>
-                                                            {valueCategory.emptyState.text}
+                                                            {
+                                                                <FormattedMessage
+                                                                    id={valueCategory.emptyState.text.id}
+                                                                    defaultMessage={valueCategory.emptyState.text.defaultMessage}
+                                                                />
+                                                            }
                                                         </div>
                                                     </div>
                                                 }
@@ -190,6 +239,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                                                     index={index}
                                                                     editing={option.id === focusedValueID}
                                                                     onUpdate={handleUpdateValue}
+                                                                    onDelete={handleDeleteValue}
                                                                     valueCategoryID={valueCategory.id}
                                                                 />
                                                             ),

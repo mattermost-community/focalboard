@@ -87,8 +87,9 @@
                 cursor: pointer;
                 padding: 4px;
 
-                .colorEditor, .EditIcon {
+                .colorEditor, .contextMenu {
                     display: none;
+                    cursor: pointer;
                 }
 
                 .Menu {
@@ -98,14 +99,13 @@
                 .colorEditor {
                     margin-right: 4px;
                     margin-left: 4px;
-                    cursor: pointer;
 
                     &.editing {
                         display: block;
                     }
                 }
 
-                .EditIcon {
+                .contextMenu {
                     width: 24px;
                     height: 24px;
                     text-align: center;
@@ -120,7 +120,7 @@
                     background: rgba(var(--center-channel-color-rgb), 0.1);
                     border-radius: 4px;
 
-                    .colorEditor, .EditIcon {
+                    .colorEditor, .contextMenu {
                         display: block;
                     }
                 }

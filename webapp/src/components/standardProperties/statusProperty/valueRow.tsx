@@ -4,6 +4,8 @@
 import React, {useCallback, useRef, useState} from 'react'
 import {Draggable} from 'react-beautiful-dnd'
 
+import DeleteIcon from '../../../widgets/icons/delete'
+
 import {Constants} from '../../../constants'
 
 import DragHandle from '../../../widgets/icons/dragHandle'
@@ -13,6 +15,8 @@ import MenuWrapper from '../../../widgets/menuWrapper'
 
 import {IPropertyOption} from '../../../blocks/board'
 
+import OptionsIcon from '../../../widgets/icons/options'
+
 import EditableLabel from './editableLabel/editableLabel'
 
 type Props = {
@@ -20,15 +24,18 @@ type Props = {
     index: number
     editing: boolean
     onUpdate: (statusCategoryID: string, newOptionValue: IPropertyOption) => void
+    onDelete: (statusCategoryID: string, optionID: string) => void
     valueCategoryID: string
 }
 
 const ValueRow = (props: Props) => {
-    const ref = useRef(null)
+    const colorEditorRef = useRef(null)
+    const menuRef = useRef(null)
     const [isActive, setIsActive] = useState<boolean>(false)
+    const [isEditing, setIsEditing] = useState<boolean>(false)
+    const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
     const handleOnColorChange = useCallback((newColor: string) => {
-        console.log(`handleOnColorChange: ${newColor}`)
         const newValue: IPropertyOption = {
             ...props.option,
             color: newColor,
@@ -36,6 +43,14 @@ const ValueRow = (props: Props) => {
 
         props.onUpdate(props.valueCategoryID, newValue)
     }, [props.valueCategoryID, props.option.value, props.option.color])
+
+    const handleEditButtonClick = useCallback(() => {
+        setIsEditing((value) => !value)
+    }, [])
+
+    const handleDeleteButtonClick = useCallback(() => {
+        props.onDelete(props.valueCategoryID, props.option.id)
+    }, [props.valueCategoryID, props.option.id])
 
     return (
         <Draggable
@@ -48,7 +63,11 @@ const ValueRow = (props: Props) => {
                     {...draggableProvided.draggableProps}
                     ref={draggableProvided.innerRef}
                     key={props.option.id}
-                    className={`categorySwimlane_Value ${isActive || props.editing ? 'active' : ''}`}
+                    className={`categorySwimlane_Value ${isActive || props.editing || isEditing || menuOpen ? 'active' : ''}`}
+                    onBlur={() => {
+                        setIsActive(false)
+                        setIsEditing(false)
+                    }}
                 >
                     <div
                         {...draggableProvided.dragHandleProps}
@@ -59,7 +78,7 @@ const ValueRow = (props: Props) => {
 
                     <EditableLabel
                         option={props.option}
-                        editing={props.editing}
+                        editing={props.editing || isEditing}
                         onBlur={(newOptionValue: IPropertyOption) => props.onUpdate(props.valueCategoryID, newOptionValue)}
                     />
                     <MenuWrapper
@@ -67,12 +86,12 @@ const ValueRow = (props: Props) => {
                         onToggle={(isOpen: boolean) => setIsActive(isOpen)}
                     >
                         <div
-                            ref={ref}
+                            ref={colorEditorRef}
                             className={`colorEditor ${props.option.color} ${props.editing ? 'editing' : ''}`}
                         />
                         <Menu
                             position='auto'
-                            parentRef={ref}
+                            parentRef={colorEditorRef}
                             menuMargin={30}
                             fixed={true}
                         >
@@ -90,7 +109,37 @@ const ValueRow = (props: Props) => {
                             }
                         </Menu>
                     </MenuWrapper>
-                    <EditIcon/>
+                    <MenuWrapper
+                        stopPropagationOnToggle={true}
+                        onToggle={(open) => setMenuOpen(open)}
+                    >
+                        <div
+                            ref={menuRef}
+                            className='contextMenu'
+                        >
+                            <OptionsIcon/>
+                        </div>
+                        <Menu
+                            position='auto'
+                            parentRef={menuRef}
+                            menuMargin={30}
+                            fixed={true}
+                        >
+                            <Menu.Text
+                                id='editText'
+                                name={'Edit'}
+                                icon={<EditIcon/>}
+                                onClick={handleEditButtonClick}
+                            />
+                            <Menu.Text
+                                id='deleteOption'
+                                name={'Delete'}
+                                icon={<DeleteIcon/>}
+                                onClick={handleDeleteButtonClick}
+                                className='text-danger'
+                            />
+                        </Menu>
+                    </MenuWrapper>
                 </div>
             )}
         </Draggable>

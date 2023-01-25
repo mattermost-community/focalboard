@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React, {useState} from 'react'
-import {FormattedMessage} from 'react-intl'
+import {FormattedMessage, IntlShape, useIntl} from 'react-intl'
 
 import EditStatusPropertyDialog, {StatusCategory} from '../standardProperties/statusProperty/editStatusDialog'
 
@@ -24,7 +24,7 @@ import BlackCheckboxOutline from '../../widgets/icons/blackCheckboxOutline'
 
 import ShareBoardDialog from './shareBoard'
 
-const valueCategoriesInitialValue: StatusCategory[] = [
+const getInitialValueCategoryValue: StatusCategory[] = [
     {
         id: 'category_id_1',
         title: 'Not Started',
@@ -36,12 +36,10 @@ const valueCategoriesInitialValue: StatusCategory[] = [
         emptyState: {
             icon: (<BlackCheckboxOutline/>),
             color: '--sys-dnd-indicator-rgb',
-            text: (
-                <FormattedMessage
-                    id='statusProperty.configDialog.todo.emptyText'
-                    defaultMessage='Drag statuses here to consider tasks with these statuses “Not Started”'
-                />
-            ),
+            text: {
+                id: 'statusProperty.configDialog.todo.emptyText',
+                defaultMessage: 'Drag statuses here to consider tasks with these statuses “Not Started”',
+            },
         },
     },
     {
@@ -56,12 +54,10 @@ const valueCategoriesInitialValue: StatusCategory[] = [
         emptyState: {
             icon: (<ClockOutline/>),
             color: '--away-indicator-rgb',
-            text: (
-                <FormattedMessage
-                    id='statusProperty.configDialog.inProgress.emptyText'
-                    defaultMessage='Drag statuses here to consider tasks with these statuses “in progress”'
-                />
-            ),
+            text: {
+                id: 'statusProperty.configDialog.inProgress.emptyText',
+                defaultMessage: 'Drag statuses here to consider tasks with these statuses “in progress”',
+            },
         },
     },
     {
@@ -75,12 +71,10 @@ const valueCategoriesInitialValue: StatusCategory[] = [
         emptyState: {
             icon: (<CheckIcon/>),
             color: '--online-indicator-rgb',
-            text: (
-                <FormattedMessage
-                    id='statusProperty.configDialog.complete.emptyText'
-                    defaultMessage='Drag statuses here to consider tasks with these statuses ”Done”'
-                />
-            ),
+            text: {
+                id: 'statusProperty.configDialog.complete.emptyText',
+                defaultMessage: 'Drag statuses here to consider tasks with these statuses ”Done”',
+            },
         },
     },
 ]
@@ -91,7 +85,8 @@ type Props = {
 const ShareBoardButton = (props: Props) => {
     const [showShareDialog, setShowShareDialog] = useState(false)
     const board = useAppSelector(getCurrentBoard)
-    const [valueCategories, setValueCategories] = useState<StatusCategory[]>(valueCategoriesInitialValue)
+    const intl = useIntl()
+    const [valueCategories, setValueCategories] = useState<StatusCategory[]>(getInitialValueCategoryValue)
 
     const iconForBoardType = () => {
         if (board.type === BoardTypeOpen) {
