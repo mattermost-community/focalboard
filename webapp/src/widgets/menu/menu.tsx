@@ -18,6 +18,7 @@ type Props = {
     position?: 'top' | 'bottom' | 'left' | 'right' | 'auto'
     fixed?: boolean
     parentRef?: React.RefObject<any>
+    menuMargin?: number
 }
 
 export default class Menu extends React.PureComponent<Props> {
@@ -48,7 +49,7 @@ export default class Menu extends React.PureComponent<Props> {
         let style: CSSProperties = {}
         if (this.props.parentRef) {
             const forceBottom = position ? ['bottom', 'left', 'right'].includes(position) : false
-            style = MenuUtil.openUp(this.props.parentRef, forceBottom).style
+            style = MenuUtil.openUp(this.props.parentRef, forceBottom, this.props.menuMargin).style
         }
 
         return (

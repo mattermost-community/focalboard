@@ -91,9 +91,17 @@
                     display: none;
                 }
 
+                .Menu {
+                    position: fixed;
+                }
+
                 .colorEditor {
                     margin-right: 4px;
                     margin-left: 4px;
+
+                    &.editing {
+                        display: block;
+                    }
                 }
 
                 .EditIcon {
@@ -107,7 +115,7 @@
                     }
                 }
 
-                &:hover {
+                &:hover, &.active {
                     background: rgba(var(--center-channel-color-rgb), 0.1);
                     border-radius: 4px;
 

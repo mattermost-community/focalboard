@@ -1,10 +1,16 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useCallback, useEffect, useState} from 'react'
+import React, {MutableRefObject, RefObject, useCallback, useEffect, useRef, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
 import {DragDropContext, Droppable, Draggable, DropReason, DropResult} from 'react-beautiful-dnd'
+
+import MenuWrapper from '../../../widgets/menuWrapper'
+
+import Menu from '../../../widgets/menu/menu'
+
+import {Constants} from '../../../constants'
 
 import PlusIcon from '../../../widgets/icons/plus'
 
@@ -19,6 +25,7 @@ import EditIcon from '../../../widgets/icons/edit'
 import {IDType, Utils} from '../../../utils'
 
 import EditableLabel from './editableLabel/editableLabel'
+import ValueRow from './valueRow'
 
 export type StatusCategoryEmptyState = {
     icon: JSX.Element
@@ -106,8 +113,6 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
             return
         }
 
-        console.log(`destination: ${destination} source: ${source} type: ${type}`)
-
         const updatedValues = Array.from(valueCategories)
 
         const sourceCategoryIndex = updatedValues.findIndex((valueCategory) => valueCategory.id === source.droppableId)
@@ -119,6 +124,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         updatedValues[destinationCategoryIndex].options.splice(destination.index, 0, draggedObject)
 
         setValueCategories(updatedValues)
+        props.onUpdate(updatedValues)
     }
 
     return (
@@ -184,37 +190,19 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                                 }
                                                 {
                                                     valueCategory.options.length > 0 &&
-                                                    valueCategory.options.map((option: EditablePropertyOption, index) => (
-                                                        <Draggable
-                                                            draggableId={option.id}
-                                                            index={index}
-                                                            key={option.id}
-                                                        >
-                                                            {(draggableProvided) => (
-                                                                <div
-                                                                    {...draggableProvided.draggableProps}
-                                                                    ref={draggableProvided.innerRef}
+                                                    valueCategory.options.map(
+                                                        (option: EditablePropertyOption, index) =>
+                                                            (
+                                                                <ValueRow
                                                                     key={option.id}
-                                                                    className='categorySwimlane_Value'
-                                                                >
-                                                                    <div
-                                                                        {...draggableProvided.dragHandleProps}
-                                                                        className='dragHandleWrapper'
-                                                                    >
-                                                                        <DragHandle/>
-                                                                    </div>
-                                                                    <EditableLabel
-                                                                        option={option}
-                                                                        editing={option.id === focusedValueID}
-                                                                        focus={option.id === focusedValueID}
-                                                                        onBlur={(newOptionValue: IPropertyOption) => handleAddNewValue(valueCategory.id, newOptionValue)}
-                                                                    />
-                                                                    <div className={`colorEditor ${option.color} withBorder`}/>
-                                                                    <EditIcon/>
-                                                                </div>
-                                                            )}
-                                                        </Draggable>
-                                                    ))
+                                                                    option={option}
+                                                                    index={index}
+                                                                    editing={option.id === focusedValueID}
+                                                                    handleAddNewValue={handleAddNewValue}
+                                                                    valueCategoryID={valueCategory.id}
+                                                                />
+                                                            ),
+                                                    )
                                                 }
                                             </div>
                                             {provided.placeholder}

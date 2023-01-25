@@ -11,7 +11,6 @@ import './editableLabel.scss'
 type Props = {
     option: IPropertyOption
     editing?: boolean
-    focus?: boolean
     onBlur?: (newOptionValue: IPropertyOption) => void
 }
 
@@ -33,7 +32,7 @@ const EditableLabel = (props: Props): JSX.Element => {
     const editValue = (
         <input
             defaultValue={props.option.value}
-            autoFocus={props.focus}
+            autoFocus={true}
             onChange={(e) => setValue(e.target.value)}
             onBlur={handleOnBlur}
         />
