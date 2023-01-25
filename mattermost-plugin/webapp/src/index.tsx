@@ -39,6 +39,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 import {Constants} from '../../../webapp/src/constants'
+import {Board} from '../../../webapp/src/blocks/board'
 
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
@@ -66,7 +67,7 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
-import CreateBoardFromTemplate, {createBoardFromTemplateAction} from './components/createBoardFromTemplate'
+import CreateBoardFromTemplate from './components/createBoardFromTemplate'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -339,18 +340,18 @@ export default class Plugin {
 
             if (this.registry.registerActionAfterChannelCreation) {
                 this.registry.registerActionAfterChannelCreation((props: {
-                    setSelectedTemplate: (templateId: string) => void,
-                    toggleAddBoardCheck: (addBoard: boolean) => void,
+                    setCanCreate: (canCreate: boolean) => void,
+                    setAction: (fn: () => (channelId: string, teamId: string) => Promise<Board | undefined>) => void,
                     newBoardInfoIcon: React.ReactNode,
                 }) => (
                     <ReduxProvider store={store}>
                         <CreateBoardFromTemplate
-                            setSelectedTemplate={props.setSelectedTemplate}
-                            toggleAddBoardCheck={props.toggleAddBoardCheck}
+                            setCanCreate={props.setCanCreate}
+                            setAction={props.setAction}
                             newBoardInfoIcon={props.newBoardInfoIcon}
                         />
                     </ReduxProvider>
-                ), createBoardFromTemplateAction)
+                ))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(

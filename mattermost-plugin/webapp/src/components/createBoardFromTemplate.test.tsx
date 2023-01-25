@@ -23,16 +23,16 @@ describe('components/createBoardFromTemplate', () => {
     it('renders the Create Boards from template component and match snapshot', async () => {
         const store = mockStateStore([], state)
         let container: Element | DocumentFragment | null = null
-        const setSelectedTemplate = jest.fn
-        const toggleAddBoardCheckbox = jest.fn
+        const setCanCreate = jest.fn
+        const setAction = jest.fn
         const newBoardInfoIcon = (<i className="icon-information-outline" />)
 
         await act(async () => {
             const result = render(wrapIntl(
                 <ReduxProvider store={store}>
                     <CreateBoardFromTemplate
-                        setSelectedTemplate={setSelectedTemplate}
-                        toggleAddBoardCheck={toggleAddBoardCheckbox}
+                        setAction={setAction}
+                        setCanCreate={setCanCreate}
                         newBoardInfoIcon={newBoardInfoIcon}
                     />
                 </ReduxProvider>
@@ -45,16 +45,16 @@ describe('components/createBoardFromTemplate', () => {
 
     it('clicking checkbox toggles the templates selector', async () => {
         const store = mockStateStore([], state)
-        const setSelectedTemplate = jest.fn
-        const toggleAddBoardCheckbox = jest.fn
+        const setCanCreate = jest.fn
+        const setAction = jest.fn
         const newBoardInfoIcon = (<i className="icon-information-outline" />)
 
         await act(async () => {
             render(wrapIntl(
                 <ReduxProvider store={store}>
                     <CreateBoardFromTemplate
-                        setSelectedTemplate={setSelectedTemplate}
-                        toggleAddBoardCheck={toggleAddBoardCheckbox}
+                        setAction={setAction}
+                        setCanCreate={setCanCreate}
                         newBoardInfoIcon={newBoardInfoIcon}
                     />
                 </ReduxProvider>
@@ -74,7 +74,7 @@ describe('components/createBoardFromTemplate', () => {
         await act(async () => {
             await userEvent.click(checkbox)
             const templatesSelector = screen.queryByText('Select a template')
-            expect(templatesSelector).not.toBeInTheDocument()
+            expect(templatesSelector).toBeNull()
         })
         
     })

@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {useState}  from 'react'
+import React, {useCallback, useEffect, useRef, useState}  from 'react'
 
 import {createIntl, createIntlCache, IntlProvider} from 'react-intl'
 
@@ -18,10 +18,11 @@ import {mutator} from '../../../../webapp/src/mutator'
 import {useGetAllTemplates} from '../../../../webapp/src/hooks/useGetAllTemplates'
 
 import './createBoardFromTemplate.scss'
+import {Board} from '../../../../webapp/src/blocks/board'
 
 type Props = {
-    setSelectedTemplate: (templateId: string) => void;
-    toggleAddBoardCheck: (addBoard: boolean) => void;
+    setCanCreate: (canCreate: boolean) => void;
+    setAction: (fn: () => (channelId: string, teamId: string) => Promise<Board | undefined>) => void;
     newBoardInfoIcon: React.ReactNode;
 }
 
@@ -41,23 +42,6 @@ const intl = createIntl({
     messages: getMessages(getCurrentLanguage())
 }, cache)
 
-export const createBoardFromTemplateAction = async (templateId: string, teamId: string, channelId: string) => {
-    const ACTION_DESCRIPTION = 'board created from channel'
-    const asTemplate = false
-
-    let boardsAndBlocks = undefined
-
-    if (templateId === EMPTY_BOARD) {
-        boardsAndBlocks = await mutator.addEmptyBoard(teamId, intl)
-    } else {
-        boardsAndBlocks = await mutator.duplicateBoard(templateId, ACTION_DESCRIPTION, asTemplate, undefined, undefined, teamId)
-    }
-
-    const board = boardsAndBlocks.boards[0]
-    await mutator.updateBoard({...board, channelId: channelId}, board, 'linked channel')
-    return board
-}
-
 const {ValueContainer, Placeholder} = components
 
 const CreateBoardFromTemplate = (props: Props) => {
@@ -65,13 +49,48 @@ const CreateBoardFromTemplate = (props: Props) => {
 
     const [addBoard, setAddBoard] = useState(false)
     const allTemplates = useGetAllTemplates()
+    const [selectedBoardTemplateId, setSelectedBoardTemplateId] = useState<string>('')
+
+    const addBoardRef = useRef(false)
+    addBoardRef.current = addBoard
+    const templateIdRef = useRef('')
+    templateIdRef.current = selectedBoardTemplateId
+
 
     const showNewBoardTemplateSelector = async () => {
-        setAddBoard((prev: boolean) => {
-            props.toggleAddBoardCheck(!prev)
-            return !prev
-        })
+        setAddBoard((prev: boolean) => !prev)
     }
+
+    // CreateBoardFromTemplate
+    const addBoardToChannel = async (channelId: string, teamId: string) => {
+        if (!addBoardRef.current || !templateIdRef.current) {
+            return
+        }
+
+        const ACTION_DESCRIPTION = 'board created from channel'
+        const LINKED_CHANNEL = 'linked channel'
+        const asTemplate = false
+
+        let boardsAndBlocks = undefined
+
+        if (selectedBoardTemplateId === EMPTY_BOARD) {
+            boardsAndBlocks = await mutator.addEmptyBoard(teamId, intl)
+        } else {
+            boardsAndBlocks = await mutator.duplicateBoard(templateIdRef.current as string, ACTION_DESCRIPTION, asTemplate, undefined, undefined, teamId)
+        }
+
+        const board = boardsAndBlocks.boards[0]
+        await mutator.updateBoard({...board, channelId: channelId}, board, LINKED_CHANNEL)
+        return board
+    }
+
+    useEffect(() => {
+        props.setAction(() => addBoardToChannel)
+    }, [])
+
+    useEffect(() => {
+        props.setCanCreate(!addBoard || (addBoard && selectedBoardTemplateId !== ''))
+    }, [addBoard, selectedBoardTemplateId])
 
     const getSubstringWithCompleteWords = (str: string, len: number) => {
         if (str?.length <= len) {
@@ -128,7 +147,7 @@ const CreateBoardFromTemplate = (props: Props) => {
         )
     }
 
-    const loadOptions = async (value = '') => {
+    const loadOptions = useCallback(async (value = '') => {
         let templates = allTemplates.map((template) => {
             return {
                 id: template.id,
@@ -151,7 +170,13 @@ const CreateBoardFromTemplate = (props: Props) => {
             templates = templates.filter(template => template.title.toLowerCase().includes(value.toLowerCase()))
         }
         return templates
-    }
+    }, [allTemplates])
+
+    const onChange = useCallback((item: SingleValue<ReactSelectItem>) => {
+        if (item) {
+            setSelectedBoardTemplateId(item.id)
+        }
+    }, [setSelectedBoardTemplateId])
 
     const selectorStyles = {
         menu: (baseStyles: CSSObject): CSSObject => ({
@@ -205,11 +230,7 @@ const CreateBoardFromTemplate = (props: Props) => {
                     <Select
                         classNamePrefix={'CreateBoardFromTemplate--templates-selector'}
                         placeholder={formatMessage({id: 'new_channel_modal.create_board.select_template_placeholder', defaultMessage: 'Select a template'})}
-                        onChange={(item: SingleValue<ReactSelectItem>) => {
-                            if (item) {
-                                props.setSelectedTemplate(item.id)
-                            }
-                        }}
+                        onChange={onChange}
                         components={{IndicatorSeparator: () => null, ValueContainer: CustomValueContainer}}
                         loadOptions={loadOptions}
                         getOptionValue={(v) => v.id}

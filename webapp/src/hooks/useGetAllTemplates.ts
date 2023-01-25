@@ -25,7 +25,6 @@ export const useGetAllTemplates = () => {
 
     const unsortedTemplates = useAppSelector(getTemplates)
     const templates = useMemo(() => Object.values(unsortedTemplates).sort((a: Board, b: Board) => a.createAt - b.createAt), [unsortedTemplates])
-    const allTemplates = globalTemplates.concat(templates)
 
-    return allTemplates
+    return useMemo(() => globalTemplates.concat(templates), [globalTemplates])
 }
