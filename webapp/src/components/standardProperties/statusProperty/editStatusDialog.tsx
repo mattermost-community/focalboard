@@ -1,16 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {MutableRefObject, RefObject, useCallback, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {FormattedMessage} from 'react-intl'
 
-import {DragDropContext, Droppable, Draggable, DropReason, DropResult} from 'react-beautiful-dnd'
-
-import MenuWrapper from '../../../widgets/menuWrapper'
-
-import Menu from '../../../widgets/menu/menu'
-
-import {Constants} from '../../../constants'
+import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
 import PlusIcon from '../../../widgets/icons/plus'
 
@@ -19,12 +13,9 @@ import InfoIcon from '../../../widgets/icons/info'
 import './editStatusDialog.scss'
 import ActionDialog from '../../actionDialog/actionDialog'
 import {IPropertyOption} from '../../../blocks/board'
-import DragHandle from '../../../widgets/icons/dragHandle'
-import EditIcon from '../../../widgets/icons/edit'
 
 import {IDType, Utils} from '../../../utils'
 
-import EditableLabel from './editableLabel/editableLabel'
 import ValueRow from './valueRow'
 
 export type StatusCategoryEmptyState = {
@@ -66,7 +57,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         />
     )
 
-    const handleAddNewValue = (statusCategoryID: string, newOptionValue: IPropertyOption): void => {
+    const handleUpdateValue = (statusCategoryID: string, newOptionValue: IPropertyOption): void => {
         const categoryIndex = valueCategories.findIndex((valueCategory) => valueCategory.id === statusCategoryID)
         if (categoryIndex < 0) {
             Utils.logError(`category with ID: ${statusCategoryID} not found`)
@@ -198,7 +189,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                                                     option={option}
                                                                     index={index}
                                                                     editing={option.id === focusedValueID}
-                                                                    handleAddNewValue={handleAddNewValue}
+                                                                    onUpdate={handleUpdateValue}
                                                                     valueCategoryID={valueCategory.id}
                                                                 />
                                                             ),
