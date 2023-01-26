@@ -32,6 +32,7 @@ func createTestUsers(t *testing.T, store store.Store, num int) []*model.User {
 	return users
 }
 
+//nolint:unparam
 func createTestBlocks(t *testing.T, store store.Store, userID string, num int) []*model.Block {
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
@@ -72,6 +73,7 @@ func createTestBlocksForCard(t *testing.T, store store.Store, cardID string, num
 	return blocks
 }
 
+//nolint:unparam
 func createTestCards(t *testing.T, store store.Store, userID string, boardID string, num int) []*model.Block {
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
@@ -91,6 +93,7 @@ func createTestCards(t *testing.T, store store.Store, userID string, boardID str
 	return blocks
 }
 
+//nolint:unparam
 func createTestBoards(t *testing.T, store store.Store, teamID string, userID string, num int) []*model.Board {
 	var boards []*model.Board
 	for i := 0; i < num; i++ {
@@ -109,6 +112,7 @@ func createTestBoards(t *testing.T, store store.Store, teamID string, userID str
 	return boards
 }
 
+//nolint:unparam
 func deleteTestBoard(t *testing.T, store store.Store, boardID string, userID string) {
 	err := store.DeleteBoard(boardID, userID)
 	require.NoError(t, err)

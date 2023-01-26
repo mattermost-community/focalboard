@@ -127,27 +127,6 @@ func (s *SQLStore) DBType() string {
 	return s.dbType
 }
 
-// DBVersion returns the DB version used for the store.
-func (s *SQLStore) DBVersion() string {
-	var sql string
-	switch s.dbType {
-	case model.SqliteDBType:
-		sql = "SELECT sqlite_version() AS version;"
-	default:
-		sql = "SELECT version() AS version"
-	}
-
-	row := s.db.QueryRow(sql)
-
-	var version string
-	if err := row.Scan(&version); err != nil {
-		s.logger.Error("error getting database version", mlog.Err(err))
-		return "unknown"
-	}
-
-	return version
-}
-
 func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	builder := sq.StatementBuilder
 	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
@@ -206,7 +185,7 @@ func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmMode
 	return nil, store.NewNotSupportedError("get channel not supported on standalone mode")
 }
 
-func (s *SQLStore) dBVersion() string {
+func (s *SQLStore) DBVersion() string {
 	var version string
 	var row *sql.Row
 
