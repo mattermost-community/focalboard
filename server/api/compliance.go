@@ -84,11 +84,13 @@ func (a *API) handleGetBoardsForCompliance(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	// check for valid team
-	_, err := a.app.GetTeam(teamID)
-	if err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
-		return
+	// check for valid team if specified
+	if teamID != "" {
+		_, err := a.app.GetTeam(teamID)
+		if err != nil {
+			a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
+			return
+		}
 	}
 
 	if strPage == "" {
@@ -217,11 +219,13 @@ func (a *API) handleGetBoardsComplianceHistory(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// check for valid team
-	_, err := a.app.GetTeam(teamID)
-	if err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
-		return
+	// check for valid team if specified
+	if teamID != "" {
+		_, err := a.app.GetTeam(teamID)
+		if err != nil {
+			a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
+			return
+		}
 	}
 
 	if strPage == "" {
@@ -364,18 +368,22 @@ func (a *API) handleGetBlocksComplianceHistory(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	// check for valid team
-	_, err := a.app.GetTeam(teamID)
-	if err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
-		return
+	// check for valid team if specified
+	if teamID != "" {
+		_, err := a.app.GetTeam(teamID)
+		if err != nil {
+			a.errorResponse(w, r, model.NewErrBadRequest("invalid team id: "+teamID))
+			return
+		}
 	}
 
-	// check for valid board
-	_, err = a.app.GetBoard(boardID)
-	if err != nil {
-		a.errorResponse(w, r, model.NewErrBadRequest("invalid board id: "+boardID))
-		return
+	// check for valid board if specified
+	if boardID != "" {
+		_, err := a.app.GetBoard(boardID)
+		if err != nil {
+			a.errorResponse(w, r, model.NewErrBadRequest("invalid board id: "+boardID))
+			return
+		}
 	}
 
 	if strPage == "" {
