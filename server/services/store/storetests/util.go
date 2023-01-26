@@ -32,7 +32,6 @@ func createTestUsers(t *testing.T, store store.Store, num int) []*model.User {
 	return users
 }
 
-//nolint:unparam
 func createTestBlocks(t *testing.T, store store.Store, userID string, num int) []*model.Block {
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
