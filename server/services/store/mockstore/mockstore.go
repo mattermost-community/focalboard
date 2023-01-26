@@ -488,10 +488,10 @@ func (mr *MockStoreMockRecorder) GetBlocksByIDs(arg0 interface{}) *gomock.Call {
 }
 
 // GetBlocksComplianceHistory mocks base method.
-func (m *MockStore) GetBlocksComplianceHistory(arg0 model.QueryBlocksComplianceHistoryOptions) ([]model.BlockHistory, bool, error) {
+func (m *MockStore) GetBlocksComplianceHistory(arg0 model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBlocksComplianceHistory", arg0)
-	ret0, _ := ret[0].([]model.BlockHistory)
+	ret0, _ := ret[0].([]*model.BlockHistory)
 	ret1, _ := ret[1].(bool)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2
@@ -656,10 +656,10 @@ func (mr *MockStoreMockRecorder) GetBoardMemberHistory(arg0, arg1, arg2 interfac
 }
 
 // GetBoardsComplianceHistory mocks base method.
-func (m *MockStore) GetBoardsComplianceHistory(arg0 model.QueryBoardsComplianceHistoryOptions) ([]model.BoardHistory, bool, error) {
+func (m *MockStore) GetBoardsComplianceHistory(arg0 model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBoardsComplianceHistory", arg0)
-	ret0, _ := ret[0].([]model.BoardHistory)
+	ret0, _ := ret[0].([]*model.BoardHistory)
 	ret1, _ := ret[1].(bool)
 	ret2, _ := ret[2].(error)
 	return ret0, ret1, ret2

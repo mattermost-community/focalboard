@@ -177,7 +177,7 @@ func testGetBoardsComplianceHistory(t *testing.T, store store.Store) {
 		}
 
 		reps := 0
-		allHistories := make([]model.BoardHistory, 0)
+		allHistories := make([]*model.BoardHistory, 0)
 
 		for {
 			reps++
@@ -271,7 +271,7 @@ func testGetBlocksComplianceHistory(t *testing.T, store store.Store) {
 		}
 
 		reps := 0
-		allHistories := make([]model.BlockHistory, 0)
+		allHistories := make([]*model.BlockHistory, 0)
 
 		for {
 			reps++

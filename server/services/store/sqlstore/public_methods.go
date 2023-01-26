@@ -143,11 +143,6 @@ func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 
 }
 
-func (s *SQLStore) DBVersion() string {
-	return s.dBVersion()
-
-}
-
 func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBlock(s.db, blockID, modifiedBy)
@@ -343,7 +338,7 @@ func (s *SQLStore) GetBlocksByIDs(ids []string) ([]*model.Block, error) {
 
 }
 
-func (s *SQLStore) GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]model.BlockHistory, bool, error) {
+func (s *SQLStore) GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error) {
 	return s.getBlocksComplianceHistory(s.db, opts)
 
 }
@@ -398,7 +393,7 @@ func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit ui
 
 }
 
-func (s *SQLStore) GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]model.BoardHistory, bool, error) {
+func (s *SQLStore) GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error) {
 	return s.getBoardsComplianceHistory(s.db, opts)
 
 }

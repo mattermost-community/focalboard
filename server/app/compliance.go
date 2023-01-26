@@ -6,10 +6,10 @@ func (a *App) GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions)
 	return a.store.GetBoardsForCompliance(opts)
 }
 
-func (a *App) GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]model.BoardHistory, bool, error) {
+func (a *App) GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error) {
 	return a.store.GetBoardsComplianceHistory(opts)
 }
 
-func (a *App) GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]model.BlockHistory, bool, error) {
+func (a *App) GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error) {
 	return a.store.GetBlocksComplianceHistory(opts)
 }

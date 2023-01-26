@@ -47,7 +47,7 @@ func (s *SQLStore) getBoardsForCompliance(db sq.BaseRunner, opts model.QueryBoar
 	return boards, hasMore, nil
 }
 
-func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.QueryBoardsComplianceHistoryOptions) ([]model.BoardHistory, bool, error) {
+func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error) {
 	queryDescendentLastUpdate := s.getQueryBuilder(db).
 		Select("MAX(blk1.update_at)").
 		From(s.tablePrefix + "blocks_history as blk1").
@@ -125,7 +125,7 @@ func (s *SQLStore) getBoardsComplianceHistory(db sq.BaseRunner, opts model.Query
 	return history, hasMore, nil
 }
 
-func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.QueryBlocksComplianceHistoryOptions) ([]model.BlockHistory, bool, error) {
+func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error) {
 	query := s.getQueryBuilder(db).
 		Select(
 			"bh.id",
@@ -188,11 +188,11 @@ func (s *SQLStore) getBlocksComplianceHistory(db sq.BaseRunner, opts model.Query
 	return history, hasMore, nil
 }
 
-func (s *SQLStore) boardsHistoryFromRows(rows *sql.Rows) ([]model.BoardHistory, error) {
-	history := []model.BoardHistory{}
+func (s *SQLStore) boardsHistoryFromRows(rows *sql.Rows) ([]*model.BoardHistory, error) {
+	history := []*model.BoardHistory{}
 
 	for rows.Next() {
-		var boardHistory model.BoardHistory
+		boardHistory := &model.BoardHistory{}
 
 		err := rows.Scan(
 			&boardHistory.ID,
@@ -213,11 +213,11 @@ func (s *SQLStore) boardsHistoryFromRows(rows *sql.Rows) ([]model.BoardHistory, 
 	return history, nil
 }
 
-func (s *SQLStore) blocksHistoryFromRows(rows *sql.Rows) ([]model.BlockHistory, error) {
-	history := []model.BlockHistory{}
+func (s *SQLStore) blocksHistoryFromRows(rows *sql.Rows) ([]*model.BlockHistory, error) {
+	history := []*model.BlockHistory{}
 
 	for rows.Next() {
-		var blockHistory model.BlockHistory
+		blockHistory := &model.BlockHistory{}
 
 		err := rows.Scan(
 			&blockHistory.ID,

@@ -23,7 +23,7 @@ type BoardsComplianceHistoryResponse struct {
 
 	// The array of BoardHistory records.
 	// required: true
-	Results []BoardHistory `json:"results"`
+	Results []*BoardHistory `json:"results"`
 }
 
 // BlocksComplianceHistoryResponse is the response body to a request for blocks history.
@@ -35,7 +35,7 @@ type BlocksComplianceHistoryResponse struct {
 
 	// The array of BlockHistory records.
 	// required: true
-	Results []BlockHistory `json:"results"`
+	Results []*BlockHistory `json:"results"`
 }
 
 // BoardHistory provides information about the history of a board.

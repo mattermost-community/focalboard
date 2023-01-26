@@ -204,7 +204,7 @@ func TestGetBoardsComplianceHistory(t *testing.T) {
 		const perPage = 3
 		_ = th.CreateBoards(testTeamID, model.BoardTypeOpen, count)
 
-		boardHistory := make([]model.BoardHistory, 0, count)
+		boardHistory := make([]*model.BoardHistory, 0, count)
 		page := 0
 		for {
 			bchr, resp := clients.Admin.GetBoardsComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, page, perPage)
@@ -319,7 +319,7 @@ func TestGetBlocksComplianceHistory(t *testing.T) {
 		const perPage = 3
 		board, _ := th.CreateBoardAndCards(testTeamID, model.BoardTypeOpen, count)
 
-		blockHistory := make([]model.BlockHistory, 0, count)
+		blockHistory := make([]*model.BlockHistory, 0, count)
 		page := 0
 		for {
 			bchr, resp := clients.Admin.GetBlocksComplianceHistory(utils.GetMillis()-OneDay, true, testTeamID, board.ID, page, perPage)

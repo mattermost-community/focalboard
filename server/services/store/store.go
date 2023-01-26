@@ -175,8 +175,8 @@ type Store interface {
 
 	// Compliance
 	GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions) ([]*model.Board, bool, error)
-	GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]model.BoardHistory, bool, error)
-	GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]model.BlockHistory, bool, error)
+	GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error)
+	GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error)
 
 	// For unit testing only
 	DeleteBoardRecord(boardID, modifiedBy string) error

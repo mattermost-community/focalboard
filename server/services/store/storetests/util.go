@@ -131,7 +131,7 @@ func extractIDs(t *testing.T, arr ...any) []string {
 					ids = append(ids, b.ID)
 				}
 			}
-		case []model.BoardHistory:
+		case []*model.BoardHistory:
 			for _, bh := range tarr {
 				ids = append(ids, bh.ID)
 			}
@@ -141,7 +141,7 @@ func extractIDs(t *testing.T, arr ...any) []string {
 					ids = append(ids, b.ID)
 				}
 			}
-		case []model.BlockHistory:
+		case []*model.BlockHistory:
 			for _, bh := range tarr {
 				ids = append(ids, bh.ID)
 			}
