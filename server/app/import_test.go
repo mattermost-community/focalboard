@@ -47,8 +47,18 @@ func TestApp_ImportArchive(t *testing.T) {
 
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.AssignableToTypeOf(&model.BoardsAndBlocks{}), "user").Return(babs, nil)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{boardMember}, nil)
-		th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
-		th.Store.EXPECT().GetMemberForBoard(board.ID, "user").Return(boardMember, nil)
+		// th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
+		// th.Store.EXPECT().GetMemberForBoard(board.ID, "user").Return(boardMember, nil)
+		// th.Store.EXPECT().GetUserCategoryBoards("user", "test-team").Return([]model.CategoryBoards{}, nil)
+		th.Store.EXPECT().GetUserCategoryBoards("user", "test-team").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					Type: "default",
+					Name: "Boards",
+					ID:   "boards_category_id",
+				},
+			},
+		}, nil)
 		th.Store.EXPECT().GetUserCategoryBoards("user", "test-team")
 		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
 		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
@@ -57,9 +67,76 @@ func TestApp_ImportArchive(t *testing.T) {
 		}, nil)
 		th.Store.EXPECT().GetBoardsForUserAndTeam("user", "test-team", false).Return([]*model.Board{}, nil)
 		th.Store.EXPECT().GetMembersForUser("user").Return([]*model.BoardMember{}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user", utils.Anything).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user", utils.Anything, utils.Anything).Return(nil)
 
 		err := th.App.ImportArchive(r, opts)
+		require.NoError(t, err, "import archive should not fail")
+	})
+
+	t.Run("import board archive", func(t *testing.T) {
+		r := bytes.NewReader([]byte(boardArchive))
+		opts := model.ImportArchiveOptions{
+			TeamID:     "test-team",
+			ModifiedBy: "f1tydgc697fcbp8ampr6881jea",
+		}
+
+		bm1 := &model.BoardMember{
+			BoardID: board.ID,
+			UserID:  "f1tydgc697fcbp8ampr6881jea",
+		}
+
+		bm2 := &model.BoardMember{
+			BoardID: board.ID,
+			UserID:  "hxxzooc3ff8cubsgtcmpn8733e",
+		}
+
+		bm3 := &model.BoardMember{
+			BoardID: board.ID,
+			UserID:  "nto73edn5ir6ifimo5a53y1dwa",
+		}
+
+		user1 := &model.User{
+			ID: "f1tydgc697fcbp8ampr6881jea",
+		}
+
+		user2 := &model.User{
+			ID: "hxxzooc3ff8cubsgtcmpn8733e",
+		}
+
+		user3 := &model.User{
+			ID: "nto73edn5ir6ifimo5a53y1dwa",
+		}
+
+		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.AssignableToTypeOf(&model.BoardsAndBlocks{}), "f1tydgc697fcbp8ampr6881jea").Return(babs, nil)
+		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{bm1, bm2, bm3}, nil)
+		th.Store.EXPECT().GetUserCategoryBoards("f1tydgc697fcbp8ampr6881jea", "test-team").Return([]model.CategoryBoards{}, nil)
+		th.Store.EXPECT().GetUserCategoryBoards("f1tydgc697fcbp8ampr6881jea", "test-team").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "boards_category_id",
+					Name: "Boards",
+					Type: model.CategoryTypeSystem,
+				},
+			},
+		}, nil)
+		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:   "boards_category_id",
+			Name: "Boards",
+		}, nil)
+		th.Store.EXPECT().GetMembersForUser("f1tydgc697fcbp8ampr6881jea").Return([]*model.BoardMember{}, nil)
+		th.Store.EXPECT().GetBoardsForUserAndTeam("f1tydgc697fcbp8ampr6881jea", "test-team", false).Return([]*model.Board{}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("f1tydgc697fcbp8ampr6881jea", utils.Anything, utils.Anything).Return(nil)
+		th.Store.EXPECT().GetBoard(board.ID).AnyTimes().Return(board, nil)
+		th.Store.EXPECT().GetMemberForBoard(board.ID, "f1tydgc697fcbp8ampr6881jea").AnyTimes().Return(bm1, nil)
+		th.Store.EXPECT().GetMemberForBoard(board.ID, "hxxzooc3ff8cubsgtcmpn8733e").AnyTimes().Return(bm2, nil)
+		th.Store.EXPECT().GetMemberForBoard(board.ID, "nto73edn5ir6ifimo5a53y1dwa").AnyTimes().Return(bm3, nil)
+		th.Store.EXPECT().GetUserByID("f1tydgc697fcbp8ampr6881jea").AnyTimes().Return(user1, nil)
+		th.Store.EXPECT().GetUserByID("hxxzooc3ff8cubsgtcmpn8733e").AnyTimes().Return(user2, nil)
+		th.Store.EXPECT().GetUserByID("nto73edn5ir6ifimo5a53y1dwa").AnyTimes().Return(user3, nil)
+
+		boardID, err := th.App.ImportBoardJSONL(r, opts)
+		require.Equal(t, board.ID, boardID, "Board ID should be same")
 		require.NoError(t, err, "import archive should not fail")
 	})
 }
@@ -77,4 +154,13 @@ const asana = `{"version":1,"date":1614714686842}
 {"type":"block","data":{"id":"ca6670b1-b034-4e42-8971-c659b478b9e0","fields":{"icon":"","properties":{"3bdcbaeb-bc78-4884-8531-a0323b74676a":"deaab476-c690-48df-828f-725b064dc476"},"contentOrder":[]},"createAt":1614714686841,"updateAt":1614714686841,"deleteAt":0,"schema":1,"parentId":"d14b9df9-1f31-4732-8a64-92bc7162cd28","rootId":"d14b9df9-1f31-4732-8a64-92bc7162cd28","modifiedBy":"","type":"card","title":"[EXAMPLE TASK] Find a venue for the holiday party"}}
 {"type":"block","data":{"id":"db1dd596-0999-4741-8b05-72ca8e438e31","fields":{"icon":"","properties":{"3bdcbaeb-bc78-4884-8531-a0323b74676a":"deaab476-c690-48df-828f-725b064dc476"},"contentOrder":[]},"createAt":1614714686841,"updateAt":1614714686841,"deleteAt":0,"schema":1,"parentId":"d14b9df9-1f31-4732-8a64-92bc7162cd28","rootId":"d14b9df9-1f31-4732-8a64-92bc7162cd28","modifiedBy":"","type":"card","title":"[EXAMPLE TASK] Approve campaign copy"}}
 {"type":"block","data":{"id":"16861c05-f31f-46af-8429-80a87b5aa93a","fields":{"icon":"","properties":{"3bdcbaeb-bc78-4884-8531-a0323b74676a":"2138305a-3157-461c-8bbe-f19ebb55846d"},"contentOrder":[]},"createAt":1614714686841,"updateAt":1614714686841,"deleteAt":0,"schema":1,"parentId":"d14b9df9-1f31-4732-8a64-92bc7162cd28","rootId":"d14b9df9-1f31-4732-8a64-92bc7162cd28","modifiedBy":"","type":"card","title":"[EXAMPLE TASK] Send out updated attendee list"}}
+`
+
+//nolint:lll
+const boardArchive = `{"type":"board","data":{"id":"bfoi6yy6pa3yzika53spj7pq9ee","teamId":"wsmqbtwb5jb35jb3mtp85c8a9h","channelId":"","createdBy":"nto73edn5ir6ifimo5a53y1dwa","modifiedBy":"nto73edn5ir6ifimo5a53y1dwa","type":"P","minimumRole":"","title":"Custom","description":"","icon":"","showDescription":false,"isTemplate":false,"templateVersion":0,"properties":{},"cardProperties":[{"id":"aonihehbifijmx56aqzu3cc7w1r","name":"Status","options":[],"type":"select"},{"id":"aohjkzt769rxhtcz1o9xcoce5to","name":"Person","options":[],"type":"person"}],"createAt":1672750481591,"updateAt":1672750481591,"deleteAt":0}}
+{"type":"block","data":{"id":"ckpc3b1dp3pbw7bqntfryy9jbzo","parentId":"bjaqxtbyqz3bu7pgyddpgpms74a","createdBy":"nto73edn5ir6ifimo5a53y1dwa","modifiedBy":"nto73edn5ir6ifimo5a53y1dwa","schema":1,"type":"card","title":"Test","fields":{"contentOrder":[],"icon":"","isTemplate":false,"properties":{"aohjkzt769rxhtcz1o9xcoce5to":"hxxzooc3ff8cubsgtcmpn8733e"}},"createAt":1672750481612,"updateAt":1672845003530,"deleteAt":0,"boardId":"bfoi6yy6pa3yzika53spj7pq9ee"}}
+{"type":"block","data":{"id":"v7tdajwpm47r3u8duedk89bhxar","parentId":"bpypang3a3errqstj1agx9kuqay","createdBy":"nto73edn5ir6ifimo5a53y1dwa","modifiedBy":"nto73edn5ir6ifimo5a53y1dwa","schema":1,"type":"view","title":"Board view","fields":{"cardOrder":["crsyw7tbr3pnjznok6ppngmmyya","c5titiemp4pgaxbs4jksgybbj4y"],"collapsedOptionIds":[],"columnCalculations":{},"columnWidths":{},"defaultTemplateId":"","filter":{"filters":[],"operation":"and"},"hiddenOptionIds":[],"kanbanCalculations":{},"sortOptions":[],"viewType":"board","visibleOptionIds":[],"visiblePropertyIds":["aohjkzt769rxhtcz1o9xcoce5to"]},"createAt":1672750481626,"updateAt":1672750481626,"deleteAt":0,"boardId":"bfoi6yy6pa3yzika53spj7pq9ee"}}
+{"type":"boardMember","data":{"boardId":"bfoi6yy6pa3yzika53spj7pq9ee","userId":"f1tydgc697fcbp8ampr6881jea","roles":"","minimumRole":"","schemeAdmin":false,"schemeEditor":false,"schemeCommenter":false,"schemeViewer":true,"synthetic":false}}
+{"type":"boardMember","data":{"boardId":"bfoi6yy6pa3yzika53spj7pq9ee","userId":"hxxzooc3ff8cubsgtcmpn8733e","roles":"","minimumRole":"","schemeAdmin":false,"schemeEditor":false,"schemeCommenter":false,"schemeViewer":true,"synthetic":false}}
+{"type":"boardMember","data":{"boardId":"bfoi6yy6pa3yzika53spj7pq9ee","userId":"nto73edn5ir6ifimo5a53y1dwa","roles":"","minimumRole":"","schemeAdmin":true,"schemeEditor":false,"schemeCommenter":false,"schemeViewer":false,"synthetic":false}}
 `

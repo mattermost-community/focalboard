@@ -35,7 +35,7 @@ exports[`components/rhsChannelBoardItem render board 1`] = `
     <div
       class="date"
     >
-      Last update at: July 08, 8:10 PM
+      Last update at: July 08, 2022, 8:10 PM
     </div>
   </div>
 </div>
@@ -168,7 +168,7 @@ exports[`components/rhsChannelBoardItem render board with menu open 1`] = `
     <div
       class="date"
     >
-      Last update at: July 08, 8:10 PM
+      Last update at: July 08, 2022, 8:10 PM
     </div>
   </div>
 </div>

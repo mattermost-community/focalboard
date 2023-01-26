@@ -54,6 +54,8 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
         className += ' expanded'
     }
 
+    const canEditOption = groupByProperty?.type !== 'person' && group.option.id
+
     return (
         <div
             key={group.option.id + 'header'}
@@ -90,7 +92,11 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                             }}
                         />
                     </Label>}
-                {group.option.id &&
+                {groupByProperty?.type === 'person' &&
+                    <Label>
+                        {groupTitle}
+                    </Label>}
+                {canEditOption &&
                     <Label color={group.option.color}>
                         <Editable
                             value={groupTitle}
@@ -122,7 +128,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
                                 onClick={() => mutator.hideViewColumn(board.id, activeView, group.option.id || '')}
                             />
-                            {group.option.id &&
+                            {canEditOption &&
                                 <>
                                     <Menu.Text
                                         id='delete'

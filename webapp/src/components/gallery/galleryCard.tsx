@@ -92,6 +92,7 @@ const GalleryCard = (props: Props) => {
                         <CardActionsMenuIcon/>
                         <CardActionsMenu
                             cardId={card!.id}
+                            boardId={card!.boardId}
                             onClickDelete={() => setShowConfirmationDialogBox(true)}
                             onClickDuplicate={() => {
                                 TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.DuplicateCard, {board: board.id, card: card.id})

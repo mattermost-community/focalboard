@@ -92,11 +92,22 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 			return err
 		}
 		if block.Type == model.TypeImage {
-			filename, err := extractImageFilename(block)
-			if err != nil {
+			filename, err2 := extractImageFilename(block)
+			if err2 != nil {
 				return err
 			}
 			files = append(files, filename)
+		}
+	}
+
+	boardMembers, err := a.GetMembersForBoard(board.ID)
+	if err != nil {
+		return err
+	}
+
+	for _, boardMember := range boardMembers {
+		if err = a.writeArchiveBoardMemberLine(w, boardMember); err != nil {
+			return err
 		}
 	}
 
@@ -107,6 +118,31 @@ func (a *App) writeArchiveBoard(zw *zip.Writer, board model.Board, opt model.Exp
 		}
 	}
 	return nil
+}
+
+// writeArchiveBoardMemberLine writes a single boardMember to the archive.
+func (a *App) writeArchiveBoardMemberLine(w io.Writer, boardMember *model.BoardMember) error {
+	bm, err := json.Marshal(&boardMember)
+	if err != nil {
+		return err
+	}
+	line := model.ArchiveLine{
+		Type: "boardMember",
+		Data: bm,
+	}
+
+	bm, err = json.Marshal(&line)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.Write(bm)
+	if err != nil {
+		return err
+	}
+
+	_, err = w.Write(newline)
+	return err
 }
 
 // writeArchiveBlockLine writes a single block to the archive.

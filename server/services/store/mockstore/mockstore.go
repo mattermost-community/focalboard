@@ -37,17 +37,17 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // AddUpdateCategoryBoard mocks base method.
-func (m *MockStore) AddUpdateCategoryBoard(arg0 string, arg1 map[string]string) error {
+func (m *MockStore) AddUpdateCategoryBoard(arg0, arg1 string, arg2 []string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddUpdateCategoryBoard", arg0, arg1)
+	ret := m.ctrl.Call(m, "AddUpdateCategoryBoard", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddUpdateCategoryBoard indicates an expected call of AddUpdateCategoryBoard.
-func (mr *MockStoreMockRecorder) AddUpdateCategoryBoard(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) AddUpdateCategoryBoard(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBoard", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBoard), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddUpdateCategoryBoard", reflect.TypeOf((*MockStore)(nil).AddUpdateCategoryBoard), arg0, arg1, arg2)
 }
 
 // CanSeeUser mocks base method.
@@ -999,18 +999,18 @@ func (mr *MockStoreMockRecorder) GetTeam(arg0 interface{}) *gomock.Call {
 }
 
 // GetTeamBoardsInsights mocks base method.
-func (m *MockStore) GetTeamBoardsInsights(arg0, arg1 string, arg2 int64, arg3, arg4 int, arg5 []string) (*model.BoardInsightsList, error) {
+func (m *MockStore) GetTeamBoardsInsights(arg0 string, arg1 int64, arg2, arg3 int, arg4 []string) (*model.BoardInsightsList, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1, arg2, arg3, arg4, arg5)
+	ret := m.ctrl.Call(m, "GetTeamBoardsInsights", arg0, arg1, arg2, arg3, arg4)
 	ret0, _ := ret[0].(*model.BoardInsightsList)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTeamBoardsInsights indicates an expected call of GetTeamBoardsInsights.
-func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1, arg2, arg3, arg4, arg5 interface{}) *gomock.Call {
+func (mr *MockStoreMockRecorder) GetTeamBoardsInsights(arg0, arg1, arg2, arg3, arg4 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1, arg2, arg3, arg4, arg5)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTeamBoardsInsights", reflect.TypeOf((*MockStore)(nil).GetTeamBoardsInsights), arg0, arg1, arg2, arg3, arg4)
 }
 
 // GetTeamCount mocks base method.
@@ -1543,6 +1543,20 @@ func (m *MockStore) SendMessage(arg0, arg1 string, arg2 []string) error {
 func (mr *MockStoreMockRecorder) SendMessage(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockStore)(nil).SendMessage), arg0, arg1, arg2)
+}
+
+// SetBoardVisibility mocks base method.
+func (m *MockStore) SetBoardVisibility(arg0, arg1, arg2 string, arg3 bool) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetBoardVisibility", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SetBoardVisibility indicates an expected call of SetBoardVisibility.
+func (mr *MockStoreMockRecorder) SetBoardVisibility(arg0, arg1, arg2, arg3 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBoardVisibility", reflect.TypeOf((*MockStore)(nil).SetBoardVisibility), arg0, arg1, arg2, arg3)
 }
 
 // SetSystemSetting mocks base method.

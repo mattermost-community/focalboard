@@ -8,9 +8,9 @@ import (
 )
 
 type servicesAPI interface {
-	// GetDirectChannel gets a direct message channel.
-	// If the channel does not exist it will create it.
-	GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error)
+	// GetDirectChannelOrCreate gets a direct message channel,
+	// or creates one if it does not already exist
+	GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error)
 
 	// CreatePost creates a post.
 	CreatePost(post *mm_model.Post) (*mm_model.Post, error)

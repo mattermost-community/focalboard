@@ -383,12 +383,13 @@ func (a *API) attachSession(handler func(w http.ResponseWriter, r *http.Request)
 
 		authService := session.AuthService
 		if authService != a.authService {
-			a.logger.Error(`Session authService mismatch`,
+			msg := `Session authService mismatch`
+			a.logger.Error(msg,
 				mlog.String("sessionID", session.ID),
 				mlog.String("want", a.authService),
 				mlog.String("got", authService),
 			)
-			a.errorResponse(w, r, model.NewErrUnauthorized(err.Error()))
+			a.errorResponse(w, r, model.NewErrUnauthorized(msg))
 			return
 		}
 
