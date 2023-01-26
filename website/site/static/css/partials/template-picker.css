@@ -1,0 +1,71 @@
+/* Template Picker */
+
+.template-picker-container {
+    text-align: center;
+    margin-top: 180px;
+    position: relative;
+}
+
+.template-picker {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    overflow: hidden;
+    margin-top: 48px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: var(--shadow-image);
+}
+
+.template-picker__sidebar {
+    background: #F7F7F8;
+    flex: 0 0 292px;
+    text-align: left;
+    padding: 16px;
+}
+
+.template-picker__preview {
+    height: 740px;
+}
+
+.template-picker-item {
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.72;
+    gap: 10px;
+    padding: 0 10px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: var(--transition-btn);
+}
+
+.template-picker-item:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+.template-picker-item.active {
+    background-color: rgba(var(--denimBtnRgb), 0.08);
+    color: var(--denimBtn);
+}
+
+@media (max-width: 1280px) {
+    .template-picker {
+        display: block;
+    }
+
+    .template-picker__sidebar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0 40px;
+        background-color: transparent;
+    }
+
+    .template-picker__preview {
+        height: auto;
+    }
+}
