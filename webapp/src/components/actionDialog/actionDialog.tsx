@@ -11,8 +11,6 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import './actionDialog.scss'
 import Button from '../../widgets/buttons/button'
 
-import {Utils} from '../../utils'
-
 type Props = {
     children: React.ReactNode
     size?: string

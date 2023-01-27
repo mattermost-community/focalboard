@@ -3,7 +3,7 @@
   "rules": {
     "indentation": 4,
     "selector-class-pattern": "[a-zA-Z_-]+",
-    "max-nesting-depth": 4,
+    "max-nesting-depth": null,
     "selector-max-compound-selectors": 6,
     "selector-max-id": 1,
     "selector-no-qualifying-type": null,

@@ -12,7 +12,7 @@
     }
 
     .toolbar {
-    padding-bottom: 10px !important;
+        padding-bottom: 10px !important;
     }
 
     .categorySwimlanes {
@@ -87,7 +87,8 @@
                 cursor: pointer;
                 padding: 4px;
 
-                .colorEditor, .contextMenu {
+                .colorEditor,
+                .contextMenu {
                     display: none;
                     cursor: pointer;
                 }
@@ -116,11 +117,13 @@
                     }
                 }
 
-                &:hover, &.active {
+                &:hover,
+                &.active {
                     background: rgba(var(--center-channel-color-rgb), 0.1);
                     border-radius: 4px;
 
-                    .colorEditor, .contextMenu {
+                    .colorEditor,
+                    .contextMenu {
                         display: block;
                     }
                 }
