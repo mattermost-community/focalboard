@@ -6,6 +6,8 @@ import {FormattedMessage, useIntl} from 'react-intl'
 
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
+import {cloneDeep} from 'lodash'
+
 import Tooltip from '../../../widgets/tooltip'
 
 import PlusIcon from '../../../widgets/icons/plus'
@@ -52,7 +54,7 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
     const [focusedValueID, setFocusedValueID] = useState<string>()
 
     useEffect(() => {
-        setValueCategories(JSON.parse(JSON.stringify(props.valueCategories)))
+        setValueCategories(cloneDeep(props.valueCategories))
     }, [props.valueCategories])
 
     const intl = useIntl()
@@ -184,7 +186,6 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                             id: valueCategory.emptyState.text.id,
                                             defaultMessage: valueCategory.emptyState.text.defaultMessage,
                                         })}
-                                        placement='top'
                                     >
                                         <InfoIcon/>
                                     </Tooltip>
