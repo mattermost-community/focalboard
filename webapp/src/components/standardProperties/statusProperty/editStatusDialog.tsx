@@ -52,12 +52,17 @@ type Props = {
 const EditStatusPropertyDialog = (props: Props): JSX.Element => {
     const [valueCategories, setValueCategories] = useState<StatusCategory[]>([])
     const [focusedValueID, setFocusedValueID] = useState<string>()
+    const intl = useIntl()
 
     useEffect(() => {
+        // we save a deel copy of props as user actions like
+        // DND and adding, editing, changing coloror deleting the values
+        // affect this local copy first and only if the user clicks the
+        // "Save" button, are the changes propogated to the prop change callback function/
+        // Direcxtly modifying the props value can cause the value of variable
+        // from the parent component to be affected as well in some cases
         setValueCategories(cloneDeep(props.valueCategories))
     }, [props.valueCategories])
-
-    const intl = useIntl()
 
     const title = (
         <FormattedMessage
@@ -85,6 +90,9 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
         const oldOptionvalue = updatedValueCategories[categoryIndex].options[valueIndex]
 
         if (oldOptionvalue.value === newOptionValue.value && newOptionValue.value === '') {
+            // if used add a new value, but then leaves it empty by, for example,
+            // clicking outside, we delete that value as its the fasted way for the user
+            // to remove an accidently added value
             updatedValueCategories[categoryIndex].options.splice(valueIndex, 1)
         } else {
             updatedValueCategories[categoryIndex].options[valueIndex] = newOptionValue
@@ -142,12 +150,10 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
 
         const sourceCategoryIndex = updatedValues.findIndex((valueCategory) => valueCategory.id === source.droppableId)
         const destinationCategoryIndex = updatedValues.findIndex((valueCategory) => valueCategory.id === destination.droppableId)
-
         const draggedObject = valueCategories[sourceCategoryIndex].options[source.index]
 
         updatedValues[sourceCategoryIndex].options.splice(source.index, 1)
         updatedValues[destinationCategoryIndex].options.splice(destination.index, 0, draggedObject)
-
         setValueCategories(updatedValues)
     }
 
