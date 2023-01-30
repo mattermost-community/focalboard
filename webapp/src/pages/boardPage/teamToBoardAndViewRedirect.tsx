@@ -32,10 +32,10 @@ const TeamToBoardAndViewRedirect = (): null => {
                 let goToBoardID: string | null = null
 
                 for (const category of categories) {
-                    for (const categoryBoardID of category.boardIDs) {
-                        if (boards[categoryBoardID]) {
-                            // pick the first category board that exists
-                            goToBoardID = categoryBoardID
+                    for (const boardMetadata of category.boardMetadata) {
+                        // pick the first category board that exists and is not hidden
+                        if (!boardMetadata.hidden && boards[boardMetadata.boardID]) {
+                            goToBoardID = boardMetadata.boardID
                             break
                         }
                     }

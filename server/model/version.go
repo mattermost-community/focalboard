@@ -53,7 +53,7 @@ var (
 
 // LogServerInfo logs information about the server instance.
 func LogServerInfo(logger mlog.LoggerIFace) {
-	logger.Info("FocalBoard Server",
+	logger.Info("Focalboard server",
 		mlog.String("version", CurrentVersion),
 		mlog.String("edition", Edition),
 		mlog.String("build_number", BuildNumber),

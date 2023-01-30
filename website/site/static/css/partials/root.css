@@ -1,0 +1,31 @@
+:root {
+    --denim01:		#C5D2EC;
+    --denim02:		#7E96C8;
+    --denim03:		#4A69AC;
+    --denim04:		#2C4987;
+    --denim05:		#1E325C;
+    --denim06:		#162645;
+    --denimBtn:		#1C58D9;
+    --denimBtnRgb:	28, 88, 217;
+    --marigold01:	#FFE099;
+    --marigold02:	#FFD470;
+    --marigold03:	#FFBC1F;
+    --marigold04:	#CC8F00;
+    --marigold05:	#BB8D21;
+    --marigold06:	#A37200;
+    --yellow:	    246, 192, 34;
+    --brown01:		#674600;
+    --brown02:		#5B3515;
+    --brown03:		#1D1400;
+    --black01:		#EBEBEF;
+    --black02:		#BABEC9;
+    --black03:		#818698;
+    --black04:		#5A6072;
+    --black05:		#363A45;
+    --black06:		#1B1D22;
+    --tradeGothic: 'trade-gothic-next', sans-serif;
+    --notoSans: 'Noto Sans', Helvetica, Arial, sans-serif;
+    --firaMono: "Fira Mono", monospace;
+    --shadow-image: 0px 24px 48px rgb(0 0 0 / 8%);
+    --transition-btn: all 0.15s;
+}

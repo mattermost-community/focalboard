@@ -102,7 +102,7 @@
         .toolbar {
             display: flex;
             flex-direction: row;
-            padding: 24px 0;
+            padding: 24px 32px;
             justify-content: space-between;
             align-items: flex-start;
         }
@@ -112,7 +112,7 @@
             gap: 8px;
             align-items: center;
             height: 28px;
-            margin-right: 16px;
+            margin-right: -14px;
         }
     }
 

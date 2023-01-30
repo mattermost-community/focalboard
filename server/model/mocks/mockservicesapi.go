@@ -199,6 +199,21 @@ func (mr *MockServicesAPIMockRecorder) GetDirectChannel(arg0, arg1 interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDirectChannel", reflect.TypeOf((*MockServicesAPI)(nil).GetDirectChannel), arg0, arg1)
 }
 
+// GetDirectChannelOrCreate mocks base method.
+func (m *MockServicesAPI) GetDirectChannelOrCreate(arg0, arg1 string) (*model.Channel, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDirectChannelOrCreate", arg0, arg1)
+	ret0, _ := ret[0].(*model.Channel)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDirectChannelOrCreate indicates an expected call of GetDirectChannelOrCreate.
+func (mr *MockServicesAPIMockRecorder) GetDirectChannelOrCreate(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDirectChannelOrCreate", reflect.TypeOf((*MockServicesAPI)(nil).GetDirectChannelOrCreate), arg0, arg1)
+}
+
 // GetFileInfo mocks base method.
 func (m *MockServicesAPI) GetFileInfo(arg0 string) (*model.FileInfo, error) {
 	m.ctrl.T.Helper()

@@ -163,6 +163,7 @@ const SidebarSettingsMenu = (props: Props) => {
                         name={intl.formatMessage({id: 'Sidebar.random-icons', defaultMessage: 'Random icons'})}
                         isOn={randomIcons}
                         onClick={async () => toggleRandomIcons()}
+                        suppressItemClicked={true}
                     />
                 </Menu>
             </MenuWrapper>
