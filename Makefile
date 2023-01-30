@@ -63,7 +63,7 @@ endif
 server-linux: setup-go-work ## Build server for Linux.
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
-	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/linux/focalboard-server ./main
+	cd server; env GOOS=linux GOARCH=$(arch) go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/linux/focalboard-server ./main
 
 server-docker: setup-go-work ## Build server for Docker Architectures.
 	mkdir -p bin/docker
@@ -101,7 +101,7 @@ server-linux-package-docker:
 	cp NOTICE.txt package/${PACKAGE_FOLDER}
 	cp webapp/NOTICE.txt package/${PACKAGE_FOLDER}/webapp-NOTICE.txt
 	mkdir -p dist
-	cd package && tar -czvf ../dist/focalboard-server-linux-amd64.tar.gz ${PACKAGE_FOLDER}
+	cd package && tar -czvf ../dist/focalboard-server-linux-$(arch).tar.gz ${PACKAGE_FOLDER}
 	rm -rf package
 
 generate: ## Install and run code generators.
