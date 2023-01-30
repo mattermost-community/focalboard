@@ -377,7 +377,7 @@ func (s *Server) UpdateAppConfig() {
 // Local server
 
 func (s *Server) startLocalModeServer() error {
-	s.localModeServer = &http.Server{ //nolint:gosec
+	s.localModeServer = &http.Server{
 		Handler:     s.localRouter,
 		ConnContext: api.SetContextConn,
 	}

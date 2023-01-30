@@ -599,7 +599,7 @@ func (s *MattermostAuthLayer) GetLicense() *mmModel.License {
 	return s.servicesAPI.GetLicense()
 }
 
-func boardFields(prefix string) []string { //nolint:unparam
+func boardFields(prefix string) []string {
 	fields := []string{
 		"id",
 		"team_id",

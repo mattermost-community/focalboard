@@ -14,7 +14,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
 	boardsHistoryQuery := s.getQueryBuilder(db).
 		Select("boards.id, boards.icon, boards.title, count(boards_history.id) as count, boards_history.modified_by, boards.created_by").
 		From(s.tablePrefix + "boards_history as boards_history").
