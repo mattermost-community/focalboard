@@ -1,21 +1,21 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, { useEffect } from 'react'
-import { createIntl, createIntlCache } from 'react-intl'
-import { Store, Action } from 'redux'
-import { Provider as ReduxProvider } from 'react-redux'
-import { createBrowserHistory, History } from 'history'
+import React, {useEffect} from 'react'
+import {createIntl, createIntlCache} from 'react-intl'
+import {Store, Action} from 'redux'
+import {Provider as ReduxProvider} from 'react-redux'
+import {createBrowserHistory, History} from 'history'
 
-import { rudderAnalytics, RudderTelemetryHandler } from 'mattermost-redux/client/rudder'
+import {rudderAnalytics, RudderTelemetryHandler} from 'mattermost-redux/client/rudder'
 
-import { GlobalState } from 'mattermost-redux/types/store'
+import {GlobalState} from 'mattermost-redux/types/store'
 
-import { selectTeam } from 'mattermost-redux/actions/teams'
+import {selectTeam} from 'mattermost-redux/actions/teams'
 
-import { Utils } from '../../../webapp/src/utils'
-import { SuiteWindow } from '../../../webapp/src/types/index'
-import { UserSettings } from '../../../webapp/src/userSettings'
-import { getMessages, getCurrentLanguage } from '../../../webapp/src/i18n'
+import {Utils} from '../../../webapp/src/utils'
+import {SuiteWindow} from '../../../webapp/src/types/index'
+import {UserSettings} from '../../../webapp/src/userSettings'
+import {getMessages, getCurrentLanguage} from '../../../webapp/src/i18n'
 
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = Utils.isFocalboardProduct() ? '/plugins/boards' : '/plugins/focalboard'
@@ -25,21 +25,21 @@ windowAny.isFocalboardPlugin = true
 import App from '../../../webapp/src/app'
 import PublicApp from '../../../webapp/src/public/app'
 import store from '../../../webapp/src/store'
-import { setTeam } from '../../../webapp/src/store/teams'
+import {setTeam} from '../../../webapp/src/store/teams'
 import WithWebSockets from '../../../webapp/src/components/withWebSockets'
-import { setChannel } from '../../../webapp/src/store/channels'
-import { initialLoad } from '../../../webapp/src/store/initialLoad'
+import {setChannel} from '../../../webapp/src/store/channels'
+import {initialLoad} from '../../../webapp/src/store/initialLoad'
 import GlobalHeader from '../../../webapp/src/components/globalHeader/globalHeader'
 import FocalboardIcon from '../../../webapp/src/widgets/icons/logo'
-import { setMattermostTheme } from '../../../webapp/src/theme'
+import {setMattermostTheme} from '../../../webapp/src/theme'
 
-import TelemetryClient, { TelemetryCategory, TelemetryActions } from '../../../webapp/src/telemetry/telemetryClient'
+import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../../webapp/src/telemetry/telemetryClient'
 
 import '../../../webapp/src/styles/focalboard-variables.scss'
 import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
-import { Constants } from '../../../webapp/src/constants'
+import {Constants} from '../../../webapp/src/constants'
 
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
@@ -63,7 +63,7 @@ import manifest from './manifest'
 import ErrorBoundary from './error_boundary'
 
 // eslint-disable-next-line import/no-unresolved
-import { PluginRegistry } from './types/mattermost-webapp'
+import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
