@@ -96,13 +96,9 @@ function DateRange(props: PropertyProps): JSX.Element {
         loadedLocales[locale] = require(`moment/locale/${locale}`)
     }
 
-    const handleToDayClick = (day: Date) => {
-        day.setHours(12)
-        handleDayClick(day)
-    }
-
     const handleDayClick = (day: Date) => {
         const range: DateProperty = {}
+        day.setHours(12)
         if (isRange) {
             const newRange = DateUtils.addDayToRange(day, {from: dateFrom, to: dateTo})
             range.from = newRange.from?.getTime()
@@ -251,7 +247,7 @@ function DateRange(props: PropertyProps): JSX.Element {
                                 locale={locale}
                                 localeUtils={MomentLocaleUtils}
                                 todayButton={intl.formatMessage({id: 'DateRange.today', defaultMessage: 'Today'})}
-                                onTodayButtonClick={handleToDayClick}
+                                onTodayButtonClick={handleDayClick}
                                 month={dateFrom}
                                 selectedDays={[dateFrom, dateTo ? {from: dateFrom, to: dateTo} : {from: dateFrom, to: dateFrom}]}
                                 modifiers={dateTo ? {start: dateFrom, end: dateTo} : {start: dateFrom, end: dateFrom}}
