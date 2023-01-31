@@ -21,6 +21,8 @@ const AdminBadge = (props: Props) => {
         text = intl.formatMessage({id: 'AdminBadge.SystemAdmin', defaultMessage: 'Admin'})
     } else if (props.permissions?.find((s) => s === 'manage_team')) {
         text = intl.formatMessage({id: 'AdminBadge.TeamAdmin', defaultMessage: 'Team Admin'})
+    } else {
+        return null
     }
     return (
         <div className='AdminBadge'>
