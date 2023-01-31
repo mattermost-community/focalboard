@@ -61,7 +61,6 @@ function DateRange(props: PropertyProps): JSX.Element {
     const onChange = useCallback((newValue) => {
         if (value !== newValue) {
             setValue(newValue)
-            mutator.changePropertyValue(board.id, card, propertyTemplate.id, newValue)
         }
     }, [value, board.id, card, propertyTemplate.id])
 
@@ -150,7 +149,9 @@ function DateRange(props: PropertyProps): JSX.Element {
     }
 
     const onClose = () => {
-        onChange(datePropertyToString(dateProperty))
+        const newDate = datePropertyToString(dateProperty)
+        onChange(newDate)
+        mutator.changePropertyValue(board.id, card, propertyTemplate.id, newDate)
         setShowDialog(false)
     }
 
