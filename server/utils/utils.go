@@ -2,9 +2,11 @@ package utils
 
 import (
 	"encoding/json"
+	"errors"
 	"reflect"
 	"time"
 
+	pluginapi "github.com/mattermost/mattermost-plugin-api"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
@@ -118,4 +120,8 @@ func DedupeStringArr(arr []string) []string {
 	}
 
 	return dedupedArr
+}
+
+func IsPluginAPINotFound(err error) bool {
+	return errors.Is(err, pluginapi.ErrNotFound)
 }

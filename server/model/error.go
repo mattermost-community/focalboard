@@ -7,9 +7,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/utils"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
-
-	pluginapi "github.com/mattermost/mattermost-plugin-api"
 )
 
 var (
@@ -276,7 +275,7 @@ func IsErrNotFound(err error) bool {
 	}
 
 	// check if this is a plugin API error
-	if errors.Is(err, pluginapi.ErrNotFound) {
+	if utils.IsPluginAPINotFound(err) {
 		return true
 	}
 
