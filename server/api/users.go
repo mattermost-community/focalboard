@@ -118,6 +118,8 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	//     description: internal error
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
+	query := r.URL.Query()
+	teamID := query.Get("teamID")
 
 	userID := getUserID(r)
 
@@ -144,6 +146,13 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 			a.errorResponse(w, r, err)
 			return
 		}
+	}
+
+	if teamID != "" && a.permissions.HasPermissionToTeam(userID, teamID, model.PermissionManageTeam) {
+		user.Permissions = append(user.Permissions, model.PermissionManageTeam.Id)
+	}
+	if a.permissions.HasPermissionTo(userID, model.PermissionManageSystem) {
+		user.Permissions = append(user.Permissions, model.PermissionManageSystem.Id)
 	}
 
 	userData, err := json.Marshal(user)

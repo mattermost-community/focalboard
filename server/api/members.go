@@ -217,6 +217,9 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 	//     schema:
 	//       "$ref": "#/definitions/ErrorResponse"
 
+	query := r.URL.Query()
+	allowAdmin := query.Has("allow_admin")
+
 	userID := getUserID(r)
 	if userID == "" {
 		a.errorResponse(w, r, model.NewErrBadRequest("missing user ID"))
@@ -229,14 +232,14 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		a.errorResponse(w, r, err)
 		return
 	}
-	if board.Type != model.BoardTypeOpen {
-		a.errorResponse(w, r, model.NewErrPermission("cannot join a non Open board"))
-		return
-	}
 
-	if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
-		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
-		return
+	isAdmin := false
+	if board.Type != model.BoardTypeOpen {
+		if !allowAdmin || !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionManageTeam) {
+			a.errorResponse(w, r, model.NewErrPermission("cannot join a non Open board"))
+			return
+		}
+		isAdmin = true
 	}
 
 	isGuest, err := a.userIsGuest(userID)
@@ -252,7 +255,7 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 	newBoardMember := &model.BoardMember{
 		UserID:          userID,
 		BoardID:         boardID,
-		SchemeAdmin:     board.MinimumRole == model.BoardRoleAdmin,
+		SchemeAdmin:     board.MinimumRole == model.BoardRoleAdmin || isAdmin,
 		SchemeEditor:    board.MinimumRole == model.BoardRoleNone || board.MinimumRole == model.BoardRoleEditor,
 		SchemeCommenter: board.MinimumRole == model.BoardRoleCommenter,
 		SchemeViewer:    board.MinimumRole == model.BoardRoleViewer,
