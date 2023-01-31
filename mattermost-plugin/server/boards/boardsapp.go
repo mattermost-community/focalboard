@@ -177,7 +177,7 @@ func (b *BoardsApp) Start() error {
 
 	b.servicesAPI.RegisterRouter(b.server.GetRootRouter())
 
-	b.logger.Info("Boards product successfully started.")
+	b.logger.Info("Boards backend successfully started.")
 
 	return nil
 }
