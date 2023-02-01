@@ -242,6 +242,11 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 		isAdmin = true
 	}
 
+	if !a.permissions.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
+		return
+	}
+
 	isGuest, err := a.userIsGuest(userID)
 	if err != nil {
 		a.errorResponse(w, r, err)
