@@ -42,8 +42,7 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 	if userID == "" || teamID == "" || permission == nil {
 		return false
 	}
-	hasPermission := s.api.HasPermissionToTeam(userID, teamID, permission)
-	return hasPermission
+	return s.api.HasPermissionToTeam(userID, teamID, permission)
 }
 
 func (s *Service) HasPermissionToChannel(userID, channelID string, permission *mmModel.Permission) bool {

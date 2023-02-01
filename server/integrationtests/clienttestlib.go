@@ -77,6 +77,9 @@ func (*FakePermissionPluginAPI) HasPermissionTo(userID string, permission *mmMod
 }
 
 func (*FakePermissionPluginAPI) HasPermissionToTeam(userID string, teamID string, permission *mmModel.Permission) bool {
+	if permission.Id == model.PermissionManageTeam.Id {
+		return false
+	}
 	if userID == userNoTeamMember {
 		return false
 	}
