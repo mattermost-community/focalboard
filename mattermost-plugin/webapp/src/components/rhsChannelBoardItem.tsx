@@ -45,7 +45,8 @@ const RHSChannelBoardItem = (props: Props) => {
 
     const handleBoardClicked = (boardID: string) => {
         // send the telemetry information for the clicked board
-        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelsRHSBoard, {teamID: team.id, channelID: currentChannel.id})
+        const extraData = {teamID: team.id, channelID: currentChannel.id, board: boardID}
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelsRHSBoard, extraData)
 
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
     }
