@@ -103,6 +103,8 @@ const TableRow = (props: Props) => {
             } else if (template && template.type === 'updatedBy') {
                 groupValue = card.modifiedBy
             }
+        } else if (Array.isArray(groupValue)) {
+            groupValue = groupValue[0]
         }
         if (collapsedOptionIds.indexOf(groupValue) > -1) {
             className += ' hidden'
