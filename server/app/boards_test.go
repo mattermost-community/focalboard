@@ -127,7 +127,7 @@ func TestAddMemberToBoard(t *testing.T) {
 			},
 		}, nil).Times(2)
 		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", []string{"board_id_1"}).Return(nil)
-		th.Api.EXPECT().HasPermissionToTeam("user_id_1", "team_id_1", model.PermissionManageTeam).Return(false).Times(1)
+		th.API.EXPECT().HasPermissionToTeam("user_id_1", "team_id_1", model.PermissionManageTeam).Return(false).Times(1)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -335,7 +335,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil).Times(2)
 
-		th.Api.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
@@ -377,7 +377,7 @@ func TestPatchBoard(t *testing.T) {
 			ChannelID:  "",
 		}, nil).Times(2)
 
-		th.Api.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)

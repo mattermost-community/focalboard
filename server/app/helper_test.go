@@ -26,7 +26,7 @@ type TestHelper struct {
 	Store        *mockstore.MockStore
 	FilesBackend *mocks.FileBackend
 	logger       mlog.LoggerIFace
-	Api          *mmpermissionsMocks.MockAPI
+	API          *mmpermissionsMocks.MockAPI
 }
 
 func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
@@ -69,6 +69,6 @@ func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
 		Store:        store,
 		FilesBackend: filesBackend,
 		logger:       logger,
-		Api:          mockAPI,
+		API:          mockAPI,
 	}, tearDown
 }
