@@ -41,6 +41,8 @@ func BlockTypeFromString(s string) (BlockType, error) {
 		return TypeView, nil
 	case "text":
 		return TypeText, nil
+	case "checkbox":
+		return TypeCheckbox, nil
 	case "comment":
 		return TypeComment, nil
 	case "image":
@@ -62,7 +64,7 @@ func BlockType2IDType(blockType BlockType) utils.IDType {
 		return utils.IDTypeCard
 	case TypeView:
 		return utils.IDTypeView
-	case TypeText, TypeComment:
+	case TypeText, TypeCheckbox, TypeComment, TypeDivider:
 		return utils.IDTypeBlock
 	case TypeImage, TypeAttachment:
 		return utils.IDTypeAttachment

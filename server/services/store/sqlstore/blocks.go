@@ -43,25 +43,25 @@ func (s *SQLStore) timestampToCharField(name string, as string) string {
 	}
 }
 
-func (s *SQLStore) blockFields(alias string) []string {
-	if alias != "" && !strings.HasSuffix(alias, ".") {
-		alias += "."
+func (s *SQLStore) blockFields(tableAlias string) []string {
+	if tableAlias != "" && !strings.HasSuffix(tableAlias, ".") {
+		tableAlias += "."
 	}
 
 	return []string{
-		alias + "id",
-		alias + "parent_id",
-		alias + "created_by",
-		alias + "modified_by",
-		alias + s.escapeField("schema"),
-		alias + "type",
-		alias + "title",
-		"COALESCE(" + alias + "fields, '{}')",
-		s.timestampToCharField(alias+"insert_at", "insertAt"),
-		alias + "create_at",
-		alias + "update_at",
-		alias + "delete_at",
-		"COALESCE(" + alias + "board_id, '0')",
+		tableAlias + "id",
+		tableAlias + "parent_id",
+		tableAlias + "created_by",
+		tableAlias + "modified_by",
+		tableAlias + s.escapeField("schema"),
+		tableAlias + "type",
+		tableAlias + "title",
+		"COALESCE(" + tableAlias + "fields, '{}')",
+		s.timestampToCharField(tableAlias+"insert_at", "insertAt"),
+		tableAlias + "create_at",
+		tableAlias + "update_at",
+		tableAlias + "delete_at",
+		"COALESCE(" + tableAlias + "board_id, '0')",
 	}
 }
 
