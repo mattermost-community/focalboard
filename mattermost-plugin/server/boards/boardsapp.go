@@ -170,14 +170,14 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	}, nil
 }
 
-func (b *BoardsApp) Start() error {
+func (b *BoardsApp) Start(mode string) error {
 	if err := b.server.Start(); err != nil {
 		return fmt.Errorf("error starting Boards server: %w", err)
 	}
 
 	b.servicesAPI.RegisterRouter(b.server.GetRootRouter())
 
-	b.logger.Info("Boards backend successfully started.")
+	b.logger.Info(fmt.Sprintf("Boards %s successfully started.", mode))
 
 	return nil
 }

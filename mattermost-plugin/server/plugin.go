@@ -29,7 +29,7 @@ type Plugin struct {
 
 func (p *Plugin) OnActivate() error {
 	if p.API.GetConfig().FeatureFlags.BoardsProduct {
-		p.API.LogError(ErrPluginNotAllowed.Error())
+		p.API.LogWarn(ErrPluginNotAllowed.Error())
 		return ErrPluginNotAllowed
 	}
 
@@ -56,7 +56,7 @@ func (p *Plugin) OnActivate() error {
 	model.LogServerInfo(logger)
 
 	p.boardsApp = boardsApp
-	return p.boardsApp.Start()
+	return p.boardsApp.Start("plugin")
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.

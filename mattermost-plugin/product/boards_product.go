@@ -9,6 +9,7 @@ import (
 
 	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/utils"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -227,6 +228,12 @@ func (bp *boardsProduct) Start() error {
 		return nil
 	}
 
+	if utils.IsEnvTrue("MM_FEATUREFLAGS_BoardsProduct") {
+		bp.logger.Info("Boards product enabled via environment variable")
+	} else {
+		bp.logger.Info("Boards product enabled via feature flag")
+	}
+
 	bp.logger.Info("Starting boards service")
 
 	adapter := newServiceAPIAdapter(bp)
@@ -242,7 +249,7 @@ func (bp *boardsProduct) Start() error {
 	}
 
 	bp.boardsApp = boardsApp
-	if err := bp.boardsApp.Start(); err != nil {
+	if err := bp.boardsApp.Start("product"); err != nil {
 		return fmt.Errorf("failed to start Boards service: %w", err)
 	}
 

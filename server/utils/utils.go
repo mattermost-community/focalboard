@@ -2,7 +2,9 @@ package utils
 
 import (
 	"encoding/json"
+	"os"
 	"reflect"
+	"strings"
 	"time"
 
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
@@ -118,4 +120,20 @@ func DedupeStringArr(arr []string) []string {
 	}
 
 	return dedupedArr
+}
+
+func IsStringTrue(v string) bool {
+	switch strings.ToLower(v) {
+	case "1", "t", "y", "true", "yes":
+		return true
+	}
+	return false
+}
+
+func IsEnvTrue(varName string) bool {
+	v := os.Getenv(varName)
+	if v == "" {
+		return false
+	}
+	return IsStringTrue(v)
 }
