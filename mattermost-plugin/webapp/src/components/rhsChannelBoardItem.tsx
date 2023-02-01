@@ -6,6 +6,7 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../../../../webapp/src/mutator'
 import {Utils} from '../../../../webapp/src/utils'
 import {getCurrentTeam} from '../../../../webapp/src/store/teams'
+import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {createBoard, Board} from '../../../../webapp/src/blocks/board'
 import {useAppSelector} from '../../../../webapp/src/store/hooks'
 import IconButton from '../../../../webapp/src/widgets/buttons/iconButton'
@@ -17,8 +18,10 @@ import CompassIcon from '../../../../webapp/src/widgets/icons/compassIcon'
 
 import {Permission} from '../../../../webapp/src/constants'
 
-import './rhsChannelBoardItem.scss'
 import BoardPermissionGate from '../../../../webapp/src/components/permissions/boardPermissionGate'
+import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../../../webapp/src/telemetry/telemetryClient'
+
+import './rhsChannelBoardItem.scss'
 
 const windowAny = (window as SuiteWindow)
 
@@ -35,7 +38,15 @@ const RHSChannelBoardItem = (props: Props) => {
         return null
     }
 
+    const currentChannel = useAppSelector(getCurrentChannel)
+    if (!currentChannel) {
+        return null
+    }
+
     const handleBoardClicked = (boardID: string) => {
+        // send the telemetry information for the clicked board
+        TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelsRHSBoard, {teamID: team.id, channelID: currentChannel.id})
+
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
     }
 

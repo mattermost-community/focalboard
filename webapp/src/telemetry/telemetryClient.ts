@@ -50,6 +50,7 @@ export const TelemetryActions = {
     LimitCardLimitReached: 'limit_cardLimitReached',
     LimitCardLimitLinkOpen: 'limit_cardLimitLinkOpen',
     VersionMoreInfo: 'version_more_info',
+    ClickChannelsRHSBoard: 'click_channels_RHS_board',
 }
 
 interface IEventProps {
