@@ -35,10 +35,9 @@ import {Utils} from '../../utils'
 
 import AddIcon from '../../widgets/icons/add'
 import CloseIcon from '../../widgets/icons/close'
-import {UserConfigPatch} from '../../user'
-import {getMe, getMyConfig, patchProps} from '../../store/users'
+import {getMe} from '../../store/users'
 import octoClient from '../../octoClient'
-import {getCurrentBoardId, getMySortedBoards} from '../../store/boards'
+import {getCurrentBoardId} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
 
@@ -75,12 +74,10 @@ const SidebarBoardItem = (props: Props) => {
     const currentViewId = useAppSelector(getCurrentViewId)
     const teamID = team?.id || ''
     const me = useAppSelector(getMe)
-    const myConfig = useAppSelector(getMyConfig)
 
     const match = useRouteMatch<{boardId: string, viewId?: string, cardId?: string, teamId?: string}>()
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const myAllBoards = useAppSelector(getMySortedBoards)
     const currentBoardID = useAppSelector(getCurrentBoardId)
 
     const generateMoveToCategoryOptions = (boardID: string) => {
@@ -136,6 +133,7 @@ const SidebarBoardItem = (props: Props) => {
             await dispatch(updateBoardCategories([{
                 boardID: boardId,
                 categoryID: props.categoryBoards.id,
+                hidden: false,
             }]))
         }
 
@@ -155,23 +153,14 @@ const SidebarBoardItem = (props: Props) => {
             return
         }
 
-        // creating new array as myConfig.hiddenBoardIDs.value
-        // belongs to Redux state and so is immutable.
-        const hiddenBoards = {...(myConfig.hiddenBoardIDs ? myConfig.hiddenBoardIDs.value : {})}
-
-        hiddenBoards[board.id] = true
-        const hiddenBoardsArray = Object.keys(hiddenBoards)
-        const patch: UserConfigPatch = {
-            updatedFields: {
-                hiddenBoardIDs: JSON.stringify(hiddenBoardsArray),
+        await octoClient.hideBoard(props.categoryBoards.id, board.id)
+        dispatch(updateBoardCategories([
+            {
+                boardID: board.id,
+                categoryID: props.categoryBoards.id,
+                hidden: true,
             },
-        }
-        const patchedProps = await octoClient.patchUserConfig(me.id, patch)
-        if (!patchedProps) {
-            return
-        }
-
-        await dispatch(patchProps(patchedProps))
+        ]))
 
         // If we're hiding the board we're currently on,
         // we need to switch to a different board once its hidden.
@@ -181,17 +170,22 @@ const SidebarBoardItem = (props: Props) => {
 
             // Empty board ID navigates to template picker, which is
             // fine if there are no more visible boards to switch to.
-            const visibleBoards = myAllBoards.filter((b) => !hiddenBoards[b.id])
 
-            if (visibleBoards.length === 0) {
+            // find the first visible board
+            let visibleBoardID: string | null = null
+            for (const iterCategory of props.allCategories) {
+                const visibleBoardMetadata = iterCategory.boardMetadata.find((categoryBoardMetadata) => !categoryBoardMetadata.hidden && categoryBoardMetadata.boardID !== props.board.id)
+                if (visibleBoardMetadata) {
+                    visibleBoardID = visibleBoardMetadata.boardID
+                    break
+                }
+            }
+
+            if (visibleBoardID === null) {
                 UserSettings.setLastBoardID(match.params.teamId!, null)
                 showTemplatePicker()
             } else {
-                let nextBoardID = ''
-                if (visibleBoards.length > 0) {
-                    nextBoardID = visibleBoards[0].id
-                }
-                props.showBoard(nextBoardID)
+                props.showBoard(visibleBoardID)
             }
         }
     }

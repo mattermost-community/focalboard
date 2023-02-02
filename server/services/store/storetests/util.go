@@ -92,12 +92,13 @@ func createTestCards(t *testing.T, store store.Store, userID string, boardID str
 	return blocks
 }
 
-func createTestBoards(t *testing.T, store store.Store, userID string, num int) []*model.Board {
+//nolint:unparam
+func createTestBoards(t *testing.T, store store.Store, teamID string, userID string, num int) []*model.Board {
 	var boards []*model.Board
 	for i := 0; i < num; i++ {
 		board := &model.Board{
 			ID:        utils.NewID(utils.IDTypeBoard),
-			TeamID:    testTeamID,
+			TeamID:    teamID,
 			Type:      "O",
 			CreatedBy: userID,
 			Title:     fmt.Sprintf("board %d", i),
@@ -108,6 +109,12 @@ func createTestBoards(t *testing.T, store store.Store, userID string, num int) [
 		boards = append(boards, boardNew)
 	}
 	return boards
+}
+
+//nolint:unparam
+func deleteTestBoard(t *testing.T, store store.Store, boardID string, userID string) {
+	err := store.DeleteBoard(boardID, userID)
+	require.NoError(t, err)
 }
 
 // extractIDs is a test helper that extracts a sorted slice of IDs from slices of various struct types.
@@ -127,11 +134,19 @@ func extractIDs(t *testing.T, arr ...any) []string {
 					ids = append(ids, b.ID)
 				}
 			}
+		case []*model.BoardHistory:
+			for _, bh := range tarr {
+				ids = append(ids, bh.ID)
+			}
 		case []*model.Block:
 			for _, b := range tarr {
 				if b != nil {
 					ids = append(ids, b.ID)
 				}
+			}
+		case []*model.BlockHistory:
+			for _, bh := range tarr {
+				ids = append(ids, bh.ID)
 			}
 		default:
 			t.Errorf("unsupported type %T extracting board ID", item)

@@ -22,15 +22,15 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBoard(userID string, boardCategoryMapping map[string]string) error {
+func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, boardIDs []string) error {
 	if s.dbType == model.SqliteDBType {
-		return s.addUpdateCategoryBoard(s.db, userID, boardCategoryMapping)
+		return s.addUpdateCategoryBoard(s.db, userID, categoryID, boardIDs)
 	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.addUpdateCategoryBoard(tx, userID, boardCategoryMapping)
+	err := s.addUpdateCategoryBoard(tx, userID, categoryID, boardIDs)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "AddUpdateCategoryBoard"))
@@ -140,11 +140,6 @@ func (s *SQLStore) CreateSubscription(sub *model.Subscription) (*model.Subscript
 
 func (s *SQLStore) CreateUser(user *model.User) (*model.User, error) {
 	return s.createUser(s.db, user)
-
-}
-
-func (s *SQLStore) DBVersion() string {
-	return s.dBVersion()
 
 }
 
@@ -348,6 +343,11 @@ func (s *SQLStore) GetBlocksByIDs(ids []string) ([]*model.Block, error) {
 
 }
 
+func (s *SQLStore) GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error) {
+	return s.getBlocksComplianceHistory(s.db, opts)
+
+}
+
 func (s *SQLStore) GetBlocksForBoard(boardID string) ([]*model.Block, error) {
 	return s.getBlocksForBoard(s.db, boardID)
 
@@ -395,6 +395,16 @@ func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBoardHistoryO
 
 func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
 	return s.getBoardMemberHistory(s.db, boardID, userID, limit)
+
+}
+
+func (s *SQLStore) GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error) {
+	return s.getBoardsComplianceHistory(s.db, opts)
+
+}
+
+func (s *SQLStore) GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions) ([]*model.Board, bool, error) {
+	return s.getBoardsForCompliance(s.db, opts)
 
 }
 
@@ -852,6 +862,11 @@ func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestI
 
 func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
 	return s.sendMessage(s.db, message, postType, receipts)
+
+}
+
+func (s *SQLStore) SetBoardVisibility(userID string, categoryID string, boardID string, visible bool) error {
+	return s.setBoardVisibility(s.db, userID, categoryID, boardID, visible)
 
 }
 

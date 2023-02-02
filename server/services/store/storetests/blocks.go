@@ -1073,7 +1073,7 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 }
 
 func testUndeleteBlockChildren(t *testing.T, store store.Store) {
-	boards := createTestBoards(t, store, testUserID, 2)
+	boards := createTestBoards(t, store, testTeamID, testUserID, 2)
 	boardDelete := boards[0]
 	boardKeep := boards[1]
 	userID := testUserID
@@ -1163,7 +1163,7 @@ func testUndeleteBlockChildren(t *testing.T, store store.Store) {
 }
 
 func testGetBlockHistoryNewestChildren(t *testing.T, store store.Store) {
-	boards := createTestBoards(t, store, testUserID, 2)
+	boards := createTestBoards(t, store, testTeamID, testUserID, 2)
 	board := boards[0]
 
 	const cardCount = 10
