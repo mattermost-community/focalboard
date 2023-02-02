@@ -8,7 +8,7 @@ import (
 
 // This test is there to guarantee that the board templates needed for
 // the work template are present in the default templates.
-// If this fails, you might need to sync with the channls team.
+// If this fails, you might need to sync with the channels team.
 func TestGetTemplatesForWorkTemplate(t *testing.T) {
 	// map[name]trackingTemplateId
 	knownInWorkTemplates := map[string]string{
