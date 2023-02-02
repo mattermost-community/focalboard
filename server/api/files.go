@@ -16,6 +16,7 @@ import (
 	"github.com/mattermost/focalboard/server/services/audit"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
+	"github.com/mattermost/mattermost-server/v6/shared/fileUtils"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
@@ -166,7 +167,8 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer fileReader.Close()
-	http.ServeContent(w, r, filename, time.Now(), fileReader)
+	fileUtils.WriteFileResponse(filename, fileInfo.MimeType, fileInfo.Size, time.Now(), "", fileReader, false, w, r)
+	// http.ServeContent(w, r, filename, time.Now(), fileReader)
 	auditRec.Success()
 }
 
