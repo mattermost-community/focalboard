@@ -35,23 +35,23 @@ func TestGetTemplatesForWorkTemplate(t *testing.T) {
 	th.CheckOK(resp)
 	require.NotNil(t, rBoards)
 
-	trackingTemplateIds := []string{}
+	trackingTemplateIDs := []string{}
 	for _, board := range rBoards {
 		property, _ := board.GetPropertyString("trackingTemplateId")
 		if property != "" {
-			trackingTemplateIds = append(trackingTemplateIds, property)
+			trackingTemplateIDs = append(trackingTemplateIDs, property)
 		}
 	}
 
 	// make sure all known templates are in trackingTemplateIds
-	for name, ttId := range knownInWorkTemplates {
+	for name, ttID := range knownInWorkTemplates {
 		found := false
-		for _, trackingTemplateId := range trackingTemplateIds {
-			if trackingTemplateId == ttId {
+		for _, trackingTemplateID := range trackingTemplateIDs {
+			if trackingTemplateID == ttID {
 				found = true
 				break
 			}
 		}
-		require.True(t, found, "trackingTemplateId %s for %s not found", ttId, name)
+		require.True(t, found, "trackingTemplateId %s for %s not found", ttID, name)
 	}
 }
