@@ -241,6 +241,15 @@ func (a *App) ImportBoardJSONL(r io.Reader, opt model.ImportArchiveOptions) (str
 
 	// add users to all the new boards (if not the fake system user).
 	for _, board := range boardsAndBlocks.Boards {
+		// make sure an admin user gets added
+		adminMember := &model.BoardMember{
+			BoardID:     board.ID,
+			UserID:      opt.ModifiedBy,
+			SchemeAdmin: true,
+		}
+		if _, err2 := a.AddMemberToBoard(adminMember); err2 != nil {
+			return "", fmt.Errorf("cannot add adminMember to board: %w", err2)
+		}
 		for _, boardMember := range boardMembers {
 			bm := &model.BoardMember{
 				BoardID:         board.ID,
