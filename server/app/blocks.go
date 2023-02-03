@@ -310,19 +310,23 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 
 	for i := range copiedBlocks {
 		block := copiedBlocks[i]
-		attachmentPresent := false
-		fileName, ok := block.Fields["fileId"]
-		if !ok || fileName == "" {
-			fileName, ok = block.Fields["attachmentId"]
-			if !ok || fileName == "" {
-				continue // doesn't have a file attachment
-			} else {
-				attachmentPresent = true
+		fileName := ""
+		if block.Type == model.TypeImage {
+			fileName, _ = block.Fields["fileId"].(string)
+			if fileName == "" {
+				continue
 			}
+		} else if block.Type == model.TypeAttachment {
+			fileName, _ = block.Fields["attachmentId"].(string)
+			if fileName == "" {
+				continue
+			}
+		} else {
+			continue
 		}
 
 		// create unique filename in case we are copying cards within the same board.
-		ext := filepath.Ext(fileName.(string))
+		ext := filepath.Ext(fileName)
 		destFilename := utils.NewID(utils.IDTypeNone) + ext
 
 		if destBoardID == "" || block.BoardID != destBoardID {
@@ -334,7 +338,7 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 			destTeamID = destBoard.TeamID
 		}
 
-		sourceFilePath := filepath.Join(sourceBoard.TeamID, sourceBoard.ID, fileName.(string))
+		sourceFilePath := filepath.Join(sourceBoard.TeamID, sourceBoard.ID, fileName)
 		destinationFilePath := filepath.Join(destTeamID, block.BoardID, destFilename)
 
 		a.logger.Debug(
@@ -351,9 +355,9 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 				mlog.Err(err),
 			)
 		}
-		if attachmentPresent {
+		if block.Type == model.TypeAttachment {
 			block.Fields["attachmentId"] = destFilename
-			parts := strings.Split(fileName.(string), ".")
+			parts := strings.Split(fileName, ".")
 			fileInfoID := parts[0][1:]
 			fileInfo, _ := a.store.GetFileInfo(fileInfoID)
 			newParts := strings.Split(destFilename, ".")

@@ -202,21 +202,21 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	blockPatches := make([]model.BlockPatch, 0)
 
 	for _, block := range bab.Blocks {
-		if fileID, ok := block.Fields["fileId"]; ok {
-			blockIDs = append(blockIDs, block.ID)
-			blockPatches = append(blockPatches, model.BlockPatch{
-				UpdatedFields: map[string]interface{}{
-					"fileId": fileID,
-				},
-			})
+		fieldName := ""
+		if block.Type == model.TypeImage {
+			fieldName = "fileId"
+		} else if block.Type == model.TypeAttachment {
+			fieldName = "attachmentId"
 		}
-		if attachmentID, ok := block.Fields["attachmentId"]; ok {
-			blockIDs = append(blockIDs, block.ID)
-			blockPatches = append(blockPatches, model.BlockPatch{
-				UpdatedFields: map[string]interface{}{
-					"attachmentId": attachmentID,
-				},
-			})
+		if fieldName != "" {
+			if fieldID, ok := block.Fields[fieldName]; ok {
+				blockIDs = append(blockIDs, block.ID)
+				blockPatches = append(blockPatches, model.BlockPatch{
+					UpdatedFields: map[string]interface{}{
+						fieldName: fieldID,
+					},
+				})
+			}
 		}
 	}
 	a.logger.Debug("Duplicate boards patching file IDs", mlog.Int("count", len(blockIDs)))
