@@ -199,6 +199,14 @@ type QueryBoardHistoryOptions struct {
 	Descending     bool   // if true then the records are sorted by insert_at in descending order
 }
 
+// QueryBlockHistoryOptions are query options that can be passed to GetBlockHistory.
+type QueryBlockHistoryChildOptions struct {
+	BeforeUpdateAt int64 // if non-zero then filter for records with update_at less than BeforeUpdateAt
+	AfterUpdateAt  int64 // if non-zero then filter for records with update_at greater than AfterUpdateAt
+	Page           int   // page number to select when paginating
+	PerPage        int   // number of blocks per page (default=-1, meaning unlimited)
+}
+
 func StampModificationMetadata(userID string, blocks []*Block, auditRec *audit.Record) {
 	if userID == SingleUser {
 		userID = ""

@@ -1,0 +1,76 @@
+.blog-list .well-sm {
+    margin: 4rem 0;
+}
+
+.blog-item__header {}
+
+.blog-item__sidebar {
+    margin: 4px 0 4px 0;
+}
+
+.blog-item__title {
+    font-size: 1.5rem;
+    margin-bottom: .6rem;
+}
+
+.doc-content .doc-title {
+    margin-bottom: 24px;
+}
+
+
+.blog-item__count {
+    margin: 0 0 0 5px;
+    opacity: .6;
+}
+
+.blog-single .tags-sidebar {
+    font-size: .9rem;
+}
+
+.doc-content,
+.sidebar {
+    -webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.doc-content {
+    margin: 50px 0 0;
+}
+
+.doc-content h2,
+.doc-content h3 {
+    margin-top: 3rem;
+}
+
+.doc-content h3 {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.doc-content img  {
+    border: 1px solid var(--black01);
+}
+
+.doc-content .edit-github {
+    padding-top: 0.9rem;
+}
+
+.doc-content .doc-title {
+    display: inline-block;
+}
+
+.sidebar+.doc-content {
+    padding-left: 16px;
+}
+
+.doc-content img {
+    margin: 1em 0;
+    max-width: 100%;
+}
+
+.doc-content pre {
+    background: #f0f3f3;
+    border-radius: 5px;
+    padding: 14px;
+    margin-bottom: 1.6rem;
+}

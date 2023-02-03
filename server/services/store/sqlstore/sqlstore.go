@@ -185,7 +185,7 @@ func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmMode
 	return nil, store.NewNotSupportedError("get channel not supported on standalone mode")
 }
 
-func (s *SQLStore) dBVersion() string {
+func (s *SQLStore) DBVersion() string {
 	var version string
 	var row *sql.Row
 

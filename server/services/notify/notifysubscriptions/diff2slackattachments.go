@@ -246,7 +246,7 @@ func appendCommentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Dif
 				msg = child.NewBlock.Title
 			}
 
-			if child.NewBlock == nil && child.OldBlock != nil {
+			if (child.NewBlock == nil || child.NewBlock.DeleteAt != 0) && child.OldBlock != nil {
 				// deleted comment
 				format = "~~`%s`~~"
 				msg = stripNewlines(child.OldBlock.Title)
@@ -266,36 +266,73 @@ func appendCommentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Dif
 
 func appendContentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Diff, logger mlog.LoggerIFace) []*mm_model.SlackAttachmentField {
 	for _, child := range cardDiff.Diffs {
-		if child.BlockType != model.TypeComment {
-			var newTitle, oldTitle string
-			if child.OldBlock != nil {
-				oldTitle = child.OldBlock.Title
-			}
-			if child.NewBlock != nil {
-				newTitle = child.NewBlock.Title
-			}
+		var opAdd, opDelete bool
+		var opString string
 
-			// only strip newlines when modifying or deleting
-			if child.OldBlock != nil && child.NewBlock == nil {
-				newTitle = stripNewlines(newTitle)
+		switch {
+		case child.OldBlock == nil && child.NewBlock != nil:
+			opAdd = true
+			opString = "added" // TODO: localize when i18n added to server
+		case child.NewBlock == nil || child.NewBlock.DeleteAt != 0:
+			opDelete = true
+			opString = "deleted"
+		default:
+			opString = "modified"
+		}
+
+		var newTitle, oldTitle string
+		if child.OldBlock != nil {
+			oldTitle = child.OldBlock.Title
+		}
+		if child.NewBlock != nil {
+			newTitle = child.NewBlock.Title
+		}
+
+		switch child.BlockType {
+		case model.TypeDivider, model.TypeComment:
+			// do nothing
+			continue
+		case model.TypeImage:
+			if newTitle == "" {
+				newTitle = "An image was " + opString + "." // TODO: localize when i18n added to server
+			}
+			oldTitle = ""
+		case model.TypeAttachment:
+			if newTitle == "" {
+				newTitle = "A file attachment was " + opString + "." // TODO: localize when i18n added to server
+			}
+			oldTitle = ""
+		default:
+			if !opAdd {
+				if opDelete {
+					newTitle = ""
+				}
+				// only strip newlines when modifying or deleting
 				oldTitle = stripNewlines(oldTitle)
+				newTitle = stripNewlines(newTitle)
 			}
-
 			if newTitle == oldTitle {
 				continue
 			}
-
-			markdown := generateMarkdownDiff(oldTitle, newTitle, logger)
-			if markdown == "" {
-				continue
-			}
-
-			fields = append(fields, &mm_model.SlackAttachmentField{
-				Short: false,
-				Title: "Description",
-				Value: markdown,
-			})
 		}
+
+		logger.Debug("appendContentChanges",
+			mlog.String("type", string(child.BlockType)),
+			mlog.String("opString", opString),
+			mlog.String("oldTitle", oldTitle),
+			mlog.String("newTitle", newTitle),
+		)
+
+		markdown := generateMarkdownDiff(oldTitle, newTitle, logger)
+		if markdown == "" {
+			continue
+		}
+
+		fields = append(fields, &mm_model.SlackAttachmentField{
+			Short: false,
+			Title: "Description",
+			Value: markdown,
+		})
 	}
 	return fields
 }

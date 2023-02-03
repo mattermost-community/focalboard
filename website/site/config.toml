@@ -31,8 +31,8 @@ pygmentsStyle = "manni"
     enable = false
 
   [[params.sidebar.item]]
-    name = "download"
-    displayName = "Download"
+    name = "docs"
+    displayName = "Docs"
     draft = false
 
   [[params.sidebar.item]]
@@ -64,25 +64,25 @@ pygmentsStyle = "manni"
       name = "GitHub"
       weight = 2
 
-    # postpended links
     [[menu.postpend]]
-      url = "/download/personal-edition"
-      name = "Download"
+      url = "https://docs.mattermost.com/guides/boards.html"
+      name = "Help Docs"
       weight = 3
-
-    [[menu.postpend]]
-      url = "/guide/user"
-      name = "User Guide"
-      weight = 4
 
     [[menu.postpend]]
       url = "/feedback"
       name = "Feedback"
-      weight = 5
+      weight = 4
 
     [[menu.postpend]]
       url = "https://mattermost.com/"
       name = "Mattermost"
+      weight = 5
+
+    # postpended links
+    [[menu.postpend]]
+      url = "/download"
+      name = "Download"
       weight = 6
 
     # Workaround to add draft status to menu items
@@ -108,7 +108,7 @@ pygmentsStyle = "manni"
   [[params.intro.item]]
     title = "Download"
     description = "Download Focalboard here."
-    url = "download/personal-edition"
+    url = "/docs/personal-edition"
     button = "Download Now"
     icon = "/img/download-icon.svg"
     draft = false
