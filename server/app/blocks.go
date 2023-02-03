@@ -311,17 +311,18 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 	for i := range copiedBlocks {
 		block := copiedBlocks[i]
 		fileName := ""
-		if block.Type == model.TypeImage {
+		switch block.Type {
+		case model.TypeImage:
 			fileName, _ = block.Fields["fileId"].(string)
 			if fileName == "" {
 				continue
 			}
-		} else if block.Type == model.TypeAttachment {
+		case model.TypeAttachment:
 			fileName, _ = block.Fields["attachmentId"].(string)
 			if fileName == "" {
 				continue
 			}
-		} else {
+		default:
 			continue
 		}
 
