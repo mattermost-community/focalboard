@@ -16,7 +16,6 @@ import CheckIcon from '../../widgets/icons/check'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
 import {getCurrentBoardId} from '../../store/boards'
-import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     cardTemplate: Card
@@ -33,7 +32,7 @@ const NewCardButtonTemplateItem = (props: Props) => {
     const boardId = useAppSelector(getCurrentBoardId)
 
     return (
-        <MenuText
+        <Menu.Text
             key={cardTemplate.id}
             id={cardTemplate.id}
             name={displayName}
@@ -46,7 +45,7 @@ const NewCardButtonTemplateItem = (props: Props) => {
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <MenuText
+                        <Menu.Text
                             icon={<CheckIcon/>}
                             id='default'
                             name={intl.formatMessage({id: 'ViewHeader.set-default-template', defaultMessage: 'Set as default'})}
@@ -54,7 +53,7 @@ const NewCardButtonTemplateItem = (props: Props) => {
                                 await mutator.setDefaultTemplate(boardId, currentView.id, currentView.fields.defaultTemplateId, cardTemplate.id)
                             }}
                         />
-                        <MenuText
+                        <Menu.Text
                             icon={<EditIcon/>}
                             id='edit'
                             name={intl.formatMessage({id: 'ViewHeader.edit-template', defaultMessage: 'Edit'})}
@@ -62,7 +61,7 @@ const NewCardButtonTemplateItem = (props: Props) => {
                                 props.editCardTemplate(cardTemplate.id)
                             }}
                         />
-                        <MenuText
+                        <Menu.Text
                             icon={<DeleteIcon/>}
                             id='delete'
                             name={intl.formatMessage({id: 'ViewHeader.delete-template', defaultMessage: 'Delete'})}

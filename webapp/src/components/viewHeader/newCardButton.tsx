@@ -12,8 +12,6 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoardTemplates} from '../../store/cards'
 import {getCurrentView} from '../../store/views'
 
-import {MenuLabel, MenuSeparator, MenuText} from '../../widgets/menu/menu'
-
 import NewCardButtonTemplateItem from './newCardButtonTemplateItem'
 import EmptyCardButton from './emptyCardButton'
 
@@ -48,16 +46,16 @@ const NewCardButton = (props: Props): JSX.Element => {
         >
             <Menu position='left'>
                 {cardTemplates.length > 0 && <>
-                    <MenuLabel>
+                    <Menu.Label>
                         <b>
                             <FormattedMessage
                                 id='ViewHeader.select-a-template'
                                 defaultMessage='Select a template'
                             />
                         </b>
-                    </MenuLabel>
+                    </Menu.Label>
 
-                    <MenuSeparator/>
+                    <Menu.Separator/>
                 </>}
 
                 {cardTemplates.map((cardTemplate) => {
@@ -78,7 +76,7 @@ const NewCardButton = (props: Props): JSX.Element => {
                     addCard={props.addCard}
                 />
 
-                <MenuText
+                <Menu.Text
                     icon={<AddIcon/>}
                     id='add-template'
                     name={intl.formatMessage({id: 'ViewHeader.add-template', defaultMessage: 'New template'})}

@@ -13,7 +13,6 @@ import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import SortDownIcon from '../../widgets/icons/sortDown'
 import SortUpIcon from '../../widgets/icons/sortUp'
-import {MenuText, MenuSeparator} from '../../widgets/menu/menu'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -65,19 +64,19 @@ const ViewHeaderSortMenu = (props: Props) => {
             <Menu>
                 {(activeView.fields.sortOptions?.length > 0) &&
                 <>
-                    <MenuText
+                    <Menu.Text
                         id='manual'
                         name='Manual'
                         onClick={onManualSort}
                     />
 
-                    <MenuText
+                    <Menu.Text
                         id='revert'
                         name='Revert'
                         onClick={onRevertSort}
                     />
 
-                    <MenuSeparator/>
+                    <Menu.Separator/>
                 </>
                 }
 
@@ -90,7 +89,7 @@ const ViewHeaderSortMenu = (props: Props) => {
                         }
                     }
                     return (
-                        <MenuText
+                        <Menu.Text
                             key={option.id}
                             id={option.id}
                             name={option.name}

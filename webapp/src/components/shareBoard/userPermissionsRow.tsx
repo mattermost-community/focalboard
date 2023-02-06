@@ -19,7 +19,6 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
-import {MenuText, MenuSeparator} from '../../widgets/menu/menu'
 
 type Props = {
     user: IUser
@@ -83,7 +82,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                             parentRef={menuWrapperRef}
                         >
                             {(board.minimumRole === MemberRole.Viewer || board.minimumRole === MemberRole.None) &&
-                                <MenuText
+                                <Menu.Text
                                     id={MemberRole.Viewer}
                                     check={true}
                                     icon={currentRole === MemberRole.Viewer ? <CheckIcon/> : <div className='empty-icon'/>}
@@ -91,14 +90,14 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                     onClick={() => props.onUpdateBoardMember(member, MemberRole.Viewer)}
                                 />}
                             {!board.isTemplate && (board.minimumRole === MemberRole.None || board.minimumRole === MemberRole.Commenter || board.minimumRole === MemberRole.Viewer) &&
-                                <MenuText
+                                <Menu.Text
                                     id={MemberRole.Commenter}
                                     check={true}
                                     icon={currentRole === MemberRole.Commenter ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
                                     onClick={() => props.onUpdateBoardMember(member, MemberRole.Commenter)}
                                 />}
-                            <MenuText
+                            <Menu.Text
                                 id={MemberRole.Editor}
                                 check={true}
                                 icon={currentRole === MemberRole.Editor ? <CheckIcon/> : <div className='empty-icon'/>}
@@ -106,15 +105,15 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                                 onClick={() => props.onUpdateBoardMember(member, MemberRole.Editor)}
                             />
                             {user.is_guest !== true &&
-                                <MenuText
+                                <Menu.Text
                                     id={MemberRole.Admin}
                                     check={true}
                                     icon={currentRole === MemberRole.Admin ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeAdmin', defaultMessage: 'Admin'})}
                                     onClick={() => props.onUpdateBoardMember(member, MemberRole.Admin)}
                                 />}
-                            <MenuSeparator/>
-                            <MenuText
+                            <Menu.Separator/>
+                            <Menu.Text
                                 id='Remove'
                                 name={intl.formatMessage({id: 'ShareBoard.userPermissionsRemoveMemberText', defaultMessage: 'Remove member'})}
                                 onClick={() => props.onDeleteBoardMember(member)}

@@ -26,7 +26,6 @@ import {TOUR_SIDEBAR, SidebarTourSteps} from '../../components/onboardingTour'
 
 import IconButton from '../../widgets/buttons/iconButton'
 import SearchForBoardsTourStep from '../../components/onboardingTour/searchForBoards/searchForBoards'
-import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     onBoardTemplateSelectorOpen: () => void
@@ -110,13 +109,13 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                         icon={<AddIcon/>}
                     />
                     <Menu>
-                        <MenuText
+                        <Menu.Text
                             id='create-new-board-option'
                             icon={<CompassIcon icon='plus'/>}
                             onClick={props.onBoardTemplateSelectorOpen}
                             name='Create new board'
                         />
-                        <MenuText
+                        <Menu.Text
                             id='createNewCategory'
                             name={intl.formatMessage({id: 'SidebarCategories.CategoryMenu.CreateNew', defaultMessage: 'Create New Category'})}
                             icon={

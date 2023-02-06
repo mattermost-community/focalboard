@@ -7,7 +7,6 @@ import {BlockTypes} from '../../blocks/block'
 import {Utils} from '../../utils'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
-import {MenuText} from '../../widgets/menu/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 
 import {contentRegistry} from '../content/contentRegistry'
@@ -28,7 +27,7 @@ function addContentMenu(intl: IntlShape, type: BlockTypes): JSX.Element {
     }, [cardDetail, handler])
 
     return (
-        <MenuText
+        <Menu.Text
             key={type}
             id={type}
             name={handler.getDisplayText(intl)}

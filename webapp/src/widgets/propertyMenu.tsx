@@ -6,9 +6,7 @@ import {useIntl, IntlShape} from 'react-intl'
 import Menu from '../widgets/menu'
 import propsRegistry from '../properties'
 import {PropertyType} from '../properties/types'
-
 import './propertyMenu.scss'
-import {MenuLabel, MenuSeparator, MenuText, MenuTextInput, MenuSubMenu} from './menu/menu'
 
 type Props = {
     propertyId: string
@@ -31,15 +29,15 @@ export const PropertyTypes = (props: TypesProps): JSX.Element => {
     const intl = useIntl()
     return (
         <>
-            <MenuLabel>
+            <Menu.Label>
                 <b>{props.label}</b>
-            </MenuLabel>
+            </Menu.Label>
 
-            <MenuSeparator/>
+            <Menu.Separator/>
 
             {
                 propsRegistry.list().map((p) => (
-                    <MenuText
+                    <Menu.Text
                         key={p.type}
                         id={p.type}
                         name={p.displayName(intl)}
@@ -62,7 +60,7 @@ const PropertyMenu = (props: Props) => {
 
     return (
         <Menu>
-            <MenuTextInput
+            <Menu.TextInput
                 initialValue={props.propertyName}
                 onConfirmValue={(n) => {
                     props.onTypeAndNameChanged(props.propertyType, n)
@@ -72,7 +70,7 @@ const PropertyMenu = (props: Props) => {
                     currentPropertyName = n
                 }}
             />
-            <MenuSubMenu
+            <Menu.SubMenu
                 id='type'
                 name={typeMenuTitle(intl, props.propertyType)}
             >
@@ -80,8 +78,8 @@ const PropertyMenu = (props: Props) => {
                     label={intl.formatMessage({id: 'PropertyMenu.changeType', defaultMessage: 'Change property type'})}
                     onTypeSelected={(type: PropertyType) => props.onTypeAndNameChanged(type, currentPropertyName)}
                 />
-            </MenuSubMenu>
-            <MenuText
+            </Menu.SubMenu>
+            <Menu.Text
                 id='delete'
                 name={deleteText}
                 onClick={() => props.onDelete(props.propertyId)}

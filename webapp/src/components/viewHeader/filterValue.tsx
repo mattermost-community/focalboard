@@ -16,8 +16,6 @@ import Menu from '../../widgets/menu'
 import Editable from '../../widgets/editable'
 import MenuWrapper from '../../widgets/menuWrapper'
 
-import {MenuSwitch} from '../../widgets/menu/menu'
-
 import DateFilter from './dateFilter'
 
 import './filterValue.scss'
@@ -105,7 +103,7 @@ const filterValue = (props: Props): JSX.Element|null => {
 
             <Menu>
                 {template?.options.map((o) => (
-                    <MenuSwitch
+                    <Menu.Switch
                         key={o.id}
                         id={o.id}
                         name={o.value}

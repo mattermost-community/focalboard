@@ -23,8 +23,6 @@ import {useHasCurrentBoardPermissions} from '../../hooks/permissions'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
 
-import {MenuText, MenuSeparator, MenuColor} from '../../widgets/menu/menu'
-
 import {KanbanCalculation} from './calculation/calculation'
 
 type Props = {
@@ -166,7 +164,7 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                         <MenuWrapper>
                             <IconButton icon={<OptionsIcon/>}/>
                             <Menu>
-                                <MenuText
+                                <Menu.Text
                                     id='hide'
                                     icon={<HideIcon/>}
                                     name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
@@ -174,15 +172,15 @@ export default function KanbanColumnHeader(props: Props): JSX.Element {
                                 />
                                 {canEditOption &&
                                     <>
-                                        <MenuText
+                                        <Menu.Text
                                             id='delete'
                                             icon={<DeleteIcon/>}
                                             name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                                             onClick={() => mutator.deletePropertyOption(board.id, board.cardProperties, groupByProperty!, group.option)}
                                         />
-                                        <MenuSeparator/>
+                                        <Menu.Separator/>
                                         {Object.entries(Constants.menuColors).map(([key, color]) => (
-                                            <MenuColor
+                                            <Menu.Color
                                                 key={key}
                                                 id={key}
                                                 name={color}

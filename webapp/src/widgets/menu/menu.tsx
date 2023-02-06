@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-import React, {CSSProperties, useCallback, useEffect, useRef, useState} from 'react'
+import React, {CSSProperties} from 'react'
 
 import SeparatorOption from './separatorOption'
 import SwitchOption from './switchOption'
@@ -21,74 +21,71 @@ type Props = {
     menuMargin?: number
 }
 
-const MenuColor = ColorOption
-const MenuSubMenu = SubMenuOption
-const MenuSwitch = SwitchOption
-const MenuSeparator = SeparatorOption
-const MenuText = TextOption
-const MenuTextInput = textInputOption
-const MenuLabel = LabelOption
+export default class Menu extends React.PureComponent<Props> {
+    static Color = ColorOption
+    static SubMenu = SubMenuOption
+    static Switch = SwitchOption
+    static Separator = SeparatorOption
+    static Text = TextOption
+    static TextInput = textInputOption
+    static Label = LabelOption
 
-const Menu = (props: Props): JSX.Element => {
-    const menuRef = useRef<HTMLDivElement>(null)
-    const [hovering, setHovering] = useState<React.ReactNode>(null)
-    const [menuStyle, setMenuStyle] = useState<CSSProperties>({})
+    menuRef: React.RefObject<HTMLDivElement>
 
-    const {position, menuMargin, fixed, children} = props
+    constructor(props: Props) {
+        super(props)
 
-    useEffect(() => {
+        this.menuRef = React.createRef<HTMLDivElement>()
+    }
+
+    public state = {
+        hovering: null,
+        menuStyle: {},
+    }
+
+    public render(): JSX.Element {
+        const {position, fixed, children} = this.props
+
         let style: CSSProperties = {}
-        if (props.parentRef) {
+        if (this.props.parentRef) {
             const forceBottom = position ? ['bottom', 'left', 'right'].includes(position) : false
-            style = MenuUtil.openUp(props.parentRef, forceBottom, menuMargin).style
+            style = MenuUtil.openUp(this.props.parentRef, forceBottom, this.props.menuMargin).style
         }
-        setMenuStyle(style)
-    }, [props.parentRef, props.position, props.menuMargin])
 
-    const onCancel = useCallback(() => {
-        // No need to do anything, as click bubbled up to MenuWrapper, which closes
-    }, [])
+        return (
+            <div
+                className={`Menu noselect ${position || 'bottom'} ${fixed ? ' fixed' : ''}`}
+                style={style}
+                ref={this.menuRef}
+            >
+                <div className='menu-contents'>
+                    <div className='menu-options'>
+                        {React.Children.map(children, (child) => (
+                            <div
+                                onMouseEnter={() => this.setState({hovering: child})}
+                            >
+                                <HoveringContext.Provider value={child === this.state.hovering}>
+                                    {child}
+                                </HoveringContext.Provider>
+                            </div>))}
+                    </div>
 
-    return (
-        <div
-            className={`Menu noselect ${position || 'bottom'} ${fixed ? ' fixed' : ''}`}
-            style={menuStyle}
-            ref={menuRef}
-        >
-            <div className='menu-contents'>
-                <div className='menu-options'>
-                    {React.Children.map(children, (child) => (
-                        <div
-                            onMouseEnter={() => setHovering(child)}
-                        >
-                            <HoveringContext.Provider value={child === hovering}>
-                                {child}
-                            </HoveringContext.Provider>
-                        </div>))}
-                </div>
+                    <div className='menu-spacer hideOnWidescreen'/>
 
-                <div className='menu-spacer hideOnWidescreen'/>
-
-                <div className='menu-options hideOnWidescreen'>
-                    <MenuText
-                        id='menu-cancel'
-                        name={'Cancel'}
-                        className='menu-cancel'
-                        onClick={onCancel}
-                    />
+                    <div className='menu-options hideOnWidescreen'>
+                        <Menu.Text
+                            id='menu-cancel'
+                            name={'Cancel'}
+                            className='menu-cancel'
+                            onClick={this.onCancel}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-    )
-}
+        )
+    }
 
-export default Menu
-export {
-    MenuColor,
-    MenuSubMenu,
-    MenuSwitch,
-    MenuSeparator,
-    MenuText,
-    MenuTextInput,
-    MenuLabel,
+    private onCancel = () => {
+        // No need to do anything, as click bubbled up to MenuWrapper, which closes
+    }
 }

@@ -21,7 +21,6 @@ import {Constants} from '../../constants'
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
 
 import './globalHeaderSettingsMenu.scss'
-import {MenuSubMenu, MenuText, MenuSwitch} from '../../widgets/menu/menu'
 
 type Props = {
     history: History<unknown>
@@ -46,12 +45,12 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                     <SettingsIcon/>
                 </div>
                 <Menu position='left'>
-                    <MenuSubMenu
+                    <Menu.SubMenu
                         id='import'
                         name={intl.formatMessage({id: 'Sidebar.import', defaultMessage: 'Import'})}
                         position='left-bottom'
                     >
-                        <MenuText
+                        <Menu.Text
                             id='import_archive'
                             name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
                             onClick={async () => {
@@ -61,7 +60,7 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                         />
                         {
                             Constants.imports.map((i) => (
-                                <MenuText
+                                <Menu.Text
                                     key={`${i.id}-import`}
                                     id={`${i.id}-import`}
                                     name={i.displayName}
@@ -72,15 +71,15 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                                 />
                             ))
                         }
-                    </MenuSubMenu>
-                    <MenuSubMenu
+                    </Menu.SubMenu>
+                    <Menu.SubMenu
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
                         position='left-bottom'
                     >
                         {
                             Constants.languages.map((language) => (
-                                <MenuText
+                                <Menu.Text
                                     key={language.code}
                                     id={`${language.name}-lang`}
                                     name={language.displayName}
@@ -89,8 +88,8 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                                 />
                             ))
                         }
-                    </MenuSubMenu>
-                    <MenuSwitch
+                    </Menu.SubMenu>
+                    <Menu.Switch
                         id='random-icons'
                         name={intl.formatMessage({id: 'Sidebar.random-icons', defaultMessage: 'Random icons'})}
                         isOn={randomIcons}
@@ -98,7 +97,7 @@ const GlobalHeaderSettingsMenu = (props: Props) => {
                         suppressItemClicked={true}
                     />
                     {me?.is_guest !== true &&
-                        <MenuText
+                        <Menu.Text
                             id='product-tour'
                             className='product-tour'
                             name={intl.formatMessage({id: 'Sidebar.product-tour', defaultMessage: 'Product tour'})}

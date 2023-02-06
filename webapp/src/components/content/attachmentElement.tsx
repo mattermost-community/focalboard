@@ -17,15 +17,14 @@ import {getUploadPercent} from '../../store/attachments'
 import {useAppSelector} from '../../store/hooks'
 import {Permission} from '../../constants'
 
-import './attachmentElement.scss'
-import {MenuText} from '../../widgets/menu/menu'
-import CompassIcon from '../../widgets/icons/compassIcon'
-import MenuWrapper from '../../widgets/menuWrapper'
-import IconButton from '../../widgets/buttons/iconButton'
-import Menu from '../../widgets/menu'
-import Tooltip from '../../widgets/tooltip'
-
 import ArchivedFile from './archivedFile/archivedFile'
+
+import './attachmentElement.scss'
+import CompassIcon from './../../widgets/icons/compassIcon'
+import MenuWrapper from './../../widgets/menuWrapper'
+import IconButton from './../../widgets/buttons/iconButton'
+import Menu from './../../widgets/menu'
+import Tooltip from './../../widgets/tooltip'
 
 type Props = {
     block: AttachmentBlock
@@ -172,7 +171,7 @@ const AttachmentElement = (props: Props): JSX.Element|null => {
                         />
                         <div className='delete-menu'>
                             <Menu position='left'>
-                                <MenuText
+                                <Menu.Text
                                     id='makeTemplate'
                                     icon={
                                         <CompassIcon

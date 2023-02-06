@@ -26,7 +26,6 @@ import CheckIcon from '../../widgets/icons/check'
 import {Constants} from '../../constants'
 
 import TelemetryClient, {TelemetryCategory, TelemetryActions} from '../../telemetry/telemetryClient'
-import {MenuSubMenu, MenuText, MenuSwitch} from '../../widgets/menu/menu'
 
 type Props = {
     activeTheme: string
@@ -86,12 +85,12 @@ const SidebarSettingsMenu = (props: Props) => {
                     />
                 </div>
                 <Menu position='top'>
-                    <MenuSubMenu
+                    <Menu.SubMenu
                         id='import'
                         name={intl.formatMessage({id: 'Sidebar.import', defaultMessage: 'Import'})}
                         position='top'
                     >
-                        <MenuText
+                        <Menu.Text
                             id='import_archive'
                             name={intl.formatMessage({id: 'Sidebar.import-archive', defaultMessage: 'Import archive'})}
                             onClick={async () => {
@@ -101,7 +100,7 @@ const SidebarSettingsMenu = (props: Props) => {
                         />
                         {
                             Constants.imports.map((i) => (
-                                <MenuText
+                                <Menu.Text
                                     key={`${i.id}-import`}
                                     id={`${i.id}-import`}
                                     name={i.displayName}
@@ -112,8 +111,8 @@ const SidebarSettingsMenu = (props: Props) => {
                                 />
                             ))
                         }
-                    </MenuSubMenu>
-                    <MenuText
+                    </Menu.SubMenu>
+                    <Menu.Text
                         id='export'
                         name={intl.formatMessage({id: 'Sidebar.export-archive', defaultMessage: 'Export archive'})}
                         onClick={async () => {
@@ -123,14 +122,14 @@ const SidebarSettingsMenu = (props: Props) => {
                             }
                         }}
                     />
-                    <MenuSubMenu
+                    <Menu.SubMenu
                         id='lang'
                         name={intl.formatMessage({id: 'Sidebar.set-language', defaultMessage: 'Set language'})}
                         position='top'
                     >
                         {
                             Constants.languages.map((language) => (
-                                <MenuText
+                                <Menu.Text
                                     key={language.code}
                                     id={`${language.name}-lang`}
                                     name={language.displayName}
@@ -139,8 +138,8 @@ const SidebarSettingsMenu = (props: Props) => {
                                 />
                             ))
                         }
-                    </MenuSubMenu>
-                    <MenuSubMenu
+                    </Menu.SubMenu>
+                    <Menu.SubMenu
                         id='theme'
                         name={intl.formatMessage({id: 'Sidebar.set-theme', defaultMessage: 'Set theme'})}
                         position='top'
@@ -148,7 +147,7 @@ const SidebarSettingsMenu = (props: Props) => {
                         {
                             themes.map((theme) =>
                                 (
-                                    <MenuText
+                                    <Menu.Text
                                         key={theme.id}
                                         id={theme.id}
                                         name={intl.formatMessage({id: `Sidebar.${theme.id}`, defaultMessage: theme.displayName})}
@@ -158,8 +157,8 @@ const SidebarSettingsMenu = (props: Props) => {
                                 ),
                             )
                         }
-                    </MenuSubMenu>
-                    <MenuSwitch
+                    </Menu.SubMenu>
+                    <Menu.Switch
                         id='random-icons'
                         name={intl.formatMessage({id: 'Sidebar.random-icons', defaultMessage: 'Random icons'})}
                         isOn={randomIcons}

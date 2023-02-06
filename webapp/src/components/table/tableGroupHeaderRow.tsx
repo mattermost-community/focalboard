@@ -21,8 +21,6 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import Editable from '../../widgets/editable'
 import Label from '../../widgets/label'
 
-import {MenuText, MenuSeparator, MenuColor} from '../../widgets/menu/menu'
-
 import {useColumnResize} from './tableColumnResizeContext'
 
 type Props = {
@@ -124,7 +122,7 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                     <MenuWrapper>
                         <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
-                            <MenuText
+                            <Menu.Text
                                 id='hide'
                                 icon={<HideIcon/>}
                                 name={intl.formatMessage({id: 'BoardComponent.hide', defaultMessage: 'Hide'})}
@@ -132,15 +130,15 @@ const TableGroupHeaderRow = (props: Props): JSX.Element => {
                             />
                             {canEditOption &&
                                 <>
-                                    <MenuText
+                                    <Menu.Text
                                         id='delete'
                                         icon={<DeleteIcon/>}
                                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                                         onClick={() => mutator.deletePropertyOption(board.id, board.cardProperties, groupByProperty!, group.option)}
                                     />
-                                    <MenuSeparator/>
+                                    <Menu.Separator/>
                                     {Object.entries(Constants.menuColors).map(([key, color]) => (
-                                        <MenuColor
+                                        <Menu.Color
                                             key={key}
                                             id={key}
                                             name={color}

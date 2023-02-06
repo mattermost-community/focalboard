@@ -4,13 +4,12 @@
 import React from 'react'
 import {useIntl} from 'react-intl'
 
-import {MenuText} from '../widgets/menu/menu'
-
 import {BlockTypes, Block} from '../blocks/block'
 import {Card} from '../blocks/card'
 import mutator from '../mutator'
 import octoClient from '../octoClient'
 import {Utils} from '../utils'
+import Menu from '../widgets/menu'
 
 import {contentRegistry} from './content/contentRegistry'
 
@@ -32,7 +31,7 @@ const AddContentMenuItem = (props: Props): JSX.Element => {
     }
 
     return (
-        <MenuText
+        <Menu.Text
             key={type}
             id={type}
             name={handler.getDisplayText(intl)}

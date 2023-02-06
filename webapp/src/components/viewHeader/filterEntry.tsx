@@ -14,7 +14,6 @@ import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
 import propsRegistry from '../../properties'
-import {MenuText} from '../../widgets/menu/menu'
 
 import FilterValue from './filterValue'
 
@@ -47,7 +46,7 @@ const FilterEntry = (props: Props): JSX.Element => {
             <MenuWrapper>
                 <Button>{propertyName}</Button>
                 <Menu>
-                    <MenuText
+                    <Menu.Text
                         key={'title'}
                         id={'title'}
                         name={'Title'}
@@ -65,7 +64,7 @@ const FilterEntry = (props: Props): JSX.Element => {
                         }}
                     />
                     {board.cardProperties.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).canFilter).map((o: IPropertyTemplate) => (
-                        <MenuText
+                        <Menu.Text
                             key={o.id}
                             id={o.id}
                             name={o.name}
@@ -90,22 +89,22 @@ const FilterEntry = (props: Props): JSX.Element => {
                 <Menu>
                     {propertyType.filterValueType === 'options' &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='includes'
                                 name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='notIncludes'
                                 name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isEmpty'
                                 name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isNotEmpty'
                                 name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
@@ -113,12 +112,12 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                     {propertyType.filterValueType === 'person' &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='includes'
                                 name={intl.formatMessage({id: 'Filter.includes', defaultMessage: 'includes'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='notIncludes'
                                 name={intl.formatMessage({id: 'Filter.not-includes', defaultMessage: 'doesn\'t include'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
@@ -126,12 +125,12 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                     {(propertyType.type === 'person' || propertyType.type === 'multiPerson') &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='isEmpty'
                                 name={intl.formatMessage({id: 'Filter.is-empty', defaultMessage: 'is empty'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isNotEmpty'
                                 name={intl.formatMessage({id: 'Filter.is-not-empty', defaultMessage: 'is not empty'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
@@ -139,12 +138,12 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                     {propertyType.filterValueType === 'boolean' &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='isSet'
                                 name={intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isNotSet'
                                 name={intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
@@ -152,37 +151,37 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                     {propertyType.filterValueType === 'text' &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='is'
                                 name={intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='contains'
                                 name={intl.formatMessage({id: 'Filter.contains', defaultMessage: 'contains'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='notContains'
                                 name={intl.formatMessage({id: 'Filter.not-contains', defaultMessage: 'doesn\'t contain'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='startsWith'
                                 name={intl.formatMessage({id: 'Filter.starts-with', defaultMessage: 'starts with'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='notStartsWith'
                                 name={intl.formatMessage({id: 'Filter.not-starts-with', defaultMessage: 'doesn\'t start with'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='endsWith'
                                 name={intl.formatMessage({id: 'Filter.ends-with', defaultMessage: 'ends with'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='notEndsWith'
                                 name={intl.formatMessage({id: 'Filter.not-ends-with', defaultMessage: 'doesn\'t end with'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
@@ -190,17 +189,17 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                     {propertyType.filterValueType === 'date' &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='is'
                                 name={intl.formatMessage({id: 'Filter.is', defaultMessage: 'is'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isBefore'
                                 name={intl.formatMessage({id: 'Filter.isbefore', defaultMessage: 'is before'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isAfter'
                                 name={intl.formatMessage({id: 'Filter.isafter', defaultMessage: 'is after'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
@@ -208,12 +207,12 @@ const FilterEntry = (props: Props): JSX.Element => {
                         </>}
                     {propertyType.type === 'date' &&
                         <>
-                            <MenuText
+                            <Menu.Text
                                 id='isSet'
                                 name={intl.formatMessage({id: 'Filter.is-set', defaultMessage: 'is set'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}
                             />
-                            <MenuText
+                            <Menu.Text
                                 id='isNotSet'
                                 name={intl.formatMessage({id: 'Filter.is-not-set', defaultMessage: 'is not set'})}
                                 onClick={(id) => props.conditionClicked(id, filter)}

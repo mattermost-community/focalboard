@@ -16,7 +16,6 @@ import {Utils} from '../../utils'
 
 import ModalWrapper from '../modalWrapper'
 import {sendFlashMessage} from '../flashMessages'
-import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     board: Board
@@ -104,35 +103,35 @@ const ViewHeaderActionsMenu = (props: Props) => {
             <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-header-menu', defaultMessage: 'View header menu'})}>
                 <IconButton icon={<OptionsIcon/>}/>
                 <Menu position='left'>
-                    <MenuText
+                    <Menu.Text
                         id='exportCsv'
                         name={intl.formatMessage({id: 'ViewHeader.export-csv', defaultMessage: 'Export to CSV'})}
                         onClick={() => onExportCsvTrigger(board, activeView, cards, intl)}
                     />
-                    <MenuText
+                    <Menu.Text
                         id='exportBoardArchive'
                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                         onClick={() => Archiver.exportBoardArchive(board)}
                     />
                     {/*
-                    <MenuSeparator/>
+                    <Menu.Separator/>
 
-                    <MenuText
+                    <Menu.Text
                         id='testAdd100Cards'
                         name={intl.formatMessage({id: 'ViewHeader.test-add-100-cards', defaultMessage: 'TEST: Add 100 cards'})}
                         onClick={() => testAddCards(board, activeView, cards.length, 100)}
                     />
-                    <MenuText
+                    <Menu.Text
                         id='testAdd1000Cards'
                         name={intl.formatMessage({id: 'ViewHeader.test-add-1000-cards', defaultMessage: 'TEST: Add 1,000 cards'})}
                         onClick={() => testAddCards(board, activeView, cards.length, 1000)}
                     />
-                    <MenuText
+                    <Menu.Text
                         id='testDistributeCards'
                         name={intl.formatMessage({id: 'ViewHeader.test-distribute-cards', defaultMessage: 'TEST: Distribute cards'})}
                         onClick={() => testDistributeCards()}
                     />
-                    <MenuText
+                    <Menu.Text
                         id='testRandomizeIcons'
                         name={intl.formatMessage({id: 'ViewHeader.test-randomize-icons', defaultMessage: 'TEST: Randomize icons'})}
                         onClick={() => testRandomizeIcons()}

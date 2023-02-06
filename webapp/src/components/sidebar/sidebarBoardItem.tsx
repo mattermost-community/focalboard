@@ -40,7 +40,6 @@ import octoClient from '../../octoClient'
 import {getCurrentBoardId} from '../../store/boards'
 import {UserSettings} from '../../userSettings'
 import {Archiver} from '../../archiver'
-import {MenuText, MenuSubMenu} from '../../widgets/menu/menu'
 
 const iconForViewType = (viewType: IViewType): JSX.Element => {
     switch (viewType) {
@@ -83,7 +82,7 @@ const SidebarBoardItem = (props: Props) => {
 
     const generateMoveToCategoryOptions = (boardID: string) => {
         return props.allCategories.map((category) => (
-            <MenuText
+            <Menu.Text
                 key={category.id}
                 id={category.id}
                 name={category.name}
@@ -238,7 +237,7 @@ const SidebarBoardItem = (props: Props) => {
                                     position='auto'
                                     parentRef={boardItemRef}
                                 >
-                                    <MenuSubMenu
+                                    <Menu.SubMenu
                                         key={`moveBlock-${board.id}`}
                                         id='moveBlock'
                                         className='boardMoveToCategorySubmenu'
@@ -247,28 +246,28 @@ const SidebarBoardItem = (props: Props) => {
                                         position='auto'
                                     >
                                         {generateMoveToCategoryOptions(board.id)}
-                                    </MenuSubMenu>
+                                    </Menu.SubMenu>
                                     {!me?.is_guest &&
-                                        <MenuText
+                                        <Menu.Text
                                             id='duplicateBoard'
                                             name={intl.formatMessage({id: 'Sidebar.duplicate-board', defaultMessage: 'Duplicate board'})}
                                             icon={<DuplicateIcon/>}
                                             onClick={() => handleDuplicateBoard(board.isTemplate)}
                                         />}
                                     {!me?.is_guest &&
-                                        <MenuText
+                                        <Menu.Text
                                             id='templateFromBoard'
                                             name={intl.formatMessage({id: 'Sidebar.template-from-board', defaultMessage: 'New template from board'})}
                                             icon={<AddIcon/>}
                                             onClick={() => handleDuplicateBoard(true)}
                                         />}
-                                    <MenuText
+                                    <Menu.Text
                                         id='exportBoardArchive'
                                         name={intl.formatMessage({id: 'ViewHeader.export-board-archive', defaultMessage: 'Export board archive'})}
                                         icon={<CompassIcon icon='export-variant'/>}
                                         onClick={() => Archiver.exportBoardArchive(board)}
                                     />
-                                    <MenuText
+                                    <Menu.Text
                                         id='hideBoard'
                                         name={intl.formatMessage({id: 'HideBoard.MenuOption', defaultMessage: 'Hide board'})}
                                         icon={<CloseIcon/>}
@@ -278,7 +277,7 @@ const SidebarBoardItem = (props: Props) => {
                                         boardId={board.id}
                                         permissions={[Permission.DeleteBoard]}
                                     >
-                                        <MenuText
+                                        <Menu.Text
                                             key={`deleteBlock-${board.id}`}
                                             id='deleteBlock'
                                             className='text-danger'

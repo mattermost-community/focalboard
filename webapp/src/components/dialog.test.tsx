@@ -14,8 +14,6 @@ import Menu from '../widgets/menu'
 
 import OptionsIcon from '../widgets/icons/options'
 
-import {MenuText} from '../widgets/menu/menu'
-
 import Dialog from './dialog'
 
 describe('components/dialog', () => {
@@ -50,7 +48,7 @@ describe('components/dialog', () => {
                 onClose={onCloseMethod}
             >
                 <Menu position='left'>
-                    <MenuText
+                    <Menu.Text
                         id='test'
                         icon={<OptionsIcon/>}
                         name='Test'
@@ -72,7 +70,7 @@ describe('components/dialog', () => {
             <Dialog
                 onClose={jest.fn()}
                 toolsMenu={<Menu position='left'>
-                    <MenuText
+                    <Menu.Text
                         id='test'
                         icon={<OptionsIcon/>}
                         name='Test'
@@ -96,7 +94,7 @@ describe('components/dialog', () => {
             <Dialog
                 onClose={jest.fn()}
                 toolsMenu={<Menu position='left'>
-                    <MenuText
+                    <Menu.Text
                         id='test'
                         icon={<OptionsIcon/>}
                         name='Test'

@@ -24,7 +24,6 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 import ConfirmationDialogBox from '../confirmationDialogBox'
 
 import BoardPermissionGate from '../permissions/boardPermissionGate'
-import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     teammateNameDisplay?: string
@@ -130,7 +129,7 @@ const ChannelPermissionsRow = (props: Props): JSX.Element => {
                             />
                         </button>
                         <Menu position='left'>
-                            <MenuText
+                            <Menu.Text
                                 id='Unlink'
                                 icon={<DeleteIcon/>}
                                 name={intl.formatMessage({id: 'BoardMember.unlinkChannel', defaultMessage: 'Unlink'})}
