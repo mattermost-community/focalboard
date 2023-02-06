@@ -3,7 +3,7 @@
 exports[`components/dialog should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back undefined size--medium"
   >
     <div
       class="backdrop"
@@ -50,7 +50,7 @@ exports[`components/dialog should match snapshot 1`] = `
 exports[`components/dialog should return dialog and click on cancel button 1`] = `
 <div>
   <div
-    class="Dialog dialog-back undefined"
+    class="Dialog dialog-back undefined size--medium"
   >
     <div
       class="backdrop"

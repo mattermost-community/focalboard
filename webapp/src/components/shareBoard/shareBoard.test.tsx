@@ -120,7 +120,7 @@ const me: IUser = {
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
-categoryAttribute1.boardIDs = [board.id]
+categoryAttribute1.boardMetadata = [{boardID: board.id, hidden: false}]
 
 describe('src/components/shareBoard/shareBoard', () => {
     const w = (window as any)

@@ -54,7 +54,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: Setup Node
       uses: actions/setup-node@v3
@@ -129,7 +129,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: List Xcode versions
       run: ls -n /Applications/ | grep Xcode*
@@ -190,7 +190,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: Setup NuGet
       uses: nuget/setup-nuget@v1
@@ -258,7 +258,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.18.1
+        go-version: 1.19.5
 
     - name: Set up Node
       uses: actions/setup-node@v3

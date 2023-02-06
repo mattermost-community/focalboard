@@ -1,33 +1,21 @@
 <div class="homepage__intro homepage__section">
 	<div class="container-fluid">
-		<div class="homepage-intro__text text-left">
+		<div class="homepage-intro__text" data-aos="fade-left">
+            <div class="focalboard-tag">Focalboard is now Mattermost Boards <img src="img/bullseye.svg" alt=""></div>
 			<h1>
-				Project & Task Management for Software Development Teams
+				Open source <br> project management for <span style='color: #ffbc1f'>technical teams</span>
 			</h1>
-
 			<p>
-				Focalboard is an open source alternative to tools like Asana, Trello, and Notion. Available as a
-				stand-alone application or integrated into the Mattermost platform, Focalboard helps developers stay
-				aligned to complete tasks, reach milestones, and achieve their goals.
+                Keep everything and everyone on track, all in the Mattermost platform.
 			</p>
+
+            <a href="https://mattermost.com/sign-up-fb/?utm_source=focalboard&utm_campaign=focalboard" target='_blank'><button class='btn btn-primary btn-xl'>Get started</button></a>
+
+            <div class='homepage-intro__github'><i class="fa fa-star"></i> Over 13k stars on <a target='_blank' href="https://github.com/mattermost/focalboard" class='mx-1 text-white'>GitHub</a> and counting!</div>
 		</div>
 
-		<p class="text-center">
-			<a href="download/personal-edition">
-				<img src="https://user-images.githubusercontent.com/46905241/121941290-ee355280-cd03-11eb-9b9f-f6f524e4103e.gif"
-					style="width: 100%; max-width: 1200px" />
-			</a>
-		</p>
-		{{ if .Site.Params.search.enable }}
-		<div class="homepage-search row">
-			<div class="homepage-search__input col-sm-9">
-				<img src="img/search-icon.svg" width="24px" height="24px" alt="Search icon">
-				<input type="text" class="transparent" placeholder="Search developer documentation">
-			</div>
-			<div class="homepage-search__button col-sm-3">
-				<input type="button" class="btn btn-white btn-shadow form-control" value="Get Started">
-			</div>
-		</div>
-		{{ end }}
+        <div class='homepage-intro__video' data-aos="fade-right">
+            <lottie-player src="lottie/intro-section.json" background="transparent" speed="1"  style="width: 957.5px" loop autoplay></lottie-player>
+        </div>
 	</div>
 </div>

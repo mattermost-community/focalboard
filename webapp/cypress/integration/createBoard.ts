@@ -28,7 +28,7 @@ describe('Create and delete board / card', () => {
         cy.contains('Project Tasks').should('exist')
 
         // Create empty board
-        cy.contains('Create empty board').should('exist').click({force: true})
+        cy.contains('Create an empty board').should('exist').click({force: true})
         cy.get('.BoardComponent').should('exist')
         cy.get('.Editable.title').invoke('attr', 'placeholder').should('contain', 'Untitled board')
 

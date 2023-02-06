@@ -149,7 +149,7 @@ const ViewHeader = (props: Props) => {
                     spellCheck={true}
                     autoExpand={false}
                 />
-                <div>
+                {!props.readonly && (<div>
                     <MenuWrapper label={intl.formatMessage({id: 'ViewHeader.view-menu', defaultMessage: 'View menu'})}>
                         <IconButton icon={<DropdownIcon/>}/>
                         <ViewMenu
@@ -161,7 +161,8 @@ const ViewHeader = (props: Props) => {
                         />
                     </MenuWrapper>
                     {showAddViewTourStep && <AddViewTourStep/>}
-                </div>
+                </div>)}
+
             </div>
 
             <div className='octo-spacer'/>

@@ -47,7 +47,13 @@
             max-width: 165px;
             margin: 0 8px 0 0;
 
+            &.empty {
+                color: rgba(var(--center-channel-color-rgb), 1);
+                font-weight: 600;
+            }
+
             .Editable {
+                color: rgba(var(--center-channel-color-rgb), 1);
                 background: transparent;
             }
         }
