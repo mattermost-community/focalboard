@@ -39,6 +39,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 import {Constants} from '../../../webapp/src/constants'
+import {Board} from '../../../webapp/src/blocks/board'
 
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
@@ -66,6 +67,7 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
+import CreateBoardFromTemplate from './components/createBoardFromTemplate'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -334,6 +336,22 @@ export default class Plugin {
 
             if (this.registry.registerAppBarComponent) {
                 this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+            }
+
+            if (this.registry.registerActionAfterChannelCreation) {
+                this.registry.registerActionAfterChannelCreation((props: {
+                    setCanCreate: (canCreate: boolean) => void,
+                    setAction: (fn: () => (channelId: string, teamId: string) => Promise<Board | undefined>) => void,
+                    newBoardInfoIcon: React.ReactNode,
+                }) => (
+                    <ReduxProvider store={store}>
+                        <CreateBoardFromTemplate
+                            setCanCreate={props.setCanCreate}
+                            setAction={props.setAction}
+                            newBoardInfoIcon={props.newBoardInfoIcon}
+                        />
+                    </ReduxProvider>
+                ))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(

@@ -240,6 +240,20 @@ exports[`components/cardDialog limited card shows hidden view (no toolbar) 1`] =
           <div
             class="toolbar--right"
           >
+            <div
+              class="d-flex"
+            >
+              <button
+                type="button"
+              >
+                <i
+                  class="CompassIcon icon-paperclip"
+                />
+                <span>
+                  Attach
+                </span>
+              </button>
+            </div>
             <button
               aria-label="Close dialog"
               title="Close dialog"

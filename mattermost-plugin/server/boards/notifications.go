@@ -95,8 +95,8 @@ func (a *appAPI) GetBlockHistory(blockID string, opts model.QueryBlockHistoryOpt
 	return a.store.GetBlockHistory(blockID, opts)
 }
 
-func (a *appAPI) GetSubTree2(boardID, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
-	return a.store.GetSubTree2(boardID, blockID, opts)
+func (a *appAPI) GetBlockHistoryNewestChildren(parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error) {
+	return a.store.GetBlockHistoryNewestChildren(parentID, opts)
 }
 
 func (a *appAPI) GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error) {

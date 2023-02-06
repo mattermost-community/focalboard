@@ -20,5 +20,7 @@ export interface PluginRegistry {
     registerInsightsHandler(handler: (timeRange: string, page: number, perPage: number, teamId: string, insightType: string) => void)
     registerSiteStatisticsHandler(handler: () => void)
 
+    registerActionAfterChannelCreation(component: React.Element)
+
     // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
 }
