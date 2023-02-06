@@ -6,7 +6,7 @@
   "AttachmentBlock.delete": "附件刪除成功。",
   "AttachmentBlock.failed": "無法上傳文件。 附件大小已達到限制。",
   "AttachmentBlock.upload": "附件正在上傳。",
-  "AttachmentBlock.uploadSuccess": "附件上傳成功。",
+  "AttachmentBlock.uploadSuccess": "附件已上傳",
   "AttachmentElement.delete-confirmation-dialog-button-text": "刪除",
   "AttachmentElement.download": "下載",
   "AttachmentElement.upload-percentage": "正在上傳...({uploadPercent}%)",
