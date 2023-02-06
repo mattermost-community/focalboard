@@ -129,6 +129,7 @@ exports[`components/sidebarBoardItem sidebar board item 1`] = `
             </button>
             <div
               class="Menu noselect auto  fixed"
+              style="top: 40px;"
             >
               <div
                 class="menu-contents"
@@ -431,6 +432,7 @@ exports[`components/sidebarBoardItem sidebar board item for guest 1`] = `
             </button>
             <div
               class="Menu noselect auto  fixed"
+              style="top: 40px;"
             >
               <div
                 class="menu-contents"

@@ -10,7 +10,7 @@ import {Constants} from '../../../constants'
 
 import DragHandle from '../../../widgets/icons/dragHandle'
 import EditIcon from '../../../widgets/icons/edit'
-import Menu from '../../../widgets/menu/menu'
+import Menu from '../../../widgets/menu'
 import MenuWrapper from '../../../widgets/menuWrapper'
 
 import {IPropertyOption} from '../../../blocks/board'
