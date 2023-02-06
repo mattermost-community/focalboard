@@ -6,7 +6,6 @@ import {FormattedMessage, useIntl} from 'react-intl'
 import mutator from '../../../../webapp/src/mutator'
 import {Utils} from '../../../../webapp/src/utils'
 import {getCurrentTeam} from '../../../../webapp/src/store/teams'
-import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {createBoard, Board} from '../../../../webapp/src/blocks/board'
 import {useAppSelector} from '../../../../webapp/src/store/hooks'
 import IconButton from '../../../../webapp/src/widgets/buttons/iconButton'
@@ -38,14 +37,9 @@ const RHSChannelBoardItem = (props: Props) => {
         return null
     }
 
-    const currentChannel = useAppSelector(getCurrentChannel)
-    if (!currentChannel) {
-        return null
-    }
-
     const handleBoardClicked = (boardID: string) => {
         // send the telemetry information for the clicked board
-        const extraData = {teamID: team.id, channelID: currentChannel.id, board: boardID}
+        const extraData = {teamID: team.id, board: boardID}
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ClickChannelsRHSBoard, extraData)
 
         window.open(`${windowAny.frontendBaseURL}/team/${team.id}/${boardID}`, '_blank', 'noopener')
