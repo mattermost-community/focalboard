@@ -1,0 +1,85 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
+import React from 'react'
+
+import {render} from '@testing-library/react'
+
+import CheckIcon from '../../../widgets/icons/check'
+import ClockOutline from '../../../widgets/icons/clockOutline'
+import {wrapIntl, wrapRBDNDContext} from '../../../testUtils'
+
+import BlackCheckboxOutline from '../../../widgets/icons/blackCheckboxOutline'
+
+import EditStatusPropertyDialog, {StatusCategory} from './editStatusDialog'
+
+describe('components/standardProperties/statusProperty/EditStatusPropertyDialog', () => {
+    test('should match snapshot', () => {
+        const initialValueCategoryValue: StatusCategory[] = [
+            {
+                id: 'category_id_1',
+                title: 'Not Started',
+                options: [
+                    {id: 'status_id_1', value: 'Pending Design', color: 'propColorPurple'},
+                    {id: 'status_id_2', value: 'TODO', color: 'propColorYellow'},
+                    {id: 'status_id_3', value: 'Pending Specs', color: 'propColorGray'},
+                ],
+                emptyState: {
+                    icon: (<BlackCheckboxOutline/>),
+                    color: '--sys-dnd-indicator-rgb',
+                    text: {
+                        id: 'statusProperty.configDialog.todo.emptyText',
+                        defaultMessage: 'Drag statuses here to consider tasks with these statuses “Not Started”',
+                    },
+                },
+            },
+            {
+                id: 'category_id_2',
+                title: 'In progress',
+                options: [
+                    {id: 'status_id_4', value: 'In Progress', color: 'propColorBrown'},
+                    {id: 'status_id_5', value: 'In Review', color: 'propColorRed'},
+                    {id: 'status_id_6', value: 'In QA', color: 'propColorPink'},
+                    {id: 'status_id_7', value: 'Awaiting Cherrypick', color: 'propColorOrange'},
+                ],
+                emptyState: {
+                    icon: (<ClockOutline/>),
+                    color: '--away-indicator-rgb',
+                    text: {
+                        id: 'statusProperty.configDialog.inProgress.emptyText',
+                        defaultMessage: 'Drag statuses here to consider tasks with these statuses “in progress”',
+                    },
+                },
+            },
+            {
+                id: 'category_id_3',
+                title: 'Completed',
+                options: [
+                    {id: 'status_id_20', value: 'Done', color: 'propColorPink'},
+                    {id: 'status_id_21', value: 'Branch Cut', color: 'propColorGreen'},
+                    {id: 'status_id_22', value: 'Released', color: 'propColorDefault'},
+                ],
+                emptyState: {
+                    icon: (<CheckIcon/>),
+                    color: '--online-indicator-rgb',
+                    text: {
+                        id: 'statusProperty.configDialog.complete.emptyText',
+                        defaultMessage: 'Drag statuses here to consider tasks with these statuses ”Done”',
+                    },
+                },
+            },
+        ]
+
+        const component = wrapRBDNDContext(
+            wrapIntl(
+                <EditStatusPropertyDialog
+                    valueCategories={initialValueCategoryValue}
+                    onClose={() => {}}
+                    onUpdate={() => {}}
+                />,
+            ))
+
+        const {container} = render(component)
+        expect(container).toMatchSnapshot()
+    })
+})
