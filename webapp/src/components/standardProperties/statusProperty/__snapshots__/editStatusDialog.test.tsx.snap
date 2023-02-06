@@ -1,0 +1,1862 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components/standardProperties/statusProperty/EditStatusPropertyDialog 0 columns 1`] = `
+<div>
+  <div
+    class="ActionDialog Dialog dialog-back StatusPropertyConfigrationDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Edit Statuses
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="text-heading5"
+        />
+        <div
+          class="text-75"
+        >
+          Categorise your status values to represent what each value represents
+        </div>
+        <div
+          class="categorySwimlanes"
+        />
+        <div
+          class="footer"
+        >
+          <button
+            class="Button emphasis--tertiary size--medium"
+            type="button"
+          >
+            <span>
+              Cancel
+            </span>
+          </button>
+          <button
+            class="Button filled emphasis--primary size--medium"
+            type="button"
+          >
+            <span>
+              Save
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/standardProperties/statusProperty/EditStatusPropertyDialog 5 columns 1`] = `
+<div>
+  <div
+    class="ActionDialog Dialog dialog-back StatusPropertyConfigrationDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Edit Statuses
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="text-heading5"
+        />
+        <div
+          class="text-75"
+        >
+          Categorise your status values to represent what each value represents
+        </div>
+        <div
+          class="categorySwimlanes"
+        >
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Column 1
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “Not Started”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="5"
+              data-rbd-droppable-id="category_id_1"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_1"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_1"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorPurple EditableLabel"
+                    title="Pending Design"
+                  >
+                    <span>
+                      Pending Design
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorPurple "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_2"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_2"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorYellow EditableLabel"
+                    title="TODO"
+                  >
+                    <span>
+                      TODO
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorYellow "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_3"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_3"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorGray EditableLabel"
+                    title="Pending Specs"
+                  >
+                    <span>
+                      Pending Specs
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorGray "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Column 2
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “in progress”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="5"
+              data-rbd-droppable-id="category_id_2"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_4"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_4"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorBrown EditableLabel"
+                    title="In Progress"
+                  >
+                    <span>
+                      In Progress
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorBrown "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_5"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_5"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorRed EditableLabel"
+                    title="In Review"
+                  >
+                    <span>
+                      In Review
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorRed "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_6"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_6"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorPink EditableLabel"
+                    title="In QA"
+                  >
+                    <span>
+                      In QA
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorPink "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_7"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_7"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorOrange EditableLabel"
+                    title="Awaiting Cherrypick"
+                  >
+                    <span>
+                      Awaiting Cherrypick
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorOrange "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Column 3
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses ”Done”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="5"
+              data-rbd-droppable-id="category_id_3"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_20"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_20"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorPink EditableLabel"
+                    title="Done"
+                  >
+                    <span>
+                      Done
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorPink "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_21"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_21"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorGreen EditableLabel"
+                    title="Branch Cut"
+                  >
+                    <span>
+                      Branch Cut
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorGreen "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_22"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_22"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorDefault EditableLabel"
+                    title="Released"
+                  >
+                    <span>
+                      Released
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorDefault "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Column 4
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “in progress”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="5"
+              data-rbd-droppable-id="category_id_2"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_54"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_54"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorOrange EditableLabel"
+                    title="Michael Scott"
+                  >
+                    <span>
+                      Michael Scott
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorOrange "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Column 5
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses ”Done”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="5"
+              data-rbd-droppable-id="category_id_3"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="5"
+                  data-rbd-draggable-id="status_id_22"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-5-hidden-text-21"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="5"
+                    data-rbd-drag-handle-draggable-id="status_id_22"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorDefault EditableLabel"
+                    title="Jim Halpert"
+                  >
+                    <span>
+                      Jim Halpert
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorDefault "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="footer"
+        >
+          <button
+            class="Button emphasis--tertiary size--medium"
+            type="button"
+          >
+            <span>
+              Cancel
+            </span>
+          </button>
+          <button
+            class="Button filled emphasis--primary size--medium"
+            type="button"
+          >
+            <span>
+              Save
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/standardProperties/statusProperty/EditStatusPropertyDialog no value in any column 1`] = `
+<div>
+  <div
+    class="ActionDialog Dialog dialog-back StatusPropertyConfigrationDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Edit Statuses
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="text-heading5"
+        />
+        <div
+          class="text-75"
+        >
+          Categorise your status values to represent what each value represents
+        </div>
+        <div
+          class="categorySwimlanes"
+        >
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Not Started
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “Not Started”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="3"
+              data-rbd-droppable-id="category_id_1"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="emptyColumnPlaceholder"
+                >
+                  <div
+                    class="icon-wrapper"
+                  >
+                    <i
+                      class="CompassIcon icon-checkbox-blank-outline BlackCheckboxOutline"
+                    />
+                  </div>
+                  <div
+                    class="placeholderText text-75"
+                  >
+                    Drag statuses here to consider tasks with these statuses “Not Started”
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                In progress
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “in progress”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="3"
+              data-rbd-droppable-id="category_id_2"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="emptyColumnPlaceholder"
+                >
+                  <div
+                    class="icon-wrapper"
+                  >
+                    <i
+                      class="CompassIcon icon-clock-outline ClockOutline"
+                    />
+                  </div>
+                  <div
+                    class="placeholderText text-75"
+                  >
+                    Drag statuses here to consider tasks with these statuses “in progress”
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Completed
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses ”Done”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="3"
+              data-rbd-droppable-id="category_id_3"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="emptyColumnPlaceholder"
+                >
+                  <div
+                    class="icon-wrapper"
+                  >
+                    <svg
+                      class="CheckIcon Icon"
+                      viewBox="0 0 100 100"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <polyline
+                        points="20,60 40,80 80,40"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="placeholderText text-75"
+                  >
+                    Drag statuses here to consider tasks with these statuses ”Done”
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="footer"
+        >
+          <button
+            class="Button emphasis--tertiary size--medium"
+            type="button"
+          >
+            <span>
+              Cancel
+            </span>
+          </button>
+          <button
+            class="Button filled emphasis--primary size--medium"
+            type="button"
+          >
+            <span>
+              Save
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`components/standardProperties/statusProperty/EditStatusPropertyDialog should match snapshot 1`] = `
+<div>
+  <div
+    class="ActionDialog Dialog dialog-back StatusPropertyConfigrationDialog size--medium"
+  >
+    <div
+      class="backdrop"
+    />
+    <div
+      class="wrapper"
+    >
+      <div
+        class="dialog"
+        role="dialog"
+      >
+        <div
+          class="toolbar"
+        >
+          <div>
+            <h1
+              class="dialog-title"
+            >
+              Edit Statuses
+            </h1>
+          </div>
+          <div
+            class="toolbar--right"
+          >
+            <button
+              aria-label="Close dialog"
+              class="IconButton dialog__close size--medium"
+              title="Close dialog"
+              type="button"
+            >
+              <i
+                class="CompassIcon icon-close CloseIcon"
+              />
+            </button>
+          </div>
+        </div>
+        <div
+          class="text-heading5"
+        />
+        <div
+          class="text-75"
+        >
+          Categorise your status values to represent what each value represents
+        </div>
+        <div
+          class="categorySwimlanes"
+        >
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Not Started
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “Not Started”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="1"
+              data-rbd-droppable-id="category_id_1"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_1"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_1"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorPurple EditableLabel"
+                    title="Pending Design"
+                  >
+                    <span>
+                      Pending Design
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorPurple "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_2"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_2"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorYellow EditableLabel"
+                    title="TODO"
+                  >
+                    <span>
+                      TODO
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorYellow "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_3"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_3"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorGray EditableLabel"
+                    title="Pending Specs"
+                  >
+                    <span>
+                      Pending Specs
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorGray "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                In progress
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses “in progress”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="1"
+              data-rbd-droppable-id="category_id_2"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_4"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_4"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorBrown EditableLabel"
+                    title="In Progress"
+                  >
+                    <span>
+                      In Progress
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorBrown "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_5"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_5"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorRed EditableLabel"
+                    title="In Review"
+                  >
+                    <span>
+                      In Review
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorRed "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_6"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_6"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorPink EditableLabel"
+                    title="In QA"
+                  >
+                    <span>
+                      In QA
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorPink "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_7"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_7"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorOrange EditableLabel"
+                    title="Awaiting Cherrypick"
+                  >
+                    <span>
+                      Awaiting Cherrypick
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorOrange "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="categorySwimlane"
+          >
+            <div
+              class="categorySwimlane_Header"
+            >
+              <div
+                class="text-heading1"
+              >
+                Completed
+              </div>
+              <div
+                class="octo-tooltip tooltip-bottom wrap"
+                data-tooltip="Drag statuses here to consider tasks with these statuses ”Done”"
+              >
+                <i
+                  class="CompassIcon icon-information-outline InfoIcon"
+                />
+              </div>
+              <div
+                class="addBtnWrapper"
+              >
+                <i
+                  class="CompassIcon icon-plus PlusIcon"
+                />
+              </div>
+            </div>
+            <div
+              class="categorySwimlane_ValueArea"
+              data-rbd-droppable-context-id="1"
+              data-rbd-droppable-id="category_id_3"
+            >
+              <div
+                class="overflowWrapper"
+              >
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_20"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_20"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorPink EditableLabel"
+                    title="Done"
+                  >
+                    <span>
+                      Done
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorPink "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_21"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_21"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorGreen EditableLabel"
+                    title="Branch Cut"
+                  >
+                    <span>
+                      Branch Cut
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorGreen "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="categorySwimlane_Value "
+                  data-rbd-draggable-context-id="1"
+                  data-rbd-draggable-id="status_id_22"
+                >
+                  <div
+                    aria-describedby="rbd-hidden-text-1-hidden-text-1"
+                    class="dragHandleWrapper"
+                    data-rbd-drag-handle-context-id="1"
+                    data-rbd-drag-handle-draggable-id="status_id_22"
+                    draggable="false"
+                    role="button"
+                    tabindex="0"
+                  >
+                    <i
+                      class="CompassIcon icon-drag-vertical DragHandle"
+                    />
+                  </div>
+                  <span
+                    class="Label propColorDefault EditableLabel"
+                    title="Released"
+                  >
+                    <span>
+                      Released
+                    </span>
+                  </span>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="colorEditor propColorDefault "
+                    />
+                  </div>
+                  <div
+                    aria-label="menuwrapper"
+                    class="MenuWrapper"
+                    role="button"
+                  >
+                    <div
+                      class="contextMenu"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="footer"
+        >
+          <button
+            class="Button emphasis--tertiary size--medium"
+            type="button"
+          >
+            <span>
+              Cancel
+            </span>
+          </button>
+          <button
+            class="Button filled emphasis--primary size--medium"
+            type="button"
+          >
+            <span>
+              Save
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
