@@ -87,7 +87,7 @@ const initialValueCategoryValue: StatusCategory[] = [
             color: '--sys-dnd-indicator-rgb',
             text: {
                 id: 'statusProperty.configDialog.todo.emptyText',
-                defaultMessage: 'Drag statuses here to consider tasks with these statuses “Not Started”',
+                defaultMessage: 'Drag statuses here to\n consider tasks with these\n statuses “Not Started”',
             },
         },
     },

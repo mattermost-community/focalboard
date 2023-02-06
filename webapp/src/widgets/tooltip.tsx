@@ -1,5 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
+
 import React from 'react'
 
 import './tooltip.scss'
@@ -8,6 +9,7 @@ type Props = {
     title: string
     children: React.ReactNode
     placement?: 'top'|'left'|'right'|'bottom'
+    wrap?: boolean
 }
 
 // Adds tooltip div over children elements, the popup will
@@ -15,7 +17,7 @@ type Props = {
 // Default position is 'top'
 function Tooltip(props: Props): JSX.Element {
     const placement = props.placement || 'top'
-    const className = `octo-tooltip tooltip-${placement}`
+    const className = `octo-tooltip tooltip-${placement}${props.wrap ? ' wrap' : ''}`
     return (
         <div
             className={className}

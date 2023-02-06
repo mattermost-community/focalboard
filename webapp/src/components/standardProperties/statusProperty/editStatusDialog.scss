@@ -53,6 +53,10 @@
                     background: rgba(var(--center-channel-color-rgb), 0.1);
                 }
             }
+
+            .octo-tooltip.tooltip-bottom:hover::after {
+                width: 180px;
+            }
         }
 
         .categorySwimlane_ValueArea {

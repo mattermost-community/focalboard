@@ -47,10 +47,19 @@ $tooltop-vertical-offset: 2px;
     position: relative;
     // Arrow gets added before content
     &:hover::before {
-        @extend %hover-tooltip-arrow; }
+        @extend %hover-tooltip-arrow;
+    }
     // Tooltip message gets added after content
     &:hover::after {
-        @extend %hover-tooltip-body; }
+        @extend %hover-tooltip-body;
+    }
+
+    &.wrap {
+        &:hover::after {
+            word-break: break-word;
+            white-space: unset;
+        }
+    }
 
     // Top tooltip arrow style
     &.tooltip-top:hover::before {

@@ -192,6 +192,8 @@ const EditStatusPropertyDialog = (props: Props): JSX.Element => {
                                             id: valueCategory.emptyState.text.id,
                                             defaultMessage: valueCategory.emptyState.text.defaultMessage,
                                         })}
+                                        placement='bottom'
+                                        wrap={true}
                                     >
                                         <InfoIcon/>
                                     </Tooltip>
