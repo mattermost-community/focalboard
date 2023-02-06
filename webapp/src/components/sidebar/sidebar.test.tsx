@@ -41,11 +41,12 @@ describe('components/sidebarSidebar', () => {
     const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
     categoryAttribute1.id = 'category1'
     categoryAttribute1.name = 'Category 1'
-    categoryAttribute1.boardIDs = [board.id]
+    categoryAttribute1.boardMetadata = [{boardID: board.id, hidden: false}]
 
     const defaultCategory = TestBlockFactory.createCategoryBoards()
     defaultCategory.id = 'default_category'
     defaultCategory.name = 'Boards'
+    defaultCategory.boardMetadata = []
 
     test('sidebar hidden', () => {
         const store = mockStore({
@@ -80,6 +81,7 @@ describe('components/sidebarSidebar', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         })
 
@@ -110,6 +112,11 @@ describe('components/sidebarSidebar', () => {
         const customGlobal = global as any
 
         customGlobal.innerWidth = 500
+
+        const localCategoryAttribute = TestBlockFactory.createCategoryBoards()
+        localCategoryAttribute.id = 'category1'
+        localCategoryAttribute.name = 'Category 1'
+        categoryAttribute1.boardMetadata = [{boardID: board.id, hidden: false}]
 
         const store = mockStore({
             teams: {
@@ -143,6 +150,7 @@ describe('components/sidebarSidebar', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         })
 
@@ -169,6 +177,11 @@ describe('components/sidebarSidebar', () => {
     })
 
     test('dont show hidden boards', () => {
+        const localCategoryAttribute = TestBlockFactory.createCategoryBoards()
+        localCategoryAttribute.id = 'category1'
+        localCategoryAttribute.name = 'Category 1'
+        localCategoryAttribute.boardMetadata = [{boardID: board.id, hidden: true}]
+
         const store = mockStore({
             teams: {
                 current: {id: 'team-id'},
@@ -203,8 +216,9 @@ describe('components/sidebarSidebar', () => {
             },
             sidebar: {
                 categoryAttributes: [
-                    categoryAttribute1,
+                    localCategoryAttribute,
                 ],
+                hiddenBoardIDs: [board.id],
             },
         })
 
@@ -236,6 +250,7 @@ describe('components/sidebarSidebar', () => {
         collapsedCategory.id = 'categoryCollapsed'
         collapsedCategory.name = 'Category 2'
         collapsedCategory.collapsed = true
+        collapsedCategory.boardMetadata = []
 
         const store = mockStore({
             teams: {
@@ -270,6 +285,7 @@ describe('components/sidebarSidebar', () => {
                     categoryAttribute1,
                     collapsedCategory,
                 ],
+                hiddenBoardIDs: [],
             },
         })
 
@@ -327,6 +343,7 @@ describe('components/sidebarSidebar', () => {
                     categoryAttribute1,
                     defaultCategory,
                 ],
+                hiddenBoardIDs: [],
             },
         })
 
@@ -355,7 +372,7 @@ describe('components/sidebarSidebar', () => {
         const categoryAttribute2 = TestBlockFactory.createCategoryBoards()
         categoryAttribute2.id = 'category2'
         categoryAttribute2.name = 'Category 2'
-        categoryAttribute2.boardIDs = [board2.id]
+        categoryAttribute2.boardMetadata = [{boardID: board2.id, hidden: false}]
 
         const store = mockStore({
             teams: {

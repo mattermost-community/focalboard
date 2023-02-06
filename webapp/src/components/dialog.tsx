@@ -12,6 +12,7 @@ import './dialog.scss'
 
 type Props = {
     children: React.ReactNode
+    size?: string
     toolsMenu?: React.ReactNode // some dialogs may not  require a toolmenu
     toolbar?: React.ReactNode
     hideCloseButton?: boolean
@@ -22,7 +23,7 @@ type Props = {
 }
 
 const Dialog = (props: Props) => {
-    const {toolsMenu, toolbar, title, subtitle} = props
+    const {toolsMenu, toolbar, title, subtitle, size} = props
     const intl = useIntl()
 
     const closeDialogText = intl.formatMessage({
@@ -35,7 +36,7 @@ const Dialog = (props: Props) => {
     const isBackdropClickedRef = useRef(false)
 
     return (
-        <div className={`Dialog dialog-back ${props.className}`}>
+        <div className={`Dialog dialog-back ${props.className} size--${size || 'medium'}`}>
             <div className='backdrop'/>
             <div
                 className='wrapper'

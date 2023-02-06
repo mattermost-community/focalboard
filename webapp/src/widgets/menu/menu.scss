@@ -1,12 +1,6 @@
 @import '../../styles/z-index';
 
-.status-dropdown-menu {
-    > .Menu {
-        position: inherit;
-    }
-}
-
-.Menu {
+.Menu:not(#statusDropdownMenu) {
     @include z-index(menu);
     display: flex;
     flex-direction: column;
@@ -179,7 +173,7 @@
     }
 }
 
-.Menu,
+.Menu:not(#statusDropdownMenu),
 .SubMenuOption .SubMenu {
     @media screen and (max-width: 430px) {
         position: fixed;

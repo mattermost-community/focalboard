@@ -97,7 +97,7 @@ const CreateCategory = (props: Props): JSX.Element => {
                     {
                         Boolean(name) &&
                         <div
-                            className='clearBtn'
+                            className='clearBtn inputWrapper__close-wrapper'
                             onClick={() => setName('')}
                         >
                             <CloseCircle/>

@@ -1,6 +1,8 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+//go:generate mockgen -destination=mocks/propValueResolverMock.go -package mocks . PropValueResolver
+
 package model
 
 import (
@@ -97,6 +99,32 @@ func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, e
 			return user.Username, nil
 		}
 		return userID, nil
+
+	case "multiPerson":
+		// v is a slice of user IDs
+		userIDs, ok := v.([]interface{})
+		if !ok {
+			return "", fmt.Errorf("multiPerson property type: %w", ErrInvalidPropertyValueType)
+		}
+		if resolver != nil {
+			usernames := make([]string, len(userIDs))
+
+			for i, userIDInterface := range userIDs {
+				userID := userIDInterface.(string)
+
+				user, err := resolver.GetUserByID(userID)
+				if err != nil {
+					return "", err
+				}
+				if user == nil {
+					usernames[i] = userID
+				} else {
+					usernames[i] = user.Username
+				}
+			}
+
+			return strings.Join(usernames, ", "), nil
+		}
 
 	case "multiSelect":
 		// v is a slice of strings containing option ids

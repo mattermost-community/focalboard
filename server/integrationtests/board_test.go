@@ -13,10 +13,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	testTeamID = "team-id"
-)
-
 func TestGetBoards(t *testing.T) {
 	t.Run("a non authenticated client should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
@@ -2082,8 +2078,8 @@ func TestDuplicateBoard(t *testing.T) {
 
 		var duplicateBoardCategoryID string
 		for _, categoryBoard := range userCategoryBoards {
-			for _, boardID := range categoryBoard.BoardIDs {
-				if boardID == duplicateBoard.ID {
+			for _, boardMetadata := range categoryBoard.BoardMetadata {
+				if boardMetadata.BoardID == duplicateBoard.ID {
 					duplicateBoardCategoryID = categoryBoard.Category.ID
 				}
 			}

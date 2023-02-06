@@ -3,7 +3,7 @@
 exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmation msg 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog"
+    class="Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"
@@ -119,7 +119,7 @@ exports[`components/viewLimitDialog/ViewL]imitDialog show notify admin confirmat
 exports[`components/viewLimitDialog/ViewL]imitDialog show view limit dialog 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog"
+    class="Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"

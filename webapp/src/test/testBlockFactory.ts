@@ -182,7 +182,7 @@ class TestBlockFactory {
     static createCategoryBoards(): CategoryBoards {
         return {
             ...TestBlockFactory.createCategory(),
-            boardIDs: [],
+            boardMetadata: [],
         }
     }
 

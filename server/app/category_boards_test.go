@@ -14,7 +14,16 @@ func TestGetUserCategoryBoards(t *testing.T) {
 	defer tearDown()
 
 	t.Run("user had no default category and had boards", func(t *testing.T) {
-		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{}, nil)
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{}, nil).Times(1)
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "boards_category_id",
+					Type: model.CategoryTypeSystem,
+					Name: "Boards",
+				},
+			},
+		}, nil).Times(1)
 		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
 		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
 			ID:   "boards_category_id",
@@ -49,18 +58,16 @@ func TestGetUserCategoryBoards(t *testing.T) {
 				Synthetic: false,
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_2": "boards_category_id"}).Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_3": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_1", "board_id_2", "board_id_3"}).Return(nil)
 
 		categoryBoards, err := th.App.GetUserCategoryBoards("user_id", "team_id")
 		assert.NoError(t, err)
 		assert.Equal(t, 1, len(categoryBoards))
 		assert.Equal(t, "Boards", categoryBoards[0].Name)
-		assert.Equal(t, 3, len(categoryBoards[0].BoardIDs))
-		assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_1")
-		assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_2")
-		assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_3")
+		assert.Equal(t, 3, len(categoryBoards[0].BoardMetadata))
+		assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_1", Hidden: false})
+		assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_2", Hidden: false})
+		assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_3", Hidden: false})
 	})
 
 	t.Run("user had no default category BUT had no boards", func(t *testing.T) {
@@ -78,14 +85,17 @@ func TestGetUserCategoryBoards(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, 1, len(categoryBoards))
 		assert.Equal(t, "Boards", categoryBoards[0].Name)
-		assert.Equal(t, 0, len(categoryBoards[0].BoardIDs))
+		assert.Equal(t, 0, len(categoryBoards[0].BoardMetadata))
 	})
 
 	t.Run("user already had a default Boards category with boards in it", func(t *testing.T) {
 		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
 			{
 				Category: model.Category{Name: "Boards"},
-				BoardIDs: []string{"board_id_1", "board_id_2"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1", Hidden: false},
+					{BoardID: "board_id_2", Hidden: false},
+				},
 			},
 		}, nil)
 
@@ -93,7 +103,7 @@ func TestGetUserCategoryBoards(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, 1, len(categoryBoards))
 		assert.Equal(t, "Boards", categoryBoards[0].Name)
-		assert.Equal(t, 2, len(categoryBoards[0].BoardIDs))
+		assert.Equal(t, 2, len(categoryBoards[0].BoardMetadata))
 	})
 }
 
@@ -116,7 +126,7 @@ func TestCreateBoardsCategory(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, boardsCategory)
 		assert.Equal(t, "Boards", boardsCategory.Name)
-		assert.Equal(t, 0, len(boardsCategory.BoardIDs))
+		assert.Equal(t, 0, len(boardsCategory.BoardMetadata))
 	})
 
 	t.Run("user has implicit access to some board", func(t *testing.T) {
@@ -150,7 +160,7 @@ func TestCreateBoardsCategory(t *testing.T) {
 
 		// there should still be no boards in the default category as
 		// the user had only implicit access to boards
-		assert.Equal(t, 0, len(boardsCategory.BoardIDs))
+		assert.Equal(t, 0, len(boardsCategory.BoardMetadata))
 	})
 
 	t.Run("user has explicit access to some board", func(t *testing.T) {
@@ -185,9 +195,17 @@ func TestCreateBoardsCategory(t *testing.T) {
 				Synthetic: false,
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_2": "boards_category_id"}).Return(nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_3": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_1", "board_id_2", "board_id_3"}).Return(nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					Type: model.CategoryTypeSystem,
+					ID:   "boards_category_id",
+					Name: "Boards",
+				},
+			},
+		}, nil)
 
 		existingCategoryBoards := []model.CategoryBoards{}
 		boardsCategory, err := th.App.createBoardsCategory("user_id", "team_id", existingCategoryBoards)
@@ -197,7 +215,7 @@ func TestCreateBoardsCategory(t *testing.T) {
 
 		// since user has explicit access to three boards,
 		// they should all end up in the default category
-		assert.Equal(t, 3, len(boardsCategory.BoardIDs))
+		assert.Equal(t, 3, len(boardsCategory.BoardMetadata))
 	})
 
 	t.Run("user has both implicit and explicit access to some board", func(t *testing.T) {
@@ -226,7 +244,17 @@ func TestCreateBoardsCategory(t *testing.T) {
 				Synthetic: true,
 			},
 		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{"board_id_1": "boards_category_id"}).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "boards_category_id", []string{"board_id_1"}).Return(nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					Type: model.CategoryTypeSystem,
+					ID:   "boards_category_id",
+					Name: "Boards",
+				},
+			},
+		}, nil)
 
 		existingCategoryBoards := []model.CategoryBoards{}
 		boardsCategory, err := th.App.createBoardsCategory("user_id", "team_id", existingCategoryBoards)
@@ -237,7 +265,7 @@ func TestCreateBoardsCategory(t *testing.T) {
 		// there was only one explicit board access,
 		// and so only that one should end up in the
 		// default category
-		assert.Equal(t, 1, len(boardsCategory.BoardIDs))
+		assert.Equal(t, 1, len(boardsCategory.BoardMetadata))
 	})
 }
 
@@ -249,15 +277,20 @@ func TestReorderCategoryBoards(t *testing.T) {
 		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
 			{
 				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
-				BoardIDs: []string{"board_id_1", "board_id_2"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1", Hidden: false},
+					{BoardID: "board_id_2", Hidden: false},
+				},
 			},
 			{
 				Category: model.Category{ID: "category_id_2", Name: "Boards", Type: "system"},
-				BoardIDs: []string{"board_id_3"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_3", Hidden: false},
+				},
 			},
 			{
-				Category: model.Category{ID: "category_id_3", Name: "Category 3"},
-				BoardIDs: []string{},
+				Category:      model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardMetadata: []model.CategoryBoardMetadata{},
 			},
 		}, nil)
 
@@ -274,15 +307,21 @@ func TestReorderCategoryBoards(t *testing.T) {
 		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
 			{
 				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
-				BoardIDs: []string{"board_id_1", "board_id_2", "board_id_3"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1", Hidden: false},
+					{BoardID: "board_id_2", Hidden: false},
+					{BoardID: "board_id_3", Hidden: false},
+				},
 			},
 			{
 				Category: model.Category{ID: "category_id_2", Name: "Boards", Type: "system"},
-				BoardIDs: []string{"board_id_3"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_3", Hidden: false},
+				},
 			},
 			{
-				Category: model.Category{ID: "category_id_3", Name: "Category 3"},
-				BoardIDs: []string{},
+				Category:      model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardMetadata: []model.CategoryBoardMetadata{},
 			},
 		}, nil)
 

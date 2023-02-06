@@ -30,6 +30,7 @@ var FocalboardBot = &mm_model.Bot{
 type ServicesAPI interface {
 	// Channels service
 	GetDirectChannel(userID1, userID2 string) (*mm_model.Channel, error)
+	GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error)
 	GetChannelByID(channelID string) (*mm_model.Channel, error)
 	GetChannelMember(channelID string, userID string) (*mm_model.ChannelMember, error)
 	GetChannelsForTeamForUser(teamID string, userID string, includeDeleted bool) (mm_model.ChannelList, error)

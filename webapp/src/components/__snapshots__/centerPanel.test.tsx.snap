@@ -2025,22 +2025,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             title="view title"
             value="view title"
           />
-          <div>
-            <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                class="IconButton"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
-            </div>
-          </div>
         </div>
         <div
           class="octo-spacer"
