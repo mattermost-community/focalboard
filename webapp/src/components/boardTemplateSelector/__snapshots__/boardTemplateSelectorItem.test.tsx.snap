@@ -143,7 +143,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
   </div>
   <div>
     <div
-      class="Dialog dialog-back DeleteBoardDialog size--medium"
+      class="ActionDialog Dialog dialog-back DeleteBoardDialog size--medium"
     >
       <div
         class="backdrop"
@@ -152,7 +152,7 @@ exports[`components/boardTemplateSelector/boardTemplateSelectorItem should trigg
         class="wrapper"
       >
         <div
-          class="dialog"
+          class="dialog footerHidden"
           role="dialog"
         >
           <div

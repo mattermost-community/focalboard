@@ -905,7 +905,7 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
     </div>
   </div>
   <div
-    class="Dialog dialog-back confirmation-dialog-box size--small"
+    class="ActionDialog Dialog dialog-back confirmation-dialog-box size--small"
   >
     <div
       class="backdrop"
@@ -914,7 +914,7 @@ exports[`src/components/gallery/GalleryCard without block content return Gallery
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div

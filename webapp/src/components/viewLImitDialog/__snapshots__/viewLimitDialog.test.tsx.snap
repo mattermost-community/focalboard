@@ -3,7 +3,7 @@
 exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button for non sys admin user 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog size--medium"
+    class="ActionDialog Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"
@@ -12,7 +12,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -85,7 +85,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
 exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys admin user 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ViewLimitDialog size--medium"
+    class="ActionDialog Dialog dialog-back ViewLimitDialog size--medium"
   >
     <div
       class="backdrop"
@@ -94,7 +94,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div

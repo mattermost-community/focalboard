@@ -3,7 +3,7 @@
 exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back confirmation-dialog-box size--small"
+    class="ActionDialog Dialog dialog-back confirmation-dialog-box size--small"
   >
     <div
       class="backdrop"
@@ -12,7 +12,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -84,7 +84,7 @@ exports[`/components/confirmationDialogBox confirmDialog should match snapshot 1
 exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Text should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back confirmation-dialog-box size--small"
+    class="ActionDialog Dialog dialog-back confirmation-dialog-box size--small"
   >
     <div
       class="backdrop"
@@ -93,7 +93,7 @@ exports[`/components/confirmationDialogBox confirmDialog with Confirm Button Tex
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div

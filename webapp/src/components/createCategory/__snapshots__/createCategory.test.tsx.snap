@@ -3,7 +3,7 @@
 exports[`components/createCategory/CreateCategory base case should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back CreateCategoryModal size--medium"
+    class="ActionDialog Dialog dialog-back CreateCategoryModal size--medium"
   >
     <div
       class="backdrop"
@@ -12,7 +12,7 @@ exports[`components/createCategory/CreateCategory base case should match snapsho
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div

@@ -3,7 +3,7 @@
 exports[`component/BoardSwitcherDialog base case 1`] = `
 <div>
   <div
-    class="Dialog dialog-back BoardSwitcherDialog size--medium"
+    class="ActionDialog Dialog dialog-back BoardSwitcherDialog size--medium"
   >
     <div
       class="backdrop"
@@ -12,7 +12,7 @@ exports[`component/BoardSwitcherDialog base case 1`] = `
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div

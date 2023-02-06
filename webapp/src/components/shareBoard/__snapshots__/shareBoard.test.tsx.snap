@@ -3,7 +3,7 @@
 exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -12,7 +12,7 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -253,7 +253,7 @@ exports[`src/components/shareBoard/shareBoard confirm unlinking linked channel 1
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -262,7 +262,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -462,7 +462,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy link 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -471,7 +471,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -671,7 +671,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Copy l
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Regenerate token 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -680,7 +680,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -903,7 +903,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Regene
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -912,7 +912,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -1139,7 +1139,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -1148,7 +1148,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -1607,7 +1607,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select, non-plugin mode 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -1616,7 +1616,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -1843,7 +1843,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard and click Select, non-plugin mode 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -1852,7 +1852,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -2311,7 +2311,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
 exports[`src/components/shareBoard/shareBoard return shareBoard template and click Select 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2320,7 +2320,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -2496,7 +2496,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
 exports[`src/components/shareBoard/shareBoard return shareBoard template and click Select 2`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2505,7 +2505,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -2817,7 +2817,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard template and cli
 exports[`src/components/shareBoard/shareBoard return shareBoard, and click switch 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -2826,7 +2826,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -3049,7 +3049,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoard, and click switc
 exports[`src/components/shareBoard/shareBoard return shareBoardComponent and click Switch without sharing 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3058,7 +3058,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -3281,7 +3281,7 @@ exports[`src/components/shareBoard/shareBoard return shareBoardComponent and cli
 exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3290,7 +3290,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -3490,7 +3490,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot 1`] = `
 exports[`src/components/shareBoard/shareBoard should match snapshot with sharing 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3499,7 +3499,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -3699,7 +3699,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
 exports[`src/components/shareBoard/shareBoard should match snapshot with sharing and subpath 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3708,7 +3708,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -3908,7 +3908,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
 exports[`src/components/shareBoard/shareBoard should match snapshot with sharing and without workspaceId and subpath 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -3917,7 +3917,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
@@ -4117,7 +4117,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot with sharing
 exports[`src/components/shareBoard/shareBoard should match snapshot, with template 1`] = `
 <div>
   <div
-    class="Dialog dialog-back ShareBoardDialog size--medium"
+    class="ActionDialog Dialog dialog-back ShareBoardDialog size--medium"
   >
     <div
       class="backdrop"
@@ -4126,7 +4126,7 @@ exports[`src/components/shareBoard/shareBoard should match snapshot, with templa
       class="wrapper"
     >
       <div
-        class="dialog"
+        class="dialog footerHidden"
         role="dialog"
       >
         <div
