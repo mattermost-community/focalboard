@@ -15,6 +15,7 @@ import {BoardGroup} from '../../blocks/board'
 import {BoardView} from '../../blocks/boardView'
 
 import Button from '../../widgets/buttons/button'
+import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     activeView: BoardView
@@ -59,7 +60,7 @@ export default function KanbanHiddenColumnItem(props: Props): JSX.Element {
                     {group.option.value}
                 </Label>
                 <Menu>
-                    <Menu.Text
+                    <MenuText
                         id='show'
                         icon={<ShowIcon/>}
                         name={intl.formatMessage({id: 'BoardComponent.show', defaultMessage: 'Show'})}

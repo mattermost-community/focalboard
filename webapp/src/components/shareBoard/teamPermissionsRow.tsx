@@ -21,6 +21,7 @@ import BoardPermissionGate from '../permissions/boardPermissionGate'
 import ConfirmationDialogBox from '../confirmationDialogBox'
 
 import mutator from '../../mutator'
+import {MenuText} from '../../widgets/menu/menu'
 
 async function updateBoardType(board: Board, newType: string, newMinimumRole: MemberRole) {
     if (board.type === newType && board.minimumRole === newMinimumRole) {
@@ -110,7 +111,7 @@ const TeamPermissionsRow = (): JSX.Element => {
                         </button>
                         <Menu position='left'>
                             {!board.isTemplate &&
-                                <Menu.Text
+                                <MenuText
                                     id={MemberRole.Editor}
                                     check={board.minimumRole === undefined || board.minimumRole === MemberRole.Editor}
                                     icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Editor ? <CheckIcon/> : <div className='empty-icon'/>}
@@ -118,21 +119,21 @@ const TeamPermissionsRow = (): JSX.Element => {
                                     onClick={() => setChangeRoleConfirmation(MemberRole.Editor)}
                                 />}
                             {!board.isTemplate &&
-                                <Menu.Text
+                                <MenuText
                                     id={MemberRole.Commenter}
                                     check={board.minimumRole === MemberRole.Commenter}
                                     icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Commenter ? <CheckIcon/> : <div className='empty-icon'/>}
                                     name={intl.formatMessage({id: 'BoardMember.schemeCommenter', defaultMessage: 'Commenter'})}
                                     onClick={() => setChangeRoleConfirmation(MemberRole.Commenter)}
                                 />}
-                            <Menu.Text
+                            <MenuText
                                 id={MemberRole.Viewer}
                                 check={board.minimumRole === MemberRole.Viewer}
                                 icon={board.type === BoardTypeOpen && board.minimumRole === MemberRole.Viewer ? <CheckIcon/> : <div className='empty-icon'/>}
                                 name={intl.formatMessage({id: 'BoardMember.schemeViewer', defaultMessage: 'Viewer'})}
                                 onClick={() => updateBoardType(board, BoardTypeOpen, MemberRole.Viewer)}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id={MemberRole.None}
                                 check={true}
                                 icon={board.type === BoardTypePrivate ? <CheckIcon/> : <div className='empty-icon'/>}

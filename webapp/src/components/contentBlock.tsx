@@ -19,6 +19,7 @@ import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import {useSortableWithGrip} from '../hooks/sortable'
 import {Position} from '../components/cardDetail/cardDetailContents'
+import {MenuSubMenu, MenuText} from '../widgets/menu/menu'
 
 import ContentElement from './content/contentElement'
 import AddContentMenuItem from './addContentMenuItem'
@@ -76,7 +77,7 @@ const ContentBlock = (props: Props): JSX.Element => {
                         <IconButton icon={<OptionsIcon/>}/>
                         <Menu>
                             {index > 0 &&
-                                <Menu.Text
+                                <MenuText
                                     id='moveUp'
                                     name={intl.formatMessage({id: 'ContentBlock.moveUp', defaultMessage: 'Move up'})}
                                     icon={<SortUpIcon/>}
@@ -86,7 +87,7 @@ const ContentBlock = (props: Props): JSX.Element => {
                                     }}
                                 />}
                             {index < (contentOrder.length - 1) &&
-                                <Menu.Text
+                                <MenuText
                                     id='moveDown'
                                     name={intl.formatMessage({id: 'ContentBlock.moveDown', defaultMessage: 'Move down'})}
                                     icon={<SortDownIcon/>}
@@ -95,7 +96,7 @@ const ContentBlock = (props: Props): JSX.Element => {
                                         mutator.changeCardContentOrder(props.card.boardId, card.id, card.fields.contentOrder, contentOrder)
                                     }}
                                 />}
-                            <Menu.SubMenu
+                            <MenuSubMenu
                                 id='insertAbove'
                                 name={intl.formatMessage({id: 'ContentBlock.insertAbove', defaultMessage: 'Insert above'})}
                                 icon={<AddIcon/>}
@@ -109,8 +110,8 @@ const ContentBlock = (props: Props): JSX.Element => {
                                         cords={cords}
                                     />
                                 ))}
-                            </Menu.SubMenu>
-                            <Menu.Text
+                            </MenuSubMenu>
+                            <MenuText
                                 icon={<DeleteIcon/>}
                                 id='delete'
                                 name={intl.formatMessage({id: 'ContentBlock.Delete', defaultMessage: 'Delete'})}

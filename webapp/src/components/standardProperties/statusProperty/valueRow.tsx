@@ -10,7 +10,7 @@ import {Constants} from '../../../constants'
 
 import DragHandle from '../../../widgets/icons/dragHandle'
 import EditIcon from '../../../widgets/icons/edit'
-import Menu from '../../../widgets/menu/menu'
+import Menu, {MenuColor, MenuText} from '../../../widgets/menu/menu'
 import MenuWrapper from '../../../widgets/menuWrapper'
 
 import {IPropertyOption} from '../../../blocks/board'
@@ -98,7 +98,7 @@ const ValueRow = (props: Props) => {
                             {
                                 Object.entries(Constants.menuColors).map(
                                     ([key, color]: [string, string]) => (
-                                        <Menu.Color
+                                        <MenuColor
                                             key={key}
                                             id={key}
                                             name={color}
@@ -125,13 +125,13 @@ const ValueRow = (props: Props) => {
                             menuMargin={30}
                             fixed={true}
                         >
-                            <Menu.Text
+                            <MenuText
                                 id='editText'
                                 name={'Edit'}
                                 icon={<EditIcon/>}
                                 onClick={handleEditButtonClick}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id='deleteOption'
                                 name={'Delete'}
                                 icon={<DeleteIcon/>}

@@ -17,6 +17,7 @@ import Tooltip from '../../widgets/tooltip'
 import GuestBadge from '../../widgets/guestBadge'
 
 import './comment.scss'
+import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     comment: Block
@@ -55,7 +56,7 @@ const Comment: FC<Props> = (props: Props) => {
                     <MenuWrapper>
                         <IconButton icon={<OptionsIcon/>}/>
                         <Menu position='left'>
-                            <Menu.Text
+                            <MenuText
                                 icon={<DeleteIcon/>}
                                 id='delete'
                                 name={intl.formatMessage({id: 'Comment.delete', defaultMessage: 'Delete'})}

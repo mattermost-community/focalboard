@@ -16,6 +16,7 @@ import mutator from '../../mutator'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentView} from '../../store/views'
 import {getCurrentBoardId} from '../../store/boards'
+import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     addCard: () => void
@@ -27,7 +28,7 @@ const EmptyCardButton = (props: Props) => {
     const intl = useIntl()
 
     return (
-        <Menu.Text
+        <MenuText
             icon={<CardIcon/>}
             id='empty-template'
             name={intl.formatMessage({id: 'ViewHeader.empty-card', defaultMessage: 'Empty card'})}
@@ -39,7 +40,7 @@ const EmptyCardButton = (props: Props) => {
                 <MenuWrapper stopPropagationOnToggle={true}>
                     <IconButton icon={<OptionsIcon/>}/>
                     <Menu position='left'>
-                        <Menu.Text
+                        <MenuText
                             icon={<CheckIcon/>}
                             id='default'
                             name={intl.formatMessage({

@@ -15,6 +15,7 @@ import MenuWrapper from '../../widgets/menuWrapper'
 import CheckIcon from '../../widgets/icons/check'
 
 import propsRegistry from '../../properties'
+import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -52,7 +53,7 @@ const ViewHeaderDisplayByMenu = (props: Props) => {
             </Button>
             <Menu>
                 {getDateProperties().length > 0 && getDateProperties().map((date: IPropertyTemplate) => (
-                    <Menu.Text
+                    <MenuText
                         key={date.id}
                         id={date.id}
                         name={date.name}
@@ -66,7 +67,7 @@ const ViewHeaderDisplayByMenu = (props: Props) => {
                     />
                 ))}
                 {getDateProperties().length === 0 &&
-                    <Menu.Text
+                    <MenuText
                         key={'createdDate'}
                         id={'createdDate'}
                         name={createdDateName}

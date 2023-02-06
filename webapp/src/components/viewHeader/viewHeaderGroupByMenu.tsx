@@ -17,6 +17,7 @@ import {useAppSelector} from '../../store/hooks'
 import {getCurrentViewCardsSortedFilteredAndGrouped} from '../../store/cards'
 import {getVisibleAndHiddenGroups} from '../../boardUtils'
 import propsRegistry from '../../properties'
+import {MenuText, MenuSeparator} from '../../widgets/menu/menu'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -69,7 +70,7 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                 {activeView.fields.viewType === 'table' && activeView.fields.groupById &&
                     <>
                         {emptyVisibleGroupsCount > 0 &&
-                            <Menu.Text
+                            <MenuText
                                 key={'hideEmptyGroups'}
                                 id={'hideEmptyGroups'}
                                 name={intl.formatMessage({id: 'GroupBy.hideEmptyGroups', defaultMessage: 'Hide {count} empty groups'}, {count: emptyVisibleGroupsCount})}
@@ -77,14 +78,14 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                                 onClick={() => handleToggleGroups(false)}
                             />}
                         {hiddenGroupsCount > 0 &&
-                            <Menu.Text
+                            <MenuText
                                 key={'showHiddenGroups'}
                                 id={'showHiddenGroups'}
                                 name={intl.formatMessage({id: 'GroupBy.showHiddenGroups', defaultMessage: 'Show {count} hidden groups'}, {count: hiddenGroupsCount})}
                                 rightIcon={<ShowIcon/>}
                                 onClick={() => handleToggleGroups(true)}
                             />}
-                        <Menu.Text
+                        <MenuText
                             key={'ungroup'}
                             id={''}
                             name={intl.formatMessage({id: 'GroupBy.ungroup', defaultMessage: 'Ungroup'})}
@@ -96,10 +97,10 @@ const ViewHeaderGroupByMenu = (props: Props) => {
                                 mutator.changeViewGroupById(activeView.boardId, activeView.id, activeView.fields.groupById, id)
                             }}
                         />
-                        <Menu.Separator/>
+                        <MenuSeparator/>
                     </>}
                 {properties?.filter((o: IPropertyTemplate) => propsRegistry.get(o.type).canGroup).map((option: IPropertyTemplate) => (
-                    <Menu.Text
+                    <MenuText
                         key={option.id}
                         id={option.id}
                         name={option.name}

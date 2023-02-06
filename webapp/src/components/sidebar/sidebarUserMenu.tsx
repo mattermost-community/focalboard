@@ -19,6 +19,8 @@ import ModalWrapper from '../modalWrapper'
 
 import {IAppWindow} from '../../types'
 
+import {MenuLabel, MenuText, MenuSeparator} from '../../widgets/menu/menu'
+
 import RegistrationLink from './registrationLink'
 
 import './sidebarUserMenu.scss'
@@ -55,8 +57,8 @@ const SidebarUserMenu = () => {
                     </div>
                     <Menu>
                         {user && user.username !== 'single-user' && <>
-                            <Menu.Label><b>{user.username}</b></Menu.Label>
-                            <Menu.Text
+                            <MenuLabel><b>{user.username}</b></MenuLabel>
+                            <MenuText
                                 id='logout'
                                 name={intl.formatMessage({id: 'Sidebar.logout', defaultMessage: 'Log out'})}
                                 onClick={async () => {
@@ -65,14 +67,14 @@ const SidebarUserMenu = () => {
                                     history.push('/login')
                                 }}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id='changePassword'
                                 name={intl.formatMessage({id: 'Sidebar.changePassword', defaultMessage: 'Change password'})}
                                 onClick={async () => {
                                     history.push('/change_password')
                                 }}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id='invite'
                                 name={intl.formatMessage({id: 'Sidebar.invite-users', defaultMessage: 'Invite users'})}
                                 onClick={async () => {
@@ -80,10 +82,10 @@ const SidebarUserMenu = () => {
                                 }}
                             />
 
-                            <Menu.Separator/>
+                            <MenuSeparator/>
                         </>}
 
-                        <Menu.Text
+                        <MenuText
                             id='about'
                             name={intl.formatMessage({id: 'Sidebar.about', defaultMessage: 'About Focalboard'})}
                             onClick={async () => {

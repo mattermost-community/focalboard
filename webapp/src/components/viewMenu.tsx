@@ -19,8 +19,10 @@ import DuplicateIcon from '../widgets/icons/duplicate'
 import GalleryIcon from '../widgets/icons/gallery'
 import TableIcon from '../widgets/icons/table'
 import Menu from '../widgets/menu'
+import {MenuText, MenuSeparator, MenuSubMenu} from '../widgets/menu/menu'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
+
 import './viewMenu.scss'
 
 type Props = {
@@ -273,7 +275,7 @@ const ViewMenu = (props: Props) => {
             <Menu>
                 <div className='view-list'>
                     {views.map((view: BoardView) => (
-                        <Menu.Text
+                        <MenuText
                             key={view.id}
                             id={view.id}
                             name={view.title}
@@ -282,11 +284,11 @@ const ViewMenu = (props: Props) => {
                         />))}
                 </div>
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.Separator/>
+                    <MenuSeparator/>
                 </BoardPermissionGate>
                 {!props.readonly &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.Text
+                    <MenuText
                         id='__duplicateView'
                         name={duplicateViewText}
                         icon={<DuplicateIcon/>}
@@ -296,7 +298,7 @@ const ViewMenu = (props: Props) => {
                 }
                 {!props.readonly && views.length > 1 &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.Text
+                    <MenuText
                         id='__deleteView'
                         name={deleteViewText}
                         icon={<DeleteIcon/>}
@@ -306,38 +308,38 @@ const ViewMenu = (props: Props) => {
                 }
                 {!props.readonly &&
                 <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                    <Menu.SubMenu
+                    <MenuSubMenu
                         id='__addView'
                         name={addViewText}
                         icon={<AddIcon/>}
                     >
                         <div className='subMenu'>
-                            <Menu.Text
+                            <MenuText
                                 id='board'
                                 name={boardText}
                                 icon={<BoardIcon/>}
                                 onClick={handleAddViewBoard}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id='table'
                                 name={tableText}
                                 icon={<TableIcon/>}
                                 onClick={handleAddViewTable}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id='gallery'
                                 name={galleryText}
                                 icon={<GalleryIcon/>}
                                 onClick={handleAddViewGallery}
                             />
-                            <Menu.Text
+                            <MenuText
                                 id='calendar'
                                 name='Calendar'
                                 icon={<CalendarIcon/>}
                                 onClick={handleAddViewCalendar}
                             />
                         </div>
-                    </Menu.SubMenu>
+                    </MenuSubMenu>
                 </BoardPermissionGate>
                 }
             </Menu>

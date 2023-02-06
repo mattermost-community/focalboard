@@ -6,9 +6,8 @@ import CompassIcon from '../../widgets/icons/compassIcon'
 
 import MenuUtil from './menuUtil'
 
-import Menu from '.'
-
 import './subMenuOption.scss'
+import {MenuText} from './menu'
 
 export const HoveringContext = React.createContext(false)
 
@@ -77,7 +76,7 @@ function SubMenuOption(props: SubMenuOptionProps): JSX.Element {
                         <div className='menu-spacer hideOnWidescreen'/>
 
                         <div className='menu-options hideOnWidescreen'>
-                            <Menu.Text
+                            <MenuText
                                 id='menu-cancel'
                                 name={'Cancel'}
                                 className='menu-cancel'

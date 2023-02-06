@@ -22,6 +22,7 @@ import CloseIcon from './icons/close'
 import Label from './label'
 
 import './valueSelector.scss'
+import {MenuText, MenuSeparator, MenuColor} from './menu/menu'
 
 type Props = {
     options: IPropertyOption[]
@@ -84,15 +85,15 @@ const ValueSelectorLabel = (props: LabelProps): JSX.Element => {
                     icon={<OptionsIcon/>}
                 />
                 <Menu position='left'>
-                    <Menu.Text
+                    <MenuText
                         id='delete'
                         icon={<DeleteIcon/>}
                         name={intl.formatMessage({id: 'BoardComponent.delete', defaultMessage: 'Delete'})}
                         onClick={() => props.onDeleteOption(option)}
                     />
-                    <Menu.Separator/>
+                    <MenuSeparator/>
                     {Object.entries(Constants.menuColors).map(([key, color]: [string, string]) => (
-                        <Menu.Color
+                        <MenuColor
                             key={key}
                             id={key}
                             name={color}

@@ -16,6 +16,7 @@ import {IUser} from '../../user'
 import {getMe} from '../../store/users'
 import {useAppSelector} from '../../store/hooks'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
+import {MenuText} from '../../widgets/menu/menu'
 
 type Props = {
     cardId: string
@@ -46,14 +47,14 @@ export const CardActionsMenu = (props: Props): JSX.Element => {
     return (
         <Menu position='left'>
             <BoardPermissionGate permissions={[Permission.ManageBoardCards]}>
-                <Menu.Text
+                <MenuText
                     icon={<DeleteIcon/>}
                     id='delete'
                     name={intl.formatMessage({id: 'CardActionsMenu.delete', defaultMessage: 'Delete'})}
                     onClick={handleDeleteCard}
                 />
                 {props.onClickDuplicate &&
-                <Menu.Text
+                <MenuText
                     icon={<DuplicateIcon/>}
                     id='duplicate'
                     name={intl.formatMessage({id: 'CardActionsMenu.duplicate', defaultMessage: 'Duplicate'})}
@@ -61,7 +62,7 @@ export const CardActionsMenu = (props: Props): JSX.Element => {
                 />}
             </BoardPermissionGate>
             {me?.id !== 'single-user' &&
-                <Menu.Text
+                <MenuText
                     icon={<LinkIcon/>}
                     id='copy'
                     name={intl.formatMessage({id: 'CardActionsMenu.copyLink', defaultMessage: 'Copy link'})}

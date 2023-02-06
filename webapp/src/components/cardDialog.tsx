@@ -16,7 +16,6 @@ import {getCardAttachments, updateAttachments, updateUploadPrecent} from '../sto
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../telemetry/telemetryClient'
 import {Utils} from '../utils'
 import CompassIcon from '../widgets/icons/compassIcon'
-import Menu from '../widgets/menu'
 import {sendFlashMessage} from '../components/flashMessages'
 
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../components/confirmationDialogBox'
@@ -31,6 +30,8 @@ import {getMe} from '../store/users'
 import {Permission} from '../constants'
 import {Block, createBlock} from '../blocks/block'
 import {AttachmentBlock, createAttachmentBlock} from '../blocks/attachmentBlock'
+
+import {MenuText} from '../widgets/menu/menu'
 
 import BoardPermissionGate from './permissions/boardPermissionGate'
 
@@ -125,7 +126,7 @@ const CardDialog = (props: Props): JSX.Element => {
         >
             {!isTemplate &&
             <BoardPermissionGate permissions={[Permission.ManageBoardProperties]}>
-                <Menu.Text
+                <MenuText
                     id='makeTemplate'
                     icon={
                         <CompassIcon

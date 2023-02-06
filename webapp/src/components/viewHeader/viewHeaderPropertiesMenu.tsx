@@ -10,6 +10,7 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import MenuWrapper from '../../widgets/menuWrapper'
+import {MenuSwitch} from '../../widgets/menu/menu'
 
 type Props = {
     properties: readonly IPropertyTemplate[]
@@ -41,7 +42,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
             </Button>
             <Menu>
                 {activeView.fields.viewType === 'gallery' &&
-                    <Menu.Switch
+                    <MenuSwitch
                         key={Constants.titleColumnId}
                         id={Constants.titleColumnId}
                         name={intl.formatMessage({id: 'default-properties.title', defaultMessage: 'Title'})}
@@ -50,7 +51,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
                         onClick={toggleVisibility}
                     />}
                 {properties?.map((option: IPropertyTemplate) => (
-                    <Menu.Switch
+                    <MenuSwitch
                         key={option.id}
                         id={option.id}
                         name={option.name}
@@ -60,7 +61,7 @@ const ViewHeaderPropertiesMenu = (props: Props) => {
                     />
                 ))}
                 {canShowBadges &&
-                    <Menu.Switch
+                    <MenuSwitch
                         key={Constants.badgesColumnId}
                         id={Constants.badgesColumnId}
                         name={intl.formatMessage({id: 'default-properties.badges', defaultMessage: 'Comments and description'})}

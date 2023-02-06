@@ -10,6 +10,7 @@ import EmojiIcon from '../widgets/icons/emoji'
 import Menu from '../widgets/menu'
 import MenuWrapper from '../widgets/menuWrapper'
 import './iconSelector.scss'
+import {MenuText, MenuSubMenu} from '../widgets/menu/menu'
 
 type Props = {
     readonly?: boolean
@@ -29,20 +30,20 @@ const IconSelector = React.memo((props: Props) => {
                 <MenuWrapper>
                     {props.iconElement}
                     <Menu>
-                        <Menu.Text
+                        <MenuText
                             id='random'
                             icon={<RandomIcon/>}
                             name={intl.formatMessage({id: 'ViewTitle.random-icon', defaultMessage: 'Random'})}
                             onClick={props.onAddRandomIcon}
                         />
-                        <Menu.SubMenu
+                        <MenuSubMenu
                             id='pick'
                             icon={<EmojiIcon/>}
                             name={intl.formatMessage({id: 'ViewTitle.pick-icon', defaultMessage: 'Pick icon'})}
                         >
                             <EmojiPicker onSelect={props.onSelectEmoji}/>
-                        </Menu.SubMenu>
-                        <Menu.Text
+                        </MenuSubMenu>
+                        <MenuText
                             id='remove'
                             icon={<DeleteIcon/>}
                             name={intl.formatMessage({id: 'ViewTitle.remove-icon', defaultMessage: 'Remove icon'})}

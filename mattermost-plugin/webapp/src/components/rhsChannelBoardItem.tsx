@@ -19,6 +19,7 @@ import {Permission} from '../../../../webapp/src/constants'
 
 import './rhsChannelBoardItem.scss'
 import BoardPermissionGate from '../../../../webapp/src/components/permissions/boardPermissionGate'
+import {MenuText} from '../../../../webapp/src/widgets/menu/menu'
 
 const windowAny = (window as SuiteWindow)
 
@@ -66,7 +67,7 @@ const RHSChannelBoardItem = (props: Props) => {
                             teamId={team.id}
                             permissions={[Permission.ManageBoardRoles]}
                         >
-                            <Menu.Text
+                            <MenuText
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
                                 name={intl.formatMessage({id: 'rhs-boards.unlink-board', defaultMessage: 'Unlink board'})}
@@ -82,7 +83,7 @@ const RHSChannelBoardItem = (props: Props) => {
                             permissions={[Permission.ManageBoardRoles]}
                             invert={true}
                         >
-                            <Menu.Text
+                            <MenuText
                                 key={`unlinkBoard-${board.id}`}
                                 id='unlinkBoard'
                                 disabled={true}
