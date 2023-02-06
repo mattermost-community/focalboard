@@ -575,6 +575,27 @@ func TestDuplicateBoard(t *testing.T) {
 	})
 }
 
+// func (th *TestHelper) runBaseCase(t *testing.T, testName string, boardID string) {
+// 	t.Run(testName+"-base case", func(t *testing.T) {
+// 		members, err := th.App.GetMembersForBoard(boardID)
+// 		assert.NoError(t, err)
+// 		assert.NotNil(t, members)
+// 		assert.False(t, members[0].SchemeAdmin)
+// 	})
+// }
+
+// func (th *TestHelper) runTeamCheck(t *testing.T, testName string, permissionToTeam bool) {
+// 	const boardID = "board_id_1"
+
+// 	t.Run(testName+"-team check "+strconv.FormatBool(permissionToTeam), func(t *testing.T) {
+// 		members, err := th.App.GetMembersForBoard(boardID)
+// 		assert.NoError(t, err)
+// 		assert.NotNil(t, members)
+
+// 		assert.Equal(t, permissionToTeam, members[0].SchemeAdmin)
+// 	})
+// }
+
 func TestGetMembersForBoard(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
@@ -583,38 +604,29 @@ func TestGetMembersForBoard(t *testing.T) {
 	const userID = "user_id_1"
 	const teamID = "team_id_1"
 
-	t.Run("base case", func(t *testing.T) {
-		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
-			{
-				BoardID:      boardID,
-				UserID:       userID,
-				SchemeEditor: true,
-			},
-		}, nil).Times(1)
-		th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
-
+	th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
+		{
+			BoardID:      boardID,
+			UserID:       userID,
+			SchemeEditor: true,
+		},
+	}, nil).Times(3)
+	th.Store.EXPECT().GetBoard(boardID).Return(nil, nil).Times(1)
+	t.Run("-base case", func(t *testing.T) {
 		members, err := th.App.GetMembersForBoard(boardID)
 		assert.NoError(t, err)
 		assert.NotNil(t, members)
 		assert.False(t, members[0].SchemeAdmin)
 	})
 
-	t.Run("check team permission - false", func(t *testing.T) {
-		board := &model.Board{
-			ID:     boardID,
-			TeamID: teamID,
-		}
+	board := &model.Board{
+		ID:     boardID,
+		TeamID: teamID,
+	}
+	th.Store.EXPECT().GetBoard(boardID).Return(board, nil).Times(2)
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
 
-		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
-			{
-				BoardID:      boardID,
-				UserID:       userID,
-				SchemeEditor: true,
-			},
-		}, nil).Times(1)
-		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
-
+	t.Run("-team check false ", func(t *testing.T) {
 		members, err := th.App.GetMembersForBoard(boardID)
 		assert.NoError(t, err)
 		assert.NotNil(t, members)
@@ -622,22 +634,8 @@ func TestGetMembersForBoard(t *testing.T) {
 		assert.False(t, members[0].SchemeAdmin)
 	})
 
-	t.Run("check team permission - true", func(t *testing.T) {
-		board := &model.Board{
-			ID:     boardID,
-			TeamID: teamID,
-		}
-
-		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
-			{
-				BoardID:      boardID,
-				UserID:       userID,
-				SchemeEditor: true,
-			},
-		}, nil).Times(1)
-		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
-
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+	t.Run("-team check true", func(t *testing.T) {
 		members, err := th.App.GetMembersForBoard(boardID)
 		assert.NoError(t, err)
 		assert.NotNil(t, members)
@@ -654,38 +652,29 @@ func TestGetMembersForUser(t *testing.T) {
 	const userID = "user_id_1"
 	const teamID = "team_id_1"
 
-	t.Run("base case", func(t *testing.T) {
-		th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
-			{
-				BoardID:      boardID,
-				UserID:       userID,
-				SchemeEditor: true,
-			},
-		}, nil).Times(1)
-		th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
-
+	th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
+		{
+			BoardID:      boardID,
+			UserID:       userID,
+			SchemeEditor: true,
+		},
+	}, nil).Times(3)
+	th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
+	t.Run("-base case", func(t *testing.T) {
 		members, err := th.App.GetMembersForUser(userID)
 		assert.NoError(t, err)
 		assert.NotNil(t, members)
 		assert.False(t, members[0].SchemeAdmin)
 	})
 
-	t.Run("check team permission - false", func(t *testing.T) {
-		board := &model.Board{
-			ID:     boardID,
-			TeamID: teamID,
-		}
+	board := &model.Board{
+		ID:     boardID,
+		TeamID: teamID,
+	}
+	th.Store.EXPECT().GetBoard(boardID).Return(board, nil).Times(2)
 
-		th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
-			{
-				BoardID:      boardID,
-				UserID:       userID,
-				SchemeEditor: true,
-			},
-		}, nil).Times(1)
-		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
-
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+	t.Run("-team check false ", func(t *testing.T) {
 		members, err := th.App.GetMembersForUser(userID)
 		assert.NoError(t, err)
 		assert.NotNil(t, members)
@@ -693,22 +682,8 @@ func TestGetMembersForUser(t *testing.T) {
 		assert.False(t, members[0].SchemeAdmin)
 	})
 
-	t.Run("check team permission - true", func(t *testing.T) {
-		board := &model.Board{
-			ID:     boardID,
-			TeamID: teamID,
-		}
-
-		th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
-			{
-				BoardID:      boardID,
-				UserID:       userID,
-				SchemeEditor: true,
-			},
-		}, nil).Times(1)
-		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
-		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
-
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+	t.Run("-team check true", func(t *testing.T) {
 		members, err := th.App.GetMembersForUser(userID)
 		assert.NoError(t, err)
 		assert.NotNil(t, members)
