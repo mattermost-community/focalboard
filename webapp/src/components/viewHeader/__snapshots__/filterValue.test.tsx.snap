@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components/viewHeader/filterValue return date filter value 1`] = `
+<div>
+  <div
+    class="DateFilter empty "
+  >
+    <button
+      class="Button"
+      type="button"
+    >
+      <span>
+        Empty
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
 exports[`components/viewHeader/filterValue return filterValue 1`] = `
 <div>
   <div

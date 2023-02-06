@@ -4,6 +4,8 @@ import React, {useCallback, useEffect, useState} from 'react'
 import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl'
 
+import {DatePropertyType} from '../properties/types'
+
 import {getCurrentBoard, isLoadingBoard, getTemplates} from '../store/boards'
 import {refreshCards, getCardLimitTimestamp, getCurrentBoardHiddenCardsCount, setLimitTimestamp, getCurrentViewCardsSortedFilteredAndGrouped, setCurrent as setCurrentCard} from '../store/cards'
 import {
@@ -23,7 +25,9 @@ import {Utils} from '../utils'
 import {IUser} from '../user'
 import propsRegistry from '../properties'
 
-import {getMe, getMyConfig} from '../store/users'
+import {getMe} from '../store/users'
+
+import {getHiddenBoardIDs} from '../store/sidebar'
 
 import CenterPanel from './centerPanel'
 import BoardTemplateSelector from './boardTemplateSelector/boardTemplateSelector'
@@ -52,12 +56,11 @@ function CenterContent(props: Props) {
     const cardLimitTimestamp = useAppSelector(getCardLimitTimestamp)
     const history = useHistory()
     const dispatch = useAppDispatch()
-    const myConfig = useAppSelector(getMyConfig)
     const me = useAppSelector<IUser|null>(getMe)
+    const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
 
     const isBoardHidden = () => {
-        const hiddenBoardIDs = myConfig.hiddenBoardIDs?.value || {}
-        return hiddenBoardIDs[board.id]
+        return hiddenBoardIDs.includes(board.id)
     }
 
     const showCard = useCallback((cardId?: string) => {
@@ -122,7 +125,7 @@ function CenterContent(props: Props) {
 
         let displayProperty = dateDisplayProperty
         if (!displayProperty && activeView.fields.viewType === 'calendar') {
-            displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type).isDate)
+            displayProperty = board.cardProperties.find((o) => propsRegistry.get(o.type) instanceof DatePropertyType)
         }
 
         return (

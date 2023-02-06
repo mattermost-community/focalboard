@@ -27,10 +27,7 @@ linters:
   enable:
     - gofmt
     - goimports
-    - deadcode
     - ineffassign
-    - structcheck
-    - varcheck
     - unparam
     - errcheck
     - govet

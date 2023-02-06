@@ -5,6 +5,7 @@ package storetests
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -71,6 +72,7 @@ func createTestBlocksForCard(t *testing.T, store store.Store, cardID string, num
 	return blocks
 }
 
+//nolint:unparam
 func createTestCards(t *testing.T, store store.Store, userID string, boardID string, num int) []*model.Block {
 	var blocks []*model.Block
 	for i := 0; i < num; i++ {
@@ -90,12 +92,13 @@ func createTestCards(t *testing.T, store store.Store, userID string, boardID str
 	return blocks
 }
 
-func createTestBoards(t *testing.T, store store.Store, userID string, num int) []*model.Board {
+//nolint:unparam
+func createTestBoards(t *testing.T, store store.Store, teamID string, userID string, num int) []*model.Board {
 	var boards []*model.Board
 	for i := 0; i < num; i++ {
 		board := &model.Board{
 			ID:        utils.NewID(utils.IDTypeBoard),
-			TeamID:    testTeamID,
+			TeamID:    teamID,
 			Type:      "O",
 			CreatedBy: userID,
 			Title:     fmt.Sprintf("board %d", i),
@@ -106,4 +109,51 @@ func createTestBoards(t *testing.T, store store.Store, userID string, num int) [
 		boards = append(boards, boardNew)
 	}
 	return boards
+}
+
+//nolint:unparam
+func deleteTestBoard(t *testing.T, store store.Store, boardID string, userID string) {
+	err := store.DeleteBoard(boardID, userID)
+	require.NoError(t, err)
+}
+
+// extractIDs is a test helper that extracts a sorted slice of IDs from slices of various struct types.
+// Might have used generics here except that would require implementing a `GetID` method on each type.
+func extractIDs(t *testing.T, arr ...any) []string {
+	ids := make([]string, 0)
+
+	for _, item := range arr {
+		if item == nil {
+			continue
+		}
+
+		switch tarr := item.(type) {
+		case []*model.Board:
+			for _, b := range tarr {
+				if b != nil {
+					ids = append(ids, b.ID)
+				}
+			}
+		case []*model.BoardHistory:
+			for _, bh := range tarr {
+				ids = append(ids, bh.ID)
+			}
+		case []*model.Block:
+			for _, b := range tarr {
+				if b != nil {
+					ids = append(ids, b.ID)
+				}
+			}
+		case []*model.BlockHistory:
+			for _, bh := range tarr {
+				ids = append(ids, bh.ID)
+			}
+		default:
+			t.Errorf("unsupported type %T extracting board ID", item)
+		}
+	}
+
+	// sort the ids to make it easier to compare lists of ids visually.
+	sort.Strings(ids)
+	return ids
 }

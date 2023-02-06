@@ -11,15 +11,16 @@ import (
 type IDType byte
 
 const (
-	IDTypeNone    IDType = '7'
-	IDTypeTeam    IDType = 't'
-	IDTypeBoard   IDType = 'b'
-	IDTypeCard    IDType = 'c'
-	IDTypeView    IDType = 'v'
-	IDTypeSession IDType = 's'
-	IDTypeUser    IDType = 'u'
-	IDTypeToken   IDType = 'k'
-	IDTypeBlock   IDType = 'a'
+	IDTypeNone       IDType = '7'
+	IDTypeTeam       IDType = 't'
+	IDTypeBoard      IDType = 'b'
+	IDTypeCard       IDType = 'c'
+	IDTypeView       IDType = 'v'
+	IDTypeSession    IDType = 's'
+	IDTypeUser       IDType = 'u'
+	IDTypeToken      IDType = 'k'
+	IDTypeBlock      IDType = 'a'
+	IDTypeAttachment IDType = 'i'
 )
 
 // NewId is a globally unique identifier.  It is a [A-Z0-9] string 27
@@ -101,4 +102,21 @@ func IsCloudLicense(license *mmModel.License) bool {
 		license.Features != nil &&
 		license.Features.Cloud != nil &&
 		*license.Features.Cloud
+}
+
+func DedupeStringArr(arr []string) []string {
+	hashMap := map[string]bool{}
+
+	for _, item := range arr {
+		hashMap[item] = true
+	}
+
+	dedupedArr := make([]string, len(hashMap))
+	i := 0
+	for key := range hashMap {
+		dedupedArr[i] = key
+		i++
+	}
+
+	return dedupedArr
 }

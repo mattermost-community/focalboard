@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 import {IntlShape} from 'react-intl'
 
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {PropertyType, PropertyTypeEnum, FilterValueType} from '../types'
 
 import CreatedBy from './createdBy'
 
@@ -12,4 +12,7 @@ export default class CreatedByProperty extends PropertyType {
     type = 'createdBy' as PropertyTypeEnum
     isReadOnly = true
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.CreatedBy', defaultMessage: 'Created by'})
+    canFilter = true
+    filterValueType = 'person' as FilterValueType
+    canGroup = true
 }

@@ -2964,7 +2964,7 @@ func TestPermissionsClientConfig(t *testing.T) {
 func TestPermissionsGetCategories(t *testing.T) {
 	ttCases := []TestCase{
 		{"/teams/test-team/categories", methodGet, "", userAnon, http.StatusUnauthorized, 1},
-		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusOK, 1},
+		{"/teams/test-team/categories", methodGet, "", userNoTeamMember, http.StatusForbidden, 1},
 		{"/teams/test-team/categories", methodGet, "", userTeamMember, http.StatusOK, 1},
 		{"/teams/test-team/categories", methodGet, "", userViewer, http.StatusOK, 1},
 		{"/teams/test-team/categories", methodGet, "", userCommenter, http.StatusOK, 1},
@@ -2985,6 +2985,8 @@ func TestPermissionsGetCategories(t *testing.T) {
 		defer th.TearDown()
 		clients := setupLocalClients(th)
 		testData := setupData(t, th)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
@@ -3003,7 +3005,7 @@ func TestPermissionsCreateCategory(t *testing.T) {
 
 		return []TestCase{
 			{"/teams/test-team/categories", methodPost, category(""), userAnon, http.StatusUnauthorized, 0},
-			{"/teams/test-team/categories", methodPost, category(userNoTeamMemberID), userNoTeamMember, http.StatusOK, 1},
+			{"/teams/test-team/categories", methodPost, category(userNoTeamMemberID), userNoTeamMember, http.StatusForbidden, 0},
 			{"/teams/test-team/categories", methodPost, category(userTeamMemberID), userTeamMember, http.StatusOK, 1},
 			{"/teams/test-team/categories", methodPost, category(userViewerID), userViewer, http.StatusOK, 1},
 			{"/teams/test-team/categories", methodPost, category(userCommenterID), userCommenter, http.StatusOK, 1},
@@ -3044,6 +3046,8 @@ func TestPermissionsCreateCategory(t *testing.T) {
 		clients := setupLocalClients(th)
 		testData := setupData(t, th)
 		ttCases := ttCasesF()
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
@@ -3064,7 +3068,7 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 
 		return []TestCase{
 			{"/teams/test-team/categories/any", methodPut, category("", "any"), userAnonID, http.StatusUnauthorized, 0},
-			{"/teams/test-team/categories/" + extraData["noTeamMember"], methodPut, category(userNoTeamMemberID, extraData["noTeamMember"]), userNoTeamMember, http.StatusOK, 1},
+			{"/teams/test-team/categories/" + extraData["noTeamMember"], methodPut, category(userNoTeamMemberID, extraData["noTeamMember"]), userNoTeamMember, http.StatusForbidden, 0},
 			{"/teams/test-team/categories/" + extraData["teamMember"], methodPut, category(userTeamMemberID, extraData["teamMember"]), userTeamMember, http.StatusOK, 1},
 			{"/teams/test-team/categories/" + extraData["viewer"], methodPut, category(userViewerID, extraData["viewer"]), userViewer, http.StatusOK, 1},
 			{"/teams/test-team/categories/" + extraData["commenter"], methodPut, category(userCommenterID, extraData["commenter"]), userCommenter, http.StatusOK, 1},
@@ -3148,6 +3152,8 @@ func TestPermissionsUpdateCategory(t *testing.T) {
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
 		ttCases := ttCasesF(extraData)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 1
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
@@ -3156,7 +3162,7 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 	ttCasesF := func(extraData map[string]string) []TestCase {
 		return []TestCase{
 			{"/teams/other-team/categories/any", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-			{"/teams/other-team/categories/" + extraData["noTeamMember"], methodDelete, "", userNoTeamMember, http.StatusBadRequest, 0},
+			{"/teams/other-team/categories/" + extraData["noTeamMember"], methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
 			{"/teams/other-team/categories/" + extraData["teamMember"], methodDelete, "", userTeamMember, http.StatusBadRequest, 0},
 			{"/teams/other-team/categories/" + extraData["viewer"], methodDelete, "", userViewer, http.StatusBadRequest, 0},
 			{"/teams/other-team/categories/" + extraData["commenter"], methodDelete, "", userCommenter, http.StatusBadRequest, 0},
@@ -3165,7 +3171,7 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 			{"/teams/other-team/categories/" + extraData["guest"], methodDelete, "", userGuest, http.StatusBadRequest, 0},
 
 			{"/teams/test-team/categories/any", methodDelete, "", userAnon, http.StatusUnauthorized, 0},
-			{"/teams/test-team/categories/" + extraData["noTeamMember"], methodDelete, "", userNoTeamMember, http.StatusOK, 1},
+			{"/teams/test-team/categories/" + extraData["noTeamMember"], methodDelete, "", userNoTeamMember, http.StatusForbidden, 0},
 			{"/teams/test-team/categories/" + extraData["teamMember"], methodDelete, "", userTeamMember, http.StatusOK, 1},
 			{"/teams/test-team/categories/" + extraData["viewer"], methodDelete, "", userViewer, http.StatusOK, 1},
 			{"/teams/test-team/categories/" + extraData["commenter"], methodDelete, "", userCommenter, http.StatusOK, 1},
@@ -3231,6 +3237,10 @@ func TestPermissionsDeleteCategory(t *testing.T) {
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
 		ttCases := ttCasesF(extraData)
+		ttCases[1].expectedStatusCode = http.StatusBadRequest
+		ttCases[1].totalResults = 0
+		ttCases[9].expectedStatusCode = http.StatusOK
+		ttCases[9].totalResults = 1
 		runTestCases(t, ttCases, testData, clients)
 	})
 }
@@ -3239,7 +3249,7 @@ func TestPermissionsUpdateCategoryBoard(t *testing.T) {
 	ttCasesF := func(testData TestData, extraData map[string]string) []TestCase {
 		return []TestCase{
 			{"/teams/test-team/categories/any/boards/any", methodPost, "", userAnon, http.StatusUnauthorized, 0},
-			{"/teams/test-team/categories/" + extraData["noTeamMember"] + "/boards/" + testData.publicBoard.ID, methodPost, "", userNoTeamMember, http.StatusOK, 0},
+			{"/teams/test-team/categories/" + extraData["noTeamMember"] + "/boards/" + testData.publicBoard.ID, methodPost, "", userNoTeamMember, http.StatusForbidden, 0},
 			{"/teams/test-team/categories/" + extraData["teamMember"] + "/boards/" + testData.publicBoard.ID, methodPost, "", userTeamMember, http.StatusOK, 0},
 			{"/teams/test-team/categories/" + extraData["viewer"] + "/boards/" + testData.publicBoard.ID, methodPost, "", userViewer, http.StatusOK, 0},
 			{"/teams/test-team/categories/" + extraData["commenter"] + "/boards/" + testData.publicBoard.ID, methodPost, "", userCommenter, http.StatusOK, 0},
@@ -3305,6 +3315,8 @@ func TestPermissionsUpdateCategoryBoard(t *testing.T) {
 		testData := setupData(t, th)
 		extraData := extraSetup(t, th)
 		ttCases := ttCasesF(testData, extraData)
+		ttCases[1].expectedStatusCode = http.StatusOK
+		ttCases[1].totalResults = 0
 		runTestCases(t, ttCases, testData, clients)
 	})
 }

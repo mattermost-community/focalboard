@@ -3,30 +3,11 @@
 .confirmation-dialog-box {
     .dialog {
         @include z-index(confirmation-dialog-box);
-        color: rgb(var(--center-channel-color-rgb));
-        max-width: 512px;
-        width: 100%;
-        position: fixed;
-        top: 30%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: max-content;
-
-        background-color: rgb(var(--center-channel-bg-rgb));
-        box-shadow: rgba(var(--center-channel-color-rgb), 0.1) 0 0 0 1px,
-            rgba(var(--center-channel-color-rgb), 0.1) 0 2px 4px;
-
-        border-radius: var(--modal-rad);
-        padding: 0;
-        -webkit-overflow-scrolling: touch;
-        overflow-x: hidden;
-        overflow-y: auto;
 
         > .toolbar {
             position: absolute;
             top: 0;
             right: 0;
-            padding: 16px;
         }
     }
 }
