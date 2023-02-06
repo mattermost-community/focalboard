@@ -574,3 +574,145 @@ func TestDuplicateBoard(t *testing.T) {
 		assert.NotNil(t, members)
 	})
 }
+
+func TestGetMembersForBoard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	const boardID = "board_id_1"
+	const userID = "user_id_1"
+	const teamID = "team_id_1"
+
+	t.Run("base case", func(t *testing.T) {
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
+			{
+				BoardID:      boardID,
+				UserID:       userID,
+				SchemeEditor: true,
+			},
+		}, nil).Times(1)
+		th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
+
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	t.Run("check team permission - false", func(t *testing.T) {
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: teamID,
+		}
+
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
+			{
+				BoardID:      boardID,
+				UserID:       userID,
+				SchemeEditor: true,
+			},
+		}, nil).Times(1)
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	t.Run("check team permission - true", func(t *testing.T) {
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: teamID,
+		}
+
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
+			{
+				BoardID:      boardID,
+				UserID:       userID,
+				SchemeEditor: true,
+			},
+		}, nil).Times(1)
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.True(t, members[0].SchemeAdmin)
+	})
+}
+
+func TestGetMembersForUser(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	const boardID = "board_id_1"
+	const userID = "user_id_1"
+	const teamID = "team_id_1"
+
+	t.Run("base case", func(t *testing.T) {
+		th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
+			{
+				BoardID:      boardID,
+				UserID:       userID,
+				SchemeEditor: true,
+			},
+		}, nil).Times(1)
+		th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
+
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	t.Run("check team permission - false", func(t *testing.T) {
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: teamID,
+		}
+
+		th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
+			{
+				BoardID:      boardID,
+				UserID:       userID,
+				SchemeEditor: true,
+			},
+		}, nil).Times(1)
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	t.Run("check team permission - true", func(t *testing.T) {
+		board := &model.Board{
+			ID:     boardID,
+			TeamID: teamID,
+		}
+
+		th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
+			{
+				BoardID:      boardID,
+				UserID:       userID,
+				SchemeEditor: true,
+			},
+		}, nil).Times(1)
+		th.Store.EXPECT().GetBoard(boardID).Return(board, nil)
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.True(t, members[0].SchemeAdmin)
+	})
+}

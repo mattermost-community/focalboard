@@ -61,7 +61,7 @@ func (th *TestHelper) checkBoardPermissions(roleName string, member *model.Board
 			if !member.SchemeAdmin {
 				th.api.EXPECT().
 					HasPermissionToTeam(member.UserID, teamID, model.PermissionManageTeam).
-					Return(false).
+					Return(roleName == "elevated-admin").
 					Times(1)
 			}
 
@@ -90,7 +90,7 @@ func (th *TestHelper) checkBoardPermissions(roleName string, member *model.Board
 			if !member.SchemeAdmin {
 				th.api.EXPECT().
 					HasPermissionToTeam(member.UserID, teamID, model.PermissionManageTeam).
-					Return(false).
+					Return(roleName == "elevated-admin").
 					Times(1)
 			}
 
