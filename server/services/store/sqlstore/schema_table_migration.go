@@ -179,7 +179,7 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 	}
 
 	if len(data) == 0 {
-		// if no data then tables does not exist and therefore a schema migration is not needed.
+		// if no data then table does not exist and therefore a schema migration is not needed.
 		return false, nil
 	}
 
