@@ -1066,7 +1066,7 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 }
 
 func testUndeleteBlockChildren(t *testing.T, store store.Store) {
-	boards := createTestBoards(t, store, testUserID, 2)
+	boards := createTestBoards(t, store, testTeamID, testUserID, 2)
 	boardDelete := boards[0]
 	boardKeep := boards[1]
 

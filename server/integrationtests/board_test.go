@@ -13,10 +13,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const (
-	testTeamID = "team-id"
-)
-
 func TestGetBoards(t *testing.T) {
 	t.Run("a non authenticated client should be rejected", func(t *testing.T) {
 		th := SetupTestHelper(t).InitBasic()
