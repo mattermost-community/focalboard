@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
@@ -22,7 +23,7 @@ func (s *SQLStore) EnsureSchemaMigrationFormat() error {
 	}
 
 	if !migrationNeeded {
-		s.logger.Debug("Schema migration table is correct format")
+		s.logger.Info("Schema migration table is correct format")
 		return nil
 	}
 
@@ -177,9 +178,14 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 		data = append(data, row)
 	}
 
+	if len(data) == 0 {
+		// if no data then tables does not exist and therefore a schema migration is not needed.
+		return false, nil
+	}
+
 	for _, row := range data {
 		// look for a column named 'name', if found then no migration is needed
-		if len(row) >= 2 && *row[idx_name] == "name" {
+		if len(row) >= 2 && strings.ToLower(*row[idx_name]) == "name" {
 			return false, nil
 		}
 	}
