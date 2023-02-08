@@ -177,7 +177,7 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 		idxName
 		idxType
 		idxNotnull
-		idxDflt_value
+		idxDfltValue
 		idxPk
 	)
 
@@ -191,7 +191,7 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 			&row[idxName],
 			&row[idxType],
 			&row[idxNotnull],
-			&row[idxDflt_value],
+			&row[idxDfltValue],
 			&row[idxPk],
 		)
 		if err != nil {
