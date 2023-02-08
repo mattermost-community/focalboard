@@ -173,12 +173,12 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 	defer s.CloseRows(rows)
 
 	const (
-		idx_cid = iota
-		idx_name
-		idx_type
-		idx_notnull
-		idx_dflt_value
-		idx_pk
+		idxCid = iota
+		idxName
+		idxType
+		idxNotnull
+		idxDflt_value
+		idxPk
 	)
 
 	data := [][]*string{}
@@ -187,12 +187,12 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 		row := make([]*string, 6)
 
 		err := rows.Scan(
-			&row[idx_cid],
-			&row[idx_name],
-			&row[idx_type],
-			&row[idx_notnull],
-			&row[idx_dflt_value],
-			&row[idx_pk],
+			&row[idxCid],
+			&row[idxName],
+			&row[idxType],
+			&row[idxNotnull],
+			&row[idxDflt_value],
+			&row[idxPk],
 		)
 		if err != nil {
 			s.logger.Error("error scanning rows from SQLite schema_migrations table definition", mlog.Err(err))
@@ -209,7 +209,7 @@ func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
 
 	for _, row := range data {
 		// look for a column named 'name', if found then no migration is needed
-		if len(row) >= 2 && strings.ToLower(*row[idx_name]) == "name" {
+		if len(row) >= 2 && strings.ToLower(*row[idxName]) == "name" {
 			return false, nil
 		}
 	}
