@@ -117,22 +117,46 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	}
 
 	query := s.getQueryBuilder(s.db).
-		Select("count(*)").
+		Select("COLUMN_NAME").
 		From("information_schema.COLUMNS").
 		Where(sq.Eq{
-			"TABLE_NAME":  s.tablePrefix + "schema_migrations",
-			"COLUMN_NAME": "name",
+			"TABLE_NAME": s.tablePrefix + "schema_migrations",
 		})
 
-	row := query.QueryRow()
-
-	var count int
-	if err := row.Scan(&count); err != nil {
-		s.logger.Error("failed to check for columns of schema_migrations table", mlog.Err(err))
+	rows, err := query.Query()
+	if err != nil {
+		s.logger.Error("failed to fetch columns in schema_migrations table", mlog.Err(err))
 		return false, err
 	}
 
-	return count == 0, nil
+	defer s.CloseRows(rows)
+
+	data := []string{}
+	for rows.Next() {
+		var columnName string
+
+		err := rows.Scan(&columnName)
+		if err != nil {
+			s.logger.Error("error scanning rows from schema_migrations table definition", mlog.Err(err))
+			return false, err
+		}
+
+		data = append(data, columnName)
+	}
+
+	if len(data) == 0 {
+		// if no data then table does not exist and therefore a schema migration is not needed.
+		return false, nil
+	}
+
+	for _, columnName := range data {
+		// look for a column named 'name', if found then no migration is needed
+		if strings.ToLower(columnName) == "name" {
+			return false, nil
+		}
+	}
+
+	return true, nil
 }
 
 func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
