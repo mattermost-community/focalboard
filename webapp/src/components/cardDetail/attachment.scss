@@ -1,5 +1,6 @@
 .Attachment {
     display: block;
+    width: 100%;
 
     .attachment-header {
         display: flex;
@@ -13,7 +14,6 @@
         padding-bottom: 20px;
         display: flex;
         overflow-x: auto;
-        width: 550px;
     }
 
     .attachment-plus-icon {
