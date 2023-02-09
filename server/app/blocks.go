@@ -311,15 +311,17 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 	for i := range copiedBlocks {
 		block := copiedBlocks[i]
 		fileName := ""
+		isOk := false
+
 		switch block.Type {
 		case model.TypeImage:
-			fileName, _ = block.Fields["fileId"].(string)
-			if fileName == "" {
+			fileName, isOk = block.Fields["fileId"].(string)
+			if !isOk || fileName == "" {
 				continue
 			}
 		case model.TypeAttachment:
-			fileName, _ = block.Fields["attachmentId"].(string)
-			if fileName == "" {
+			fileName, isOk = block.Fields["attachmentId"].(string)
+			if !isOk || fileName == "" {
 				continue
 			}
 		default:
@@ -360,13 +362,16 @@ func (a *App) CopyCardFiles(sourceBoardID string, copiedBlocks []*model.Block) e
 			block.Fields["attachmentId"] = destFilename
 			parts := strings.Split(fileName, ".")
 			fileInfoID := parts[0][1:]
-			fileInfo, _ := a.store.GetFileInfo(fileInfoID)
+			fileInfo, err := a.store.GetFileInfo(fileInfoID)
+			if err != nil {
+				return fmt.Errorf("CopyCardFiles: cannot retrieve original fileinfo: %w", err)
+			}
 			newParts := strings.Split(destFilename, ".")
 			newFileID := newParts[0][1:]
 			fileInfo.Id = newFileID
-			err := a.store.SaveFileInfo(fileInfo)
+			err = a.store.SaveFileInfo(fileInfo)
 			if err != nil {
-				return fmt.Errorf("cannot create file info for CopyCardFiles: %w", err)
+				return fmt.Errorf("CopyCardFiles: cannot create fileinfo: %w", err)
 			}
 		} else {
 			block.Fields["fileId"] = destFilename
