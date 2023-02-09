@@ -454,9 +454,9 @@ func (s *SQLStore) getBestTeamForBoard(tx sq.BaseRunner, board *model.Board) (st
 		return "", err
 	}
 
-	teams := [][]interface{}{}
+	teams := [][]any{}
 	for _, userTeam := range userTeams {
-		userTeamInterfaces := make([]interface{}, len(userTeam))
+		userTeamInterfaces := make([]any, len(userTeam))
 		for i := range userTeam {
 			userTeamInterfaces[i] = userTeam[i]
 		}

@@ -55,7 +55,7 @@ func (pla *pluginLogAdapter) Shutdown() error {
 func (pla *pluginLogAdapter) Write(p []byte, rec *mlog.LogRec) (int, error) {
 	fields := rec.Fields()
 
-	args := make([]interface{}, 0, len(fields)*2)
+	args := make([]any, 0, len(fields)*2)
 	buf := &bytes.Buffer{}
 	var err error
 	for _, fld := range fields {

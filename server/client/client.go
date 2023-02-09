@@ -62,7 +62,7 @@ func closeBody(r *http.Response) {
 	}
 }
 
-func toJSON(v interface{}) string {
+func toJSON(v any) string {
 	b, _ := json.Marshal(v)
 	return string(b)
 }

@@ -160,8 +160,8 @@ func TestGenerateBlockIDs(t *testing.T) {
 			ID:       blockID2,
 			BoardID:  boardID2,
 			ParentID: parentID2,
-			Fields: map[string]interface{}{
-				"contentOrder": []interface{}{
+			Fields: map[string]any{
+				"contentOrder": []any{
 					blockID1,
 				},
 			},
@@ -181,7 +181,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 
 		// since block 1 was referenced in block 2,
 		// the ID should have been changed in content order
-		block2ContentOrder, ok := block2.Fields["contentOrder"].([]interface{})
+		block2ContentOrder, ok := block2.Fields["contentOrder"].([]any)
 		require.True(t, ok)
 		require.NotEqual(t, blockID1, block2ContentOrder[0].(string))
 		require.Equal(t, blocks[0].ID, block2ContentOrder[0].(string))
@@ -219,10 +219,10 @@ func TestGenerateBlockIDs(t *testing.T) {
 			ID:       blockID4,
 			BoardID:  boardID2,
 			ParentID: parentID2,
-			Fields: map[string]interface{}{
-				"contentOrder": []interface{}{
+			Fields: map[string]any{
+				"contentOrder": []any{
 					blockID1,
-					[]interface{}{
+					[]any{
 						blockID2,
 						blockID3,
 					},
@@ -244,14 +244,14 @@ func TestGenerateBlockIDs(t *testing.T) {
 
 		// since block 1 was referenced in block 2,
 		// the ID should have been changed in content order
-		block4ContentOrder, ok := block4.Fields["contentOrder"].([]interface{})
+		block4ContentOrder, ok := block4.Fields["contentOrder"].([]any)
 		require.True(t, ok)
 		require.NotEqual(t, blockID1, block4ContentOrder[0].(string))
-		require.NotEqual(t, blockID2, block4ContentOrder[1].([]interface{})[0])
-		require.NotEqual(t, blockID3, block4ContentOrder[1].([]interface{})[1])
+		require.NotEqual(t, blockID2, block4ContentOrder[1].([]any)[0])
+		require.NotEqual(t, blockID3, block4ContentOrder[1].([]any)[1])
 		require.Equal(t, blocks[0].ID, block4ContentOrder[0].(string))
-		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]interface{})[0])
-		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]interface{})[1])
+		require.Equal(t, blocks[1].ID, block4ContentOrder[1].([]any)[0])
+		require.Equal(t, blocks[2].ID, block4ContentOrder[1].([]any)[1])
 	})
 
 	t.Run("Should update Id of default template view", func(t *testing.T) {
@@ -271,7 +271,7 @@ func TestGenerateBlockIDs(t *testing.T) {
 			ID:       blockID2,
 			BoardID:  boardID2,
 			ParentID: parentID2,
-			Fields: map[string]interface{}{
+			Fields: map[string]any{
 				"defaultTemplateId": blockID1,
 			},
 		}

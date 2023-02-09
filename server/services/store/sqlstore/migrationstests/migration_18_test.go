@@ -91,7 +91,7 @@ func Test18AddTeamsAndBoardsSQLMigration(t *testing.T) {
 		eErr := th.f.DB().Get(&view, "SELECT title, type, parent_id, board_id, fields FROM focalboard_blocks WHERE id = 'view-id'")
 		require.NoError(t, eErr)
 		require.Contains(t, view.Fields, "columnCalculations")
-		var fields map[string]interface{}
+		var fields map[string]any
 
 		// Make sure a valid JSON object
 		json.Unmarshal([]byte(view.Fields), &fields)

@@ -205,7 +205,7 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		if fileID, ok := block.Fields["fileId"]; ok {
 			blockIDs = append(blockIDs, block.ID)
 			blockPatches = append(blockPatches, model.BlockPatch{
-				UpdatedFields: map[string]interface{}{
+				UpdatedFields: map[string]any{
 					"fileId": fileID,
 				},
 			})

@@ -131,7 +131,7 @@ func testInsertBlock(t *testing.T, store store.Store) {
 			ID:         "id-test",
 			BoardID:    "id-test",
 			ModifiedBy: userID,
-			Fields:     map[string]interface{}{"no-serialiable-value": t.Run},
+			Fields:     map[string]any{"no-serialiable-value": t.Run},
 		}
 
 		err := store.InsertBlock(block, "user-id-1")
@@ -259,7 +259,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 		BoardID:    boardID,
 		Title:      "oldTitle",
 		ModifiedBy: userID,
-		Fields:     map[string]interface{}{"test": "test value", "test2": "test value 2"},
+		Fields:     map[string]any{"test": "test value", "test2": "test value 2"},
 	}
 
 	err := store.InsertBlock(block, "user-id-1")
@@ -282,7 +282,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 
 	t.Run("invalid fields data", func(t *testing.T) {
 		blockPatch := &model.BlockPatch{
-			UpdatedFields: map[string]interface{}{"no-serialiable-value": t.Run},
+			UpdatedFields: map[string]any{"no-serialiable-value": t.Run},
 		}
 
 		err := store.PatchBlock("id-test", blockPatch, "user-id-1")
@@ -316,7 +316,7 @@ func testPatchBlock(t *testing.T, store store.Store) {
 
 	t.Run("update block custom fields", func(t *testing.T) {
 		blockPatch := &model.BlockPatch{
-			UpdatedFields: map[string]interface{}{"test": "new test value", "test3": "new value"},
+			UpdatedFields: map[string]any{"test": "new test value", "test3": "new value"},
 		}
 
 		// Wait for not colliding the ID+insert_at key

@@ -177,7 +177,7 @@ func TestPatchBlock(t *testing.T) {
 		UpdateAt: 1,
 		Type:     model.TypeCard,
 		Title:    "New title",
-		Fields:   map[string]interface{}{"test": "test value", "test2": "test value 2"},
+		Fields:   map[string]any{"test": "test value", "test2": "test value 2"},
 	}
 
 	newBlocks, resp := th.Client.InsertBlocks(board.ID, []*model.Block{block}, false)
@@ -210,7 +210,7 @@ func TestPatchBlock(t *testing.T) {
 
 	t.Run("Patch a block custom fields", func(t *testing.T) {
 		blockPatch := &model.BlockPatch{
-			UpdatedFields: map[string]interface{}{
+			UpdatedFields: map[string]any{
 				"test":  "new test value",
 				"test3": "new field",
 			},

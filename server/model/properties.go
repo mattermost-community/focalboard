@@ -60,7 +60,7 @@ type PropDef struct {
 
 // GetValue resolves the value of a property if the passed value is an ID for an option,
 // otherwise returns the original value.
-func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, error) {
+func (pd PropDef) GetValue(v any, resolver PropValueResolver) (string, error) {
 	switch pd.Type {
 	case "select":
 		// v is the id of an option
@@ -128,7 +128,7 @@ func (pd PropDef) GetValue(v interface{}, resolver PropValueResolver) (string, e
 
 	case "multiSelect":
 		// v is a slice of strings containing option ids
-		ms, ok := v.([]interface{})
+		ms, ok := v.([]any)
 		if !ok {
 			return "", ErrInvalidPropertyValueType
 		}
@@ -188,12 +188,12 @@ func ParsePropertySchema(board *Board) (PropSchema, error) {
 		}
 		optsIface, ok := prop["options"]
 		if ok {
-			opts, ok := optsIface.([]interface{})
+			opts, ok := optsIface.([]any)
 			if !ok {
 				return nil, ErrInvalidPropSchema
 			}
 			for j, propOptIface := range opts {
-				propOpt, ok := propOptIface.(map[string]interface{})
+				propOpt, ok := propOptIface.(map[string]any)
 				if !ok {
 					return nil, ErrInvalidPropSchema
 				}
@@ -211,7 +211,7 @@ func ParsePropertySchema(board *Board) (PropSchema, error) {
 	return schema, nil
 }
 
-func getMapString(key string, m map[string]interface{}) string {
+func getMapString(key string, m map[string]any) string {
 	iface, ok := m[key]
 	if !ok {
 		return ""
@@ -239,7 +239,7 @@ func ParseProperties(block *Block, schema PropSchema, resolver PropValueResolver
 		return props, nil // this is expected for blocks that don't have any properties.
 	}
 
-	blockProps, ok := propsIface.(map[string]interface{})
+	blockProps, ok := propsIface.(map[string]any)
 	if !ok {
 		return props, fmt.Errorf("`properties` field wrong type: %w", ErrInvalidProperty)
 	}

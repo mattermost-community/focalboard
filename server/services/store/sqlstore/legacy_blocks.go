@@ -195,7 +195,7 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 			"delete_at",
 		)
 
-	insertQueryValues := map[string]interface{}{
+	insertQueryValues := map[string]any{
 		"workspace_id":          workspaceID,
 		"id":                    block.ID,
 		"parent_id":             block.ParentID,
@@ -254,6 +254,6 @@ func (s *SQLStore) insertLegacyBlock(db sq.BaseRunner, workspaceID string, block
 	return nil
 }
 
-func (s *SQLStore) getLegacyBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
+func (s *SQLStore) getLegacyBoardsByCondition(db sq.BaseRunner, conditions ...any) ([]*model.Board, error) {
 	return s.getBoardsFieldsByCondition(db, legacyBoardFields(""), conditions...)
 }

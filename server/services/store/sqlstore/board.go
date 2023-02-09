@@ -190,7 +190,7 @@ func (s *SQLStore) boardMemberHistoryEntriesFromRows(rows *sql.Rows) ([]*model.B
 	return boardMemberHistoryEntries, nil
 }
 
-func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...interface{}) (*model.Board, error) {
+func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...any) (*model.Board, error) {
 	boards, err := s.getBoardsByCondition(db, conditions...)
 	if err != nil {
 		return nil, err
@@ -199,11 +199,11 @@ func (s *SQLStore) getBoardByCondition(db sq.BaseRunner, conditions ...interface
 	return boards[0], nil
 }
 
-func (s *SQLStore) getBoardsByCondition(db sq.BaseRunner, conditions ...interface{}) ([]*model.Board, error) {
+func (s *SQLStore) getBoardsByCondition(db sq.BaseRunner, conditions ...any) ([]*model.Board, error) {
 	return s.getBoardsFieldsByCondition(db, boardFields(""), conditions...)
 }
 
-func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string, conditions ...interface{}) ([]*model.Board, error) {
+func (s *SQLStore) getBoardsFieldsByCondition(db sq.BaseRunner, fields []string, conditions ...any) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(fields...).
 		From(s.tablePrefix + "boards")
@@ -336,7 +336,7 @@ func (s *SQLStore) insertBoard(db sq.BaseRunner, board *model.Board, userID stri
 	board.ModifiedBy = userID
 	board.UpdateAt = now
 
-	insertQueryValues := map[string]interface{}{
+	insertQueryValues := map[string]any{
 		"id":               board.ID,
 		"team_id":          board.TeamID,
 		"channel_id":       board.ChannelID,
@@ -432,7 +432,7 @@ func (s *SQLStore) deleteBoardAndChildren(db sq.BaseRunner, boardID, userID stri
 		return err
 	}
 
-	insertQueryValues := map[string]interface{}{
+	insertQueryValues := map[string]any{
 		"id":               board.ID,
 		"team_id":          board.TeamID,
 		"channel_id":       board.ChannelID,
@@ -500,7 +500,7 @@ func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, us
 }
 
 func (s *SQLStore) saveMember(db sq.BaseRunner, bm *model.BoardMember) (*model.BoardMember, error) {
-	queryValues := map[string]interface{}{
+	queryValues := map[string]any{
 		"board_id":         bm.BoardID,
 		"user_id":          bm.UserID,
 		"roles":            "",
@@ -835,7 +835,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		"delete_at",
 	}
 
-	values := []interface{}{
+	values := []any{
 		board.ID,
 		board.TeamID,
 		"",

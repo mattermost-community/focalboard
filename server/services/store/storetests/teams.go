@@ -100,7 +100,7 @@ func testUpsertTeamSettings(t *testing.T, store store.Store) {
 		teamID := "0"
 		team := &model.Team{
 			ID: teamID,
-			Settings: map[string]interface{}{
+			Settings: map[string]any{
 				"field1": "A",
 			},
 		}
@@ -115,7 +115,7 @@ func testUpsertTeamSettings(t *testing.T, store store.Store) {
 		require.Equal(t, team.Settings, got.Settings)
 
 		// update settings
-		team.Settings = map[string]interface{}{
+		team.Settings = map[string]any{
 			"field1": "B",
 		}
 		err = store.UpsertTeamSettings(*team)

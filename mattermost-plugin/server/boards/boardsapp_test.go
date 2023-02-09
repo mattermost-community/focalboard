@@ -76,8 +76,8 @@ func TestSetConfiguration(t *testing.T) {
 
 	t.Run("test enable shared boards", func(t *testing.T) {
 		mmConfig := baseConfig
-		mmConfig.PluginSettings.Plugins = make(map[string]map[string]interface{})
-		mmConfig.PluginSettings.Plugins[PluginName] = make(map[string]interface{})
+		mmConfig.PluginSettings.Plugins = make(map[string]map[string]any)
+		mmConfig.PluginSettings.Plugins[PluginName] = make(map[string]any)
 		mmConfig.PluginSettings.Plugins[PluginName][SharedBoardsName] = true
 		config := createBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, true, config.EnablePublicSharedBoards)

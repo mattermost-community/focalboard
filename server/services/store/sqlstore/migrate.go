@@ -146,7 +146,7 @@ func (s *SQLStore) Migrate() error {
 		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"prefix":     s.tablePrefix,
 		"postgres":   s.dbType == model.PostgresDBType,
 		"sqlite":     s.dbType == model.SqliteDBType,

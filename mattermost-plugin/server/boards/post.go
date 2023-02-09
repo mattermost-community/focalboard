@@ -73,7 +73,7 @@ func postWithBoardsEmbed(post *mm_model.Post) *mm_model.Post {
 func getFirstLinkAndShortenAllBoardsLink(postMessage string) (firstLink, newPostMessage string) {
 	newPostMessage = postMessage
 	seenLinks := make(map[string]bool)
-	markdown.Inspect(postMessage, func(blockOrInline interface{}) bool {
+	markdown.Inspect(postMessage, func(blockOrInline any) bool {
 		if autoLink, ok := blockOrInline.(*markdown.Autolink); ok {
 			link := autoLink.Destination()
 

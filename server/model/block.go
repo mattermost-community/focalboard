@@ -41,7 +41,7 @@ type Block struct {
 
 	// The block fields
 	// required: false
-	Fields map[string]interface{} `json:"fields"`
+	Fields map[string]any `json:"fields"`
 
 	// The creation time in miliseconds since the current epoch
 	// required: true
@@ -89,7 +89,7 @@ type BlockPatch struct {
 
 	// The block updated fields
 	// required: false
-	UpdatedFields map[string]interface{} `json:"updatedFields"`
+	UpdatedFields map[string]any `json:"updatedFields"`
 
 	// The block removed fields
 	// required: false
@@ -110,13 +110,13 @@ type BlockPatchBatch struct {
 // A cache of arbitrary data will be passed for each call and any changes
 // to the cache will be preserved for the next call.
 // Return true to import the block or false to skip import.
-type BoardModifier func(board *Board, cache map[string]interface{}) bool
+type BoardModifier func(board *Board, cache map[string]any) bool
 
 // BlockModifier is a callback that can modify each block during an import.
 // A cache of arbitrary data will be passed for each call and any changes
 // to the cache will be preserved for the next call.
 // Return true to import the block or false to skip import.
-type BlockModifier func(block *Block, cache map[string]interface{}) bool
+type BlockModifier func(block *Block, cache map[string]any) bool
 
 func BlocksFromJSON(data io.Reader) []*Block {
 	var blocks []*Block
@@ -125,7 +125,7 @@ func BlocksFromJSON(data io.Reader) []*Block {
 }
 
 // LogClone implements the `mlog.LogCloner` interface to provide a subset of Block fields for logging.
-func (b *Block) LogClone() interface{} {
+func (b *Block) LogClone() any {
 	return struct {
 		ID       string
 		ParentID string
@@ -246,7 +246,7 @@ func (b *Block) GetLimited() *Block {
 	}
 
 	if iconField, ok := b.Fields["icon"]; ok {
-		newBlock.Fields = map[string]interface{}{
+		newBlock.Fields = map[string]any{
 			"icon": iconField,
 		}
 	}

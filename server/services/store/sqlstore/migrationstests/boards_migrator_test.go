@@ -122,7 +122,7 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 		assetNamesForDriver[i] = dirEntry.Name()
 	}
 
-	params := map[string]interface{}{
+	params := map[string]any{
 		"prefix":     tablePrefix,
 		"postgres":   bm.driverName == model.PostgresDBType,
 		"sqlite":     bm.driverName == model.SqliteDBType,

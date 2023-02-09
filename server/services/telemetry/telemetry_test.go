@@ -24,7 +24,7 @@ func mockServer() (chan []byte, *httptest.Server) {
 			panic(err)
 		}
 
-		var v interface{}
+		var v any
 		err := json.Unmarshal(buf.Bytes(), &v)
 		if err != nil {
 			panic(err)
@@ -62,7 +62,7 @@ func TestTelemetry(t *testing.T) {
 	t.Run("Register tracker and run telemetry job", func(t *testing.T) {
 		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(false, mlog.LvlDebug))
 		service.RegisterTracker("mockTracker", func() (Tracker, error) {
-			return map[string]interface{}{
+			return map[string]any{
 				"mockTrackerKey": "mockTrackerValue",
 			}, nil
 		})
@@ -74,7 +74,7 @@ func TestTelemetry(t *testing.T) {
 	t.Run("do telemetry if needed", func(t *testing.T) {
 		service := New("mockTelemetryID", mlog.CreateConsoleTestLogger(false, mlog.LvlDebug))
 		service.RegisterTracker("mockTracker", func() (Tracker, error) {
-			return map[string]interface{}{
+			return map[string]any{
 				"mockTrackerKey": "mockTrackerValue",
 			}, nil
 		})

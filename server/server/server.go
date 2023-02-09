@@ -434,7 +434,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 	telemetryService := telemetry.New(opts.telemetryID, opts.logger)
 
 	telemetryService.RegisterTracker("server", func() (telemetry.Tracker, error) {
-		return map[string]interface{}{
+		return map[string]any{
 			"version":          appModel.CurrentVersion,
 			"build_number":     appModel.BuildNumber,
 			"build_hash":       appModel.BuildHash,
@@ -444,7 +444,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		}, nil
 	})
 	telemetryService.RegisterTracker("config", func() (telemetry.Tracker, error) {
-		return map[string]interface{}{
+		return map[string]any{
 			"serverRoot":                 opts.cfg.ServerRoot == config.DefaultServerRoot,
 			"port":                       opts.cfg.Port == config.DefaultPort,
 			"useSSL":                     opts.cfg.UseSSL,
@@ -454,7 +454,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		}, nil
 	})
 	telemetryService.RegisterTracker("activity", func() (telemetry.Tracker, error) {
-		m := make(map[string]interface{})
+		m := make(map[string]any)
 		var count int
 		var err error
 		if count, err = opts.app.GetRegisteredUserCount(); err != nil {
@@ -483,7 +483,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		if err != nil {
 			return nil, err
 		}
-		m := make(map[string]interface{})
+		m := make(map[string]any)
 		for k, v := range blockCounts {
 			m[k] = v
 		}
@@ -494,7 +494,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		if err != nil {
 			return nil, err
 		}
-		m := map[string]interface{}{
+		m := map[string]any{
 			"boards": boardCount,
 		}
 		return m, nil
@@ -504,7 +504,7 @@ func initTelemetry(opts telemetryOptions) *telemetry.Service {
 		if err != nil {
 			return nil, err
 		}
-		m := map[string]interface{}{
+		m := map[string]any{
 			"teams": count,
 		}
 		return m, nil

@@ -64,7 +64,7 @@ type ServicesAPI interface {
 	GetFileInfo(fileID string) (*mm_model.FileInfo, error)
 
 	// Cluster service
-	PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast)
+	PublishWebSocketEvent(event string, payload map[string]any, broadcast *mm_model.WebsocketBroadcast)
 	PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error
 
 	// Cloud service
