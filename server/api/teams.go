@@ -274,6 +274,11 @@ func (a *API) handleGetTeamUsersByID(w http.ResponseWriter, r *http.Request) {
 	//   description: Team ID
 	//   required: true
 	//   type: string
+	// - name: Body
+	//   in: body
+	//   description: []UserIDs to return
+	//   required: true
+	//   type: []string
 	// security:
 	// - BearerAuth: []
 	// responses:
@@ -300,8 +305,8 @@ func (a *API) handleGetTeamUsersByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditRec := a.makeAuditRecord(r, "getUsersListByID", audit.Fail)
-	defer a.audit.LogRecord(audit.LevelAuth, auditRec)
+	auditRec := a.makeAuditRecord(r, "getTeamUsersByID", audit.Fail)
+	defer a.audit.LogRecord(audit.LevelRead, auditRec)
 
 	vars := mux.Vars(r)
 	teamID := vars["teamID"]

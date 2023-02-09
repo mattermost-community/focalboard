@@ -499,13 +499,13 @@ func (a *App) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
 		return nil, err
 	}
 
-	for i, m := range members {
-		if !m.SchemeAdmin {
-			board, err := a.store.GetBoard(m.BoardID)
-			if err != nil && !model.IsErrNotFound(err) {
-				return nil, err
-			}
-			if board != nil {
+	board, err := a.store.GetBoard(boardID)
+	if err != nil && !model.IsErrNotFound(err) {
+		return nil, err
+	}
+	if board != nil {
+		for i, m := range members {
+			if !m.SchemeAdmin {
 				if a.permissions.HasPermissionToTeam(m.UserID, board.TeamID, model.PermissionManageTeam) {
 					members[i].SchemeAdmin = true
 				}

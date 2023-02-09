@@ -575,27 +575,6 @@ func TestDuplicateBoard(t *testing.T) {
 	})
 }
 
-// func (th *TestHelper) runBaseCase(t *testing.T, testName string, boardID string) {
-// 	t.Run(testName+"-base case", func(t *testing.T) {
-// 		members, err := th.App.GetMembersForBoard(boardID)
-// 		assert.NoError(t, err)
-// 		assert.NotNil(t, members)
-// 		assert.False(t, members[0].SchemeAdmin)
-// 	})
-// }
-
-// func (th *TestHelper) runTeamCheck(t *testing.T, testName string, permissionToTeam bool) {
-// 	const boardID = "board_id_1"
-
-// 	t.Run(testName+"-team check "+strconv.FormatBool(permissionToTeam), func(t *testing.T) {
-// 		members, err := th.App.GetMembersForBoard(boardID)
-// 		assert.NoError(t, err)
-// 		assert.NotNil(t, members)
-
-// 		assert.Equal(t, permissionToTeam, members[0].SchemeAdmin)
-// 	})
-// }
-
 func TestGetMembersForBoard(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()

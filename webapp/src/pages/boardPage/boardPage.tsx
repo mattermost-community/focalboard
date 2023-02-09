@@ -190,7 +190,7 @@ const BoardPage = (props: Props): JSX.Element => {
     const joinBoard = async (myUser: IUser, boardTeamId: string, boardId: string, allowAdmin: boolean) => {
         const member = await octoClient.joinBoard(boardId, allowAdmin)
         if (!member) {
-            if (myUser.permissions) {
+            if (myUser.permissions?.find((s) => s === 'manage_system' || s === 'manage_team')) {
                 setShowJoinBoardDialog(true)
                 return
             }
@@ -199,7 +199,11 @@ const BoardPage = (props: Props): JSX.Element => {
             dispatch(setGlobalError('board-not-found'))
             return
         }
-        await dispatch(loadBoardData(boardId))
+        const result: any = await dispatch(loadBoardData(boardId))
+        if (result.payload.blocks.length > 0 && myUser.id) {
+            // set board as most recently viewed board
+            UserSettings.setLastBoardID(boardTeamId, boardId)
+        }
     }
 
     const loadOrJoinBoard = useCallback(async (myUser: IUser, boardTeamId: string, boardId: string) => {
@@ -207,6 +211,9 @@ const BoardPage = (props: Props): JSX.Element => {
         const result: any = await dispatch(loadBoardData(boardId))
         if (result.payload.blocks.length === 0 && myUser.id) {
             joinBoard(myUser, boardTeamId, boardId, false)
+        } else {
+            // set board as most recently viewed board
+            UserSettings.setLastBoardID(boardTeamId, boardId)
         }
 
         dispatch(fetchBoardMembers({
@@ -221,9 +228,6 @@ const BoardPage = (props: Props): JSX.Element => {
         if (match.params.boardId) {
             // set the active board
             dispatch(setCurrentBoard(match.params.boardId))
-
-            // and set it as most recently viewed board
-            UserSettings.setLastBoardID(teamId, match.params.boardId)
 
             if (viewId !== Constants.globalTeamId) {
                 // reset current, even if empty string
@@ -272,7 +276,10 @@ const BoardPage = (props: Props): JSX.Element => {
                 <ConfirmationDialog
                     dialogBox={{
                         heading: intl.formatMessage({id: 'boardPage.confirm-join-title', defaultMessage: 'Join private board'}),
-                        subText: intl.formatMessage({id: 'boardPage.confirm-join-text', defaultMessage: 'You are about to join ~private board~ without explicitly being added by the board admin. Are you sure you wish to join this private board?'}),
+                        subText: intl.formatMessage({
+                            id: 'boardPage.confirm-join-text',
+                            defaultMessage: 'You are about to join a private board without explicitly being added by the board admin. Are you sure you wish to join this private board?',
+                        }),
                         confirmButtonText: intl.formatMessage({id: 'boardPage.confirm-join-button', defaultMessage: 'Join'}),
                         destructive: true, //board.channelId !== '',
 
