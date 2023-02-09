@@ -149,10 +149,10 @@ func (dg *diffGenerator) generateDiffsForCard(card *model.Block, schema model.Pr
 	}
 
 	// fetch all card content blocks that were updated after last notify
-	opts := model.QuerySubtreeOptions{
+	opts := model.QueryBlockHistoryChildOptions{
 		AfterUpdateAt: dg.lastNotifyAt,
 	}
-	blocks, err := dg.store.GetSubTree2(card.BoardID, card.ID, opts)
+	blocks, _, err := dg.store.GetBlockHistoryNewestChildren(card.ID, opts)
 	if err != nil {
 		return nil, fmt.Errorf("could not get subtree for card %s: %w", card.ID, err)
 	}
