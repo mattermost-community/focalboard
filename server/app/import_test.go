@@ -47,9 +47,8 @@ func TestApp_ImportArchive(t *testing.T) {
 
 		th.Store.EXPECT().CreateBoardsAndBlocks(gomock.AssignableToTypeOf(&model.BoardsAndBlocks{}), "user").Return(babs, nil)
 		th.Store.EXPECT().GetMembersForBoard(board.ID).AnyTimes().Return([]*model.BoardMember{boardMember}, nil)
-		// th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
-		// th.Store.EXPECT().GetMemberForBoard(board.ID, "user").Return(boardMember, nil)
-		// th.Store.EXPECT().GetUserCategoryBoards("user", "test-team").Return([]model.CategoryBoards{}, nil)
+		th.Store.EXPECT().GetBoard(board.ID).Return(board, nil)
+		th.Store.EXPECT().GetMemberForBoard(board.ID, "user").Return(boardMember, nil)
 		th.Store.EXPECT().GetUserCategoryBoards("user", "test-team").Return([]model.CategoryBoards{
 			{
 				Category: model.Category{
