@@ -146,7 +146,12 @@ func (a *API) handleAddMember(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if reqBoardMember.UserID == "" {
-		a.errorResponse(w, r, model.NewErrBadRequest(err.Error()))
+		a.errorResponse(w, r, model.NewErrBadRequest("empty userID"))
+		return
+	}
+
+	if !a.permissions.HasPermissionToTeam(reqBoardMember.UserID, board.TeamID, model.PermissionViewTeam) {
+		a.errorResponse(w, r, model.NewErrPermission("access denied to team"))
 		return
 	}
 

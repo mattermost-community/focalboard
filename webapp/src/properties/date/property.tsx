@@ -8,21 +8,18 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {PropertyTypeEnum, DatePropertyType} from '../types'
 
 import DateComponent, {createDatePropertyFromString} from './date'
-
-const oneDay = 60 * 60 * 24 * 1000
 
 const timeZoneOffset = (date: number): number => {
     return new Date(date).getTimezoneOffset() * 60 * 1000
 }
 
-export default class DateProperty extends PropertyType {
+export default class DateProperty extends DatePropertyType {
     Editor = DateComponent
     name = 'Date'
     type = 'date' as PropertyTypeEnum
-    isDate = true
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.Date', defaultMessage: 'Date'})
     calculationOptions = [Options.none, Options.count, Options.countEmpty,
         Options.countNotEmpty, Options.percentEmpty, Options.percentNotEmpty,
@@ -51,10 +48,10 @@ export default class DateProperty extends PropertyType {
         return displayValue
     }
 
-    getDateFrom = (value: string | string[] | undefined, card: Card) => {
+    getDateFrom = (value: string | string[] | undefined) => {
         const dateProperty = createDatePropertyFromString(value as string)
         if (!dateProperty.from) {
-            return new Date(card.createAt || 0)
+            return undefined
         }
 
         // date properties are stored as 12 pm UTC, convert to 12 am (00) UTC for calendar
@@ -63,16 +60,13 @@ export default class DateProperty extends PropertyType {
         return dateFrom
     }
 
-    getDateTo = (value: string | string[] | undefined, card: Card) => {
+    getDateTo = (value: string | string[] | undefined) => {
         const dateProperty = createDatePropertyFromString(value as string)
-        if (!dateProperty.from) {
-            return new Date(card.createAt || 0)
+        if (!dateProperty.to) {
+            return undefined
         }
-        const dateFrom = dateProperty.from ? new Date(dateProperty.from + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.from))) : new Date()
-        dateFrom.setHours(0, 0, 0, 0)
-
-        const dateToNumber = dateProperty.to ? dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to)) : dateFrom.getTime()
-        const dateTo = new Date(dateToNumber + oneDay) // Add one day.
+        const dateToNumber = dateProperty.to + (dateProperty.includeTime ? 0 : timeZoneOffset(dateProperty.to))
+        const dateTo = new Date(dateToNumber)
         dateTo.setHours(0, 0, 0, 0)
         return dateTo
     }

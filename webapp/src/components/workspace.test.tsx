@@ -92,7 +92,7 @@ const me: IUser = {
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
-categoryAttribute1.boardIDs = [board.id]
+categoryAttribute1.boardMetadata = [{boardID: board.id, hidden: false}]
 
 jest.mock('react-router-dom', () => {
     const originalModule = jest.requireActual('react-router-dom')
@@ -171,6 +171,7 @@ describe('src/components/workspace', () => {
             categoryAttributes: [
                 categoryAttribute1,
             ],
+            hiddenBoardIDs: [],
         },
     }
     mockedOctoClient.searchTeamUsers.mockResolvedValue(Object.values(state.users.boardUsers))
@@ -285,6 +286,12 @@ describe('src/components/workspace', () => {
                     featureFlags: {},
                 },
             },
+            sidebar: {
+                categoryAttributes: [
+                    categoryAttribute1,
+                ],
+                hiddenBoardIDs: [],
+            },
         })
         let container: Element | undefined
         await act(async () => {
@@ -388,6 +395,7 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         }
         const localStore = mockStateStore([thunk], localState)
@@ -492,6 +500,7 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         }
         const localStore = mockStateStore([thunk], localState)
@@ -601,6 +610,7 @@ describe('src/components/workspace', () => {
                 categoryAttributes: [
                     categoryAttribute1,
                 ],
+                hiddenBoardIDs: [],
             },
         }
         const localStore = mockStateStore([thunk], localState)

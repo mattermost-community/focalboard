@@ -6,7 +6,7 @@
     "postgres_dbconfig": "dbname=boards sslmode=disable",
     "useSSL": false,
     "webpath": "./pack",
-    "filespath": "./files",
+    "filespath": "./data/files",
     "telemetry": true,
     "prometheusaddress": ":9092",
     "session_expire_time": 2592000,

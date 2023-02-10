@@ -95,7 +95,9 @@ func (a *API) RegisterRoutes(r *mux.Router) {
 	a.registerTemplatesRoutes(apiv2)
 	a.registerBoardsRoutes(apiv2)
 	a.registerBlocksRoutes(apiv2)
+	a.registerContentBlocksRoutes(apiv2)
 	a.registerStatisticsRoutes(apiv2)
+	a.registerComplianceRoutes(apiv2)
 
 	// V3 routes
 	a.registerCardsRoutes(apiv2)
@@ -219,7 +221,7 @@ func stringResponse(w http.ResponseWriter, message string) {
 	_, _ = fmt.Fprint(w, message)
 }
 
-func jsonStringResponse(w http.ResponseWriter, code int, message string) {
+func jsonStringResponse(w http.ResponseWriter, code int, message string) { //nolint:unparam
 	setResponseHeader(w, "Content-Type", "application/json")
 	w.WriteHeader(code)
 	fmt.Fprint(w, message)
@@ -231,7 +233,7 @@ func jsonBytesResponse(w http.ResponseWriter, code int, json []byte) {
 	_, _ = w.Write(json)
 }
 
-func setResponseHeader(w http.ResponseWriter, key string, value string) {
+func setResponseHeader(w http.ResponseWriter, key string, value string) { //nolint:unparam
 	header := w.Header()
 	if header == nil {
 		return

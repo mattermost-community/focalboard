@@ -174,13 +174,15 @@ class TestBlockFactory {
             teamID: '',
             collapsed: false,
             type: 'custom',
+            sortOrder: 0,
+            isNew: false,
         }
     }
 
     static createCategoryBoards(): CategoryBoards {
         return {
             ...TestBlockFactory.createCategory(),
-            boardIDs: [],
+            boardMetadata: [],
         }
     }
 

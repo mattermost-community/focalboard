@@ -27,6 +27,7 @@ func TestAddMemberToBoard(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     "board_id_1",
 			TeamID: "team_id_1",
 		}, nil)
 
@@ -41,6 +42,17 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "default_category_id",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil).Times(2)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", []string{"board_id_1"}).Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -83,6 +95,7 @@ func TestAddMemberToBoard(t *testing.T) {
 		}
 
 		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:     "board_id_1",
 			TeamID: "team_id_1",
 		}, nil)
 
@@ -103,6 +116,17 @@ func TestAddMemberToBoard(t *testing.T) {
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "default_category_id",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil).Times(2)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", []string{"board_id_1"}).Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -159,7 +183,7 @@ func TestPatchBoard(t *testing.T) {
 		}, nil)
 
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -197,7 +221,7 @@ func TestPatchBoard(t *testing.T) {
 		}, nil)
 
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -234,7 +258,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -272,7 +296,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -310,7 +334,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -348,7 +372,7 @@ func TestPatchBoard(t *testing.T) {
 			IsTemplate: true,
 		}, nil)
 		// Type not null will retrieve team members
-		th.Store.EXPECT().GetUsersByTeam(teamID, "").Return([]*model.User{{ID: userID}}, nil)
+		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
 		th.Store.EXPECT().PatchBoard(boardID, patch, userID).Return(
 			&model.Board{
@@ -387,41 +411,158 @@ func TestBoardCategory(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	t.Run("test addBoardsToDefaultCategory", func(t *testing.T) {
-		t.Run("no boards default category exists", func(t *testing.T) {
-			th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
-				{
-					Category: model.Category{ID: "category_id_1", Name: "Category 1"},
-					BoardIDs: []string{"board_id_1", "board_id_2"},
+	t.Run("no boards default category exists", func(t *testing.T) {
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1"},
+					{BoardID: "board_id_2"},
 				},
-				{
-					Category: model.Category{ID: "category_id_2", Name: "Category 2"},
-					BoardIDs: []string{"board_id_3"},
+			},
+			{
+				Category: model.Category{ID: "category_id_2", Name: "Category 2"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_3"},
 				},
-				{
-					Category: model.Category{ID: "category_id_3", Name: "Category 3"},
-					BoardIDs: []string{},
+			},
+			{
+				Category:      model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardMetadata: []model.CategoryBoardMetadata{},
+			},
+		}, nil).Times(1)
+
+		// when this function is called the second time, the default category is created
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1"},
+					{BoardID: "board_id_2"},
 				},
-			}, nil)
+			},
+			{
+				Category: model.Category{ID: "category_id_2", Name: "Category 2"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_3"},
+				},
+			},
+			{
+				Category:      model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardMetadata: []model.CategoryBoardMetadata{},
+			},
+			{
+				Category: model.Category{ID: "default_category_id", Type: model.CategoryTypeSystem, Name: "Boards"},
+			},
+		}, nil).Times(1)
 
-			th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
-			th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
-				ID:   "default_category_id",
-				Name: "Boards",
-			}, nil)
-			th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_1").Return(nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_2").Return(nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", "board_id_3").Return(nil)
+		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:   "default_category_id",
+			Name: "Boards",
+		}, nil)
+		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
+		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", []string{
+			"board_id_1",
+			"board_id_2",
+			"board_id_3",
+		}).Return(nil)
 
-			boards := []*model.Board{
-				{ID: "board_id_1"},
-				{ID: "board_id_2"},
-				{ID: "board_id_3"},
-			}
+		boards := []*model.Board{
+			{ID: "board_id_1"},
+			{ID: "board_id_2"},
+			{ID: "board_id_3"},
+		}
 
-			err := th.App.addBoardsToDefaultCategory("user_id", "team_id", boards)
-			assert.NoError(t, err)
-		})
+		err := th.App.addBoardsToDefaultCategory("user_id", "team_id", boards)
+		assert.NoError(t, err)
+	})
+}
+
+func TestDuplicateBoard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	t.Run("base case", func(t *testing.T) {
+		board := &model.Board{
+			ID:    "board_id_2",
+			Title: "Duplicated Board",
+		}
+
+		block := &model.Block{
+			ID:   "block_id_1",
+			Type: "image",
+		}
+
+		th.Store.EXPECT().DuplicateBoard("board_id_1", "user_id_1", "team_id_1", false).Return(
+			&model.BoardsAndBlocks{
+				Boards: []*model.Board{
+					board,
+				},
+				Blocks: []*model.Block{
+					block,
+				},
+			},
+			[]*model.BoardMember{},
+			nil,
+		)
+
+		th.Store.EXPECT().GetBoard("board_id_1").Return(&model.Board{}, nil)
+
+		th.Store.EXPECT().GetUserCategoryBoards("user_id_1", "team_id_1").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{
+					ID:   "category_id_1",
+					Name: "Boards",
+					Type: "system",
+				},
+			},
+		}, nil).Times(3)
+
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "category_id_1", utils.Anything).Return(nil)
+
+		// for WS change broadcast
+		th.Store.EXPECT().GetMembersForBoard(utils.Anything).Return([]*model.BoardMember{}, nil).Times(2)
+
+		bab, members, err := th.App.DuplicateBoard("board_id_1", "user_id_1", "team_id_1", false)
+		assert.NoError(t, err)
+		assert.NotNil(t, bab)
+		assert.NotNil(t, members)
+	})
+
+	t.Run("duplicating board as template should not set it's category", func(t *testing.T) {
+		board := &model.Board{
+			ID:    "board_id_2",
+			Title: "Duplicated Board",
+		}
+
+		block := &model.Block{
+			ID:   "block_id_1",
+			Type: "image",
+		}
+
+		th.Store.EXPECT().DuplicateBoard("board_id_1", "user_id_1", "team_id_1", true).Return(
+			&model.BoardsAndBlocks{
+				Boards: []*model.Board{
+					board,
+				},
+				Blocks: []*model.Block{
+					block,
+				},
+			},
+			[]*model.BoardMember{},
+			nil,
+		)
+
+		th.Store.EXPECT().GetBoard("board_id_1").Return(&model.Board{}, nil)
+
+		// for WS change broadcast
+		th.Store.EXPECT().GetMembersForBoard(utils.Anything).Return([]*model.BoardMember{}, nil).Times(2)
+
+		bab, members, err := th.App.DuplicateBoard("board_id_1", "user_id_1", "team_id_1", true)
+		assert.NoError(t, err)
+		assert.NotNil(t, bab)
+		assert.NotNil(t, members)
 	})
 }

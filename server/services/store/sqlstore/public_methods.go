@@ -22,15 +22,15 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, blockID string) error {
+func (s *SQLStore) AddUpdateCategoryBoard(userID string, categoryID string, boardIDs []string) error {
 	if s.dbType == model.SqliteDBType {
-		return s.addUpdateCategoryBoard(s.db, userID, categoryID, blockID)
+		return s.addUpdateCategoryBoard(s.db, userID, categoryID, boardIDs)
 	}
 	tx, txErr := s.db.BeginTx(context.Background(), nil)
 	if txErr != nil {
 		return txErr
 	}
-	err := s.addUpdateCategoryBoard(tx, userID, categoryID, blockID)
+	err := s.addUpdateCategoryBoard(tx, userID, categoryID, boardIDs)
 	if err != nil {
 		if rollbackErr := tx.Rollback(); rollbackErr != nil {
 			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "AddUpdateCategoryBoard"))
@@ -105,7 +105,26 @@ func (s *SQLStore) CreateBoardsAndBlocksWithAdmin(bab *model.BoardsAndBlocks, us
 }
 
 func (s *SQLStore) CreateCategory(category model.Category) error {
-	return s.createCategory(s.db, category)
+	if s.dbType == model.SqliteDBType {
+		return s.createCategory(s.db, category)
+	}
+	tx, txErr := s.db.BeginTx(context.Background(), nil)
+	if txErr != nil {
+		return txErr
+	}
+	err := s.createCategory(tx, category)
+	if err != nil {
+		if rollbackErr := tx.Rollback(); rollbackErr != nil {
+			s.logger.Error("transaction rollback error", mlog.Err(rollbackErr), mlog.String("methodName", "CreateCategory"))
+		}
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
 
 }
 
@@ -148,6 +167,11 @@ func (s *SQLStore) DeleteBlock(blockID string, modifiedBy string) error {
 
 }
 
+func (s *SQLStore) DeleteBlockRecord(blockID string, modifiedBy string) error {
+	return s.deleteBlockRecord(s.db, blockID, modifiedBy)
+
+}
+
 func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	if s.dbType == model.SqliteDBType {
 		return s.deleteBoard(s.db, boardID, userID)
@@ -169,6 +193,11 @@ func (s *SQLStore) DeleteBoard(boardID string, userID string) error {
 	}
 
 	return nil
+
+}
+
+func (s *SQLStore) DeleteBoardRecord(boardID string, modifiedBy string) error {
+	return s.deleteBoardRecord(s.db, boardID, modifiedBy)
 
 }
 
@@ -299,6 +328,11 @@ func (s *SQLStore) GetBlockHistoryDescendants(boardID string, opts model.QueryBl
 
 }
 
+func (s *SQLStore) GetBlockHistoryNewestChildren(parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error) {
+	return s.getBlockHistoryNewestChildren(s.db, parentID, opts)
+
+}
+
 func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	return s.getBlocks(s.db, opts)
 
@@ -306,6 +340,11 @@ func (s *SQLStore) GetBlocks(opts model.QueryBlocksOptions) ([]*model.Block, err
 
 func (s *SQLStore) GetBlocksByIDs(ids []string) ([]*model.Block, error) {
 	return s.getBlocksByIDs(s.db, ids)
+
+}
+
+func (s *SQLStore) GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error) {
+	return s.getBlocksComplianceHistory(s.db, opts)
 
 }
 
@@ -356,6 +395,16 @@ func (s *SQLStore) GetBoardHistory(boardID string, opts model.QueryBoardHistoryO
 
 func (s *SQLStore) GetBoardMemberHistory(boardID string, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {
 	return s.getBoardMemberHistory(s.db, boardID, userID, limit)
+
+}
+
+func (s *SQLStore) GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error) {
+	return s.getBoardsComplianceHistory(s.db, opts)
+
+}
+
+func (s *SQLStore) GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions) ([]*model.Board, bool, error) {
+	return s.getBoardsForCompliance(s.db, opts)
 
 }
 
@@ -479,8 +528,8 @@ func (s *SQLStore) GetTeam(ID string) (*model.Team, error) {
 
 }
 
-func (s *SQLStore) GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
-	return s.getTeamBoardsInsights(s.db, teamID, userID, since, offset, limit, boardIDs)
+func (s *SQLStore) GetTeamBoardsInsights(teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+	return s.getTeamBoardsInsights(s.db, teamID, since, offset, limit, boardIDs)
 
 }
 
@@ -524,6 +573,11 @@ func (s *SQLStore) GetUserByUsername(username string) (*model.User, error) {
 
 }
 
+func (s *SQLStore) GetUserCategories(userID string, teamID string) ([]model.Category, error) {
+	return s.getUserCategories(s.db, userID, teamID)
+
+}
+
 func (s *SQLStore) GetUserCategoryBoards(userID string, teamID string) ([]model.CategoryBoards, error) {
 	return s.getUserCategoryBoards(s.db, userID, teamID)
 
@@ -539,13 +593,13 @@ func (s *SQLStore) GetUserTimezone(userID string) (string, error) {
 
 }
 
-func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
-	return s.getUsersByTeam(s.db, teamID, asGuestID)
+func (s *SQLStore) GetUsersByTeam(teamID string, asGuestID string, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.getUsersByTeam(s.db, teamID, asGuestID, showEmail, showName)
 
 }
 
-func (s *SQLStore) GetUsersList(userIDs []string) ([]*model.User, error) {
-	return s.getUsersList(s.db, userIDs)
+func (s *SQLStore) GetUsersList(userIDs []string, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.getUsersList(s.db, userIDs, showEmail, showName)
 
 }
 
@@ -742,6 +796,16 @@ func (s *SQLStore) RemoveDefaultTemplates(boards []*model.Board) error {
 
 }
 
+func (s *SQLStore) ReorderCategories(userID string, teamID string, newCategoryOrder []string) ([]string, error) {
+	return s.reorderCategories(s.db, userID, teamID, newCategoryOrder)
+
+}
+
+func (s *SQLStore) ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error) {
+	return s.reorderCategoryBoards(s.db, categoryID, newBoardsOrder)
+
+}
+
 func (s *SQLStore) RunDataRetention(globalRetentionDate int64, batchSize int64) (int64, error) {
 	if s.dbType == model.SqliteDBType {
 		return s.runDataRetention(s.db, globalRetentionDate, batchSize)
@@ -776,8 +840,8 @@ func (s *SQLStore) SaveMember(bm *model.BoardMember) (*model.BoardMember, error)
 
 }
 
-func (s *SQLStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return s.searchBoardsForUser(s.db, term, userID, includePublicBoards)
+func (s *SQLStore) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return s.searchBoardsForUser(s.db, term, searchField, userID, includePublicBoards)
 
 }
 
@@ -791,13 +855,18 @@ func (s *SQLStore) SearchUserChannels(teamID string, userID string, query string
 
 }
 
-func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots)
+func (s *SQLStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail bool, showName bool) ([]*model.User, error) {
+	return s.searchUsersByTeam(s.db, teamID, searchQuery, asGuestID, excludeBots, showEmail, showName)
 
 }
 
 func (s *SQLStore) SendMessage(message string, postType string, receipts []string) error {
 	return s.sendMessage(s.db, message, postType, receipts)
+
+}
+
+func (s *SQLStore) SetBoardVisibility(userID string, categoryID string, boardID string, visible bool) error {
+	return s.setBoardVisibility(s.db, userID, categoryID, boardID, visible)
 
 }
 

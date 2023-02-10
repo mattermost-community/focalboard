@@ -311,7 +311,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -371,7 +371,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -460,16 +460,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -528,16 +533,21 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -571,7 +581,7 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -1562,7 +1572,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -1622,7 +1632,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -1711,16 +1721,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -1779,16 +1794,21 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -1822,7 +1842,7 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2005,22 +2025,6 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
             title="view title"
             value="view title"
           />
-          <div>
-            <div
-              aria-label="View menu"
-              class="MenuWrapper"
-              role="button"
-            >
-              <button
-                class="IconButton"
-                type="button"
-              >
-                <i
-                  class="CompassIcon icon-chevron-down DropdownIcon"
-                />
-              </button>
-            </div>
-          </div>
         </div>
         <div
           class="octo-spacer"
@@ -2089,7 +2093,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2127,7 +2131,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2153,10 +2157,13 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </button>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              />
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2194,10 +2201,13 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
               </div>
             </div>
             <div
-              class="TableRow octo-table-row"
+              class="TableRow octo-table-row readonly"
               draggable="true"
               style="opacity: 1;"
             >
+              <div
+                class="action-cell octo-table-cell-btn"
+              />
               <div
                 class="octo-table-cell title-cell"
                 id="mainBoardHeader"
@@ -2252,7 +2262,7 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2619,7 +2629,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2679,7 +2689,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -2768,16 +2778,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -2836,16 +2851,21 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -2879,7 +2899,7 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3267,7 +3287,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3327,7 +3347,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3416,16 +3436,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -3484,16 +3509,21 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -3527,7 +3557,7 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3915,7 +3945,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -3975,7 +4005,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4064,16 +4094,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -4132,16 +4167,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -4175,7 +4215,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4563,7 +4603,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4623,7 +4663,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -4712,16 +4752,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -4780,16 +4825,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -4823,7 +4873,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5211,7 +5261,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5271,7 +5321,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5360,16 +5410,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -5428,16 +5483,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -5471,7 +5531,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5859,7 +5919,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -5919,7 +5979,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6008,16 +6068,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -6076,16 +6141,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -6119,7 +6189,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6507,7 +6577,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6567,7 +6637,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -6656,16 +6726,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -6724,16 +6799,21 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -6767,7 +6847,7 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7155,7 +7235,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7215,7 +7295,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7304,16 +7384,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -7372,16 +7457,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -7415,7 +7505,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7803,7 +7893,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7863,7 +7953,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -7952,16 +8042,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -8020,16 +8115,21 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -8063,7 +8163,7 @@ exports[`components/centerPanel return centerPanel and select one card and click
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -9764,7 +9864,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -9824,7 +9924,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span
@@ -9913,16 +10013,21 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   class="MenuWrapper optionsMenu ml-2 mr-2"
                   role="button"
                 >
-                  <button
-                    aria-label="MenuBtn"
-                    class="IconButton"
-                    title="MenuBtn"
-                    type="button"
+                  <div
+                    class="octo-tooltip tooltip-top"
+                    data-tooltip="More actions"
                   >
-                    <i
-                      class="CompassIcon icon-dots-horizontal OptionsIcon"
-                    />
-                  </button>
+                    <button
+                      aria-label="MenuBtn"
+                      class="IconButton"
+                      title="MenuBtn"
+                      type="button"
+                    >
+                      <i
+                        class="CompassIcon icon-dots-horizontal OptionsIcon"
+                      />
+                    </button>
+                  </div>
                 </div>
                 <div
                   class="open-button"
@@ -9956,7 +10061,7 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
                   type="button"
                 >
                   <i
-                    class="CompassIcon icon-menu-down"
+                    class="CompassIcon icon-menu-right"
                   />
                 </button>
                 <span

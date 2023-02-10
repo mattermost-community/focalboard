@@ -8,6 +8,10 @@ import (
 // It should be maintained in chronological order with most current
 // release at the front of the list.
 var versions = []string{
+	"7.9.0",
+	"7.8.0",
+	"7.7.0",
+	"7.6.0",
 	"7.5.0",
 	"7.4.0",
 	"7.3.0",
@@ -50,7 +54,7 @@ var (
 
 // LogServerInfo logs information about the server instance.
 func LogServerInfo(logger mlog.LoggerIFace) {
-	logger.Info("FocalBoard Server",
+	logger.Info("Focalboard server",
 		mlog.String("version", CurrentVersion),
 		mlog.String("edition", Edition),
 		mlog.String("build_number", BuildNumber),

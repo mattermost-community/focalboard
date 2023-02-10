@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/mattermost/focalboard/server/model"
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -50,7 +50,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	var rootUser string
 
 	if dbType == model.SqliteDBType {
-		file, err := ioutil.TempFile("", "fbtest_*.db")
+		file, err := os.CreateTemp("", "fbtest_*.db")
 		if err != nil {
 			return "", "", err
 		}
@@ -118,4 +118,48 @@ func newErrInvalidDBType(dbType string) error {
 
 func (e ErrInvalidDBType) Error() string {
 	return "unsupported database type: " + e.dbType
+}
+
+// deleteBoardRecord deletes a boards record without deleting any child records in the blocks table.
+// FOR UNIT TESTING ONLY.
+func (s *SQLStore) deleteBoardRecord(db sq.BaseRunner, boardID string, modifiedBy string) error {
+	return s.deleteBoardAndChildren(db, boardID, modifiedBy, true)
+}
+
+// deleteBlockRecord deletes a blocks record without deleting any child records in the blocks table.
+// FOR UNIT TESTING ONLY.
+func (s *SQLStore) deleteBlockRecord(db sq.BaseRunner, blockID, modifiedBy string) error {
+	return s.deleteBlockAndChildren(db, blockID, modifiedBy, true)
+}
+
+func (s *SQLStore) castInt(val int64, as string) string {
+	if s.dbType == model.MysqlDBType {
+		return fmt.Sprintf("cast(%d as unsigned) AS %s", val, as)
+	}
+	return fmt.Sprintf("cast(%d as bigint) AS %s", val, as)
+}
+
+func (s *SQLStore) GetSchemaName() (string, error) {
+	var query sq.SelectBuilder
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		query = s.getQueryBuilder(s.db).Select("DATABASE()")
+	case model.PostgresDBType:
+		query = s.getQueryBuilder(s.db).Select("current_schema()")
+	case model.SqliteDBType:
+		return "", nil
+	default:
+		return "", ErrUnsupportedDatabaseType
+	}
+
+	scanner := query.QueryRow()
+
+	var result string
+	err := scanner.Scan(&result)
+	if err != nil && !model.IsErrNotFound(err) {
+		return "", err
+	}
+
+	return result, nil
 }

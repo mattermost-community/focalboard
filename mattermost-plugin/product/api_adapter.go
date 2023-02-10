@@ -49,6 +49,11 @@ func (a *serviceAPIAdapter) GetDirectChannel(userID1, userID2 string) (*mm_model
 	return channel, normalizeAppErr(appErr)
 }
 
+func (a *serviceAPIAdapter) GetDirectChannelOrCreate(userID1, userID2 string) (*mm_model.Channel, error) {
+	channel, appErr := a.api.channelService.GetDirectChannelOrCreate(userID1, userID2)
+	return channel, normalizeAppErr(appErr)
+}
+
 func (a *serviceAPIAdapter) GetChannelByID(channelID string) (*mm_model.Channel, error) {
 	channel, appErr := a.api.channelService.GetChannelByID(channelID)
 	return channel, normalizeAppErr(appErr)
@@ -165,11 +170,11 @@ func (a *serviceAPIAdapter) GetFileInfo(fileID string) (*mm_model.FileInfo, erro
 //
 
 func (a *serviceAPIAdapter) PublishWebSocketEvent(event string, payload map[string]interface{}, broadcast *mm_model.WebsocketBroadcast) {
-	a.api.clusterService.PublishWebSocketEvent(boardsProductID, event, payload, broadcast)
+	a.api.clusterService.PublishWebSocketEvent(boardsProductName, event, payload, broadcast)
 }
 
 func (a *serviceAPIAdapter) PublishPluginClusterEvent(ev mm_model.PluginClusterEvent, opts mm_model.PluginClusterEventSendOptions) error {
-	return a.api.clusterService.PublishPluginClusterEvent(boardsProductID, ev, opts)
+	return a.api.clusterService.PublishPluginClusterEvent(boardsProductName, ev, opts)
 }
 
 //
@@ -201,7 +206,7 @@ func (a *serviceAPIAdapter) GetLogger() mlog.LoggerIFace {
 //
 
 func (a *serviceAPIAdapter) KVSetWithOptions(key string, value []byte, options mm_model.PluginKVSetOptions) (bool, error) {
-	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductID, key, value, options)
+	b, appErr := a.api.kvStoreService.SetPluginKeyWithOptions(boardsProductName, key, value, options)
 	return b, normalizeAppErr(appErr)
 }
 

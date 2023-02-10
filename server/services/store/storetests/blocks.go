@@ -1,6 +1,8 @@
 package storetests
 
 import (
+	"math"
+	"strconv"
 	"testing"
 	"time"
 
@@ -73,6 +75,16 @@ func StoreTestBlocksStore(t *testing.T, setup func(t *testing.T) (store.Store, f
 		store, tearDown := setup(t)
 		defer tearDown()
 		testGetBlockMetadata(t, store)
+	})
+	t.Run("UndeleteBlockChildren", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testUndeleteBlockChildren(t, store)
+	})
+	t.Run("GetBlockHistoryNewestChildren", func(t *testing.T) {
+		store, tearDown := setup(t)
+		defer tearDown()
+		testGetBlockHistoryNewestChildren(t, store)
 	})
 }
 
@@ -1021,6 +1033,7 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 
 	t.Run("get full block history after delete", func(t *testing.T) {
 		time.Sleep(20 * time.Millisecond)
+		// this will delete `block1` and any other blocks with `block1` as parent.
 		err = store.DeleteBlock(blocksToInsert[0].ID, testUserID)
 		require.NoError(t, err)
 
@@ -1029,15 +1042,14 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		}
 		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
 		require.NoError(t, err)
-		require.Len(t, blocks, 6)
-		expectedBlock := blocksToInsert[0]
-		block := blocks[0]
-
-		require.Equal(t, expectedBlock.ID, block.ID)
+		// all 5 blocks get a history record for insert, then `block1` gets a record for delete,
+		// and all 3 `block1` children get a record for delete. Thus total is 9.
+		require.Len(t, blocks, 9)
 	})
 
 	t.Run("get full block history after undelete", func(t *testing.T) {
 		time.Sleep(20 * time.Millisecond)
+		// this will undelete `block1` and its children
 		err = store.UndeleteBlock(blocksToInsert[0].ID, testUserID)
 		require.NoError(t, err)
 
@@ -1046,11 +1058,9 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		}
 		blocks, err = store.GetBlockHistoryDescendants(boardID, opts)
 		require.NoError(t, err)
-		require.Len(t, blocks, 7)
-		expectedBlock := blocksToInsert[0]
-		block := blocks[0]
-
-		require.Equal(t, expectedBlock.ID, block.ID)
+		// previous test put 9 records in history table. In this test 1 record was added for undeleting
+		// `block1` and another 3 for undeleting the children for a total of 13.
+		require.Len(t, blocks, 13)
 	})
 
 	t.Run("get block history of a board with no history", func(t *testing.T) {
@@ -1059,5 +1069,186 @@ func testGetBlockMetadata(t *testing.T, store store.Store) {
 		blocks, err = store.GetBlockHistoryDescendants("nonexistent-board-id", opts)
 		require.NoError(t, err)
 		require.Empty(t, blocks)
+	})
+}
+
+func testUndeleteBlockChildren(t *testing.T, store store.Store) {
+	boards := createTestBoards(t, store, testTeamID, testUserID, 2)
+	boardDelete := boards[0]
+	boardKeep := boards[1]
+	userID := testUserID
+
+	// create some blocks to be deleted
+	cardsDelete := createTestCards(t, store, userID, boardDelete.ID, 3)
+	blocksDelete := createTestBlocksForCard(t, store, cardsDelete[0].ID, 5)
+	require.Len(t, blocksDelete, 5)
+
+	// create some blocks to keep
+	cardsKeep := createTestCards(t, store, userID, boardKeep.ID, 3)
+	blocksKeep := createTestBlocksForCard(t, store, cardsKeep[0].ID, 4)
+	require.Len(t, blocksKeep, 4)
+
+	t.Run("undelete block children for card", func(t *testing.T) {
+		cardDelete := cardsDelete[0]
+		cardKeep := cardsKeep[0]
+
+		// delete a card
+		err := store.DeleteBlock(cardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the card was deleted
+		block, err := store.GetBlock(cardDelete.ID)
+		require.Error(t, err)
+		require.Nil(t, block)
+
+		// ensure the card children were deleted
+		blocks, err := store.GetBlocksWithParentAndType(cardDelete.BoardID, cardDelete.ID, model.TypeText)
+		require.NoError(t, err)
+		assert.Empty(t, blocks)
+
+		// ensure the other card children remain.
+		blocks, err = store.GetBlocksWithParentAndType(cardKeep.BoardID, cardKeep.ID, model.TypeText)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksKeep))
+
+		// undelete the card
+		err = store.UndeleteBlock(cardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the card was restored
+		block, err = store.GetBlock(cardDelete.ID)
+		require.NoError(t, err)
+		require.NotNil(t, block)
+
+		// ensure the card children were restored
+		blocks, err = store.GetBlocksWithParentAndType(cardDelete.BoardID, cardDelete.ID, model.TypeText)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksDelete))
+	})
+
+	t.Run("undelete block children for board", func(t *testing.T) {
+		// delete the board
+		err := store.DeleteBoard(boardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the board was deleted
+		board, err := store.GetBoard(boardDelete.ID)
+		require.Error(t, err)
+		require.Nil(t, board)
+
+		// ensure all cards and blocks for the board were deleted
+		blocks, err := store.GetBlocksForBoard(boardDelete.ID)
+		require.NoError(t, err)
+		assert.Empty(t, blocks)
+
+		// ensure the other board's cards and blocks remain.
+		blocks, err = store.GetBlocksForBoard(boardKeep.ID)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksKeep)+len(cardsKeep))
+
+		// undelete the board
+		err = store.UndeleteBoard(boardDelete.ID, testUserID)
+		require.NoError(t, err)
+
+		// ensure the board was restored
+		board, err = store.GetBoard(boardDelete.ID)
+		require.NoError(t, err)
+		require.NotNil(t, board)
+
+		// ensure the board's cards and blocks were restored.
+		blocks, err = store.GetBlocksForBoard(boardDelete.ID)
+		require.NoError(t, err)
+		assert.Len(t, blocks, len(blocksDelete)+len(cardsDelete))
+	})
+}
+
+func testGetBlockHistoryNewestChildren(t *testing.T, store store.Store) {
+	boards := createTestBoards(t, store, testTeamID, testUserID, 2)
+	board := boards[0]
+
+	const cardCount = 10
+	const patchCount = 5
+
+	// create a card and some content blocks
+	cards := createTestCards(t, store, testUserID, board.ID, 1)
+	card := cards[0]
+	content := createTestBlocksForCard(t, store, card.ID, cardCount)
+
+	// patch the content blocks to create some history records
+	for i := 1; i <= patchCount; i++ {
+		for _, block := range content {
+			title := strconv.FormatInt(int64(i), 10)
+			patch := &model.BlockPatch{
+				Title: &title,
+			}
+			err := store.PatchBlock(block.ID, patch, testUserID)
+			require.NoError(t, err, "error patching content blocks")
+		}
+	}
+
+	// delete some of the content blocks
+	err := store.DeleteBlock(content[0].ID, testUserID)
+	require.NoError(t, err, "error deleting content block")
+	err = store.DeleteBlock(content[3].ID, testUserID)
+	require.NoError(t, err, "error deleting content block")
+	err = store.DeleteBlock(content[7].ID, testUserID)
+	require.NoError(t, err, "error deleting content block")
+
+	t.Run("invalid card", func(t *testing.T) {
+		opts := model.QueryBlockHistoryChildOptions{}
+		blocks, hasMore, err := store.GetBlockHistoryNewestChildren(utils.NewID(utils.IDTypeCard), opts)
+		require.NoError(t, err)
+		require.False(t, hasMore)
+		require.Empty(t, blocks)
+	})
+
+	t.Run("valid card with no children", func(t *testing.T) {
+		opts := model.QueryBlockHistoryChildOptions{}
+		emptyCard := createTestCards(t, store, testUserID, board.ID, 1)[0]
+		blocks, hasMore, err := store.GetBlockHistoryNewestChildren(emptyCard.ID, opts)
+		require.NoError(t, err)
+		require.False(t, hasMore)
+		require.Empty(t, blocks)
+	})
+
+	t.Run("valid card with children", func(t *testing.T) {
+		opts := model.QueryBlockHistoryChildOptions{}
+		blocks, hasMore, err := store.GetBlockHistoryNewestChildren(card.ID, opts)
+		require.NoError(t, err)
+		require.False(t, hasMore)
+		require.Len(t, blocks, cardCount)
+		require.ElementsMatch(t, extractIDs(t, blocks), extractIDs(t, content))
+
+		expected := strconv.FormatInt(patchCount, 10)
+		for _, b := range blocks {
+			require.Equal(t, expected, b.Title)
+		}
+	})
+
+	t.Run("pagination", func(t *testing.T) {
+		opts := model.QueryBlockHistoryChildOptions{
+			PerPage: 3,
+		}
+
+		collected := make([]*model.Block, 0)
+		reps := 0
+		for {
+			reps++
+			blocks, hasMore, err := store.GetBlockHistoryNewestChildren(card.ID, opts)
+			require.NoError(t, err)
+			collected = append(collected, blocks...)
+			if !hasMore {
+				break
+			}
+			opts.Page++
+		}
+
+		assert.Len(t, collected, cardCount)
+		assert.Equal(t, math.Floor(float64(cardCount/opts.PerPage)+1), float64(reps))
+
+		expected := strconv.FormatInt(patchCount, 10)
+		for _, b := range collected {
+			require.Equal(t, expected, b.Title)
+		}
 	})
 }

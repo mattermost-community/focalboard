@@ -25,7 +25,6 @@
     &:hover {
         background-color: rgba(var(--center-channel-color-rgb), 0.05);
         overflow: initial;
-        margin-left: -60px;
 
         .delete-button {
             display: block;
@@ -39,13 +38,10 @@
             @include z-index(table-row-action-cell);
             position: relative;
             align-items: center;
-            left: 8px;
-            padding: 8px;
-            height: 44px;
         }
 
         .octo-table-cell-btn {
-            display: flex;
+            visibility: visible;
         }
 
         .title-cell {
@@ -53,12 +49,23 @@
         }
     }
 
+    &.readonly:hover {
+        margin-left: unset;
+    }
+
     .action-cell {
-        display: none;
-        margin-left: 20px;
+        display: flex;
+        visibility: hidden;
+        margin-left: 8px;
+        width: 24px;
     }
 
     .URLProperty:hover .Button_Copy {
         display: none;
+    }
+
+    .octo-propertyvalue--readonly {
+        flex-wrap: nowrap;
+        overflow: hidden !important;
     }
 }

@@ -2,6 +2,8 @@ package integrationtests
 
 import (
 	"errors"
+	"os"
+	"strconv"
 	"strings"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -89,7 +91,7 @@ func (s *PluginTestStore) GetTeam(id string) (*model.Team, error) {
 		return s.baseTeam, nil
 	case "other-team":
 		return s.otherTeam, nil
-	case "test-team":
+	case "test-team", testTeamID:
 		return s.testTeam, nil
 	case "empty-team":
 		return s.emptyTeam, nil
@@ -156,7 +158,7 @@ func (s *PluginTestStore) GetUserPreferences(userID string) (mmModel.Preferences
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error) {
+func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error) {
 	if asGuestID == "guest" {
 		return []*model.User{
 			s.users["viewer"],
@@ -191,9 +193,9 @@ func (s *PluginTestStore) GetUsersByTeam(teamID string, asGuestID string) ([]*mo
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
+func (s *PluginTestStore) SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error) {
 	users := []*model.User{}
-	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID)
+	teamUsers, err := s.GetUsersByTeam(teamID, asGuestID, showEmail, showName)
 	if err != nil {
 		return nil, err
 	}
@@ -271,8 +273,8 @@ func (s *PluginTestStore) GetChannel(teamID, channel string) (*mmModel.Channel, 
 	return nil, errTestStore
 }
 
-func (s *PluginTestStore) SearchBoardsForUser(term string, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	boards, err := s.Store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (s *PluginTestStore) SearchBoardsForUser(term string, field model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	boards, err := s.Store.SearchBoardsForUser(term, field, userID, includePublicBoards)
 	if err != nil {
 		return nil, err
 	}
@@ -292,4 +294,28 @@ func (s *PluginTestStore) SearchBoardsForUser(term string, userID string, includ
 		}
 	}
 	return resultBoards, nil
+}
+
+func (s *PluginTestStore) GetLicense() *mmModel.License {
+	license := s.Store.GetLicense()
+
+	if license == nil {
+		license = &mmModel.License{
+			Id:        mmModel.NewId(),
+			StartsAt:  mmModel.GetMillis() - 2629746000, // 1 month
+			ExpiresAt: mmModel.GetMillis() + 2629746000, //
+			IssuedAt:  mmModel.GetMillis() - 2629746000,
+			Features:  &mmModel.Features{},
+		}
+		license.Features.SetDefaults()
+	}
+
+	complianceLicense := os.Getenv("FOCALBOARD_UNIT_TESTING_COMPLIANCE")
+	if complianceLicense != "" {
+		if val, err := strconv.ParseBool(complianceLicense); err == nil {
+			license.Features.Compliance = mmModel.NewBool(val)
+		}
+	}
+
+	return license
 }

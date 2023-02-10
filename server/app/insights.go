@@ -8,7 +8,7 @@ import (
 
 func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
 	// check if server is properly licensed, and user is not a guest
-	userPermitted, err := insightPermissionGate(a, userID)
+	userPermitted, err := insightPermissionGate(a, userID, false)
 	if err != nil {
 		return nil, err
 	}
@@ -19,12 +19,12 @@ func (a *App) GetTeamBoardsInsights(userID string, teamID string, opts *mmModel.
 	if err != nil {
 		return nil, err
 	}
-	return a.store.GetTeamBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
+	return a.store.GetTeamBoardsInsights(teamID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
 }
 
 func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.InsightsOpts) (*model.BoardInsightsList, error) {
 	// check if server is properly licensed, and user is not a guest
-	userPermitted, err := insightPermissionGate(a, userID)
+	userPermitted, err := insightPermissionGate(a, userID, true)
 	if err != nil {
 		return nil, err
 	}
@@ -38,24 +38,29 @@ func (a *App) GetUserBoardsInsights(userID string, teamID string, opts *mmModel.
 	return a.store.GetUserBoardsInsights(teamID, userID, opts.StartUnixMilli, opts.Page*opts.PerPage, opts.PerPage, boardIDs)
 }
 
-func insightPermissionGate(a *App, userID string) (bool, error) {
+func insightPermissionGate(a *App, userID string, isMyInsights bool) (bool, error) {
 	licenseError := errors.New("invalid license/authorization to use insights API")
 	guestError := errors.New("guests aren't authorized to use insights API")
 	lic := a.store.GetLicense()
-	if lic == nil {
-		a.logger.Debug("Deployment doesn't have a license")
-		return false, licenseError
-	}
+
 	user, err := a.store.GetUserByID(userID)
 	if err != nil {
 		return false, err
 	}
-	if lic.SkuShortName != mmModel.LicenseShortSkuProfessional && lic.SkuShortName != mmModel.LicenseShortSkuEnterprise {
-		return false, licenseError
-	}
+
 	if user.IsGuest {
 		return false, guestError
 	}
+
+	if lic == nil && !isMyInsights {
+		a.logger.Debug("Deployment doesn't have a license")
+		return false, licenseError
+	}
+
+	if !isMyInsights && (lic.SkuShortName != mmModel.LicenseShortSkuProfessional && lic.SkuShortName != mmModel.LicenseShortSkuEnterprise) {
+		return false, licenseError
+	}
+
 	return true, nil
 }
 

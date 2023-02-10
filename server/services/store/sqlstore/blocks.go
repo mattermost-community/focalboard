@@ -4,13 +4,13 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
 
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/mattermost/focalboard/server/model"
-	_ "github.com/mattn/go-sqlite3" // sqlite driver
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
@@ -20,10 +20,16 @@ const (
 	descClause     = " DESC "
 )
 
-type BoardIDNilError struct{}
+type ErrEmptyBoardID struct{}
 
-func (re BoardIDNilError) Error() string {
-	return "boardID is nil"
+func (re ErrEmptyBoardID) Error() string {
+	return "boardID is empty"
+}
+
+type ErrLimitExceeded struct{ max int }
+
+func (le ErrLimitExceeded) Error() string {
+	return fmt.Sprintf("limit exceeded (max=%d)", le.max)
 }
 
 func (s *SQLStore) timestampToCharField(name string, as string) string {
@@ -37,27 +43,31 @@ func (s *SQLStore) timestampToCharField(name string, as string) string {
 	}
 }
 
-func (s *SQLStore) blockFields() []string {
+func (s *SQLStore) blockFields(tableAlias string) []string {
+	if tableAlias != "" && !strings.HasSuffix(tableAlias, ".") {
+		tableAlias += "."
+	}
+
 	return []string{
-		"id",
-		"parent_id",
-		"created_by",
-		"modified_by",
-		s.escapeField("schema"),
-		"type",
-		"title",
-		"COALESCE(fields, '{}')",
-		s.timestampToCharField("insert_at", "insertAt"),
-		"create_at",
-		"update_at",
-		"delete_at",
-		"COALESCE(board_id, '0')",
+		tableAlias + "id",
+		tableAlias + "parent_id",
+		tableAlias + "created_by",
+		tableAlias + "modified_by",
+		tableAlias + s.escapeField("schema"),
+		tableAlias + "type",
+		tableAlias + "title",
+		"COALESCE(" + tableAlias + "fields, '{}')",
+		s.timestampToCharField(tableAlias+"insert_at", "insertAt"),
+		tableAlias + "create_at",
+		tableAlias + "update_at",
+		tableAlias + "delete_at",
+		"COALESCE(" + tableAlias + "board_id, '0')",
 	}
 }
 
 func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks")
 
 	if opts.BoardID != "" {
@@ -110,7 +120,7 @@ func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID strin
 
 func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": ids})
 
@@ -145,7 +155,7 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string
 // getSubTree2 returns blocks within 2 levels of the given blockID.
 func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"board_id": boardID}).
@@ -231,7 +241,7 @@ func (s *SQLStore) blocksFromRows(rows *sql.Rows) ([]*model.Block, error) {
 
 func (s *SQLStore) insertBlock(db sq.BaseRunner, block *model.Block, userID string) error {
 	if block.BoardID == "" {
-		return BoardIDNilError{}
+		return ErrEmptyBoardID{}
 	}
 
 	fieldsJSON, err := json.Marshal(block.Fields)
@@ -339,7 +349,7 @@ func (s *SQLStore) patchBlocks(db sq.BaseRunner, blockPatches *model.BlockPatchB
 func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []*model.Block, userID string) error {
 	for _, block := range blocks {
 		if block.BoardID == "" {
-			return BoardIDNilError{}
+			return ErrEmptyBoardID{}
 		}
 	}
 	for i := range blocks {
@@ -352,6 +362,10 @@ func (s *SQLStore) insertBlocks(db sq.BaseRunner, blocks []*model.Block, userID 
 }
 
 func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy string) error {
+	return s.deleteBlockAndChildren(db, blockID, modifiedBy, false)
+}
+
+func (s *SQLStore) deleteBlockAndChildren(db sq.BaseRunner, blockID string, modifiedBy string, keepChildren bool) error {
 	block, err := s.getBlock(db, blockID)
 	if model.IsErrNotFound(err) {
 		s.logger.Warn("deleteBlock block not found", mlog.String("block_id", blockID))
@@ -409,7 +423,11 @@ func (s *SQLStore) deleteBlock(db sq.BaseRunner, blockID string, modifiedBy stri
 		return err
 	}
 
-	return nil
+	if keepChildren {
+		return nil
+	}
+
+	return s.deleteBlockChildren(db, block.BoardID, block.ID, modifiedBy)
 }
 
 func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy string) error {
@@ -481,7 +499,7 @@ func (s *SQLStore) undeleteBlock(db sq.BaseRunner, blockID string, modifiedBy st
 		return err
 	}
 
-	return nil
+	return s.undeleteBlockChildren(db, block.BoardID, block.ID, modifiedBy)
 }
 
 func (s *SQLStore) getBlockCountsByType(db sq.BaseRunner) (map[string]int64, error) {
@@ -537,7 +555,7 @@ func (s *SQLStore) getBoardCount(db sq.BaseRunner) (int64, error) {
 
 func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": blockID})
 
@@ -567,7 +585,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
@@ -601,7 +619,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"board_id": boardID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
@@ -620,12 +638,89 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 
 	rows, err := query.Query()
 	if err != nil {
-		s.logger.Error(`GetBlockHistory ERROR`, mlog.Err(err))
+		s.logger.Error(`GetBlockHistoryDescendants ERROR`, mlog.Err(err))
 		return nil, err
 	}
 	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
+}
+
+// getBlockHistoryNewestChildren returns the newest (latest) version child blocks for the
+// specified parent from the blocks_history table. This includes any deleted children.
+func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error) {
+	// as we're joining 2 queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder(db).PlaceholderFormat(sq.Question)
+
+	sub := builder.
+		Select("bh2.id", "MAX(bh2.insert_at) AS max_insert_at").
+		From(s.tablePrefix + "blocks_history AS bh2").
+		Where(sq.Eq{"bh2.parent_id": parentID}).
+		GroupBy("bh2.id")
+
+	if opts.AfterUpdateAt != 0 {
+		sub = sub.Where(sq.Gt{"bh2.update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.BeforeUpdateAt != 0 {
+		sub = sub.Where(sq.Lt{"bh2.update_at": opts.BeforeUpdateAt})
+	}
+
+	subQuery, subArgs, err := sub.ToSql()
+	if err != nil {
+		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate subquery: %w", err)
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields("bh")...).
+		From(s.tablePrefix+"blocks_history AS bh").
+		InnerJoin("("+subQuery+") AS sub ON bh.id=sub.id AND bh.insert_at=sub.max_insert_at", subArgs...)
+
+	if opts.Page != 0 {
+		query = query.Offset(uint64(opts.Page * opts.PerPage))
+	}
+
+	if opts.PerPage > 0 {
+		// limit+1 to detect if more records available
+		query = query.Limit(uint64(opts.PerPage + 1))
+	}
+
+	sql, args, err := query.ToSql()
+	if err != nil {
+		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate sql: %w", err)
+	}
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		sql, rErr = sq.Dollar.ReplacePlaceholders(sql)
+		if rErr != nil {
+			return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to replace sql placeholders: %w", rErr)
+		}
+	}
+
+	rows, err := db.Query(sql, args...)
+	if err != nil {
+		s.logger.Error(`getBlockHistoryNewestChildren ERROR`, mlog.Err(err))
+		return nil, false, err
+	}
+	defer s.CloseRows(rows)
+
+	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return nil, false, err
+	}
+
+	hasMore := false
+	if opts.PerPage > 0 && len(blocks) > opts.PerPage {
+		blocks = blocks[:opts.PerPage]
+		hasMore = true
+	}
+	return blocks, hasMore, nil
 }
 
 // getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.
@@ -788,4 +883,156 @@ func (s *SQLStore) duplicateBlock(db sq.BaseRunner, boardID string, blockID stri
 		return nil, err
 	}
 	return allBlocks, nil
+}
+
+func (s *SQLStore) deleteBlockChildren(db sq.BaseRunner, boardID string, parentID string, modifiedBy string) error {
+	now := utils.GetMillis()
+
+	selectQuery := s.getQueryBuilder(db).
+		Select(
+			"board_id",
+			"id",
+			"parent_id",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"fields",
+			"'"+modifiedBy+"'",
+			"create_at",
+			s.castInt(now, "update_at"),
+			s.castInt(now, "delete_at"),
+			"created_by",
+		).
+		From(s.tablePrefix + "blocks").
+		Where(sq.Eq{"board_id": boardID})
+
+	if parentID != "" {
+		selectQuery = selectQuery.Where(sq.Eq{"parent_id": parentID})
+	}
+
+	insertQuery := s.getQueryBuilder(db).
+		Insert(s.tablePrefix+"blocks_history").
+		Columns(
+			"board_id",
+			"id",
+			"parent_id",
+			s.escapeField("schema"),
+			"type",
+			"title",
+			"fields",
+			"modified_by",
+			"create_at",
+			"update_at",
+			"delete_at",
+			"created_by",
+		).Select(selectQuery)
+
+	if _, err := insertQuery.Exec(); err != nil {
+		return err
+	}
+
+	deleteQuery := s.getQueryBuilder(db).
+		Delete(s.tablePrefix + "blocks").
+		Where(sq.Eq{"board_id": boardID})
+
+	if parentID != "" {
+		deleteQuery = deleteQuery.Where(sq.Eq{"parent_id": parentID})
+	}
+
+	if _, err := deleteQuery.Exec(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *SQLStore) undeleteBlockChildren(db sq.BaseRunner, boardID string, parentID string, modifiedBy string) error {
+	if boardID == "" {
+		return ErrEmptyBoardID{}
+	}
+
+	where := fmt.Sprintf("board_id='%s'", boardID)
+	if parentID != "" {
+		where += fmt.Sprintf(" AND parent_id='%s'", parentID)
+	}
+
+	selectQuery := s.getQueryBuilder(db).
+		Select(
+			"bh.board_id",
+			"'' AS channel_id",
+			"bh.id",
+			"bh.parent_id",
+			"bh.schema",
+			"bh.type",
+			"bh.title",
+			"bh.fields",
+			"'"+modifiedBy+"' AS modified_by",
+			"bh.create_at",
+			s.castInt(utils.GetMillis(), "update_at"),
+			s.castInt(0, "delete_at"),
+			"bh.created_by",
+		).
+		From(fmt.Sprintf(`
+				%sblocks_history AS bh,
+				(SELECT id, max(insert_at) AS max_insert_at FROM %sblocks_history WHERE %s GROUP BY id) AS sub`,
+			s.tablePrefix, s.tablePrefix, where)).
+		Where("bh.id=sub.id").
+		Where("bh.insert_at=sub.max_insert_at").
+		Where(sq.NotEq{"bh.delete_at": 0})
+
+	columns := []string{
+		"board_id",
+		"channel_id",
+		"id",
+		"parent_id",
+		s.escapeField("schema"),
+		"type",
+		"title",
+		"fields",
+		"modified_by",
+		"create_at",
+		"update_at",
+		"delete_at",
+		"created_by",
+	}
+
+	insertQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks").
+		Columns(columns...).
+		Select(selectQuery)
+
+	insertHistoryQuery := s.getQueryBuilder(db).Insert(s.tablePrefix + "blocks_history").
+		Columns(columns...).
+		Select(selectQuery)
+
+	sql, args, err := insertQuery.ToSql()
+	s.logger.Trace("undeleteBlockChildren - insertQuery",
+		mlog.String("sql", sql),
+		mlog.Array("args", args),
+		mlog.Err(err),
+	)
+
+	sql, args, err = insertHistoryQuery.ToSql()
+	s.logger.Trace("undeleteBlockChildren - insertHistoryQuery",
+		mlog.String("sql", sql),
+		mlog.Array("args", args),
+		mlog.Err(err),
+	)
+
+	// insert into blocks table must happen before history table, otherwise the history
+	// table will be changed and the second query will fail to find the same records.
+	result, err := insertQuery.Exec()
+	if err != nil {
+		return err
+	}
+	rowsAffected, _ := result.RowsAffected()
+	s.logger.Debug("undeleteBlockChildren - insertQuery", mlog.Int64("rows_affected", rowsAffected))
+
+	result, err = insertHistoryQuery.Exec()
+	if err != nil {
+		return err
+	}
+	rowsAffected, _ = result.RowsAffected()
+	s.logger.Debug("undeleteBlockChildren - insertHistoryQuery", mlog.Int64("rows_affected", rowsAffected))
+
+	return nil
 }

@@ -1,8 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useState} from 'react'
+
 import {useIntl} from 'react-intl'
 
+import {PropertyType} from '../../properties/types'
 import {IPropertyTemplate} from '../../blocks/board'
 import {FilterClause} from '../../blocks/filterClause'
 import {createFilterGroup} from '../../blocks/filterGroup'
@@ -13,9 +15,11 @@ import Button from '../../widgets/buttons/button'
 import Menu from '../../widgets/menu'
 import Editable from '../../widgets/editable'
 import MenuWrapper from '../../widgets/menuWrapper'
-import {PropertyType} from '../../properties/types'
+
+import DateFilter from './dateFilter'
 
 import './filterValue.scss'
+import MultiPersonFilterValue from './multipersonFilterValue'
 
 type Props = {
     view: BoardView
@@ -37,7 +41,7 @@ const filterValue = (props: Props): JSX.Element|null => {
         return null
     }
 
-    if (propertyType.filterValueType === 'options' && filter.condition !== 'includes' && filter.condition !== 'notIncludes') {
+    if ((propertyType.filterValueType === 'options' || propertyType.filterValueType === 'person') && filter.condition !== 'includes' && filter.condition !== 'notIncludes') {
         return null
     }
 
@@ -62,6 +66,27 @@ const filterValue = (props: Props): JSX.Element|null => {
         )
     }
 
+    if (propertyType.filterValueType === 'person') {
+        return (
+            <MultiPersonFilterValue
+                view={view}
+                filter={filter}
+            />
+        )
+    }
+    if (propertyType.filterValueType === 'date') {
+        if (filter.condition === 'isSet' || filter.condition === 'isNotSet') {
+            return null
+        }
+
+        return (
+            <DateFilter
+                view={view}
+                filter={filter}
+            />
+        )
+    }
+
     let displayValue: string
     if (filter.values.length > 0) {
         displayValue = filter.values.map((id) => {
@@ -69,12 +94,13 @@ const filterValue = (props: Props): JSX.Element|null => {
             return option?.value || '(Unknown)'
         }).join(', ')
     } else {
-        displayValue = '(empty)'
+        displayValue = intl.formatMessage({id: 'FilterValue.empty', defaultMessage: '(empty)'})
     }
 
     return (
         <MenuWrapper className='filterValue'>
             <Button>{displayValue}</Button>
+
             <Menu>
                 {template?.options.map((o) => (
                     <Menu.Switch

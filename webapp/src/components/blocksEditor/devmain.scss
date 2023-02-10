@@ -1,0 +1,27 @@
+h1,
+h2,
+h3,
+p {
+    margin: 5px;
+}
+
+.App-header {
+    padding: 20px 100px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}

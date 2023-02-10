@@ -1,2 +1,2 @@
-ALTER TABLE {{.prefix}}blocks
-ADD COLUMN modified_by VARCHAR(36);
+{{- /* addColumnIfNeeded tableName columnName datatype constraint */ -}}
+{{ addColumnIfNeeded "blocks" "modified_by" "varchar(36)" ""}}

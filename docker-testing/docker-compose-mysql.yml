@@ -15,7 +15,7 @@ services:
       retries: 3
     tmpfs: /var/lib/mysql
     ports:
-      - 44445:3306
+      - 44446:3306
 
   start_dependencies:
     image: mattermost/mattermost-wait-for-dep:latest

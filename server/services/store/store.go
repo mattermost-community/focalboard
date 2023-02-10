@@ -38,6 +38,7 @@ type Store interface {
 	PatchBlock(blockID string, blockPatch *model.BlockPatch, userID string) error
 	GetBlockHistory(blockID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error)
 	GetBlockHistoryDescendants(boardID string, opts model.QueryBlockHistoryOptions) ([]*model.Block, error)
+	GetBlockHistoryNewestChildren(parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error)
 	GetBoardHistory(boardID string, opts model.QueryBoardHistoryOptions) ([]*model.Board, error)
 	GetBoardAndCardByID(blockID string) (board *model.Board, card *model.Block, err error)
 	GetBoardAndCard(block *model.Block) (board *model.Board, card *model.Block, err error)
@@ -56,15 +57,15 @@ type Store interface {
 
 	GetRegisteredUserCount() (int, error)
 	GetUserByID(userID string) (*model.User, error)
-	GetUsersList(userIDs []string) ([]*model.User, error)
+	GetUsersList(userIDs []string, showEmail, showName bool) ([]*model.User, error)
 	GetUserByEmail(email string) (*model.User, error)
 	GetUserByUsername(username string) (*model.User, error)
 	CreateUser(user *model.User) (*model.User, error)
 	UpdateUser(user *model.User) (*model.User, error)
 	UpdateUserPassword(username, password string) error
 	UpdateUserPasswordByID(userID, password string) error
-	GetUsersByTeam(teamID string, asGuestID string) ([]*model.User, error)
-	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error)
+	GetUsersByTeam(teamID string, asGuestID string, showEmail, showName bool) ([]*model.User, error)
+	SearchUsersByTeam(teamID string, searchQuery string, asGuestID string, excludeBots bool, showEmail, showName bool) ([]*model.User, error)
 	PatchUserPreferences(userID string, patch model.UserPreferencesPatch) (mmModel.Preferences, error)
 	GetUserPreferences(userID string) (mmModel.Preferences, error)
 
@@ -104,7 +105,7 @@ type Store interface {
 	GetMembersForBoard(boardID string) ([]*model.BoardMember, error)
 	GetMembersForUser(userID string) ([]*model.BoardMember, error)
 	CanSeeUser(seerID string, seenID string) (bool, error)
-	SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error)
+	SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error)
 	SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error)
 
 	// @withTransaction
@@ -117,9 +118,13 @@ type Store interface {
 	DeleteBoardsAndBlocks(dbab *model.DeleteBoardsAndBlocks, userID string) error
 
 	GetCategory(id string) (*model.Category, error)
+
+	GetUserCategories(userID, teamID string) ([]model.Category, error)
+	// @withTransaction
 	CreateCategory(category model.Category) error
 	UpdateCategory(category model.Category) error
 	DeleteCategory(categoryID, userID, teamID string) error
+	ReorderCategories(userID, teamID string, newCategoryOrder []string) ([]string, error)
 
 	GetUserCategoryBoards(userID, teamID string) ([]model.CategoryBoards, error)
 
@@ -127,7 +132,9 @@ type Store interface {
 	SaveFileInfo(fileInfo *mmModel.FileInfo) error
 
 	// @withTransaction
-	AddUpdateCategoryBoard(userID, categoryID, blockID string) error
+	AddUpdateCategoryBoard(userID, categoryID string, boardIDs []string) error
+	ReorderCategoryBoards(categoryID string, newBoardsOrder []string) ([]string, error)
+	SetBoardVisibility(userID, categoryID, boardID string, visible bool) error
 
 	CreateSubscription(sub *model.Subscription) (*model.Subscription, error)
 	DeleteSubscription(blockID string, subscriberID string) error
@@ -153,6 +160,7 @@ type Store interface {
 	UpdateCardLimitTimestamp(cardLimit int) (int64, error)
 
 	DBType() string
+	DBVersion() string
 
 	GetLicense() *mmModel.License
 	GetCloudLimits() (*mmModel.ProductLimits, error)
@@ -162,9 +170,18 @@ type Store interface {
 	SendMessage(message, postType string, receipts []string) error
 
 	// Insights
-	GetTeamBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
+	GetTeamBoardsInsights(teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserBoardsInsights(teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error)
 	GetUserTimezone(userID string) (string, error)
+
+	// Compliance
+	GetBoardsForCompliance(opts model.QueryBoardsForComplianceOptions) ([]*model.Board, bool, error)
+	GetBoardsComplianceHistory(opts model.QueryBoardsComplianceHistoryOptions) ([]*model.BoardHistory, bool, error)
+	GetBlocksComplianceHistory(opts model.QueryBlocksComplianceHistoryOptions) ([]*model.BlockHistory, bool, error)
+
+	// For unit testing only
+	DeleteBoardRecord(boardID, modifiedBy string) error
+	DeleteBlockRecord(blockID, modifiedBy string) error
 }
 
 type NotSupportedError struct {

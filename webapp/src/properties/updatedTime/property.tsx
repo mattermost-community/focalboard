@@ -6,15 +6,14 @@ import {Options} from '../../components/calculations/options'
 import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {DatePropertyType, PropertyTypeEnum} from '../types'
 
 import UpdatedTime from './updatedTime'
 
-export default class UpdatedTimeProperty extends PropertyType {
+export default class UpdatedTimeProperty extends DatePropertyType {
     Editor = UpdatedTime
     name = 'Last Modified At'
     type = 'updatedTime' as PropertyTypeEnum
-    isDate = true
     isReadOnly = true
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.UpdatedTime', defaultMessage: 'Last updated time'})
     calculationOptions = [Options.none, Options.count, Options.countEmpty,

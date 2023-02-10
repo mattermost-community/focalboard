@@ -6,11 +6,11 @@ import (
 )
 
 func (a *App) GetTeamUsers(teamID string, asGuestID string) ([]*model.User, error) {
-	return a.store.GetUsersByTeam(teamID, asGuestID)
+	return a.store.GetUsersByTeam(teamID, asGuestID, a.config.ShowEmailAddress, a.config.ShowFullName)
 }
 
 func (a *App) SearchTeamUsers(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots)
+	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots, a.config.ShowEmailAddress, a.config.ShowFullName)
 }
 
 func (a *App) UpdateUserConfig(userID string, patch model.UserPreferencesPatch) ([]mmModel.Preference, error) {

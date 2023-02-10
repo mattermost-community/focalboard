@@ -154,8 +154,8 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 	var destinationCategoryID string
 
 	for _, categoryBoard := range userCategoryBoards {
-		for _, boardID := range categoryBoard.BoardIDs {
-			if boardID == sourceBoardID {
+		for _, metadata := range categoryBoard.BoardMetadata {
+			if metadata.BoardID == sourceBoardID {
 				// category found!
 				destinationCategoryID = categoryBoard.ID
 				break
@@ -175,7 +175,7 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 
 	// now that we have source board's category,
 	// we send destination board to the same category
-	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, destinationBoardID)
+	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, []string{destinationBoardID})
 }
 
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
@@ -189,9 +189,11 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 		a.logger.Error("Could not copy files while duplicating board", mlog.String("BoardID", boardID), mlog.Err(err))
 	}
 
-	for _, board := range bab.Boards {
-		if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
-			return nil, nil, categoryErr
+	if !asTemplate {
+		for _, board := range bab.Boards {
+			if categoryErr := a.setBoardCategoryFromSource(boardID, board.ID, userID, toTeam, asTemplate); categoryErr != nil {
+				return nil, nil, categoryErr
+			}
 		}
 	}
 
@@ -200,13 +202,21 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	blockPatches := make([]model.BlockPatch, 0)
 
 	for _, block := range bab.Blocks {
-		if fileID, ok := block.Fields["fileId"]; ok {
-			blockIDs = append(blockIDs, block.ID)
-			blockPatches = append(blockPatches, model.BlockPatch{
-				UpdatedFields: map[string]interface{}{
-					"fileId": fileID,
-				},
-			})
+		fieldName := ""
+		if block.Type == model.TypeImage {
+			fieldName = "fileId"
+		} else if block.Type == model.TypeAttachment {
+			fieldName = "attachmentId"
+		}
+		if fieldName != "" {
+			if fieldID, ok := block.Fields[fieldName]; ok {
+				blockIDs = append(blockIDs, block.ID)
+				blockPatches = append(blockPatches, model.BlockPatch{
+					UpdatedFields: map[string]interface{}{
+						fieldName: fieldID,
+					},
+				})
+			}
 		}
 	}
 	a.logger.Debug("Duplicate boards patching file IDs", mlog.Int("count", len(blockIDs)))
@@ -300,7 +310,7 @@ func (a *App) CreateBoard(board *model.Board, userID string, addMember bool) (*m
 		return nil
 	})
 
-	if board.TeamID != "0" {
+	if !board.IsTemplate {
 		if err := a.addBoardsToDefaultCategory(userID, newBoard.TeamID, []*model.Board{newBoard}); err != nil {
 			return nil, err
 		}
@@ -327,10 +337,13 @@ func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.
 		return fmt.Errorf("%w userID: %s", errNoDefaultCategoryFound, userID)
 	}
 
-	for _, board := range boards {
-		if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, board.ID); err != nil {
-			return err
-		}
+	boardIDs := make([]string, len(boards))
+	for i := range boards {
+		boardIDs[i] = boards[i].ID
+	}
+
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, boardIDs); err != nil {
+		return err
 	}
 
 	return nil
@@ -378,10 +391,14 @@ func (a *App) PatchBoard(patch *model.BoardPatch, boardID, userID string) (*mode
 		}
 
 		boardLink := utils.MakeBoardLink(a.config.ServerRoot, updatedBoard.TeamID, updatedBoard.ID)
+		title := updatedBoard.Title
+		if title == "" {
+			title = "Untitled board" // todo: localize this when server has i18n
+		}
 		if *patch.ChannelID != "" {
-			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, updatedBoard.Title, boardLink), updatedBoard.ChannelID)
+			a.postChannelMessage(fmt.Sprintf(linkBoardMessage, username, title, boardLink), updatedBoard.ChannelID)
 		} else if *patch.ChannelID == "" {
-			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, updatedBoard.Title, boardLink), oldChannelID)
+			a.postChannelMessage(fmt.Sprintf(unlinkBoardMessage, username, title, boardLink), oldChannelID)
 		}
 	}
 
@@ -519,6 +536,12 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 		return nil, err
 	}
 
+	if !board.IsTemplate {
+		if err = a.addBoardsToDefaultCategory(member.UserID, board.TeamID, []*model.Board{board}); err != nil {
+			return nil, err
+		}
+	}
+
 	a.blockChangeNotifier.Enqueue(func() error {
 		a.wsAdapter.BroadcastMemberChange(board.TeamID, member.BoardID, member)
 		return nil
@@ -628,8 +651,8 @@ func (a *App) DeleteBoardMember(boardID, userID string) error {
 	return nil
 }
 
-func (a *App) SearchBoardsForUser(term, userID string, includePublicBoards bool) ([]*model.Board, error) {
-	return a.store.SearchBoardsForUser(term, userID, includePublicBoards)
+func (a *App) SearchBoardsForUser(term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
+	return a.store.SearchBoardsForUser(term, searchField, userID, includePublicBoards)
 }
 
 func (a *App) SearchBoardsForUserInTeam(teamID, term, userID string) ([]*model.Board, error) {

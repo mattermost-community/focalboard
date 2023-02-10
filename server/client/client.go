@@ -11,6 +11,8 @@ import (
 
 	"github.com/mattermost/focalboard/server/api"
 	"github.com/mattermost/focalboard/server/model"
+
+	mmModel "github.com/mattermost/mattermost-server/v6/model"
 )
 
 const (
@@ -442,6 +444,15 @@ func (c *Client) CreateCategory(category model.Category) (*model.Category, *Resp
 	return model.CategoryFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) DeleteCategory(teamID, categoryID string) *Response {
+	r, err := c.DoAPIDelete(c.GetTeamRoute(teamID)+"/categories/"+categoryID, "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
 func (c *Client) UpdateCategoryBoard(teamID, categoryID, boardID string) *Response {
 	r, err := c.DoAPIPost(fmt.Sprintf("%s/categories/%s/boards/%s", c.GetTeamRoute(teamID), categoryID, boardID), "")
 	if err != nil {
@@ -462,6 +473,30 @@ func (c *Client) GetUserCategoryBoards(teamID string) ([]model.CategoryBoards, *
 	var categoryBoards []model.CategoryBoards
 	_ = json.NewDecoder(r.Body).Decode(&categoryBoards)
 	return categoryBoards, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategories(teamID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedCategoryOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedCategoryOrder)
+	return updatedCategoryOrder, BuildResponse(r)
+}
+
+func (c *Client) ReorderCategoryBoards(teamID, categoryID string, newOrder []string) ([]string, *Response) {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/reorder", toJSON(newOrder))
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var updatedBoardsOrder []string
+	_ = json.NewDecoder(r.Body).Decode(&updatedBoardsOrder)
+	return updatedBoardsOrder, BuildResponse(r)
 }
 
 func (c *Client) PatchBoardsAndBlocks(pbab *model.PatchBoardsAndBlocks) (*model.BoardsAndBlocks, *Response) {
@@ -686,6 +721,17 @@ func (c *Client) GetBoardsForTeam(teamID string) ([]*model.Board, *Response) {
 	return model.BoardsFromJSON(r.Body), BuildResponse(r)
 }
 
+func (c *Client) SearchBoardsForUser(teamID, term string, field model.BoardSearchField) ([]*model.Board, *Response) {
+	query := fmt.Sprintf("q=%s&field=%s", term, field)
+	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return model.BoardsFromJSON(r.Body), BuildResponse(r)
+}
+
 func (c *Client) SearchBoardsForTeam(teamID, term string) ([]*model.Board, *Response) {
 	r, err := c.DoAPIGet(c.GetTeamRoute(teamID)+"/boards/search?q="+term, "")
 	if err != nil {
@@ -788,6 +834,19 @@ func (c *Client) TeamUploadFile(teamID, boardID string, data io.Reader) (*api.Fi
 	}
 
 	return fileUploadResponse, BuildResponse(r)
+}
+
+func (c *Client) TeamUploadFileInfo(teamID, boardID string, fileName string) (*mmModel.FileInfo, *Response) {
+	r, err := c.DoAPIGet(fmt.Sprintf("/files/teams/%s/%s/%s/info", teamID, boardID, fileName), "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+	fileInfoResponse, error := api.FileInfoResponseFromJSON(r.Body)
+	if error != nil {
+		return nil, BuildErrorResponse(r, error)
+	}
+	return fileInfoResponse, BuildResponse(r)
 }
 
 func (c *Client) GetSubscriptionsRoute() string {
@@ -903,6 +962,16 @@ func (c *Client) GetLimits() (*model.BoardsCloudLimits, *Response) {
 	return limits, BuildResponse(r)
 }
 
+func (c *Client) MoveContentBlock(srcBlockID string, dstBlockID string, where string, userID string) (bool, *Response) {
+	r, err := c.DoAPIPost("/content-blocks/"+srcBlockID+"/moveto/"+where+"/"+dstBlockID, "")
+	if err != nil {
+		return false, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	return true, BuildResponse(r)
+}
+
 func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
 	r, err := c.DoAPIGet("/statistics", "")
 	if err != nil {
@@ -917,4 +986,77 @@ func (c *Client) GetStatistics() (*model.BoardsStatistics, *Response) {
 	}
 
 	return stats, BuildResponse(r)
+}
+
+func (c *Client) GetBoardsForCompliance(teamID string, page, perPage int) (*model.BoardsComplianceResponse, *Response) {
+	query := fmt.Sprintf("?team_id=%s&page=%d&per_page=%d", teamID, page, perPage)
+	r, err := c.DoAPIGet("/admin/boards"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var res *model.BoardsComplianceResponse
+	err = json.NewDecoder(r.Body).Decode(&res)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return res, BuildResponse(r)
+}
+
+func (c *Client) GetBoardsComplianceHistory(
+	modifiedSince int64, includeDeleted bool, teamID string, page, perPage int) (*model.BoardsComplianceHistoryResponse, *Response) {
+	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&page=%d&per_page=%d",
+		modifiedSince, includeDeleted, teamID, page, perPage)
+	r, err := c.DoAPIGet("/admin/boards_history"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var res *model.BoardsComplianceHistoryResponse
+	err = json.NewDecoder(r.Body).Decode(&res)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return res, BuildResponse(r)
+}
+
+func (c *Client) GetBlocksComplianceHistory(
+	modifiedSince int64, includeDeleted bool, teamID, boardID string, page, perPage int) (*model.BlocksComplianceHistoryResponse, *Response) {
+	query := fmt.Sprintf("?modified_since=%d&include_deleted=%t&team_id=%s&board_id=%s&page=%d&per_page=%d",
+		modifiedSince, includeDeleted, teamID, boardID, page, perPage)
+	r, err := c.DoAPIGet("/admin/blocks_history"+query, "")
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+	defer closeBody(r)
+
+	var res *model.BlocksComplianceHistoryResponse
+	err = json.NewDecoder(r.Body).Decode(&res)
+	if err != nil {
+		return nil, BuildErrorResponse(r, err)
+	}
+
+	return res, BuildResponse(r)
+}
+
+func (c *Client) HideBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/boards/"+boardID+"/hide", "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
+}
+
+func (c *Client) UnhideBoard(teamID, categoryID, boardID string) *Response {
+	r, err := c.DoAPIPut(c.GetTeamRoute(teamID)+"/categories/"+categoryID+"/boards/"+boardID+"/unhide", "")
+	if err != nil {
+		return BuildErrorResponse(r, err)
+	}
+
+	return BuildResponse(r)
 }

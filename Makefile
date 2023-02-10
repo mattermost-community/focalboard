@@ -12,7 +12,7 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_DATE := n/a
 endif
 
-BUILD_TAGS += json1
+BUILD_TAGS += json1 sqlite3
 
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
@@ -64,6 +64,11 @@ server-linux: setup-go-work ## Build server for Linux.
 	mkdir -p bin/linux
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
 	cd server; env GOOS=linux GOARCH=amd64 go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/linux/focalboard-server ./main
+
+server-docker: setup-go-work ## Build server for Docker Architectures.
+	mkdir -p bin/docker
+	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=linux")
+	cd server; env GOOS=$(os) GOARCH=$(arch) go build -ldflags '$(LDFLAGS)' -tags '$(BUILD_TAGS)' -o ../bin/docker/focalboard-server ./main
 
 server-win: setup-go-work ## Build server for Windows.
 	$(eval LDFLAGS += -X "github.com/mattermost/focalboard/server/model.Edition=win")
@@ -141,7 +146,7 @@ server-test-mini-sqlite: setup-go-work ## Run server tests using sqlite
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql
-server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44445
+server-test-mysql: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
 
 server-test-mysql: setup-go-work ## Run server tests using mysql
 	@echo Starting docker container for mysql
@@ -169,7 +174,7 @@ server-test-mariadb: templates-archive ## Run server tests using mysql
 
 server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
 server-test-postgres: export FOCALBOARD_STORE_TEST_DB_TYPE=postgres
-server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44446
+server-test-postgres: export FOCALBOARD_STORE_TEST_DOCKER_PORT=44447
 
 server-test-postgres: setup-go-work ## Run server tests using postgres
 	@echo Starting docker container for postgres

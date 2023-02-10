@@ -17,41 +17,31 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func boardFields(prefix string) []string {
-	fields := []string{
-		"id",
-		"team_id",
-		"COALESCE(channel_id, '')",
-		"COALESCE(created_by, '')",
-		"modified_by",
-		"type",
-		"minimum_role",
-		"title",
-		"description",
-		"icon",
-		"show_description",
-		"is_template",
-		"template_version",
-		"COALESCE(properties, '{}')",
-		"COALESCE(card_properties, '[]')",
-		"create_at",
-		"update_at",
-		"delete_at",
+func boardFields(tableAlias string) []string {
+	if tableAlias != "" && !strings.HasSuffix(tableAlias, ".") {
+		tableAlias += "."
 	}
 
-	if prefix == "" {
-		return fields
+	return []string{
+		tableAlias + "id",
+		tableAlias + "team_id",
+		"COALESCE(" + tableAlias + "channel_id, '')",
+		"COALESCE(" + tableAlias + "created_by, '')",
+		tableAlias + "modified_by",
+		tableAlias + "type",
+		tableAlias + "minimum_role",
+		tableAlias + "title",
+		tableAlias + "description",
+		tableAlias + "icon",
+		tableAlias + "show_description",
+		tableAlias + "is_template",
+		tableAlias + "template_version",
+		"COALESCE(" + tableAlias + "properties, '{}')",
+		"COALESCE(" + tableAlias + "card_properties, '[]')",
+		tableAlias + "create_at",
+		tableAlias + "update_at",
+		tableAlias + "delete_at",
 	}
-
-	prefixedFields := make([]string, len(fields))
-	for i, field := range fields {
-		if strings.HasPrefix(field, "COALESCE(") {
-			prefixedFields[i] = strings.Replace(field, "COALESCE(", "COALESCE("+prefix, 1)
-		} else {
-			prefixedFields[i] = prefix + field
-		}
-	}
-	return prefixedFields
 }
 
 func boardHistoryFields() []string {
@@ -422,6 +412,10 @@ func (s *SQLStore) patchBoard(db sq.BaseRunner, boardID string, boardPatch *mode
 }
 
 func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
+	return s.deleteBoardAndChildren(db, boardID, userID, false)
+}
+
+func (s *SQLStore) deleteBoardAndChildren(db sq.BaseRunner, boardID, userID string, keepChildren bool) error {
 	now := utils.GetMillis()
 
 	board, err := s.getBoard(db, boardID)
@@ -477,7 +471,11 @@ func (s *SQLStore) deleteBoard(db sq.BaseRunner, boardID, userID string) error {
 		return err
 	}
 
-	return nil
+	if keepChildren {
+		return nil
+	}
+
+	return s.deleteBlockChildren(db, boardID, "", userID)
 }
 
 func (s *SQLStore) insertBoardWithAdmin(db sq.BaseRunner, board *model.Board, userID string) (*model.Board, *model.BoardMember, error) {
@@ -652,7 +650,7 @@ func (s *SQLStore) getMembersForBoard(db sq.BaseRunner, boardID string) ([]*mode
 // term that are either private and which the user is a member of, or
 // they're open, regardless of the user membership.
 // Search is case-insensitive.
-func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string, includePublicBoards bool) ([]*model.Board, error) {
+func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchField model.BoardSearchField, userID string, includePublicBoards bool) ([]*model.Board, error) {
 	query := s.getQueryBuilder(db).
 		Select(boardFields("b.")...).
 		Distinct().
@@ -672,19 +670,30 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term, userID string, in
 	}
 
 	if term != "" {
-		// break search query into space separated words
-		// and search for all words.
-		// This should later be upgraded to industrial-strength
-		// word tokenizer, that uses much more than space
-		// to break words.
-
-		conditions := sq.And{}
-
-		for _, word := range strings.Split(strings.TrimSpace(term), " ") {
-			conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+		if searchField == model.BoardSearchFieldPropertyName {
+			switch s.dbType {
+			case model.PostgresDBType:
+				where := "b.properties->? is not null"
+				query = query.Where(where, term)
+			case model.MysqlDBType, model.SqliteDBType:
+				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
+				query = query.Where(where, "$."+term)
+			default:
+				where := "b.properties LIKE ?"
+				query = query.Where(where, "%\""+term+"\"%")
+			}
+		} else { // model.BoardSearchFieldTitle
+			// break search query into space separated words
+			// and search for all words.
+			// This should later be upgraded to industrial-strength
+			// word tokenizer, that uses much more than space
+			// to break words.
+			conditions := sq.And{}
+			for _, word := range strings.Split(strings.TrimSpace(term), " ") {
+				conditions = append(conditions, sq.Like{"lower(b.title)": "%" + strings.ToLower(word) + "%"})
+			}
+			query = query.Where(conditions)
 		}
-
-		query = query.Where(conditions)
 	}
 
 	rows, err := query.Query()
@@ -861,7 +870,7 @@ func (s *SQLStore) undeleteBoard(db sq.BaseRunner, boardID string, modifiedBy st
 		return err
 	}
 
-	return nil
+	return s.undeleteBlockChildren(db, board.ID, "", modifiedBy)
 }
 
 func (s *SQLStore) getBoardMemberHistory(db sq.BaseRunner, boardID, userID string, limit uint64) ([]*model.BoardMemberHistoryEntry, error) {

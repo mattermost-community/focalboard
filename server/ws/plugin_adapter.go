@@ -422,7 +422,7 @@ func (pa *PluginAdapter) sendTeamMessage(event, teamID string, payload map[strin
 			EnsureUsers: ensureUserIDs,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendTeamMessageSkipCluster(event, teamID, payload)
@@ -447,7 +447,7 @@ func (pa *PluginAdapter) sendBoardMessage(teamID, boardID string, payload map[st
 			EnsureUsers: ensureUserIDs,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendBoardMessageSkipCluster(teamID, boardID, payload, ensureUserIDs...)
@@ -490,25 +490,74 @@ func (pa *PluginAdapter) BroadcastCategoryChange(category model.Category) {
 			UserID:  category.UserID,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategory, payload, category.UserID)
 }
 
-func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategory model.BoardCategoryWebsocketData) {
+func (pa *PluginAdapter) BroadcastCategoryReorder(teamID, userID string, categoryOrder []string) {
+	pa.logger.Debug("BroadcastCategoryReorder",
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+	)
+
+	message := CategoryReorderMessage{
+		Action:        websocketActionReorderCategories,
+		CategoryOrder: categoryOrder,
+		TeamID:        teamID,
+	}
+	payload := utils.StructToMap(message)
+	go func() {
+		clusterMessage := &ClusterMessage{
+			Payload: payload,
+			UserID:  userID,
+		}
+
+		pa.sendMessageToCluster(clusterMessage)
+	}()
+
+	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBoardsReorder(teamID, userID, categoryID string, boardsOrder []string) {
+	pa.logger.Debug("BroadcastCategoryBoardsReorder",
+		mlog.String("userID", userID),
+		mlog.String("teamID", teamID),
+		mlog.String("categoryID", categoryID),
+	)
+
+	message := CategoryBoardReorderMessage{
+		Action:     websocketActionReorderCategoryBoards,
+		CategoryID: categoryID,
+		BoardOrder: boardsOrder,
+		TeamID:     teamID,
+	}
+	payload := utils.StructToMap(message)
+	go func() {
+		clusterMessage := &ClusterMessage{
+			Payload: payload,
+			UserID:  userID,
+		}
+
+		pa.sendMessageToCluster(clusterMessage)
+	}()
+
+	pa.sendUserMessageSkipCluster(message.Action, payload, userID)
+}
+
+func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boardCategories []*model.BoardCategoryWebsocketData) {
 	pa.logger.Debug(
 		"BroadcastCategoryBoardChange",
 		mlog.String("userID", userID),
 		mlog.String("teamID", teamID),
-		mlog.String("categoryID", boardCategory.CategoryID),
-		mlog.String("blockID", boardCategory.BoardID),
+		mlog.Int("numEntries", len(boardCategories)),
 	)
 
 	message := UpdateCategoryMessage{
 		Action:          websocketActionUpdateCategoryBoard,
 		TeamID:          teamID,
-		BoardCategories: &boardCategory,
+		BoardCategories: boardCategories,
 	}
 
 	payload := utils.StructToMap(message)
@@ -519,7 +568,7 @@ func (pa *PluginAdapter) BroadcastCategoryBoardChange(teamID, userID string, boa
 			UserID:  userID,
 		}
 
-		pa.sendMessageToCluster("websocket_message", clusterMessage)
+		pa.sendMessageToCluster(clusterMessage)
 	}()
 
 	pa.sendUserMessageSkipCluster(websocketActionUpdateCategoryBoard, utils.StructToMap(message), userID)

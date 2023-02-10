@@ -172,6 +172,7 @@ if (TARGET_IS_PRODUCT) {
 
     config.output = {
         path: path.join(__dirname, '/dist'),
+        chunkFilename: '[name].[contenthash].js',
     };
 } else {
     config.resolve.alias['react-intl'] = path.resolve(__dirname, '../../webapp/node_modules/react-intl/');
@@ -206,10 +207,13 @@ if (NPM_TARGET === 'start:product') {
     const url = new URL(process.env.MM_BOARDS_DEV_SERVER_URL ?? 'http://localhost:9006');
 
     config.devServer = {
-        https: url.protocol === 'https:' && {
-            minVersion: process.env.MM_SERVICESETTINGS_TLSMINVER,
-            key: process.env.MM_SERVICESETTINGS_TLSKEYFILE,
-            cert: process.env.MM_SERVICESETTINGS_TLSCERTFILE,
+        server: {
+            type: url.protocol.substring(0, url.protocol.length - 1),
+            options: {
+                minVersion: process.env.MM_SERVICESETTINGS_TLSMINVER ?? 'TLSv1.2',
+                key: process.env.MM_SERVICESETTINGS_TLSKEYFILE,
+                cert: process.env.MM_SERVICESETTINGS_TLSCERTFILE,
+            },
         },
         host: url.hostname,
         port: url.port,

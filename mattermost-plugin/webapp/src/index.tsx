@@ -39,6 +39,7 @@ import '../../../webapp/src/styles/main.scss'
 import '../../../webapp/src/styles/labels.scss'
 import octoClient from '../../../webapp/src/octoClient'
 import {Constants} from '../../../webapp/src/constants'
+import {Board} from '../../../webapp/src/blocks/board'
 
 import appBarIcon from '../../../webapp/static/app-bar-icon.png'
 
@@ -55,6 +56,7 @@ import wsClient, {
     ACTION_UPDATE_CATEGORY,
     ACTION_UPDATE_BOARD_CATEGORY,
     ACTION_UPDATE_BOARD,
+    ACTION_REORDER_CATEGORIES,
 } from './../../../webapp/src/wsclient'
 
 import manifest from './manifest'
@@ -65,6 +67,7 @@ import {PluginRegistry} from './types/mattermost-webapp'
 
 import './plugin.scss'
 import CloudUpgradeNudge from "./components/cloudUpgradeNudge/cloudUpgradeNudge"
+import CreateBoardFromTemplate from './components/createBoardFromTemplate'
 
 function getSubpath(siteURL: string): string {
     const url = new URL(siteURL)
@@ -200,7 +203,7 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
 
-        const productID = process.env.TARGET_IS_PRODUCT ? 'com.mattermost.boards' : manifest.id
+        const productID = process.env.TARGET_IS_PRODUCT ? 'boards' : manifest.id
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
@@ -209,6 +212,8 @@ export default class Plugin {
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CLIENT_CONFIG}`, (e: any) => wsClient.updateClientConfigHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_CARD_LIMIT_TIMESTAMP}`, (e: any) => wsClient.updateCardLimitTimestampHandler(e.data))
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_SUBSCRIPTION}`, (e: any) => wsClient.updateSubscriptionHandler(e.data))
+        this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_REORDER_CATEGORIES}`, (e) => wsClient.updateHandler(e.data))
+
         this.registry?.registerWebSocketEventHandler('plugin_statuses_changed', (e: any) => wsClient.pluginStatusesChangedHandler(e.data))
         this.registry?.registerPostTypeComponent('custom_cloud_upgrade_nudge', CloudUpgradeNudge)
         this.registry?.registerWebSocketEventHandler('preferences_changed', (e: any) => {
@@ -261,6 +266,14 @@ export default class Plugin {
                 store.dispatch(setTeam(currentTeamID))
                 octoClient.teamId = currentTeamID
                 store.dispatch(initialLoad())
+            }
+
+            if (currentTeamID && currentTeamID !== prevTeamID) {
+                let theme = mmStore.getState().entities.preferences.myPreferences[`theme--${currentTeamID}`]
+                if (!theme) {
+                    theme = mmStore.getState().entities.preferences.myPreferences['theme--'] || mmStore.getState().entities.preferences.myPreferences.theme
+                }
+                setMattermostTheme(theme)
             }
         })
 
@@ -318,11 +331,27 @@ export default class Plugin {
             }
 
             if (registry.registerChannelIntroButtonAction) {
-                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, 'Boards')
+                this.channelHeaderButtonId = registry.registerChannelIntroButtonAction(<FocalboardIcon/>, goToFocalboardTemplate, intl.formatMessage({id: 'ChannelIntro.CreateBoard', defaultMessage: 'Create a board'}))
             }
 
             if (this.registry.registerAppBarComponent) {
                 this.registry.registerAppBarComponent(Utils.buildURL(appBarIcon, true), () => mmStore.dispatch(toggleRHSPlugin), intl.formatMessage({id: 'AppBar.Tooltip', defaultMessage: 'Toggle Linked Boards'}))
+            }
+
+            if (this.registry.registerActionAfterChannelCreation) {
+                this.registry.registerActionAfterChannelCreation((props: {
+                    setCanCreate: (canCreate: boolean) => void,
+                    setAction: (fn: () => (channelId: string, teamId: string) => Promise<Board | undefined>) => void,
+                    newBoardInfoIcon: React.ReactNode,
+                }) => (
+                    <ReduxProvider store={store}>
+                        <CreateBoardFromTemplate
+                            setCanCreate={props.setCanCreate}
+                            setAction={props.setAction}
+                            newBoardInfoIcon={props.newBoardInfoIcon}
+                        />
+                    </ReduxProvider>
+                ))
             }
 
             this.registry.registerPostWillRenderEmbedComponent(

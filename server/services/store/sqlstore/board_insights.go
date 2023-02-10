@@ -3,6 +3,7 @@ package sqlstore
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/mattermost/focalboard/server/model"
@@ -13,7 +14,7 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, userID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
+func (s *SQLStore) getTeamBoardsInsights(db sq.BaseRunner, teamID string, since int64, offset int, limit int, boardIDs []string) (*model.BoardInsightsList, error) {
 	boardsHistoryQuery := s.getQueryBuilder(db).
 		Select("boards.id, boards.icon, boards.title, count(boards_history.id) as count, boards_history.modified_by, boards.created_by").
 		From(s.tablePrefix + "boards_history as boards_history").
@@ -129,15 +130,17 @@ func boardsInsightsFromRows(rows *sql.Rows) ([]*model.BoardInsight, error) {
 	boardsInsights := []*model.BoardInsight{}
 	for rows.Next() {
 		var boardInsight model.BoardInsight
-
+		var activeUsersString string
 		err := rows.Scan(
 			&boardInsight.BoardID,
 			&boardInsight.Title,
 			&boardInsight.Icon,
 			&boardInsight.ActivityCount,
-			&boardInsight.ActiveUsers,
+			&activeUsersString,
 			&boardInsight.CreatedBy,
 		)
+		// split activeUsersString into slice
+		boardInsight.ActiveUsers = strings.Split(activeUsersString, ",")
 		if err != nil {
 			return nil, err
 		}

@@ -28,6 +28,8 @@ type SQLStore struct {
 	NewMutexFn       MutexFactory
 	servicesAPI      servicesAPI
 	isBinaryParam    bool
+	schemaName       string
+	configFn         func() *mmModel.Config
 }
 
 // MutexFactory is used by the store in plugin mode to generate
@@ -52,12 +54,19 @@ func New(params Params) (*SQLStore, error) {
 		isSingleUser:     params.IsSingleUser,
 		NewMutexFn:       params.NewMutexFn,
 		servicesAPI:      params.ServicesAPI,
+		configFn:         params.ConfigFn,
 	}
 
 	var err error
 	store.isBinaryParam, err = store.computeBinaryParam()
 	if err != nil {
 		params.Logger.Error(`Cannot compute binary parameter`, mlog.Err(err))
+		return nil, err
+	}
+
+	store.schemaName, err = store.GetSchemaName()
+	if err != nil {
+		params.Logger.Error(`Cannot get schema name`, mlog.Err(err))
 		return nil, err
 	}
 
@@ -127,7 +136,7 @@ func (s *SQLStore) getQueryBuilder(db sq.BaseRunner) sq.StatementBuilderType {
 	return builder.RunWith(db)
 }
 
-func (s *SQLStore) escapeField(fieldName string) string {
+func (s *SQLStore) escapeField(fieldName string) string { //nolint:unparam
 	if s.dbType == model.MysqlDBType {
 		return "`" + fieldName + "`"
 	}
@@ -174,4 +183,27 @@ func (s *SQLStore) searchUserChannels(db sq.BaseRunner, teamID, userID, query st
 
 func (s *SQLStore) getChannel(db sq.BaseRunner, teamID, channel string) (*mmModel.Channel, error) {
 	return nil, store.NewNotSupportedError("get channel not supported on standalone mode")
+}
+
+func (s *SQLStore) DBVersion() string {
+	var version string
+	var row *sql.Row
+
+	switch s.dbType {
+	case model.MysqlDBType:
+		row = s.db.QueryRow("SELECT VERSION()")
+	case model.PostgresDBType:
+		row = s.db.QueryRow("SHOW server_version")
+	case model.SqliteDBType:
+		row = s.db.QueryRow("SELECT sqlite_version()")
+	default:
+		return ""
+	}
+
+	if err := row.Scan(&version); err != nil {
+		s.logger.Error("error checking database version", mlog.Err(err))
+		return ""
+	}
+
+	return version
 }

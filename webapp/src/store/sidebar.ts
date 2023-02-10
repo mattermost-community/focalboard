@@ -5,6 +5,8 @@ import {createAsyncThunk, createSelector, createSlice, PayloadAction} from '@red
 
 import {default as client} from '../octoClient'
 
+import {Utils} from '../utils'
+
 import {RootState} from './index'
 
 export type CategoryType = 'system' | 'custom'
@@ -18,16 +20,29 @@ interface Category {
     updateAt: number
     deleteAt: number
     collapsed: boolean
+    sortOrder: number
     type: CategoryType
+    isNew: boolean
+}
+
+interface CategoryBoardMetadata {
+    boardID: string
+    hidden: boolean
 }
 
 interface CategoryBoards extends Category {
-    boardIDs: string[]
+    boardMetadata: CategoryBoardMetadata[]
 }
 
 interface BoardCategoryWebsocketData {
     boardID: string
     categoryID: string
+    hidden: boolean
+}
+
+interface CategoryBoardsReorderData {
+    categoryID: string
+    boardsMetadata: CategoryBoardMetadata[]
 }
 
 export const DefaultCategory: CategoryBoards = {
@@ -38,28 +53,30 @@ export const DefaultCategory: CategoryBoards = {
 export const fetchSidebarCategories = createAsyncThunk(
     'sidebarCategories/fetch',
     async (teamID: string) => {
-        const categories = await client.getSidebarCategories(teamID)
-        return categories.sort((a, b) => a.name.localeCompare(b.name))
+        return client.getSidebarCategories(teamID)
     },
 )
 
 type Sidebar = {
     categoryAttributes: CategoryBoards[]
+    hiddenBoardIDs: string[]
 }
 
 const sidebarSlice = createSlice({
     name: 'sidebar',
-    initialState: {categoryAttributes: []} as Sidebar,
+    initialState: {categoryAttributes: [], hiddenBoardIDs: []} as Sidebar,
     reducers: {
         updateCategories: (state, action: PayloadAction<Category[]>) => {
             action.payload.forEach((updatedCategory) => {
                 const index = state.categoryAttributes.findIndex((c) => c.id === updatedCategory.id)
 
-                // when new category got created
+                // when new category got created,
                 if (index === -1) {
-                    state.categoryAttributes.push({
+                    // new categories should always show up on the top
+                    state.categoryAttributes.unshift({
                         ...updatedCategory,
-                        boardIDs: [],
+                        boardMetadata: [],
+                        isNew: true,
                     })
                 } else if (updatedCategory.deleteAt) {
                     // when category is deleted
@@ -70,32 +87,108 @@ const sidebarSlice = createSlice({
                         ...state.categoryAttributes[index],
                         name: updatedCategory.name,
                         updateAt: updatedCategory.updateAt,
+                        isNew: false,
                     }
                 }
             })
-
-            // sort categories alphabetically
-            state.categoryAttributes.sort((a, b) => a.name.localeCompare(b.name))
         },
         updateBoardCategories: (state, action: PayloadAction<BoardCategoryWebsocketData[]>) => {
+            const updatedCategoryAttributes: CategoryBoards[] = []
+            let updatedHiddenBoardIDs = state.hiddenBoardIDs
+
             action.payload.forEach((boardCategory) => {
                 for (let i = 0; i < state.categoryAttributes.length; i++) {
                     const categoryAttribute = state.categoryAttributes[i]
 
-                    // first we remove the board from list of boards
-                    categoryAttribute.boardIDs = categoryAttribute.boardIDs.filter((boardID) => boardID !== boardCategory.boardID)
-
-                    // then we add it if this is the target category
                     if (categoryAttribute.id === boardCategory.categoryID) {
-                        categoryAttribute.boardIDs.push(boardCategory.boardID)
+                        const categoryBoardMetadataIndex = categoryAttribute.boardMetadata.findIndex((boardMetadata) => boardMetadata.boardID === boardCategory.boardID)
+                        if (categoryBoardMetadataIndex >= 0) {
+                            categoryAttribute.boardMetadata[categoryBoardMetadataIndex] = {
+                                ...categoryAttribute.boardMetadata[categoryBoardMetadataIndex],
+                                hidden: boardCategory.hidden,
+                            }
+                        } else {
+                            categoryAttribute.boardMetadata.unshift({boardID: boardCategory.boardID, hidden: boardCategory.hidden})
+                            categoryAttribute.isNew = false
+                        }
+                    } else {
+                        // remove the board from other categories
+                        categoryAttribute.boardMetadata = categoryAttribute.boardMetadata.filter((metadata) => metadata.boardID !== boardCategory.boardID)
+                    }
+
+                    updatedCategoryAttributes[i] = categoryAttribute
+
+                    if (boardCategory.hidden) {
+                        if (updatedHiddenBoardIDs.indexOf(boardCategory.boardID) < 0) {
+                            updatedHiddenBoardIDs.push(boardCategory.boardID)
+                        }
+                    } else {
+                        updatedHiddenBoardIDs = updatedHiddenBoardIDs.filter((hiddenBoardID) => hiddenBoardID !== boardCategory.boardID)
                     }
                 }
             })
+
+            if (updatedCategoryAttributes.length > 0) {
+                state.categoryAttributes = updatedCategoryAttributes
+            }
+            state.hiddenBoardIDs = updatedHiddenBoardIDs
+        },
+        updateCategoryOrder: (state, action: PayloadAction<string[]>) => {
+            if (action.payload.length === 0) {
+                return
+            }
+
+            const categoryById = new Map<string, CategoryBoards>()
+            state.categoryAttributes.forEach((categoryBoards: CategoryBoards) => categoryById.set(categoryBoards.id, categoryBoards))
+
+            const newOrderedCategories: CategoryBoards[] = []
+            action.payload.forEach((categoryId) => {
+                const category = categoryById.get(categoryId)
+                if (!category) {
+                    Utils.logError('Category ID from updated category order not found in store. CategoryID: ' + categoryId)
+                    return
+                }
+                newOrderedCategories.push(category)
+            })
+
+            state.categoryAttributes = newOrderedCategories
+        },
+        updateCategoryBoardsOrder: (state, action: PayloadAction<CategoryBoardsReorderData>) => {
+            if (action.payload.boardsMetadata.length === 0) {
+                return
+            }
+
+            const categoryIndex = state.categoryAttributes.findIndex((categoryBoards) => categoryBoards.id === action.payload.categoryID)
+            if (categoryIndex < 0) {
+                Utils.logError('Category ID from updated category boards order not found in store. CategoryID: ' + action.payload.categoryID)
+                return
+            }
+
+            const category = state.categoryAttributes[categoryIndex]
+            const updatedCategory: CategoryBoards = {
+                ...category,
+                boardMetadata: action.payload.boardsMetadata,
+                isNew: false,
+            }
+
+            // creating a new reference of array so redux knows it changed
+            state.categoryAttributes = state.categoryAttributes.map((original, i) => (i === categoryIndex ? updatedCategory : original))
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchSidebarCategories.fulfilled, (state, action) => {
             state.categoryAttributes = action.payload || []
+            state.hiddenBoardIDs = state.categoryAttributes.flatMap(
+                (ca) => {
+                    return ca.boardMetadata.reduce((collector, m) => {
+                        if (m.hidden) {
+                            collector.push(m.boardID)
+                        }
+
+                        return collector
+                    }, [] as string[])
+                },
+            )
         })
     },
 })
@@ -105,9 +198,18 @@ export const getSidebarCategories = createSelector(
     (sidebarCategories) => sidebarCategories,
 )
 
+export const getHiddenBoardIDs = (state: RootState): string[] => state.sidebar.hiddenBoardIDs
+
+export function getCategoryOfBoard(boardID: string): (state: RootState) => CategoryBoards | undefined {
+    return createSelector(
+        (state: RootState): CategoryBoards[] => state.sidebar.categoryAttributes,
+        (sidebarCategories) => sidebarCategories.find((category) => category.boardMetadata.findIndex((m) => m.boardID === boardID) >= 0),
+    )
+}
+
 export const {reducer} = sidebarSlice
 
-export const {updateCategories, updateBoardCategories} = sidebarSlice.actions
+export const {updateCategories, updateBoardCategories, updateCategoryOrder, updateCategoryBoardsOrder} = sidebarSlice.actions
 
-export {Category, CategoryBoards, BoardCategoryWebsocketData}
+export {Category, CategoryBoards, BoardCategoryWebsocketData, CategoryBoardsReorderData, CategoryBoardMetadata}
 
