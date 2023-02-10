@@ -242,7 +242,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
     useEffect(() => {
         if (match.params.boardId && !props.readonly && me) {
-            loadOrJoinBoard(me.id, teamId, match.params.boardId)
+            loadOrJoinBoard(me, teamId, match.params.boardId)
         }
     }, [teamId, match.params.boardId, me?.id])
 
@@ -287,8 +287,8 @@ const BoardPage = (props: Props): JSX.Element => {
 
                         onConfirm: onConfirmJoin,
                         onClose: () => {
-                            history.goBack()
                             setShowJoinBoardDialog(false)
+                            history.goBack()
                         },
                     }}
                 />}
