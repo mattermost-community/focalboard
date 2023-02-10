@@ -181,7 +181,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
@@ -219,7 +219,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
@@ -257,7 +257,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -295,7 +295,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -333,7 +333,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil).Times(2)
+		}, nil).Times(3)
 
 		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
 
@@ -375,7 +375,7 @@ func TestPatchBoard(t *testing.T) {
 			TeamID:     teamID,
 			IsTemplate: true,
 			ChannelID:  "",
-		}, nil).Times(2)
+		}, nil).Times(1)
 
 		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
 
