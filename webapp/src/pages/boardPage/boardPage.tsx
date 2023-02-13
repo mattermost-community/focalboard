@@ -215,12 +215,14 @@ const BoardPage = (props: Props): JSX.Element => {
                     UserSettings.setLastViewId(match.params.boardId, viewId)
                 }
             }
-
-            if (!props.readonly && me) {
-                loadOrJoinBoard(me.id, teamId, match.params.boardId)
-            }
         }
     }, [teamId, match.params.boardId, viewId, me?.id])
+
+    useEffect(() => {
+        if (match.params.boardId && !props.readonly && me) {
+            loadOrJoinBoard(me.id, teamId, match.params.boardId)
+        }
+    }, [teamId, match.params.boardId, me?.id])
 
     const handleUnhideBoard = async (boardID: string) => {
         if (!me || !category) {
