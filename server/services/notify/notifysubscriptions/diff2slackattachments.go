@@ -189,6 +189,9 @@ func cardDiff2SlackAttachment(cardDiff *Diff, opts DiffConvOpts) (*mm_model.Slac
 	// comment add/delete
 	attachment.Fields = appendCommentChanges(attachment.Fields, cardDiff)
 
+	// File Attachment add/delete
+	attachment.Fields = appendAttachmentChanges(attachment.Fields, cardDiff)
+
 	// content/description changes
 	attachment.Fields = appendContentChanges(attachment.Fields, cardDiff, opts.Logger)
 
@@ -256,6 +259,31 @@ func appendCommentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Dif
 				fields = append(fields, &mm_model.SlackAttachmentField{
 					Short: false,
 					Title: "Comment by " + makeAuthorsList(child.Authors, "unknown_user"), // todo:  localize this when server has i18n
+					Value: fmt.Sprintf(format, msg),
+				})
+			}
+		}
+	}
+	return fields
+}
+
+func appendAttachmentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Diff) []*mm_model.SlackAttachmentField {
+	for _, child := range cardDiff.Diffs {
+		if child.BlockType == model.TypeAttachment {
+			var format string
+			var msg string
+			if child.NewBlock != nil && child.OldBlock == nil {
+				format = "Added an attachment: **`%s`**"
+				msg = child.NewBlock.Title
+			} else {
+				format = "Removed ~~`%s`~~ attachment"
+				msg = stripNewlines(child.OldBlock.Title)
+			}
+
+			if format != "" {
+				fields = append(fields, &mm_model.SlackAttachmentField{
+					Short: false,
+					Title: "Changed by " + makeAuthorsList(child.Authors, "unknown_user"), // TODO:  localize this when server has i18n
 					Value: fmt.Sprintf(format, msg),
 				})
 			}
