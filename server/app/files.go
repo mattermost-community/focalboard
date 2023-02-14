@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/mattermost/focalboard/server/model"
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/focalboard/server/utils"
@@ -28,7 +29,7 @@ func (a *App) SaveFile(reader io.Reader, teamID, rootID, filename string) (strin
 
 	createdFilename := utils.NewID(utils.IDTypeNone)
 	fullFilename := fmt.Sprintf(`%s%s`, createdFilename, fileExtension)
-	filePath := filepath.Join(teamID, rootID, fullFilename)
+	filePath := filepath.Join(utils.GetBaseFilePath(), fullFilename)
 
 	fileSize, appErr := a.filesBackend.WriteFile(reader, filePath)
 	if appErr != nil {
@@ -45,7 +46,7 @@ func (a *App) SaveFile(reader io.Reader, teamID, rootID, filename string) (strin
 		CreateAt:        now,
 		UpdateAt:        now,
 		DeleteAt:        0,
-		Path:            emptyString,
+		Path:            filePath,
 		ThumbnailPath:   emptyString,
 		PreviewPath:     emptyString,
 		Name:            filename,
@@ -83,6 +84,50 @@ func (a *App) GetFileInfo(filename string) (*mmModel.FileInfo, error) {
 	}
 
 	return fileInfo, nil
+}
+
+func (a *App) GetFile(teamID, rootID, fileName string) (map[string]interface{}, *mmModel.FileInfo, filestore.ReadCloseSeeker, error) {
+	fileInfo, err := a.GetFileInfo(fileName)
+	if err != nil && !model.IsErrNotFound(err) {
+		return nil, nil, nil, err
+	}
+
+	if fileInfo != nil && fileInfo.Archived {
+		fileMetadata := map[string]interface{}{
+			"archived":  true,
+			"name":      fileInfo.Name,
+			"size":      fileInfo.Size,
+			"extension": fileInfo.Extension,
+		}
+
+		return fileMetadata, nil, nil, nil
+	}
+
+	var filePath string
+
+	if fileInfo != nil && fileInfo.Path != "" {
+		filePath = fileInfo.Path
+	} else {
+		filePath = filepath.Join(teamID, rootID, fileName)
+	}
+
+	exists, err := a.filesBackend.FileExists(filePath)
+	if err != nil {
+		a.logger.Error(fmt.Sprintf("GetFile: Failed to check if file exists as path. Path: %s, error: %e", filePath, err))
+		return nil, nil, nil, err
+	}
+
+	if !exists {
+		return nil, nil, nil, ErrFileNotFound
+	}
+
+	reader, err := a.filesBackend.Reader(filePath)
+	if err != nil {
+		a.logger.Error(fmt.Sprintf("GetFile: Failed to get file reader of existing file at path: %s, error: %e", filePath, err))
+		return nil, nil, nil, err
+	}
+
+	return nil, fileInfo, reader, nil
 }
 
 func (a *App) GetFileReader(teamID, rootID, filename string) (filestore.ReadCloseSeeker, error) {
