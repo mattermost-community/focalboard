@@ -104,6 +104,38 @@ describe('src/components/shareBoard/userPermissionsRow', () => {
         expect(container).toMatchSnapshot()
     })
 
+    test('should match snapshot-admin', async () => {
+        let container: Element | undefined
+        mockedUtils.isFocalboardPlugin.mockReturnValue(false)
+        const store = mockStateStore([thunk], state)
+
+        const newMe = Object.assign({}, me)
+        newMe.permissions = ['manage_system']
+        await act(async () => {
+            const result = render(
+                wrapDNDIntl(
+                    <ReduxProvider store={store}>
+                        <UserPermissionsRow
+                            user={newMe}
+                            isMe={true}
+                            member={state.boards.myBoardMemberships[board.id] as BoardMember}
+                            teammateNameDisplay={'test'}
+                            onDeleteBoardMember={() => {}}
+                            onUpdateBoardMember={() => {}}
+                        />
+                    </ReduxProvider>),
+                {wrapper: MemoryRouter},
+            )
+            container = result.container
+        })
+
+        const buttonElement = container?.querySelector('.user-item__button')
+        expect(buttonElement).toBeDefined()
+        userEvent.click(buttonElement!)
+
+        expect(container).toMatchSnapshot()
+    })
+
     test('should match snapshot in plugin mode', async () => {
         let container: Element | undefined
         mockedUtils.isFocalboardPlugin.mockReturnValue(true)

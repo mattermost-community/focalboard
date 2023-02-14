@@ -1991,6 +1991,15 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                             >
                               @username_1
                             </strong>
+                            <div
+                              class="AdminBadge"
+                            >
+                              <div
+                                class="AdminBadge__box"
+                              >
+                                Team Admin
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -2017,6 +2026,15 @@ exports[`src/components/shareBoard/shareBoard return shareBoard and click Select
                             >
                               @username_2
                             </strong>
+                            <div
+                              class="AdminBadge"
+                            >
+                              <div
+                                class="AdminBadge__box"
+                              >
+                                Admin
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

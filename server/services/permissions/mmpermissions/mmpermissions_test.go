@@ -219,4 +219,25 @@ func TestHasPermissionToBoard(t *testing.T) {
 
 		th.checkBoardPermissions("viewer", member, teamID, hasPermissionTo, hasNotPermissionTo)
 	})
+
+	t.Run("elevate board viewer permissions", func(t *testing.T) {
+		member := &model.BoardMember{
+			UserID:       userID,
+			BoardID:      boardID,
+			SchemeViewer: true,
+		}
+
+		hasPermissionTo := []*mmModel.Permission{
+			model.PermissionManageBoardType,
+			model.PermissionDeleteBoard,
+			model.PermissionManageBoardRoles,
+			model.PermissionShareBoard,
+			model.PermissionManageBoardCards,
+			model.PermissionViewBoard,
+			model.PermissionManageBoardProperties,
+		}
+
+		hasNotPermissionTo := []*mmModel.Permission{}
+		th.checkBoardPermissions("elevated-admin", member, teamID, hasPermissionTo, hasNotPermissionTo)
+	})
 }

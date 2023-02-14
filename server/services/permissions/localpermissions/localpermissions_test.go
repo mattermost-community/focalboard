@@ -27,6 +27,11 @@ func TestHasPermissionToTeam(t *testing.T) {
 		hasPermission := th.permissions.HasPermissionToTeam("user-id", "team-id", model.PermissionManageBoardCards)
 		assert.True(t, hasPermission)
 	})
+
+	t.Run("no users have PermissionManageTeam on teams", func(t *testing.T) {
+		hasPermission := th.permissions.HasPermissionToTeam("user-id", "team-id", model.PermissionManageTeam)
+		assert.False(t, hasPermission)
+	})
 }
 
 func TestHasPermissionToBoard(t *testing.T) {
@@ -120,6 +125,29 @@ func TestHasPermissionToBoard(t *testing.T) {
 	})
 
 	t.Run("board viewer", func(t *testing.T) {
+		member := &model.BoardMember{
+			UserID:       "user-id",
+			BoardID:      "board-id",
+			SchemeViewer: true,
+		}
+
+		hasPermissionTo := []*mmModel.Permission{
+			model.PermissionViewBoard,
+		}
+
+		hasNotPermissionTo := []*mmModel.Permission{
+			model.PermissionManageBoardType,
+			model.PermissionDeleteBoard,
+			model.PermissionManageBoardRoles,
+			model.PermissionShareBoard,
+			model.PermissionManageBoardCards,
+			model.PermissionManageBoardProperties,
+		}
+
+		th.checkBoardPermissions("viewer", member, hasPermissionTo, hasNotPermissionTo)
+	})
+
+	t.Run("Manage Team Permission ", func(t *testing.T) {
 		member := &model.BoardMember{
 			UserID:       "user-id",
 			BoardID:      "board-id",

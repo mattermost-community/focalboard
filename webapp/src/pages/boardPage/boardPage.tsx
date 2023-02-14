@@ -3,7 +3,7 @@
 import React, {useEffect, useState, useMemo, useCallback} from 'react'
 import {batch} from 'react-redux'
 import {FormattedMessage, useIntl} from 'react-intl'
-import {useRouteMatch} from 'react-router-dom'
+import {useRouteMatch, useHistory} from 'react-router-dom'
 
 import Workspace from '../../components/workspace'
 import CloudMessage from '../../components/messages/cloudMessage'
@@ -29,6 +29,7 @@ import {
     addMyBoardMemberships,
 } from '../../store/boards'
 import {getCurrentViewId, setCurrent as setCurrentView, updateViews} from '../../store/views'
+import ConfirmationDialog from '../../components/confirmationDialogBox'
 import {initialLoad, initialReadOnlyLoad, loadBoardData} from '../../store/initialLoad'
 import {useAppSelector, useAppDispatch} from '../../store/hooks'
 import {setTeam} from '../../store/teams'
@@ -79,6 +80,8 @@ const BoardPage = (props: Props): JSX.Element => {
     const me = useAppSelector<IUser|null>(getMe)
     const hiddenBoardIDs = useAppSelector(getHiddenBoardIDs)
     const category = useAppSelector(getCategoryOfBoard(activeBoardId))
+    const [showJoinBoardDialog, setShowJoinBoardDialog] = useState<boolean>(false)
+    const history = useHistory()
 
     // if we're in a legacy route and not showing a shared board,
     // redirect to the new URL schema equivalent
@@ -177,18 +180,40 @@ const BoardPage = (props: Props): JSX.Element => {
         }
     }, [me?.id, activeBoardId])
 
-    const loadOrJoinBoard = useCallback(async (userId: string, boardTeamId: string, boardId: string) => {
-        // and fetch its data
-        const result: any = await dispatch(loadBoardData(boardId))
-        if (result.payload.blocks.length === 0 && userId) {
-            const member = await octoClient.joinBoard(boardId)
-            if (!member) {
-                UserSettings.setLastBoardID(boardTeamId, null)
-                UserSettings.setLastViewId(boardId, null)
-                dispatch(setGlobalError('board-not-found'))
+    const onConfirmJoin = async () => {
+        if (me) {
+            joinBoard(me, teamId, match.params.boardId, true)
+            setShowJoinBoardDialog(false)
+        }
+    }
+
+    const joinBoard = async (myUser: IUser, boardTeamId: string, boardId: string, allowAdmin: boolean) => {
+        const member = await octoClient.joinBoard(boardId, allowAdmin)
+        if (!member) {
+            if (myUser.permissions?.find((s) => s === 'manage_system' || s === 'manage_team')) {
+                setShowJoinBoardDialog(true)
                 return
             }
-            await dispatch(loadBoardData(boardId))
+            UserSettings.setLastBoardID(boardTeamId, null)
+            UserSettings.setLastViewId(boardId, null)
+            dispatch(setGlobalError('board-not-found'))
+            return
+        }
+        const result: any = await dispatch(loadBoardData(boardId))
+        if (result.payload.blocks.length > 0 && myUser.id) {
+            // set board as most recently viewed board
+            UserSettings.setLastBoardID(boardTeamId, boardId)
+        }
+    }
+
+    const loadOrJoinBoard = useCallback(async (myUser: IUser, boardTeamId: string, boardId: string) => {
+        // and fetch its data
+        const result: any = await dispatch(loadBoardData(boardId))
+        if (result.payload.blocks.length === 0 && myUser.id) {
+            joinBoard(myUser, boardTeamId, boardId, false)
+        } else {
+            // set board as most recently viewed board
+            UserSettings.setLastBoardID(boardTeamId, boardId)
         }
 
         dispatch(fetchBoardMembers({
@@ -204,9 +229,6 @@ const BoardPage = (props: Props): JSX.Element => {
             // set the active board
             dispatch(setCurrentBoard(match.params.boardId))
 
-            // and set it as most recently viewed board
-            UserSettings.setLastBoardID(teamId, match.params.boardId)
-
             if (viewId !== Constants.globalTeamId) {
                 // reset current, even if empty string
                 dispatch(setCurrentView(viewId))
@@ -220,7 +242,7 @@ const BoardPage = (props: Props): JSX.Element => {
 
     useEffect(() => {
         if (match.params.boardId && !props.readonly && me) {
-            loadOrJoinBoard(me.id, teamId, match.params.boardId)
+            loadOrJoinBoard(me, teamId, match.params.boardId)
         }
     }, [teamId, match.params.boardId, me?.id])
 
@@ -251,49 +273,71 @@ const BoardPage = (props: Props): JSX.Element => {
     }
 
     return (
-        <div className='BoardPage'>
-            {!props.new && <TeamToBoardAndViewRedirect/>}
-            <BackwardCompatibilityQueryParamsRedirect/>
-            <SetWindowTitleAndIcon/>
-            <UndoRedoHotKeys/>
-            <WebsocketConnection/>
-            <CloudMessage/>
-            <VersionMessage/>
+        <>
+            {showJoinBoardDialog &&
+                <ConfirmationDialog
+                    dialogBox={{
+                        heading: intl.formatMessage({id: 'boardPage.confirm-join-title', defaultMessage: 'Join private board'}),
+                        subText: intl.formatMessage({
+                            id: 'boardPage.confirm-join-text',
+                            defaultMessage: 'You are about to join a private board without explicitly being added by the board admin. Are you sure you wish to join this private board?',
+                        }),
+                        confirmButtonText: intl.formatMessage({id: 'boardPage.confirm-join-button', defaultMessage: 'Join'}),
+                        destructive: true, //board.channelId !== '',
 
-            {!mobileWarningClosed &&
-                <div className='mobileWarning'>
-                    <div>
-                        <FormattedMessage
-                            id='Error.mobileweb'
-                            defaultMessage='Mobile web support is currently in early beta. Not all functionality may be present.'
+                        onConfirm: onConfirmJoin,
+                        onClose: () => {
+                            setShowJoinBoardDialog(false)
+                            history.goBack()
+                        },
+                    }}
+                />}
+
+            {!showJoinBoardDialog &&
+                <div className='BoardPage'>
+                    {!props.new && <TeamToBoardAndViewRedirect/>}
+                    <BackwardCompatibilityQueryParamsRedirect/>
+                    <SetWindowTitleAndIcon/>
+                    <UndoRedoHotKeys/>
+                    <WebsocketConnection/>
+                    <CloudMessage/>
+                    <VersionMessage/>
+
+                    {!mobileWarningClosed &&
+                        <div className='mobileWarning'>
+                            <div>
+                                <FormattedMessage
+                                    id='Error.mobileweb'
+                                    defaultMessage='Mobile web support is currently in early beta. Not all functionality may be present.'
+                                />
+                            </div>
+                            <IconButton
+                                onClick={() => {
+                                    UserSettings.mobileWarningClosed = true
+                                    setMobileWarningClosed(true)
+                                }}
+                                icon={<CloseIcon/>}
+                                title='Close'
+                                className='margin-right'
+                            />
+                        </div>}
+
+                    {props.readonly && activeBoardId === undefined &&
+                        <div className='error'>
+                            {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
+                        </div>}
+                    {
+
+                        // Don't display Templates page
+                        // if readonly mode and no board defined.
+                        (!props.readonly || activeBoardId !== undefined) &&
+                        <Workspace
+                            readonly={props.readonly || false}
                         />
-                    </div>
-                    <IconButton
-                        onClick={() => {
-                            UserSettings.mobileWarningClosed = true
-                            setMobileWarningClosed(true)
-                        }}
-                        icon={<CloseIcon/>}
-                        title='Close'
-                        className='margin-right'
-                    />
-                </div>}
-
-            {props.readonly && activeBoardId === undefined &&
-                <div className='error'>
-                    {intl.formatMessage({id: 'BoardPage.syncFailed', defaultMessage: 'Board may be deleted or access revoked.'})}
-                </div>}
-
-            {
-
-                // Don't display Templates page
-                // if readonly mode and no board defined.
-                (!props.readonly || activeBoardId !== undefined) &&
-                <Workspace
-                    readonly={props.readonly || false}
-                />
+                    }
+                </div>
             }
-        </div>
+        </>
     )
 }
 
