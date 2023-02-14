@@ -126,6 +126,7 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	//       "$ref": "#/definitions/ErrorResponse"
 	query := r.URL.Query()
 	teamID := query.Get("teamID")
+	channelID := query.Get("channelID")
 
 	userID := getUserID(r)
 
@@ -159,6 +160,9 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	}
 	if a.permissions.HasPermissionTo(userID, model.PermissionManageSystem) {
 		user.Permissions = append(user.Permissions, model.PermissionManageSystem.Id)
+	}
+	if channelID != "" && a.permissions.HasPermissionToChannel(userID, channelID, model.PermissionCreatePost) {
+		user.Permissions = append(user.Permissions, model.PermissionCreatePost.Id)
 	}
 
 	userData, err := json.Marshal(user)

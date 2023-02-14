@@ -51,7 +51,7 @@ class OctoClient {
         localStorage.setItem('focalboardSessionId', value)
     }
 
-    constructor(serverUrl?: string, public teamId = Constants.globalTeamId) {
+    constructor(serverUrl?: string, public teamId = Constants.globalTeamId, public channelId = Constants.noChannelID) {
         this.serverUrl = serverUrl
     }
 
@@ -161,8 +161,20 @@ class OctoClient {
 
     async getMe(): Promise<IUser | undefined> {
         let path = '/api/v2/users/me'
+        let parameters = ''
         if (this.teamId !== Constants.globalTeamId) {
-            path += `?teamID=${this.teamId}`
+            parameters = `teamID=${this.teamId}`
+        }
+        if (this.channelId !== Constants.noChannelID) {
+            const channelClause = `channelID=${this.channelId}`
+            if (parameters) {
+                parameters += '&' + channelClause
+            } else {
+                parameters = channelClause
+            }
+        }
+        if (parameters) {
+            path += '?' + parameters
         }
         const response = await fetch(this.getBaseURL() + path, {headers: this.headers()})
         if (response.status !== 200) {
