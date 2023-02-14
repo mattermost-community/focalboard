@@ -313,6 +313,7 @@ const SidebarCategory = (props: Props) => {
                                                     <IconButton icon={<OptionsIcon/>}/>
                                                     <Menu
                                                         position='auto'
+                                                        fixed={true}
                                                         parentRef={menuWrapperRef}
                                                     >
                                                         {
