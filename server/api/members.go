@@ -206,6 +206,11 @@ func (a *API) handleJoinBoard(w http.ResponseWriter, r *http.Request) {
 	//   description: Board ID
 	//   required: true
 	//   type: string
+	// - name: allow_admin
+	//   in: path
+	//   description: allows admin users to join private boards
+	//   required: false
+	//   type: boolean
 	// security:
 	// - BearerAuth: []
 	// responses:

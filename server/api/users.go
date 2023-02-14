@@ -107,6 +107,12 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	// ---
 	// produces:
 	// - application/json
+	// parameters:
+	// - name: teamID
+	//   in: path
+	//   description: Team ID
+	//   required: false
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
