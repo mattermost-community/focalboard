@@ -86,21 +86,10 @@ func (a *App) GetFileInfo(filename string) (*mmModel.FileInfo, error) {
 	return fileInfo, nil
 }
 
-func (a *App) GetFile(teamID, rootID, fileName string) (map[string]interface{}, *mmModel.FileInfo, filestore.ReadCloseSeeker, error) {
+func (a *App) GetFile(teamID, rootID, fileName string) (*mmModel.FileInfo, filestore.ReadCloseSeeker, error) {
 	fileInfo, err := a.GetFileInfo(fileName)
 	if err != nil && !model.IsErrNotFound(err) {
-		return nil, nil, nil, err
-	}
-
-	if fileInfo != nil && fileInfo.Archived {
-		fileMetadata := map[string]interface{}{
-			"archived":  true,
-			"name":      fileInfo.Name,
-			"size":      fileInfo.Size,
-			"extension": fileInfo.Extension,
-		}
-
-		return fileMetadata, nil, nil, nil
+		return nil, nil, err
 	}
 
 	var filePath string
@@ -114,20 +103,20 @@ func (a *App) GetFile(teamID, rootID, fileName string) (map[string]interface{}, 
 	exists, err := a.filesBackend.FileExists(filePath)
 	if err != nil {
 		a.logger.Error(fmt.Sprintf("GetFile: Failed to check if file exists as path. Path: %s, error: %e", filePath, err))
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 
 	if !exists {
-		return nil, nil, nil, ErrFileNotFound
+		return nil, nil, ErrFileNotFound
 	}
 
 	reader, err := a.filesBackend.Reader(filePath)
 	if err != nil {
 		a.logger.Error(fmt.Sprintf("GetFile: Failed to get file reader of existing file at path: %s, error: %e", filePath, err))
-		return nil, nil, nil, err
+		return nil, nil, err
 	}
 
-	return nil, fileInfo, reader, nil
+	return fileInfo, reader, nil
 }
 
 func (a *App) GetFileReader(teamID, rootID, filename string) (filestore.ReadCloseSeeker, error) {
