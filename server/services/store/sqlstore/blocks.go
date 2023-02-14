@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/mattermost/focalboard/server/utils"
 
@@ -42,27 +43,31 @@ func (s *SQLStore) timestampToCharField(name string, as string) string {
 	}
 }
 
-func (s *SQLStore) blockFields() []string {
+func (s *SQLStore) blockFields(tableAlias string) []string {
+	if tableAlias != "" && !strings.HasSuffix(tableAlias, ".") {
+		tableAlias += "."
+	}
+
 	return []string{
-		"id",
-		"parent_id",
-		"created_by",
-		"modified_by",
-		s.escapeField("schema"),
-		"type",
-		"title",
-		"COALESCE(fields, '{}')",
-		s.timestampToCharField("insert_at", "insertAt"),
-		"create_at",
-		"update_at",
-		"delete_at",
-		"COALESCE(board_id, '0')",
+		tableAlias + "id",
+		tableAlias + "parent_id",
+		tableAlias + "created_by",
+		tableAlias + "modified_by",
+		tableAlias + s.escapeField("schema"),
+		tableAlias + "type",
+		tableAlias + "title",
+		"COALESCE(" + tableAlias + "fields, '{}')",
+		s.timestampToCharField(tableAlias+"insert_at", "insertAt"),
+		tableAlias + "create_at",
+		tableAlias + "update_at",
+		tableAlias + "delete_at",
+		"COALESCE(" + tableAlias + "board_id, '0')",
 	}
 }
 
 func (s *SQLStore) getBlocks(db sq.BaseRunner, opts model.QueryBlocksOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks")
 
 	if opts.BoardID != "" {
@@ -115,7 +120,7 @@ func (s *SQLStore) getBlocksWithParent(db sq.BaseRunner, boardID, parentID strin
 
 func (s *SQLStore) getBlocksByIDs(db sq.BaseRunner, ids []string) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": ids})
 
@@ -150,7 +155,7 @@ func (s *SQLStore) getBlocksWithType(db sq.BaseRunner, boardID, blockType string
 // getSubTree2 returns blocks within 2 levels of the given blockID.
 func (s *SQLStore) getSubTree2(db sq.BaseRunner, boardID string, blockID string, opts model.QuerySubtreeOptions) ([]*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Or{sq.Eq{"id": blockID}, sq.Eq{"parent_id": blockID}}).
 		Where(sq.Eq{"board_id": boardID}).
@@ -550,7 +555,7 @@ func (s *SQLStore) getBoardCount(db sq.BaseRunner) (int64, error) {
 
 func (s *SQLStore) getBlock(db sq.BaseRunner, blockID string) (*model.Block, error) {
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks").
 		Where(sq.Eq{"id": blockID})
 
@@ -580,7 +585,7 @@ func (s *SQLStore) getBlockHistory(db sq.BaseRunner, blockID string, opts model.
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"id": blockID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
@@ -614,7 +619,7 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 	}
 
 	query := s.getQueryBuilder(db).
-		Select(s.blockFields()...).
+		Select(s.blockFields("")...).
 		From(s.tablePrefix + "blocks_history").
 		Where(sq.Eq{"board_id": boardID}).
 		OrderBy("insert_at " + order + ", update_at" + order)
@@ -639,6 +644,83 @@ func (s *SQLStore) getBlockHistoryDescendants(db sq.BaseRunner, boardID string, 
 	defer s.CloseRows(rows)
 
 	return s.blocksFromRows(rows)
+}
+
+// getBlockHistoryNewestChildren returns the newest (latest) version child blocks for the
+// specified parent from the blocks_history table. This includes any deleted children.
+func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID string, opts model.QueryBlockHistoryChildOptions) ([]*model.Block, bool, error) {
+	// as we're joining 2 queries, we need to avoid numbered
+	// placeholders until the join is done, so we use the default
+	// question mark placeholder here
+	builder := s.getQueryBuilder(db).PlaceholderFormat(sq.Question)
+
+	sub := builder.
+		Select("bh2.id", "MAX(bh2.insert_at) AS max_insert_at").
+		From(s.tablePrefix + "blocks_history AS bh2").
+		Where(sq.Eq{"bh2.parent_id": parentID}).
+		GroupBy("bh2.id")
+
+	if opts.AfterUpdateAt != 0 {
+		sub = sub.Where(sq.Gt{"bh2.update_at": opts.AfterUpdateAt})
+	}
+
+	if opts.BeforeUpdateAt != 0 {
+		sub = sub.Where(sq.Lt{"bh2.update_at": opts.BeforeUpdateAt})
+	}
+
+	subQuery, subArgs, err := sub.ToSql()
+	if err != nil {
+		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate subquery: %w", err)
+	}
+
+	query := s.getQueryBuilder(db).
+		Select(s.blockFields("bh")...).
+		From(s.tablePrefix+"blocks_history AS bh").
+		InnerJoin("("+subQuery+") AS sub ON bh.id=sub.id AND bh.insert_at=sub.max_insert_at", subArgs...)
+
+	if opts.Page != 0 {
+		query = query.Offset(uint64(opts.Page * opts.PerPage))
+	}
+
+	if opts.PerPage > 0 {
+		// limit+1 to detect if more records available
+		query = query.Limit(uint64(opts.PerPage + 1))
+	}
+
+	sql, args, err := query.ToSql()
+	if err != nil {
+		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate sql: %w", err)
+	}
+
+	// if we're using postgres or sqlite, we need to replace the
+	// question mark placeholder with the numbered dollar one, now
+	// that the full query is built
+	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+		var rErr error
+		sql, rErr = sq.Dollar.ReplacePlaceholders(sql)
+		if rErr != nil {
+			return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to replace sql placeholders: %w", rErr)
+		}
+	}
+
+	rows, err := db.Query(sql, args...)
+	if err != nil {
+		s.logger.Error(`getBlockHistoryNewestChildren ERROR`, mlog.Err(err))
+		return nil, false, err
+	}
+	defer s.CloseRows(rows)
+
+	blocks, err := s.blocksFromRows(rows)
+	if err != nil {
+		return nil, false, err
+	}
+
+	hasMore := false
+	if opts.PerPage > 0 && len(blocks) > opts.PerPage {
+		blocks = blocks[:opts.PerPage]
+		hasMore = true
+	}
+	return blocks, hasMore, nil
 }
 
 // getBoardAndCardByID returns the first parent of type `card` and first parent of type `board` for the block specified by ID.

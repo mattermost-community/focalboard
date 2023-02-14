@@ -1,3 +1,6 @@
+// Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
+// See LICENSE.txt for license information.
+
 package api
 
 import (
@@ -17,6 +20,7 @@ import (
 	mmModel "github.com/mattermost/mattermost-server/v6/model"
 
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
+	"github.com/mattermost/mattermost-server/v6/shared/web"
 )
 
 // FileUploadResponse is the response to a file upload
@@ -166,7 +170,7 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer fileReader.Close()
-	http.ServeContent(w, r, filename, time.Now(), fileReader)
+	web.WriteFileResponse(filename, fileInfo.MimeType, fileInfo.Size, time.Now(), "", fileReader, false, w, r)
 	auditRec.Success()
 }
 

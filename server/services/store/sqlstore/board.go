@@ -17,41 +17,31 @@ import (
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 )
 
-func boardFields(prefix string) []string {
-	fields := []string{
-		"id",
-		"team_id",
-		"COALESCE(channel_id, '')",
-		"COALESCE(created_by, '')",
-		"modified_by",
-		"type",
-		"minimum_role",
-		"title",
-		"description",
-		"icon",
-		"show_description",
-		"is_template",
-		"template_version",
-		"COALESCE(properties, '{}')",
-		"COALESCE(card_properties, '[]')",
-		"create_at",
-		"update_at",
-		"delete_at",
+func boardFields(tableAlias string) []string {
+	if tableAlias != "" && !strings.HasSuffix(tableAlias, ".") {
+		tableAlias += "."
 	}
 
-	if prefix == "" {
-		return fields
+	return []string{
+		tableAlias + "id",
+		tableAlias + "team_id",
+		"COALESCE(" + tableAlias + "channel_id, '')",
+		"COALESCE(" + tableAlias + "created_by, '')",
+		tableAlias + "modified_by",
+		tableAlias + "type",
+		tableAlias + "minimum_role",
+		tableAlias + "title",
+		tableAlias + "description",
+		tableAlias + "icon",
+		tableAlias + "show_description",
+		tableAlias + "is_template",
+		tableAlias + "template_version",
+		"COALESCE(" + tableAlias + "properties, '{}')",
+		"COALESCE(" + tableAlias + "card_properties, '[]')",
+		tableAlias + "create_at",
+		tableAlias + "update_at",
+		tableAlias + "delete_at",
 	}
-
-	prefixedFields := make([]string, len(fields))
-	for i, field := range fields {
-		if strings.HasPrefix(field, "COALESCE(") {
-			prefixedFields[i] = strings.Replace(field, "COALESCE(", "COALESCE("+prefix, 1)
-		} else {
-			prefixedFields[i] = prefix + field
-		}
-	}
-	return prefixedFields
 }
 
 func boardHistoryFields() []string {
