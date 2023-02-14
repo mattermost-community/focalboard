@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"runtime/debug"
 	"sync/atomic"
 	"time"
 
@@ -119,9 +120,11 @@ func (cn *CallbackQueue) exec(f CallbackFunc) {
 	// don't let a panic in the callback exit the thread.
 	defer func() {
 		if r := recover(); r != nil {
+			stack := debug.Stack()
 			cn.logger.Error("CallbackQueue callback panic",
 				mlog.String("name", cn.name),
 				mlog.Any("panic", r),
+				mlog.String("stack", string(stack)),
 			)
 		}
 	}()
