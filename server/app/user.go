@@ -10,7 +10,20 @@ func (a *App) GetTeamUsers(teamID string, asGuestID string) ([]*model.User, erro
 }
 
 func (a *App) SearchTeamUsers(teamID string, searchQuery string, asGuestID string, excludeBots bool) ([]*model.User, error) {
-	return a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots, a.config.ShowEmailAddress, a.config.ShowFullName)
+	users, err := a.store.SearchUsersByTeam(teamID, searchQuery, asGuestID, excludeBots, a.config.ShowEmailAddress, a.config.ShowFullName)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, u := range users {
+		if a.permissions.HasPermissionToTeam(u.ID, teamID, model.PermissionManageTeam) {
+			users[i].Permissions = append(users[i].Permissions, model.PermissionManageTeam.Id)
+		}
+		if a.permissions.HasPermissionTo(u.ID, model.PermissionManageSystem) {
+			users[i].Permissions = append(users[i].Permissions, model.PermissionManageSystem.Id)
+		}
+	}
+	return users, nil
 }
 
 func (a *App) UpdateUserConfig(userID string, patch model.UserPreferencesPatch) ([]mmModel.Preference, error) {

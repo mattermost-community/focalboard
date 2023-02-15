@@ -58,6 +58,13 @@ func (th *TestHelper) checkBoardPermissions(roleName string, member *model.Board
 				Return(member, nil).
 				Times(1)
 
+			if !member.SchemeAdmin {
+				th.api.EXPECT().
+					HasPermissionToTeam(member.UserID, teamID, model.PermissionManageTeam).
+					Return(roleName == "elevated-admin").
+					Times(1)
+			}
+
 			hasPermission := th.permissions.HasPermissionToBoard(member.UserID, member.BoardID, p)
 			assert.True(t, hasPermission)
 		})
@@ -79,6 +86,13 @@ func (th *TestHelper) checkBoardPermissions(roleName string, member *model.Board
 				GetMemberForBoard(member.BoardID, member.UserID).
 				Return(member, nil).
 				Times(1)
+
+			if !member.SchemeAdmin {
+				th.api.EXPECT().
+					HasPermissionToTeam(member.UserID, teamID, model.PermissionManageTeam).
+					Return(roleName == "elevated-admin").
+					Times(1)
+			}
 
 			hasPermission := th.permissions.HasPermissionToBoard(member.UserID, member.BoardID, p)
 			assert.False(t, hasPermission)

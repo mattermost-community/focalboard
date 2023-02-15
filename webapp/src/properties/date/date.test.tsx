@@ -302,7 +302,7 @@ describe('properties/dateRange', () => {
         // About `Date()`
         // > "When called as a function, returns a string representation of the current date and time"
         const date = new Date()
-        const today = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+        const today = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12)
 
         const {getByText, getByTitle} = render(component)
         const dayDisplay = getByText('Empty')

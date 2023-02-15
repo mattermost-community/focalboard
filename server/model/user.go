@@ -66,6 +66,9 @@ type User struct {
 	// required: true
 	IsGuest bool `json:"is_guest"`
 
+	// Special Permissions the user may have
+	Permissions []string `json:"permissions,omitempty"`
+
 	Roles string `json:"roles"`
 }
 

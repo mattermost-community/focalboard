@@ -31,6 +31,9 @@ func (s *Service) HasPermissionToTeam(userID, teamID string, permission *mmModel
 	if userID == "" || teamID == "" || permission == nil {
 		return false
 	}
+	if permission.Id == model.PermissionManageTeam.Id {
+		return false
+	}
 	return true
 }
 
