@@ -15,6 +15,7 @@ import {IUser} from '../../user'
 import {Utils} from '../../utils'
 import {Permission} from '../../constants'
 import GuestBadge from '../../widgets/guestBadge'
+import AdminBadge from '../../widgets/adminBadge/adminBadge'
 import {useAppSelector} from '../../store/hooks'
 import {getCurrentBoard} from '../../store/boards'
 
@@ -65,6 +66,7 @@ const UserPermissionsRow = (props: Props): JSX.Element => {
                     <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                     {isMe && <strong className='ml-2 text-light'>{intl.formatMessage({id: 'ShareBoard.userPermissionsYouText', defaultMessage: '(You)'})}</strong>}
                     <GuestBadge show={user.is_guest}/>
+                    <AdminBadge permissions={user.permissions}/>
                 </div>
             </div>
             <div>

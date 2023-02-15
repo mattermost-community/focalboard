@@ -1,6 +1,6 @@
 @import '../../styles/z-index';
 
-.Menu:not(#statusDropdownMenu) {
+.Menu.noselect {
     @include z-index(menu);
     display: flex;
     flex-direction: column;
@@ -173,7 +173,7 @@
     }
 }
 
-.Menu:not(#statusDropdownMenu),
+.Menu.noselect,
 .SubMenuOption .SubMenu {
     @media screen and (max-width: 430px) {
         position: fixed;
