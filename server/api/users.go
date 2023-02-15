@@ -113,6 +113,11 @@ func (a *API) handleGetMe(w http.ResponseWriter, r *http.Request) {
 	//   description: Team ID
 	//   required: false
 	//   type: string
+	// - name: channelID
+	//   in: path
+	//   description: Channel ID
+	//   required: false
+	//   type: string
 	// security:
 	// - BearerAuth: []
 	// responses:
