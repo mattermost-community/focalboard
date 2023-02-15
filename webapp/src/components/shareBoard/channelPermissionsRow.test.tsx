@@ -14,7 +14,6 @@ import {Channel} from '../../store/channels'
 import {TestBlockFactory} from '../../test/testBlockFactory'
 import {mockStateStore, wrapDNDIntl} from '../../testUtils'
 import client from '../../octoClient'
-import {Utils} from '../../utils'
 
 import ChannelPermissionsRow from './channelPermissionsRow'
 
@@ -22,11 +21,9 @@ jest.useFakeTimers()
 
 const boardId = '1'
 
-jest.mock('../../utils')
 jest.mock('../../octoClient')
 
 const mockedOctoClient = mocked(client, true)
-const mockedUtils = mocked(Utils, true)
 
 const board = TestBlockFactory.createBoard()
 board.id = boardId
@@ -80,7 +77,6 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
 
     test('should match snapshot', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const store = mockStateStore([thunk], state)
         await act(async () => {
             const result = render(
@@ -98,7 +94,6 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
 
     test('should match snapshot with unknown channel', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedOctoClient.getChannel.mockResolvedValue(undefined)
         const store = mockStateStore([thunk], state)
         await act(async () => {
@@ -117,7 +112,6 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
 
     test('should match snapshot with menu open', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const store = mockStateStore([thunk], state)
         await act(async () => {
             const result = render(
@@ -137,27 +131,8 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot when no plugin mode', async () => {
-        let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(false)
-        const store = mockStateStore([thunk], state)
-        await act(async () => {
-            const result = render(
-                wrapDNDIntl(
-                    <ReduxProvider store={store}>
-                        <ChannelPermissionsRow/>
-                    </ReduxProvider>),
-                {wrapper: MemoryRouter},
-            )
-            container = result.container
-        })
-
-        expect(container).toMatchSnapshot()
-    })
-
     test('should match snapshot when board has no channel id', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const newState = {
             ...state,
             boards: {
@@ -184,7 +159,6 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
 
     test('should match snapshot in plugin mode', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const store = mockStateStore([thunk], state)
         await act(async () => {
             const result = render(
@@ -206,7 +180,6 @@ describe('src/components/shareBoard/channelPermissionsRow', () => {
 
     test('should match snapshot in template', async () => {
         let container: Element | undefined
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         const testState = {
             ...state,
             boards: {

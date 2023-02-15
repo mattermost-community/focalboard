@@ -117,7 +117,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     const [publish, setPublish] = useState(false)
 
     const intl = useIntl()
-    const match = useRouteMatch<{teamId?: string, boardId: string, viewId: string}>()
+    const match = useRouteMatch<{teamId: string, boardId: string, viewId: string}>()
 
     const hasSharePermissions = useHasPermissions(board.teamId, boardId, [Permission.ShareBoard])
 
@@ -254,33 +254,19 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
     shareUrl.searchParams.set('r', readToken)
     const boardUrl = new URL(window.location.toString())
 
-    if (match.params.teamId) {
-        const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId', {
-            boardId: match.params.boardId,
-            viewId: match.params.viewId,
-            teamId: match.params.teamId,
-        })
-        shareUrl.pathname = Utils.buildURL(newPath)
+    const newPath = generatePath('/team/:teamId/shared/:boardId/:viewId', {
+        boardId: match.params.boardId,
+        viewId: match.params.viewId,
+        teamId: match.params.teamId,
+    })
+    shareUrl.pathname = Utils.buildURL(newPath)
 
-        const boardPath = generatePath('/team/:teamId/:boardId/:viewId', {
-            boardId: match.params.boardId,
-            viewId: match.params.viewId,
-            teamId: match.params.teamId,
-        })
-        boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
-    } else {
-        const newPath = generatePath('/shared/:boardId/:viewId', {
-            boardId: match.params.boardId,
-            viewId: match.params.viewId,
-        })
-        shareUrl.pathname = Utils.buildURL(newPath)
-        boardUrl.pathname = Utils.buildURL(
-            generatePath(':boardId/:viewId', {
-                boardId: match.params.boardId,
-                viewId: match.params.viewId,
-            },
-            ))
-    }
+    const boardPath = generatePath('/team/:teamId/:boardId/:viewId', {
+        boardId: match.params.boardId,
+        viewId: match.params.viewId,
+        teamId: match.params.teamId,
+    })
+    boardUrl.pathname = Utils.getFrontendBaseURL() + boardPath
 
     const shareBoardTitle = (
         <FormattedMessage
@@ -301,12 +287,10 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
             const user = userOrChannel as IUser
             return (
                 <div className='user-item'>
-                    {Utils.isFocalboardPlugin() &&
-                        <img
-                            src={Utils.getProfilePicture(user.id)}
-                            className='user-item__img'
-                        />
-                    }
+                    <img
+                        src={Utils.getProfilePicture(user.id)}
+                        className='user-item__img'
+                    />
                     <div className='ml-3'>
                         <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                         <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
@@ -315,10 +299,6 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                     </div>
                 </div>
             )
-        }
-
-        if (!Utils.isFocalboardPlugin()) {
-            return null
         }
 
         const channel = userOrChannel as Channel
@@ -380,22 +360,18 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                             }}
                             loadOptions={async (inputValue: string) => {
                                 const result = []
-                                if (Utils.isFocalboardPlugin()) {
-                                    const excludeBots = true
-                                    const users = await client.searchTeamUsers(inputValue, excludeBots)
-                                    if (users) {
-                                        result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
-                                    }
-                                    if (!board.isTemplate) {
-                                        const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
-                                        if (channels) {
-                                            result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
-                                        }
-                                    }
-                                } else {
-                                    const users = await client.searchTeamUsers(inputValue) || []
-                                    result.push(...users)
+                                const excludeBots = true
+                                const users = await client.searchTeamUsers(inputValue, excludeBots)
+                                if (users) {
+                                    result.push({label: intl.formatMessage({id: 'shareBoard.members-select-group', defaultMessage: 'Members'}), options: users || []})
                                 }
+                                if (!board.isTemplate) {
+                                    const channels = await client.searchUserChannels(match.params.teamId || '', inputValue)
+                                    if (channels) {
+                                        result.push({label: intl.formatMessage({id: 'shareBoard.channels-select-group', defaultMessage: 'Channels'}), options: channels || []})
+                                    }
+                                }
+
                                 return result
                             }}
                             components={{DropdownIndicator: () => null, IndicatorSeparator: () => null}}

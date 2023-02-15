@@ -1,10 +1,9 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 import React, {useCallback, useEffect, useState} from 'react'
-import {FormattedMessage} from 'react-intl'
 import {DragDropContext, Droppable, DropResult} from 'react-beautiful-dnd'
 
-import {getActiveThemeName, loadTheme} from '../../theme'
+import {loadTheme} from '../../theme'
 import IconButton from '../../widgets/buttons/iconButton'
 import HamburgerIcon from '../../widgets/icons/hamburger'
 import HideSidebarIcon from '../../widgets/icons/hideSidebar'
@@ -48,8 +47,6 @@ import mutator from '../../mutator'
 import {Board} from '../../blocks/board'
 
 import SidebarCategory from './sidebarCategory'
-import SidebarSettingsMenu from './sidebarSettingsMenu'
-import SidebarUserMenu from './sidebarUserMenu'
 
 type Props = {
     activeBoardId?: string
@@ -345,12 +342,8 @@ const Sidebar = (props: Props) => {
 
     return (
         <div className='Sidebar octo-sidebar'>
-            {!Utils.isFocalboardPlugin() &&
-                <div className='octo-sidebar-header'>
-                    <div className='heading'>
-                        <SidebarUserMenu/>
-                    </div>
-
+            {team && team.id !== Constants.globalTeamId &&
+                <div className='WorkspaceTitle'>
                     <div className='octo-spacer'/>
                     <div className='sidebarSwitcher'>
                         <IconButton
@@ -361,24 +354,6 @@ const Sidebar = (props: Props) => {
                             icon={<HideSidebarIcon/>}
                         />
                     </div>
-                </div>}
-
-            {team && team.id !== Constants.globalTeamId &&
-                <div className='WorkspaceTitle'>
-                    {Utils.isFocalboardPlugin() &&
-                    <>
-                        <div className='octo-spacer'/>
-                        <div className='sidebarSwitcher'>
-                            <IconButton
-                                onClick={() => {
-                                    setUserHidden(true)
-                                    setHidden(true)
-                                }}
-                                icon={<HideSidebarIcon/>}
-                            />
-                        </div>
-                    </>
-                    }
                 </div>
             }
 
@@ -425,22 +400,6 @@ const Sidebar = (props: Props) => {
             </DragDropContext>
 
             <div className='octo-spacer'/>
-
-            {
-                (!Utils.isFocalboardPlugin()) &&
-                <div
-                    className='add-board'
-                    onClick={props.onBoardTemplateSelectorOpen}
-                >
-                    <FormattedMessage
-                        id='Sidebar.add-board'
-                        defaultMessage='+ Add board'
-                    />
-                </div>
-            }
-
-            {!Utils.isFocalboardPlugin() &&
-                <SidebarSettingsMenu activeTheme={getActiveThemeName()}/>}
         </div>
     )
 }

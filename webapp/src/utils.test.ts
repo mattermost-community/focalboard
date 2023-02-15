@@ -86,7 +86,6 @@ describe('utils', () => {
 
     describe('test - buildURL', () => {
         test('buildURL, no base', () => {
-            (global as any).isFocalboardPlugin = true
             expect(Utils.buildURL('test', true)).toBe('http://localhost/test')
             expect(Utils.buildURL('/test', true)).toBe('http://localhost/test')
 

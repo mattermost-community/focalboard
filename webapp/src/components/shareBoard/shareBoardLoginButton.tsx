@@ -7,7 +7,6 @@ import {generatePath, useRouteMatch, useHistory} from 'react-router-dom'
 
 import Button from '../../widgets/buttons/button'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
-import {Utils} from '../../utils'
 
 import './shareBoardLoginButton.scss'
 
@@ -15,19 +14,12 @@ const ShareBoardLoginButton = () => {
     const match = useRouteMatch<{teamId: string, boardId: string, viewId?: string, cardId?: string}>()
     const history = useHistory()
 
-    let redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
-    if (Utils.isFocalboardLegacy()) {
-        redirectQueryParam = 'redirect_to=' + encodeURIComponent(generatePath('/boards/team/:teamId/:boardId?/:viewId?/:cardId?', match.params))
-    }
+    const redirectQueryParam = 'r=' + encodeURIComponent(generatePath('/:boardId?/:viewId?/:cardId?', match.params))
     const loginPath = '/login?' + redirectQueryParam
 
     const onLoginClick = useCallback(() => {
         TelemetryClient.trackEvent(TelemetryCategory, TelemetryActions.ShareBoardLogin)
-        if (Utils.isFocalboardLegacy()) {
-            location.assign(loginPath)
-        } else {
-            history.push(loginPath)
-        }
+        history.push(loginPath)
     }, [])
 
     return (

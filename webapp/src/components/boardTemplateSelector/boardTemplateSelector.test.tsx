@@ -13,7 +13,6 @@ import {Provider as ReduxProvider} from 'react-redux'
 import {MemoryRouter, Router} from 'react-router-dom'
 
 import Mutator from '../../mutator'
-import {Utils} from '../../utils'
 import {Team} from '../../store/teams'
 import {createBoard, Board} from '../../blocks/board'
 import {IUser} from '../../user'
@@ -41,14 +40,12 @@ jest.mock('../../octoClient', () => {
         patchUserConfig: jest.fn(() => Promise.resolve({})),
     }
 })
-jest.mock('../../utils')
 jest.mock('../../mutator')
 
 jest.mock('../../telemetry/telemetryClient')
 const mockedTelemetry = mocked(TelemetryClient, true)
 
 describe('components/boardTemplateSelector/boardTemplateSelector', () => {
-    const mockedUtils = mocked(Utils, true)
     const mockedMutator = mocked(Mutator, true)
     const mockedOctoClient = mocked(client, true)
     const team1: Team = {
@@ -159,24 +156,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         store = mockStateStore([], state)
         jest.useRealTimers()
     })
-    describe('not a focalboard Plugin', () => {
-        beforeAll(() => {
-            mockedUtils.isFocalboardPlugin.mockReturnValue(false)
-        })
-        test('should match snapshot', () => {
-            const {container} = render(wrapDNDIntl(
-                <ReduxProvider store={store}>
-                    <BoardTemplateSelector onClose={jest.fn()}/>
-                </ReduxProvider>
-                ,
-            ), {wrapper: MemoryRouter})
-            expect(container).toMatchSnapshot()
-        })
-    })
     describe('a focalboard Plugin', () => {
-        beforeAll(() => {
-            mockedUtils.isFocalboardPlugin.mockReturnValue(true)
-        })
         test('should match snapshot', () => {
             const {container} = render(wrapDNDIntl(
                 <ReduxProvider store={store}>

@@ -19,7 +19,6 @@ import {getMessages, getCurrentLanguage} from '../../../webapp/src/i18n'
 const windowAny = (window as SuiteWindow)
 windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
 windowAny.frontendBaseURL = '/boards'
-windowAny.isFocalboardPlugin = true
 
 import App from '../../../webapp/src/app'
 import store from '../../../webapp/src/store'

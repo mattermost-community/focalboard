@@ -495,7 +495,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users: IUser[] = [
@@ -596,7 +595,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
         let container: Element | DocumentFragment | null = null
         await act(async () => {
@@ -671,7 +669,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users: IUser[] = [

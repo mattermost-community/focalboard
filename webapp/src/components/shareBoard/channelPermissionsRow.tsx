@@ -44,7 +44,7 @@ const ChannelPermissionsRow = (props: Props): JSX.Element => {
     }
 
     useEffect(() => {
-        if (!Utils.isFocalboardPlugin() || !board.channelId) {
+        if (!board.channelId) {
             setLinkedChannel(null)
             return
         }

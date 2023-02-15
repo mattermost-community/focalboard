@@ -421,26 +421,6 @@ class Utils {
         /// #!endif
     }
 
-    // favicon
-
-    static setFavicon(icon?: string): void {
-        if (Utils.isFocalboardPlugin()) {
-            // Do not change the icon from focalboard plugin
-            return
-        }
-
-        if (!icon) {
-            document.querySelector("link[rel*='icon']")?.remove()
-            return
-        }
-        const link = document.createElement('link') as HTMLLinkElement
-        link.type = 'image/x-icon'
-        link.rel = 'shortcut icon'
-        link.href = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">${icon}</text></svg>`
-        document.querySelectorAll("link[rel*='icon']").forEach((n) => n.remove())
-        document.getElementsByTagName('head')[0].appendChild(link)
-    }
-
     // URL
 
     static replaceUrlQueryParam(paramName: string, value?: string): void {
@@ -584,9 +564,10 @@ class Utils {
 
     static buildURL(path: string, absolute?: boolean): string {
         /* eslint-disable no-process-env */
-        if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
-            return path
-        }
+        // Waiting for confirmation on TARGET_IS_PRODUCT
+        // if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
+        //     return path
+        // }
 
         const baseURL = Utils.getBaseURL()
         let finalPath = baseURL + path
@@ -604,17 +585,6 @@ class Utils {
 
     static roundTo(num: number, decimalPlaces: number): number {
         return Math.round(num * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)
-    }
-
-    static isFocalboardPlugin(): boolean {
-        return Boolean(window.isFocalboardPlugin)
-    }
-
-    // this is a temporary solution while we're using legacy routes
-    // for shared boards as a way to check if we're accessing the
-    // legacy routes inside the plugin
-    static isFocalboardLegacy(): boolean {
-        return window.location.pathname.includes('/plugins/focalboard')
     }
 
     static fixWSData(message: WSMessage): [WSMessagePayloads, ChangeHandlerType] {

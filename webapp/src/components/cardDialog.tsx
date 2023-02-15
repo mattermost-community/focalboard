@@ -159,7 +159,7 @@ const CardDialog = (props: Props): JSX.Element => {
                     const attachmentBlock = createAttachmentBlock(uploadingBlock)
                     attachmentBlock.isUploading = true
                     dispatch(updateAttachments([attachmentBlock]))
-                    if (attachment.size > clientConfig.maxFileSize && Utils.isFocalboardPlugin()) {
+                    if (attachment.size > clientConfig.maxFileSize) {
                         removeUploadingAttachment(uploadingBlock)
                         sendFlashMessage({content: intl.formatMessage({id: 'AttachmentBlock.failed', defaultMessage: 'Unable to upload the file. Attachment size limit reached.'}), severity: 'normal'})
                     } else {
@@ -263,7 +263,7 @@ const CardDialog = (props: Props): JSX.Element => {
             </>
         )
 
-        if (!isTemplate && Utils.isFocalboardPlugin() && !card?.limited) {
+        if (!isTemplate && !card?.limited) {
             return (<>{attachBtn()}{following ? unfollowBtn : followBtn}</>)
         }
         return (<>{attachBtn()}</>)
