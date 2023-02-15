@@ -60,6 +60,9 @@ func (a *App) SaveFile(reader io.Reader, teamID, rootID, filename string) (strin
 		Content:         "",
 		RemoteId:        nil,
 	}
+
+	a.logger.Error(fmt.Sprintf("createdFilename[1:]: '%s' path: %s", createdFilename[1:], fileInfo.Path))
+
 	err := a.store.SaveFileInfo(fileInfo)
 	if err != nil {
 		return "", err
@@ -78,6 +81,9 @@ func (a *App) GetFileInfo(filename string) (*mmModel.FileInfo, error) {
 	// will be the fileinfo id.
 	parts := strings.Split(filename, ".")
 	fileInfoID := parts[0][1:]
+
+	a.logger.Info(fmt.Sprintf("fileInfoID: '%s'", fileInfoID))
+
 	fileInfo, err := a.store.GetFileInfo(fileInfoID)
 	if err != nil {
 		return nil, err
@@ -89,29 +95,39 @@ func (a *App) GetFileInfo(filename string) (*mmModel.FileInfo, error) {
 func (a *App) GetFile(teamID, rootID, fileName string) (*mmModel.FileInfo, filestore.ReadCloseSeeker, error) {
 	fileInfo, err := a.GetFileInfo(fileName)
 	if err != nil && !model.IsErrNotFound(err) {
+		a.logger.Error("111")
 		return nil, nil, err
 	}
 
 	var filePath string
 
+	if fileInfo != nil {
+		a.logger.Error(fmt.Sprintf("fileInfo exists: %t path: %s", fileInfo != nil, fileInfo.Path))
+	}
+
 	if fileInfo != nil && fileInfo.Path != "" {
+		a.logger.Error("Harshil")
 		filePath = fileInfo.Path
 	} else {
+		a.logger.Error("Sharma")
 		filePath = filepath.Join(teamID, rootID, fileName)
 	}
 
 	exists, err := a.filesBackend.FileExists(filePath)
 	if err != nil {
+		a.logger.Error("222")
 		a.logger.Error(fmt.Sprintf("GetFile: Failed to check if file exists as path. Path: %s, error: %e", filePath, err))
 		return nil, nil, err
 	}
 
 	if !exists {
+		a.logger.Error("333 " + filePath)
 		return nil, nil, ErrFileNotFound
 	}
 
 	reader, err := a.filesBackend.Reader(filePath)
 	if err != nil {
+		a.logger.Error("444")
 		a.logger.Error(fmt.Sprintf("GetFile: Failed to get file reader of existing file at path: %s, error: %e", filePath, err))
 		return nil, nil, err
 	}
