@@ -75,7 +75,6 @@ func (a *App) SearchUserChannels(teamID string, userID string, query string) ([]
 		}
 	}
 	return writeableChannels, nil
-
 }
 
 func (a *App) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {
