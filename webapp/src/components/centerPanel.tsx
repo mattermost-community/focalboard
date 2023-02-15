@@ -41,14 +41,6 @@ import {UserConfigPatch} from '../user'
 
 import octoClient from '../octoClient'
 
-import CheckIcon from '../widgets/icons/checkIcon'
-
-import ClockOutline from '../widgets/icons/clockOutline'
-
-import BlackCheckboxOutline from '../widgets/icons/blackCheckboxOutline'
-
-import {Constants} from '../constants'
-
 import ShareBoardButton from './shareBoard/shareBoardButton'
 import ShareBoardLoginButton from './shareBoard/shareBoardLoginButton'
 
@@ -68,65 +60,6 @@ import CardLimitNotification from './cardLimitNotification'
 import Gallery from './gallery/gallery'
 import {BoardTourSteps, FINISHED, TOUR_BOARD, TOUR_CARD} from './onboardingTour'
 import ShareBoardTourStep from './onboardingTour/shareBoard/shareBoard'
-
-import EditStatusPropertyDialog, {StatusCategory} from './standardProperties/statusProperty/editStatusDialog'
-
-// this is the sample data for a dummy status property configration dialog
-// and will be removed after the PR is tested and merged
-const initialValueCategoryValue: StatusCategory[] = [
-    {
-        id: 'category_id_1',
-        title: 'Not Started',
-        options: [
-            {id: 'status_id_1', value: 'Pending Design', color: 'propColorPurple'},
-            {id: 'status_id_2', value: 'TODO', color: 'propColorYellow'},
-            {id: 'status_id_3', value: 'Pending Specs', color: 'propColorGray'},
-        ],
-        emptyState: {
-            icon: (<BlackCheckboxOutline/>),
-            color: '--sys-dnd-indicator-rgb',
-            text: {
-                id: 'statusProperty.configDialog.todo.emptyText',
-                defaultMessage: 'Drag statuses here to consider tasks with these statuses “Not Started”',
-            },
-        },
-    },
-    {
-        id: 'category_id_2',
-        title: 'In progress',
-        options: [
-            {id: 'status_id_4', value: 'In Progress', color: 'propColorBrown'},
-            {id: 'status_id_5', value: 'In Review', color: 'propColorRed'},
-            {id: 'status_id_6', value: 'In QA', color: 'propColorPink'},
-            {id: 'status_id_7', value: 'Awaiting Cherrypick', color: 'propColorOrange'},
-        ],
-        emptyState: {
-            icon: (<ClockOutline/>),
-            color: '--away-indicator-rgb',
-            text: {
-                id: 'statusProperty.configDialog.inProgress.emptyText',
-                defaultMessage: 'Drag statuses here to consider tasks with these statuses “in progress”',
-            },
-        },
-    },
-    {
-        id: 'category_id_3',
-        title: 'Completed',
-        options: [
-            {id: 'status_id_20', value: 'Done', color: 'propColorPink'},
-            {id: 'status_id_21', value: 'Branch Cut', color: 'propColorGreen'},
-            {id: 'status_id_22', value: 'Released', color: 'propColorDefault'},
-        ],
-        emptyState: {
-            icon: (<CheckIcon/>),
-            color: '--online-indicator-rgb',
-            text: {
-                id: 'statusProperty.configDialog.complete.emptyText',
-                defaultMessage: 'Drag statuses here to consider tasks with these statuses ”Done”',
-            },
-        },
-    },
-]
 
 type Props = {
     clientConfig?: ClientConfig
@@ -156,32 +89,6 @@ const CenterPanel = (props: Props) => {
     const currentCard = useAppSelector(getCurrentCard)
     const boardUsers = useAppSelector(getBoardUsers)
     const dispatch = useAppDispatch()
-
-    // STATUS PROPOERTY EDIT DIALOG TEST CODE STARTS HERE
-
-    // SHOULD BE REMOVED AFTER MERGE
-    const [valueCategories, setValueCategories] = useState<StatusCategory[]>(initialValueCategoryValue)
-    const [showEditStatusPropertyDialog, setShowEditStatusPropertyDialog] = useState(false)
-
-    const handleStatusPropertyShortcut = (e: KeyboardEvent) => {
-        if (Utils.cmdOrCtrlPressed(e) && e.shiftKey && Utils.isKeyPressed(e, Constants.keyCodes.I)) {
-            if (!e.altKey) {
-                e.preventDefault()
-                setShowEditStatusPropertyDialog((show) => !show)
-            }
-        }
-    }
-
-    useEffect(() => {
-        document.addEventListener('keydown', handleStatusPropertyShortcut)
-
-        // cleanup function
-        return () => {
-            document.removeEventListener('keydown', handleStatusPropertyShortcut)
-        }
-    }, [])
-
-    // STATUS PROPOERTY EDIT DIALOG TEST CODE ENDS HERE
 
     const clientConfig = useAppSelector<ClientConfig>(getClientConfig)
 
@@ -607,15 +514,6 @@ const CenterPanel = (props: Props) => {
                 showHiddenCardNotification={showHiddenCardCountNotification}
                 hiddenCardCountNotificationHandler={hiddenCardCountNotifyHandler}
             />
-
-            {
-                showEditStatusPropertyDialog &&
-                    <EditStatusPropertyDialog
-                        valueCategories={valueCategories}
-                        onClose={() => setShowEditStatusPropertyDialog(false)}
-                        onUpdate={(updatedValue) => setValueCategories(updatedValue)}
-                    />
-            }
         </div>
     )
 }
