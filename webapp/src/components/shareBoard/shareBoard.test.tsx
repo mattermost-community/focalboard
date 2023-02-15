@@ -24,6 +24,7 @@ jest.useFakeTimers()
 const boardId = '1'
 const workspaceId: string|undefined = boardId
 const viewId = boardId
+const teamId = 'team-id'
 
 jest.mock('../../octoClient')
 jest.mock('../../utils')
@@ -50,7 +51,7 @@ jest.mock('react-router', () => {
 
 const board = TestBlockFactory.createBoard()
 board.id = boardId
-board.teamId = 'team-id'
+board.teamId = teamId
 board.cardProperties = [
     {
         id: 'property1',
@@ -128,7 +129,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
     const state = {
         teams: {
-            current: {id: 'team-id', title: 'Test Team'},
+            current: {id: teamId, title: 'Test Team'},
         },
         users: {
             me,
@@ -190,6 +191,7 @@ describe('src/components/shareBoard/shareBoard', () => {
         mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
 
         params = {
+            teamId,
             boardId,
             viewId,
             workspaceId,

@@ -26,29 +26,3 @@ exports[`src/components/topBar should match snapshot for focalboardPlugin 1`] = 
   </div>
 </div>
 `;
-
-exports[`src/components/topBar should match snapshot for none focalboardPlugin 1`] = `
-<div>
-  <div
-    class="TopBar"
-  >
-    <a
-      class="link"
-      href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
-      rel="noreferrer"
-      target="_blank"
-    >
-      Give feedback
-    </a>
-    <a
-      href="https://www.focalboard.com/guide/user?utm_source=webapp"
-      rel="noreferrer"
-      target="_blank"
-    >
-      <i
-        class="CompassIcon icon-help-circle-outline HelpIcon"
-      />
-    </a>
-  </div>
-</div>
-`;
