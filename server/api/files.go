@@ -125,7 +125,6 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 
 	fileInfo, fileReader, err := a.app.GetFile(board.TeamID, boardID, filename)
 	if err != nil && !model.IsErrNotFound(err) {
-		a.logger.Error("AAAAAAAAAA " + err.Error())
 		a.errorResponse(w, r, err)
 		return
 	}
@@ -137,7 +136,6 @@ func (a *API) handleServeFile(w http.ResponseWriter, r *http.Request) {
 		// channel ID.
 		fileReader, err = a.app.GetFileReader(board.ChannelID, boardID, filename)
 		if err != nil {
-			a.logger.Error("BBBBBBBBBB")
 			a.errorResponse(w, r, err)
 			return
 		}
