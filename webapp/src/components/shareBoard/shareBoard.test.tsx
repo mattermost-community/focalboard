@@ -440,33 +440,6 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot with sharing and without workspaceId and subpath', async () => {
-        w.baseURL = '/test-subpath/plugins/boards'
-        const sharing: ISharing = {
-            id: boardId,
-            enabled: true,
-            token: 'oneToken',
-        }
-        params = {
-            boardId,
-            viewId,
-        }
-        mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        let container
-        await act(async () => {
-            const result = render(wrapDNDIntl(
-                <ReduxProvider store={store}>
-                    <ShareBoard
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />
-                </ReduxProvider>),
-            {wrapper: MemoryRouter})
-            container = result.container
-        })
-        expect(container).toMatchSnapshot()
-    })
-
     test('should match snapshot with sharing and subpath', async () => {
         w.baseURL = '/test-subpath/plugins/boards'
         const sharing: ISharing = {

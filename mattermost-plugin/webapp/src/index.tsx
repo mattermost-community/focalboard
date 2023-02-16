@@ -17,7 +17,7 @@ import {UserSettings} from '../../../webapp/src/userSettings'
 import {getMessages, getCurrentLanguage} from '../../../webapp/src/i18n'
 
 const windowAny = (window as SuiteWindow)
-windowAny.baseURL = process.env.TARGET_IS_PRODUCT ? '/plugins/boards' : '/plugins/focalboard'
+windowAny.baseURL = '/plugins/boards'
 windowAny.frontendBaseURL = '/boards'
 
 import App from '../../../webapp/src/app'
@@ -202,7 +202,8 @@ export default class Plugin {
         let theme = mmStore.getState().entities.preferences.myPreferences.theme
         setMattermostTheme(theme)
 
-        const productID = process.env.TARGET_IS_PRODUCT ? 'boards' : manifest.id
+        const productID = 'boards'
+        console.log(productID)
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))

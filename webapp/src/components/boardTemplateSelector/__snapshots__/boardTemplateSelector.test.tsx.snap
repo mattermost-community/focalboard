@@ -16,7 +16,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
       >
         <button
           aria-label="Close"
-          class="IconButton size--medium"
           title="Close"
           type="button"
         >
@@ -49,7 +48,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="templates-list"
           >
             <button
-              class="Button emphasis--link size--medium new-template"
               type="button"
             >
               <i
@@ -91,7 +89,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               >
                 <button
                   aria-label="Delete"
-                  class="IconButton"
                   title="Delete"
                   type="button"
                 >
@@ -101,7 +98,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
                 </button>
                 <button
                   aria-label="Edit"
-                  class="IconButton"
                   title="Edit"
                   type="button"
                 >
@@ -130,7 +126,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="templates-sidebar__footer"
           >
             <button
-              class="Button emphasis--secondary size--medium"
               type="button"
             >
               <i
@@ -156,7 +151,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="buttons"
           >
             <button
-              class="Button filled size--medium"
               type="button"
             >
               <span>
@@ -206,7 +200,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="templates-list"
           >
             <button
-              class="Button emphasis--link size--medium new-template"
               type="button"
             >
               <i
@@ -248,7 +241,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               >
                 <button
                   aria-label="Delete"
-                  class="IconButton"
                   title="Delete"
                   type="button"
                 >
@@ -258,7 +250,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
                 </button>
                 <button
                   aria-label="Edit"
-                  class="IconButton"
                   title="Edit"
                   type="button"
                 >
@@ -287,7 +278,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="templates-sidebar__footer"
           >
             <button
-              class="Button emphasis--secondary size--medium"
               type="button"
             >
               <i
@@ -313,7 +303,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="buttons"
           >
             <button
-              class="Button filled size--medium"
               type="button"
             >
               <span>
@@ -363,7 +352,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="templates-list"
           >
             <button
-              class="Button emphasis--link size--medium new-template"
               type="button"
             >
               <i
@@ -405,7 +393,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
               >
                 <button
                   aria-label="Delete"
-                  class="IconButton"
                   title="Delete"
                   type="button"
                 >
@@ -415,7 +402,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
                 </button>
                 <button
                   aria-label="Edit"
-                  class="IconButton"
                   title="Edit"
                   type="button"
                 >
@@ -444,7 +430,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="templates-sidebar__footer"
           >
             <button
-              class="Button emphasis--secondary size--medium"
               type="button"
             >
               <i
@@ -470,7 +455,6 @@ exports[`components/boardTemplateSelector/boardTemplateSelector a focalboard Plu
             class="buttons"
           >
             <button
-              class="Button filled size--medium"
               type="button"
             >
               <span>

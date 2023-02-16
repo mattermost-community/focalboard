@@ -562,25 +562,8 @@ class Utils {
         return frontendBaseURL
     }
 
-    static buildURL(path: string, absolute?: boolean): string {
-        /* eslint-disable no-process-env */
-        // Waiting for confirmation on TARGET_IS_PRODUCT
-        // if (!Utils.isFocalboardPlugin() || process.env.TARGET_IS_PRODUCT) {
-        //     return path
-        // }
-
-        const baseURL = Utils.getBaseURL()
-        let finalPath = baseURL + path
-        if (path.indexOf('/') !== 0) {
-            finalPath = baseURL + '/' + path
-        }
-        if (absolute) {
-            if (finalPath.indexOf('/') === 0) {
-                finalPath = finalPath.slice(1)
-            }
-            return window.location.origin + '/' + finalPath
-        }
-        return finalPath
+    static buildURL(path: string): string {
+        return path
     }
 
     static roundTo(num: number, decimalPlaces: number): number {

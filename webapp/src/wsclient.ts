@@ -106,7 +106,6 @@ type Subscriptions = {
 }
 
 class WSClient {
-    ws: WebSocket|null = null
     client: MMWebSocketClient|null = null
     onPluginReconnect: null|(() => void) = null
     token = ''
@@ -180,10 +179,7 @@ class WSClient {
             if (this.client !== null) {
                 const {action, ...data} = command
                 this.client.sendMessage(this.clientPrefix + action, data)
-                return
             }
-
-            this.ws?.send(JSON.stringify(command))
         } catch (e) {
             Utils.logError(`WSClient failed to send command ${command.action}: ${e}`)
         }
@@ -386,111 +382,11 @@ class WSClient {
             this.client.addErrorListener(onError)
             this.client.addCloseListener(onClose)
             this.client.addReconnectListener(onReconnect)
-
-            return
-        }
-
-        const url = new URL(this.getBaseURL())
-        const protocol = (url.protocol === 'https:') ? 'wss:' : 'ws:'
-        const wsServerUrl = `${protocol}//${url.host}${url.pathname.replace(/\/$/, '')}/ws`
-        Utils.log(`WSClient open: ${wsServerUrl}`)
-        const ws = new WebSocket(wsServerUrl)
-        this.ws = ws
-
-        ws.onopen = () => {
-            Utils.log('WSClient webSocket opened.')
-            this.state = 'open'
-
-            // if has a token defined when connecting, authenticate
-            if (this.token) {
-                this.sendAuthenticationCommand(this.token)
-            }
-
-            // if there are any subscriptions set by the components,
-            // send their subscribe messages
-            this.subscribe()
-
-            for (const handler of this.onStateChange) {
-                handler(this, 'open')
-            }
-        }
-
-        ws.onerror = (e) => {
-            Utils.logError(`WSClient websocket onerror. data: ${e}`)
-            for (const handler of this.onError) {
-                handler(this, e)
-            }
-        }
-
-        ws.onclose = (e) => {
-            Utils.log(`WSClient websocket onclose, code: ${e.code}, reason: ${e.reason}`)
-            if (ws === this.ws) {
-                // Unexpected close, re-open
-                Utils.logError('Unexpected close, re-opening websocket')
-                for (const handler of this.onStateChange) {
-                    handler(this, 'close')
-                }
-                this.state = 'close'
-                setTimeout(() => {
-                    // ToDo: assert that this actually runs the onopen
-                    // contents (auth + this.subscribe())
-                    this.open()
-                    for (const handler of this.onReconnect) {
-                        handler(this)
-                    }
-                }, this.reopenDelay)
-            }
-        }
-
-        ws.onmessage = (e) => {
-            if (ws !== this.ws) {
-                Utils.log('Ignoring closed ws')
-                return
-            }
-
-            try {
-                const message = JSON.parse(e.data) as WSMessage
-                if (message.error) {
-                    Utils.logError(`Listener websocket error: ${message.error}`)
-                    return
-                }
-
-                switch (message.action) {
-                case ACTION_UPDATE_BOARD:
-                    this.updateHandler(message)
-                    break
-                case ACTION_UPDATE_MEMBER:
-                    this.updateHandler(message)
-                    break
-                case ACTION_DELETE_MEMBER:
-                    this.updateHandler(message)
-                    break
-                case ACTION_UPDATE_BLOCK:
-                    this.updateHandler(message)
-                    break
-                case ACTION_UPDATE_CATEGORY:
-                    this.updateHandler(message)
-                    break
-                case ACTION_UPDATE_BOARD_CATEGORY:
-                    this.updateHandler(message)
-                    break
-                case ACTION_UPDATE_SUBSCRIPTION:
-                    this.updateSubscriptionHandler(message)
-                    break
-                case ACTION_REORDER_CATEGORIES:
-                    this.updateHandler(message)
-                    break
-                default:
-                    Utils.logError(`Unexpected action: ${message.action}`)
-                }
-            } catch (err) {
-                Utils.log('message is not an object')
-            }
         }
     }
 
     hasConn(): boolean {
-        return this.ws?.readyState === 1 || this.client !== null
+        return this.client !== null
     }
 
     updateHandler(message: WSMessage): void {
@@ -761,30 +657,11 @@ class WSClient {
             return
         }
 
-        Utils.log(`WSClient close: ${this.ws?.url}`)
-
         // Use this sequence so the onclose method doesn't try to re-open
-        const ws = this.ws
-        this.ws = null
         this.onChange = {Block: [], Category: [], BoardCategory: [], Board: [], BoardMember: [], CategoryReorder: []}
         this.onReconnect = []
         this.onStateChange = []
         this.onError = []
-
-        // if running in plugin mode, nothing else needs to be done
-        if (this.client) {
-            return
-        }
-
-        try {
-            ws?.close()
-        } catch {
-            try {
-                (ws as any)?.websocket?.close()
-            } catch {
-                Utils.log('WSClient unable to close the websocket')
-            }
-        }
     }
 }
 

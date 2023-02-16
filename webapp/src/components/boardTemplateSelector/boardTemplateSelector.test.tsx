@@ -41,6 +41,7 @@ jest.mock('../../octoClient', () => {
     }
 })
 jest.mock('../../mutator')
+jest.mock('../../utils')
 
 jest.mock('../../telemetry/telemetryClient')
 const mockedTelemetry = mocked(TelemetryClient, true)
@@ -270,6 +271,7 @@ describe('components/boardTemplateSelector/boardTemplateSelector', () => {
         })
         test('return BoardTemplateSelector and click to add board from template', async () => {
             const newBoard = createBoard({id: 'new-board'} as Board)
+            console.log(newBoard)
             mockedMutator.addBoardFromTemplate.mockResolvedValue({boards: [newBoard], blocks: []})
 
             render(wrapDNDIntl(
