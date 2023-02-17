@@ -24,7 +24,6 @@ beforeEach(() => {
 
 describe('components/table/TableRows', () => {
     const board = TestBlockFactory.createBoard()
-    console.log(board)
     const view = TestBlockFactory.createBoardView(board)
 
     const view2 = TestBlockFactory.createBoardView(board)

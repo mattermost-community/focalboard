@@ -203,7 +203,6 @@ export default class Plugin {
         setMattermostTheme(theme)
 
         const productID = 'boards'
-        console.log(productID)
 
         // register websocket handlers
         this.registry?.registerWebSocketEventHandler(`custom_${productID}_${ACTION_UPDATE_BOARD}`, (e: any) => wsClient.updateHandler(e.data))
