@@ -35,9 +35,9 @@ jest.mock('../../mutator')
 jest.mock('../../utils')
 jest.mock('../../telemetry/telemetryClient')
 const mockedMutator = mocked(Mutator, true)
-const mockedUtils = mocked(Utils, true)
+// const mockedUtils = mocked(Utils, true)
 
-mockedUtils.createGuid = jest.requireActual('../../utils').Utils.createGuid
+// mockedUtils.createGuid = jest.requireActual('../../utils').Utils.createGuid
 
 describe('components/table/Table', () => {
     const board = TestBlockFactory.createBoard()
