@@ -35,9 +35,13 @@ jest.mock('../../mutator')
 jest.mock('../../utils')
 jest.mock('../../telemetry/telemetryClient')
 const mockedMutator = mocked(Mutator, true)
+const mockedUtils = mocked(Utils, true)
+
+mockedUtils.createGuid = jest.requireActual('../../utils').Utils.createGuid
 
 describe('components/table/Table', () => {
     const board = TestBlockFactory.createBoard()
+
     const view = TestBlockFactory.createBoardView(board)
     view.fields.viewType = 'table'
     view.fields.groupById = undefined
@@ -47,7 +51,9 @@ describe('components/table/Table', () => {
     view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
+
     const cardTemplate = TestBlockFactory.createCard(board)
+
     cardTemplate.fields.isTemplate = true
 
     const state = {
@@ -217,6 +223,7 @@ describe('components/table/Table', () => {
         const callback = jest.fn()
         const addCard = jest.fn()
         const boardTest = TestBlockFactory.createBoard()
+
         const card1 = TestBlockFactory.createCard(boardTest)
         const card2 = TestBlockFactory.createCard(boardTest)
         const mockStore = configureStore([])
@@ -690,6 +697,7 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid(IDType.User)
+        console.log(modifiedById)
         board.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
