@@ -7,7 +7,6 @@ import {getMessages} from '../../../../webapp/src/i18n'
 import {getLanguage} from '../../../../webapp/src/store/language'
 import {getCurrentChannel} from '../../../../webapp/src/store/channels'
 import {useAppSelector} from '../../../../webapp/src/store/hooks'
-import {Utils} from '../../../../webapp/src/utils'
 
 import appBarIcon from '../../../../webapp/static/app-bar-icon.png'
 

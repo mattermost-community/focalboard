@@ -25,7 +25,6 @@ import {useAppSelector, useAppDispatch} from '../../../../webapp/src/store/hooks
 import AddIcon from '../../../../webapp/src/widgets/icons/add'
 import Button from '../../../../webapp/src/widgets/buttons/button'
 
-import {Utils} from '../../../../webapp/src/utils'
 import {WSClient} from '../../../../webapp/src/wsclient'
 
 import boardsScreenshots from '../../../../webapp/static/boards-screenshots.png'
