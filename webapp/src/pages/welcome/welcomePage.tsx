@@ -10,7 +10,6 @@ import BoardWelcomeSmallPNG from '../../../static/boards-welcome-small.png'
 
 import Button from '../../widgets/buttons/button'
 import CompassIcon from '../../widgets/icons/compassIcon'
-import {Utils} from '../../utils'
 
 import './welcomePage.scss'
 import mutator from '../../mutator'
@@ -129,14 +128,14 @@ const WelcomePage = () => {
 
                 {/* This image will be rendered on large screens over 2000px */}
                 <img
-                    src={Utils.buildURL(BoardWelcomePNG, true)}
+                    src={BoardWelcomePNG}
                     className='WelcomePage__image WelcomePage__image--large'
                     alt='Boards Welcome Image'
                 />
 
                 {/* This image will be rendered on small screens below 2000px */}
                 <img
-                    src={Utils.buildURL(BoardWelcomeSmallPNG, true)}
+                    src={BoardWelcomeSmallPNG}
                     className='WelcomePage__image WelcomePage__image--small'
                     alt='Boards Welcome Image'
                 />

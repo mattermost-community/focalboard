@@ -188,7 +188,8 @@ describe('src/components/shareBoard/shareBoard', () => {
     const store = mockStateStore([thunk], state)
     beforeEach(() => {
         jest.clearAllMocks()
-        mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
+
+        // mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
 
         params = {
             teamId,

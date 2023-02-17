@@ -116,7 +116,7 @@ const RHSChannelBoards = () => {
                             defaultMessage='Boards is a project management tool that helps define, organize, track and manage work across teams, using a familiar kanban board view.'
                         />
                     </div>
-                    <div className='boards-screenshots'><img src={Utils.buildURL(boardsScreenshots, true)}/></div>
+                    <div className='boards-screenshots'><img src={boardsScreenshots}/></div>
                     <Button
                         onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
                         emphasis='primary'

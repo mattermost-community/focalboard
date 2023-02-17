@@ -84,36 +84,6 @@ describe('utils', () => {
         })
     })
 
-    describe('test - buildURL', () => {
-        test('buildURL, no base', () => {
-            expect(Utils.buildURL('test', true)).toBe('http://localhost/test')
-            expect(Utils.buildURL('/test', true)).toBe('http://localhost/test')
-
-            expect(Utils.buildURL('test')).toBe('/test')
-            expect(Utils.buildURL('/test')).toBe('/test')
-        })
-
-        test('buildURL, base no slash', () => {
-            window.baseURL = 'base'
-
-            expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
-            expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
-
-            expect(Utils.buildURL('test')).toBe('base/test')
-            expect(Utils.buildURL('/test')).toBe('base/test')
-        })
-
-        test('buildUrl, base with slash', () => {
-            window.baseURL = '/base/'
-
-            expect(Utils.buildURL('test', true)).toBe('http://localhost/base/test')
-            expect(Utils.buildURL('/test', true)).toBe('http://localhost/base/test')
-
-            expect(Utils.buildURL('test')).toBe('base/test')
-            expect(Utils.buildURL('/test')).toBe('base/test')
-        })
-    })
-
     describe('display date', () => {
         const intl = createIntl({locale: 'en-us'})
 

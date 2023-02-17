@@ -43,7 +43,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show notify upgrade button 
         >
           <img
             alt="upgrade image"
-            src="http://localhost/test-file-stub"
+            src="test-file-stub"
           />
           <h2
             class="header text-heading5"
@@ -125,7 +125,7 @@ exports[`components/viewLimitDialog/ViewLiimitDialog show upgrade button for sys
         >
           <img
             alt="upgrade image"
-            src="http://localhost/test-file-stub"
+            src="test-file-stub"
           />
           <h2
             class="header text-heading5"

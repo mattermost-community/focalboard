@@ -96,7 +96,7 @@ export const ViewLimitModal = (props: Props): JSX.Element => {
         >
             <div className='ViewLimitDialog_body'>
                 <img
-                    src={Utils.buildURL(upgradeImage, true)}
+                    src={upgradeImage}
                     alt={intl.formatMessage({id: 'ViewLimitDialog.UpgradeImg.AltText', defaultMessage: 'upgrade image'})}
                 />
                 <h2 className='header text-heading5'>

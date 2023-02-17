@@ -259,7 +259,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
         viewId: match.params.viewId,
         teamId: match.params.teamId,
     })
-    shareUrl.pathname = Utils.buildURL(newPath)
+    shareUrl.pathname = newPath
 
     const boardPath = generatePath('/team/:teamId/:boardId/:viewId', {
         boardId: match.params.boardId,

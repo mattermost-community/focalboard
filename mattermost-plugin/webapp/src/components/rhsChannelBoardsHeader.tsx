@@ -27,7 +27,7 @@ const RHSChannelBoardsHeader = () => {
             <div>
                 <img
                     className='boards-rhs-header-logo'
-                    src={Utils.buildURL(appBarIcon, true)}
+                    src={appBarIcon}
                 />
                 <span>
                     <FormattedMessage

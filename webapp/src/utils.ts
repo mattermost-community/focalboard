@@ -562,10 +562,6 @@ class Utils {
         return frontendBaseURL
     }
 
-    static buildURL(path: string): string {
-        return path
-    }
-
     static roundTo(num: number, decimalPlaces: number): number {
         return Math.round(num * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces)
     }

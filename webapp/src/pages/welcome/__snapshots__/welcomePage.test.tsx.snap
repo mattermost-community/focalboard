@@ -21,12 +21,12 @@ exports[`pages/welcome Welcome Page shows Explore Page 1`] = `
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--large"
-        src="http://localhost/test-file-stub"
+        src="test-file-stub"
       />
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--small"
-        src="http://localhost/test-file-stub"
+        src="test-file-stub"
       />
       <button
         class="Button filled size--large"
@@ -70,12 +70,12 @@ exports[`pages/welcome Welcome Page shows Explore Page with subpath 1`] = `
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--large"
-        src="http://localhost/subpath/test-file-stub"
+        src="test-file-stub"
       />
       <img
         alt="Boards Welcome Image"
         class="WelcomePage__image WelcomePage__image--small"
-        src="http://localhost/subpath/test-file-stub"
+        src="test-file-stub"
       />
       <button
         class="Button filled size--large"

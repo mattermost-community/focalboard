@@ -2127,6 +2127,14 @@ exports[`src/components/workspace show add new view tooltip 1`] = `
           Go here to create a new view to organise your board using different layouts.
         </div>
         <div
+          class="tutorial-tour-tip__image"
+        >
+          <img
+            alt="tutorial tour tip product image"
+            src="test-file-stub"
+          />
+        </div>
+        <div
           class="tutorial-tour-tip__footer"
         >
           <div
@@ -2228,6 +2236,14 @@ exports[`src/components/workspace show copy link tooltip 1`] = `
           class="tutorial-tour-tip__body"
         >
           You can share your cards with teammates by copying the link and pasting it in a channel, direct message, or group message.
+        </div>
+        <div
+          class="tutorial-tour-tip__image"
+        >
+          <img
+            alt="tutorial tour tip product image"
+            src="test-file-stub"
+          />
         </div>
         <div
           class="tutorial-tour-tip__footer"
