@@ -51,9 +51,7 @@ describe('components/table/Table', () => {
     view2.fields.sortOptions = []
 
     const card = TestBlockFactory.createCard(board)
-
     const cardTemplate = TestBlockFactory.createCard(board)
-
     cardTemplate.fields.isTemplate = true
 
     const state = {
@@ -223,7 +221,6 @@ describe('components/table/Table', () => {
         const callback = jest.fn()
         const addCard = jest.fn()
         const boardTest = TestBlockFactory.createBoard()
-
         const card1 = TestBlockFactory.createCard(boardTest)
         const card2 = TestBlockFactory.createCard(boardTest)
         const mockStore = configureStore([])
@@ -697,7 +694,6 @@ describe('components/table/Table extended', () => {
         const board = TestBlockFactory.createBoard()
 
         const modifiedById = Utils.createGuid(IDType.User)
-        console.log(modifiedById)
         board.cardProperties.push({
             id: modifiedById,
             name: 'Last Modified By',
