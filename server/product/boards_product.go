@@ -84,7 +84,7 @@ func newBoardsProduct(services map[product.ServiceKey]interface{}) (product.Prod
 	boardsProd.logger.Info("Creating boards service")
 
 	adapter := newServiceAPIAdapter(boardsProd)
-	boardsApp, err := server.NewBoardsApp(adapter)
+	boardsApp, err := server.NewBoardsService(adapter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Boards service: %w", err)
 	}
@@ -230,7 +230,7 @@ func (bp *boardsProduct) Start() error {
 	bp.logger.Info("Starting boards service")
 
 	adapter := newServiceAPIAdapter(bp)
-	boardsApp, err := server.NewBoardsApp(adapter)
+	boardsApp, err := server.NewBoardsService(adapter)
 	if err != nil {
 		return fmt.Errorf("failed to create Boards service: %w", err)
 	}

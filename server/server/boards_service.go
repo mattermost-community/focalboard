@@ -10,6 +10,7 @@ import (
 
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -57,7 +58,17 @@ type BoardsService struct {
 	logger      mlog.LoggerIFace
 }
 
-func NewBoardsApp(api model.ServicesAPI) (*BoardsService, error) {
+func NewBoardsServiceForTest(server *Server, wsPluginAdapter ws.PluginAdapterInterface,
+	api model.ServicesAPI, logger mlog.LoggerIFace) *BoardsService {
+	return &BoardsService{
+		server:          server,
+		wsPluginAdapter: wsPluginAdapter,
+		servicesAPI:     api,
+		logger:          logger,
+	}
+}
+
+func NewBoardsService(api model.ServicesAPI) (*BoardsService, error) {
 	mmconfig := api.GetConfig()
 	logger := api.GetLogger()
 
@@ -66,7 +77,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsService, error) {
 		baseURL = *mmconfig.ServiceSettings.SiteURL
 	}
 	serverID := api.GetDiagnosticID()
-	cfg := createBoardsConfig(*mmconfig, baseURL, serverID)
+	cfg := CreateBoardsConfig(*mmconfig, baseURL, serverID)
 	sqlDB, err := api.GetMasterDB()
 	if err != nil {
 		return nil, fmt.Errorf("cannot access database while initializing Boards: %w", err)
@@ -217,6 +228,14 @@ func (b *BoardsService) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
 	if err := b.server.App().SetCloudLimits(limits); err != nil {
 		b.logger.Error("Error setting the cloud limits for Boards", mlog.Err(err))
 	}
+}
+
+func (b *BoardsService) Config() *config.Configuration {
+	return b.server.Config()
+}
+
+func (b *BoardsService) ClientConfig() *model.ClientConfig {
+	return b.server.App().GetClientConfig()
 }
 
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.

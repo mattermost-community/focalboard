@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package server
+package integrationtests
 
 import (
 	"io"
@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	server_util "github.com/mattermost/focalboard/server/server/util"
+	"github.com/mattermost/focalboard/server/server"
 
 	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -71,7 +71,7 @@ func TestSetConfiguration(t *testing.T) {
 		mmConfig := baseConfig
 		mmConfig.LogSettings = *logSettings
 
-		config := createBoardsConfig(*mmConfig, "", "testId")
+		config := server.CreateBoardsConfig(*mmConfig, "", "testId")
 		assert.Equal(t, true, config.Telemetry)
 		assert.Equal(t, "testId", config.TelemetryID)
 	})
@@ -79,9 +79,9 @@ func TestSetConfiguration(t *testing.T) {
 	t.Run("test enable shared boards", func(t *testing.T) {
 		mmConfig := baseConfig
 		mmConfig.PluginSettings.Plugins = make(map[string]map[string]interface{})
-		mmConfig.PluginSettings.Plugins[PluginName] = make(map[string]interface{})
-		mmConfig.PluginSettings.Plugins[PluginName][SharedBoardsName] = true
-		config := createBoardsConfig(*mmConfig, "", "")
+		mmConfig.PluginSettings.Plugins[server.PluginName] = make(map[string]interface{})
+		mmConfig.PluginSettings.Plugins[server.PluginName][server.SharedBoardsName] = true
+		config := server.CreateBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, true, config.EnablePublicSharedBoards)
 	})
 
@@ -95,7 +95,7 @@ func TestSetConfiguration(t *testing.T) {
 		mmConfig := baseConfig
 		mmConfig.FeatureFlags = featureFlags
 
-		config := createBoardsConfig(*mmConfig, "", "")
+		config := server.CreateBoardsConfig(*mmConfig, "", "")
 		assert.Equal(t, "true", config.FeatureFlags["TestBoolFeature"])
 		assert.Equal(t, "test", config.FeatureFlags["TestFeature"])
 
@@ -105,13 +105,10 @@ func TestSetConfiguration(t *testing.T) {
 }
 
 func TestServeHTTP(t *testing.T) {
-	th, tearDown := server_util.SetupTestHelper(t)
-	defer tearDown()
+	th := SetupTestHelperPluginMode(t)
+	defer th.TearDown()
 
-	b := &BoardsService{
-		server: th.Server,
-		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
-	}
+	b := server.NewBoardsServiceForTest(th.Server, &FakePluginAdapter{}, nil, mlog.CreateConsoleTestLogger(true, mlog.LvlError))
 
 	assert := assert.New(t)
 	w := httptest.NewRecorder()
