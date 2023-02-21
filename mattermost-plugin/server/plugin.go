@@ -48,7 +48,7 @@ func (p *Plugin) OnActivate() error {
 
 	adapter := newServiceAPIAdapter(p.API, client.Store, logger)
 
-	boardsApp, err := server.NewBoardsApp(adapter)
+	boardsApp, err := server.NewBoardsService(adapter)
 	if err != nil {
 		return fmt.Errorf("cannot activate plugin: %w", err)
 	}
