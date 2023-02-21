@@ -1,49 +1,26 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package server
 
 import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/focalboard/server/integrationtests"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/ws"
 
 	mockservicesapi "github.com/mattermost/focalboard/server/model/mocks"
+	server_util "github.com/mattermost/focalboard/server/server/util"
 
-	serverModel "github.com/mattermost/mattermost-server/v6/model"
+	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-type TestHelper struct {
-	Server *server.Server
-}
-
-func SetupTestHelper(t *testing.T) (*TestHelper, func()) {
-	th := &TestHelper{}
-	th.Server = newTestServer()
-
-	err := th.Server.Start()
-	require.NoError(t, err, "Server start should not error")
-
-	tearDown := func() {
-		err := th.Server.Shutdown()
-		require.NoError(t, err, "Server shutdown should not error")
-	}
-	return th, tearDown
-}
-
-func newTestServer() *server.Server {
-	return integrationtests.NewTestServerPluginMode()
-}
 func TestConfigurationNullConfiguration(t *testing.T) {
-	boardsApp := &BoardsApp{}
+	boardsApp := &BoardsService{}
 	assert.NotNil(t, boardsApp.getConfiguration())
 }
 
@@ -54,29 +31,29 @@ func TestOnConfigurationChange(t *testing.T) {
 	basePlugins[PluginName] = make(map[string]interface{})
 	basePlugins[PluginName][SharedBoardsName] = true
 
-	baseFeatureFlags := &serverModel.FeatureFlags{
+	baseFeatureFlags := &mm_model.FeatureFlags{
 		BoardsFeatureFlags: "Feature1-Feature2",
 	}
-	basePluginSettings := &serverModel.PluginSettings{
+	basePluginSettings := &mm_model.PluginSettings{
 		Directory: &stringRef,
 		Plugins:   basePlugins,
 	}
 	intRef := 365
-	baseDataRetentionSettings := &serverModel.DataRetentionSettings{
+	baseDataRetentionSettings := &mm_model.DataRetentionSettings{
 		BoardsRetentionDays: &intRef,
 	}
 	usernameRef := "username"
-	baseTeamSettings := &serverModel.TeamSettings{
+	baseTeamSettings := &mm_model.TeamSettings{
 		TeammateNameDisplay: &usernameRef,
 	}
 
 	falseRef := false
-	basePrivacySettings := &serverModel.PrivacySettings{
+	basePrivacySettings := &mm_model.PrivacySettings{
 		ShowEmailAddress: &falseRef,
 		ShowFullName:     &falseRef,
 	}
 
-	baseConfig := &serverModel.Config{
+	baseConfig := &mm_model.Config{
 		FeatureFlags:          baseFeatureFlags,
 		PluginSettings:        *basePluginSettings,
 		DataRetentionSettings: *baseDataRetentionSettings,
@@ -85,14 +62,14 @@ func TestOnConfigurationChange(t *testing.T) {
 	}
 
 	t.Run("Test Load Plugin Success", func(t *testing.T) {
-		th, tearDown := SetupTestHelper(t)
+		th, tearDown := server_util.SetupTestHelper(t)
 		defer tearDown()
 
 		ctrl := gomock.NewController(t)
 		api := mockservicesapi.NewMockServicesAPI(ctrl)
 		api.EXPECT().GetConfig().Return(baseConfig)
 
-		b := &BoardsApp{
+		b := &BoardsService{
 			server:          th.Server,
 			wsPluginAdapter: &FakePluginAdapter{},
 			servicesAPI:     api,

@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package server
 
 import (
 	"os"
@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/config"
 	"github.com/mattermost/focalboard/server/services/permissions/localpermissions"
 	"github.com/mattermost/focalboard/server/services/store/mockstore"
@@ -20,7 +19,7 @@ import (
 )
 
 type TestHelperMockStore struct {
-	Server *server.Server
+	Server *Server
 	Store  *mockstore.MockStore
 }
 
@@ -44,7 +43,7 @@ func SetupTestHelperMockStore(t *testing.T) (*TestHelperMockStore, func()) {
 	return th, tearDown
 }
 
-func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
+func newTestServerMock(mockStore *mockstore.MockStore) *Server {
 	config := &config.Configuration{
 		EnableDataRetention: false,
 		DataRetentionDays:   10,
@@ -62,7 +61,7 @@ func newTestServerMock(mockStore *mockstore.MockStore) *server.Server {
 
 	permissionsService := localpermissions.New(mockStore, logger)
 
-	srv, err := server.New(server.Params{
+	srv, err := New(Params{
 		Cfg:                config,
 		DBStore:            mockStore,
 		Logger:             logger,
@@ -79,7 +78,7 @@ func TestRunDataRetention(t *testing.T) {
 	th, tearDown := SetupTestHelperMockStore(t)
 	defer tearDown()
 
-	b := &BoardsApp{
+	b := &BoardsService{
 		server: th.Server,
 		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
 	}

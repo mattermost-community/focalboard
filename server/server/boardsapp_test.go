@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package server
 
 import (
 	"io"
@@ -10,6 +10,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+
+	server_util "github.com/mattermost/focalboard/server/server/util"
 
 	"github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/shared/mlog"
@@ -103,10 +105,10 @@ func TestSetConfiguration(t *testing.T) {
 }
 
 func TestServeHTTP(t *testing.T) {
-	th, tearDown := SetupTestHelper(t)
+	th, tearDown := server_util.SetupTestHelper(t)
 	defer tearDown()
 
-	b := &BoardsApp{
+	b := &BoardsService{
 		server: th.Server,
 		logger: mlog.CreateConsoleTestLogger(true, mlog.LvlError),
 	}

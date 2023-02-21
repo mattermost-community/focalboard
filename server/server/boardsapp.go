@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package server
 
 import (
 	"fmt"
@@ -10,7 +10,6 @@ import (
 
 	"github.com/mattermost/focalboard/server/auth"
 	"github.com/mattermost/focalboard/server/model"
-	"github.com/mattermost/focalboard/server/server"
 	"github.com/mattermost/focalboard/server/services/notify"
 	"github.com/mattermost/focalboard/server/services/permissions/mmpermissions"
 	"github.com/mattermost/focalboard/server/services/store"
@@ -43,7 +42,7 @@ type BoardsEmbed struct {
 	ReadToken    string `json:"readToken,omitempty"`
 }
 
-type BoardsApp struct {
+type BoardsService struct {
 	// configurationLock synchronizes access to the configuration.
 	configurationLock sync.RWMutex
 
@@ -51,14 +50,14 @@ type BoardsApp struct {
 	// setConfiguration for usage.
 	configuration *configuration
 
-	server          *server.Server
+	server          *Server
 	wsPluginAdapter ws.PluginAdapterInterface
 
 	servicesAPI model.ServicesAPI
 	logger      mlog.LoggerIFace
 }
 
-func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
+func NewBoardsApp(api model.ServicesAPI) (*BoardsService, error) {
 	mmconfig := api.GetConfig()
 	logger := api.GetLogger()
 
@@ -92,7 +91,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error initializing the DB: %w", err)
 	}
-	if cfg.AuthMode == server.MattermostAuthMod {
+	if cfg.AuthMode == MattermostAuthMod {
 		layeredStore, err2 := mattermostauthlayer.New(cfg.DBType, sqlDB, db, logger, api, storeParams.TablePrefix)
 		if err2 != nil {
 			return nil, fmt.Errorf("error initializing the DB: %w", err2)
@@ -128,7 +127,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	notifyBackends = append(notifyBackends, subscriptionsBackend)
 	mentionsBackend.AddListener(subscriptionsBackend)
 
-	params := server.Params{
+	params := Params{
 		Cfg:                cfg,
 		SingleUserToken:    "",
 		DBStore:            db,
@@ -140,7 +139,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 		IsPlugin:           true,
 	}
 
-	server, err := server.New(params)
+	server, err := New(params)
 	if err != nil {
 		return nil, fmt.Errorf("error initializing the server: %w", err)
 	}
@@ -162,7 +161,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 		}
 	*/
 
-	return &BoardsApp{
+	return &BoardsService{
 		server:          server,
 		wsPluginAdapter: wsPluginAdapter,
 		servicesAPI:     api,
@@ -170,7 +169,7 @@ func NewBoardsApp(api model.ServicesAPI) (*BoardsApp, error) {
 	}, nil
 }
 
-func (b *BoardsApp) Start() error {
+func (b *BoardsService) Start() error {
 	if err := b.server.Start(); err != nil {
 		return fmt.Errorf("error starting Boards server: %w", err)
 	}
@@ -182,7 +181,7 @@ func (b *BoardsApp) Start() error {
 	return nil
 }
 
-func (b *BoardsApp) Stop() error {
+func (b *BoardsService) Stop() error {
 	return b.server.Shutdown()
 }
 
@@ -190,38 +189,38 @@ func (b *BoardsApp) Stop() error {
 // These callbacks are called automatically by the suite server.
 //
 
-func (b *BoardsApp) MessageWillBePosted(_ *plugin.Context, post *mm_model.Post) (*mm_model.Post, string) {
+func (b *BoardsService) MessageWillBePosted(_ *plugin.Context, post *mm_model.Post) (*mm_model.Post, string) {
 	return postWithBoardsEmbed(post), ""
 }
 
-func (b *BoardsApp) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mm_model.Post) (*mm_model.Post, string) {
+func (b *BoardsService) MessageWillBeUpdated(_ *plugin.Context, newPost, _ *mm_model.Post) (*mm_model.Post, string) {
 	return postWithBoardsEmbed(newPost), ""
 }
 
-func (b *BoardsApp) OnWebSocketConnect(webConnID, userID string) {
+func (b *BoardsService) OnWebSocketConnect(webConnID, userID string) {
 	b.wsPluginAdapter.OnWebSocketConnect(webConnID, userID)
 }
 
-func (b *BoardsApp) OnWebSocketDisconnect(webConnID, userID string) {
+func (b *BoardsService) OnWebSocketDisconnect(webConnID, userID string) {
 	b.wsPluginAdapter.OnWebSocketDisconnect(webConnID, userID)
 }
 
-func (b *BoardsApp) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm_model.WebSocketRequest) {
+func (b *BoardsService) WebSocketMessageHasBeenPosted(webConnID, userID string, req *mm_model.WebSocketRequest) {
 	b.wsPluginAdapter.WebSocketMessageHasBeenPosted(webConnID, userID, req)
 }
 
-func (b *BoardsApp) OnPluginClusterEvent(_ *plugin.Context, ev mm_model.PluginClusterEvent) {
+func (b *BoardsService) OnPluginClusterEvent(_ *plugin.Context, ev mm_model.PluginClusterEvent) {
 	b.wsPluginAdapter.HandleClusterEvent(ev)
 }
 
-func (b *BoardsApp) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
+func (b *BoardsService) OnCloudLimitsUpdated(limits *mm_model.ProductLimits) {
 	if err := b.server.App().SetCloudLimits(limits); err != nil {
 		b.logger.Error("Error setting the cloud limits for Boards", mlog.Err(err))
 	}
 }
 
 // ServeHTTP demonstrates a plugin that handles HTTP requests by greeting the world.
-func (b *BoardsApp) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
+func (b *BoardsService) ServeHTTP(_ *plugin.Context, w http.ResponseWriter, r *http.Request) {
 	router := b.server.GetRootRouter()
 	router.ServeHTTP(w, r)
 }

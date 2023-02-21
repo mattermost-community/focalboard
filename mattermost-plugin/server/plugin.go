@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/server"
 
 	pluginapi "github.com/mattermost/mattermost-plugin-api"
 
@@ -24,7 +24,7 @@ var ErrPluginNotAllowed = errors.New("boards plugin not allowed while Boards pro
 type Plugin struct {
 	plugin.MattermostPlugin
 
-	boardsApp *boards.BoardsApp
+	boardsApp *server.BoardsService
 }
 
 func (p *Plugin) OnActivate() error {
@@ -48,7 +48,7 @@ func (p *Plugin) OnActivate() error {
 
 	adapter := newServiceAPIAdapter(p.API, client.Store, logger)
 
-	boardsApp, err := boards.NewBoardsApp(adapter)
+	boardsApp, err := server.NewBoardsApp(adapter)
 	if err != nil {
 		return fmt.Errorf("cannot activate plugin: %w", err)
 	}

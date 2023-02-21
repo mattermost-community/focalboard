@@ -1,6 +1,6 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
-package boards
+package server
 
 import (
 	"errors"
@@ -9,7 +9,7 @@ import (
 
 var ErrInsufficientLicense = errors.New("appropriate license required")
 
-func (b *BoardsApp) RunDataRetention(nowTime, batchSize int64) (int64, error) {
+func (b *BoardsService) RunDataRetention(nowTime, batchSize int64) (int64, error) {
 	b.logger.Debug("Boards RunDataRetention")
 	license := b.server.Store().GetLicense()
 	if license == nil || !(*license.Features.DataRetention) {
