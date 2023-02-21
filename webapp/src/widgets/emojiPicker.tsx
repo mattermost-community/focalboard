@@ -18,6 +18,7 @@ const EmojiPicker: FC<Props> = (props: Props): JSX.Element => (
     >
         <Picker
             onSelect={(emoji: BaseEmoji) => props.onSelect(emoji.native)}
+            native={true}
         />
     </div>
 )
