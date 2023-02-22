@@ -52,7 +52,6 @@ server-lint: setup-go-work ## Run linters on server code.
 		exit 1; \
 	fi;
 	cd server; golangci-lint run ./...
-	cd mattermost-plugin; golangci-lint run ./...
 
 modd-precheck:
 	@if ! [ -x "$$(command -v modd)" ]; then \
@@ -86,8 +85,6 @@ server-test-mysql: setup-go-work ## Run server tests using mysql
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mysql-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-mysql-profile.coverage
-	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-mysql-profile.coverage -count=1 -timeout=30m ./...
-	cd mattermost-plugin/server; go tool cover -func plugin-mysql-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-mysql.yml down -v --remove-orphans
 
 server-test-mariadb: export FOCALBOARD_UNIT_TESTING=1
@@ -100,8 +97,6 @@ server-test-mariadb: templates-archive ## Run server tests using mysql
 	docker-compose -f ./docker-testing/docker-compose-mariadb.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-mariadb-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-mariadb-profile.coverage
-	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-mariadb-profile.coverage -count=1 -timeout=30m ./...
-	cd mattermost-plugin/server; go tool cover -func plugin-mariadb-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-mariadb.yml down -v --remove-orphans
 
 server-test-postgres: export FOCALBOARD_UNIT_TESTING=1
@@ -114,8 +109,6 @@ server-test-postgres: setup-go-work ## Run server tests using postgres
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml run start_dependencies
 	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-postgres-profile.coverage -count=1 -timeout=30m ./...
 	cd server; go tool cover -func server-postgres-profile.coverage
-	cd mattermost-plugin/server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=plugin-postgres-profile.coverage -count=1 -timeout=30m ./...
-	cd mattermost-plugin/server; go tool cover -func plugin-postgres-profile.coverage
 	docker-compose -f ./docker-testing/docker-compose-postgres.yml down -v --remove-orphans
 
 webapp-ci: ## Webapp CI: linting & testing.
