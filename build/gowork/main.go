@@ -46,6 +46,7 @@ func makeGoWork(ci bool) string {
 	repos := map[string]string{
 		"../mattermost-server": "EXCLUDE_SERVER",
 		"../enterprise":        "EXCLUDE_ENTERPRISE",
+		"./mattermost-plugin":  "EXCLUDE_PLUGIN",
 	}
 
 	var b strings.Builder
