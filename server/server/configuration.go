@@ -1,4 +1,4 @@
-package boards
+package server
 
 import (
 	"reflect"
@@ -29,7 +29,7 @@ func (c *configuration) Clone() *configuration {
 // getConfiguration retrieves the active configuration under lock, making it safe to use
 // concurrently. The active configuration may change underneath the client of this method, but
 // the struct returned by this API call is considered immutable.
-func (b *BoardsApp) getConfiguration() *configuration {
+func (b *BoardsService) getConfiguration() *configuration {
 	b.configurationLock.RLock()
 	defer b.configurationLock.RUnlock()
 
@@ -49,7 +49,7 @@ func (b *BoardsApp) getConfiguration() *configuration {
 // This method panics if setConfiguration is called with the existing configuration. This almost
 // certainly means that the configuration was modified without being cloned and may result in
 // an unsafe access.
-func (b *BoardsApp) setConfiguration(configuration *configuration) {
+func (b *BoardsService) setConfiguration(configuration *configuration) {
 	b.configurationLock.Lock()
 	defer b.configurationLock.Unlock()
 
@@ -68,7 +68,7 @@ func (b *BoardsApp) setConfiguration(configuration *configuration) {
 }
 
 // OnConfigurationChange is invoked when configuration changes may have been made.
-func (b *BoardsApp) OnConfigurationChange() error {
+func (b *BoardsService) OnConfigurationChange() error {
 	// Have we been setup by OnActivate?
 	if b.server == nil {
 		return nil

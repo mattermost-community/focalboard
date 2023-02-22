@@ -7,8 +7,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/mattermost/focalboard/mattermost-plugin/server/boards"
 	"github.com/mattermost/focalboard/server/model"
+	"github.com/mattermost/focalboard/server/server"
 
 	mm_model "github.com/mattermost/mattermost-server/v6/model"
 	"github.com/mattermost/mattermost-server/v6/plugin"
@@ -71,7 +71,7 @@ type boardsProduct struct {
 	preferencesService   product.PreferencesService
 	hooksService         product.HooksService
 
-	boardsApp *boards.BoardsApp
+	boardsApp *server.BoardsService
 }
 
 func newBoardsProduct(services map[product.ServiceKey]interface{}) (product.Product, error) {
@@ -84,7 +84,7 @@ func newBoardsProduct(services map[product.ServiceKey]interface{}) (product.Prod
 	boardsProd.logger.Info("Creating boards service")
 
 	adapter := newServiceAPIAdapter(boardsProd)
-	boardsApp, err := boards.NewBoardsApp(adapter)
+	boardsApp, err := server.NewBoardsService(adapter)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create Boards service: %w", err)
 	}
@@ -92,7 +92,7 @@ func newBoardsProduct(services map[product.ServiceKey]interface{}) (product.Prod
 	boardsProd.boardsApp = boardsApp
 
 	// Add the Boards services API to the services map so other products can access Boards functionality.
-	boardsAPI := boards.NewBoardsServiceAPI(boardsApp)
+	boardsAPI := server.NewBoardsServiceAPI(boardsApp)
 	services[product.BoardsKey] = boardsAPI
 
 	return boardsProd, nil
@@ -230,7 +230,7 @@ func (bp *boardsProduct) Start() error {
 	bp.logger.Info("Starting boards service")
 
 	adapter := newServiceAPIAdapter(bp)
-	boardsApp, err := boards.NewBoardsApp(adapter)
+	boardsApp, err := server.NewBoardsService(adapter)
 	if err != nil {
 		return fmt.Errorf("failed to create Boards service: %w", err)
 	}

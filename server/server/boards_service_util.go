@@ -1,7 +1,7 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-package boards
+package server
 
 import (
 	"math"
@@ -15,7 +15,7 @@ import (
 
 const defaultS3Timeout = 60 * 1000 // 60 seconds
 
-func createBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID string) *config.Configuration {
+func CreateBoardsConfig(mmconfig mm_model.Config, baseURL string, serverID string) *config.Configuration {
 	filesS3Config := config.AmazonS3Config{}
 	if mmconfig.FileSettings.AmazonS3AccessKeyId != nil {
 		filesS3Config.AccessKeyID = *mmconfig.FileSettings.AmazonS3AccessKeyId

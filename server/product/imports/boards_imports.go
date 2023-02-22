@@ -6,5 +6,5 @@ package imports
 import (
 	// Needed to ensure the init() method in the FocalBoard product is run.
 	// This file is copied to the mmserver imports package via makefile.
-	_ "github.com/mattermost/focalboard/mattermost-plugin/product"
+	_ "github.com/mattermost/focalboard/server/product"
 )

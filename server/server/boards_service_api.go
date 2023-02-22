@@ -1,4 +1,4 @@
-package boards
+package server
 
 import (
 	"github.com/mattermost/focalboard/server/app"
@@ -13,7 +13,7 @@ type boardsServiceAPI struct {
 	app *app.App
 }
 
-func NewBoardsServiceAPI(app *BoardsApp) *boardsServiceAPI {
+func NewBoardsServiceAPI(app *BoardsService) *boardsServiceAPI {
 	return &boardsServiceAPI{
 		app: app.server.App(),
 	}
