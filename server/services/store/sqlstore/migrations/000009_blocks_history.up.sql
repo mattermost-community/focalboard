@@ -13,7 +13,6 @@
 CREATE TABLE IF NOT EXISTS {{.prefix}}blocks (
     id VARCHAR(36),
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
-    {{if .sqlite}}insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),{{end}}
     {{if .mysql}}insert_at DATETIME(6) NOT NULL DEFAULT NOW(6),{{end}}
     parent_id VARCHAR(36),
     {{if .mysql}}`schema`{{else}}schema{{end}} BIGINT,
@@ -35,11 +34,7 @@ INSERT IGNORE INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_history OR
 {{if .postgres}}
 INSERT INTO {{.prefix}}blocks (SELECT * FROM {{.prefix}}blocks_history ORDER BY insert_at DESC) ON CONFLICT DO NOTHING;
 {{end}}
-{{if .sqlite}}
-INSERT OR IGNORE INTO {{.prefix}}blocks SELECT * FROM {{.prefix}}blocks_history ORDER BY insert_at DESC;
-{{end}}
 
 {{end}}
 
 DELETE FROM {{.prefix}}blocks where delete_at > 0;
-

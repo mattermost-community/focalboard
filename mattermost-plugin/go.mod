@@ -3,12 +3,10 @@ module github.com/mattermost/focalboard/mattermost-plugin
 go 1.19
 
 require (
-	github.com/golang/mock v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/mattermost/focalboard/server v0.0.0-20220818150333-feb49eaf197a
 	github.com/mattermost/mattermost-plugin-api v0.0.29-0.20220801143717-73008cfda2fb
 	github.com/mattermost/mattermost-server/v6 v6.0.0-20221214122404-8d90c7042f93
-	github.com/stretchr/testify v1.8.1
 )
 
 require (
@@ -76,7 +74,6 @@ require (
 	github.com/rs/xid v1.4.0 // indirect
 	github.com/rudderlabs/analytics-go v3.3.3+incompatible // indirect
 	github.com/segmentio/backo-go v1.0.1 // indirect
-	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
@@ -84,6 +81,7 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.10.1 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/testify v1.8.1 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/tidwall/gjson v1.14.3 // indirect
 	github.com/tidwall/match v1.1.1 // indirect

@@ -692,10 +692,10 @@ func (s *SQLStore) getBlockHistoryNewestChildren(db sq.BaseRunner, parentID stri
 		return nil, false, fmt.Errorf("getBlockHistoryNewestChildren unable to generate sql: %w", err)
 	}
 
-	// if we're using postgres or sqlite, we need to replace the
-	// question mark placeholder with the numbered dollar one, now
-	// that the full query is built
-	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+	// if we're using postgres, we need to replace the question mark
+	// placeholder with the numbered dollar one, now that the full
+	// query is built
+	if s.dbType == model.PostgresDBType {
 		var rErr error
 		sql, rErr = sq.Dollar.ReplacePlaceholders(sql)
 		if rErr != nil {
