@@ -344,7 +344,7 @@ func appendContentChanges(fields []*mm_model.SlackAttachmentField, cardDiff *Dif
 			}
 		}
 
-		logger.Debug("appendContentChanges",
+		logger.Trace("appendContentChanges",
 			mlog.String("type", string(child.BlockType)),
 			mlog.String("opString", opString),
 			mlog.String("oldTitle", oldTitle),

@@ -94,7 +94,7 @@ func (*FakePermissionPluginAPI) HasPermissionToChannel(userID string, channelID 
 	return channelID == "valid-channel-id"
 }
 
-func getTestConfig() (*config.Configuration, error) {
+func GetTestConfig() (*config.Configuration, error) {
 	dbType, connectionString, err := sqlstore.PrepareNewTestDatabase()
 	if err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func newTestServer(singleUserToken string) *server.Server {
 }
 
 func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *server.Server {
-	cfg, err := getTestConfig()
+	cfg, err := GetTestConfig()
 	if err != nil {
 		panic(err)
 	}
@@ -189,7 +189,7 @@ func newTestServerWithLicense(singleUserToken string, licenseType LicenseType) *
 }
 
 func NewTestServerPluginMode() *server.Server {
-	cfg, err := getTestConfig()
+	cfg, err := GetTestConfig()
 	if err != nil {
 		panic(err)
 	}
@@ -225,7 +225,7 @@ func NewTestServerPluginMode() *server.Server {
 }
 
 func newTestServerLocalMode() *server.Server {
-	cfg, err := getTestConfig()
+	cfg, err := GetTestConfig()
 	if err != nil {
 		panic(err)
 	}
