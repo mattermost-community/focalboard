@@ -315,7 +315,7 @@ describe('properties/dateRange', () => {
 
         expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify({from: today}))
     })
-    
+
     test('returns component with new date after prop change', () => {
         const component = wrapIntl(
             <DateProp
@@ -341,8 +341,8 @@ describe('properties/dateRange', () => {
                     board={{...board}}
                     card={{...card}}
                     propertyTemplate={propertyTemplate}
-                />
-            )
+                />,
+            ),
         )
 
         expect(container).toMatchSnapshot()
