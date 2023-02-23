@@ -20,7 +20,6 @@ jobs:
     strategy:
       matrix:
         db:
-          - sqlite
           - mysql
           - mariadb
           - postgres
@@ -92,4 +91,3 @@ jobs:
 
     - name: Lint & test webapp
       run: cd focalboard; make webapp-ci
-

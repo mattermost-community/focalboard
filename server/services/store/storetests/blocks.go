@@ -403,10 +403,6 @@ func testPatchBlocks(t *testing.T, store store.Store) {
 	})
 
 	t.Run("invalid block id, nothing updated existing blocks", func(t *testing.T) {
-		if store.DBType() == model.SqliteDBType {
-			t.Skip("No transactions support int sqlite")
-		}
-
 		title := "Another Title"
 		blockPatch := model.BlockPatch{
 			Title: &title,

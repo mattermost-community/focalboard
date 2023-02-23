@@ -40,7 +40,7 @@ func (s *SQLStore) MarshalJSONB(data interface{}) ([]byte, error) {
 func PrepareNewTestDatabase() (dbType string, connectionString string, err error) {
 	dbType = strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DB_TYPE"))
 	if dbType == "" {
-		dbType = model.SqliteDBType
+		panic("Environment variable FOCALBOARD_STORE_TEST_DB_TYPE must be defined")
 	}
 	if dbType == "mariadb" {
 		dbType = model.MysqlDBType
@@ -49,14 +49,7 @@ func PrepareNewTestDatabase() (dbType string, connectionString string, err error
 	var dbName string
 	var rootUser string
 
-	if dbType == model.SqliteDBType {
-		file, err := os.CreateTemp("", "fbtest_*.db")
-		if err != nil {
-			return "", "", err
-		}
-		connectionString = file.Name() + "?_busy_timeout=5000"
-		_ = file.Close()
-	} else if port := strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DOCKER_PORT")); port != "" {
+	if port := strings.TrimSpace(os.Getenv("FOCALBOARD_STORE_TEST_DOCKER_PORT")); port != "" {
 		// docker unit tests take priority over any DSN env vars
 		var template string
 		switch dbType {
@@ -147,8 +140,6 @@ func (s *SQLStore) GetSchemaName() (string, error) {
 		query = s.getQueryBuilder(s.db).Select("DATABASE()")
 	case model.PostgresDBType:
 		query = s.getQueryBuilder(s.db).Select("current_schema()")
-	case model.SqliteDBType:
-		return "", nil
 	default:
 		return "", ErrUnsupportedDatabaseType
 	}

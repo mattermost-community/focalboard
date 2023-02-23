@@ -13,7 +13,6 @@ import (
 	"github.com/mattermost/morph/drivers"
 	"github.com/mattermost/morph/drivers/mysql"
 	"github.com/mattermost/morph/drivers/postgres"
-	"github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
 	"github.com/mgdelacroix/foundation"
 
@@ -97,11 +96,6 @@ func (bm *BoardsMigrator) getDriver() (drivers.Driver, error) {
 		if err != nil {
 			return nil, err
 		}
-	case model.SqliteDBType:
-		driver, err = sqlite.WithInstance(bm.db)
-		if err != nil {
-			return nil, err
-		}
 	}
 
 	return driver, nil
@@ -125,7 +119,6 @@ func (bm *BoardsMigrator) getMorphConnection() (*morph.Morph, drivers.Driver, er
 	params := map[string]interface{}{
 		"prefix":     tablePrefix,
 		"postgres":   bm.driverName == model.PostgresDBType,
-		"sqlite":     bm.driverName == model.SqliteDBType,
 		"mysql":      bm.driverName == model.MysqlDBType,
 		"plugin":     bm.withMattermostMigrations,
 		"singleUser": false,

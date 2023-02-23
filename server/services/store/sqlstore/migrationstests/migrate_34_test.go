@@ -31,12 +31,6 @@ func Test34DropDeleteAtColumnMySQLPostgres(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		// For migration 34, we don't drop column
-		// on SQLite, so no need to test for it.
-		if th.IsSQLite() {
-			return
-		}
-
 		th.f.MigrateToStep(33).
 			ExecFile("./fixtures/test34_drop_delete_at_column.sql")
 

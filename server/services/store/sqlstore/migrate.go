@@ -21,7 +21,6 @@ import (
 	drivers "github.com/mattermost/morph/drivers"
 	mysql "github.com/mattermost/morph/drivers/mysql"
 	postgres "github.com/mattermost/morph/drivers/postgres"
-	sqlite "github.com/mattermost/morph/drivers/sqlite"
 	embedded "github.com/mattermost/morph/sources/embedded"
 
 	_ "github.com/lib/pq" // postgres driver
@@ -101,27 +100,17 @@ func (s *SQLStore) Migrate() error {
 
 	var driver drivers.Driver
 	var err error
-
-	if s.dbType == model.SqliteDBType {
-		driver, err = sqlite.WithInstance(s.db)
-		if err != nil {
-			return err
-		}
-	}
-
 	var db *sql.DB
-	if s.dbType != model.SqliteDBType {
-		s.logger.Debug("Getting migrations connection")
-		db, err = s.getMigrationConnection()
-		if err != nil {
-			return err
-		}
-
-		defer func() {
-			s.logger.Debug("Closing migrations connection")
-			db.Close()
-		}()
+	s.logger.Debug("Getting migrations connection")
+	db, err = s.getMigrationConnection()
+	if err != nil {
+		return err
 	}
+
+	defer func() {
+		s.logger.Debug("Closing migrations connection")
+		db.Close()
+	}()
 
 	if s.dbType == model.PostgresDBType {
 		driver, err = postgres.WithInstance(db)
@@ -149,7 +138,6 @@ func (s *SQLStore) Migrate() error {
 	params := map[string]interface{}{
 		"prefix":     s.tablePrefix,
 		"postgres":   s.dbType == model.PostgresDBType,
-		"sqlite":     s.dbType == model.SqliteDBType,
 		"mysql":      s.dbType == model.MysqlDBType,
 		"plugin":     s.isPlugin,
 		"singleUser": s.isSingleUser,
@@ -193,10 +181,6 @@ func (s *SQLStore) Migrate() error {
 		morph.WithLock("boards-lock-key"),
 		morph.SetMigrationTableName(fmt.Sprintf("%sschema_migrations", s.tablePrefix)),
 		morph.SetStatementTimeoutInSeconds(1000000),
-	}
-
-	if s.dbType == model.SqliteDBType {
-		opts = opts[:0] // sqlite driver does not support locking, it doesn't need to anyway.
 	}
 
 	s.logger.Debug("Creating migration engine")
@@ -312,9 +296,6 @@ func (s *SQLStore) genAddColumnIfNeeded(tableName, columnName, datatype, constra
 	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	switch s.dbType {
-	case model.SqliteDBType:
-		// Sqlite does not support any conditionals that can contain DDL commands. No idempotent migrations for Sqlite :-(
-		return fmt.Sprintf("\nALTER TABLE %s ADD COLUMN %s %s %s;\n", normTableName, columnName, datatype, constraint), nil
 	case model.MysqlDBType:
 		vars := map[string]string{
 			"schema":          s.schemaName,
@@ -351,8 +332,6 @@ func (s *SQLStore) genDropColumnIfNeeded(tableName, columnName string) (string, 
 	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	switch s.dbType {
-	case model.SqliteDBType:
-		return fmt.Sprintf("\n-- Sqlite3 cannot drop columns for versions less than 3.35.0; drop column '%s' in table '%s' skipped\n", columnName, tableName), nil
 	case model.MysqlDBType:
 		vars := map[string]string{
 			"schema":          s.schemaName,
@@ -388,9 +367,6 @@ func (s *SQLStore) genCreateIndexIfNeeded(tableName, columns string) (string, er
 	normTableName := normalizeTablename(s.schemaName, tableName)
 
 	switch s.dbType {
-	case model.SqliteDBType:
-		// No support for idempotent index creation in Sqlite.
-		return fmt.Sprintf("\nCREATE INDEX %s ON %s (%s);\n", indexName, normTableName, columns), nil
 	case model.MysqlDBType:
 		vars := map[string]string{
 			"schema":          s.schemaName,
@@ -435,9 +411,6 @@ func (s *SQLStore) genRenameTableIfNeeded(oldTableName, newTableName string) (st
 	}
 
 	switch s.dbType {
-	case model.SqliteDBType:
-		// No support for idempotent table renaming in Sqlite.
-		return fmt.Sprintf("\nALTER TABLE %s RENAME TO %s;\n", normOldTableName, newTableName), nil
 	case model.MysqlDBType:
 		return replaceVars(`
 			SET @stmt = (SELECT IF(
@@ -456,14 +429,14 @@ func (s *SQLStore) genRenameTableIfNeeded(oldTableName, newTableName string) (st
 	case model.PostgresDBType:
 		return replaceVars(`
 			do $$
-			begin 
+			begin
 				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.TABLES
 							WHERE table_name = '[[new_table_name]]'
 							AND table_schema = '[[schema]]'
-				) = 0 then 
+				) = 0 then
 					ALTER TABLE [[norm_old_table_name]] RENAME TO [[new_table_name]];
 				end if;
-			end$$;		
+			end$$;
 		`, vars), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
@@ -484,9 +457,6 @@ func (s *SQLStore) genRenameColumnIfNeeded(tableName, oldColumnName, newColumnNa
 	}
 
 	switch s.dbType {
-	case model.SqliteDBType:
-		// No support for idempotent column renaming in Sqlite.
-		return fmt.Sprintf("\nALTER TABLE %s RENAME COLUMN %s TO %s;\n", normTableName, oldColumnName, newColumnName), nil
 	case model.MysqlDBType:
 		return replaceVars(`
 			SET @stmt = (SELECT IF(
@@ -506,15 +476,15 @@ func (s *SQLStore) genRenameColumnIfNeeded(tableName, oldColumnName, newColumnNa
 	case model.PostgresDBType:
 		return replaceVars(`
 			do $$
-			begin 
+			begin
 				if (SELECT COUNT(table_name) FROM INFORMATION_SCHEMA.COLUMNS
 							WHERE table_name = '[[table_name]]'
 							AND table_schema = '[[schema]]'
 							AND column_name = '[[new_column_name]]'
-				) = 0 then 
+				) = 0 then
 					ALTER TABLE [[norm_table_name]] RENAME COLUMN [[old_column_name]] TO [[new_column_name]];
 				end if;
-			end$$;		
+			end$$;
 		`, vars), nil
 	default:
 		return "", ErrUnsupportedDatabaseType
@@ -523,28 +493,14 @@ func (s *SQLStore) genRenameColumnIfNeeded(tableName, oldColumnName, newColumnNa
 
 func (s *SQLStore) doesTableExist(tableName string) (bool, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
-	var query sq.SelectBuilder
 
-	switch s.dbType {
-	case model.MysqlDBType, model.PostgresDBType:
-		query = s.getQueryBuilder(s.db).
-			Select("table_name").
-			From("INFORMATION_SCHEMA.TABLES").
-			Where(sq.Eq{
-				"table_name":   tableName,
-				"table_schema": s.schemaName,
-			})
-	case model.SqliteDBType:
-		query = s.getQueryBuilder(s.db).
-			Select("name").
-			From("sqlite_master").
-			Where(sq.Eq{
-				"name": tableName,
-				"type": "table",
-			})
-	default:
-		return false, ErrUnsupportedDatabaseType
-	}
+	query := s.getQueryBuilder(s.db).
+		Select("table_name").
+		From("INFORMATION_SCHEMA.TABLES").
+		Where(sq.Eq{
+			"table_name":   tableName,
+			"table_schema": s.schemaName,
+		})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -566,28 +522,15 @@ func (s *SQLStore) doesTableExist(tableName string) (bool, error) {
 
 func (s *SQLStore) doesColumnExist(tableName, columnName string) (bool, error) {
 	tableName = addPrefixIfNeeded(tableName, s.tablePrefix)
-	var query sq.SelectBuilder
 
-	switch s.dbType {
-	case model.MysqlDBType, model.PostgresDBType:
-		query = s.getQueryBuilder(s.db).
-			Select("table_name").
-			From("INFORMATION_SCHEMA.COLUMNS").
-			Where(sq.Eq{
-				"table_name":   tableName,
-				"table_schema": s.schemaName,
-				"column_name":  columnName,
-			})
-	case model.SqliteDBType:
-		query = s.getQueryBuilder(s.db).
-			Select("name").
-			From(fmt.Sprintf("pragma_table_info('%s')", tableName)).
-			Where(sq.Eq{
-				"name": columnName,
-			})
-	default:
-		return false, ErrUnsupportedDatabaseType
-	}
+	query := s.getQueryBuilder(s.db).
+		Select("table_name").
+		From("INFORMATION_SCHEMA.COLUMNS").
+		Where(sq.Eq{
+			"table_name":   tableName,
+			"table_schema": s.schemaName,
+			"column_name":  columnName,
+		})
 
 	rows, err := query.Query()
 	if err != nil {
@@ -624,11 +567,6 @@ func (s *SQLStore) genAddConstraintIfNeeded(tableName, constraintName, constrain
 	}
 
 	switch s.dbType {
-	case model.SqliteDBType:
-		// SQLite doesn't have a generic way to add constraint. For example, you can only create indexes on existing tables.
-		// For other constraints, you need to re-build the table. So skipping here.
-		// Include SQLite specific migration in original migration file.
-		query = fmt.Sprintf("\n-- Sqlite3 cannot drop constraints; drop constraint '%s' in table '%s' skipped\n", constraintName, tableName)
 	case model.MysqlDBType:
 		query = replaceVars(`
 			SET @stmt = (SELECT IF(
