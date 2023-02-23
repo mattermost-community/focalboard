@@ -116,7 +116,8 @@ webapp-ci: ## Webapp CI: linting & testing.
 	cd mattermost-plugin/webapp; npm run lint
 	cd webapp; npm run test
 	cd mattermost-plugin/webapp; npm run test
-	cd webapp; npm run cypress:ci
+	# ToDo: reenable e2e tests when available in product-mode
+	# cd webapp; npm run cypress:ci
 
 webapp-test: ## jest tests for webapp
 	cd webapp; npm run test
