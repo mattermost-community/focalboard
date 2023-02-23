@@ -315,4 +315,36 @@ describe('properties/dateRange', () => {
 
         expect(mockedMutator.changePropertyValue).toHaveBeenCalledWith(board.id, card, propertyTemplate.id, JSON.stringify({from: today}))
     })
+    
+    test('returns component with new date after prop change', () => {
+        const component = wrapIntl(
+            <DateProp
+                property={new DateProperty()}
+                propertyValue=''
+                showEmptyPlaceholder={false}
+                readOnly={false}
+                board={{...board}}
+                card={{...card}}
+                propertyTemplate={propertyTemplate}
+            />,
+        )
+
+        const {container, rerender} = render(component)
+
+        rerender(
+            wrapIntl(
+                <DateProp
+                    property={new DateProperty()}
+                    propertyValue={'{"from": ' + June15.getTime().toString() + '}'}
+                    showEmptyPlaceholder={false}
+                    readOnly={false}
+                    board={{...board}}
+                    card={{...card}}
+                    propertyTemplate={propertyTemplate}
+                />
+            )
+        )
+
+        expect(container).toMatchSnapshot()
+    })
 })
