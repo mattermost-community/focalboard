@@ -82,7 +82,6 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 	if !s.HasPermissionToTeam(userID, board.TeamID, model.PermissionViewTeam) {
 		return false
 	}
-
 	member, err := s.store.GetMemberForBoard(boardID, userID)
 	if model.IsErrNotFound(err) {
 		return false
@@ -105,6 +104,13 @@ func (s *Service) HasPermissionToBoard(userID, boardID string, permission *mmMod
 		member.SchemeCommenter = true
 	case "viewer":
 		member.SchemeViewer = true
+	}
+
+	// Admins become member of boards, but get minimal role
+	// if they are a System/Team Admin (model.PermissionManageTeam)
+	// elevate their permissions
+	if !member.SchemeAdmin && s.HasPermissionToTeam(userID, board.TeamID, model.PermissionManageTeam) {
+		return true
 	}
 
 	switch permission {

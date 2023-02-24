@@ -502,11 +502,48 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 }
 
 func (a *App) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
-	return a.store.GetMembersForBoard(boardID)
+	members, err := a.store.GetMembersForBoard(boardID)
+	if err != nil {
+		return nil, err
+	}
+
+	board, err := a.store.GetBoard(boardID)
+	if err != nil && !model.IsErrNotFound(err) {
+		return nil, err
+	}
+	if board != nil {
+		for i, m := range members {
+			if !m.SchemeAdmin {
+				if a.permissions.HasPermissionToTeam(m.UserID, board.TeamID, model.PermissionManageTeam) {
+					members[i].SchemeAdmin = true
+				}
+			}
+		}
+	}
+	return members, nil
 }
 
 func (a *App) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
-	return a.store.GetMembersForUser(userID)
+	members, err := a.store.GetMembersForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, m := range members {
+		if !m.SchemeAdmin {
+			board, err := a.store.GetBoard(m.BoardID)
+			if err != nil && !model.IsErrNotFound(err) {
+				return nil, err
+			}
+			if board != nil {
+				if a.permissions.HasPermissionToTeam(m.UserID, board.TeamID, model.PermissionManageTeam) {
+					// if system/team admin
+					members[i].SchemeAdmin = true
+				}
+			}
+		}
+	}
+	return members, nil
 }
 
 func (a *App) GetMemberForBoard(boardID string, userID string) (*model.BoardMember, error) {
@@ -534,6 +571,14 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 	newMember, err := a.store.SaveMember(member)
 	if err != nil {
 		return nil, err
+	}
+
+	if !newMember.SchemeAdmin {
+		if board != nil {
+			if a.permissions.HasPermissionToTeam(newMember.UserID, board.TeamID, model.PermissionManageTeam) {
+				newMember.SchemeAdmin = true
+			}
+		}
 	}
 
 	if !board.IsTemplate {

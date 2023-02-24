@@ -97,6 +97,7 @@ function DateRange(props: PropertyProps): JSX.Element {
 
     const handleDayClick = (day: Date) => {
         const range: DateProperty = {}
+        day.setHours(12)
         if (isRange) {
             const newRange = DateUtils.addDayToRange(day, {from: dateFrom, to: dateTo})
             range.from = newRange.from?.getTime()
