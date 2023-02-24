@@ -34,8 +34,6 @@ describe('components/boardsUnfurl/BoardsUnfurl', () => {
     }
 
     beforeEach(() => {
-        // This is done to the websocket not to try to connect directly
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         jest.clearAllMocks()
     })
 

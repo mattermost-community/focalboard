@@ -13,21 +13,22 @@ exports[`components/centerPanel Clicking on the Hidden card count should open a 
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -721,21 +722,22 @@ exports[`components/centerPanel return centerPanel and click on card to show car
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -1274,21 +1276,22 @@ exports[`components/centerPanel return centerPanel and click on new card to edit
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -1932,21 +1935,22 @@ exports[`components/centerPanel return centerPanel and press touch 1 with readon
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -2331,21 +2335,22 @@ exports[`components/centerPanel return centerPanel and press touch ctrl+d for on
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -2989,21 +2994,22 @@ exports[`components/centerPanel return centerPanel and press touch del for one c
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -3647,21 +3653,22 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -4305,21 +4312,22 @@ exports[`components/centerPanel return centerPanel and press touch esc for one c
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -4963,21 +4971,22 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -5621,21 +5630,22 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -6279,21 +6289,22 @@ exports[`components/centerPanel return centerPanel and press touch esc for two c
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -6937,21 +6948,22 @@ exports[`components/centerPanel return centerPanel and select one card and click
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -7595,21 +7607,22 @@ exports[`components/centerPanel return centerPanel and select one card and click
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -8253,21 +8266,22 @@ exports[`components/centerPanel should match snapshot for Gallery 1`] = `
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -8528,21 +8542,22 @@ exports[`components/centerPanel should match snapshot for Kanban 1`] = `
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -9047,21 +9062,22 @@ exports[`components/centerPanel should match snapshot for Kanban, not shared 1`]
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"
@@ -9566,21 +9582,22 @@ exports[`components/centerPanel should match snapshot for Table 1`] = `
       >
         <a
           class="link"
-          href="https://www.focalboard.com/fwlink/feedback-focalboard.html?v=1.0.0"
+          href="https://www.focalboard.com/fwlink/feedback-boards.html?v=1.0.0"
           rel="noreferrer"
           target="_blank"
         >
           Give feedback
         </a>
-        <a
-          href="https://www.focalboard.com/guide/user?utm_source=webapp"
-          rel="noreferrer"
-          target="_blank"
+        <div
+          class="versionFrame"
         >
-          <i
-            class="CompassIcon icon-help-circle-outline HelpIcon"
-          />
-        </a>
+          <div
+            class="version"
+            title="v1.0.0"
+          >
+            v1.0.0
+          </div>
+        </div>
       </div>
       <div
         class="mid-head"

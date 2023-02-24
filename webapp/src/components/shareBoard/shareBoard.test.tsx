@@ -24,6 +24,7 @@ jest.useFakeTimers()
 const boardId = '1'
 const workspaceId: string|undefined = boardId
 const viewId = boardId
+const teamId = 'team-id'
 
 jest.mock('../../octoClient')
 jest.mock('../../utils')
@@ -50,7 +51,7 @@ jest.mock('react-router', () => {
 
 const board = TestBlockFactory.createBoard()
 board.id = boardId
-board.teamId = 'team-id'
+board.teamId = teamId
 board.cardProperties = [
     {
         id: 'property1',
@@ -128,7 +129,7 @@ describe('src/components/shareBoard/shareBoard', () => {
 
     const state = {
         teams: {
-            current: {id: 'team-id', title: 'Test Team'},
+            current: {id: teamId, title: 'Test Team'},
         },
         users: {
             me,
@@ -187,9 +188,11 @@ describe('src/components/shareBoard/shareBoard', () => {
     const store = mockStateStore([thunk], state)
     beforeEach(() => {
         jest.clearAllMocks()
-        mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
+
+        // mockedUtils.buildURL.mockImplementation((path) => (w.baseURL || '') + path)
 
         params = {
+            teamId,
             boardId,
             viewId,
             workspaceId,
@@ -438,33 +441,6 @@ describe('src/components/shareBoard/shareBoard', () => {
         expect(container).toMatchSnapshot()
     })
 
-    test('should match snapshot with sharing and without workspaceId and subpath', async () => {
-        w.baseURL = '/test-subpath/plugins/boards'
-        const sharing: ISharing = {
-            id: boardId,
-            enabled: true,
-            token: 'oneToken',
-        }
-        params = {
-            boardId,
-            viewId,
-        }
-        mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        let container
-        await act(async () => {
-            const result = render(wrapDNDIntl(
-                <ReduxProvider store={store}>
-                    <ShareBoard
-                        onClose={jest.fn()}
-                        enableSharedBoards={true}
-                    />
-                </ReduxProvider>),
-            {wrapper: MemoryRouter})
-            container = result.container
-        })
-        expect(container).toMatchSnapshot()
-    })
-
     test('should match snapshot with sharing and subpath', async () => {
         w.baseURL = '/test-subpath/plugins/boards'
         const sharing: ISharing = {
@@ -495,7 +471,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users: IUser[] = [
@@ -596,7 +571,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
 
         let container: Element | DocumentFragment | null = null
         await act(async () => {
@@ -671,7 +645,6 @@ describe('src/components/shareBoard/shareBoard', () => {
             token: '',
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
-        mockedUtils.isFocalboardPlugin.mockReturnValue(true)
         mockedUtils.getUserDisplayName.mockImplementation((u) => u.username)
 
         const users: IUser[] = [

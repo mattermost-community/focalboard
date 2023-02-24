@@ -100,13 +100,14 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
             </div>
             {shouldViewSearchForBoardsTour && <div><SearchForBoardsTourStep/></div>}
             {
-                Utils.isFocalboardPlugin() && !props.userIsGuest &&
+                !props.userIsGuest &&
                 <MenuWrapper>
                     <IconButton
                         size='small'
                         inverted={true}
                         className='add-board-icon'
                         icon={<AddIcon/>}
+                        title={'Add Board Dropdown'}
                     />
                     <Menu>
                         <Menu.Text

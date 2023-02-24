@@ -86,7 +86,7 @@ const KanbanCard = (props: Props) => {
     }, [props.onClick, card])
 
     const isOnboardingCard = card.title === 'Create a new card'
-    const showOnboarding = isOnboardingCard && !match.params.cardId && !board.isTemplate && Utils.isFocalboardPlugin()
+    const showOnboarding = isOnboardingCard && !match.params.cardId && !board.isTemplate
 
     return (
         <>

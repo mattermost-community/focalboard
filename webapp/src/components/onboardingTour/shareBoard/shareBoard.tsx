@@ -7,7 +7,6 @@ import {FormattedMessage} from 'react-intl'
 import {useMeasurePunchouts} from '../../tutorial_tour_tip/hooks'
 
 import './shareBoard.scss'
-import {Utils} from '../../../utils'
 import shareBoard from '../../../../static/share.gif'
 
 import {BoardTourSteps, TOUR_BOARD} from '../index'
@@ -45,7 +44,7 @@ const ShareBoardTourStep = (): JSX.Element | null => {
             classname='ShareBoardTourStep'
             telemetryTag='tourPoint2b'
             placement={'bottom-end'}
-            imageURL={Utils.buildURL(shareBoard, true)}
+            imageURL={shareBoard}
             hideBackdrop={true}
         />
     )
