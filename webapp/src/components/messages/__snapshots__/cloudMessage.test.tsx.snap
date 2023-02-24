@@ -1,8 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`components/messages/CloudMessage not plugin mode, close message 1`] = `<div />`;
-
-exports[`components/messages/CloudMessage not plugin mode, show message, close message 1`] = `
+exports[`components/messages/CloudMessage plugin mode, no display 1`] = `
 <div>
   <div
     class="CloudMessage"
@@ -15,6 +13,7 @@ exports[`components/messages/CloudMessage not plugin mode, show message, close m
       />
       Get your own free cloud server.
       <button
+        class="Button emphasis--primary size--xsmall"
         title="Learn more"
         type="button"
       >
@@ -25,6 +24,7 @@ exports[`components/messages/CloudMessage not plugin mode, show message, close m
     </div>
     <button
       aria-label="Close dialog"
+      class="IconButton margin-right size--small"
       title="Close dialog"
       type="button"
     >
@@ -35,39 +35,3 @@ exports[`components/messages/CloudMessage not plugin mode, show message, close m
   </div>
 </div>
 `;
-
-exports[`components/messages/CloudMessage not plugin mode, single user, close message 1`] = `
-<div>
-  <div
-    class="CloudMessage"
-  >
-    <div
-      class="banner"
-    >
-      <i
-        class="CompassIcon icon-information-outline CompassIcon"
-      />
-      Get your own free cloud server.
-      <button
-        title="Learn more"
-        type="button"
-      >
-        <span>
-          Learn more
-        </span>
-      </button>
-    </div>
-    <button
-      aria-label="Close dialog"
-      title="Close dialog"
-      type="button"
-    >
-      <i
-        class="CompassIcon icon-close CloseIcon"
-      />
-    </button>
-  </div>
-</div>
-`;
-
-exports[`components/messages/CloudMessage plugin mode, no display 1`] = `<div />`;

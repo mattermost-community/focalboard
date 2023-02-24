@@ -281,8 +281,6 @@ exports[`src/components/shareBoard/channelPermissionsRow should match snapshot i
 
 exports[`src/components/shareBoard/channelPermissionsRow should match snapshot when board has no channel id 1`] = `<div />`;
 
-exports[`src/components/shareBoard/channelPermissionsRow should match snapshot when no plugin mode 1`] = `<div />`;
-
 exports[`src/components/shareBoard/channelPermissionsRow should match snapshot with menu open 1`] = `
 <div>
   <div

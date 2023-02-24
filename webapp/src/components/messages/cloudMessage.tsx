@@ -4,7 +4,6 @@ import React from 'react'
 
 import {useIntl, FormattedMessage} from 'react-intl'
 
-import {Utils} from '../../utils'
 import IconButton from '../../widgets/buttons/iconButton'
 import Button from '../../widgets/buttons/button'
 
@@ -61,7 +60,7 @@ const CloudMessage = React.memo(() => {
         }
     }
 
-    if (Utils.isFocalboardPlugin() || cloudMessageCanceled) {
+    if (cloudMessageCanceled) {
         return null
     }
 

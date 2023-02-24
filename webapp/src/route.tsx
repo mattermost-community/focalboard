@@ -6,7 +6,6 @@ import {
     Route,
 } from 'react-router-dom'
 
-import {Utils} from './utils'
 import {getLoggedIn, getMe, getMyConfig} from './store/users'
 import {useAppSelector} from './store/hooks'
 import {UserSettingKey} from './userSettings'
@@ -36,7 +35,6 @@ function FBRoute(props: RouteProps) {
     const disableTour = me?.is_guest || clientConfig?.featureFlags?.disableTour || false
 
     const showWelcomePage = !disableTour &&
-        Utils.isFocalboardPlugin() &&
         (me?.id !== 'single-user') &&
         props.path !== '/welcome' &&
         loggedIn === true &&
@@ -54,7 +52,7 @@ function FBRoute(props: RouteProps) {
     if (redirect === null && loggedIn === false && props.loginRequired) {
         redirect = ({match}: any) => {
             if (props.getOriginalPath) {
-                let redirectUrl = '/' + Utils.buildURL(props.getOriginalPath!(match))
+                let redirectUrl = '/' + props.getOriginalPath!(match)
                 if (redirectUrl.indexOf('//') === 0) {
                     redirectUrl = redirectUrl.slice(1)
                 }
