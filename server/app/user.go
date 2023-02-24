@@ -63,7 +63,18 @@ func (a *App) CanSeeUser(seerUser string, seenUser string) (bool, error) {
 }
 
 func (a *App) SearchUserChannels(teamID string, userID string, query string) ([]*mmModel.Channel, error) {
-	return a.store.SearchUserChannels(teamID, userID, query)
+	channels, err := a.store.SearchUserChannels(teamID, userID, query)
+	if err != nil {
+		return nil, err
+	}
+
+	var writeableChannels []*mmModel.Channel
+	for _, channel := range channels {
+		if a.permissions.HasPermissionToChannel(userID, channel.Id, model.PermissionCreatePost) {
+			writeableChannels = append(writeableChannels, channel)
+		}
+	}
+	return writeableChannels, nil
 }
 
 func (a *App) GetChannel(teamID string, channelID string) (*mmModel.Channel, error) {

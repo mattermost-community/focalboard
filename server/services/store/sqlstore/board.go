@@ -675,7 +675,7 @@ func (s *SQLStore) searchBoardsForUser(db sq.BaseRunner, term string, searchFiel
 			case model.PostgresDBType:
 				where := "b.properties->? is not null"
 				query = query.Where(where, term)
-			case model.MysqlDBType, model.SqliteDBType:
+			case model.MysqlDBType:
 				where := "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
 				query = query.Where(where, "$."+term)
 			default:

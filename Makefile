@@ -12,8 +12,6 @@ ifeq ($(BUILD_NUMBER),)
 	BUILD_DATE := n/a
 endif
 
-BUILD_TAGS += json1 sqlite3
-
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildNumber=$(BUILD_NUMBER)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildDate=$(BUILD_DATE)"
 LDFLAGS += -X "github.com/mattermost/focalboard/server/model.BuildHash=$(BUILD_HASH)"
@@ -59,21 +57,7 @@ modd-precheck:
 		exit 1; \
 	fi; \
 
-watch-server-test: modd-precheck ## Run server tests watching for changes
-	env FOCALBOARD_BUILD_TAGS='$(BUILD_TAGS)' modd -f modd-servertest.conf
-
-server-test: server-test-sqlite server-test-mysql server-test-mariadb server-test-postgres ## Run server tests
-
-server-test-sqlite: export FOCALBOARD_UNIT_TESTING=1
-
-server-test-sqlite: setup-go-work ## Run server tests using sqlite
-	cd server; go test -tags '$(BUILD_TAGS)' -race -v -coverpkg=./... -coverprofile=server-sqlite-profile.coverage -count=1 -timeout=30m ./...
-	cd server; go tool cover -func server-sqlite-profile.coverage
-
-server-test-mini-sqlite: export FOCALBOARD_UNIT_TESTING=1
-
-server-test-mini-sqlite: setup-go-work ## Run server tests using sqlite
-	cd server/integrationtests; go test -tags '$(BUILD_TAGS)' $(RACE) -v -count=1 -timeout=30m ./...
+server-test: server-test-mysql server-test-mariadb server-test-postgres ## Run server tests
 
 server-test-mysql: export FOCALBOARD_UNIT_TESTING=1
 server-test-mysql: export FOCALBOARD_STORE_TEST_DB_TYPE=mysql

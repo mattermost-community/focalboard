@@ -81,8 +81,8 @@ func ReadConfigFile(configFilePath string) (*Configuration, error) {
 	viper.AutomaticEnv() // read config values from env like FOCALBOARD_SERVERROOT=...
 	viper.SetDefault("ServerRoot", DefaultServerRoot)
 	viper.SetDefault("Port", DefaultPort)
-	viper.SetDefault("DBType", "sqlite3")
-	viper.SetDefault("DBConfigString", "./focalboard.db")
+	viper.SetDefault("DBType", "postgres")
+	viper.SetDefault("DBConfigString", "postgres://mmuser:mostest@localhost/mattermost_test?sslmode=disable\u0026connect_timeout=10\u0026binary_parameters=yes")
 	viper.SetDefault("DBTablePrefix", "")
 	viper.SetDefault("SecureCookie", false)
 	viper.SetDefault("WebPath", "./pack")

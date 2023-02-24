@@ -2,7 +2,7 @@
 {{- /* Assigning 10x total number of categories works perfectly. The sort_order is anyways updated */ -}}
 {{- /* when the user manually DNDs a category. */ -}}
 
-{{if or .postgres .sqlite}}
+{{if .postgres}}
 UPDATE {{.prefix}}categories SET sort_order = (10 * (SELECT COUNT(*) FROM {{.prefix}}categories)) WHERE lower(name) = 'boards';
 {{end}}
 

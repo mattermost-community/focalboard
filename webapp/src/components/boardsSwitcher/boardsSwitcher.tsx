@@ -107,6 +107,7 @@ const BoardsSwitcher = (props: Props): JSX.Element => {
                         inverted={true}
                         className='add-board-icon'
                         icon={<AddIcon/>}
+                        title={'Add Board Dropdown'}
                     />
                     <Menu>
                         <Menu.Text

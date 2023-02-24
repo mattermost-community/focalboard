@@ -42,18 +42,6 @@ UPDATE {{.prefix}}blocks b
     AND b.type = 'view';
 {{end}}
 
-{{if .sqlite}}
-UPDATE {{.prefix}}blocks SET fields = replace(fields, '"columnCalculations":[]', '"columnCalculations":{}');
-
-UPDATE {{.prefix}}blocks AS b
-    SET fields = (
-        SELECT  json_set(a.fields, '$.columnCalculations',json_extract(c.fields,  '$.columnCalculations')) from {{.prefix}}blocks AS a
-        JOIN {{.prefix}}blocks AS c on c.id = a.root_id
-        WHERE a.id = b.id)
-    WHERE json_extract(b.fields,'$.viewType') = 'table'
-    AND b.type = 'view';
-{{end}}
-
 {{- /* TODO: Migrate the columnCalculations at app level and remove it from the boards and boards_history tables */ -}}
 
 
@@ -62,7 +50,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
     id VARCHAR(36) NOT NULL PRIMARY KEY,
 
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
-	{{if .sqlite}}insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),{{end}}
 	{{if .mysql}}insert_at DATETIME(6) NOT NULL DEFAULT NOW(6),{{end}}
 
     team_id VARCHAR(36) NOT NULL,
@@ -83,10 +70,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards (
     {{if .postgres}}
     properties JSONB,
     card_properties JSONB,
-    {{end}}
-    {{if .sqlite}}
-    properties TEXT,
-    card_properties TEXT,
     {{end}}
     create_at BIGINT,
     update_at BIGINT,
@@ -101,7 +84,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
     id VARCHAR(36) NOT NULL,
 
     {{if .postgres}}insert_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),{{end}}
-	{{if .sqlite}}insert_at DATETIME NOT NULL DEFAULT(STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),{{end}}
 	{{if .mysql}}insert_at DATETIME(6) NOT NULL DEFAULT NOW(6),{{end}}
 
     team_id VARCHAR(36) NOT NULL,
@@ -122,10 +104,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
     {{if .postgres}}
     properties JSONB,
     card_properties JSONB,
-    {{end}}
-    {{if .sqlite}}
-    properties TEXT,
-    card_properties TEXT,
     {{end}}
     create_at BIGINT,
     update_at BIGINT,
@@ -254,31 +232,6 @@ CREATE TABLE IF NOT EXISTS {{.prefix}}boards_history (
           FROM {{.prefix}}blocks_history AS B
           WHERE type='board'
   );
-  {{end}}
-  
-  {{if .sqlite}}
-  INSERT INTO {{.prefix}}boards
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
-                 COALESCE(title, ''),
-                 COALESCE(json_extract(fields, '$.description'), ''),
-                 json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
-                 COALESCE(json_extract(fields, '$.templateVer'), 0),
-                 '{}', json_extract(fields, '$.cardProperties'), create_at,
-                 update_at, delete_at {{if doesColumnExist "boards" "minimum_role"}} ,'editor' {{end}}
-          FROM {{.prefix}}blocks
-          WHERE type='board'
-  ;
-  INSERT INTO {{.prefix}}boards_history
-      SELECT id, insert_at, '0', channel_id, created_by, modified_by, 'O',
-                 COALESCE(title, ''),
-                 COALESCE(json_extract(fields, '$.description'), ''),
-                 json_extract(fields, '$.icon'), json_extract(fields, '$.showDescription'), json_extract(fields, '$.isTemplate'),
-                 COALESCE(json_extract(fields, '$.templateVer'), 0),
-                 '{}', json_extract(fields, '$.cardProperties'), create_at,
-                 update_at, delete_at {{if doesColumnExist "boards_history" "minimum_role"}} ,'editor' {{end}}
-          FROM {{.prefix}}blocks_history
-          WHERE type='board'
-  ;
   {{end}}
 {{end}}
 

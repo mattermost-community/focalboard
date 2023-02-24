@@ -13,12 +13,6 @@ func Test35AddHIddenColumnToCategoryBoards(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
 
-		// We don't support adding column in idempotent manner
-		// for SQLite, so no need to check for it.
-		if th.IsSQLite() {
-			return
-		}
-
 		th.f.MigrateToStep(34).
 			ExecFile("./fixtures/test35_add_hidden_column.sql")
 

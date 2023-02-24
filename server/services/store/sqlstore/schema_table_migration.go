@@ -111,11 +111,6 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	// Check if `name` column exists on schema version table.
 	// This column exists only for the new schema version table.
 
-	// SQLite needs a bit of a special handling
-	if s.dbType == model.SqliteDBType {
-		return s.isSchemaMigrationNeededSQLite()
-	}
-
 	query := s.getQueryBuilder(s.db).
 		Select("COLUMN_NAME").
 		From("information_schema.COLUMNS").
@@ -152,64 +147,6 @@ func (s *SQLStore) isSchemaMigrationNeeded() (bool, error) {
 	for _, columnName := range data {
 		// look for a column named 'name', if found then no migration is needed
 		if strings.ToLower(columnName) == "name" {
-			return false, nil
-		}
-	}
-
-	return true, nil
-}
-
-func (s *SQLStore) isSchemaMigrationNeededSQLite() (bool, error) {
-	// the way to check presence of a column is different
-	// for SQLite. Hence, the separate function
-
-	query := fmt.Sprintf("PRAGMA table_info(\"%sschema_migrations\");", s.tablePrefix)
-	rows, err := s.db.Query(query)
-	if err != nil {
-		s.logger.Error("SQLite - failed to check for columns in schema_migrations table", mlog.Err(err))
-		return false, err
-	}
-
-	defer s.CloseRows(rows)
-
-	const (
-		idxCid = iota
-		idxName
-		idxType
-		idxNotnull
-		idxDfltValue
-		idxPk
-	)
-
-	data := [][]*string{}
-	for rows.Next() {
-		// PRAGMA returns 6 columns
-		row := make([]*string, 6)
-
-		err := rows.Scan(
-			&row[idxCid],
-			&row[idxName],
-			&row[idxType],
-			&row[idxNotnull],
-			&row[idxDfltValue],
-			&row[idxPk],
-		)
-		if err != nil {
-			s.logger.Error("error scanning rows from SQLite schema_migrations table definition", mlog.Err(err))
-			return false, err
-		}
-
-		data = append(data, row)
-	}
-
-	if len(data) == 0 {
-		// if no data then table does not exist and therefore a schema migration is not needed.
-		return false, nil
-	}
-
-	for _, row := range data {
-		// look for a column named 'name', if found then no migration is needed
-		if len(row) >= 2 && strings.ToLower(*row[idxName]) == "name" {
 			return false, nil
 		}
 	}

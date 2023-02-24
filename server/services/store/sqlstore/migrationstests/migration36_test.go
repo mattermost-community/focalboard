@@ -15,11 +15,6 @@ func Test36AddUniqueConstraintToCategoryBoards(t *testing.T) {
 
 		// verifying if constraint has been added
 
-		//can't verify in sqlite, so skipping it
-		if th.IsSQLite() {
-			return
-		}
-
 		var count int
 		query := "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS " +
 			"WHERE constraint_name = 'unique_user_category_board' " +
@@ -33,12 +28,6 @@ func Test36AddUniqueConstraintToCategoryBoards(t *testing.T) {
 	t.Run("constraint already exists", func(t *testing.T) {
 		th, tearDown := SetupTestHelper(t)
 		defer tearDown()
-
-		// SQLIte doesn't support adding constraint to existing table
-		// and neither do we, so skipping for sqlite
-		if th.IsSQLite() {
-			return
-		}
 
 		th.f.MigrateToStep(35)
 

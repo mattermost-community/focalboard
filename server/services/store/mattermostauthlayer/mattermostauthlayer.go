@@ -324,7 +324,7 @@ func (s *MattermostAuthLayer) GetTeamsForUser(userID string) ([]*model.Team, err
 
 func (s *MattermostAuthLayer) getQueryBuilder() sq.StatementBuilderType {
 	builder := sq.StatementBuilder
-	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+	if s.dbType == model.PostgresDBType {
 		builder = builder.PlaceholderFormat(sq.Dollar)
 	}
 
@@ -712,7 +712,7 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model
 			case model.PostgresDBType:
 				where = "b.properties->? is not null"
 				whereTerm = term
-			case model.MysqlDBType, model.SqliteDBType:
+			case model.MysqlDBType:
 				where = "JSON_EXTRACT(b.properties, ?) IS NOT NULL"
 				whereTerm = "$." + term
 			default:
@@ -774,10 +774,10 @@ func (s *MattermostAuthLayer) SearchBoardsForUser(term string, searchField model
 		return nil, fmt.Errorf("SearchBoardsForUser error getting unionSQL: %w", err)
 	}
 
-	// if we're using postgres or sqlite, we need to replace the
-	// question mark placeholder with the numbered dollar one, now
-	// that the full query is built
-	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+	// if we're using postgres, we need to replace the question mark
+	// placeholder with the numbered dollar one, now that the full
+	// query is built
+	if s.dbType == model.PostgresDBType {
 		var rErr error
 		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
 		if rErr != nil {
@@ -872,10 +872,10 @@ func (s *MattermostAuthLayer) SearchBoardsForUserInTeam(teamID, term, userID str
 		return nil, fmt.Errorf("SearchBoardsForUserInTeam error getting unionSQL: %w", err)
 	}
 
-	// if we're using postgres or sqlite, we need to replace the
-	// question mark placeholder with the numbered dollar one, now
-	// that the full query is built
-	if s.dbType == model.PostgresDBType || s.dbType == model.SqliteDBType {
+	// if we're using postgres, we need to replace the question mark
+	// placeholder with the numbered dollar one, now that the full
+	// query is built
+	if s.dbType == model.PostgresDBType {
 		var rErr error
 		unionSQL, rErr = sq.Dollar.ReplacePlaceholders(unionSQL)
 		if rErr != nil {
