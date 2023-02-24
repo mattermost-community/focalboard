@@ -56,6 +56,8 @@ exports[`src/components/workspace return workspace and showcard 1`] = `
           role="button"
         >
           <button
+            aria-label="Add Board Dropdown"
+            title="Add Board Dropdown"
             type="button"
           >
             <i
@@ -1105,6 +1107,8 @@ exports[`src/components/workspace should match snapshot 1`] = `
           role="button"
         >
           <button
+            aria-label="Add Board Dropdown"
+            title="Add Board Dropdown"
             type="button"
           >
             <i

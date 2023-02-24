@@ -54,7 +54,9 @@ exports[`components/sidebarSidebar dont show hidden boards 1`] = `
         role="button"
       >
         <button
+          aria-label="Add Board Dropdown"
           class="IconButton style--inverted add-board-icon size--small"
+          title="Add Board Dropdown"
           type="button"
         >
           <i
@@ -192,7 +194,9 @@ exports[`components/sidebarSidebar should assign default category if current boa
         role="button"
       >
         <button
+          aria-label="Add Board Dropdown"
           class="IconButton style--inverted add-board-icon size--small"
+          title="Add Board Dropdown"
           type="button"
         >
           <i
@@ -385,7 +389,9 @@ exports[`components/sidebarSidebar shouldnt do any category assignment is board 
         role="button"
       >
         <button
+          aria-label="Add Board Dropdown"
           class="IconButton style--inverted add-board-icon size--small"
+          title="Add Board Dropdown"
           type="button"
         >
           <i
@@ -733,7 +739,9 @@ exports[`components/sidebarSidebar sidebar hidden 1`] = `
         role="button"
       >
         <button
+          aria-label="Add Board Dropdown"
           class="IconButton style--inverted add-board-icon size--small"
+          title="Add Board Dropdown"
           type="button"
         >
           <i
@@ -964,7 +972,9 @@ exports[`components/sidebarSidebar some categories hidden 1`] = `
         role="button"
       >
         <button
+          aria-label="Add Board Dropdown"
           class="IconButton style--inverted add-board-icon size--small"
+          title="Add Board Dropdown"
           type="button"
         >
           <i
