@@ -9,7 +9,7 @@ From the Focalboard project root directory:
 
 ```bash
 docker build -f docker/Dockerfile -t focalboard .
-docker run -it -v "fbdata:/opt/focalboard/data" -p 80:8000 focalboard
+docker run -it -v "fbdata:/data" -p 80:8000 focalboard
 ```
 
 Open a browser to [localhost](http://localhost) to start
@@ -20,7 +20,7 @@ From the Focalboard project root directory:
 
 ```bash
 docker build -f docker/Dockerfile --platform linux/arm64 -t focalboard .
-docker run -it -v "fbdata:/opt/focalboard/data" -p 80:8000 focalboard
+docker run -it -v "fbdata:/data" -p 80:8000 focalboard
 ```
 
 ## Docker-Compose
