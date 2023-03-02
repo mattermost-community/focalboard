@@ -35,11 +35,14 @@ const URLProperty = (props: PropertyProps): JSX.Element => {
         if (value !== (props.card.fields.properties[props.propertyTemplate?.id || ''] || '')) {
             mutator.changePropertyValue(props.board.id, props.card, props.propertyTemplate?.id || '', value)
         }
-    }, [props.card, props.propertyTemplate, value])
+    }, [props.board.id, props.card, props.propertyTemplate?.id, value])
 
     const saveTextPropertyRef = useRef<() => void>(saveTextProperty)
-    saveTextPropertyRef.current = saveTextProperty
-
+    if (props.readOnly) {
+        saveTextPropertyRef.current = () => null
+    } else {
+        saveTextPropertyRef.current = saveTextProperty
+    }
     useEffect(() => {
         return () => {
             saveTextPropertyRef.current && saveTextPropertyRef.current()
