@@ -132,11 +132,18 @@ if (TARGET_IS_PRODUCT) {
         const sharedObject = {};
 
         for (const packageName of packageNames) {
-            // Set both versions to false so that the version of this module provided by the web app will be used
             sharedObject[packageName] = {
-                requiredVersion: false,
+
+                // Ensure only one copy of this package is ever loaded
                 singleton: true,
-                version: false,
+
+                // Set this to false to prevent Webpack from packaging any "fallback" version of this package so that
+                // only the version provided by the web app will be used
+                import: false,
+
+                // Set these to false so that any version provided by the web app will be accepted
+                requiredVersion: false,
+                version: false
             };
         }
 
