@@ -20,6 +20,9 @@ import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
+import {getCardAttachments} from '../../store/attachments'
+import {getCardComments} from '../../store/comments'
+import {useAppSelector} from '../../store/hooks'
 
 export const OnboardingCardClassName = 'onboardingCard'
 
@@ -38,6 +41,8 @@ type Props = {
 
 const KanbanCard = (props: Props) => {
     const {card, board} = props
+    const comments = useAppSelector(getCardComments(card?.id))
+    const attachments = useAppSelector(getCardAttachments(card?.id))
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []
@@ -72,12 +77,12 @@ const KanbanCard = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (card?.title === '' && card?.fields?.contentOrder?.length === 0) {
+        if (card?.title === '' && card?.fields?.contentOrder?.length === 0 && Object.keys(card?.fields?.properties).length === 0 && attachments?.length === 0 && comments?.length === 0) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [handleDeleteCard, card.title, card?.fields?.contentOrder?.length])
+    }, [handleDeleteCard, card.title, card?.fields?.contentOrder?.length, card?.fields?.properties, attachments?.length, comments?.length])
 
     const handleOnClick = useCallback((e: React.MouseEvent) => {
         if (props.onClick) {

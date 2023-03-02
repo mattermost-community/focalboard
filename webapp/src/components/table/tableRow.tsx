@@ -10,6 +10,9 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
+import {useAppSelector} from '../../store/hooks'
+import {getCardAttachments} from '../../store/attachments'
+import {getCardComments} from '../../store/comments'
 
 import {Utils} from '../../utils'
 
@@ -48,7 +51,8 @@ type Props = {
 const TableRow = (props: Props) => {
     const intl = useIntl()
     const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
-
+    const comments = useAppSelector(getCardComments(card?.id))
+    const attachments = useAppSelector(getCardAttachments(card?.id))
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isGrouped = Boolean(groupById)
@@ -138,12 +142,12 @@ const TableRow = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (card?.title === '' && card?.fields.contentOrder.length === 0) {
+        if (card?.title === '' && card?.fields?.contentOrder?.length === 0 && Object.keys(card?.fields?.properties).length === 0 && attachments?.length === 0 && comments?.length === 0) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [card.title, card.fields.contentOrder, handleDeleteCard])
+    }, [card.title, card.fields.contentOrder, handleDeleteCard, card?.fields?.properties, attachments?.length, comments?.length])
 
     return (
         <div
