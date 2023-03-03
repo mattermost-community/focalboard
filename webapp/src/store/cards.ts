@@ -170,11 +170,7 @@ export function getCard(cardId: string): (state: RootState) => Card|undefined {
 
 export function isCardEmpty(cardId: string): (state: RootState) => boolean {
     return (state: RootState): boolean => {
-        const card = getCards(state)[cardId]
-        const comments = state.comments.commentsByCard[cardId]
-        const attachments = state.attachments.attachmentsByCard[cardId]
-
-        return card?.title === '' && card?.fields.contentOrder.length === 0 && Object.keys(card?.fields?.properties).length === 0 && !comments && !attachments
+        return getCards(state)[cardId]?.title === '' && getCards(state)[cardId]?.fields.contentOrder.length === 0 && Object.keys(getCards(state)[cardId]?.fields?.properties).length === 0 && !state.comments.commentsByCard[cardId] && !state.attachments.attachmentsByCard[cardId]
     }
 }
 
