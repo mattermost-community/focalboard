@@ -109,7 +109,7 @@ const CardDialog = (props: Props): JSX.Element => {
         // use may be renaming a card title
         // and accidently delete the card
         // so adding des
-        if (card?.title === '' && card?.fields.contentOrder.length === 0 && Object.keys(card?.fields?.properties).length === 0 && attachments?.length === 0 && comments?.length === 0) {
+        if (Utils.isCardEmpty(card, comments, attachments)) {
             handleDeleteCard()
             return
         }

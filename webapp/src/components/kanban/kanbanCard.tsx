@@ -77,12 +77,12 @@ const KanbanCard = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (card?.title === '' && card?.fields?.contentOrder?.length === 0 && Object.keys(card?.fields?.properties).length === 0 && attachments?.length === 0 && comments?.length === 0) {
+        if (Utils.isCardEmpty(card, comments, attachments)) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [handleDeleteCard, card.title, card?.fields?.contentOrder?.length, card?.fields?.properties, attachments?.length, comments?.length])
+    }, [handleDeleteCard, card, comments, attachments])
 
     const handleOnClick = useCallback((e: React.MouseEvent) => {
         if (props.onClick) {
