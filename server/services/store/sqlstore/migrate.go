@@ -254,7 +254,7 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 	}
 
 	currentMigrationVersion := len(appliedMigrations)
-	if mErr := s.RunDeDuplicateCategoryBoardsMigration(currentMigrationVersion); err != nil {
+	if mErr := s.RunDeDuplicateCategoryBoardsMigration(currentMigrationVersion); mErr != nil {
 		return mErr
 	}
 
