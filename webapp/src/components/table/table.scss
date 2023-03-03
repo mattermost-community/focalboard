@@ -212,7 +212,8 @@
     .octo-table-body {
         display: flex;
         flex-direction: column;
-        width: fit-content;
+        width: 100%;
+        height: 100%;
     }
 
     .octo-table-header,
@@ -250,7 +251,8 @@
     }
 
     .table-row-container {
-        width: fit-content;
+        width: 100%;
+        height: 100%;
 
         .octo-table-cell {
             align-items: center;
