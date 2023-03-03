@@ -11,8 +11,7 @@ import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
 import {useAppSelector} from '../../store/hooks'
-import {getCardAttachments} from '../../store/attachments'
-import {getCardComments} from '../../store/comments'
+import {isCardEmpty as isCardEmptySelector} from '../../store/cards'
 
 import {Utils} from '../../utils'
 
@@ -51,8 +50,7 @@ type Props = {
 const TableRow = (props: Props) => {
     const intl = useIntl()
     const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
-    const comments = useAppSelector(getCardComments(card?.id))
-    const attachments = useAppSelector(getCardAttachments(card?.id))
+    const isCardEmpty = useAppSelector(isCardEmptySelector(card?.id))
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isGrouped = Boolean(groupById)
@@ -142,12 +140,12 @@ const TableRow = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (Utils.isCardEmpty(card, comments, attachments)) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [handleDeleteCard, card, comments, attachments])
+    }, [handleDeleteCard, isCardEmpty])
 
     return (
         <div

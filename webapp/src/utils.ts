@@ -13,13 +13,12 @@ import {IUser} from './user'
 import {Block} from './blocks/block'
 import {Board as BoardType, BoardMember, createBoard} from './blocks/board'
 import {createBoardView} from './blocks/boardView'
-import {Card as CardBlock, createCard} from './blocks/card'
-import {CommentBlock, createCommentBlock} from './blocks/commentBlock'
+import {createCard} from './blocks/card'
+import {createCommentBlock} from './blocks/commentBlock'
 import {IAppWindow} from './types'
 import {ChangeHandlerType, WSMessage} from './wsclient'
 import {BoardCategoryWebsocketData, Category} from './store/sidebar'
 import {UserSettings} from './userSettings'
-import {AttachmentBlock} from './blocks/attachmentBlock'
 
 declare let window: IAppWindow
 
@@ -831,14 +830,6 @@ class Utils {
 
     static isAdmin(roles: string): boolean {
         return Utils.isSystemAdmin(roles) || Utils.isTeamAdmin(roles)
-    }
-
-    static isCardEmpty(card: CardBlock | undefined, comments: CommentBlock[], attachments: AttachmentBlock[]): boolean {
-        if (!card) {
-            return true
-        }
-
-        return card?.title === '' && card?.fields.contentOrder.length === 0 && Object.keys(card?.fields?.properties).length === 0 && attachments?.length === 0 && comments?.length === 0
     }
 }
 

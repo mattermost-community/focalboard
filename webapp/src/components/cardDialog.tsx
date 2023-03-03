@@ -8,7 +8,7 @@ import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
 import octoClient from '../octoClient'
 import mutator from '../mutator'
-import {getCard} from '../store/cards'
+import {getCard, isCardEmpty as isCardEmptySelector} from '../store/cards'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -62,6 +62,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
+    const isCardEmpty = useAppSelector(isCardEmptySelector(props.cardId))
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {
@@ -109,7 +110,7 @@ const CardDialog = (props: Props): JSX.Element => {
         // use may be renaming a card title
         // and accidently delete the card
         // so adding des
-        if (Utils.isCardEmpty(card, comments, attachments)) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }

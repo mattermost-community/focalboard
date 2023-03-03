@@ -22,9 +22,7 @@ import CardBadges from '../cardBadges'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
-import {Utils} from '../../utils'
-import {getCardComments} from '../../store/comments'
-import {getCardAttachments} from '../../store/attachments'
+import {isCardEmpty as isCardEmptySelector} from '../../store/cards'
 
 type Props = {
     board: Board
@@ -42,8 +40,7 @@ type Props = {
 const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const {card, board} = props
-    const comments = useAppSelector(getCardComments(card?.id))
-    const attachments = useAppSelector(getCardAttachments(card?.id))
+    const isCardEmpty = useAppSelector(isCardEmptySelector(card?.id))
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
@@ -72,12 +69,12 @@ const GalleryCard = (props: Props) => {
         // user trying to delete a card with blank name
         // but content present cannot be deleted without
         // confirmation dialog
-        if (Utils.isCardEmpty(card, comments, attachments)) {
+        if (isCardEmpty) {
             handleDeleteCard()
             return
         }
         setShowConfirmationDialogBox(true)
-    }, [card, comments, attachments])
+    }, [isCardEmpty])
 
     const image: ContentBlock|undefined = useMemo(() => {
         for (let i = 0; i < contents.length; ++i) {
