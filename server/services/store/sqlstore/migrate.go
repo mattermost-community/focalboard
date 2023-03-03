@@ -36,6 +36,7 @@ const (
 	uniqueIDsMigrationRequiredVersion        = 14
 	teamLessBoardsMigrationRequiredVersion   = 18
 	categoriesUUIDIDMigrationRequiredVersion = 20
+	deDuplicateCategoryBoards                = 35
 
 	tempSchemaMigrationTableName = "temp_schema_migration"
 )
@@ -246,6 +247,15 @@ func (s *SQLStore) runMigrationSequence(engine *morph.Morph, driver drivers.Driv
 	appliedMigrations, err := driver.AppliedMigrations()
 	if err != nil {
 		return err
+	}
+
+	if mErr := s.ensureMigrationsAppliedUpToVersion(engine, driver, deDuplicateCategoryBoards); mErr != nil {
+		return mErr
+	}
+
+	currentMigrationVersion := len(appliedMigrations)
+	if mErr := s.RunDeDuplicateCategoryBoardsMigration(currentMigrationVersion); err != nil {
+		return mErr
 	}
 
 	s.logger.Debug("== Applying all remaining migrations ====================",

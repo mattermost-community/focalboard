@@ -21,11 +21,12 @@ const (
 	// query, so we want to stay safely below.
 	CategoryInsertBatch = 1000
 
-	TemplatesToTeamsMigrationKey        = "TemplatesToTeamsMigrationComplete"
-	UniqueIDsMigrationKey               = "UniqueIDsMigrationComplete"
-	CategoryUUIDIDMigrationKey          = "CategoryUuidIdMigrationComplete"
-	TeamLessBoardsMigrationKey          = "TeamLessBoardsMigrationComplete"
-	DeletedMembershipBoardsMigrationKey = "DeletedMembershipBoardsMigrationComplete"
+	TemplatesToTeamsMigrationKey              = "TemplatesToTeamsMigrationComplete"
+	UniqueIDsMigrationKey                     = "UniqueIDsMigrationComplete"
+	CategoryUUIDIDMigrationKey                = "CategoryUuidIdMigrationComplete"
+	TeamLessBoardsMigrationKey                = "TeamLessBoardsMigrationComplete"
+	DeletedMembershipBoardsMigrationKey       = "DeletedMembershipBoardsMigrationComplete"
+	DeDuplicateCategoryBoardTableMigrationKey = "DeDuplicateCategoryBoardTableComplete"
 )
 
 func (s *SQLStore) getBlocksWithSameID(db sq.BaseRunner) ([]*model.Block, error) {
@@ -789,4 +790,89 @@ func (s *SQLStore) getCollationAndCharset(tableName string) (string, string, err
 	}
 
 	return collation, charSet, nil
+}
+
+func (s *SQLStore) RunDeDuplicateCategoryBoardsMigration(currentMigration int) error {
+	setting, err := s.GetSystemSetting(DeDuplicateCategoryBoardTableMigrationKey)
+	if err != nil {
+		return fmt.Errorf("cannot get DeDuplicateCategoryBoardTableMigration state: %w", err)
+	}
+
+	// If the migration is already completed, do not run it again.
+	if hasAlreadyRun, _ := strconv.ParseBool(setting); hasAlreadyRun {
+		return nil
+	}
+
+	if currentMigration >= (deDuplicateCategoryBoards + 1) {
+		// if the migration for which we're fixing the data is already applied,
+		// no need to check fix anything
+
+		if err := s.setSystemSetting(s.db, DeDuplicateCategoryBoardTableMigrationKey, strconv.FormatBool(true)); err != nil {
+			return fmt.Errorf("cannot mark migration %s as completed: %w", "RunDeDuplicateCategoryBoardsMigration", err)
+		}
+		return nil
+	}
+
+	needed, err := s.doesDuplicateCategoryBoardsExist()
+	if err != nil {
+		return err
+	}
+
+	if !needed {
+		if err := s.setSystemSetting(s.db, DeDuplicateCategoryBoardTableMigrationKey, strconv.FormatBool(true)); err != nil {
+			return fmt.Errorf("cannot mark migration %s as completed: %w", "RunDeDuplicateCategoryBoardsMigration", err)
+		}
+	}
+
+	if s.dbType == model.MysqlDBType {
+		return s.runMySQLDeDuplicateCategoryBoardsMigration()
+	} else if s.dbType == model.PostgresDBType {
+		return s.runPostgresDeDuplicateCategoryBoardsMigration()
+	}
+
+	if err := s.setSystemSetting(s.db, DeDuplicateCategoryBoardTableMigrationKey, strconv.FormatBool(true)); err != nil {
+		return fmt.Errorf("cannot mark migration %s as completed: %w", "RunDeDuplicateCategoryBoardsMigration", err)
+	}
+
+	return nil
+}
+
+func (s *SQLStore) doesDuplicateCategoryBoardsExist() (bool, error) {
+	subQuery := s.getQueryBuilder(s.db).
+		Select("user_id", "board_id", "count(*) AS count").
+		From(s.tablePrefix+"category_boards").
+		GroupBy("user_id", "board_id").
+		Having("count(*) > 1")
+
+	query := s.getQueryBuilder(s.db).
+		Select("COUNT(*)").
+		FromSelect(subQuery, "duplicate_dataset")
+
+	row := query.QueryRow()
+
+	count := 0
+	if err := row.Scan(&count); err != nil {
+		s.logger.Error("Error occurred reading number of duplicate records in category_boards table", mlog.Err(err))
+		return false, err
+	}
+
+	return count > 0, nil
+}
+
+func (s *SQLStore) runMySQLDeDuplicateCategoryBoardsMigration() error {
+	query := fmt.Sprintf("WITH duplicates AS (SELECT id, ROW_NUMBER() OVER(PARTITION BY user_id, board_id) AS rownum FROM %[1]scategory_boards) DELETE %[1]scategory_boards FROM %[1]scategory_boards JOIN duplicates USING(id) WHERE duplicates.rownum > 1;", s.tablePrefix)
+	if _, err := s.db.Exec(query); err != nil {
+		s.logger.Error("Failed to de-duplicate data in category_boards table", mlog.Err(err))
+	}
+
+	return nil
+}
+
+func (s *SQLStore) runPostgresDeDuplicateCategoryBoardsMigration() error {
+	query := fmt.Sprintf("WITH duplicates AS (SELECT id, ROW_NUMBER() OVER(PARTITION BY user_id, board_id) AS rownum FROM %[1]scategory_boards) DELETE FROM %[1]scategory_boards USING duplicates WHERE %[1]scategory_boards.id = duplicates.id AND duplicates.rownum > 1;", s.tablePrefix)
+	if _, err := s.db.Exec(query); err != nil {
+		s.logger.Error("Failed to de-duplicate data in category_boards table", mlog.Err(err))
+	}
+
+	return nil
 }
