@@ -22,7 +22,7 @@ import CardBadges from '../cardBadges'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import ConfirmationDialogBox, {ConfirmationDialogBoxProps} from '../confirmationDialogBox'
 import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
-import {isCardEmpty as isCardEmptySelector} from '../../store/cards'
+import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 
 type Props = {
     board: Board
@@ -40,7 +40,7 @@ type Props = {
 const GalleryCard = (props: Props) => {
     const intl = useIntl()
     const {card, board} = props
-    const isCardEmpty = useAppSelector(isCardEmptySelector(card?.id))
+    const isCardEmpty = useIsCardEmpty(card)
     const [isDragging, isOver, cardRef] = useSortable('card', card, props.isManualSort && !props.readonly, props.onDrop)
     const contents = useAppSelector(getCardContents(card.id))
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)

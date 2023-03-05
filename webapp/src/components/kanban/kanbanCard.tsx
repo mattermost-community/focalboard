@@ -7,6 +7,7 @@ import {useIntl} from 'react-intl'
 import {Board, IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {useSortable} from '../../hooks/sortable'
+import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 import mutator from '../../mutator'
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 import {Utils} from '../../utils'
@@ -20,8 +21,6 @@ import OpenCardTourStep from '../onboardingTour/openCard/open_card'
 import CopyLinkTourStep from '../onboardingTour/copyLink/copy_link'
 import CardActionsMenu from '../cardActionsMenu/cardActionsMenu'
 import CardActionsMenuIcon from '../cardActionsMenu/cardActionsMenuIcon'
-import {useAppSelector} from '../../store/hooks'
-import {isCardEmpty as isCardEmptySelector} from '../../store/cards'
 
 export const OnboardingCardClassName = 'onboardingCard'
 
@@ -40,7 +39,7 @@ type Props = {
 
 const KanbanCard = (props: Props) => {
     const {card, board} = props
-    const isCardEmpty = useAppSelector(isCardEmptySelector(card?.id))
+    const isCardEmpty = useIsCardEmpty(card)
     const intl = useIntl()
     const [isDragging, isOver, cardRef] = useSortable('card', card, !props.readonly, props.onDrop)
     const visiblePropertyTemplates = props.visiblePropertyTemplates || []

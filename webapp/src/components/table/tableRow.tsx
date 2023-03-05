@@ -10,9 +10,7 @@ import mutator from '../../mutator'
 import Button from '../../widgets/buttons/button'
 import Editable from '../../widgets/editable'
 import {useSortable} from '../../hooks/sortable'
-import {useAppSelector} from '../../store/hooks'
-import {isCardEmpty as isCardEmptySelector} from '../../store/cards'
-
+import {useIsCardEmpty} from '../../hooks/useIsCardEmpty'
 import {Utils} from '../../utils'
 
 import PropertyValueElement from '../propertyValueElement'
@@ -50,7 +48,7 @@ type Props = {
 const TableRow = (props: Props) => {
     const intl = useIntl()
     const {board, card, isManualSort, groupById, visiblePropertyIds, collapsedOptionIds} = props
-    const isCardEmpty = useAppSelector(isCardEmptySelector(card?.id))
+    const isCardEmpty = useIsCardEmpty(card)
     const titleRef = useRef<{ focus(selectAll?: boolean): void }>(null)
     const [title, setTitle] = useState(props.card.title || '')
     const isGrouped = Boolean(groupById)

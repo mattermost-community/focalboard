@@ -8,7 +8,8 @@ import {BoardView} from '../blocks/boardView'
 import {Card} from '../blocks/card'
 import octoClient from '../octoClient'
 import mutator from '../mutator'
-import {getCard, isCardEmpty as isCardEmptySelector} from '../store/cards'
+import {getCard} from '../store/cards'
+import {useIsCardEmpty} from '../hooks/useIsCardEmpty'
 import {getCardComments} from '../store/comments'
 import {getCardContents} from '../store/contents'
 import {useAppDispatch, useAppSelector} from '../store/hooks'
@@ -62,7 +63,7 @@ const CardDialog = (props: Props): JSX.Element => {
     const dispatch = useAppDispatch()
     const me = useAppSelector<IUser|null>(getMe)
     const isTemplate = card && card.fields.isTemplate
-    const isCardEmpty = useAppSelector(isCardEmptySelector(props.cardId))
+    const isCardEmpty = useIsCardEmpty(card)
 
     const [showConfirmationDialogBox, setShowConfirmationDialogBox] = useState<boolean>(false)
     const makeTemplateClicked = async () => {

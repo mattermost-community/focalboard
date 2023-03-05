@@ -168,12 +168,6 @@ export function getCard(cardId: string): (state: RootState) => Card|undefined {
     }
 }
 
-export function isCardEmpty(cardId: string): (state: RootState) => boolean {
-    return (state: RootState): boolean => {
-        return getCards(state)[cardId]?.title === '' && getCards(state)[cardId]?.fields.contentOrder.length === 0 && Object.keys(getCards(state)[cardId]?.fields?.properties).length === 0 && !state.comments.commentsByCard[cardId] && !state.attachments.attachmentsByCard[cardId]
-    }
-}
-
 export const getCurrentBoardCards = createSelector(
     (state: RootState) => state.boards.current,
     getCards,
