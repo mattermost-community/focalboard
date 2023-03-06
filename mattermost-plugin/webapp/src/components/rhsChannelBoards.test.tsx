@@ -3,7 +3,7 @@
 
 import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
-import {act, render} from '@testing-library/react'
+import {act, render, screen} from '@testing-library/react'
 import {mocked} from 'jest-mock'
 import thunk from 'redux-thunk'
 
@@ -44,6 +44,7 @@ describe('components/rhsChannelBoards', () => {
         users: {
             me: {
                 id: 'user-id',
+                permissions: ['create_post']
             },
         },
         language: {
@@ -89,7 +90,8 @@ describe('components/rhsChannelBoards', () => {
             ))
             container = result.container
         })
-
+        const buttonElement = screen.queryByText('Add')
+        expect(buttonElement).not.toBeNull()
         expect(container).toMatchSnapshot()
     })
 
@@ -107,6 +109,45 @@ describe('components/rhsChannelBoards', () => {
             container = result.container
         })
 
+        const buttonElement = screen.queryByText('Link boards to Channel Name')
+        expect(buttonElement).not.toBeNull()
+        expect(container).toMatchSnapshot()
+    })
+
+    it('renders the RHS for channel boards, no add', async () => {
+        const localState = {...state, users: {me:{id: 'user-id'}}}
+        const store = mockStateStore([thunk], localState)
+        let container: Element | DocumentFragment | null = null
+        await act(async () => {
+            const result = render(wrapIntl(
+                <ReduxProvider store={store}>
+                    <RHSChannelBoards/>
+                </ReduxProvider>
+            ))
+            container = result.container
+        })
+
+        const buttonElement = screen.queryByText('Add')
+        expect(buttonElement).toBeNull()
+        expect(container).toMatchSnapshot()
+    })
+
+    it('renders with empty list of boards, cannot add', async () => {
+        const localState = {...state, users: {me:{id: 'user-id'}}, boards: {...state.boards, boards: {}}}
+        const store = mockStateStore([thunk], localState)
+
+        let container: Element | DocumentFragment | null = null
+        await act(async () => {
+            const result = render(wrapIntl(
+                <ReduxProvider store={store}>
+                    <RHSChannelBoards/>
+                </ReduxProvider>
+            ))
+            container = result.container
+        })
+
+        const buttonElement = screen.queryByText('Link boards to Channel Name')
+        expect(buttonElement).toBeNull()
         expect(container).toMatchSnapshot()
     })
 })

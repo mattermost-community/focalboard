@@ -1,65 +1,214 @@
-<div class="homepage__section homepage__threecol">
-    <div class="threecol__single">
-        <div class="threecol__image">
-            <img src="img/developers-icon.svg" alt="Developers Icon" />
-        </div>
-        <div class="threecol__copy">
-            <h4>For Developers</h4>
-            <p>
-                Fork the source code on <a href="https://github.com/mattermost/focalboard" target="_blank">GitHub</a> and install <a href="/download/personal-edition/ubuntu/">personal server</a> for
-                development.
-            </p>
-        </div>
-    </div>
-    <div class="threecol__single">
-        <div class="threecol__image">
-            <img src="img/single-users-icon.svg" alt="Single User Icon" />
-        </div>
-        <div class="threecol__copy">
-            <h4>For Single Users</h4>
-            <p>
-                Get <a href="/download/personal-edition/desktop/">Personal Desktop</a>, a stand-alone single-user app for <a href="/download/personal-edition/desktop/#macos">Mac</a>, <a
-                    href="/download/personal-edition/desktop/#windows">Windows</a>, and <a href="/download/personal-edition/desktop/#linux-desktop">Linux</a>.
-            </p>
-        </div>
-    </div>
-    <div class="threecol__single">
-        <div class="threecol__image">
-            <img src="img/teams-icon.svg" alt="Teams Icon" />
-        </div>
-        <div class="threecol__copy">
-            <h4>For Teams</h4>
-            <p>
-                Check out <a href="https://mattermost.com/boards/" target="_blank">Mattermost Boards</a> with integrated collaboration, for <a href="https://customers.mattermost.com/cloud/signup?utm_source=focalboard&utm_campaign=focalboard" target="_blank">cloud</a> or <a
-                    href="https://mattermost.com/deploy/?utm_source=focalboard&utm_campaign=focalboard" target="_blank">self-hosted</a>.
-            </p>
+<div class='mmtrust-banner'>
+    <div class="container-fluid">
+        <div class="title">MATTERMOST IS TRUSTED BY TEAMS AROUND THE WORLD</div>
+        <div class='mmtrust_banner__logos'>
+            <a target="_blank" href="https://www.qualcomm.com/home"><img src="img/teams/qualcom.svg" alt=""></a>
+            <a target="_blank" href="https://www.nasa.gov"><img src="img/teams/nasa.svg" alt=""></a>
+            <a target="_blank" href="https://www.aig.com"><img src="img/teams/aig.svg" alt=""></a>
+            <a target="_blank" href="https://www.nasdaq.com"><img src="img/teams/nasdaq.svg" alt=""></a>
+            <a target="_blank" href="https://www.samsung.com"><img src="img/teams/samsung.svg" alt=""></a>
         </div>
     </div>
 </div>
-<div class="homepage__section homepage__twocol">
-    <div class="twocol__single twocol__image">
-        <img src="https://user-images.githubusercontent.com/10912003/164514752-7ec8cbbd-844d-47b3-964f-dcf2e18e60b5.png" alt="Illustration of unzipping zipper revealing the code behind the focalboard interface" />
-    </div>
-    <div class="twocol__single twocol__copy">
-        <h2>Focalboard is 100% Open Source</h2>
-        <p>
-            <a href="https://github.com/mattermost/focalboard" target="_blank">Check out the source code on GitHub</a>, and contribute to the future of this project. Join
-            the discussion
-            on the <a href="https://community.mattermost.com/core/channels/focalboard" target="_blank">Mattermost community</a> to interact with other Mattermost and Focalboard contributors
-            and users.
-        </p>
+
+<div class='section-half'>
+    <div class="section-half__container">
+        <div data-aos="fade-right">
+            <img src="img/3d-icons/rocket.svg" alt="Rocket Icon">
+            <h2>Accelerate productivity</h2>
+            <p>
+                Centralize, plan, and track all your work in one place. Mattermost Boards helps your organization maintain a single source of truth, so your teams stay aligned to complete tasks, reach milestones, and achieve their goals.
+            </p>
+        </div>
+        <div class="section-half__visual" data-aos="fade-left">
+            <video src="video/accelerate1.mp4" autoplay loop muted width='640px'></video>
+        </div>
     </div>
 </div>
-<div class="homepage__section homepage__twocol">
-    <div class="twocol__single twocol__copy">
-        <h2>Interested in joining the team?</h2>
-        <p>
-            Focalboard was built by a passionate group of developers at Mattermost. We're looking for more talented
-            engineers, designers, product managers, and other roles to join our rapidly growing team. Find out more
-            on the Mattermost <a href="https://mattermost.com/careers/" target="_blank">careers page</a>.
-        </p>
+
+<div class='section-half section-half--reverse'>
+    <img src="img/bgroundedleft.svg" alt="Background rounded left Element" class='bgElementLeft'>
+    <div class="section-half__container">
+        <div data-aos="fade-right">
+            <img src="img/3d-icons/gasp.svg" alt="Wow Icon">
+            <h2>Organize and visualize work, your way</h2>
+            <p>
+                Work in the way that suits you best. Manage all your tasks on a Kanban, table, gallery, and calendar view. Focus on the highest priority items with board filters, and save an unlimited number of filtered views for quick access later.
+            </p>
+        </div>
+        <div class="section-half__visual" data-aos="fade-left">
+            <div class="view-tabs">
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 1 }" @click='boardView = 1, clearInterval(viewsInterval)'>Board</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 2 }" @click='boardView = 2, clearInterval(viewsInterval)'>List</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 3 }" @click='boardView = 3, clearInterval(viewsInterval)'>Calendar</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': boardView == 4 }" @click='boardView = 4, clearInterval(viewsInterval)'>Gallery</button>
+            </div>
+            <div class='view-content'>
+                <img x-cloak x-transition.duration.300 x-show='boardView == 1' src="img/views/boardview.png" alt="Board View">
+                <img x-cloak x-transition.duration.300 x-show='boardView == 2' src="img/views/listview.png" alt="List View">
+                <img x-cloak x-transition.duration.300 x-show='boardView == 3' src="img/views/calendarview.png" alt="Calendar View">
+                <img x-cloak x-transition.duration.300 x-show='boardView == 4' src="img/views/galleryview.png" alt="Gallery View">
+            </div>
+        </div>
     </div>
-    <div class="twocol__single twocol__image">
-        <img src="https://user-images.githubusercontent.com/10912003/164514748-fb39c516-c71e-445b-85bf-d75814053c3c.png" alt="Illustration of people with varying skin tones." />
+</div>
+
+<div class='section-half'>
+    <img src="img/bgroundedright.svg" alt="Background rounded right Element" class='bgElementRight'>
+    <div class="section-half__container" data-aos="fade-right">
+        <div>
+            <img src="img/3d-icons/handshake.svg" alt="Handshake Icon">
+            <h2>Align your teams with real-time collaboration</h2>
+            <p>
+                Keep everyone in sync with card comments, @mention teammates to get their attention, and set board permissions to share your board with the entire team or specific individuals.
+            </p>
+        </div>
+        <div class="section-half__visual"  data-aos="fade-left">
+            <video src="video/comment-animation.mp4" class='align-video' autoplay loop muted></video>
+        </div>
+    </div>
+</div>
+
+<div class='template-picker-container' data-aos="zoom-in">
+    <img src="img/bgroundedcenter.svg" alt="Background rounded center Element" class='bgElementCenter'>
+    <div class="container-wide">
+        <h2 class='mb-4'>
+            <span>Tons of templates to get you started</span>
+            <img class='ml-3 position-relative' style='top: -6px' src="img/3d-icons/raisedhands.svg" alt="Raised hands icon">
+        </h2>
+        <p>Get started fast with our pre-built templates or create a fully custom board from scratch.</p>
+
+        <div class="template-picker">
+            <div class="template-picker__sidebar">
+                <div class="template-picker-item" x-bind:class="{ 'active': template == 1 }" @click='template = 1'>
+                    <span class='template-picker-item__emoji'>🎯</span>
+                    <span class='template-picker-item__title'>Project Tasks</span>
+                </div>
+                <div class="template-picker-item" x-bind:class="{ 'active': template == 2 }" @click='template = 2'>
+                    <span class='template-picker-item__emoji'>📅</span>
+                    <span class='template-picker-item__title'>Content Calendar</span>
+                </div>
+                <div class="template-picker-item" x-bind:class="{ 'active': template == 3 }" @click='template = 3'>
+                    <span class='template-picker-item__emoji'>⛳</span>
+                    <span class='template-picker-item__title'>Company Goals & OKRs</span>
+                </div>
+                <div class="template-picker-item" x-bind:class="{ 'active': template == 4 }" @click='template = 4'>
+                    <span class='template-picker-item__emoji'>🗺️</span>
+                    <span class='template-picker-item__title'>Roadmap</span>
+                </div>
+                <div class="template-picker-item" x-bind:class="{ 'active': template == 5 }" @click='template = 5'>
+                    <span class='template-picker-item__emoji'>🍩</span>
+                    <span class='template-picker-item__title'>Meeting Agenda</span>
+                </div>
+                <div class="template-picker-item" x-bind:class="{ 'active': template == 6 }" @click='template = 6'>
+                    <span class='template-picker-item__emoji'>👋</span>
+                    <span class='template-picker-item__title'>Welcome to Boards</span>
+                </div>
+            </div>
+            <div class="template-picker__preview">
+                <img x-cloak x-transition.duration.500 x-show='template == 1' src="img/templates/project-tasks.png" alt="Project Tasks Template">
+                <img x-cloak x-transition.duration.500 x-show='template == 2' src="img/templates/content-calendar.png" alt="Content Calendar Template">
+                <img x-cloak x-transition.duration.500 x-show='template == 3' src="img/templates/company-goals.png" alt="Company Goals Template">
+                <img x-cloak x-transition.duration.500 x-show='template == 4' src="img/templates/roadmap.png" alt="Roadmap Template">
+                <img x-cloak x-transition.duration.500 x-show='template == 5' src="img/templates/meeting-agenda.png" alt="Meeting Agenda Template">
+                <img x-cloak x-transition.duration.500 x-show='template == 6' src="img/templates/welcome.png" alt="Welcome to Boards Template">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class='section-full text-center' data-aos="fade-up">
+    <div class="container-fluid">
+        <h2>Feature Highlights</h2>
+        <div class='feature-bullets'>
+            <div>Unlimited boards</div>
+            <div>Group, filter, and sort tasks</div>
+            <div>File sharing</div>
+            <div>Unlimited custom attributes</div>
+            <div>Customizable templates</div>
+            <div>Meeting notes</div>
+            <div>Project cards & tasks</div>
+            <div>Archiving & back-up snapshots</div>
+            <div>Priority labeling</div>
+            <div>User permissions</div>
+            <div>Team and direct messaging</div>
+            <div>Multi-team views</div>
+        </div>
+    </div>
+</div>
+
+<div class='mmtrust-banner mentioned-in'  data-aos="fade-up">
+    <div class="container-wide">
+        <div class="title">MENTIONED IN</div>
+        <div class='mmtrust_banner__logos align-items-center d-flex'>
+            <a target="_blank" href="https://www.producthunt.com/products/focalboard"><img src="img/mentioned/producthunt.png" alt=""></a>
+            <a target="_blank" href="https://venturebeat.com/software/mattermost-moves-beyond-messaging-to-unify-developer-collaboration-and-productivity/"><img src="img/mentioned/venturebeat.png" alt=""></a>
+            <a target="_blank" href="https://www.techrepublic.com/article/focalboard-kanban-tool-better-task-management/"><img src="img/mentioned/techrepublic.png" alt=""></a>
+            <a target="_blank" href="https://news.ycombinator.com/item?id=26499062"><img src="img/mentioned/ycombinator.png" alt=""></a>
+            <a target="_blank" href="https://thenewstack.io/how-to-build-an-open-source-community/"><img src="img/mentioned/newstack.png" alt=""></a>
+        </div>
+    </div>
+</div>
+
+<div class='section-half section-half--reverse'>
+    <div class="section-half__container">
+        <div data-aos="fade-left">
+            <img src="img/3d-icons/development.svg" alt="Open source Icon">
+            <h2>Mattermost Boards is 100% open source</h2>
+            <p>
+                Mattermost Boards is an open source alternative to tools like Asana, Trello, and Notion. Check out the <a target='_blank' href="https://github.com/mattermost/focalboard">source code on GitHub</a>, and contribute to the future of this project. Join the discussion on the <a href="https://community.mattermost.com/core/channels/focalboard" target="_blank">Mattermost community</a> to interact with other Mattermost and Focalboard contributors and users.
+            </p>
+        </div>
+        <div class="section-half__visual" data-aos="fade-right">
+            <img src="https://user-images.githubusercontent.com/10912003/164514752-7ec8cbbd-844d-47b3-964f-dcf2e18e60b5.png" alt="Open source image">
+        </div>
+    </div>
+</div>
+
+<div class='section-half roadmap-section'>
+    <div class="section-half__container">
+        <div data-aos="fade-left">
+            <img src="img/3d-icons/firstbump.svg" alt="Fistbump Icon">
+            <h2>What’s next for Boards</h2>
+            <p>
+                Here are some things that we have on our roadmap and plan to release soon!
+            </p>
+            <div class="view-tabs">
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 1 }" @click='roadmapItem = 1, clearInterval(roadmapInterval)'>Standard Properties</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 2 }" @click='roadmapItem = 2, clearInterval(roadmapInterval)'>Card Dependencies</button>
+                <button class='btn btn-yellow btn-lg' x-bind:class="{ 'active': roadmapItem == 3 }" @click='roadmapItem = 3, clearInterval(roadmapInterval)'>Analytics and Reporting</button>
+            </div>
+        </div>
+        <div class="section-half__visual" data-aos="fade-right">
+            <img x-cloak x-transition.duration.500
+            x-show='roadmapItem == 1' src="img/roadmap/standard-properties.png" alt="Standard Properties Image">
+            <img x-cloak x-transition.duration.500
+            x-show='roadmapItem == 2' src="img/roadmap/card-dependencies.png" class='image-shadow' alt="Card Dependencies Image">
+            <img x-cloak x-transition.duration.500
+            x-show='roadmapItem == 3' src="img/roadmap/analytics.png" alt="Analytics and Reporting Image" width='800px'>
+        </div>
+    </div>
+</div>
+
+<div class="help-section" data-aos="fade-up">
+    <div class='section-half'>
+        <div class="section-half__container">
+            <div>
+                <h2>Need help?</h2>
+                <p>
+                    We have tons of documentation to help you make the most out of boards, head over to our documentation site to learn more about boards.
+                </p>
+                <a href='https://docs.mattermost.com/guides/boards.html' target='_blank'>
+                    <button class='btn btn-primary btn-xl'>
+                        <span>Go to docs</span>
+                        <img src="img/arrow-right.svg" alt="Arrow right">
+                    </button>
+                </a>
+            </div>
+            <div class="section-half__visual">
+                <img src='img/needhelp.svg' alt='Get Help Image'>
+            </div>
+        </div>
     </div>
 </div>

@@ -51,8 +51,8 @@ func TestAddMemberToBoard(t *testing.T) {
 					Type: "system",
 				},
 			},
-		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_1": "default_category_id"}).Return(nil)
+		}, nil).Times(2)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", []string{"board_id_1"}).Return(nil)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -125,8 +125,9 @@ func TestAddMemberToBoard(t *testing.T) {
 					Type: "system",
 				},
 			},
-		}, nil)
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", map[string]string{"board_id_1": "default_category_id"}).Return(nil)
+		}, nil).Times(2)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "default_category_id", []string{"board_id_1"}).Return(nil)
+		th.API.EXPECT().HasPermissionToTeam("user_id_1", "team_id_1", model.PermissionManageTeam).Return(false).Times(1)
 
 		addedBoardMember, err := th.App.AddMemberToBoard(boardMember)
 		require.NoError(t, err)
@@ -180,7 +181,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
@@ -218,7 +219,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{}, nil)
@@ -256,7 +257,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -294,7 +295,7 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(2)
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -332,7 +333,10 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+		}, nil).Times(3)
+
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -370,7 +374,11 @@ func TestPatchBoard(t *testing.T) {
 			ID:         boardID,
 			TeamID:     teamID,
 			IsTemplate: true,
-		}, nil)
+			ChannelID:  "",
+		}, nil).Times(1)
+
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
 		// Type not null will retrieve team members
 		th.Store.EXPECT().GetUsersByTeam(teamID, "", false, false).Return([]*model.User{{ID: userID}}, nil)
 
@@ -411,45 +419,72 @@ func TestBoardCategory(t *testing.T) {
 	th, tearDown := SetupTestHelper(t)
 	defer tearDown()
 
-	t.Run("test addBoardsToDefaultCategory", func(t *testing.T) {
-		t.Run("no boards default category exists", func(t *testing.T) {
-			th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
-				{
-					Category: model.Category{ID: "category_id_1", Name: "Category 1"},
-					BoardIDs: []string{"board_id_1", "board_id_2"},
+	t.Run("no boards default category exists", func(t *testing.T) {
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1"},
+					{BoardID: "board_id_2"},
 				},
-				{
-					Category: model.Category{ID: "category_id_2", Name: "Category 2"},
-					BoardIDs: []string{"board_id_3"},
+			},
+			{
+				Category: model.Category{ID: "category_id_2", Name: "Category 2"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_3"},
 				},
-				{
-					Category: model.Category{ID: "category_id_3", Name: "Category 3"},
-					BoardIDs: []string{},
+			},
+			{
+				Category:      model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardMetadata: []model.CategoryBoardMetadata{},
+			},
+		}, nil).Times(1)
+
+		// when this function is called the second time, the default category is created
+		th.Store.EXPECT().GetUserCategoryBoards("user_id", "team_id").Return([]model.CategoryBoards{
+			{
+				Category: model.Category{ID: "category_id_1", Name: "Category 1"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_1"},
+					{BoardID: "board_id_2"},
 				},
-			}, nil)
+			},
+			{
+				Category: model.Category{ID: "category_id_2", Name: "Category 2"},
+				BoardMetadata: []model.CategoryBoardMetadata{
+					{BoardID: "board_id_3"},
+				},
+			},
+			{
+				Category:      model.Category{ID: "category_id_3", Name: "Category 3"},
+				BoardMetadata: []model.CategoryBoardMetadata{},
+			},
+			{
+				Category: model.Category{ID: "default_category_id", Type: model.CategoryTypeSystem, Name: "Boards"},
+			},
+		}, nil).Times(1)
 
-			th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
-			th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
-				ID:   "default_category_id",
-				Name: "Boards",
-			}, nil)
-			th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
-			th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
-			th.Store.EXPECT().AddUpdateCategoryBoard("user_id", map[string]string{
-				"board_id_1": "default_category_id",
-				"board_id_2": "default_category_id",
-				"board_id_3": "default_category_id",
-			}).Return(nil)
+		th.Store.EXPECT().CreateCategory(utils.Anything).Return(nil)
+		th.Store.EXPECT().GetCategory(utils.Anything).Return(&model.Category{
+			ID:   "default_category_id",
+			Name: "Boards",
+		}, nil)
+		th.Store.EXPECT().GetMembersForUser("user_id").Return([]*model.BoardMember{}, nil)
+		th.Store.EXPECT().GetBoardsForUserAndTeam("user_id", "team_id", false).Return([]*model.Board{}, nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id", "default_category_id", []string{
+			"board_id_1",
+			"board_id_2",
+			"board_id_3",
+		}).Return(nil)
 
-			boards := []*model.Board{
-				{ID: "board_id_1"},
-				{ID: "board_id_2"},
-				{ID: "board_id_3"},
-			}
+		boards := []*model.Board{
+			{ID: "board_id_1"},
+			{ID: "board_id_2"},
+			{ID: "board_id_3"},
+		}
 
-			err := th.App.addBoardsToDefaultCategory("user_id", "team_id", boards)
-			assert.NoError(t, err)
-		})
+		err := th.App.addBoardsToDefaultCategory("user_id", "team_id", boards)
+		assert.NoError(t, err)
 	})
 }
 
@@ -491,9 +526,9 @@ func TestDuplicateBoard(t *testing.T) {
 					Type: "system",
 				},
 			},
-		}, nil).Times(2)
+		}, nil).Times(3)
 
-		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", utils.Anything).Return(nil)
+		th.Store.EXPECT().AddUpdateCategoryBoard("user_id_1", "category_id_1", utils.Anything).Return(nil)
 
 		// for WS change broadcast
 		th.Store.EXPECT().GetMembersForBoard(utils.Anything).Return([]*model.BoardMember{}, nil).Times(2)
@@ -537,5 +572,101 @@ func TestDuplicateBoard(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, bab)
 		assert.NotNil(t, members)
+	})
+}
+
+func TestGetMembersForBoard(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	const boardID = "board_id_1"
+	const userID = "user_id_1"
+	const teamID = "team_id_1"
+
+	th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{
+		{
+			BoardID:      boardID,
+			UserID:       userID,
+			SchemeEditor: true,
+		},
+	}, nil).Times(3)
+	th.Store.EXPECT().GetBoard(boardID).Return(nil, nil).Times(1)
+	t.Run("-base case", func(t *testing.T) {
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	board := &model.Board{
+		ID:     boardID,
+		TeamID: teamID,
+	}
+	th.Store.EXPECT().GetBoard(boardID).Return(board, nil).Times(2)
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+
+	t.Run("-team check false ", func(t *testing.T) {
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+	t.Run("-team check true", func(t *testing.T) {
+		members, err := th.App.GetMembersForBoard(boardID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.True(t, members[0].SchemeAdmin)
+	})
+}
+
+func TestGetMembersForUser(t *testing.T) {
+	th, tearDown := SetupTestHelper(t)
+	defer tearDown()
+
+	const boardID = "board_id_1"
+	const userID = "user_id_1"
+	const teamID = "team_id_1"
+
+	th.Store.EXPECT().GetMembersForUser(userID).Return([]*model.BoardMember{
+		{
+			BoardID:      boardID,
+			UserID:       userID,
+			SchemeEditor: true,
+		},
+	}, nil).Times(3)
+	th.Store.EXPECT().GetBoard(boardID).Return(nil, nil)
+	t.Run("-base case", func(t *testing.T) {
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	board := &model.Board{
+		ID:     boardID,
+		TeamID: teamID,
+	}
+	th.Store.EXPECT().GetBoard(boardID).Return(board, nil).Times(2)
+
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+	t.Run("-team check false ", func(t *testing.T) {
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.False(t, members[0].SchemeAdmin)
+	})
+
+	th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(true).Times(1)
+	t.Run("-team check true", func(t *testing.T) {
+		members, err := th.App.GetMembersForUser(userID)
+		assert.NoError(t, err)
+		assert.NotNil(t, members)
+
+		assert.True(t, members[0].SchemeAdmin)
 	})
 }

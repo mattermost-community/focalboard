@@ -32,6 +32,7 @@ import Button from '../../widgets/buttons/button'
 import {sendFlashMessage} from '../flashMessages'
 import {Permission} from '../../constants'
 import GuestBadge from '../../widgets/guestBadge'
+import AdminBadge from '../../widgets/adminBadge/adminBadge'
 
 import TelemetryClient, {TelemetryActions, TelemetryCategory} from '../../telemetry/telemetryClient'
 
@@ -310,6 +311,7 @@ export default function ShareBoardDialog(props: Props): JSX.Element {
                         <strong>{Utils.getUserDisplayName(user, clientConfig.teammateNameDisplay)}</strong>
                         <strong className='ml-2 text-light'>{`@${user.username}`}</strong>
                         <GuestBadge show={Boolean(user?.is_guest)}/>
+                        <AdminBadge permissions={user.permissions}/>
                     </div>
                 </div>
             )

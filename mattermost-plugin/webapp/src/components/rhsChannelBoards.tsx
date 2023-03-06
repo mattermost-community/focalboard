@@ -49,7 +49,7 @@ const RHSChannelBoards = () => {
             dispatch(loadMyBoardsMemberships()),
             dispatch(fetchMe()),
         ]).then(() => setDataLoaded(true))
-    }, [])
+    }, [currentChannel?.id])
 
     useWebsockets(teamId || '', (wsClient: WSClient) => {
         const onChangeBoardHandler = (_: WSClient, boards: Board[]): void => {
@@ -117,17 +117,19 @@ const RHSChannelBoards = () => {
                         />
                     </div>
                     <div className='boards-screenshots'><img src={Utils.buildURL(boardsScreenshots, true)}/></div>
-                    <Button
-                        onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
-                        emphasis='primary'
-                        size='medium'
-                    >
-                        <FormattedMessage
-                            id='rhs-boards.link-boards-to-channel'
-                            defaultMessage='Link boards to {channelName}'
-                            values={{channelName: channelName}}
-                        />
-                    </Button>
+                    {me?.permissions?.find((s) => s === 'create_post') &&
+                        <Button
+                            onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
+                            emphasis='primary'
+                            size='medium'
+                        >
+                            <FormattedMessage
+                                id='rhs-boards.link-boards-to-channel'
+                                defaultMessage='Link boards to {channelName}'
+                                values={{channelName: channelName}}
+                            />
+                        </Button>
+                    }
                 </div>
             </div>
         )
@@ -143,16 +145,18 @@ const RHSChannelBoards = () => {
                             defaultMessage='Linked boards'
                         />
                     </span>
-                    <Button
-                        onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
-                        icon={<AddIcon/>}
-                        emphasis='primary'
-                    >
-                        <FormattedMessage
-                            id='rhs-boards.add'
-                            defaultMessage='Add'
-                        />
-                    </Button>
+                    {me?.permissions?.find((s) => s === 'create_post') &&
+                        <Button
+                            onClick={() => dispatch(setLinkToChannel(currentChannel.id))}
+                            icon={<AddIcon/>}
+                            emphasis='primary'
+                        >
+                            <FormattedMessage
+                                id='rhs-boards.add'
+                                defaultMessage='Add'
+                            />
+                        </Button>
+                    }
                 </div>
                 <div className='rhs-boards-list'>
                     {channelBoards.map((b) => (

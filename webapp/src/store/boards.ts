@@ -36,7 +36,7 @@ export const fetchBoardMembers = createAsyncThunk(
         const users = [] as IUser[]
         const userIDs = members.map((member) => member.userId)
 
-        const usersData = await client.getUsersList(userIDs)
+        const usersData = await client.getTeamUsersList(userIDs, teamId)
         users.push(...usersData)
 
         thunkAPI.dispatch(setBoardUsers(users))
@@ -85,9 +85,13 @@ export const updateMembersEnsuringBoardsAndUsers = createAsyncThunk(
             if (boardUsers[m.userId]) {
                 return
             }
-            const user = await client.getUser(m.userId)
-            if (user) {
-                thunkAPI.dispatch(addBoardUsers([user]))
+
+            const board = await client.getBoard(m.boardId)
+            if (board) {
+                const user = await client.getTeamUsersList([m.userId], board.teamId)
+                if (user) {
+                    thunkAPI.dispatch(addBoardUsers(user))
+                }
             }
         })
 

@@ -7,15 +7,14 @@ import {IPropertyTemplate} from '../../blocks/board'
 import {Card} from '../../blocks/card'
 import {Utils} from '../../utils'
 
-import {PropertyType, PropertyTypeEnum} from '../types'
+import {DatePropertyType, PropertyTypeEnum} from '../types'
 
 import CreatedTime from './createdTime'
 
-export default class CreatedAtProperty extends PropertyType {
+export default class CreatedAtProperty extends DatePropertyType {
     Editor = CreatedTime
     name = 'Created At'
     type = 'createdTime' as PropertyTypeEnum
-    isDate = true
     isReadOnly = true
     displayName = (intl: IntlShape) => intl.formatMessage({id: 'PropertyType.CreatedTime', defaultMessage: 'Created time'})
     calculationOptions = [Options.none, Options.count, Options.countEmpty,

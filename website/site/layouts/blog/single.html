@@ -11,7 +11,7 @@
 </head>
 
 <body class="blog-single">
-    {{ partial "nav2.html" .}}
+    {{ partial "nav.html" .}}
     <div class="container">
         <div class="row">
             <div class="col-md-9 doc-content">
@@ -70,7 +70,7 @@
                     <ul class="list-unstyled">
                         {{ range .Params.categories }}
                     <li>- <a href="{{ $.Site.BaseURL }}categories/{{ . | urlize }}">{{ . }}</a></li>
-                        {{ end }}   
+                        {{ end }}
                     </ul>
                 </div>
             </div>

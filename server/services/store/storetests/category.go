@@ -294,11 +294,11 @@ func testReorderCategoryBoards(t *testing.T, store store.Store) {
 	})
 	assert.NoError(t, err)
 
-	err = store.AddUpdateCategoryBoard("user_id", map[string]string{
-		"board_id_1": "category_id_1",
-		"board_id_2": "category_id_1",
-		"board_id_3": "category_id_1",
-		"board_id_4": "category_id_1",
+	err = store.AddUpdateCategoryBoard("user_id", "category_id_1", []string{
+		"board_id_1",
+		"board_id_2",
+		"board_id_3",
+		"board_id_4",
 	})
 	assert.NoError(t, err)
 
@@ -306,11 +306,11 @@ func testReorderCategoryBoards(t *testing.T, store store.Store) {
 	categoryBoards, err := store.GetUserCategoryBoards("user_id", "team_id")
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(categoryBoards))
-	assert.Equal(t, 4, len(categoryBoards[0].BoardIDs))
-	assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_1")
-	assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_2")
-	assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_3")
-	assert.Contains(t, categoryBoards[0].BoardIDs, "board_id_4")
+	assert.Equal(t, 4, len(categoryBoards[0].BoardMetadata))
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_1", Hidden: false})
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_2", Hidden: false})
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_3", Hidden: false})
+	assert.Contains(t, categoryBoards[0].BoardMetadata, model.CategoryBoardMetadata{BoardID: "board_id_4", Hidden: false})
 
 	// reordering
 	newOrder, err := store.ReorderCategoryBoards("category_id_1", []string{
@@ -329,9 +329,9 @@ func testReorderCategoryBoards(t *testing.T, store store.Store) {
 	categoryBoards, err = store.GetUserCategoryBoards("user_id", "team_id")
 	assert.NoError(t, err)
 	assert.Equal(t, 1, len(categoryBoards))
-	assert.Equal(t, 4, len(categoryBoards[0].BoardIDs))
-	assert.Equal(t, "board_id_3", categoryBoards[0].BoardIDs[0])
-	assert.Equal(t, "board_id_1", categoryBoards[0].BoardIDs[1])
-	assert.Equal(t, "board_id_2", categoryBoards[0].BoardIDs[2])
-	assert.Equal(t, "board_id_4", categoryBoards[0].BoardIDs[3])
+	assert.Equal(t, 4, len(categoryBoards[0].BoardMetadata))
+	assert.Equal(t, "board_id_3", categoryBoards[0].BoardMetadata[0].BoardID)
+	assert.Equal(t, "board_id_1", categoryBoards[0].BoardMetadata[1].BoardID)
+	assert.Equal(t, "board_id_2", categoryBoards[0].BoardMetadata[2].BoardID)
+	assert.Equal(t, "board_id_4", categoryBoards[0].BoardMetadata[3].BoardID)
 }

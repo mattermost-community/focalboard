@@ -9,7 +9,7 @@ type CategoryBoards struct {
 
 	// The IDs of boards in this category
 	// required: true
-	BoardIDs []string `json:"boardIDs"`
+	BoardMetadata []CategoryBoardMetadata `json:"boardMetadata"`
 
 	// The relative sort order of this board in its category
 	// required: true
@@ -19,4 +19,10 @@ type CategoryBoards struct {
 type BoardCategoryWebsocketData struct {
 	BoardID    string `json:"boardID"`
 	CategoryID string `json:"categoryID"`
+	Hidden     bool   `json:"hidden"`
+}
+
+type CategoryBoardMetadata struct {
+	BoardID string `json:"boardID"`
+	Hidden  bool   `json:"hidden"`
 }

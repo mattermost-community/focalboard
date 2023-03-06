@@ -120,7 +120,7 @@ const me: IUser = {
 
 const categoryAttribute1 = TestBlockFactory.createCategoryBoards()
 categoryAttribute1.name = 'Category 1'
-categoryAttribute1.boardIDs = [board.id]
+categoryAttribute1.boardMetadata = [{boardID: board.id, hidden: false}]
 
 describe('src/components/shareBoard/shareBoard', () => {
     const w = (window as any)
@@ -548,8 +548,8 @@ describe('src/components/shareBoard/shareBoard', () => {
         }
         mockedOctoClient.getSharing.mockResolvedValue(sharing)
         const users: IUser[] = [
-            {id: 'userid1', username: 'username_1'} as IUser,
-            {id: 'userid2', username: 'username_2'} as IUser,
+            {id: 'userid1', username: 'username_1', permissions: ['manage_team']} as IUser,
+            {id: 'userid2', username: 'username_2', permissions: ['manage_system']} as IUser,
             {id: 'userid3', username: 'username_3'} as IUser,
             {id: 'userid4', username: 'username_4'} as IUser,
         ]

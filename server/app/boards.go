@@ -154,8 +154,8 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 	var destinationCategoryID string
 
 	for _, categoryBoard := range userCategoryBoards {
-		for _, boardID := range categoryBoard.BoardIDs {
-			if boardID == sourceBoardID {
+		for _, metadata := range categoryBoard.BoardMetadata {
+			if metadata.BoardID == sourceBoardID {
 				// category found!
 				destinationCategoryID = categoryBoard.ID
 				break
@@ -175,7 +175,7 @@ func (a *App) setBoardCategoryFromSource(sourceBoardID, destinationBoardID, user
 
 	// now that we have source board's category,
 	// we send destination board to the same category
-	return a.AddUpdateUserCategoryBoard(teamID, userID, map[string]string{destinationBoardID: destinationCategoryID})
+	return a.AddUpdateUserCategoryBoard(teamID, userID, destinationCategoryID, []string{destinationBoardID})
 }
 
 func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*model.BoardsAndBlocks, []*model.BoardMember, error) {
@@ -202,13 +202,21 @@ func (a *App) DuplicateBoard(boardID, userID, toTeam string, asTemplate bool) (*
 	blockPatches := make([]model.BlockPatch, 0)
 
 	for _, block := range bab.Blocks {
-		if fileID, ok := block.Fields["fileId"]; ok {
-			blockIDs = append(blockIDs, block.ID)
-			blockPatches = append(blockPatches, model.BlockPatch{
-				UpdatedFields: map[string]interface{}{
-					"fileId": fileID,
-				},
-			})
+		fieldName := ""
+		if block.Type == model.TypeImage {
+			fieldName = "fileId"
+		} else if block.Type == model.TypeAttachment {
+			fieldName = "attachmentId"
+		}
+		if fieldName != "" {
+			if fieldID, ok := block.Fields[fieldName]; ok {
+				blockIDs = append(blockIDs, block.ID)
+				blockPatches = append(blockPatches, model.BlockPatch{
+					UpdatedFields: map[string]interface{}{
+						fieldName: fieldID,
+					},
+				})
+			}
 		}
 	}
 	a.logger.Debug("Duplicate boards patching file IDs", mlog.Int("count", len(blockIDs)))
@@ -329,12 +337,12 @@ func (a *App) addBoardsToDefaultCategory(userID, teamID string, boards []*model.
 		return fmt.Errorf("%w userID: %s", errNoDefaultCategoryFound, userID)
 	}
 
-	boardCategoryMapping := map[string]string{}
-	for _, board := range boards {
-		boardCategoryMapping[board.ID] = defaultCategoryID
+	boardIDs := make([]string, len(boards))
+	for i := range boards {
+		boardIDs[i] = boards[i].ID
 	}
 
-	if err := a.AddUpdateUserCategoryBoard(teamID, userID, boardCategoryMapping); err != nil {
+	if err := a.AddUpdateUserCategoryBoard(teamID, userID, defaultCategoryID, boardIDs); err != nil {
 		return err
 	}
 
@@ -494,11 +502,48 @@ func (a *App) DeleteBoard(boardID, userID string) error {
 }
 
 func (a *App) GetMembersForBoard(boardID string) ([]*model.BoardMember, error) {
-	return a.store.GetMembersForBoard(boardID)
+	members, err := a.store.GetMembersForBoard(boardID)
+	if err != nil {
+		return nil, err
+	}
+
+	board, err := a.store.GetBoard(boardID)
+	if err != nil && !model.IsErrNotFound(err) {
+		return nil, err
+	}
+	if board != nil {
+		for i, m := range members {
+			if !m.SchemeAdmin {
+				if a.permissions.HasPermissionToTeam(m.UserID, board.TeamID, model.PermissionManageTeam) {
+					members[i].SchemeAdmin = true
+				}
+			}
+		}
+	}
+	return members, nil
 }
 
 func (a *App) GetMembersForUser(userID string) ([]*model.BoardMember, error) {
-	return a.store.GetMembersForUser(userID)
+	members, err := a.store.GetMembersForUser(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, m := range members {
+		if !m.SchemeAdmin {
+			board, err := a.store.GetBoard(m.BoardID)
+			if err != nil && !model.IsErrNotFound(err) {
+				return nil, err
+			}
+			if board != nil {
+				if a.permissions.HasPermissionToTeam(m.UserID, board.TeamID, model.PermissionManageTeam) {
+					// if system/team admin
+					members[i].SchemeAdmin = true
+				}
+			}
+		}
+	}
+	return members, nil
 }
 
 func (a *App) GetMemberForBoard(boardID string, userID string) (*model.BoardMember, error) {
@@ -526,6 +571,14 @@ func (a *App) AddMemberToBoard(member *model.BoardMember) (*model.BoardMember, e
 	newMember, err := a.store.SaveMember(member)
 	if err != nil {
 		return nil, err
+	}
+
+	if !newMember.SchemeAdmin {
+		if board != nil {
+			if a.permissions.HasPermissionToTeam(newMember.UserID, board.TeamID, model.PermissionManageTeam) {
+				newMember.SchemeAdmin = true
+			}
+		}
 	}
 
 	if !board.IsTemplate {
