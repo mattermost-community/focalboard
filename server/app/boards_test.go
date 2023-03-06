@@ -399,6 +399,67 @@ func TestPatchBoard(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, boardID, patchedBoard.ID)
 	})
+
+	t.Run("patch type channel, user without post permissions", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		channelID := "myChannel"
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type:      &patchType,
+			ChannelID: &channelID,
+		}
+
+		// Type not nil, will cause board to be reteived
+		// to check isTemplate
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+		}, nil).Times(1)
+
+		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(false).Times(1)
+		_, err := th.App.PatchBoard(patch, boardID, userID)
+		require.Error(t, err)
+	})
+
+	t.Run("patch type remove channel, user without post permissions", func(t *testing.T) {
+		const boardID = "board_id_1"
+		const userID = "user_id_2"
+		const teamID = "team_id_1"
+
+		channelID := "myChannel"
+		clearChannel := ""
+		patchType := model.BoardTypeOpen
+		patch := &model.BoardPatch{
+			Type:      &patchType,
+			ChannelID: &clearChannel,
+		}
+
+		// Type not nil, will cause board to be reteived
+		// to check isTemplate
+		th.Store.EXPECT().GetBoard(boardID).Return(&model.Board{
+			ID:         boardID,
+			TeamID:     teamID,
+			IsTemplate: true,
+			ChannelID:  channelID,
+		}, nil).Times(2)
+
+		th.API.EXPECT().HasPermissionToChannel(userID, channelID, model.PermissionCreatePost).Return(false).Times(1)
+
+		th.API.EXPECT().HasPermissionToTeam(userID, teamID, model.PermissionManageTeam).Return(false).Times(1)
+		// Should call GetMembersForBoard 2 times
+		// for WS BroadcastBoardChange
+		// for AddTeamMembers check
+		// We are returning the user as a direct Board Member, so BroadcastMemberDelete won't be called
+		th.Store.EXPECT().GetMembersForBoard(boardID).Return([]*model.BoardMember{{BoardID: boardID, UserID: userID, SchemeEditor: true}}, nil).Times(1)
+
+		_, err := th.App.PatchBoard(patch, boardID, userID)
+		require.Error(t, err)
+	})
+
 }
 
 func TestGetBoardCount(t *testing.T) {
